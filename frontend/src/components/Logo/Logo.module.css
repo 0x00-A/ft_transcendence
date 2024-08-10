@@ -6,5 +6,6 @@
 }
 
 .logo img {
+  transition-duration: 500ms;
   /* width: 8rem; */
 }

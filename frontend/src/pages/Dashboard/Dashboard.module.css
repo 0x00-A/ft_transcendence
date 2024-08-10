@@ -1,30 +1,17 @@
 .container {
   display: flex;
   height: 100vh;
-}
-
-.sidebar nav ul li a:hover {
-  background-color: #575757;
-  border-radius: 4px;
+  flex: 1;
 }
 
 .dashboard {
-  height: 100vh;
+  padding: 1.75rem; /* 7 * 0.25rem */
+  font-size: 1.5rem; /* 2xl size */
+  font-weight: 600;
 
+  height: 100vh;
   width: 85%;
   flex: 1;
-  padding: 20px;
   background-color: #f4f4f4;
-  float: right;
   border: 1px solid rgb(0, 255, 17);
-
-}
-
-.dashboard h1 {
-  margin-bottom: 20px;
-}
-
-.dashboard p {
-  font-size: 18px;
-  line-height: 1.6;
 }
