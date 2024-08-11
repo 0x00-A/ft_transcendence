@@ -1,16 +1,17 @@
-
-@import "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap";
+@import 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap';
 @import 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
-
 
 /* These CSS variables are global, so they are available in all CSS modules */
 :root {
-  --color-brand--1: #FF2047;
-  --color-brand--2: #F8C25C;
+  --color-brand--1: #ff2047;
+  --color-brand--2: #f8c25c;
 
-  --color-dark--0: #0E1725;
-  --color-dark--1: #1E2738;
+  --color-dark--0: #0e1725;
+  --color-dark--1: #1e2738;
   --color-dark--2: #283245;
+  --color-light--1: #f8f3e3;
+
+  --color-active: #d6192e;
 
   /* --color-dark--0: #242a2e;
   --color-dark--1: #2d3439;
@@ -24,8 +25,7 @@
   margin: 0;
   padding: 0;
   box-sizing: inherit;
-  font-family: "Poppins", sans-serif;
-
+  font-family: 'Poppins', sans-serif;
 }
 
 html {

@@ -1,14 +1,25 @@
 .sidebar {
   position: relative;
   height: 100vh;
-  width: 450px;
-  background-color: #333;
+  width: 350px;
+  background-color: var(--color-dark--1);
   /* color: white; */
   /* padding: 15px; */
-  border: 1px solid red;
+  /* border: 1px solid red; */
   transition-duration: 300ms;
-  padding: 3.25rem;
+  /* padding: 3.25rem; */
   padding-top: 2rem;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid white;
+  padding-bottom: 30px;
+  /* transition: fill 0.3s ease;
+
+  transition-duration: 300ms; */
 }
 
 .small {
@@ -19,19 +30,21 @@
 
 .closed {
   padding-top: 2rem;
-  padding: 1.25rem;
-  width: 120px;
+  /* padding: 1.25rem; */
+  width: 100px;
 }
 
-.sidebar > img {
+.controller {
   position: absolute;
   cursor: pointer;
   right: 0;
   /* transform: translate(50%, 0); */
   top: 6.25rem;
   width: 3.75rem;
-  border: 2px solid purple;
+  /* border: 2px solid var(--color-brand--2); */
   border-radius: 50%;
+  width: 25px;
+  /* transition: fill 0.3s ease; */
 }
 
 .norotate {

@@ -1,4 +1,4 @@
-import { LoadingBarContextType } from "../hooks/LoadingBarContext";
+import { LoadingBarContextType } from '../contexts/LoadingBarContext';
 
 export function handleLoadingBar(loadingBarRef: LoadingBarContextType | null) {
   loadingBarRef?.current?.staticStart();

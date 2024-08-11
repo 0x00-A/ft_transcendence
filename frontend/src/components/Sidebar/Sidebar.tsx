@@ -1,21 +1,23 @@
-import { NavLink } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import css from './Sidebar.module.css';
-import { LuArrowLeftCircle } from 'react-icons/lu';
-import ControlSVG from '/icons/vector.svg';
-import { useState } from 'react';
+import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
+import { useSidebar } from '../../contexts/SidebarContext';
+// import { CiLogout } from 'react-icons/ci';
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(true);
+  const { open, setOpen } = useSidebar();
   return (
     <aside className={`${css.sidebar} ${open ? '' : css.closed}`}>
       <img
-        className={`${open ? css.norotate : css.rotate}`}
+        className={`${open ? css.norotate : css.rotate} ${css.controller}`}
         onClick={() => setOpen((open) => !open)}
-        src={ControlSVG}
-        alt=""
+        src="/icons/menu/control.svg"
       />
-      <Logo style={open ? '' : css.small} />
+
+      <div className={css.logo}>
+        <Logo style={`${open ? '' : css.small} ${css.center}`} />
+      </div>
+      <SidebarMenu />
       {/* <nav className={css.nav}>
         <div>
           <Logo />
