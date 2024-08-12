@@ -1,0 +1,47 @@
+/* * {
+    background-color: #283245
+} */
+
+html, body {
+    background-color: #283245;
+}
+
+.modal {
+    background-color: #0E1725;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    height: 85%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px white solid;
+    padding: 20px;
+}
+
+.imageBox {
+    width: 48%;
+    height: 95%;
+    border: 1px white solid;
+    border-radius: 10px;
+}
+
+.formBox {
+    width: 48%;
+    height: 95%;
+    border: 1px white solid;
+    border-radius: 10px;
+}
+
+.welcome {
+    color: azure;
+    text-align: center;
+}
+
+.inputs {
+    padding-top: 25px;
+}

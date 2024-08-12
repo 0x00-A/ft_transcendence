@@ -20,7 +20,7 @@ import Settings from './pages/Settings/Settings';
 import Sidebar from './components/Sidebar/Sidebar';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
-import Signup from './pages/Signup';
+import Signup from './pages/Auth/Signup';
 
 function App() {
   return (
