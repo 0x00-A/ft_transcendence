@@ -3,11 +3,11 @@
 } */
 
 html, body {
-    background-color: #283245;
+    background-color: var(--color-dark--1);
 }
 
 .modal {
-    background-color: #0E1725;
+    background-color: var(--color-dark--1);
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -44,4 +44,9 @@ html, body {
 
 .inputs {
     padding-top: 25px;
+    position: absolute;
+}
+
+.icons {
+    
 }

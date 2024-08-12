@@ -2,6 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client';
 import css from './Signup.module.css'
 import UserIcon from '../../../public/icons/login/bx-user.svg';
+import { FaRegUser } from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
+import { FaEnvelope } from "react-icons/fa";
 
 const Signup = () => {
   return (
@@ -16,9 +19,11 @@ const Signup = () => {
               <p>create your account and enjoy the game</p>
             </div>
             <div className={css.inputs}>
-              <img src={UserIcon} alt="" />
+              <FaRegUser color='#f8f3e3' className={css.icons}/>
               <input type="text" name="" id="" placeholder='username'/>
+              <FaEnvelope color='#f8f3e3' className={css.icons}/>
               <input type="text" placeholder='email' />
+              <FaLock color='#f8f3e3' className='icons'/>
               <input type="text" placeholder='password' />
             </div>
           </form>
