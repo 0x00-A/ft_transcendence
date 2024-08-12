@@ -6,8 +6,6 @@
   /* padding: 10px 20px; */
 }
 
-.button {
-}
 .iconButton {
   position: relative;
   display: flex;
@@ -23,7 +21,8 @@
 }
 
 .iconButton:hover {
-  background-color: #575757;
+  /* background-color: #575757; */
+  transform: scale(1.1);
 }
 
 .counter {
@@ -37,6 +36,7 @@
   transform: translate(15px, -10px);
   border-radius: 50%;
   background-color: var(--color-brand--1);
+  border: 1px solid #000000;
 }
 
 .userAccount {
@@ -44,12 +44,23 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  cursor: pointer;
 }
 
 .userName {
   color: var(--color-light--1);
+  cursor: pointer;
 }
-
+.userName:hover {
+  /* color: #007bff;
+  text-shadow: 1px 1px 5px rgba(0, 123, 255, 0.7); */
+  text-decoration: underline;
+  transform: scale(1.1);
+}
+.userIcon:hover {
+  transform: scale(1.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
+}
 .userIcon {
   width: 40px;
   border-radius: 50%;
