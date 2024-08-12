@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   return (
     <main className={css.container}>
-      <p>Main app</p>
+      <div className={css.lobby}></div>
     </main>
   );
 };

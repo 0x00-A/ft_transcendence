@@ -1,2 +1,12 @@
 .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lobby {
+  margin-top: 20px;
+  width: 75%;
+  height: 90vh;
+  background-color: var(--color-dark--1);
 }

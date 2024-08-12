@@ -25,8 +25,6 @@
 
   color: var(--color-light--1);
   text-decoration: none;
-
-  /* border: 1px solid red; */
 }
 
 /* @keyframes fade-inout {
@@ -40,8 +38,6 @@
 
 .menu li a p {
   position: absolute;
-  /* transform: translate(50px, 0); */
-  /* animation: fade-inout 2s; */
 }
 
 .menu li {
@@ -49,10 +45,7 @@
 }
 
 .activeTab {
-  /* border: 1px solid red; */
   border-right: 3px solid var(--color-active);
-  /* margin-top: 10px !important; */
-  /* margin-bottom: 10px !important; */
   font-weight: 600 !important;
   font-size: 1.8rem !important;
 }
@@ -89,3 +82,7 @@
 /* .menu img {
   padding: 5px;
 } */
+
+.resize a {
+  padding: 20px !important;
+}

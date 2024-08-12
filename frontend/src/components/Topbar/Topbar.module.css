@@ -1,9 +1,56 @@
-.Topbar {
+.topbar {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  /* padding: 10px 20px; */
 }
 
+.button {
+}
 .iconButton {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background-color: #575757;
 }
 
 .counter {
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  transform: translate(15px, -10px);
+  border-radius: 50%;
+  background-color: var(--color-brand--1);
+}
+
+.userAccount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.userName {
+  color: var(--color-light--1);
+}
+
+.userIcon {
+  width: 40px;
+  border-radius: 50%;
 }
