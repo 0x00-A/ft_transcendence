@@ -1,7 +1,7 @@
 .sidebar {
   position: relative;
   height: 100vh;
-  width: 350px;
+  width: 300px;
   background-color: var(--color-dark--1);
   /* color: white; */
   /* padding: 15px; */
@@ -16,7 +16,7 @@
   justify-content: center;
   align-items: center;
   /* border-bottom: 1px solid white; */
-  padding-bottom: 30px;
+  /* padding-bottom: 10%; */
   /* transition: fill 0.3s ease;
 
   transition-duration: 300ms; */
@@ -70,6 +70,47 @@
 
 .rotate {
   transform: translate(50%, 0) rotate(180deg);
+}
+
+.logout {
+  display: flex;
+  position: relative;
+  gap: 20px;
+  align-items: center;
+  font-weight: 400;
+  font-size: 1.6rem;
+  padding: 20px 30px;
+  margin: 0;
+
+  color: var(--color-light--1);
+  text-decoration: none;
+  cursor: pointer;
+}
+.logout:hover {
+  background-color: #575757;
+  border-radius: 4px;
+}
+.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.logout > p {
+  position: absolute;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.open {
+  opacity: 1;
+  transform: translate(50px, 0);
+  transition:
+    opacity 1s ease,
+    transform 0.5s ease;
 }
 
 /* .sidebar nav ul li a:hover {
