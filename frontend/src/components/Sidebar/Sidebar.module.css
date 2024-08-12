@@ -11,21 +11,38 @@
   padding-top: 2rem;
 }
 
-.logo {
+.logoBox {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid white;
+  /* border-bottom: 1px solid white; */
   padding-bottom: 30px;
   /* transition: fill 0.3s ease;
 
   transition-duration: 300ms; */
+  /* border-image: linear-gradient(to right, var(--color-dark--1) 0%, red 100%) 1;
+  border-radius: 5px;
+  border-width: 4px;
+  border-style: solid;
+  border-top: none;
+  border-left: none;
+  border-right: none; */
 }
 
-.small {
-  /* transition-duration: 300ms; */
+/* .logo::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, white, transparent);
+} */
 
-  height: 50px;
+.small {
+  height: 40px;
+
+  /* transition-duration: 2s; */
 }
 
 .closed {
@@ -53,33 +70,6 @@
 
 .rotate {
   transform: translate(50%, 0) rotate(180deg);
-}
-
-.nav {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-right: 1px solid currentColor;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.nav > div {
-  padding: 1rem;
-  padding-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav > div > button {
-  padding: 0.375rem;
-  border-radius: 0.5rem;
-  background-color: #f9fafb;
-}
-
-.nav > div > button:hover {
-  background-color: #f3f4f6;
 }
 
 /* .sidebar nav ul li a:hover {

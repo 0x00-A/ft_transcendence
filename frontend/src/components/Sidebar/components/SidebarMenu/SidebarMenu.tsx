@@ -20,7 +20,7 @@ export const SidebarMenu = () => {
             to={item.path}
           >
             {location.pathname === item.path ? item.activeIcon : item.icon}
-            <p className={`${open ? '' : css.hidden}`}>{item.title}</p>
+            <p className={`${open ? css.open : css.hidden}`}>{item.title}</p>
           </NavLink>
         </li>
       ))}

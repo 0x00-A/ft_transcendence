@@ -14,7 +14,7 @@ export default function Sidebar() {
         src="/icons/menu/control.svg"
       />
 
-      <div className={css.logo}>
+      <div className={css.logoBox}>
         <Logo style={`${open ? '' : css.small} ${css.center}`} />
       </div>
       <SidebarMenu />
