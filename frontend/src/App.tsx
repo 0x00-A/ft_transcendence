@@ -21,6 +21,7 @@ import Sidebar from './components/Sidebar/Sidebar';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 import Signup from './pages/Signup';
+import Topbar from './components/Topbar/Topbar';
 
 function App() {
   return (
@@ -55,6 +56,9 @@ function AppContent() {
         <Sidebar />
       )}
       <div className="main-content">
+        {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
+          <Topbar />
+        )}
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/games" element={<Games />} />

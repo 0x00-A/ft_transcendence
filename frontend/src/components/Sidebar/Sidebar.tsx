@@ -5,7 +5,7 @@ import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
 // import { useSidebar } from '../../contexts/SidebarContext';
 import { useState } from 'react';
 // import { CiLogout } from 'react-icons/ci';
-import { IoLogOut } from 'react-icons/io5';
+import { IoLogOut, IoSettings } from 'react-icons/io5';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function Sidebar() {
