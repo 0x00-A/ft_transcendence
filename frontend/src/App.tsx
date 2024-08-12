@@ -1,5 +1,9 @@
-import { BrowserRouter, Link, Route, Router, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import PageNotFound from './pages/PageNotFound';
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
@@ -13,33 +17,42 @@ import Search from './pages/Search/Search';
 import Leaderboard from './pages/Leaderboard/Leaderboard';
 import Store from './pages/Store/Store';
 import Settings from './pages/Settings/Settings';
-import { SidebarProvider } from './contexts/SidebarContext';
+import Sidebar from './components/Sidebar/Sidebar';
+import './App.css';
 
 function App() {
   return (
-    <>
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+function AppContent() {
+  const hideSidebarRoutes = ['/login', '/signup', 'default'];
+  const location = useLocation();
+
+  return (
+    <div className="app-container">
       {/* <PreLoader /> */}
-      <div>
-        <SidebarProvider>
-          <LoadingBarProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/games" element={<Games />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/friends" element={<Friends />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/store" element={<Store />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="*" element={<PageNotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </LoadingBarProvider>
-        </SidebarProvider>
-      </div>
-    </>
+      {!hideSidebarRoutes.includes(location.pathname) && <Sidebar />}
+      <LoadingBarProvider>
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/games" element={<Games />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </div>
+      </LoadingBarProvider>
+    </div>
   );
 }
 
