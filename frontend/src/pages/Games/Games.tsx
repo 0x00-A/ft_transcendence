@@ -6,11 +6,12 @@ const Games = () => {
   const { isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
-    return <Navigate to="/signup" />;
+    return <Navigate to="/login" />;
   }
+
   return (
     <main className={css.container}>
-      <p>Games</p>
+      <div className={css.lobby}></div>
     </main>
   );
 };
