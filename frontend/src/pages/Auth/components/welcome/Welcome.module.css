@@ -1,0 +1,17 @@
+.welcome {
+    color: azure;
+    text-align: center;
+    border: 1px solid white;
+    box-sizing: border-box;
+    width: fit-content;
+}
+
+.welcome h1 {
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 2px;
+}   
+
+.welcome p {
+    font-size: small;
+}
