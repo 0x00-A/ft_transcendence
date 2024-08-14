@@ -4,7 +4,11 @@
   width: 300px;
   background-color: var(--color-dark--1);
   /* transition-duration: 100ms; */
-  padding-top: 2rem;
+  padding-top: 1rem;
+
+  /* min-width: 200px;
+  max-width: 300px; */
+  transition: width 0.3s ease;
 }
 
 .logoBox {
@@ -18,7 +22,7 @@
 }
 
 .closed {
-  padding-top: 2rem;
+  padding-top: 1rem;
   width: 80px;
 }
 
@@ -26,11 +30,13 @@
   position: absolute;
   cursor: pointer;
   right: 0;
-  top: 5.5rem;
+  top: 4.5rem;
   border-radius: 50%;
-  border: 1px solid #000000;
+  border: 1px solid var(--color-light--1);
+  &:hover {
+    scale: 1.1;
+  }
 }
-
 .norotate {
   width: 20px;
   transform: translate(50%, 0);
@@ -46,7 +52,7 @@
   position: relative;
   gap: 20px;
   align-items: center;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 1.6rem;
   padding: 20px 30px;
   margin: 0;
@@ -64,7 +70,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .logout > p {
   position: absolute;

@@ -1,17 +1,37 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import css from './Games.module.css';
+import FlexHeader from '../../components/Layout/FlexHeader/FlexHeader';
+import { useState } from 'react';
+import PongGame from '../../components/Game/PongGame/PongGame';
+import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
 
 const Games = () => {
   const { isLoggedIn } = useAuth();
+  const [selectedGame, SetSelectedGame] = useState(0);
 
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }
+
   return (
-    <main className={css.container}>
-      <p>Games</p>
-    </main>
+    <FlexContainer className={css.container}>
+      <FlexHeader className={css.header}>
+        <section className={css.gameSelect}>
+          <img src="/icons/pong.svg" alt="" />
+          <select name="" id="">
+            <option value="0">PingPong Game</option>
+            <option value="1">Another Game</option>
+          </select>
+        </section>
+        <section className={css.gameCoins}>
+          <p>Coins</p>
+          <p>99999999</p>
+          <img src="/icons/coins.svg" alt="" />
+        </section>
+      </FlexHeader>
+      {selectedGame === 0 && <PongGame />}
+    </FlexContainer>
   );
 };
 

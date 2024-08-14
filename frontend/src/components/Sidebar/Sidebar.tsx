@@ -1,7 +1,7 @@
 import Logo from '../Logo/Logo';
 import css from './Sidebar.module.css';
 import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoLogOut } from 'react-icons/io5';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -13,6 +13,20 @@ export default function Sidebar() {
     setIsLoggedIn(false);
     // logout logic
   }
+
+  const handleResize = () => {
+    if (window.innerWidth <= 768) {
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
     <aside className={`${css.sidebar} ${open ? '' : css.closed}`}>
       <img

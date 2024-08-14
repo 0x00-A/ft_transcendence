@@ -1,4 +1,43 @@
 .container {
-  /* height: 100vh; */
-  /* flex: 1; */
+}
+
+.header {
+  justify-content: space-between;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.gameSelect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.gameCoins {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  color: var(--color-light--1);
+}
+
+select {
+  /* width: 200px; */
+  padding-right: 10px;
+  border: none;
+  background-color: transparent;
+  color: var(--color-light--1);
+  font-size: 16px;
+  /* appearance: none; */
+  cursor: pointer;
+  outline: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+option {
+  background-color: #43506b;
 }
