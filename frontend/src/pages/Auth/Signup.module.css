@@ -17,30 +17,29 @@ body {
     background-color: var(--color-dark--1);
     width: 500px;
     height: 600px;
-    /* border: 1px solid wheat; */
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     box-sizing: border-box;
 }
 
-.signupForm {
-    border: 1px solid aliceblue;
+/*
+/* .signupForm {
+    /* border: 1px solid aliceblue; 
     display: flex;
     flex-direction: column;
     margin-top: 25px;
     width: 60%;
     height: 70%;
     align-items: center;
-    /* align-content: center; */
+    /* align-content: center; 
 }
 
 .entryArea{
-    border: 1px solid aliceblue;
+    /* border: 1px solid aliceblue; 
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     width: 85%;
     display: flex;
     flex-direction: column;
@@ -48,20 +47,20 @@ body {
 }
 
 .entryArea input {
-    /* background: #41506b; */
+    /* background: #41506b; 
     background-color: #2b4450;
     border-radius: 10px;
     border: 1px solid black;
     width: 100%;
     margin-top: 5px;
 
-    /* outline: none; */
+    /* outline: none; 
 }
 
 .entryArea input:focus {
     background-color: #497285;
     border: 2px solid black;
-    padding-left: 30px;
+    padding-left: 35px;
 }
 
 ::placeholder {
@@ -69,18 +68,80 @@ body {
     font-size: large;
 }
 
-.userIcon {
-    color: white;
+.userIcon , .emailIcon , .passIcon {
+    color: aliceblue;
     size: 2.2em;
     position: absolute;
-    top: 15%;
-    left: 5%;
+    left: 10px;
 }
 
-.label {
-    /* position: absolute; */
-    top: 20px;
+.userIcon {
+    top: 15px;
 }
+
+.emailIcon {
+    top: 62px;
+}
+
+.passIcon {
+    top: 110px;
+}
+
+.signupBtn {
+    border: 1px solid black;
+    width: 60%;
+    height: 35px;
+    border-radius: 20px;
+    background-color: #07689f;
+    color: azure;
+    font-size: large;
+    margin-bottom: 20px;
+}
+
+.signupBtn:hover {
+    background-color: #0e6ac7;
+}
+
+.line {
+    border: 1px solid white;
+    width: 50px;
+    height: 0px;
+}
+
+.orSignup {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.orSignup p {
+    font-size: small;
+    color: aliceblue;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.signGoogle {
+    position: relative;
+    display: flex;
+}
+
+.signGoogle button {
+    height: 40px;
+    width: 190px;
+    border-radius: 15px;
+    border: 1px solid black;
+    font-size: small;
+    text-align: right;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+} 
+
 
 /* .inputData {
     margin-top: 20px;
@@ -162,4 +223,5 @@ body {
     border: 2px solid white;
     width: 60%;
     padding: ;
-} */
+} 
+*/
