@@ -11,7 +11,7 @@ const Games = () => {
   const [selectedGame, SetSelectedGame] = useState(0);
 
   if (!isLoggedIn) {
-    return <Navigate to="/signup" />;
+    return <Navigate to="/login" />;
   }
 
   return (
