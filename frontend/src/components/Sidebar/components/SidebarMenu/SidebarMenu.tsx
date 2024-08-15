@@ -1,11 +1,12 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import css from './SidebarMenu.module.css';
 
 import Menus from '../../SidebarData';
 import { useState } from 'react';
 
 export const SidebarMenu = ({ open }: { open: boolean | null }) => {
-  const [activeLink, setActiveLink] = useState(0);
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState(location.pathname);
 
   return (
     <ul className={css.menu}>
@@ -13,13 +14,13 @@ export const SidebarMenu = ({ open }: { open: boolean | null }) => {
         <li
           className={`${open ? '' : css.resize}`}
           key={item.id}
-          onClick={() => setActiveLink(item.id)}
+          onClick={() => setActiveLink(item.path)}
         >
           <NavLink
-            className={`${activeLink === item.id ? css.activeTab : ''}`}
+            className={`${activeLink === item.path ? css.activeTab : ''}`}
             to={item.path}
           >
-            {activeLink === item.id ? item.activeIcon : item.icon}
+            {activeLink === item.path ? item.activeIcon : item.icon}
             <p className={`${open ? css.open : css.hidden}`}>{item.title}</p>
           </NavLink>
         </li>

@@ -3,8 +3,8 @@
   margin-top: 25px;
   /* transition-duration: 0.5s; */
   /* transition: all; */
-  /* border-image: linear-gradient(to left, var(--color-dark--1) 0%, red 100%) 1;
-  border-image: linear-gradient(to right, var(--color-dark--1) 0%, red 100%) 1;
+  /* border-image: linear-gradient(to left, var(--sidebar-surface-primary) 0%, red 100%) 1;
+  border-image: linear-gradient(to right, var(--sidebar-surface-primary) 0%, red 100%) 1;
   border-radius: 5px;
   border-width: 4px;
   border-style: solid;
@@ -23,7 +23,7 @@
   padding: 15px 30px;
   margin: 0;
 
-  color: var(--color-light--1);
+  color: var(--text-color);
   text-decoration: none;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .menu li a:hover {
-  background-color: #575757;
+  background-color: var(--sidebar-tab-hover);
 }
 
 .hidden {
