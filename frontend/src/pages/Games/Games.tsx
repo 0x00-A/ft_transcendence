@@ -5,10 +5,11 @@ import FlexHeader from '../../components/Layout/FlexHeader/FlexHeader';
 import { useState } from 'react';
 import PongGame from '../../components/Game/PongGame/PongGame';
 import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
+import BodyContainer from '../../components/Layout/BodyContainer/BodyContainer';
 
 const Games = () => {
   const { isLoggedIn } = useAuth();
-  const [selectedGame, SetSelectedGame] = useState(0);
+  const [selectedGame, SetSelectedGame] = useState('0');
 
   if (!isLoggedIn) {
     return <Navigate to="/login" />;
@@ -19,7 +20,12 @@ const Games = () => {
       <FlexHeader className={css.header}>
         <section className={css.gameSelect}>
           <img src="/icons/pong.svg" alt="" />
-          <select name="" id="">
+          <select
+            value={selectedGame}
+            onChange={(e) => {
+              SetSelectedGame(e.target.value);
+            }}
+          >
             <option value="0">PingPong Game</option>
             <option value="1">Another Game</option>
           </select>
@@ -30,7 +36,10 @@ const Games = () => {
           <img src="/icons/coins.svg" alt="" />
         </section>
       </FlexHeader>
-      {selectedGame === 0 && <PongGame />}
+      <BodyContainer className={selectedGame === '0' ? css.lobby : ''}>
+        {selectedGame === '0' && <PongGame />}
+        {selectedGame === '1' && <p>Another game</p>}
+      </BodyContainer>
     </FlexContainer>
   );
 };

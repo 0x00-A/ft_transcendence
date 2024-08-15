@@ -1,6 +1,12 @@
 // LoadingBarContext.tsx
-import { createContext, useRef, ReactNode, MutableRefObject } from "react";
-import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import {
+  createContext,
+  useRef,
+  ReactNode,
+  MutableRefObject,
+  useContext,
+} from 'react';
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 
 // context type
 export type LoadingBarContextType = MutableRefObject<LoadingBarRef | null>;
@@ -13,7 +19,7 @@ interface LoadingBarProviderProps {
 }
 
 // provider component
-const LoadingBarProvider = ({ children }: LoadingBarProviderProps) => {
+export const LoadingBarProvider = ({ children }: LoadingBarProviderProps) => {
   const loadingBarRef = useRef<LoadingBarRef>(null);
 
   return (
@@ -24,4 +30,12 @@ const LoadingBarProvider = ({ children }: LoadingBarProviderProps) => {
   );
 };
 
-export { LoadingBarContext, LoadingBarProvider };
+export const useLoadingBar = () => {
+  const context = useContext(LoadingBarContext);
+  if (!context) {
+    throw new Error('useLoadingBar must be used within a LoadingBarProvider');
+  }
+  return context;
+};
+
+// export { LoadingBarContext, LoadingBarProvider };

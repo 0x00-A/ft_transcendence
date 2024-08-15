@@ -3,24 +3,48 @@
 
 /* These CSS variables are global, so they are available in all CSS modules */
 :root {
+  --black-secondary: rgb(13, 13, 13);
+  --gray-50: #f9f9f9;
+  --gray-100: #ececec;
+  --gray-200: #e3e3e3;
+  --gray-300: #cdcdcd;
+  --gray-400: #b4b4b4;
+  --gray-500: #9b9b9b;
+  --gray-600: #676767;
+  --gray-700: #424242;
+  --gray-750: #2f2f2f;
+  --gray-800: #212121;
+  --gray-900: #171717;
+  --gray-950: #0d0d0d;
+  --red-500: #ef4444;
+  --red-700: #b91c1c;
+  --brand-purple: #ab68ff;
+
   --color-brand--1: #ff2047;
   --color-brand--2: #f8c25c;
 
-  --color-dark--0: #0e1725;
-  --color-dark--1: #1e2738;
-  --color-dark--2: #283245;
-  --color-light--1: #f8f3e3;
-
+  --text-color: #f8f3e3;
   --color-active: #d6192e;
-  --color-hover--0: #575757;
-  --color-game-header: #1d2738;
-  --color-game-mode-bg: #151e2d
-    /* --color-dark--0: #242a2e;
-  --color-dark--1: #2d3439;
-  --color-dark--2: #42484d;
-  --color-light--1: #aaa;
-  --color-light--2: #ececec;
-  --color-light--3: #d6dee0; */;
+  --color-game-mode-bg: #151e2d;
+
+  --main-surface-primary: #283245;
+  --main-surface-secondary: #1d2738;
+  --main-surface-tertiary: #0e1725;
+  --sidebar-surface-primary: #1e2738;
+  --sidebar-tab-hover: #575757;
+}
+
+[data-theme='dark'] {
+  --main-surface-primary: var(--gray-800);
+  --main-surface-secondary: var(--gray-750);
+  --main-surface-tertiary: var(--black-secondary);
+
+  --sidebar-surface-primary: var(--gray-900);
+  --sidebar-tab-hover: var(--gray-750);
+
+  --sidebar-surface-secondary: var(--gray-800);
+
+  --color-game-mode-bg: var(--gray-800);
 }
 
 * {
@@ -33,7 +57,7 @@
 html {
   font-size: 62.5%;
   box-sizing: border-box;
-  background-color: var(--color-dark--1);
+  background-color: var(--sidebar-surface-primary);
 }
 
 body {
@@ -69,7 +93,7 @@ input:focus {
 .cta:visited {
   display: inline-block;
   background-color: var(--color-brand--2);
-  color: var(--color-dark--1);
+  color: var(--sidebar-surface-primary);
   text-transform: uppercase;
   text-decoration: none;
   font-size: 1.6rem;

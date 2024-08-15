@@ -10,6 +10,6 @@
   font-weight: 600;
   height: 100vh;
   flex: 1 1 0%;
-  background-color: var(--color-dark--2);
+  background-color: var(--main-surface-primary);
   /* width: 100%; */
 }

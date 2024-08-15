@@ -6,14 +6,10 @@ const Dashboard = () => {
   const { isLoggedIn } = useAuth();
 
   if (!isLoggedIn) {
-    return <Navigate to="/signup" />;
+    return <Navigate to="/login" />;
   }
 
-  return (
-    <main className={css.container}>
-      <div className={css.lobby}></div>
-    </main>
-  );
+  return <main className={css.container}>Dashboard</main>;
 };
 
 export default Dashboard;
