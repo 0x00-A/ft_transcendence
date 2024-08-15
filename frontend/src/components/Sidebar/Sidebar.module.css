@@ -90,11 +90,9 @@
     transform 0.5s ease;
 }
 
-.padding .logout {
-  padding: 20px !important;
-}
+.padding .logout,
 .padding .darkMode {
-  padding: 20px !important;
+  padding: 15px !important;
 }
 
 /* .navigation {
