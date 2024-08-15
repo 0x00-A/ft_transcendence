@@ -1,6 +1,6 @@
-.container {
+.lobby {
+  text-align: center;
 }
-
 .header {
   justify-content: space-between;
   padding-left: 40px;
@@ -19,7 +19,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  color: var(--color-light--1);
+  color: var(--text-color);
 }
 
 select {
@@ -27,7 +27,7 @@ select {
   padding-right: 10px;
   border: none;
   background-color: transparent;
-  color: var(--color-light--1);
+  color: var(--text-color);
   font-size: 16px;
   /* appearance: none; */
   cursor: pointer;

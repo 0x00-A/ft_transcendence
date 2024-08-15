@@ -1,21 +1,25 @@
-import { PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
 import css from './GameMode.module.css';
 
 const GameMode = ({
-  children,
   title,
+  desc,
   className = '',
-}: PropsWithChildren<{ title: string; className?: string }>) => {
+}: {
+  title: string;
+  desc: string;
+  className?: string;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
-    <div
+    <li
       className={`${css.mode} ${className}`}
       onMouseEnter={() => setIsHovered((isHovered: boolean) => !isHovered)}
       onMouseLeave={() => setIsHovered((isHovered: boolean) => !isHovered)}
     >
       <p className={css.title}>{title}</p>
-      {isHovered && <p className={css.info}>{children}</p>}
-    </div>
+      {isHovered && <p className={css.info}>{desc}</p>}
+    </li>
   );
 };
 

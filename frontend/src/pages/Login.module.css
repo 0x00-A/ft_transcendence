@@ -1,12 +1,12 @@
 .login {
   margin: 2.5rem;
   padding: 2.5rem 5rem;
-  background-color: var(--color-dark--1);
+  background-color: var(--sidebar-surface-primary);
   min-height: calc(100vh - 5rem);
 }
 
 .form {
-  background-color: var(--color-dark--2);
+  background-color: var(--main-surface-primary);
   border-radius: 7px;
   padding: 2rem 3rem;
   width: 100%;
