@@ -2,11 +2,15 @@ import { NavLink, useLocation } from 'react-router-dom';
 import css from './SidebarMenu.module.css';
 
 import Menus from '../../SidebarData';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const SidebarMenu = ({ open }: { open: boolean | null }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(location.pathname);
+
+  useEffect(() => {
+    setActiveLink(location.pathname);
+  }, [location]);
 
   return (
     <ul className={css.menu}>
