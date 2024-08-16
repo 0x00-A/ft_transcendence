@@ -7,6 +7,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+import {
+  MENU_ICON_COLOR,
+  MENU_ICON_SIZE,
+  SIDEBAR_RESIZE_WIDTH,
+} from '../../config/constants';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -21,10 +26,9 @@ export default function Sidebar() {
   };
 
   const confirmLogout = () => {
-    // setIsLoggingOut(true); // Start the logout process
+    // setIsLoggingOut(true); // start logout process
     loadingBarRef.current?.continuousStart();
     setTimeout(() => {
-      // Simulate a logout process with a timeout
       // setIsLoggingOut(false)
       loadingBarRef.current?.complete();
       setIsLoggedIn(false);
@@ -37,10 +41,10 @@ export default function Sidebar() {
   };
 
   const handleResize = () => {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= SIDEBAR_RESIZE_WIDTH) {
       setOpen(false);
     }
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > SIDEBAR_RESIZE_WIDTH) {
       setOpen(true);
     }
   };
@@ -68,7 +72,7 @@ export default function Sidebar() {
         <div className={`${!open ? css.padding : ''} ${css.bottom}`}>
           <ThemeToggle className={css.darkMode} open={open}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
-            <IoLogOut size={32} color="#F8F3E3" />
+            <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
             <p className={`${open ? css.open : css.hidden}`}>Logout</p>
           </div>
         </div>
