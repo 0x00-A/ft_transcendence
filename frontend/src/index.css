@@ -89,7 +89,7 @@ input:focus {
   background-color: #fff;
 }
 
-.cta:link,
+/* .cta:link,
 .cta:visited {
   display: inline-block;
   background-color: var(--color-brand--2);
@@ -100,7 +100,7 @@ input:focus {
   font-weight: 600;
   padding: 1rem 3rem;
   border-radius: 5px;
-}
+} */
 
 /* "importCSSModule": {
     "prefix": "csm",
