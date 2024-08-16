@@ -58,14 +58,16 @@ export default function Sidebar() {
       />
 
       <div className={css.logoBox}>
-        <Logo style={`${open ? '' : css.small} ${css.center}`} />
+        <Logo style={`${open ? css.normal : css.small} ${css.center}`} />
       </div>
-      <SidebarMenu open={open} />
-      <div className={`${!open ? css.padding : ''} ${css.bottom}`}>
-        <ThemeToggle className={css.darkMode} open={open}></ThemeToggle>
-        <div className={css.logout} onClick={handleLogoutClick}>
-          <IoLogOut size={32} color="#F8F3E3" />
-          <p className={`${open ? css.open : css.hidden}`}>Logout</p>
+      <div className={css.menuBox}>
+        <SidebarMenu open={open} />
+        <div className={`${!open ? css.padding : ''} ${css.bottom}`}>
+          <ThemeToggle className={css.darkMode} open={open}></ThemeToggle>
+          <div className={css.logout} onClick={handleLogoutClick}>
+            <IoLogOut size={32} color="#F8F3E3" />
+            <p className={`${open ? css.open : css.hidden}`}>Logout</p>
+          </div>
         </div>
       </div>
       {showConfirm && (

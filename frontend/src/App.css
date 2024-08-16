@@ -12,4 +12,6 @@
   flex: 1 1 0%;
   background-color: var(--main-surface-primary);
   /* width: 100%; */
+  min-height: 100vh;
+  height: auto;
 }
