@@ -40,6 +40,9 @@ export default function Sidebar() {
     if (window.innerWidth <= 768) {
       setOpen(false);
     }
+    if (window.innerWidth > 768) {
+      setOpen(true);
+    }
   };
 
   useEffect(() => {
