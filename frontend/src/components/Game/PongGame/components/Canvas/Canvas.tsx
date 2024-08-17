@@ -1,10 +1,14 @@
 import useCanvas from '../../../../../hooks/useCanvas';
 
 const Canvas = (props) => {
-  const { draw, ...rest } = props;
-  const canvasRef = useCanvas(draw);
+  const { draw, className = '', ...rest } = props;
+  const { canvasRef, containerRef } = useCanvas(draw);
 
-  return <canvas ref={canvasRef} {...rest} />;
+  return (
+    <div ref={containerRef} className={className}>
+      <canvas ref={canvasRef} {...rest} />
+    </div>
+  );
 };
 
 export default Canvas;
