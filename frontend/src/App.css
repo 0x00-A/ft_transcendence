@@ -1,5 +1,7 @@
 .app-container {
   display: flex;
+  margin: 0;
+  padding: 0;
   /* height: 100vh; */
   /* flex: 1; */
 }
@@ -11,5 +13,13 @@
   height: 100vh;
   flex: 1 1 0%;
   background-color: var(--main-surface-primary);
-  /* width: 100%; */
+  background-color: var(--color-dark--2);
+  width: 100%;
 }
+
+
+/* .main-content {
+  display: flex;
+  background-color: var(--color-dark--2);
+  width: 100%;
+} */

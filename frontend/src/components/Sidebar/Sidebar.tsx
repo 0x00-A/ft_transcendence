@@ -54,7 +54,7 @@ export default function Sidebar() {
       <img
         className={`${open ? css.norotate : css.rotate} ${css.controller}`}
         onClick={() => setOpen((open) => !open)}
-        src="/icons/menu/control.svg"
+        src="/icons/control.svg"
       />
 
       <div className={css.logoBox}>

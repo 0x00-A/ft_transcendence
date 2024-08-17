@@ -1,5 +1,5 @@
 .authFooter {
-    border: 1px solid white;
+    /* border: 1px solid white; */
     margin-top: 30px;
     display: flex;
     justify-content: space-between;
@@ -12,3 +12,6 @@
     color: aliceblue;
 }
 
+.authFooter a {
+    /* text-decoration: none; */
+}

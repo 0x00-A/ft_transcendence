@@ -1,9 +1,9 @@
 .inputContainer {
-    display: flex;
+    /* display: flex; */
     position: relative;
     /* border: 1px solid aliceblue; */
-    margin-top: 5px;
-    width: 100%;
+    /* margin-top: 5px; */
+    width: 270px;
 
 }
 
@@ -13,7 +13,7 @@
     border-radius: 10px;
     border: none;
     outline: none;
-    padding-left: 40px;
+    padding: 15px 10px;
     width: 100%;
 }
 

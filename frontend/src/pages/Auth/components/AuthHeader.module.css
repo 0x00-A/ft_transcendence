@@ -1,13 +1,11 @@
 .authHeader {
-    color: azure;
+    color: var(--text-color);
     text-align: center;
-    box-sizing: border-box;
-    width: fit-content;
 }
 
 .authHeader h1 {
     font-size: 40px;
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
     letter-spacing: 2px;
 }
 
