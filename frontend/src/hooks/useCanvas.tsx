@@ -40,8 +40,7 @@ const useCanvas = (draw) => {
       // set a backgriund img
       // Load the image
       const backgroundImage = new Image();
-      backgroundImage.src = '/game-bg.jpg'; // Replace with your image path
-
+      backgroundImage.src = '../../public/game-bg.jpg';
       // Draw the image once it has loaded
       backgroundImage.onload = () => {
         ctx?.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
