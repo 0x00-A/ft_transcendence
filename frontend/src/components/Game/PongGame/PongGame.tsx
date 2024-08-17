@@ -22,15 +22,17 @@ const Modes = [
 const PongGame = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
 
-  const draw = (ctx, frameCount) => {
+  const draw = (ctx: CanvasRenderingContext2D, frameCount: number) => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = '#853535';
     ctx.beginPath();
-    ctx.arc(50, 100, 20 * Math.sin(frameCount * 0.05) ** 2, 0, 2 * Math.PI);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillStyle = '#050505';
+    ctx.arc(ctx.canvas.width - 20, ctx.canvas.height - 20, 20, 0, 2 * Math.PI);
     ctx.fill();
   };
 
-  if (selectedMode === 0) return <Canvas draw={draw} />;
+  if (selectedMode === 0) return <Canvas className={css.canvas} draw={draw} />;
   return (
     <>
       <div className={css.title}>

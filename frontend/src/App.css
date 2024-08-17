@@ -18,6 +18,14 @@
   height: auto;
 }
 
+/* .body-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 116px);
+} */
+
 /* .main-content {
   display: flex;
   background-color: var(--color-dark--2);

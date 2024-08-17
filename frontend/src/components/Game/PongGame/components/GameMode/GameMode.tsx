@@ -1,4 +1,4 @@
-import { Dispatch, useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import css from './GameMode.module.css';
 
 const GameMode = ({
@@ -10,7 +10,7 @@ const GameMode = ({
   title: string;
   desc: string;
   className?: string;
-  onSelect: Dispatch<React.SetStateAction<number | null>>;
+  onSelect: MouseEventHandler<HTMLLIElement>;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
