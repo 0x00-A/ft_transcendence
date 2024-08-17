@@ -6,6 +6,7 @@ import { FaMoon } from 'react-icons/fa';
 import {
   DARK_MODE_ICON_SIZE,
   MENU_ICON_COLOR,
+  MENU_ICON_SIZE,
 } from '../../../../config/constants';
 
 const ThemeToggle = ({
@@ -41,7 +42,7 @@ const ThemeToggle = ({
         <>
           <MdSunny
             color={MENU_ICON_COLOR}
-            size={DARK_MODE_ICON_SIZE}
+            size={MENU_ICON_SIZE}
             className={css['icon sun-icon']}
           />
           <p className={`${open ? css.open : css.hidden}`}>Light mode</p>
@@ -50,7 +51,7 @@ const ThemeToggle = ({
         <>
           <FaMoon
             color={MENU_ICON_COLOR}
-            size={DARK_MODE_ICON_SIZE}
+            size={MENU_ICON_SIZE}
             className={css['icon moon-icon']}
           />
           <p className={`${open ? css.open : css.hidden}`}>Dark mode</p>

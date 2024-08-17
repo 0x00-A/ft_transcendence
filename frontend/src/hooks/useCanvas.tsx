@@ -37,26 +37,18 @@ const useCanvas = (draw) => {
       // Use the container dimensions for rendering logic
       // ctx?.clearRect(0, 0, width, height);
 
-      // set a backgriund img
-      // Load the image
-      const backgroundImage = new Image();
-      backgroundImage.src = '../../public/game-bg.jpg';
-      // Draw the image once it has loaded
-      backgroundImage.onload = () => {
-        ctx?.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-      };
-
       // game rendering logic here
-      let frameCount = 0;
-      let animationFrameId: number;
-      const render = () => {
-        frameCount++;
-        draw(ctx, frameCount);
-        animationFrameId = requestAnimationFrame(render);
-      };
+      // let frameCount = 0;
+      // let animationFrameId: number;
+      // const render = () => {
+      //   frameCount++;
+      //   draw(ctx, frameCount);
+      //   animationFrameId = requestAnimationFrame(render);
+      // };
 
-      render();
-      return () => cancelAnimationFrame(animationFrameId);
+      // render();
+      draw(ctx, 1);
+      // return () => cancelAnimationFrame(animationFrameId);
     }
   }, [containerSize]);
 

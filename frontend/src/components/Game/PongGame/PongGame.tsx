@@ -23,24 +23,61 @@ const PongGame = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
 
   const draw = (ctx: CanvasRenderingContext2D, frameCount: number) => {
+    const [ball, setBall] = useState({
+      radius: 20,
+      x: ctx.canvas.width / 2,
+      y: ctx.canvas.height / 2,
+    });
+
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = '#853535';
-    ctx.beginPath();
+    const drawBall = () => {
+      ctx.beginPath();
+      ctx.fillStyle = '#050505';
+      ctx.arc(
+        ctx.canvas.width - 20,
+        ctx.canvas.height - 20,
+        20,
+        0,
+        2 * Math.PI
+      );
+      ctx.fill();
+    };
+
+    drawBall();
+
+    function onmouseDown(e: MouseEvent) {
+      console.log(e);
+    }
+    function onmouseUp(e: MouseEvent) {
+      console.log(e);
+    }
+    function onmouseMove(e: MouseEvent) {
+      console.log(e);
+    }
+
+    ctx.canvas.addEventListener('mousedown', onmouseDown);
+    ctx.canvas.addEventListener('mouseup', onmouseUp);
+    ctx.canvas.addEventListener('mousemove', onmouseMove);
+
     // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = '#050505';
-    ctx.arc(ctx.canvas.width - 20, ctx.canvas.height - 20, 20, 0, 2 * Math.PI);
-    ctx.fill();
   };
 
-  if (selectedMode === 0) return <Canvas className={css.canvas} draw={draw} />;
+  if (selectedMode === 0)
+    return (
+      <>
+        <p>Score</p>
+        <Canvas className={css.canvasContainer} draw={draw} />
+      </>
+    );
   return (
     <>
       <div className={css.title}>
         <p className={css.cornerBorder}>mode</p>
       </div>
       <ul className={css.modes}>
-        {Modes.map((m) => (
+        {Modes.map((m, i) => (
           <GameMode
+            key={i}
             onSelect={() => setSelectedMode(m.id)}
             title={m.title}
             desc={m.description}
