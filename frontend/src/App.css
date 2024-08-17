@@ -13,10 +13,10 @@
   height: 100vh;
   flex: 1 1 0%;
   background-color: var(--main-surface-primary);
-  background-color: var(--color-dark--2);
-  width: 100%;
+  /* width: 100%; */
+  min-height: 100vh;
+  height: auto;
 }
-
 
 /* .main-content {
   display: flex;

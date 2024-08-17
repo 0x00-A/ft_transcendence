@@ -22,7 +22,6 @@
 }
 
 .iconButton:hover {
-  /* background-color: var(--sidebar-tab-hover); */
   transform: scale(1.1);
 }
 
@@ -44,7 +43,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   cursor: pointer;
 }
 
@@ -52,14 +51,14 @@
   color: var(--text-color);
   cursor: pointer;
 }
-.userName:hover {
+.userAccount:hover {
   /* color: #007bff;
   text-shadow: 1px 1px 5px rgba(0, 123, 255, 0.7); */
-  text-decoration: underline;
-  transform: scale(1.1);
+  text-decoration: underline var(--text-color) 2px;
+  /* transform: scale(1.1); */
 }
 .userIcon:hover {
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
 }
 .userIcon {

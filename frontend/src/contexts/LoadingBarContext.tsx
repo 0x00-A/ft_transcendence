@@ -7,6 +7,7 @@ import {
   useContext,
 } from 'react';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
+import { LOADING_BAR_COLOR } from '../config/constants';
 
 // context type
 export type LoadingBarContextType = MutableRefObject<LoadingBarRef | null>;
@@ -25,7 +26,11 @@ export const LoadingBarProvider = ({ children }: LoadingBarProviderProps) => {
   return (
     <LoadingBarContext.Provider value={loadingBarRef}>
       {children}
-      <LoadingBar color="#f11946" waitingTime={200} ref={loadingBarRef} />
+      <LoadingBar
+        color={LOADING_BAR_COLOR}
+        waitingTime={200}
+        ref={loadingBarRef}
+      />
     </LoadingBarContext.Provider>
   );
 };
