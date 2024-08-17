@@ -26,7 +26,7 @@ const PongGame = () => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = '#853535';
     ctx.beginPath();
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.fillStyle = '#050505';
     ctx.arc(ctx.canvas.width - 20, ctx.canvas.height - 20, 20, 0, 2 * Math.PI);
     ctx.fill();
