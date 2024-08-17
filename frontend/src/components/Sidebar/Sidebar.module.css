@@ -1,6 +1,8 @@
 .sidebar {
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
+  z-index: 50;
+  /* position: fixed; */
   width: 300px;
   background-color: var(--sidebar-surface-primary);
   /* transition-duration: 100ms; */
@@ -11,14 +13,29 @@
   transition: width 0.3s ease;
 }
 
+.menuBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* min-height: 100vh; */
+
+  height: calc(100vh - 55px);
+}
+
 .logoBox {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.normal {
+  height: 45px;
+  scale: 1.4;
+}
+
 .small {
   height: 35px;
+  margin-bottom: 10px;
 }
 
 .closed {
@@ -55,7 +72,7 @@
   align-items: center;
   font-weight: 300;
   font-size: 1.6rem;
-  padding: 15px 30px;
+  padding: 15px 20px;
   margin: 0;
 
   color: var(--text-color);
@@ -68,9 +85,9 @@
   border-radius: 4px;
 }
 .bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  /* position: absolute; */
+  /* bottom: 0; */
+  /* left: 0; */
   width: 100%;
   margin-bottom: 10px;
 }
@@ -92,7 +109,7 @@
 
 .padding .logout,
 .padding .darkMode {
-  padding: 15px !important;
+  padding: 15px 20px !important;
 }
 
 /* .navigation {

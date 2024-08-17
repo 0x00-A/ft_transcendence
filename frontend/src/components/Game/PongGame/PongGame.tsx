@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import GameMode from './components/GameMode/GameMode';
 import css from './PongGame.module.css';
+import Canvas from './components/Canvas/Canvas';
 
 const Modes = [
   {
@@ -18,6 +20,17 @@ const Modes = [
 ];
 
 const PongGame = () => {
+  const [selectedMode, setSelectedMode] = useState<number | null>(null);
+
+  const draw = (ctx, frameCount) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(50, 100, 20 * Math.sin(frameCount * 0.05) ** 2, 0, 2 * Math.PI);
+    ctx.fill();
+  };
+
+  if (selectedMode === 0) return <Canvas draw={draw} />;
   return (
     <>
       <div className={css.title}>
@@ -25,7 +38,11 @@ const PongGame = () => {
       </div>
       <ul className={css.modes}>
         {Modes.map((m) => (
-          <GameMode title={m.title} desc={m.description} />
+          <GameMode
+            onSelect={() => setSelectedMode(m.id)}
+            title={m.title}
+            desc={m.description}
+          />
         ))}
       </ul>
     </>

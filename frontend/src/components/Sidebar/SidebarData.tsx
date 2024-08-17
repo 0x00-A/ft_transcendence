@@ -8,63 +8,102 @@ import {
 import { AiOutlineAppstore } from 'react-icons/ai';
 import { MdOutlineLeaderboard } from 'react-icons/md';
 import { RiSettings3Line } from 'react-icons/ri';
+import {
+  MENU_ACTIVE_ICON_COLOR,
+  MENU_ICON_COLOR,
+  MENU_ICON_SIZE,
+} from '../../config/constants';
 
 const Menus = [
   {
     id: 0,
     path: '/',
     title: 'Dashboard',
-    icon: <IoHomeOutline size={32} color={'#F8F3E3'} />,
-    activeIcon: <IoHomeOutline size={32} color={'#d6192e'} />,
+    icon: <IoHomeOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    activeIcon: (
+      <IoHomeOutline size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+    ),
   },
   {
     id: 2,
     path: '/games',
     title: 'Games',
-    icon: <IoGameControllerOutline size={32} color={'#F8F3E3'} />,
-    activeIcon: <IoGameControllerOutline size={32} color={'#d6192e'} />,
+    icon: (
+      <IoGameControllerOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+    ),
+    activeIcon: (
+      <IoGameControllerOutline
+        size={MENU_ICON_SIZE}
+        color={MENU_ACTIVE_ICON_COLOR}
+      />
+    ),
   },
   {
     id: 1,
     path: '/chat',
     title: 'Chat',
-    icon: <IoChatbubblesOutline size={32} color={'#F8F3E3'} />,
-    activeIcon: <IoChatbubblesOutline size={32} color={'#d6192e'} />,
+    icon: (
+      <IoChatbubblesOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+    ),
+    activeIcon: (
+      <IoChatbubblesOutline
+        size={MENU_ICON_SIZE}
+        color={MENU_ACTIVE_ICON_COLOR}
+      />
+    ),
   },
   {
     id: 3,
     path: '/friends',
     title: 'Friends ',
-    icon: <LiaUserFriendsSolid size={32} color={'#F8F3E3'} />,
-    activeIcon: <LiaUserFriendsSolid size={32} color={'#d6192e'} />,
+    icon: <LiaUserFriendsSolid size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    activeIcon: (
+      <LiaUserFriendsSolid
+        size={MENU_ICON_SIZE}
+        color={MENU_ACTIVE_ICON_COLOR}
+      />
+    ),
   },
   {
     id: 4,
     path: '/search',
     title: 'Search',
-    icon: <IoSearchOutline size={32} color={'#F8F3E3'} />,
-    activeIcon: <IoSearchOutline size={32} color={'#d6192e'} />,
+    icon: <IoSearchOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    activeIcon: (
+      <IoSearchOutline size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+    ),
   },
   {
     id: 5,
     path: '/store',
     title: 'Store',
-    icon: <AiOutlineAppstore size={32} color={'#F8F3E3'} />,
-    activeIcon: <AiOutlineAppstore size={32} color={'#d6192e'} />,
+    icon: <AiOutlineAppstore size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    activeIcon: (
+      <AiOutlineAppstore size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+    ),
   },
   {
     id: 6,
     path: '/leaderboard',
     title: 'Leaderboard',
-    icon: <MdOutlineLeaderboard size={32} color={'#F8F3E3'} />,
-    activeIcon: <MdOutlineLeaderboard size={32} color={'#d6192e'} />,
+    icon: (
+      <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+    ),
+    activeIcon: (
+      <MdOutlineLeaderboard
+        size={MENU_ICON_SIZE}
+        color={MENU_ACTIVE_ICON_COLOR}
+      />
+    ),
   },
   {
     id: 7,
     path: '/settings',
     title: 'Settings',
-    icon: <RiSettings3Line size={32} color={'#F8F3E3'} />,
-    activeIcon: <RiSettings3Line size={32} color={'#d6192e'} />,
+    icon: <RiSettings3Line size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    activeIcon: (
+      <RiSettings3Line size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+    ),
   },
 ];
 
