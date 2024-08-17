@@ -1,0 +1,28 @@
+.signupForm {
+    border: 1px solid aliceblue; 
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    width: 60%;
+    height: 70%;
+    align-items: center;
+    align-content: center; 
+}
+
+.entryArea{
+    border: 1px solid aliceblue; 
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    width: 60%;
+    height: 70%;
+    align-items: center;
+    align-content: center; 
+    /* border: 1px solid aliceblue; 
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    position: relative; */
+}

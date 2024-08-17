@@ -1,0 +1,33 @@
+.inputContainer {
+    display: flex;
+    position: relative;
+    /* border: 1px solid aliceblue; */
+    margin-top: 5px;
+    width: 100%;
+
+}
+
+.inputContainer input {
+    background: #41506b;
+    background-color: #2b4450;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding-left: 40px;
+    width: 100%;
+}
+
+.inputContainer img {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+}
+
+.inputContainer input:focus {
+    background-color: #497285;
+}
+
+.inputContainer input::placeholder {
+    text-align: center;
+    font-size: large;
+}

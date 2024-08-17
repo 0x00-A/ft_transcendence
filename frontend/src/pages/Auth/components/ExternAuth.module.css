@@ -1,0 +1,24 @@
+.container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    place-items: center;
+}
+
+.or {
+    display: flex;
+    place-items: center;
+    margin-bottom: 10px;
+}
+
+.or div {
+    border-bottom: 1px solid wheat;
+    width: 100px;
+    margin: 0 12px;
+}
+
+.or p {
+    font-size: small;
+    color: aliceblue;
+}
