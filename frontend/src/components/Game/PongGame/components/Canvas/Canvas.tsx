@@ -1,4 +1,5 @@
 import useCanvas from '../../../../../hooks/useCanvas';
+import css from './Canvas.module.css';
 
 const Canvas = (props) => {
   const { draw, className = '', ...rest } = props;
@@ -6,7 +7,7 @@ const Canvas = (props) => {
 
   return (
     <div ref={containerRef} className={className}>
-      <canvas ref={canvasRef} {...rest} />
+      <canvas id={css.canvas} ref={canvasRef} {...rest} />
     </div>
   );
 };
