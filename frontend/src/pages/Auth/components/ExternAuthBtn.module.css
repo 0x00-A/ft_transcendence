@@ -1,0 +1,16 @@
+.intraAuthBtn {
+    margin-top: 5px;
+    height: 40px;
+    width: 190px;
+    border-radius: 18px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: small;
+}
+
+.intraAuthBtn img {
+    width: 30px;
+    height: 30px;
+}
