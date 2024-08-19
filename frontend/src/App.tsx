@@ -51,7 +51,7 @@ function AppContent() {
   const { isLoggedIn } = useAuth();
 
   return (
-    <div className="app-container">
+    <div className="app-container ">
       {/* <PreLoader /> */}
       {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
         <Sidebar />
@@ -60,6 +60,7 @@ function AppContent() {
         {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
           <Topbar />
         )}
+        <div className="scattered-background"></div>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/games" element={<Games />} />
