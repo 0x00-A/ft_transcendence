@@ -1,7 +1,7 @@
 import css from './ChatHeader.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const ChatHeader = () => {
+const ChatHeader = ({ toggleSidebar, isExpanded }) => {
   return (
     <header className={css.chatHeader}>
       <div className={css.chatHeaderContent}>
@@ -17,8 +17,8 @@ const ChatHeader = () => {
           </div>
         </div>
         <div className={css.chatActions}>
-          <button className={css.backButton}>
-            <i className="fas fa-arrow-right"></i>
+          <button className={css.backButton} onClick={toggleSidebar}>
+            <i className={`fas ${isExpanded ? 'fa-arrow-left' : 'fa-arrow-right'}`}></i>
           </button>
         </div>
       </div>
@@ -27,3 +27,4 @@ const ChatHeader = () => {
 };
 
 export default ChatHeader;
+
