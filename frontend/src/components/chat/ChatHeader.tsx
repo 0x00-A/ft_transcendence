@@ -1,7 +1,19 @@
+import React from 'react';
 import css from './ChatHeader.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+// import { FaAngleLeft } from 'react-icons/fa6';
+// import { FaAngleRight } from 'react-icons/fa6';
+import { FaCircleInfo } from 'react-icons/fa6';
 
-const ChatHeader = ({ toggleSidebar, isExpanded }) => {
+interface ChatHeaderProps {
+  isExpanded: boolean;
+  toggleSidebar: () => void;
+}
+
+const ChatHeader: React.FC<ChatHeaderProps> = ({
+  toggleSidebar,
+  isExpanded,
+}) => {
   return (
     <header className={css.chatHeader}>
       <div className={css.chatHeaderContent}>
@@ -18,7 +30,9 @@ const ChatHeader = ({ toggleSidebar, isExpanded }) => {
         </div>
         <div className={css.chatActions}>
           <button className={css.backButton} onClick={toggleSidebar}>
-            <i className={`fas ${isExpanded ? 'fa-arrow-left' : 'fa-arrow-right'}`}></i>
+            <i>
+              <FaCircleInfo color="#F8F3E3" />
+            </i>
           </button>
         </div>
       </div>
@@ -27,4 +41,3 @@ const ChatHeader = ({ toggleSidebar, isExpanded }) => {
 };
 
 export default ChatHeader;
-
