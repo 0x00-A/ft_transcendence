@@ -4,6 +4,7 @@ import { useState } from 'react';
 import css from './Chat.module.css';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
+import SearchMessages from '../../components/chat/SearchMessages';
 
 interface SelectedMessageProps {
   avatar: string;
@@ -53,6 +54,7 @@ const Chat = () => {
   return (
     <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
       <div className={css.sidebarLeft}>
+        <SearchMessages />
         <MessageList messages={messages} onSelectMessage={setSelectedMessage} />
       </div>
       <div className={css.chatBody}>
