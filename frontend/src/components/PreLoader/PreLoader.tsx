@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-
-import preLoaderSVG from '/preLoader.svg'
-import styles from "./PreLoader.module.css";
+import { useEffect, useState } from 'react';
+import css from './pong.module.css';
 
 const PreLoader = () => {
   const [hidden, setHidden] = useState(false);
@@ -12,11 +10,21 @@ const PreLoader = () => {
     }, 3000);
   }, []);
   return (
+    // <div
+    //   className={styles.preloader}
+    //   style={{ display: hidden ? "none" : "flex" }}
+    // >
+    //   <img src={preLoaderSVG} alt="" />
+    // </div>
     <div
-      className={styles.preloader}
-      style={{ display: hidden ? "none" : "flex" }}
+      className={css.preloader}
+      style={{ display: hidden ? 'flex' : 'flex' }}
     >
-      <img src={preLoaderSVG} alt="" />
+      <div className={css.pong}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
   );
 };
