@@ -1,8 +1,5 @@
 import React from 'react';
 import css from './ChatHeader.module.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-// import { FaAngleLeft } from 'react-icons/fa6';
-// import { FaAngleRight } from 'react-icons/fa6';
 import { FaCircleInfo } from 'react-icons/fa6';
 
 interface ChatHeaderProps {
