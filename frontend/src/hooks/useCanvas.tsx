@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 
-const useCanvas = (draw) => {
+const useCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [ball, setBall] = useState({
+    radius: 20,
+    x: 50,
+    y: 50,
+  });
+  const [isDragged, setIsDragged] = useState(false);
 
   useEffect(() => {
     const updateSize = () => {
@@ -22,8 +27,8 @@ const useCanvas = (draw) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas?.getContext('2d');
+    const ctx = canvas?.getContext('2d');
+    if (canvas && ctx) {
       const { width, height } = containerSize;
 
       // Adjust for device pixel ratio
@@ -46,11 +51,36 @@ const useCanvas = (draw) => {
       //   animationFrameId = requestAnimationFrame(render);
       // };
 
+      const drawBall = () => {
+        ctx?.clearRect(0, 0, ctx?.canvas.width, ctx?.canvas.height);
+        ctx?.beginPath();
+        ctx.fillStyle = '#050505';
+        ctx?.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+        ctx?.fill();
+      };
+
+      function onmouseDown(e: MouseEvent) {
+        setIsDragged(true);
+      }
+      function onmouseUp(e: MouseEvent) {
+        setIsDragged(false);
+      }
+      function onmouseMove(e: MouseEvent) {}
+
+      ctx.canvas.addEventListener('mousedown', onmouseDown);
+      ctx.canvas.addEventListener('mouseup', onmouseUp);
+      ctx.canvas.addEventListener('mousemove', onmouseMove);
       // render();
-      draw(ctx, 1);
+      drawBall();
+
       // return () => cancelAnimationFrame(animationFrameId);
+      return () => {
+        ctx.canvas.removeEventListener('mousedown', onmouseDown);
+        ctx.canvas.removeEventListener('mouseup', onmouseUp);
+        ctx.canvas.removeEventListener('mousemove', onmouseMove);
+      };
     }
-  }, [containerSize]);
+  }, [containerSize, ball]);
 
   // useEffect(() => {
   //   const canvas = canvasRef.current;
