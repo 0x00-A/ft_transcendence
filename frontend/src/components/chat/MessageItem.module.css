@@ -1,0 +1,62 @@
+.messageItem {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--messages-item);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 30%;
+  margin-right: 10px;
+}
+
+.messageContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.time {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.messageBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.lastMessage {
+  font-size: 1rem;
+  color: var(--text-last-message);
+}
+
+.unreadCount {
+  display: flex;
+  background-color: #ff4b4b;
+  color: var(--text-color);
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}

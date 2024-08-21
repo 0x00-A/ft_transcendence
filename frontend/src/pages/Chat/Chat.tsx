@@ -3,6 +3,101 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import css from './Chat.module.css';
 import ChatHeader from '../../components/chat/ChatHeader';
+import MessageList from '../../components/chat/MessageList';
+
+const messages = [
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'Rachid el ismaili',
+    lastMessage: 'wfin akhouy l3ziz hani.....',
+    time: '21:15 PM',
+    unreadCount: 3,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'abde latif',
+    lastMessage: 'wakhdmo adrari.....',
+    time: '21:15 PM',
+    unreadCount: 99,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+    unreadCount: 1,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'imad ezaghab',
+    lastMessage: '????????????.....',
+    time: '21:15 PM',
+    unreadCount: 0,
+  },
+];
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
@@ -18,7 +113,9 @@ const Chat = () => {
 
   return (
     <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
-      <div className={css.sidebarLeft}></div>
+      <div className={css.sidebarLeft}>
+        <MessageList messages={messages} />
+      </div>
       <div className={css.chatBody}>
         <ChatHeader toggleSidebar={toggleSidebar} isExpanded={isExpanded} />
       </div>
