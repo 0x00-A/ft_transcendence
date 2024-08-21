@@ -18,6 +18,16 @@
   height: auto;
 }
 
+.custom-container {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 300px;
+  height: auto;
+  margin: 0 auto;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
 /* .body-container {
   display: flex;
   justify-content: center;
