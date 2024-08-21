@@ -1,8 +1,30 @@
+import React from 'react';
 import css from './MessageItem.module.css';
 
-const MessageItem = ({ avatar, name, lastMessage, time, unreadCount }) => {
+interface MessageItemProps {
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+const MessageItem: React.FC<MessageItemProps> = ({
+  avatar,
+  name,
+  lastMessage,
+  time,
+  unreadCount,
+  isSelected,
+  onClick,
+}) => {
   return (
-    <div className={css.messageItem}>
+    <div
+      className={`${css.messageItem} ${isSelected ? css.selected : ''}`}
+      onClick={onClick}
+    >
       <img src={avatar} alt={name} className={css.avatar} />
       <div className={css.messageContent}>
         <div className={css.messageHeader}>
@@ -11,7 +33,7 @@ const MessageItem = ({ avatar, name, lastMessage, time, unreadCount }) => {
         </div>
         <div className={css.messageBody}>
           <span className={css.lastMessage}>{lastMessage}</span>
-          {unreadCount > 0 && (
+          {unreadCount && unreadCount > 0 && (
             <span className={css.unreadCount}>{unreadCount}</span>
           )}
         </div>

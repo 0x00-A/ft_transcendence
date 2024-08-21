@@ -5,7 +5,15 @@ import css from './Chat.module.css';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
 
-const messages = [
+interface SelectedMessageProps {
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+}
+
+const messages: SelectedMessageProps[] = [
   {
     avatar: 'https://picsum.photos/200',
     name: 'Rachid el ismaili',
@@ -25,83 +33,14 @@ const messages = [
     name: 'mehadi f',
     lastMessage: 'chni 9alih.....',
     time: '21:15 PM',
-    unreadCount: 1,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'imad ezaghab',
-    lastMessage: '????????????.....',
-    time: '21:15 PM',
-    unreadCount: 0,
   },
 ];
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [selectedMessage, setSelectedMessage] =
+    useState<SelectedMessageProps | null>(null);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -114,10 +53,13 @@ const Chat = () => {
   return (
     <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
       <div className={css.sidebarLeft}>
-        <MessageList messages={messages} />
+        <MessageList messages={messages} onSelectMessage={setSelectedMessage} />
       </div>
       <div className={css.chatBody}>
-        <ChatHeader toggleSidebar={toggleSidebar} isExpanded={isExpanded} />
+        <ChatHeader
+          toggleSidebar={toggleSidebar}
+          selectedMessage={selectedMessage}
+        />
       </div>
       {!isExpanded && <div className={css.sidebarRight}></div>}
     </main>
