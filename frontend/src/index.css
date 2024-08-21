@@ -37,6 +37,7 @@
   --online-typing: #28a745;
   --chat-body: #1e2533;
   --messages-item: #31405b;
+  --selected-color: #5774a0;
 }
 
 [data-theme='dark'] {
