@@ -56,7 +56,7 @@ function AppContent() {
       {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
         <Sidebar />
       )}
-      <div className="main-content">
+      <div className="main-content custom-container">
         {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
           <Topbar />
         )}
