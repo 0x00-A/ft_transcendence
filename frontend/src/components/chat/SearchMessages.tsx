@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import css from './SearchMessages.module.css';
 import { FiSearch } from 'react-icons/fi';
 import { HiArrowLeft } from 'react-icons/hi';
 
 interface SearchMessagesProps {
   onSearch: (query: string) => void;
-  onSelectedSearch: (SelectedSearch: boolean) => void;
+  onSelectedSearch: (selectedSearch: boolean) => void;
 }
 
 const SearchMessages: React.FC<SearchMessagesProps> = ({
@@ -14,6 +14,7 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
 }) => {
   const [query, setQuery] = useState<string>('');
   const [showIcon, setShowIcon] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleInputClick = () => {
     setShowIcon(true);
@@ -31,8 +32,25 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
     onSearch(value);
   };
 
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(e.target as Node)
+    ) {
+      // onSelectedSearch(false);
+      setShowIcon(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={css.searchContainer}>
+    <div ref={containerRef} className={css.searchContainer}>
       <div className={`${css.searchBar} ${showIcon ? css.showIcon : ''}`}>
         {showIcon && (
           <HiArrowLeft className={css.arrowIcon} onClick={handleIconClick} />
