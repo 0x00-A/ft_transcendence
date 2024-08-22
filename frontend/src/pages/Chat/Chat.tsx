@@ -42,20 +42,37 @@ const Chat = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] =
     useState<SelectedMessageProps | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }
 
+  const filteredMessages = messages.filter((message) =>
+    message.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
       <div className={css.sidebarLeft}>
-        <SearchMessages />
-        <MessageList messages={messages} onSelectMessage={setSelectedMessage} />
+        <SearchMessages
+          onSearch={handleSearch}
+          onSelectedSearch={setSelectedSearch}
+        />
+        <MessageList
+          messages={selectedSearch ? filteredMessages : messages}
+          onSelectMessage={setSelectedMessage}
+          isSearchActive={selectedSearch}
+        />
       </div>
       <div className={css.chatBody}>
         <ChatHeader
