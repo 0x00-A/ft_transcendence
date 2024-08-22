@@ -38,6 +38,8 @@
   --chat-body: #1e2533;
   --messages-item: #31405b;
   --selected-color: #5774a0;
+  --search-color: #283245;
+  --icons-color: #f8f3e3;
 }
 
 [data-theme='dark'] {
