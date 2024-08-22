@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import css from './Chat.module.css';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
@@ -44,6 +44,23 @@ const Chat = () => {
     useState<SelectedMessageProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
+  const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      sidebarLeftRef.current &&
+      !sidebarLeftRef.current.contains(e.target as Node)
+    ) {
+      setSelectedSearch(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -63,7 +80,7 @@ const Chat = () => {
 
   return (
     <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
-      <div className={css.sidebarLeft}>
+      <div className={css.sidebarLeft} ref={sidebarLeftRef}>
         <SearchMessages
           onSearch={handleSearch}
           onSelectedSearch={setSelectedSearch}
@@ -72,6 +89,7 @@ const Chat = () => {
           messages={selectedSearch ? filteredMessages : messages}
           onSelectMessage={setSelectedMessage}
           isSearchActive={selectedSearch}
+          onSelectedSearch={setSelectedSearch}
         />
       </div>
       <div className={css.chatBody}>
