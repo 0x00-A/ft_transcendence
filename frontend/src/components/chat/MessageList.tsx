@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
@@ -22,7 +22,12 @@ const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
   isSearchActive,
 }) => {
-  const handleClick = (message: Message) => {
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState<
+    number | null
+  >(null);
+
+  const handleClick = (index: number, message: Message) => {
+    setSelectedMessageIndex(index);
     onSelectMessage(message);
   };
 
@@ -34,7 +39,7 @@ const MessageList: React.FC<MessageListProps> = ({
             key={index}
             avatar={message.avatar}
             name={message.name}
-            onClick={() => handleClick(message)}
+            onClick={() => handleClick(index, message)}
           />
         ) : (
           <MessageItem
@@ -44,8 +49,8 @@ const MessageList: React.FC<MessageListProps> = ({
             lastMessage={message.lastMessage}
             time={message.time}
             unreadCount={message.unreadCount}
-            isSelected={false}
-            onClick={() => handleClick(message)}
+            isSelected={index === selectedMessageIndex}
+            onClick={() => handleClick(index, message)}
           />
         )
       )}
