@@ -15,12 +15,14 @@ interface MessageListProps {
   messages: Message[];
   onSelectMessage: (message: Message) => void;
   isSearchActive: boolean;
+  onSelectedSearch: (selectedSearch: boolean) => void;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
   messages,
   onSelectMessage,
   isSearchActive,
+  onSelectedSearch,
 }) => {
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
@@ -29,6 +31,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const handleClick = (index: number, message: Message) => {
     setSelectedMessageIndex(index);
     onSelectMessage(message);
+    onSelectedSearch(false);
   };
 
   return (

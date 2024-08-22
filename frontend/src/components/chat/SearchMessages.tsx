@@ -37,7 +37,6 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
       containerRef.current &&
       !containerRef.current.contains(e.target as Node)
     ) {
-      // onSelectedSearch(false);
       setShowIcon(false);
     }
   };
