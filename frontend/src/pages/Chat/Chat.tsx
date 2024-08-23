@@ -1,7 +1,7 @@
+import css from './Chat.module.css';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState, useRef, useEffect } from 'react';
-import css from './Chat.module.css';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
 import SearchMessages from '../../components/chat/SearchMessages';
@@ -93,12 +93,25 @@ const Chat = () => {
         />
       </div>
       <div className={css.chatBody}>
-        <ChatHeader
-          toggleSidebar={toggleSidebar}
-          selectedMessage={selectedMessage}
-        />
+        {selectedMessage ? (
+          <ChatHeader
+            toggleSidebar={toggleSidebar}
+            selectedMessage={selectedMessage}
+          />
+        ) : (
+          <div className={css.noChatSelected}>
+            <img
+              src="../../../public/icons/chat/Selected.svg"
+              alt="selected"
+              className={css.noChatIcon}
+            />
+            <p>No chats selected</p>
+          </div>
+        )}
       </div>
-      {!isExpanded && <div className={css.sidebarRight}></div>}
+      {selectedMessage && !isExpanded && (
+        <div className={css.sidebarRight}></div>
+      )}
     </main>
   );
 };

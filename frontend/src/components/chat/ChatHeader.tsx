@@ -38,7 +38,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           </div>
         </div>
       ) : (
-        <div className={css.placeholderHeader}>Select a chat</div>
+        <div className={css.placeholderHeader}>No chats selected</div>
       )}
     </header>
   );
