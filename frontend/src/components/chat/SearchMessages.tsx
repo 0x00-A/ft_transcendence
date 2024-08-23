@@ -24,6 +24,7 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
   const handleIconClick = () => {
     onSelectedSearch(false);
     setShowIcon(false);
+    setQuery('');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +60,7 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
         />
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search Messages"
           value={query}
           onChange={handleInputChange}
           onClick={handleInputClick}
