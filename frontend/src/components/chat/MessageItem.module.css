@@ -1,4 +1,4 @@
-.messageItem {
+.messageItemWrapper {
   display: flex;
   align-items: center;
   padding: 10px;
@@ -6,15 +6,25 @@
   background-color: var(--messages-item);
   margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    width 0.3s ease;
+  width: 100%;
+  position: relative;
 }
 
-.messageItem:hover {
+.messageItemWrapper:hover {
   opacity: 50%;
 }
 
 .selected {
   background-color: var(--selected-color);
+}
+
+.messageItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .avatar {
@@ -68,4 +78,20 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
+}
+
+.icon {
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  margin-left: 15px;
+  font-size: 20px;
+  color: var(icons-color);
+}
+
+.messageItemWrapper:hover .icon {
+  opacity: 1;
+  transform: scale(1.3) rotate(90deg);
 }
