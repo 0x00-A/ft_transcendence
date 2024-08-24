@@ -1,5 +1,6 @@
 import React from 'react';
 import css from './MessageItem.module.css';
+import { CgMoreO } from 'react-icons/cg';
 
 interface MessageItemProps {
   avatar: string;
@@ -9,6 +10,7 @@ interface MessageItemProps {
   unreadCount?: number;
   isSelected: boolean;
   onClick: () => void;
+  onMoreClick: (position: { top: number; left: number }) => void;
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({
@@ -19,24 +21,36 @@ const MessageItem: React.FC<MessageItemProps> = ({
   unreadCount,
   isSelected,
   onClick,
+  onMoreClick,
 }) => {
+  const handleIconClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const { top, left, height } = (
+      e.currentTarget as HTMLElement
+    ).getBoundingClientRect();
+    onMoreClick({ top: top + height, left });
+  };
+
   return (
     <div
-      className={`${css.messageItem} ${isSelected ? css.selected : ''}`}
+      className={`${css.messageItemWrapper} ${isSelected ? css.selected : ''}`}
       onClick={onClick}
     >
-      <img src={avatar} alt={name} className={css.avatar} />
-      <div className={css.messageContent}>
-        <div className={css.messageHeader}>
-          <span className={css.name}>{name}</span>
-          <span className={css.time}>{time}</span>
+      <div className={css.messageItem}>
+        <img src={avatar} alt={name} className={css.avatar} />
+        <div className={css.messageContent}>
+          <div className={css.messageHeader}>
+            <span className={css.name}>{name}</span>
+            <span className={css.time}>{time}</span>
+          </div>
+          <div className={css.messageBody}>
+            <span className={css.lastMessage}>{lastMessage}</span>
+            {unreadCount && unreadCount > 0 && (
+              <span className={css.unreadCount}>{unreadCount}</span>
+            )}
+          </div>
         </div>
-        <div className={css.messageBody}>
-          <span className={css.lastMessage}>{lastMessage}</span>
-          {unreadCount && unreadCount > 0 && (
-            <span className={css.unreadCount}>{unreadCount}</span>
-          )}
-        </div>
+        <CgMoreO className={css.icon} onClick={handleIconClick} />
       </div>
     </div>
   );
