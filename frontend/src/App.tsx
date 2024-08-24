@@ -8,7 +8,9 @@ import PageNotFound from './pages/PageNotFound';
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
-import Login from './pages/Login';
+// import Login from './pages/Login';
+// import Login from './pages/Auth/Login';
+import Auth from './pages/Auth/Auth';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Games from './pages/Games/Games';
 import Chat from './pages/Chat/Chat';
@@ -22,7 +24,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 // import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
-import Signup from './pages/Auth/Signup';
+// import Signup from './pages/Auth/Signup';
 
 function App() {
   return (
@@ -69,8 +71,7 @@ function AppContent() {
           <Route path="/store" element={<Store />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
