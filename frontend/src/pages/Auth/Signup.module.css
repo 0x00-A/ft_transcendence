@@ -1,31 +1,4 @@
-
-
-/* body {
-} */
-
-.container {
-    /* background-color: var(--main-surface-primary); */
-    min-height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.boxContainer {
-    background-color: var(--main-surface-tertiary);
-    width: 500px;
-    height: 600px;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
 .entryArea {
-    /* border: 1px solid aliceblue; */
     display: flex;
     flex-direction: column;
     /* margin-top: 20px; */

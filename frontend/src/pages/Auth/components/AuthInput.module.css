@@ -14,7 +14,10 @@
     border: none;
     outline: none;
     padding: 15px 10px;
+    padding-left: 40px;
     width: 100%;
+    font-size: medium;
+
 }
 
 .inputContainer img {
@@ -28,6 +31,6 @@
 }
 
 .inputContainer input::placeholder {
-    text-align: center;
+    text-align:start;
     font-size: large;
 }

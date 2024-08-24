@@ -10,3 +10,4 @@ const AuthButton = ({children, className=''}: PropsWithChildren<{className: stri
 }
 
 export default AuthButton
+
