@@ -1,4 +1,3 @@
-// MessageList.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
@@ -37,12 +36,17 @@ const MessageList: React.FC<MessageListProps> = ({
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
   >(null);
-  const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [menuPosition, setMenuPosition] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [menuState, setMenuState] = useState<{
+    isOpen: boolean;
+    position: { top: number; left: number } | null;
+    activeIndex: number | null;
+  }>({
+    isOpen: false,
+    position: null,
+    activeIndex: null,
+  });
+  const menuRef = useRef(null);
+  const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleClick = (index: number, message: Message) => {
     setSelectedMessageIndex(index);
@@ -50,15 +54,46 @@ const MessageList: React.FC<MessageListProps> = ({
     onSelectedSearch(false);
   };
 
-  const handleMoreClick = (position: { top: number; left: number }) => {
-    setShowMenu(!showMenu);
-    setMenuPosition(position);
+  const handleMoreClick = (e: React.MouseEvent, index: number) => {
+    e.stopPropagation();
+    const { top, left, height } = (
+      e.currentTarget as HTMLElement
+    ).getBoundingClientRect();
+
+    console.log('activeIndex: ', menuState.activeIndex);
+    console.log('Index: ', index);
+    setMenuState((prevState) => {
+      if (prevState.activeIndex === index) {
+        return {
+          isOpen: !prevState.isOpen,
+          position: prevState.position,
+          activeIndex: prevState.isOpen ? null : index,
+        };
+      } else {
+        return {
+          isOpen: true,
+          position: { top: top + height, left },
+          activeIndex: index,
+        };
+      }
+    });
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+      const target = event.target as Node;
+      const isOutsideMenu =
+        menuRef.current && !menuRef.current.contains(target);
+      const isOutsideButtons = !buttonRefs.current.some(
+        (ref) => ref && ref.contains(target)
+      );
+
+      if (isOutsideMenu && isOutsideButtons) {
+        setMenuState((prevState) => ({
+          ...prevState,
+          isOpen: false,
+          activeIndex: null,
+        }));
       }
     };
 
@@ -81,22 +116,21 @@ const MessageList: React.FC<MessageListProps> = ({
         ) : (
           <MessageItem
             key={index}
-            avatar={message.avatar}
-            name={message.name}
-            lastMessage={message.lastMessage}
-            time={message.time}
-            unreadCount={message.unreadCount}
-            isSelected={index === selectedMessageIndex}
+            {...message}
+            isSelected={selectedMessageIndex === index}
             onClick={() => handleClick(index, message)}
-            onMoreClick={handleMoreClick}
+            onMoreClick={(e) => handleMoreClick(e, index)}
+            showMoreIcon={true}
+            isActive={menuState.activeIndex === index}
+            ref={(el) => (buttonRefs.current[index] = el)}
           />
         )
       )}
-      {showMenu && menuPosition && (
+      {menuState.isOpen && menuState.position && (
         <div
-          className={css.menu}
           ref={menuRef}
-          style={{ top: menuPosition.top + 28, left: menuPosition.left - 190 }}
+          className={css.menu}
+          style={{ top: menuState.position.top, left: menuState.position.left }}
         >
           <div className={css.menuItem}>
             <FaCheck /> Mark as read
@@ -106,19 +140,6 @@ const MessageList: React.FC<MessageListProps> = ({
           </div>
           <div className={css.menuItem}>
             <FaUser /> View Profile
-          </div>
-          <hr />
-          <div className={css.menuItem}>
-            <FaBan /> Block
-          </div>
-          <div className={css.menuItem}>
-            <FaArchive /> Archive chat
-          </div>
-          <div className={css.menuItem}>
-            <FaTrash /> Delete chat
-          </div>
-          <div className={css.menuItem}>
-            <FaThumbtack /> Pin chat
           </div>
         </div>
       )}
