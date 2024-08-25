@@ -52,6 +52,11 @@ const MessageList: React.FC<MessageListProps> = ({
     setSelectedMessageIndex(index);
     onSelectMessage(message);
     onSelectedSearch(false);
+    setMenuState((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      activeIndex: null,
+    }));
   };
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
