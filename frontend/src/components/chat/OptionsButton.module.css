@@ -1,0 +1,9 @@
+.optionsButton {
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 10px;
+  padding-bottom: 0;
+  border-style: none;
+}

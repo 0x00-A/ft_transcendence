@@ -5,6 +5,30 @@
   padding: 10px;
   height: 100%;
   position: relative;
+  scroll-behavior: smooth;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.messageList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messageList::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.messageList::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.messageList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.messageList {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
 .menu {
@@ -39,11 +63,4 @@
 hr {
   margin-top: 5px;
   margin-bottom: 5px;
-}
-
-.menuIcon {
-  position: absolute;
-  width: 24px; /* Adjust the width as needed */
-  height: 24px; /* Adjust the height as needed */
-  z-index: 999; /* Ensure it's above other elements */
 }
