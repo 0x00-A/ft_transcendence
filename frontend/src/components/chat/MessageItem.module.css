@@ -1,5 +1,5 @@
-/* MessageItem.module.css */
 .messageItemWrapper {
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 10px;
@@ -8,15 +8,15 @@
   margin-bottom: 10px;
   cursor: pointer;
   transition:
-    background-color 0.3s ease,
-    width 0.3s ease;
-  width: 100%;
+    background-color 1.3s ease,
+    width 1.3s ease;
   position: relative;
 }
 
 .messageItemWrapper:hover {
   opacity: 50%;
 }
+
 .selected {
   background-color: var(--selected-color);
 }
@@ -119,9 +119,9 @@
     transform: scale(1.3) rotate(180deg);
   }
   50% {
-    transform: scale(1.1) rotate(90deg);
+    transform: scale(1.3) rotate(90deg);
   }
   100% {
-    transform: scale(1.1) rotate(0deg);
+    transform: scale(1.3) rotate(0deg);
   }
 }
