@@ -1,15 +1,18 @@
+import { forwardRef } from 'react';
 import css from './MoreButton.module.css';
 
 interface MoreButtonProps {
   onClick: () => void;
 }
 
-const MoreButton: React.FC<MoreButtonProps> = ({ onClick }) => {
-  return (
-    <div className={css.moreButton} onClick={onClick}>
-      <img src="/icons/chat/more.svg" alt="Options" />
-    </div>
-  );
-};
+const MoreButton = forwardRef<HTMLDivElement, MoreButtonProps>(
+  ({ onClick }, ref) => {
+    return (
+      <div className={css.moreButton} onClick={onClick} ref={ref}>
+        <img src="/icons/chat/more.svg" alt="Options" />
+      </div>
+    );
+  }
+);
 
 export default MoreButton;
