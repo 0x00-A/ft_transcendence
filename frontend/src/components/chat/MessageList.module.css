@@ -8,7 +8,7 @@
 }
 
 .menu {
-  position: fixed;
+  position: absolute;
   background-color: var(--main-surface-primary);
   color: var(--text-color);
   border-radius: 10px;
@@ -34,4 +34,16 @@
 .menuItem svg {
   margin-right: 15px;
   font-size: 1.7rem;
+}
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.menuIcon {
+  position: absolute;
+  width: 24px; /* Adjust the width as needed */
+  height: 24px; /* Adjust the height as needed */
+  z-index: 999; /* Ensure it's above other elements */
 }

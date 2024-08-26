@@ -35,6 +35,42 @@ const messages: SelectedMessageProps[] = [
     lastMessage: 'chni 9alih.....',
     time: '21:15 PM',
   },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'mehadi f',
+    lastMessage: 'chni 9alih.....',
+    time: '21:15 PM',
+  },
 ];
 
 const Chat = () => {

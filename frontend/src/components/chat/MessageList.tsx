@@ -61,27 +61,33 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
-    const { top, left, height } = (
-      e.currentTarget as HTMLElement
-    ).getBoundingClientRect();
+    const messageListRect = e.currentTarget
+      .closest(`.${css.messageList}`)
+      ?.getBoundingClientRect();
+    const buttonRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
-    console.log('activeIndex: ', menuState.activeIndex);
-    console.log('Index: ', index);
-    setMenuState((prevState) => {
-      if (prevState.activeIndex === index) {
-        return {
-          isOpen: !prevState.isOpen,
-          position: prevState.position,
-          activeIndex: prevState.isOpen ? null : index,
-        };
+    if (messageListRect) {
+      const spaceBelow = messageListRect.bottom - buttonRect.bottom;
+      const spaceAbove = buttonRect.top - messageListRect.top;
+      const menuHeight = 400;
+
+      let top, left;
+
+      if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
+        top = buttonRect.bottom - messageListRect.top + 25;
+        left = buttonRect.left - messageListRect.left - 185;
       } else {
-        return {
-          isOpen: true,
-          position: { top: top + height, left },
-          activeIndex: index,
-        };
+        top = buttonRect.top - messageListRect.top - menuHeight + 35;
+        left = buttonRect.left - messageListRect.left - 185;
       }
-    });
+
+      setMenuState((prevState) => ({
+        isOpen: prevState.activeIndex !== index || !prevState.isOpen,
+        position: { top, left },
+        activeIndex:
+          prevState.activeIndex !== index || !prevState.isOpen ? index : null,
+      }));
+    }
   };
 
   useEffect(() => {
@@ -135,7 +141,10 @@ const MessageList: React.FC<MessageListProps> = ({
         <div
           ref={menuRef}
           className={css.menu}
-          style={{ top: menuState.position.top, left: menuState.position.left }}
+          style={{
+            top: `${menuState.position.top}px`,
+            left: `${menuState.position.left}px`,
+          }}
         >
           <div className={css.menuItem}>
             <FaCheck /> Mark as read
@@ -145,6 +154,19 @@ const MessageList: React.FC<MessageListProps> = ({
           </div>
           <div className={css.menuItem}>
             <FaUser /> View Profile
+          </div>
+          <hr />
+          <div className={css.menuItem}>
+            <FaBan /> Block
+          </div>
+          <div className={css.menuItem}>
+            <FaArchive /> Archive chat
+          </div>
+          <div className={css.menuItem}>
+            <FaTrash /> Delete chat
+          </div>
+          <div className={css.menuItem}>
+            <FaThumbtack /> Pin chat
           </div>
         </div>
       )}
