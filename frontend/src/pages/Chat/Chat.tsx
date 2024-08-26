@@ -101,7 +101,7 @@ const Chat = () => {
         ) : (
           <div className={css.noChatSelected}>
             <img
-              src="../../../public/icons/chat/Selected.svg"
+              src="/icons/chat/Selected.svg"
               alt="selected"
               className={css.noChatIcon}
             />
