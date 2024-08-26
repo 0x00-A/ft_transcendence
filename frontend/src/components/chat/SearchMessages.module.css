@@ -1,5 +1,6 @@
 .searchContainer {
   padding: 10px;
+  padding-bottom: 5px;
   /* border-radius: 10px; */
 }
 
@@ -16,13 +17,13 @@
   padding-left: 50px;
   border-radius: 20px;
   border: none;
-  background-color: var(--search-color);
+  background-color: var(--main-surface-primary);
   color: var(--text-color);
   transition: width 0.3s ease;
 }
 
 .searchInput:focus {
-  background-color: var(--search-color);
+  background-color: var(--main-surface-primary);
 }
 .shrinkWidth {
   width: 80%;

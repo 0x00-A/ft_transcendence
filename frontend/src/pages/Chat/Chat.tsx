@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
 import SearchMessages from '../../components/chat/SearchMessages';
+import OptionsButton from '../../components/chat/OptionsButton';
 
 interface SelectedMessageProps {
   avatar: string;
@@ -28,12 +29,6 @@ const messages: SelectedMessageProps[] = [
     lastMessage: 'wakhdmo adrari.....',
     time: '21:15 PM',
     unreadCount: 99,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'mehadi f',
-    lastMessage: 'chni 9alih.....',
-    time: '21:15 PM',
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -117,6 +112,7 @@ const Chat = () => {
   return (
     <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
       <div className={css.sidebarLeft} ref={sidebarLeftRef}>
+        <OptionsButton />
         <SearchMessages
           onSearch={handleSearch}
           onSelectedSearch={setSelectedSearch}
