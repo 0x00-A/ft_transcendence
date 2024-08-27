@@ -52,3 +52,16 @@
   cursor: pointer;
   margin-left: 5px;
 }
+
+.arrowIcon:hover {
+  animation: zoomIn 0.3s ease forwards;
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.3);
+  }
+}

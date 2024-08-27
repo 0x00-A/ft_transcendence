@@ -99,6 +99,7 @@
 
 .icon.active {
   display: block;
+  opacity: 50%;
   animation: reverseZoomAndRotate 0.3s ease forwards;
 }
 
