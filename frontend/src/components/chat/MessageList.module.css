@@ -1,10 +1,10 @@
 .messageList {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   padding: 10px;
   height: 100%;
-  position: relative;
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: var(--selected-color) var(--main-surface-primary);
@@ -19,13 +19,14 @@
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  width: 220px;
+  width: 200px;
 }
 
 .menuItem {
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
   cursor: pointer;
   border-radius: 10px;
   transition: background-color 0.3s ease;
@@ -37,7 +38,6 @@
 
 .menuItem svg {
   margin-right: 15px;
-  font-size: 1.7rem;
 }
 
 hr {

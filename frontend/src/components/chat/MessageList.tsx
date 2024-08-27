@@ -77,15 +77,15 @@ const MessageList: React.FC<MessageListProps> = ({
 
       if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
         top = buttonRect.bottom - messageListRect.top + 25 + scrollOffsetTop;
-        left = buttonRect.left - messageListRect.left - 185 + scrollOffsetLeft;
+        left = buttonRect.left - messageListRect.left - 165 + scrollOffsetLeft;
       } else {
         top =
           buttonRect.top -
           messageListRect.top -
           menuHeight +
-          35 +
+          105 +
           scrollOffsetTop;
-        left = buttonRect.left - messageListRect.left - 185 + scrollOffsetLeft;
+        left = buttonRect.left - messageListRect.left - 165 + scrollOffsetLeft;
       }
 
       setMenuState((prevState) => ({

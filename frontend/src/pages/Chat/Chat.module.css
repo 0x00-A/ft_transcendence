@@ -1,8 +1,15 @@
+/* .CenterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 116px);
+} */
+
 .container {
   display: flex;
+  overflow: hidden;
   height: 65vh;
   min-height: 600px;
-  overflow: hidden;
   border-radius: 20px;
   background-color: var(--main-surface-tertiary);
 }
