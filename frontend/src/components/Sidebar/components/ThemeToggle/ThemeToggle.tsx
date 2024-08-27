@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import css from './ThemeToggle.module.css';
 import { MdSunny } from 'react-icons/md';
 import { FaMoon } from 'react-icons/fa';
+import {
+  DARK_MODE_ICON_SIZE,
+  MENU_ICON_COLOR,
+} from '../../../../config/constants';
 
 const ThemeToggle = ({
   open,
@@ -35,12 +39,20 @@ const ThemeToggle = ({
     >
       {theme === 'dark' ? (
         <>
-          <MdSunny color="#f8f3e3" size={26} className={css['icon sun-icon']} />
+          <MdSunny
+            color={MENU_ICON_COLOR}
+            size={DARK_MODE_ICON_SIZE}
+            className={css['icon sun-icon']}
+          />
           <p className={`${open ? css.open : css.hidden}`}>Light mode</p>
         </>
       ) : (
         <>
-          <FaMoon color="#f8f3e3" size={26} className={css['icon moon-icon']} />
+          <FaMoon
+            color={MENU_ICON_COLOR}
+            size={DARK_MODE_ICON_SIZE}
+            className={css['icon moon-icon']}
+          />
           <p className={`${open ? css.open : css.hidden}`}>Dark mode</p>
         </>
       )}

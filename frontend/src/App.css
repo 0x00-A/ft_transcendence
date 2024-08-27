@@ -13,10 +13,28 @@
   height: 100vh;
   flex: 1 1 0%;
   background-color: var(--main-surface-primary);
-  background-color: var(--color-dark--2);
-  width: 100%;
+  /* width: 100%; */
+  min-height: 100vh;
+  height: auto;
 }
 
+.custom-container {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 300px;
+  height: auto;
+  margin: 0 auto;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* .body-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 116px);
+} */
 
 /* .main-content {
   display: flex;
