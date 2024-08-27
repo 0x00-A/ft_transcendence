@@ -42,7 +42,7 @@ const MessageList: React.FC<MessageListProps> = ({
     activeIndex: number | null;
   }>({
     isOpen: false,
-    position: null,
+    position: { top: 0, left: 0 },
     activeIndex: null,
   });
   const menuRef = useRef(null);
@@ -58,15 +58,17 @@ const MessageList: React.FC<MessageListProps> = ({
       activeIndex: null,
     }));
   };
+  const messageListRef = useRef<HTMLDivElement>(null);
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
-    const messageListRect = e.currentTarget
-      .closest(`.${css.messageList}`)
-      ?.getBoundingClientRect();
+    const messageListRect = messageListRef.current?.getBoundingClientRect();
     const buttonRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
     if (messageListRect) {
+      const scrollOffsetTop = messageListRef.current?.scrollTop || 0;
+      const scrollOffsetLeft = messageListRef.current?.scrollLeft || 0;
+
       const spaceBelow = messageListRect.bottom - buttonRect.bottom;
       const spaceAbove = buttonRect.top - messageListRect.top;
       const menuHeight = 400;
@@ -74,11 +76,16 @@ const MessageList: React.FC<MessageListProps> = ({
       let top, left;
 
       if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
-        top = buttonRect.bottom - messageListRect.top + 25;
-        left = buttonRect.left - messageListRect.left - 185;
+        top = buttonRect.bottom - messageListRect.top + 25 + scrollOffsetTop;
+        left = buttonRect.left - messageListRect.left - 185 + scrollOffsetLeft;
       } else {
-        top = buttonRect.top - messageListRect.top - menuHeight + 35;
-        left = buttonRect.left - messageListRect.left - 185;
+        top =
+          buttonRect.top -
+          messageListRect.top -
+          menuHeight +
+          35 +
+          scrollOffsetTop;
+        left = buttonRect.left - messageListRect.left - 185 + scrollOffsetLeft;
       }
 
       setMenuState((prevState) => ({
@@ -115,7 +122,7 @@ const MessageList: React.FC<MessageListProps> = ({
   }, []);
 
   return (
-    <div className={css.messageList}>
+    <div ref={messageListRef} className={css.messageList}>
       {messages.map((message, index) =>
         isSearchActive ? (
           <SearchResultItem
