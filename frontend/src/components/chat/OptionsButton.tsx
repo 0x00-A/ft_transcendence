@@ -34,6 +34,7 @@ const OptionsButton = () => {
 
   return (
     <div className={css.optionsButtonContainer}>
+      <h2>Chat</h2>
       <MoreButton ref={buttonRef} onClick={handleOptionsClick} />
       {showMenu && (
         <div ref={menuRef} className={css.menu}>
