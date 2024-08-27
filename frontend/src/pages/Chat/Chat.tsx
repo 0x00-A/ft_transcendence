@@ -56,41 +56,41 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     unreadCount: 99,
   },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-  },
+  // {
+  //   avatar: 'https://picsum.photos/200',
+  //   name: 'hex01e',
+  //   lastMessage: 'appah',
+  //   time: '21:15 PM',
+  //   unreadCount: 99,
+  // },
+  // {
+  //   avatar: 'https://picsum.photos/200',
+  //   name: 'hex01e',
+  //   lastMessage: 'appah',
+  //   time: '21:15 PM',
+  //   unreadCount: 99,
+  // },
+  // {
+  //   avatar: 'https://picsum.photos/200',
+  //   name: 'hex01e',
+  //   lastMessage: 'appah',
+  //   time: '21:15 PM',
+  //   unreadCount: 99,
+  // },
+  // {
+  //   avatar: 'https://picsum.photos/200',
+  //   name: 'hex01e',
+  //   lastMessage: 'appah',
+  //   time: '21:15 PM',
+  //   unreadCount: 99,
+  // },
+  // {
+  //   avatar: 'https://picsum.photos/200',
+  //   name: 'hex01e',
+  //   lastMessage: 'appah',
+  //   time: '21:15 PM',
+  //   unreadCount: 99,
+  // },
 ];
 
 const Chat = () => {
@@ -135,40 +135,42 @@ const Chat = () => {
   );
 
   return (
-    <main className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
-      <div className={css.sidebarLeft} ref={sidebarLeftRef}>
-        <OptionsButton />
-        <SearchMessages
-          onSearch={handleSearch}
-          onSelectedSearch={setSelectedSearch}
-        />
-        <MessageList
-          messages={selectedSearch ? filteredMessages : messages}
-          onSelectMessage={setSelectedMessage}
-          isSearchActive={selectedSearch}
-          onSelectedSearch={setSelectedSearch}
-        />
-      </div>
-      <div className={css.chatBody}>
-        {selectedMessage ? (
-          <ChatHeader
-            toggleSidebar={toggleSidebar}
-            selectedMessage={selectedMessage}
+    <main className={css.CenterContainer}>
+      <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
+        <div className={css.sidebarLeft} ref={sidebarLeftRef}>
+          <OptionsButton />
+          <SearchMessages
+            onSearch={handleSearch}
+            onSelectedSearch={setSelectedSearch}
           />
-        ) : (
-          <div className={css.noChatSelected}>
-            <img
-              src="/icons/chat/Selected.svg"
-              alt="selected"
-              className={css.noChatIcon}
+          <MessageList
+            messages={selectedSearch ? filteredMessages : messages}
+            onSelectMessage={setSelectedMessage}
+            isSearchActive={selectedSearch}
+            onSelectedSearch={setSelectedSearch}
+          />
+        </div>
+        <div className={css.chatBody}>
+          {selectedMessage ? (
+            <ChatHeader
+              toggleSidebar={toggleSidebar}
+              selectedMessage={selectedMessage}
             />
-            <p>No chats selected</p>
-          </div>
+          ) : (
+            <div className={css.noChatSelected}>
+              <img
+                src="/icons/chat/Selected.svg"
+                alt="selected"
+                className={css.noChatIcon}
+              />
+              <p>No chats selected</p>
+            </div>
+          )}
+        </div>
+        {selectedMessage && !isExpanded && (
+          <div className={css.sidebarRight}></div>
         )}
       </div>
-      {selectedMessage && !isExpanded && (
-        <div className={css.sidebarRight}></div>
-      )}
     </main>
   );
 };
