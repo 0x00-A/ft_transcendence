@@ -1,0 +1,5 @@
+.status {
+  color: green; /* Status color */
+  font-size: 0.9em;
+  margin: 5px 0;
+}
