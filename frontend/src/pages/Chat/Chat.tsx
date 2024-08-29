@@ -6,6 +6,8 @@ import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
 import SearchMessages from '../../components/chat/SearchMessages';
 import OptionsButton from '../../components/chat/OptionsButton';
+import NoChatSelected from '../../components/chat/NoChatSelected';
+import SideInfoChat from '../../components/chat/SideInfoChat';
 
 interface SelectedMessageProps {
   avatar: string;
@@ -77,20 +79,6 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     unreadCount: 99,
   },
-  // {
-  //   avatar: 'https://picsum.photos/200',
-  //   name: 'hex01e',
-  //   lastMessage: 'appah',
-  //   time: '21:15 PM',
-  //   unreadCount: 99,
-  // },
-  // {
-  //   avatar: 'https://picsum.photos/200',
-  //   name: 'hex01e',
-  //   lastMessage: 'appah',
-  //   time: '21:15 PM',
-  //   unreadCount: 99,
-  // },
 ];
 
 const Chat = () => {
@@ -157,18 +145,13 @@ const Chat = () => {
               selectedMessage={selectedMessage}
             />
           ) : (
-            <div className={css.noChatSelected}>
-              <img
-                src="/icons/chat/Selected.svg"
-                alt="selected"
-                className={css.noChatIcon}
-              />
-              <p>No chats selected</p>
-            </div>
+            <NoChatSelected />
           )}
         </div>
         {selectedMessage && !isExpanded && (
-          <div className={css.sidebarRight}></div>
+          <div className={css.sidebarRight}>
+            <SideInfoChat selectedMessage={selectedMessage} />
+          </div>
         )}
       </div>
     </main>

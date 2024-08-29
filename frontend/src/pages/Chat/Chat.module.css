@@ -34,38 +34,6 @@
   border-radius: 0 20px 20px 0;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.noChatSelected {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  text-align: center;
-  color: var(--text-color);
-}
-
-.noChatSelected p {
-  margin-top: 20px;
-  font-size: 1em;
-}
-
-.noChatSelected .noChatIcon {
-  animation: pulse 1.5s infinite ease-in-out;
-  color: var(--text-color);
-}
-
 /* .sidebarLeft {
   border-right: 1px solid #333;
 }
