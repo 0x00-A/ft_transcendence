@@ -4,6 +4,7 @@ import css from './SideInfoChat.module.css';
 import ProfileSection from './ProfileSection';
 import StatusSection from './StatusSection';
 import ButtonSection from './ButtonSection';
+import SettingsSection from './SettingsSection';
 
 interface Info {
   avatar: string;
@@ -26,6 +27,7 @@ const SideInfoChat: React.FC<SideInfoChatProps> = ({ selectedMessage }) => {
       />
       <StatusSection status="typing..." />
       <ButtonSection />
+      <SettingsSection />
     </div>
   );
 };
