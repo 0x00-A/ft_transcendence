@@ -45,6 +45,10 @@
   margin-right: 10px;
 }
 
+.Item:hover {
+  background-color: var(--selected-color);
+  border-radius: 10px;
+}
 .iconRotated {
   transform: rotate(360deg);
 }

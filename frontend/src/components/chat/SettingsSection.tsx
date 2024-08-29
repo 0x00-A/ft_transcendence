@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import css from './SettingsSection.module.css';
 import { FaBell, FaBan, FaThumbtack } from 'react-icons/fa';
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa6';
+import { FaAngleDown, FaAngleUp, FaFaceGrin } from 'react-icons/fa6';
 
 const SettingsSection: React.FC = () => {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
@@ -39,7 +39,9 @@ const SettingsSection: React.FC = () => {
         </div>
         {isCustomizeChatOpen && (
           <div className={css.sectionContent}>
-            <p>Change theme</p>
+            <div className={css.Item}>
+              <FaFaceGrin /> Change emoji
+            </div>
           </div>
         )}
       </div>
