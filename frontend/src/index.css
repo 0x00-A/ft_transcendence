@@ -24,14 +24,22 @@
   --color-brand--2: #f8c25c;
 
   --text-color: #f8f3e3;
+  --text-last-message: #999999;
   --color-active: #d6192e;
   --color-game-mode-bg: #151e2d;
-
   --main-surface-primary: #283245;
   --main-surface-secondary: #1d2738;
   --main-surface-tertiary: #0e1725;
   --sidebar-surface-primary: #1e2738;
   --sidebar-tab-hover: #575757;
+  --header-chat-body: #445c85;
+  --box-shadow: #000000;
+  --online-typing: #28a745;
+  --chat-body: #1e2533;
+  --messages-item: #31405b;
+  --selected-color: #5774a0;
+  --search-color: #283245;
+  --icons-color: #f8f3e3;
 }
 
 [data-theme='dark'] {
@@ -65,6 +73,7 @@ body {
   color: var(--text-color);
   font-weight: 400;
   line-height: 1.6;
+  background-color: var(--main-surface-primary);
 }
 
 label {
