@@ -17,11 +17,11 @@ const Login = () => {
 
   return (
     <>
-        {/* <AuthHeader
+        <AuthHeader
           title="Welcome back"
           description=""
         />
-        <form className={authCss.entryArea} onSubmit={handleSubmit}>
+        {/* <form className={authCss.entryArea} onSubmit={handleSubmit}>
           <AuthInput type="text" pHolder="username" icon={UserIcon} />
           <AuthInput type="password" pHolder="password" icon={PassIcon} />
           <AuthButton className={authCss.authBtn}>Sign in</AuthButton>
