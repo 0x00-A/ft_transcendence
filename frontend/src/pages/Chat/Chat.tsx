@@ -20,7 +20,7 @@ interface SelectedMessageProps {
 const messages: SelectedMessageProps[] = [
   {
     avatar: 'https://picsum.photos/200',
-    name: 'Rachid el ismaili',
+    name: 'oussama',
     lastMessage: 'wfin akhouy l3ziz hani.....',
     time: '21:15 PM',
     unreadCount: 3,
@@ -40,7 +40,7 @@ const messages: SelectedMessageProps[] = [
   },
   {
     avatar: 'https://picsum.photos/200',
-    name: 'Yassmine',
+    name: 'yasmine',
     lastMessage: 'nmchiw ntghdaw',
     time: '21:15 PM',
   },
@@ -60,10 +60,30 @@ const messages: SelectedMessageProps[] = [
   },
   {
     avatar: 'https://picsum.photos/200',
+    name: 'naima',
+    lastMessage: 'waa333',
+    time: '21:15 PM',
+  },
+  {
+    avatar: 'https://picsum.photos/200',
     name: 'hex01e',
     lastMessage: 'appah',
     time: '21:15 PM',
     unreadCount: 99,
+  },
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'hex01e',
+    lastMessage: 'appah',
+    time: '21:15 PM',
+    unreadCount: 99,
+  },
+  ,
+  {
+    avatar: 'https://picsum.photos/200',
+    name: 'naima',
+    lastMessage: 'waa333',
+    time: '21:15 PM',
   },
   {
     avatar: 'https://picsum.photos/200',

@@ -10,7 +10,7 @@
 .menu {
   position: absolute;
   top: 50px;
-  right: 10px;
+  right: -155px;
   background-color: var(--main-surface-primary);
   color: var(--text-color);
   border-radius: 10px;

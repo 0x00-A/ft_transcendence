@@ -66,9 +66,6 @@ const MessageList: React.FC<MessageListProps> = ({
     const buttonRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
     if (messageListRect) {
-      const scrollOffsetTop = messageListRef.current?.scrollTop || 0;
-      const scrollOffsetLeft = messageListRef.current?.scrollLeft || 0;
-
       const spaceBelow = messageListRect.bottom - buttonRect.bottom;
       const spaceAbove = buttonRect.top - messageListRect.top;
       const menuHeight = 400;
@@ -76,16 +73,11 @@ const MessageList: React.FC<MessageListProps> = ({
       let top, left;
 
       if (spaceBelow >= menuHeight || spaceBelow > spaceAbove) {
-        top = buttonRect.bottom - messageListRect.top + 25 + scrollOffsetTop;
-        left = buttonRect.left - messageListRect.left - 165 + scrollOffsetLeft;
+        top = buttonRect.bottom - messageListRect.top + 110;
+        left = buttonRect.left - messageListRect.left;
       } else {
-        top =
-          buttonRect.top -
-          messageListRect.top -
-          menuHeight +
-          105 +
-          scrollOffsetTop;
-        left = buttonRect.left - messageListRect.left - 165 + scrollOffsetLeft;
+        top = buttonRect.top - messageListRect.top - menuHeight + 190;
+        left = buttonRect.left - messageListRect.left;
       }
 
       setMenuState((prevState) => ({
@@ -144,6 +136,7 @@ const MessageList: React.FC<MessageListProps> = ({
           />
         )
       )}
+
       {menuState.isOpen && menuState.position && (
         <div
           ref={menuRef}
