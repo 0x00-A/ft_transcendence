@@ -113,6 +113,24 @@ const MessageList: React.FC<MessageListProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+    };
+
+    const currentMessageListRef = messageListRef.current;
+    if (currentMessageListRef) {
+      currentMessageListRef.addEventListener('scroll', handleScroll);
+      return () => {
+        currentMessageListRef.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [menuState.activeIndex]);
+
   return (
     <div ref={messageListRef} className={css.messageList}>
       {messages.map((message, index) =>
