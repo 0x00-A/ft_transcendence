@@ -63,24 +63,8 @@
   position: absolute;
   bottom: 30px;
   right: 87px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(0.8);
 }
-
-/* .emojiPicker::after {
-  content: '';
-  position: absolute;
-  bottom: -15px;
-  right: 24px;
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-top: 15px solid #fff;
-  transform: translateX(50%);
-} */
 
 .emojiPicker::after {
   content: '';
