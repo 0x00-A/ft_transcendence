@@ -1,31 +1,17 @@
 import { useState } from 'react';
 import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
-import Lottie from 'react-lottie';
-import animationData from './lottieflow-social-networks-16-9-000000-easey.json';
+import send from './lottieflow-social-networks-16-9-000000-easey.json';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showAnimation, setShowAnimation] = useState(false);
 
   const handleSend = () => {
     if (message.trim()) {
       console.log('Sending message:', message);
       setMessage('');
-
-      setShowAnimation(true);
-      setTimeout(() => setShowAnimation(false), 3000);
     }
-  };
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
   };
 
   return (
@@ -49,11 +35,7 @@ const MessageInput = () => {
         </button>
       </div>
       <button onClick={handleSend} className={css.sendButton}>
-        {showAnimation ? (
-          <Lottie options={defaultOptions} height={50} width={50} />
-        ) : (
-          <FaPaperPlane size={20} />
-        )}
+        <FaPaperPlane size={20} />
       </button>
     </div>
   );
