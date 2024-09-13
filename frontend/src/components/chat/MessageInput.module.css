@@ -59,29 +59,39 @@
   margin-left: 10px;
 }
 
-/* .emojiPicker {
-  position: absolute;
-  bottom: 100%;
-  left: 10px;
-  background-color: #36393f;
-  border-radius: 5px;
-  padding: 5px;
-  display: flex;
-  gap: 5px;
-  right: 65px;
-  left: 250px;
-} */
-
 .emojiPicker {
   position: absolute;
-  bottom: 20px;
-  right: 80px;
+  bottom: 30px;
+  right: 87px;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(0.8);
-  width: auto;
-  height: auto;
+}
+
+/* .emojiPicker::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  right: 24px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 15px solid #fff;
+  transform: translateX(50%);
+} */
+
+.emojiPicker::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  width: 0;
+  height: 0;
+  border: 20px solid #fff;
+  border-radius: 5px;
+  border-color: transparent white transparent transparent;
 }
 
 .emojiPicker button {
