@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
-import send from './lottieflow-social-networks-16-9-000000-easey.json';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 
 const MessageInput = () => {
   const [message, setMessage] = useState('');
@@ -14,8 +15,18 @@ const MessageInput = () => {
     }
   };
 
+  const handleEmojiClick = (emoji) => {
+    setMessage((prevMessage) => prevMessage + emoji.native);
+    setShowEmojiPicker(false);
+  };
+
   return (
     <div className={css.messageInputWrapper}>
+      {showEmojiPicker && (
+        <div className={css.emojiPicker}>
+          <Picker data={data} onEmojiSelect={handleEmojiClick} />
+        </div>
+      )}
       <div className={css.messageInputContainer}>
         <input
           type="text"
@@ -25,12 +36,12 @@ const MessageInput = () => {
           className={css.input}
         />
         <button
-          className={css.button}
+          className={css.buttonEmoji}
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
         >
           <FaSmile size={20} />
         </button>
-        <button className={css.button}>
+        <button className={css.buttonClip}>
           <FaPaperclip size={20} />
         </button>
       </div>
