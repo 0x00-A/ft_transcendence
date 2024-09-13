@@ -8,6 +8,7 @@ import SearchMessages from '../../components/chat/SearchMessages';
 import OptionsButton from '../../components/chat/OptionsButton';
 import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
+import MessageInput from '../../components/chat/MessageInput';
 
 interface SelectedMessageProps {
   avatar: string;
@@ -160,10 +161,16 @@ const Chat = () => {
         </div>
         <div className={css.chatBody}>
           {selectedMessage ? (
-            <ChatHeader
-              toggleSidebar={toggleSidebar}
-              selectedMessage={selectedMessage}
-            />
+            <>
+              <ChatHeader
+                toggleSidebar={toggleSidebar}
+                selectedMessage={selectedMessage}
+              />
+              <div className={css.messageArea}>
+                {/* Add your message list component here */}
+              </div>
+              <MessageInput />
+            </>
           ) : (
             <NoChatSelected />
           )}
