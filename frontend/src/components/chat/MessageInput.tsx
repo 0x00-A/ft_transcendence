@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
@@ -7,6 +7,7 @@ import Picker from '@emoji-mart/react';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -17,6 +18,9 @@ const MessageInput = () => {
 
   const handleEmojiClick = (emoji) => {
     setMessage((prevMessage) => prevMessage + emoji.native);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
     setShowEmojiPicker(false);
   };
 
@@ -29,6 +33,7 @@ const MessageInput = () => {
       )}
       <div className={css.messageInputContainer}>
         <input
+          ref={inputRef}
           type="text"
           placeholder="Write a message"
           value={message}
