@@ -1,0 +1,76 @@
+.messageInputWrapper {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.messageInputContainer {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #d0d8e7;
+  border-radius: 22px;
+}
+
+.input {
+  flex-grow: 1;
+  background-color: transparent;
+  color: #1e2533;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  margin: 0 10px;
+}
+
+.input::placeholder {
+  color: #1e2533;
+}
+
+.input:focus {
+  background-color: transparent;
+}
+
+.button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1e2533;
+  padding: 0 5px;
+}
+
+.sendButton {
+  background-color: #d0d8e7;
+  color: #1e2533;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.emojiPicker {
+  position: absolute;
+  bottom: 100%;
+  left: 10px;
+  background-color: #36393f;
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  gap: 5px;
+}
+
+.emojiPicker button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
