@@ -24,8 +24,13 @@ const Message: React.FC<MessageProps> = ({
       {!sender && <img src={avatar} alt="avatar" className={css.avatar} />}
       <div className={css.sideMessage}>
         <div className={css.nameAndTime}>
-          {!sender ? <span>{name} • </span> : <span> • YOU</span>}
-          <span className={css.time}>{time}</span>
+          {!sender ? (
+            <span>
+              {name} • {time}
+            </span>
+          ) : (
+            <span>{time} • YOU</span>
+          )}
         </div>
 
         <div className={css.messageBubble}>
