@@ -65,10 +65,16 @@
   text-align: right;
 } */
 
+.sender .nameAndTime {
+  justify-content: end;
+}
+.receiver .nameAndTime {
+  justify-content: start;
+}
+
 .nameAndTime {
   display: flex;
   align-items: center;
-  justify-content: end;
   font-size: 12px;
   color: var(--text-color);
   margin-right: 5px;
