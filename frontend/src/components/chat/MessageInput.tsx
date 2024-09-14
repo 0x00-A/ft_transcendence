@@ -15,7 +15,6 @@ const MessageInput = () => {
       console.log('Sending message:', message);
       setMessage('');
 
-      // Trigger flying animation
       setIsFlying(true);
       setTimeout(() => {
         setIsFlying(false);
@@ -23,7 +22,7 @@ const MessageInput = () => {
     }
   };
 
-  const handleEmojiClick = (emoji) => {
+  const handleEmojiClick = (emoji: any) => {
     setMessage((prevMessage) => prevMessage + emoji.native);
     if (inputRef.current) {
       inputRef.current.focus();
