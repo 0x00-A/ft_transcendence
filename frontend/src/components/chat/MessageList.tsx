@@ -165,26 +165,28 @@ const MessageList: React.FC<MessageListProps> = ({
           }}
         >
           <div className={css.menuItem}>
-            <FaCheck /> Mark as read
+            <FaCheck /> <span>Mark as read</span>
           </div>
           <div className={css.menuItem}>
-            <FaBell /> Mute notifications
+            <FaBell /> <span>Mute notifications</span>
           </div>
           <div className={css.menuItem}>
-            <FaUser /> View Profile
+            <FaUser /> <span>View Profile</span>
           </div>
           <hr />
           <div className={css.menuItem}>
-            <FaBan /> Block
+            <FaBan /> <span>Block</span>
           </div>
           <div className={css.menuItem}>
-            <FaArchive /> Archive chat
+            <FaArchive /> <span>Archive chat</span>
           </div>
           <div className={css.menuItem}>
-            <FaTrash /> Delete chat
+            <FaTrash />
+            <span>Delete chat</span>
           </div>
           <div className={css.menuItem}>
-            <FaThumbtack /> Pin chat
+            <FaThumbtack />
+            <span>Pin chat</span>
           </div>
         </div>
       )}
