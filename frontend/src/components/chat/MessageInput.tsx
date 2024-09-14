@@ -7,12 +7,19 @@ import Picker from '@emoji-mart/react';
 const MessageInput = () => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isFlying, setIsFlying] = useState(false); // To track animation state
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if (message.trim()) {
       console.log('Sending message:', message);
       setMessage('');
+
+      // Trigger flying animation
+      setIsFlying(true);
+      setTimeout(() => {
+        setIsFlying(false);
+      }, 1000);
     }
   };
 
@@ -44,14 +51,18 @@ const MessageInput = () => {
           className={css.buttonEmoji}
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
         >
-          <FaSmile size={20} />
+          <FaSmile size={25} />
         </button>
         <button className={css.buttonClip}>
-          <FaPaperclip size={20} />
+          <FaPaperclip size={25} />
         </button>
       </div>
-      <button onClick={handleSend} className={css.sendButton}>
-        <FaPaperPlane size={20} />
+
+      <button
+        onClick={handleSend}
+        className={`${css.sendButton} ${isFlying ? css.animateIcon : ''}`}
+      >
+        <FaPaperPlane size={25} />
       </button>
     </div>
   );
