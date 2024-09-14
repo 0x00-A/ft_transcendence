@@ -103,6 +103,47 @@ const messages: SelectedMessageProps[] = [
   },
 ];
 
+interface ChatMessage {
+  name: string;
+  content: string;
+  sender: boolean;
+  avatar: string;
+  time: string;
+}
+
+const messageschats: ChatMessage[] = [
+  {
+    name: 'rachid el ismaiyly',
+    content: 'Hey, how are you? fdjhjkdf jkdf dmgdf hg hjdf ghasfdgf dsds sd',
+    sender: false,
+    avatar: 'https://picsum.photos/200',
+    time: '21:15 PM',
+  },
+  {
+    name: 'rachid el ismaiyly',
+    content:
+      'I’m good, how about you fdjhjkdf jkdf dmgdf hg hjdf ghasfdgf dsds sd?',
+    sender: true,
+    avatar: 'https://picsum.photos/200',
+    time: '21:16 PM',
+  },
+  {
+    name: 'rachid el ismaiyly',
+    content: 'Doing well, thanks!',
+    sender: false,
+    avatar: 'https://picsum.photos/200',
+    time: '21:17 PM',
+  },
+  {
+    name: 'rachid el ismaiyly',
+    content:
+      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
+    sender: true,
+    avatar: 'https://picsum.photos/200',
+    time: '21:18 PM',
+  },
+];
+
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -111,6 +152,7 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -144,6 +186,19 @@ const Chat = () => {
     message.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleSendMessage = (newMessage: string) => {
+    if (selectedMessage) {
+      const message = {
+        name: 'You',
+        content: newMessage,
+        sender: true,
+        avatar: 'https://picsum.photos/200',
+        time: new Date().toLocaleTimeString(),
+      };
+      setChatMessages((prevMessages) => [...prevMessages, message]);
+    }
+  };
+
   return (
     <main className={css.CenterContainer}>
       <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
@@ -168,10 +223,9 @@ const Chat = () => {
                 selectedMessage={selectedMessage}
               />
               <div className={css.messageArea}>
-                {/* Add your message list component here */}
-                <MessageArea />
+                <MessageArea messages={chatMessages} />
               </div>
-              <MessageInput />
+              <MessageInput onSendMessage={handleSendMessage} />
             </>
           ) : (
             <NoChatSelected />
