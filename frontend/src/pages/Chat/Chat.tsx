@@ -9,6 +9,7 @@ import OptionsButton from '../../components/chat/OptionsButton';
 import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
 import MessageInput from '../../components/chat/MessageInput';
+import MessageArea from '../../components/chat/MessageArea';
 
 interface SelectedMessageProps {
   avatar: string;
@@ -168,6 +169,7 @@ const Chat = () => {
               />
               <div className={css.messageArea}>
                 {/* Add your message list component here */}
+                <MessageArea />
               </div>
               <MessageInput />
             </>

@@ -1,0 +1,75 @@
+.messageArea {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sideMessage {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+}
+.messageWrapper {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.sender {
+  justify-content: flex-end;
+}
+
+.receiver {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  padding: 10px;
+  background-color: #d0d8e7;
+  color: #1e2533;
+  position: relative;
+}
+
+.sender .messageBubble {
+  background-color: #5774a0;
+  border-radius: 15px 0 15px;
+  color: var(--text-color);
+}
+
+.receiver .messageBubble {
+  border-radius: 0 15px 0;
+  background-color: #31405b;
+  color: var(--text-color);
+}
+
+.time {
+  display: block;
+  font-size: 12px;
+  color: var(--text-color);
+  text-align: right;
+  margin-right: 5px;
+}
+
+.sender .time {
+  text-align: right;
+  margin-right: 5px;
+}
+.receiver .time {
+  text-align: left;
+  margin-left: 5px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.nameAndTime {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
