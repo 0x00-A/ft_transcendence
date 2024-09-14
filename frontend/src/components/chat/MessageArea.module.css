@@ -44,14 +44,6 @@
   color: var(--text-color);
 }
 
-.time {
-  display: block;
-  font-size: 12px;
-  color: var(--text-color);
-  text-align: right;
-  margin-right: 5px;
-}
-
 .sender .time {
   text-align: right;
   margin-right: 5px;
@@ -68,8 +60,16 @@
   margin-right: 10px;
 }
 
+.time {
+  display: block;
+  text-align: right;
+}
+
 .nameAndTime {
   display: flex;
   align-items: center;
+  font-size: 12px;
+  color: var(--text-color);
+  margin-right: 5px;
   margin-bottom: 2px;
 }
