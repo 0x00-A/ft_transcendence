@@ -4,15 +4,20 @@ import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
-const MessageInput = () => {
+interface MessageInputProps {
+  onSendMessage: (message: string) => void;
+}
+
+const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [isFlying, setIsFlying] = useState(false); // To track animation state
+  const [isFlying, setIsFlying] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if (message.trim()) {
       console.log('Sending message:', message);
+      onSendMessage(message);
       setMessage('');
 
       setIsFlying(true);

@@ -1,6 +1,5 @@
 import React from 'react';
 import css from './MessageArea.module.css';
-import { spawn } from 'child_process';
 
 interface MessageProps {
   name: string;
