@@ -39,18 +39,23 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        emojiRef.current &&
-        !emojiRef.current.contains(event.target as Node) &&
-        buttonEmojiRef.current &&
-        !buttonEmojiRef.current.contains(event.target as Node)
-      ) {
-        setShowEmojiPicker(false);
-      }
-    };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
+  };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      emojiRef.current &&
+      !emojiRef.current.contains(event.target as Node) &&
+      buttonEmojiRef.current &&
+      !buttonEmojiRef.current.contains(event.target as Node)
+    ) {
+      setShowEmojiPicker(false);
+    }
+  };
+  useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
@@ -72,6 +77,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
           placeholder="Write a message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
           className={css.input}
         />
         <button
