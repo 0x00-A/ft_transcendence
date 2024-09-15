@@ -1,4 +1,5 @@
 import css from './Chat.module.css';
+import moment from 'moment';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState, useRef, useEffect } from 'react';
@@ -196,7 +197,7 @@ const Chat = () => {
         content: newMessage,
         sender: true,
         avatar: 'https://picsum.photos/200',
-        time: new Date().toLocaleTimeString(),
+        time: moment().format('HH:mm A'),
       };
       setChatMessages((prevMessages) => [...prevMessages, message]);
     }
