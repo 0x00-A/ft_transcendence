@@ -67,7 +67,6 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     unreadCount: 99,
   },
-  ,
   {
     avatar: 'https://picsum.photos/200',
     name: 'naima',
