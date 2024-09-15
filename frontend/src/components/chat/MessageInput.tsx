@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
@@ -13,6 +13,8 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const emojiRef = useRef<HTMLDivElement>(null);
+  const buttonEmojiRef = useRef<HTMLButtonElement>(null);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -24,6 +26,9 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
       setTimeout(() => {
         setIsFlying(false);
       }, 1000);
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   };
 
@@ -32,13 +37,31 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-    setShowEmojiPicker(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiRef.current &&
+        !emojiRef.current.contains(event.target as Node) &&
+        buttonEmojiRef.current &&
+        !buttonEmojiRef.current.contains(event.target as Node)
+      ) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className={css.messageInputWrapper}>
       {showEmojiPicker && (
-        <div className={css.emojiPicker}>
+        <div ref={emojiRef} className={css.emojiPicker}>
           <Picker data={data} onEmojiSelect={handleEmojiClick} />
         </div>
       )}
@@ -52,6 +75,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
           className={css.input}
         />
         <button
+          ref={buttonEmojiRef}
           className={css.buttonEmoji}
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
         >
