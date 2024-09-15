@@ -24,11 +24,13 @@ const Message: React.FC<MessageProps> = ({
       <div className={css.sideMessage}>
         <div className={css.nameAndTime}>
           {!sender ? (
-            <span>
-              {name} • {time}
-            </span>
+            <div className={css.receiverInfo}>
+              <p>{name}</p> • <span>{time}</span>
+            </div>
           ) : (
-            <span>{time} • YOU</span>
+            <div className={css.senderInfo}>
+              <span>{time}</span> • <p>YOU</p>
+            </div>
           )}
         </div>
 
