@@ -39,6 +39,38 @@ const chatData: { [key: string]: ChatMessage[] } = {
       time: '21:16 PM',
     },
   ],
+  yasmine: [
+    {
+      name: 'yasmine',
+      content: 'nmchiw nt3chaw',
+      sender: false,
+      avatar: 'https://picsum.photos/200',
+      time: '21:15 PM',
+    },
+    {
+      name: 'rachid el ismaiyly',
+      content: 'after 1 mini',
+      sender: true,
+      avatar: 'https://picsum.photos/200',
+      time: '21:16 PM',
+    },
+  ],
+  'mehadi f': [
+    {
+      name: 'mehadi f',
+      content: 'Hey,  cc',
+      sender: false,
+      avatar: 'https://picsum.photos/200',
+      time: '21:15 PM',
+    },
+    {
+      name: 'rachid el ismaiyly',
+      content: 'I’m good, how abd sfsdf out you cc ?',
+      sender: true,
+      avatar: 'https://picsum.photos/200',
+      time: '21:16 PM',
+    },
+  ],
 };
 
 export default chatData;
