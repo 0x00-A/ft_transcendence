@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import css from './OptionsButton.module.css';
 import MoreButton from './MoreButton';
 import { FaArchive, FaUser } from 'react-icons/fa';
-// import { RiRadioButtonLine } from 'react-icons/ri';
 
 const OptionsButton = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);

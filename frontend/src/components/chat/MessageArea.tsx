@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 
@@ -13,11 +14,20 @@ interface MessageAreaProps {
 }
 
 const MessageArea = ({ messages }: MessageAreaProps) => {
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   return (
     <div className={css.messageArea}>
       {messages.map((message, index) => (
         <Message key={index} {...message} />
       ))}
+      <div ref={messageEndRef} />
     </div>
   );
 };

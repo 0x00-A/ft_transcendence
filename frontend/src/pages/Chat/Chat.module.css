@@ -37,7 +37,13 @@
 }
 
 .messageArea {
-  flex: 1;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+  max-height: 85%;
+  overflow-y: auto;
+}
+
+.messageArea::-webkit-scrollbar {
+  display: none;
 }
