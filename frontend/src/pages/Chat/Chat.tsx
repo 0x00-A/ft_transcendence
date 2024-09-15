@@ -112,45 +112,57 @@ interface ChatMessage {
   time: string;
 }
 
-const messageschats: ChatMessage[] = [
-  {
-    name: 'rachid el ismaiyly',
-    content: 'Hey, how are you? fdjhjkdf jkdf dmgdf hg hjdf ghasfdgf dsds sd',
-    sender: false,
-    avatar: 'https://picsum.photos/200',
-    time: '21:15 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content:
-      'I’m good, how about you fdjhjkdf jkdf dmgdf hg hjdf ghasfdgf dsds sd?',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:16 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content: 'Doing well, thanks!',
-    sender: false,
-    avatar: 'https://picsum.photos/200',
-    time: '21:17 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content:
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:18 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content: '??',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:18 PM',
-  },
-];
+const messageschats = {
+  oussama: [
+    {
+      name: 'oussama',
+      content: 'Hey, how are you?',
+      sender: false,
+      avatar: 'https://picsum.photos/200',
+      time: '21:15 PM',
+    },
+    {
+      name: 'rachid el ismaiyly',
+      content: 'I’m good, how about you?',
+      sender: true,
+      avatar: 'https://picsum.photos/200',
+      time: '21:16 PM',
+    },
+  ],
+  abdeLatif: [
+    {
+      name: 'abde latif',
+      content: 'Hey, how are you? cc',
+      sender: false,
+      avatar: 'https://picsum.photos/200',
+      time: '21:15 PM',
+    },
+    {
+      name: 'rachid el ismaiyly',
+      content: 'I’m good, how about you cc ?',
+      sender: true,
+      avatar: 'https://picsum.photos/200',
+      time: '21:16 PM',
+    },
+  ],
+};
+
+// const messageschats: ChatMessage[] = [
+//   {
+//     name: 'rachid el ismaiyly',
+//     content: 'Hey, how are you?',
+//     sender: false,
+//     avatar: 'https://picsum.photos/200',
+//     time: '21:15 PM',
+//   },
+//   {
+//     name: 'rachid el ismaiyly',
+//     content: 'I’m good, how about you?',
+//     sender: true,
+//     avatar: 'https://picsum.photos/200',
+//     time: '21:16 PM',
+//   },
+// ];
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
