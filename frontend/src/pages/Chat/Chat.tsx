@@ -169,6 +169,9 @@ const Chat = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  useEffect(() => {
+    setChatMessages(messageschats);
+  }, []);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);

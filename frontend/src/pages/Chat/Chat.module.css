@@ -36,8 +36,8 @@
   flex-direction: column;
 }
 
-/* .messageArea {
+.messageArea {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
-} */
+}
