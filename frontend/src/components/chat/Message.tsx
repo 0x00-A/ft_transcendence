@@ -41,5 +41,4 @@ const Message: React.FC<MessageProps> = ({
     </div>
   );
 };
-
 export default Message;
