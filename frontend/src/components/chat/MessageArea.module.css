@@ -32,6 +32,13 @@
   border-radius: 0 15px 15px 15px;
   background-color: #31405b;
 }
+.sender .sideMessage {
+  align-items: end;
+}
+
+.receiver .sideMessage {
+  align-items: start;
+}
 
 .sender .time {
   text-align: right;
@@ -64,7 +71,6 @@
 .nameAndTime {
   display: flex;
   align-items: center;
-  margin-right: 5px;
   margin-bottom: 2px;
 }
 

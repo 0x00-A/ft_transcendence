@@ -145,46 +145,12 @@ const messageschats: ChatMessage[] = [
   },
   {
     name: 'rachid el ismaiyly',
-    content:
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:18 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content:
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:18 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content:
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:18 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content:
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
-    sender: true,
-    avatar: 'https://picsum.photos/200',
-    time: '21:18 PM',
-  },
-  {
-    name: 'rachid el ismaiyly',
-    content:
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution',
+    content: '??',
     sender: true,
     avatar: 'https://picsum.photos/200',
     time: '21:18 PM',
   },
 ];
-
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
