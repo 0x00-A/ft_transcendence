@@ -14,7 +14,8 @@
 }
 
 .messageItemWrapper:hover {
-  opacity: 30%;
+  /* opacity: 30%; */
+  background-color: #1e2533;
 }
 
 .selected {
