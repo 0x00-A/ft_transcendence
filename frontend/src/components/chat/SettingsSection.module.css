@@ -33,12 +33,16 @@
 }
 
 .Item {
+  border-radius: 10px;
   font-size: 1.5rem;
   display: flex;
   align-items: center;
   padding: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  box-shadow: inset 0 0 0 0 var(--selected-color);
+  transition:
+    color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
 }
 
 .Item svg {
@@ -46,8 +50,8 @@
 }
 
 .Item:hover {
-  background-color: var(--selected-color);
-  border-radius: 10px;
+  color: var(--text-color);
+  box-shadow: inset 250px 0 0 0 var(--selected-color);
 }
 .iconRotated {
   transform: rotate(360deg);
