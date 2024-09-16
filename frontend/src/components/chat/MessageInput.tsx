@@ -25,7 +25,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
       setIsFlying(true);
       setTimeout(() => {
         setIsFlying(false);
-      }, 1000);
+      }, 500);
       if (inputRef.current) {
         inputRef.current.focus();
       }
