@@ -18,6 +18,8 @@ interface Message {
   lastMessage: string;
   time: string;
   unreadCount?: number;
+  status: 'online' | 'offline' | 'typing';
+  lastSeen?: string;
 }
 
 interface MessageListProps {

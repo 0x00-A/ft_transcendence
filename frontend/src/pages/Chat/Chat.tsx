@@ -20,6 +20,8 @@ interface SelectedMessageProps {
   lastMessage: string;
   time: string;
   unreadCount?: number;
+  status: 'online' | 'offline' | 'typing';
+  lastSeen?: string;
 }
 interface ChatMessage {
   name: string;
