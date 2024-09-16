@@ -91,6 +91,25 @@
   position: relative;
 }
 
+.sendEmoji {
+  display: flex;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  margin-left: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.sendEmoji span {
+  font-size: 35px;
+}
+.sendEmoji span:hover {
+  transform: scale(1.2);
+}
 .sendButton.animateIcon {
   animation: flyAway 0.5s ease forwards;
 }
