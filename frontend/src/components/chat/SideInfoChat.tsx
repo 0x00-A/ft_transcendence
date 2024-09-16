@@ -9,9 +9,8 @@ import SettingsSection from './SettingsSection';
 interface Info {
   avatar: string;
   name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
+  status: 'online' | 'offline' | 'typing';
+  lastSeen?: string;
 }
 
 interface SideInfoChatProps {
@@ -25,7 +24,7 @@ const SideInfoChat: React.FC<SideInfoChatProps> = ({ selectedMessage }) => {
         avatarUrl={selectedMessage.avatar}
         name={selectedMessage.name}
       />
-      <StatusSection status="typing..." />
+      <StatusSection status={selectedMessage} />
       <ButtonSection />
       <SettingsSection />
     </div>

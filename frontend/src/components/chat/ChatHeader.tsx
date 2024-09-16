@@ -7,6 +7,8 @@ interface ChatHeaderProps {
   selectedMessage: {
     avatar: string;
     name: string;
+    status: 'online' | 'offline' | 'typing';
+    lastSeen?: string;
   } | null;
 }
 
@@ -14,6 +16,23 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   toggleSidebar,
   selectedMessage,
 }) => {
+  const renderUserStatus = () => {
+    if (!selectedMessage) return null;
+
+    switch (selectedMessage.status) {
+      case 'online':
+        return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
+      case 'typing':
+        return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
+      case 'offline':
+        return (
+          <p className={`${css.userStatus} ${css.offline}`}>
+            Last seen at {selectedMessage.lastSeen}
+          </p>
+        );
+    }
+  };
+
   return (
     <header className={css.chatHeader}>
       {selectedMessage ? (
@@ -26,7 +45,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
             />
             <div className={css.userDetails}>
               <h2 className={css.userName}>{selectedMessage.name}</h2>
-              <p className={css.userStatus}>Typing...</p>
+              {renderUserStatus()}
             </div>
           </div>
           <div className={css.chatActions}>

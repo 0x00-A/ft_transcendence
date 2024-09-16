@@ -1,5 +1,11 @@
-.status {
-  color: green; /* Status color */
-  font-size: 0.9em;
-  margin: 5px 0;
+.online {
+  color: green;
+}
+
+.typing {
+  color: green;
+}
+
+.offline {
+  color: #f8f3e3b0;
 }
