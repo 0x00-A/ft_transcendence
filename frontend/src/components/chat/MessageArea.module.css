@@ -1,0 +1,103 @@
+.sideMessage {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.messageWrapper {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.sender {
+  justify-content: flex-end;
+}
+
+.receiver {
+  justify-content: flex-start;
+}
+
+.messageBubble {
+  padding: 10px;
+  color: var(--text-color);
+  position: relative;
+}
+
+.sender .messageBubble {
+  background-color: #5774a0;
+  border-radius: 15px 0 15px 15px;
+}
+
+.receiver .messageBubble {
+  border-radius: 0 15px 15px 15px;
+  background-color: #31405b;
+}
+.sender .sideMessage {
+  align-items: end;
+}
+
+.receiver .sideMessage {
+  align-items: start;
+}
+
+.sender .time {
+  text-align: right;
+  margin-right: 5px;
+}
+.receiver .time {
+  text-align: left;
+  margin-left: 5px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* .time {
+  display: block;
+  text-align: right;
+} */
+
+.sender .nameAndTime {
+  justify-content: end;
+}
+.receiver .nameAndTime {
+  justify-content: start;
+}
+
+.nameAndTime {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.receiverInfo,
+.senderInfo {
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+}
+
+.receiverInfo p {
+  font-size: 13px;
+  margin-right: 5px;
+}
+.receiverInfo span {
+  font-size: 8px;
+  margin-left: 5px;
+  color: #dcdee2;
+}
+.senderInfo p {
+  font-size: 13px;
+  margin-left: 5px;
+}
+.senderInfo span {
+  font-size: 8px;
+  margin-right: 5px;
+  color: #dcdee2;
+}

@@ -1,0 +1,11 @@
+.online {
+  color: green;
+}
+
+.typing {
+  color: green;
+}
+
+.offline {
+  color: #f8f3e3b0;
+}

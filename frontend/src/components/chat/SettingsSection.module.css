@@ -1,0 +1,58 @@
+.settingsSection {
+  width: 100%;
+  color: var(--text-color);
+  padding: 10px;
+  padding-top: 30px;
+}
+
+.section {
+  margin-bottom: 15px;
+}
+
+.sectionHeader {
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5px;
+}
+
+.sectionHeader span {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.Item {
+  border-radius: 10px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0 var(--selected-color);
+  transition:
+    color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
+}
+
+.Item svg {
+  margin-right: 10px;
+}
+
+.Item:hover {
+  color: var(--text-color);
+  box-shadow: inset 250px 0 0 0 var(--selected-color);
+}
+.iconRotated {
+  transform: rotate(360deg);
+}
