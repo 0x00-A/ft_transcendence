@@ -15,7 +15,7 @@ interface Info {
 
 interface SideInfoChatProps {
   selectedMessage: Info;
-  onEmojiChange: any;
+  onEmojiChange: () => void;
 }
 
 const SideInfoChat: React.FC<SideInfoChatProps> = ({
