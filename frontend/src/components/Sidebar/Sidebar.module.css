@@ -1,16 +1,18 @@
 .sidebar {
   position: relative;
   min-height: 100vh;
-  z-index: 50;
+  /* z-index: 50; */
   /* position: fixed; */
   width: 300px;
+  max-width: 300px;
+  min-width: 300px;
   background-color: var(--sidebar-surface-primary);
-  /* transition-duration: 100ms; */
+  /* transition-duration: 300ms; */
   padding-top: 1rem;
 
   /* min-width: 200px;
   max-width: 300px; */
-  transition: width 0.3s ease;
+  /* transition: width 0.3s ease; */
 }
 
 .menuBox {
@@ -36,9 +38,12 @@
 .small {
   height: 35px;
   margin-bottom: 10px;
+  /* transition-duration: 0; */
 }
 
 .closed {
+  min-width: 80px;
+
   padding-top: 1rem;
   width: 80px;
 }
