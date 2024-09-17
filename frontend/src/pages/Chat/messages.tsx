@@ -11,15 +11,15 @@ interface SelectedMessageProps {
 const messages: SelectedMessageProps[] = [
   {
     avatar: 'https://picsum.photos/200',
-    name: 'oussama',
-    lastMessage: 'wfin akhouy l3ziz hani.....',
+    name: 'kasimo l9re3',
+    lastMessage: 'omwan',
     time: '21:15 PM',
     unreadCount: 3,
     status: 'online',
   },
   {
     avatar: 'https://picsum.photos/200',
-    name: 'abde latif',
+    name: 'imad king of 1337',
     lastMessage: 'wakhdmo adrari.....',
     time: '21:15 PM',
     unreadCount: 99,

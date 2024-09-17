@@ -40,6 +40,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const handleEmojiClick = (emoji: any) => {
     setMessage((prevMessage) => prevMessage + emoji.native);
     if (inputRef.current) {
+      setInputFocused(true);
       inputRef.current.focus();
     }
   };
@@ -47,6 +48,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSend();
+      setShowEmojiPicker(false);
     }
   };
 
