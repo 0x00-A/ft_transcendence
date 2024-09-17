@@ -2,6 +2,7 @@
   background-color: #1f2533;
   display: flex;
   align-items: center;
+  justify-content: space-around;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -87,7 +88,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-left: 10px;
   position: relative;
 }
 
@@ -99,7 +99,6 @@
   width: 42px;
   height: 42px;
   border: none;
-  margin-left: 10px;
   border-radius: 50%;
   cursor: pointer;
 }
