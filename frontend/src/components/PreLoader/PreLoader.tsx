@@ -7,16 +7,22 @@ const PreLoader = () => {
   useEffect(() => {
     setTimeout(() => {
       setHidden(true);
-    }, 3000);
+    }, 1500);
   }, []);
-  return (
-    // <div
-    //   className={styles.preloader}
-    //   style={{ display: hidden ? "none" : "flex" }}
-    // >
-    //   <img src={preLoaderSVG} alt="" />
-    // </div>
-    <div
+
+  // useEffect(() => {
+  //   window.onload = () => {
+  //      setHidden(true);
+  //   };
+
+  //   return () => {
+  //     window.onload = null;
+  //   };
+  // }, []);
+
+
+  return <>
+  {!hidden &&   <div
       className={css.preloader}
       style={{ display: hidden ? 'flex' : 'flex' }}
     >
@@ -25,8 +31,9 @@ const PreLoader = () => {
         <div></div>
         <div></div>
       </div>
-    </div>
-  );
+    </div>}
+  </>
+  ;
 };
 
 export default PreLoader;
