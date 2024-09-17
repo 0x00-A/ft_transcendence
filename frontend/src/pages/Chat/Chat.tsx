@@ -40,7 +40,9 @@ const Chat = () => {
   const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [customEmoji, setCustomEmoji] = useState('👍');
+  const [customSticker, setCustomSticker] = useState(
+    '<img src="/icons/chat/Invite.svg" alt="svg" />'
+  );
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -80,22 +82,29 @@ const Chat = () => {
     message.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSendMessage = (newMessage: string) => {
+  const handleSendMessage = (
+    newMessage: string,
+    isSticker: boolean = false
+  ) => {
     if (selectedMessage) {
       const message = {
-        name: 'rachid el ismaiyly',
+        name: 'You',
         content: newMessage,
         sender: true,
         avatar: 'https://picsum.photos/200',
         time: moment().format('HH:mm A'),
       };
+
+      if (isSticker) {
+        message.content = newMessage;
+      }
+
       setChatMessages((prevMessages) => [...prevMessages, message]);
     }
-    console.log(chatMessages);
   };
 
-  const handleEmojiChange = (newEmoji: string) => {
-    setCustomEmoji(newEmoji);
+  const handleStickerChange = (newSticker: string) => {
+    setCustomSticker(newSticker);
   };
 
   return (
@@ -126,7 +135,7 @@ const Chat = () => {
               </div>
               <MessageInput
                 onSendMessage={handleSendMessage}
-                customEmoji={customEmoji}
+                customSticker={customSticker}
               />
             </>
           ) : (
@@ -137,7 +146,7 @@ const Chat = () => {
           <div className={css.sidebarRight}>
             <SideInfoChat
               selectedMessage={selectedMessage}
-              onEmojiChange={handleEmojiChange}
+              onEmojiChange={handleStickerChange}
             />
           </div>
         )}

@@ -57,19 +57,19 @@
   transform: rotate(360deg);
 }
 
-.customEmojiPicker {
-  /* width: 52%; */
+.customStickerPicker {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 10px;
   padding: 10px;
-  background-color: #f0f0f0;
+  background-color: #56a9e1;
   border-radius: 5px;
   margin-top: 10px;
 }
 
-.emojiButton {
-  font-size: 24px;
+.stickerButton {
+  width: 40px;
+  height: 40px;
   background: none;
   border: none;
   cursor: pointer;
@@ -78,6 +78,11 @@
   transition: background-color 0.2s;
 }
 
-.emojiButton:hover {
+.stickerButton:hover {
   background-color: #e0e0e0;
+}
+
+.stickerButton img {
+  width: 40px;
+  height: 40px;
 }
