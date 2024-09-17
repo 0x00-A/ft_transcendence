@@ -40,6 +40,7 @@ const Chat = () => {
   const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [customEmoji, setCustomEmoji] = useState('👍');
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -82,7 +83,7 @@ const Chat = () => {
   const handleSendMessage = (newMessage: string) => {
     if (selectedMessage) {
       const message = {
-        name: 'You',
+        name: 'rachid el ismaiyly',
         content: newMessage,
         sender: true,
         avatar: 'https://picsum.photos/200',
@@ -90,6 +91,11 @@ const Chat = () => {
       };
       setChatMessages((prevMessages) => [...prevMessages, message]);
     }
+    console.log(chatMessages);
+  };
+
+  const handleEmojiChange = (newEmoji: string) => {
+    setCustomEmoji(newEmoji);
   };
 
   return (
@@ -118,7 +124,10 @@ const Chat = () => {
               <div className={css.messageArea}>
                 <MessageArea messages={chatMessages} />
               </div>
-              <MessageInput onSendMessage={handleSendMessage} />
+              <MessageInput
+                onSendMessage={handleSendMessage}
+                customEmoji={customEmoji}
+              />
             </>
           ) : (
             <NoChatSelected />
@@ -126,7 +135,10 @@ const Chat = () => {
         </div>
         {selectedMessage && !isExpanded && (
           <div className={css.sidebarRight}>
-            <SideInfoChat selectedMessage={selectedMessage} />
+            <SideInfoChat
+              selectedMessage={selectedMessage}
+              onEmojiChange={handleEmojiChange}
+            />
           </div>
         )}
       </div>

@@ -18,7 +18,7 @@ const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
       case 'online':
         return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
       case 'typing':
-        return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
+        return <p className={`${css.userStatus} ${css.typing}`}>Online</p>;
       case 'offline':
         return (
           <p className={`${css.userStatus} ${css.offline}`}>

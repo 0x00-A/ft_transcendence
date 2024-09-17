@@ -15,9 +15,13 @@ interface Info {
 
 interface SideInfoChatProps {
   selectedMessage: Info;
+  onEmojiChange: any;
 }
 
-const SideInfoChat: React.FC<SideInfoChatProps> = ({ selectedMessage }) => {
+const SideInfoChat: React.FC<SideInfoChatProps> = ({
+  selectedMessage,
+  onEmojiChange,
+}) => {
   return (
     <div className={css.sideInfoChat}>
       <ProfileSection
@@ -26,7 +30,7 @@ const SideInfoChat: React.FC<SideInfoChatProps> = ({ selectedMessage }) => {
       />
       <StatusSection status={selectedMessage} />
       <ButtonSection />
-      <SettingsSection />
+      <SettingsSection onEmojiChange={onEmojiChange} />
     </div>
   );
 };

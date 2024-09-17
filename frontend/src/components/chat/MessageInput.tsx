@@ -6,9 +6,10 @@ import Picker from '@emoji-mart/react';
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
+  customEmoji: string;
 }
 
-const MessageInput = ({ onSendMessage }: MessageInputProps) => {
+const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
@@ -16,7 +17,6 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
-  const [emojiSend, setEmojiSend] = useState('👍');
 
   const handleSend = () => {
     if (message.trim()) {
@@ -32,8 +32,8 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
       if (inputRef.current) {
         inputRef.current.focus();
       }
-    } else if (emojiSend) {
-      onSendMessage(emojiSend);
+    } else if (customEmoji) {
+      onSendMessage(customEmoji);
     }
   };
 
@@ -126,7 +126,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
         </button>
       ) : (
         <button className={css.sendEmoji} onClick={handleSend}>
-          <span>👍</span>
+          <span>{customEmoji}</span>
         </button>
       )}
     </div>
