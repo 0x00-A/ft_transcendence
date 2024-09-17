@@ -51,7 +51,7 @@ const messages: SelectedMessageProps[] = [
   },
   {
     avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
+    name: 'oussama',
     lastMessage: 'appah',
     time: '21:15 PM',
     unreadCount: 99,

@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 import css from './SettingsSection.module.css';
 import { FaBell, FaBan, FaThumbtack } from 'react-icons/fa';
 import { FaAngleDown, FaAngleUp, FaFaceGrin } from 'react-icons/fa6';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 
-const SettingsSection: React.FC = () => {
+const SettingsSection = ({ onEmojiChange }) => {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isChatInfoOpen, setIsChatInfoOpen] = useState(false);
   const [isCustomizeChatOpen, setIsCustomizeChatOpen] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const togglePrivacy = () => setIsPrivacyOpen(!isPrivacyOpen);
   const toggleChatInfo = () => setIsChatInfoOpen(!isChatInfoOpen);
   const toggleCustomizeChat = () =>
     setIsCustomizeChatOpen(!isCustomizeChatOpen);
+
+  const handleEmojiSelect = (emoji) => {
+    onEmojiChange(emoji.native);
+    setShowEmojiPicker(false);
+  };
 
   return (
     <div className={css.settingsSection}>
@@ -39,9 +47,17 @@ const SettingsSection: React.FC = () => {
         </div>
         {isCustomizeChatOpen && (
           <div className={css.sectionContent}>
-            <div className={css.Item}>
+            <div
+              className={css.Item}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
               <FaFaceGrin /> Change emoji
             </div>
+            {showEmojiPicker && (
+              <div className={css.emojiPicker}>
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+              </div>
+            )}
           </div>
         )}
       </div>
