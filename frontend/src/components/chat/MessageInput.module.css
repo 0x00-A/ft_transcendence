@@ -155,3 +155,19 @@
     transform: scale(1.2);
   }
 }
+
+.sendSticker {
+  display: flex;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.sendSticker span:hover {
+  transform: scale(1.1);
+}

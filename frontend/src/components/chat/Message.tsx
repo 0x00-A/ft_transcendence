@@ -16,6 +16,10 @@ const Message: React.FC<MessageProps> = ({
   time,
   name,
 }) => {
+  const isSticker = content.includes('<img');
+
+  console.log('content:', content);
+
   return (
     <div
       className={`${css.messageWrapper} ${sender ? css.sender : css.receiver}`}
@@ -33,12 +37,17 @@ const Message: React.FC<MessageProps> = ({
             </div>
           )}
         </div>
-
         <div className={css.messageBubble}>
-          <p>{content}</p>
+          {/* Use dangerouslySetInnerHTML if it's a sticker */}
+          {isSticker ? (
+            <div dangerouslySetInnerHTML={{ __html: content }} />
+          ) : (
+            <p>{content}</p>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 export default Message;

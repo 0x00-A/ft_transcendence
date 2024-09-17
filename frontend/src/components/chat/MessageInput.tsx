@@ -5,11 +5,11 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
 interface MessageInputProps {
-  onSendMessage: (message: string) => void;
-  customEmoji: string;
+  onSendMessage: (message: string, isSticker?: boolean) => void;
+  customSticker: string;
 }
 
-const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
+const MessageInput = ({ onSendMessage, customSticker }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
@@ -20,20 +20,21 @@ const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
 
   const handleSend = () => {
     if (message.trim()) {
-      console.log('Sending message:', message);
-      onSendMessage(message);
+      // Send message as text
+      onSendMessage(message, false);
       setMessage('');
+    } else if (customSticker) {
+      // Send sticker
+      onSendMessage(customSticker, true);
+    }
 
-      setIsFlying(true);
-      setInputFocused(false);
-      setTimeout(() => {
-        setIsFlying(false);
-      }, 500);
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    } else if (customEmoji) {
-      onSendMessage(customEmoji);
+    setIsFlying(true);
+    setInputFocused(false);
+    setTimeout(() => {
+      setIsFlying(false);
+    }, 500);
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   };
 
@@ -62,6 +63,7 @@ const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
       setShowEmojiPicker(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
 
@@ -71,14 +73,9 @@ const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) {
-      setMessage(value);
-      setInputFocused(true);
-    }
+    setMessage(e.target.value);
+    setInputFocused(true);
   };
-  // const handleInputFocus = () => {
-  // };
 
   const handleInputBlur = () => {
     if (!message.trim()) {
@@ -101,7 +98,6 @@ const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          // onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           className={css.input}
         />
@@ -125,8 +121,8 @@ const MessageInput = ({ onSendMessage, customEmoji }: MessageInputProps) => {
           <FaPaperPlane size={25} />
         </button>
       ) : (
-        <button className={css.sendEmoji} onClick={handleSend}>
-          <span>{customEmoji}</span>
+        <button className={css.sendSticker} onClick={handleSend}>
+          <span dangerouslySetInnerHTML={{ __html: customSticker }} />
         </button>
       )}
     </div>

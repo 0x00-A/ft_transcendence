@@ -4,40 +4,35 @@ import { FaBell, FaBan, FaThumbtack } from 'react-icons/fa';
 import { FaAngleDown, FaAngleUp, FaFaceGrin } from 'react-icons/fa6';
 
 interface SettingsSectionProps {
-  onEmojiChange: () => void;
+  onEmojiChange: (emoji: string) => void;
 }
 
 const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isChatInfoOpen, setIsChatInfoOpen] = useState(false);
   const [isCustomizeChatOpen, setIsCustomizeChatOpen] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showStickerPicker, setShowStickerPicker] = useState(false);
 
   const togglePrivacy = () => setIsPrivacyOpen(!isPrivacyOpen);
   const toggleChatInfo = () => setIsChatInfoOpen(!isChatInfoOpen);
   const toggleCustomizeChat = () =>
     setIsCustomizeChatOpen(!isCustomizeChatOpen);
 
-  const customEmojis = [
-    '👍',
-    '❤️',
-    '😊',
-    '🎉',
-    '🔥',
-    '👀',
-    '🙌',
-    '🤔',
-    '👋',
-    '🚀',
+  // Custom SVG stickers
+  const customStickers = [
+    '<img src="/icons/chat/love.svg" alt="svg" />',
+    '<img src="/icons/chat/likeLove.svg" alt="love" />',
+    '<img src="/icons/chat/stickers1.svg" alt="love" />',
   ];
 
-  const handleEmojiSelect = (emoji: string) => {
-    onEmojiChange(emoji);
-    setShowEmojiPicker(false);
+  const handleStickerSelect = (sticker: string) => {
+    onEmojiChange(sticker);
+    setShowStickerPicker(false);
   };
 
   return (
     <div className={css.settingsSection}>
+      {/* Chat info section */}
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={toggleChatInfo}>
           Chat info
@@ -53,6 +48,8 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
           </div>
         )}
       </div>
+
+      {/* Customize chat section */}
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={toggleCustomizeChat}>
           Customize chat
@@ -64,20 +61,19 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
           <div className={css.sectionContent}>
             <div
               className={css.Item}
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              onClick={() => setShowStickerPicker(!showStickerPicker)}
             >
-              <FaFaceGrin /> Change emoji
+              <FaFaceGrin /> Change sticker
             </div>
-            {showEmojiPicker && (
-              <div className={css.customEmojiPicker}>
-                {customEmojis.map((emoji, index) => (
+            {showStickerPicker && (
+              <div className={css.customStickerPicker}>
+                {customStickers.map((sticker, index) => (
                   <button
                     key={index}
-                    className={css.emojiButton}
-                    onClick={() => handleEmojiSelect(emoji)}
-                  >
-                    {emoji}
-                  </button>
+                    className={css.stickerButton}
+                    onClick={() => handleStickerSelect(sticker)}
+                    dangerouslySetInnerHTML={{ __html: sticker }}
+                  />
                 ))}
               </div>
             )}
@@ -85,6 +81,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
         )}
       </div>
 
+      {/* Privacy section */}
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={togglePrivacy}>
           Privacy
