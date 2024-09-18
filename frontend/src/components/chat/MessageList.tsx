@@ -27,6 +27,7 @@ interface MessageListProps {
   onSelectMessage: (message: Message) => void;
   isSearchActive: boolean;
   onSelectedSearch: (selectedSearch: boolean) => void;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -34,6 +35,7 @@ const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
   isSearchActive,
   onSelectedSearch,
+  setQuery,
 }) => {
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
@@ -54,6 +56,7 @@ const MessageList: React.FC<MessageListProps> = ({
     setSelectedMessageIndex(index);
     onSelectMessage(message);
     onSelectedSearch(false);
+    setQuery('');
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,

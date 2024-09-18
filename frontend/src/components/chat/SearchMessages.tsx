@@ -6,13 +6,17 @@ import { HiArrowLeft } from 'react-icons/hi';
 interface SearchMessagesProps {
   onSearch: (query: string) => void;
   onSelectedSearch: (selectedSearch: boolean) => void;
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SearchMessages: React.FC<SearchMessagesProps> = ({
   onSearch,
   onSelectedSearch,
+  query,
+  setQuery,
 }) => {
-  const [query, setQuery] = useState<string>('');
+  // const [query, setQuery] = useState<string>('');
   const [showIcon, setShowIcon] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
