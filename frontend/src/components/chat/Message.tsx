@@ -37,14 +37,15 @@ const Message: React.FC<MessageProps> = ({
             </div>
           )}
         </div>
-        <div className={css.messageBubble}>
-          {/* Use dangerouslySetInnerHTML if it's a sticker */}
-          {isSticker ? (
-            <div dangerouslySetInnerHTML={{ __html: content }} />
-          ) : (
+        {/* <div className={css.messageBubble}> */}
+        {isSticker ? (
+          <div dangerouslySetInnerHTML={{ __html: content }} />
+        ) : (
+          <div className={css.messageBubble}>
             <p>{content}</p>
-          )}
-        </div>
+          </div>
+        )}
+        {/* </div> */}
       </div>
     </div>
   );
