@@ -6,11 +6,13 @@ import { HiArrowLeft } from 'react-icons/hi';
 interface SearchMessagesProps {
   onSearch: (query: string) => void;
   onSelectedSearch: (selectedSearch: boolean) => void;
+  clickMsg: boolean;
 }
 
 const SearchMessages: React.FC<SearchMessagesProps> = ({
   onSearch,
   onSelectedSearch,
+  clickMsg,
 }) => {
   const [query, setQuery] = useState<string>('');
   const [showIcon, setShowIcon] = useState<boolean>(false);
@@ -48,7 +50,6 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
   return (
     <div ref={containerRef} className={css.searchContainer}>
       <div className={`${css.searchBar} ${showIcon ? css.showIcon : ''}`}>
