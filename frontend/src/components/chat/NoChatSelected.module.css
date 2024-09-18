@@ -17,15 +17,67 @@
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: var(--text-color);
+  color: #fff; /* Change to match the dark theme */
+  padding: 20px;
+}
+
+.noChatIcon {
+  max-width: 300px;
+  margin-bottom: 20px;
+  /* animation: pulse 1.5s infinite ease-in-out; */
+}
+
+.noChatSelected h2 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .noChatSelected p {
-  margin-top: 20px;
-  font-size: 1em;
+  margin-top: 10px;
+  font-size: 1.1em;
+  line-height: 1.5;
 }
 
-.noChatSelected .noChatIcon {
-  animation: pulse 1.5s infinite ease-in-out;
-  color: var(--text-color);
+.addFriendsButton {
+  background-color: #fff;
+  color: #1f2533;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border: none;
+  padding: 0 10px;
+  border-radius: 20px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+  /* animation: pulse 1.5s infinite ease-in-out; */
+}
+
+.addFriendsButton:hover {
+  background-color: #e5e5e5;
+  transition: background-color 0.3s ease;
+}
+
+.addFriendsButton:focus {
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .noChatIcon {
+    max-width: 200px;
+  }
+
+  .noChatSelected h2 {
+    font-size: 1.5em;
+  }
+
+  .noChatSelected p {
+    font-size: 0.9em;
+  }
+
+  .addFriendsButton {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
 }

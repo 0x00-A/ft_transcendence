@@ -38,10 +38,11 @@ const Chat = () => {
     useState<SelectedMessageProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
+  const [clickMsg, setClickMsg] = useState<boolean>(false);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [customSticker, setCustomSticker] = useState(
-    '<img src="/icons/chat/Invite.svg" alt="svg" />'
+    '<img src="/icons/chat/like.svg" alt="love" />'
   );
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -115,12 +116,14 @@ const Chat = () => {
           <SearchMessages
             onSearch={handleSearch}
             onSelectedSearch={setSelectedSearch}
+            clickMsg={clickMsg}
           />
           <MessageList
             messages={selectedSearch ? filteredMessages : messages}
             onSelectMessage={setSelectedMessage}
             isSearchActive={selectedSearch}
             onSelectedSearch={setSelectedSearch}
+            onSetClickMsg={setClickMsg}
           />
         </div>
         <div className={css.chatBody}>
