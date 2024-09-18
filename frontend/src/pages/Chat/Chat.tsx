@@ -115,12 +115,15 @@ const Chat = () => {
           <SearchMessages
             onSearch={handleSearch}
             onSelectedSearch={setSelectedSearch}
+            query={searchQuery}
+            setQuery={setSearchQuery}
           />
           <MessageList
             messages={selectedSearch ? filteredMessages : messages}
             onSelectMessage={setSelectedMessage}
             isSearchActive={selectedSearch}
             onSelectedSearch={setSelectedSearch}
+            setQuery={setSearchQuery}
           />
         </div>
         <div className={css.chatBody}>
