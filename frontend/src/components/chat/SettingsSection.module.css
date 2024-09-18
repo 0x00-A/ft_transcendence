@@ -62,7 +62,7 @@
   flex-wrap: wrap;
   gap: 10px;
   padding: 10px;
-  background-color: #56a9e1;
+  background-color: #32405b;
   border-radius: 5px;
   margin-top: 10px;
 }
@@ -79,7 +79,7 @@
 }
 
 .stickerButton:hover {
-  background-color: #e0e0e0;
+  background-color: #0e1725;
 }
 
 .stickerButton img {
