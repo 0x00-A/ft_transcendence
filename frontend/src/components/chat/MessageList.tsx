@@ -30,6 +30,7 @@ interface MessageListProps {
   onSelectedSearch: (selectedSearch: boolean) => void;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   onBlockUser: (userName: string) => void;
+  isBlocked: boolean;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -39,6 +40,7 @@ const MessageList: React.FC<MessageListProps> = ({
   onSelectedSearch,
   setQuery,
   onBlockUser,
+  isBlocked,
 }) => {
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
@@ -196,10 +198,7 @@ const MessageList: React.FC<MessageListProps> = ({
           >
             <FaBan />
             <span>
-              {/* {blockedUsers.get(messages[menuState.activeIndex!].name)
-                ? 'Unblock'
-                : 'Block'} */}
-              bllock
+              {messages[selectedMessageIndex!].blocked ? 'Unblock' : 'Block'}
             </span>
           </div>
           <div className={css.menuItem}>
