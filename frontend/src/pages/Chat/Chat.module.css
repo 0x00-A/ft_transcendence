@@ -30,9 +30,12 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: auto;
 }
 
+.sidebarRight {
+  overflow: auto;
+  scrollbar-color: var(--selected-color) transparent;
+}
 .chatBody {
   flex: 1;
   /* background-color: yellow; */
