@@ -7,9 +7,16 @@ import Picker from '@emoji-mart/react';
 interface MessageInputProps {
   onSendMessage: (message: string, isSticker?: boolean) => void;
   customSticker: string;
+  setBlock: React.Dispatch<React.SetStateAction<boolean>>;
+  block: boolean;
 }
 
-const MessageInput = ({ onSendMessage, customSticker }: MessageInputProps) => {
+const MessageInput = ({
+  onSendMessage,
+  customSticker,
+  setBlock,
+  block,
+}: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
@@ -84,48 +91,64 @@ const MessageInput = ({ onSendMessage, customSticker }: MessageInputProps) => {
   };
 
   return (
-    <div className={css.messageInputWrapper}>
-      {showEmojiPicker && (
-        <div ref={emojiRef} className={css.emojiPicker}>
-          <Picker data={data} onEmojiSelect={handleEmojiClick} />
+    <>
+      {block ? (
+        <div className={css.messageBlock}>
+          <h2>
+            Your blocked <span>Rachid el ismaiyly</span>
+          </h2>
+          <p>
+            You can't message them in this chat, and you won't receive their
+            messages.
+          </p>
+          <button className={css.buttonUnblock} onClick={() => setBlock(false)}>
+            Unblock
+          </button>
+        </div>
+      ) : (
+        <div className={css.messageInputWrapper}>
+          {showEmojiPicker && (
+            <div ref={emojiRef} className={css.emojiPicker}>
+              <Picker data={data} onEmojiSelect={handleEmojiClick} />
+            </div>
+          )}
+          <div className={css.messageInputContainer}>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Write a message"
+              value={message}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onBlur={handleInputBlur}
+              className={css.input}
+            />
+            <button
+              ref={buttonEmojiRef}
+              className={css.buttonEmoji}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <FaSmile size={25} />
+            </button>
+            <button className={css.buttonClip}>
+              <FaPaperclip size={25} />
+            </button>
+          </div>
+          {inputFocused ? (
+            <button
+              onClick={handleSend}
+              className={`${css.sendButton} ${isFlying ? css.animateIcon : ''}`}
+            >
+              <FaPaperPlane size={25} />
+            </button>
+          ) : (
+            <button className={css.sendSticker} onClick={handleSend}>
+              <span dangerouslySetInnerHTML={{ __html: customSticker }} />
+            </button>
+          )}
         </div>
       )}
-      <div className={css.messageInputContainer}>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Write a message"
-          value={message}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onBlur={handleInputBlur}
-          className={css.input}
-        />
-        <button
-          ref={buttonEmojiRef}
-          className={css.buttonEmoji}
-          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-        >
-          <FaSmile size={25} />
-        </button>
-        <button className={css.buttonClip}>
-          <FaPaperclip size={25} />
-        </button>
-      </div>
-
-      {inputFocused ? (
-        <button
-          onClick={handleSend}
-          className={`${css.sendButton} ${isFlying ? css.animateIcon : ''}`}
-        >
-          <FaPaperPlane size={25} />
-        </button>
-      ) : (
-        <button className={css.sendSticker} onClick={handleSend}>
-          <span dangerouslySetInnerHTML={{ __html: customSticker }} />
-        </button>
-      )}
-    </div>
+    </>
   );
 };
 

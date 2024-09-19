@@ -28,6 +28,8 @@ interface MessageListProps {
   isSearchActive: boolean;
   onSelectedSearch: (selectedSearch: boolean) => void;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
+  setBlock: React.Dispatch<React.SetStateAction<boolean>>;
+  block: boolean;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -36,6 +38,8 @@ const MessageList: React.FC<MessageListProps> = ({
   isSearchActive,
   onSelectedSearch,
   setQuery,
+  setBlock,
+  block,
 }) => {
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
@@ -136,6 +140,14 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   }, [menuState.activeIndex]);
 
+  const handleBlock = () => {
+    setBlock(!block);
+    setMenuState((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      activeIndex: null,
+    }));
+  };
   return (
     <div ref={messageListRef} className={css.messageList}>
       {messages.map((message, index) =>
@@ -179,8 +191,8 @@ const MessageList: React.FC<MessageListProps> = ({
             <FaUser /> <span>View Profile</span>
           </div>
           <hr />
-          <div className={css.menuItem}>
-            <FaBan /> <span>Block</span>
+          <div className={css.menuItem} onClick={handleBlock}>
+            <FaBan /> <span> {block ? 'UnBlock' : 'Block'}</span>
           </div>
           <div className={css.menuItem}>
             <FaArchive /> <span>Archive chat</span>

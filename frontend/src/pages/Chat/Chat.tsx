@@ -44,6 +44,11 @@ const Chat = () => {
     '<img src="/icons/chat/like.svg" alt="love" />'
   );
 
+  const [block, setBlock] = useState<boolean>(false);
+  const [blockedUsers, setBlockedUsers] = useState<Map<string, boolean>>(
+    new Map()
+  );
+
   const handleClickOutside = (e: MouseEvent) => {
     if (
       sidebarLeftRef.current &&
@@ -107,6 +112,22 @@ const Chat = () => {
     setCustomSticker(newSticker);
   };
 
+  // Handle block/unblock for the selected user
+  const handleBlock = () => {
+    if (selectedMessage) {
+      setBlockedUsers((prevBlockedUsers) => {
+        const updatedBlockedUsers = new Map(prevBlockedUsers);
+        const isBlocked = updatedBlockedUsers.get(selectedMessage.name);
+        updatedBlockedUsers.set(selectedMessage.name, !isBlocked);
+        return updatedBlockedUsers;
+      });
+    }
+  };
+
+  const isUserBlocked = selectedMessage
+    ? blockedUsers.get(selectedMessage.name)
+    : false;
+
   return (
     <main className={css.CenterContainer}>
       <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
@@ -124,6 +145,8 @@ const Chat = () => {
             isSearchActive={selectedSearch}
             onSelectedSearch={setSelectedSearch}
             setQuery={setSearchQuery}
+            setBlock={setBlock}
+            block={block}
           />
         </div>
         <div className={css.chatBody}>
@@ -139,6 +162,8 @@ const Chat = () => {
               <MessageInput
                 onSendMessage={handleSendMessage}
                 customSticker={customSticker}
+                setBlock={setBlock}
+                block={block}
               />
             </>
           ) : (
