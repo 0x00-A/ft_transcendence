@@ -32,6 +32,9 @@
 .messageBlock .buttonUnblock {
   border: none;
   background-color: #ff4c4b;
+  color: var(--text-color);
+  font-weight: 900;
+  letter-spacing: 1px;
   width: 80%;
   height: 40px;
   border-radius: 30px;

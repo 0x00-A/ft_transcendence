@@ -102,7 +102,7 @@ const MessageInput = ({
             messages.
           </p>
           <button className={css.buttonUnblock} onClick={onUnblock}>
-            Unblock
+            UnBlock
           </button>
         </div>
       ) : (
