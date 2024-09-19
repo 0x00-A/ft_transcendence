@@ -25,6 +25,7 @@
   margin: 0 auto;
   padding: 15px;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 /* .body-container {

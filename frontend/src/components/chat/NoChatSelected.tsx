@@ -15,16 +15,10 @@ const NoChatSelected = () => {
       />
       <h2>Welcome to Your Chat!</h2>
       <p>Please select a conversation to start chatting.</p>
-      <p>
-        If you don't have any friends yet,{' '}
-        <button
-          onClick={handleAddFriendsClick}
-          className={css.addFriendsButton}
-        >
-          Click
-        </button>{' '}
-        to add some!
-      </p>
+      <p>If you don't have any friends yet</p>
+      <button onClick={handleAddFriendsClick} className={css.addFriendsButton}>
+        Add Friend
+      </button>
     </div>
   );
 };
