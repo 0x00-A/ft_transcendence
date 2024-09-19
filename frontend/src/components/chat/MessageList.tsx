@@ -28,8 +28,8 @@ interface MessageListProps {
   isSearchActive: boolean;
   onSelectedSearch: (selectedSearch: boolean) => void;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  setBlock: React.Dispatch<React.SetStateAction<boolean>>;
-  block: boolean;
+  blockedUsers: Map<string, boolean>;
+  onBlockUser: (userName: string) => void;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -38,8 +38,8 @@ const MessageList: React.FC<MessageListProps> = ({
   isSearchActive,
   onSelectedSearch,
   setQuery,
-  setBlock,
-  block,
+  blockedUsers,
+  onBlockUser,
 }) => {
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
@@ -140,8 +140,8 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   }, [menuState.activeIndex]);
 
-  const handleBlock = () => {
-    setBlock(!block);
+  const handleBlock = (userName: string) => {
+    onBlockUser(userName);
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
@@ -191,8 +191,16 @@ const MessageList: React.FC<MessageListProps> = ({
             <FaUser /> <span>View Profile</span>
           </div>
           <hr />
-          <div className={css.menuItem} onClick={handleBlock}>
-            <FaBan /> <span> {block ? 'UnBlock' : 'Block'}</span>
+          <div
+            className={css.menuItem}
+            onClick={() => handleBlock(messages[menuState.activeIndex!].name)}
+          >
+            <FaBan />
+            <span>
+              {blockedUsers.get(messages[menuState.activeIndex!].name)
+                ? 'Unblock'
+                : 'Block'}
+            </span>
           </div>
           <div className={css.menuItem}>
             <FaArchive /> <span>Archive chat</span>

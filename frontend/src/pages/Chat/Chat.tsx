@@ -112,21 +112,13 @@ const Chat = () => {
     setCustomSticker(newSticker);
   };
 
-  // Handle block/unblock for the selected user
-  const handleBlock = () => {
-    if (selectedMessage) {
-      setBlockedUsers((prevBlockedUsers) => {
-        const updatedBlockedUsers = new Map(prevBlockedUsers);
-        const isBlocked = updatedBlockedUsers.get(selectedMessage.name);
-        updatedBlockedUsers.set(selectedMessage.name, !isBlocked);
-        return updatedBlockedUsers;
-      });
-    }
+  const handleBlockUser = (userName: string) => {
+    setBlockedUsers((prevBlockedUsers) => {
+      const newBlockedUsers = new Map(prevBlockedUsers);
+      newBlockedUsers.set(userName, !newBlockedUsers.get(userName));
+      return newBlockedUsers;
+    });
   };
-
-  const isUserBlocked = selectedMessage
-    ? blockedUsers.get(selectedMessage.name)
-    : false;
 
   return (
     <main className={css.CenterContainer}>
@@ -145,8 +137,8 @@ const Chat = () => {
             isSearchActive={selectedSearch}
             onSelectedSearch={setSelectedSearch}
             setQuery={setSearchQuery}
-            setBlock={setBlock}
-            block={block}
+            blockedUsers={blockedUsers}
+            onBlockUser={handleBlockUser}
           />
         </div>
         <div className={css.chatBody}>
@@ -162,8 +154,8 @@ const Chat = () => {
               <MessageInput
                 onSendMessage={handleSendMessage}
                 customSticker={customSticker}
-                setBlock={setBlock}
-                block={block}
+                isBlocked={blockedUsers.get(selectedMessage.name) || false}
+                onUnblock={() => handleBlockUser(selectedMessage.name)}
               />
             </>
           ) : (
