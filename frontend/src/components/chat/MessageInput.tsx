@@ -7,15 +7,15 @@ import Picker from '@emoji-mart/react';
 interface MessageInputProps {
   onSendMessage: (message: string, isSticker?: boolean) => void;
   customSticker: string;
-  setBlock: React.Dispatch<React.SetStateAction<boolean>>;
-  block: boolean;
+  isBlocked: boolean;
+  onUnblock: () => void;
 }
 
 const MessageInput = ({
   onSendMessage,
   customSticker,
-  setBlock,
-  block,
+  isBlocked,
+  onUnblock,
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -92,7 +92,7 @@ const MessageInput = ({
 
   return (
     <>
-      {block ? (
+      {isBlocked ? (
         <div className={css.messageBlock}>
           <h2>
             Your blocked <span>Rachid el ismaiyly</span>
@@ -101,7 +101,7 @@ const MessageInput = ({
             You can't message them in this chat, and you won't receive their
             messages.
           </p>
-          <button className={css.buttonUnblock} onClick={() => setBlock(false)}>
+          <button className={css.buttonUnblock} onClick={onUnblock}>
             Unblock
           </button>
         </div>
