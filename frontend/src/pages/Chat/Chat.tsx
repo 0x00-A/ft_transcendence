@@ -22,6 +22,7 @@ interface SelectedMessageProps {
   unreadCount?: number;
   status: 'online' | 'offline' | 'typing';
   lastSeen?: string;
+  blocked: boolean;
 }
 interface ChatMessage {
   name: string;
@@ -42,11 +43,6 @@ const Chat = () => {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [customSticker, setCustomSticker] = useState(
     '<img src="/icons/chat/like.svg" alt="love" />'
-  );
-
-  const [block, setBlock] = useState<boolean>(false);
-  const [blockedUsers, setBlockedUsers] = useState<Map<string, boolean>>(
-    new Map()
   );
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -113,11 +109,11 @@ const Chat = () => {
   };
 
   const handleBlockUser = (userName: string) => {
-    setBlockedUsers((prevBlockedUsers) => {
-      const newBlockedUsers = new Map(prevBlockedUsers);
-      newBlockedUsers.set(userName, !newBlockedUsers.get(userName));
-      return newBlockedUsers;
-    });
+    console.log('nameblock: ', userName);
+    const updatedMessages = messages.map((msg) =>
+      msg.name === userName ? { ...msg, blocked: !msg.blocked } : msg
+    );
+    console.log(updatedMessages);
   };
 
   return (
@@ -137,7 +133,6 @@ const Chat = () => {
             isSearchActive={selectedSearch}
             onSelectedSearch={setSelectedSearch}
             setQuery={setSearchQuery}
-            blockedUsers={blockedUsers}
             onBlockUser={handleBlockUser}
           />
         </div>
@@ -154,7 +149,7 @@ const Chat = () => {
               <MessageInput
                 onSendMessage={handleSendMessage}
                 customSticker={customSticker}
-                isBlocked={blockedUsers.get(selectedMessage.name) || false}
+                isBlocked={selectedMessage.blocked}
                 onUnblock={() => handleBlockUser(selectedMessage.name)}
               />
             </>

@@ -6,6 +6,7 @@ interface SelectedMessageProps {
   unreadCount?: number;
   status: 'online' | 'offline' | 'typing';
   lastSeen?: string;
+  blocked: boolean;
 }
 
 const messages: SelectedMessageProps[] = [
@@ -16,6 +17,7 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     unreadCount: 3,
     status: 'online',
+    blocked: false,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -24,6 +26,7 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     unreadCount: 99,
     status: 'typing',
+    blocked: true,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -32,6 +35,7 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     status: 'offline',
     lastSeen: '20:30 PM',
+    blocked: true,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -39,6 +43,7 @@ const messages: SelectedMessageProps[] = [
     lastMessage: 'nmchiw ntghdaw',
     time: '21:15 PM',
     status: 'online',
+    blocked: false,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -48,6 +53,7 @@ const messages: SelectedMessageProps[] = [
     unreadCount: 1,
     status: 'offline',
     lastSeen: '19:45 PM',
+    blocked: false,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -56,6 +62,7 @@ const messages: SelectedMessageProps[] = [
     time: '21:15 PM',
     unreadCount: 99,
     status: 'typing',
+    blocked: false,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -63,6 +70,7 @@ const messages: SelectedMessageProps[] = [
     lastMessage: 'waa333',
     time: '21:15 PM',
     status: 'online',
+    blocked: false,
   },
   {
     avatar: 'https://picsum.photos/200',
@@ -72,38 +80,7 @@ const messages: SelectedMessageProps[] = [
     unreadCount: 99,
     status: 'offline',
     lastSeen: '18:20 PM',
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-    status: 'online',
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'naima',
-    lastMessage: 'waa333',
-    time: '21:15 PM',
-    status: 'typing',
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-    status: 'offline',
-    lastSeen: '17:55 PM',
-  },
-  {
-    avatar: 'https://picsum.photos/200',
-    name: 'hex01e',
-    lastMessage: 'appah',
-    time: '21:15 PM',
-    unreadCount: 99,
-    status: 'online',
+    blocked: true,
   },
 ];
 
