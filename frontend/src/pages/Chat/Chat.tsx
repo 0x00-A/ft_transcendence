@@ -134,7 +134,6 @@ const Chat = () => {
             onSelectedSearch={setSelectedSearch}
             setQuery={setSearchQuery}
             onBlockUser={handleBlockUser}
-            isBlocked={selectedMessage.blocked}
           />
         </div>
         <div className={css.chatBody}>
