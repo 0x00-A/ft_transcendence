@@ -7,6 +7,11 @@
   padding-bottom: 0;
 }
 
+.sideButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .menu {
   position: absolute;
   top: 50px;

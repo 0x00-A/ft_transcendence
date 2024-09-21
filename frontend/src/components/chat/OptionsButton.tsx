@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import css from './OptionsButton.module.css';
-import MoreButton from './MoreButton';
 import { FaArchive, FaUser } from 'react-icons/fa';
+import MoreButton from './MoreButton';
+import NewMessage from './NewMessage';
 
 const OptionsButton = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -34,7 +35,11 @@ const OptionsButton = () => {
   return (
     <div className={css.optionsButtonContainer}>
       <h2>Chat</h2>
-      <MoreButton ref={buttonRef} onClick={handleOptionsClick} />
+
+      <div className={css.sideButtons}>
+        <NewMessage ref={buttonRef} onClick={handleOptionsClick} />
+        <MoreButton ref={buttonRef} onClick={handleOptionsClick} />
+      </div>
       {showMenu && (
         <div ref={menuRef} className={css.menu}>
           <div className={css.menuItem}>
