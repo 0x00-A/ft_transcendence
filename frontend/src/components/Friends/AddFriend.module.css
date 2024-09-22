@@ -58,8 +58,8 @@
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -75,7 +75,7 @@
 
 .fullName {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   color: #b9bbbe;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .viewProfileBtn:hover {
-  background-color: #5d6269;
+  background-color: #9faabe;
 }
 
 .addFriendBtn {
@@ -109,5 +109,5 @@
 }
 
 .addFriendBtn:hover {
-  background-color: #2d7d46;
+  background-color: #334462;
 }
