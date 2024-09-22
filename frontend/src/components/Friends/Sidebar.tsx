@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './Sidebar.module.css';
 import {
-  FaUserFriends,
+  // FaUserFriends,
   FaCircle,
   FaUserPlus,
   FaUserMinus,
@@ -24,38 +24,40 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
           className={`${css.navButton} ${currentView === 'all' ? css.active : ''}`}
           onClick={() => setView('all')}
         >
-          <FaUserFriends /> All Friends
+          <img src="/icons/friend/allFriends.svg" alt="All" /> All Friends
         </button>
         <button
           className={`${css.navButton} ${currentView === 'online' ? css.active : ''}`}
           onClick={() => setView('online')}
         >
-          <FaCircle /> Online Friends
+          <img src="/icons/friend/onlineFriend.svg" alt="Online" />
+          Online Friends
         </button>
         <button
           className={`${css.navButton} ${currentView === 'requests' ? css.active : ''}`}
           onClick={() => setView('requests')}
         >
-          <FaUserPlus /> Friend Requests
+          <img src="/icons/friend/requestsFriend.svg" alt="Requests" /> Friend
+          Requests
         </button>
         <button
           className={`${css.navButton} ${currentView === 'sent' ? css.active : ''}`}
           onClick={() => setView('sent')}
         >
-          <FaUserMinus /> Sent Requests
+          <img src="/icons/friend/sentRequests.svg" alt="Sent" /> Sent Requests
         </button>
         <button
           className={`${css.navButton} ${currentView === 'blocked' ? css.active : ''}`}
           onClick={() => setView('blocked')}
         >
-          <FaBan /> Blocked List
+          <img src="/icons/friend/blockList.svg" alt="Blocked" /> Blocked List
         </button>
       </div>
       <button
         className={`${css.addFriendButton} ${currentView === 'add' ? css.active : ''}`}
         onClick={() => setView('add')}
       >
-        <FaUserCog /> Add Friend
+        <img src="/icons/friend/addFriend.svg" alt="Add" /> Add Friend
       </button>
     </nav>
   );
