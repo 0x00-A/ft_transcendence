@@ -4,6 +4,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import css from './Friends.module.css';
 import Sidebar from '../../components/Friends/Sidebar';
 import AddFriend from '../../components/Friends/AddFriend';
+import BlockedList from '../../components/Friends/blockedUsers';
+import SentRequests from '../../components/Friends/sentRequests';
+import FriendRequests from '../../components/Friends/FriendRequests';
+import OnlineFriends from '../../components/Friends/OnlineFriends';
+import AllFriends from '../../components/Friends/AllFriends';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
@@ -19,7 +24,16 @@ const Friends: React.FC = () => {
     switch (currentView) {
       case 'add':
         return <AddFriend />;
-      // Implement other views as needed
+      case 'blocked':
+        return <BlockedList />;
+      case 'sent':
+        return <SentRequests />;
+      case 'requests':
+        return <FriendRequests />;
+      case 'online':
+        return <OnlineFriends />;
+      case 'all':
+        return <AllFriends />;
       default:
         return <AddFriend />;
     }
