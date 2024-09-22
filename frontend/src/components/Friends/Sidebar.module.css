@@ -21,7 +21,7 @@
   margin-bottom: 8px;
   background-color: transparent;
   border: none;
-  color: #b9bbbe;
+  color: #f8f3e3;
   text-align: left;
   cursor: pointer;
   font-size: 17px;
@@ -32,13 +32,13 @@
 }
 
 .navButton:hover {
-  background-color: #393c43;
-  color: #ffffff;
+  background-color: #445c85;
+  color: #f8f3e3;
 }
 
 .navButton.active {
-  background-color: #393c43;
-  color: #ffffff;
+  background-color: #445c85;
+  color: #f8f3e3;
 }
 
 .navButton svg {
@@ -51,7 +51,7 @@
   align-items: center;
   width: 100%;
   padding: 10px;
-  background-color: #3ba55c;
+  background-color: transparent;
   border: none;
   color: #ffffff;
   text-align: left;
@@ -62,7 +62,10 @@
 }
 
 .addFriendButton:hover {
-  background-color: #2d7d46;
+  background-color: #445c85;
+}
+.addFriendButton.active {
+  background-color: #445c85;
 }
 
 .addFriendButton svg {
