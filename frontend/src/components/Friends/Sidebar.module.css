@@ -1,0 +1,71 @@
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  background-color: var(--chat-body);
+  padding: 20px;
+  border-radius: 0 20px 20px 0;
+  margin-left: 20px;
+}
+
+.sidebarContent {
+  flex-grow: 1;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  border: none;
+  color: #b9bbbe;
+  text-align: left;
+  cursor: pointer;
+  font-size: 17px;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.navButton:hover {
+  background-color: #393c43;
+  color: #ffffff;
+}
+
+.navButton.active {
+  background-color: #393c43;
+  color: #ffffff;
+}
+
+.navButton svg {
+  margin-right: 12px;
+  font-size: 20px;
+}
+
+.addFriendButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #3ba55c;
+  border: none;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  font-size: 17px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.addFriendButton:hover {
+  background-color: #2d7d46;
+}
+
+.addFriendButton svg {
+  margin-right: 12px;
+  font-size: 20px;
+}

@@ -25,10 +25,11 @@ const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
             Last seen at {status.lastSeen}
           </p>
         );
+      default:
     }
   };
 
-  return <p className={css.status}>{renderUserStatus()}</p>;
+  return <div className={css.status}>{renderUserStatus()}</div>;
 };
 
 export default StatusSection;
