@@ -1,13 +1,5 @@
 import React from 'react';
 import css from './Sidebar.module.css';
-import {
-  // FaUserFriends,
-  FaCircle,
-  FaUserPlus,
-  FaUserMinus,
-  FaBan,
-  FaUserCog,
-} from 'react-icons/fa';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
