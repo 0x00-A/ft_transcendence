@@ -27,15 +27,6 @@
     box-shadow 0.3s ease-in-out;
 }
 
-/* .Item svg {
-  margin-right: 10px;
-}
-
-.Item:hover {
-  color: var(--text-color);
-  box-shadow: inset 250px 0 0 0 var(--selected-color);
-} */
-
 .navButton {
   display: flex;
   align-items: center;
