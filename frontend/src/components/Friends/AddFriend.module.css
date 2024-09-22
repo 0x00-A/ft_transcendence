@@ -1,6 +1,6 @@
 .addFriend {
   padding: 20px;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 .topSearch {

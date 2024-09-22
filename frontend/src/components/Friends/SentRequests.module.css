@@ -1,6 +1,6 @@
 .sentRequests {
   padding: 20px;
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 .title {
@@ -40,10 +40,11 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 600;
   transition: background-color 0.2s;
 }
 
 .cancelButton:hover {
   background-color: #7892b8;
-  color: #f8f3e3;
+  color: var(--text-color);
 }
