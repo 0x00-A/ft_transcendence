@@ -14,19 +14,19 @@ const exampleUsers: User[] = [
     id: '1',
     username: 'relimsa',
     fullName: 'Rachid El Ismaiyly',
-    avatar: '/avatar1.jpg',
+    avatar: 'https://picsum.photos/200',
   },
   {
     id: '2',
     username: 'johndoe',
     fullName: 'John Doe',
-    avatar: '/avatar2.jpg',
+    avatar: 'https://picsum.photos/200',
   },
   {
     id: '3',
     username: 'janedoe',
     fullName: 'Jane Doe',
-    avatar: '/avatar3.jpg',
+    avatar: 'https://picsum.photos/200',
   },
 ];
 
