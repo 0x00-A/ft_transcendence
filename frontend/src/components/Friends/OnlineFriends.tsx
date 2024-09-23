@@ -27,8 +27,10 @@ const OnlineFriends: React.FC = () => {
               alt={friend.username}
               className={css.avatar}
             />
-            <span className={css.username}>{friend.username}</span>
-            <span className={css.status}>Online</span>
+            <div className={css.userInfo}>
+              <span className={css.username}>{friend.username}</span>
+              <span className={css.online}>Online</span>
+            </div>
             <div className={css.actions}>
               <button className={css.actionButton}>Message</button>
               <button className={css.actionButton}>Invite</button>

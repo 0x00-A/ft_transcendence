@@ -49,9 +49,11 @@ const AllFriends: React.FC = () => {
             />
             <div className={css.userInfo}>
               <span className={css.username}>{friend.username}</span>
-              <span className={css.status}>
-                {friend.isOnline ? 'Online' : 'Offline'}
-              </span>
+              {friend.isOnline ? (
+                <span className={css.Online}>Online</span>
+              ) : (
+                <span className={css.Offline}>Offline</span>
+              )}
             </div>
             <div className={css.actions}>
               <button className={css.actionButton}>Block</button>
