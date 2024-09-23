@@ -41,7 +41,7 @@
   font-size: 13px;
   color: #b9bbbe;
   position: relative;
-  margin-right: 10px;
+  margin-left: 15px;
 }
 .online::before {
   position: absolute;
@@ -49,6 +49,7 @@
   width: 10px;
   height: 10px;
   top: 5px;
+  left: -15px;
   border-radius: 50%;
   background-color: green;
 }

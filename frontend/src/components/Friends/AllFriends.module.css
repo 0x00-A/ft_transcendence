@@ -39,7 +39,7 @@
   font-weight: bold;
 }
 
-.status {
+.Online {
   display: block;
   font-size: 13px;
   color: #b9bbbe;
@@ -47,7 +47,7 @@
   margin-left: 15px;
 }
 
-.status::before {
+.Online::before {
   position: absolute;
   content: '';
   width: 10px;
@@ -56,6 +56,24 @@
   left: -15px;
   border-radius: 50%;
   background-color: green;
+}
+.Offline {
+  display: block;
+  font-size: 13px;
+  color: #b9bbbe;
+  position: relative;
+  margin-left: 15px;
+}
+
+.Offline::before {
+  position: absolute;
+  content: '';
+  width: 10px;
+  height: 10px;
+  top: 5px;
+  left: -15px;
+  border-radius: 50%;
+  background-color: #b9bbbe;
 }
 
 .actions {
