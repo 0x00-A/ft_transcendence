@@ -49,33 +49,46 @@ const AddFriend: React.FC = () => {
 
   return (
     <div className={css.addFriend}>
-      <div className={css.topSearch}>
-        <div className={css.searchContainer}>
-          <FaSearch className={css.searchIcon} />
-          <input
-            type="text"
-            placeholder="Find your friend"
-            value={searchTerm}
-            onChange={handleSearch}
-            className={css.searchInput}
-          />
-        </div>
-        <h1 className={css.title}>Add Friend</h1>
+      <h1 className={css.title}>Add Friend</h1>
+      <div className={css.searchContainer}>
+        <FaSearch className={css.searchIcon} />
+        <input
+          type="text"
+          placeholder="Find your friend"
+          value={searchTerm}
+          onChange={handleSearch}
+          className={css.searchInput}
+        />
       </div>
       <div className={css.results}>
-        {searchResults.map((user) => (
-          <div key={user.id} className={css.userCard}>
-            <img src={user.avatar} alt={user.username} className={css.avatar} />
-            <div className={css.userInfo}>
-              <span className={css.username}>{user.username}</span>
-              <span className={css.fullName}>{user.fullName}</span>
-            </div>
-            <div className={css.actions}>
-              <button className={css.viewProfileBtn}>View Profile</button>
-              <button className={css.addFriendBtn}>Add Friend</button>
-            </div>
+        {searchTerm == '' ? (
+          <div className={css.emptyState}>
+            <img src="/icons/friend/searchFriend.svg" alt="" />
+            <p className={css.emptyStateText}>
+              Search for friends by typing their name or username above.
+            </p>
           </div>
-        ))}
+        ) : searchResults.length > 0 ? (
+          searchResults.map((user) => (
+            <div key={user.id} className={css.userCard}>
+              <img
+                src={user.avatar}
+                alt={user.username}
+                className={css.avatar}
+              />
+              <div className={css.userInfo}>
+                <span className={css.username}>{user.username}</span>
+                <span className={css.fullName}>{user.fullName}</span>
+              </div>
+              <div className={css.actions}>
+                <button className={css.viewProfileBtn}>View Profile</button>
+                <button className={css.addFriendBtn}>Add Friend</button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No users found</p>
+        )}
       </div>
     </div>
   );

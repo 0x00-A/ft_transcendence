@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import css from './BlockedList.module.css';
+import { FaSearch } from 'react-icons/fa';
 
 interface BlockedUser {
   id: string;
@@ -19,26 +20,54 @@ const blockedUsers: BlockedUser[] = [
 ];
 
 const BlockedList: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
   const handleUnblock = (userId: string) => {
     console.log(`Unblocked user with ID: ${userId}`);
   };
 
+  const filteredUsers = blockedUsers.filter((user) =>
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className={css.blockedList}>
-      <h1 className={css.title}>Blocked</h1>
+      <h1 className={css.title}>Blocked List</h1>
+
+      {/* Search input */}
+      <div className={css.searchContainer}>
+        <FaSearch className={css.searchIcon} />
+
+        <input
+          type="text"
+          className={css.searchInput}
+          placeholder="Search blocked users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       <div className={css.list}>
-        {blockedUsers.map((user) => (
-          <div key={user.id} className={css.userCard}>
-            <img src={user.avatar} alt={user.username} className={css.avatar} />
-            <span className={css.username}>{user.username}</span>
-            <button
-              className={css.unblockButton}
-              onClick={() => handleUnblock(user.id)}
-            >
-              Unblock
-            </button>
-          </div>
-        ))}
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div key={user.id} className={css.userCard}>
+              <img
+                src={user.avatar}
+                alt={user.username}
+                className={css.avatar}
+              />
+              <span className={css.username}>{user.username}</span>
+              <button
+                className={css.unblockButton}
+                onClick={() => handleUnblock(user.id)}
+              >
+                Unblock
+              </button>
+            </div>
+          ))
+        ) : (
+          <p>No blocked users found</p>
+        )}
       </div>
     </div>
   );
