@@ -20,35 +20,35 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
     <nav className={`${css.sidebar} ${isCollapsed ? css.collapsed : ''}`}>
       <div className={css.sidebarContent}>
         <button
-          className={`${css.navButton} ${currentView === 'all' ? css.active : ''}`}
+          className={`${css.navButton} ${currentView === 'all' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('all')}
         >
           <img src="/icons/friend/allFriends.svg" alt="All" />
           <span className={css.buttonText}>All Friends</span>
         </button>
         <button
-          className={`${css.navButton} ${currentView === 'online' ? css.active : ''}`}
+          className={`${css.navButton} ${currentView === 'online' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('online')}
         >
           <img src="/icons/friend/onlineFriend.svg" alt="Online" />
           <span className={css.buttonText}>Online Friends</span>
         </button>
         <button
-          className={`${css.navButton} ${currentView === 'requests' ? css.active : ''}`}
+          className={`${css.navButton} ${currentView === 'requests' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('requests')}
         >
           <img src="/icons/friend/requestsFriend.svg" alt="Requests" />
           <span className={css.buttonText}>Friend Requests</span>
         </button>
         <button
-          className={`${css.navButton} ${currentView === 'sent' ? css.active : ''}`}
+          className={`${css.navButton} ${currentView === 'sent' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('sent')}
         >
           <img src="/icons/friend/sentRequests.svg" alt="Sent" />
           <span className={css.buttonText}>Sent Requests</span>
         </button>
         <button
-          className={`${css.navButton} ${currentView === 'blocked' ? css.active : ''}`}
+          className={`${css.navButton} ${currentView === 'blocked' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('blocked')}
         >
           <img src="/icons/friend/blockList.svg" alt="Blocked" />
@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         </button>
       </div>
       <button
-        className={`${css.addFriendButton} ${currentView === 'add' ? css.active : ''}`}
+        className={`${css.addFriendButton} ${currentView === 'add' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
         onClick={() => setView('add')}
       >
         <img src="/icons/friend/addFriend.svg" alt="Add" />
@@ -64,9 +64,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
       </button>
       <button className={css.collapseButton} onClick={toggleCollapse}>
         {isCollapsed ? (
-          <FaArrowCircleRight size={24} />
+          <FaArrowCircleRight size={30} />
         ) : (
-          <FaArrowCircleLeft size={24} />
+          <FaArrowCircleLeft size={30} />
         )}
       </button>
     </nav>
