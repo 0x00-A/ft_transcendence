@@ -14,9 +14,9 @@
   height: 35px;
 } */
 
-/* .newMessage:hover img {
+.newMessage:hover img {
   animation: zoomAndRotate 0.3s ease forwards;
-} */
+}
 
 @keyframes zoomAndRotate {
   0% {

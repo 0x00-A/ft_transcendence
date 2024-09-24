@@ -54,7 +54,7 @@ const AllFriends: React.FC = () => {
         <input
           type="text"
           className={css.searchInput}
-          placeholder="Search users..."
+          placeholder="Search friends..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

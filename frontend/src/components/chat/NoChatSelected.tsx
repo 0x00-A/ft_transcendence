@@ -1,9 +1,11 @@
 import css from './NoChatSelected.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const NoChatSelected = () => {
+  const navigate = useNavigate();
+
   const handleAddFriendsClick = () => {
-    // Add your logic here for adding friends, such as navigating to the "Add Friends" page
-    console.log('Redirecting to Add Friends...');
+    navigate('/friends');
   };
 
   return (
