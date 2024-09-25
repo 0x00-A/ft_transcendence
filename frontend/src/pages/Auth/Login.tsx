@@ -8,25 +8,29 @@ import PassIcon from "./assets/passIcon.svg";
 import ExternAuth from './components/ExternAuth';
 import AuthFooter from './components/AuthFooter';
 import { FormEvent } from 'react';
+import css from './AuthForm.module.css';
 
 const Login = () => {
 
-  // const handleSubmit = (event: FormEvent) => {
-  //   event.preventDefault();
-  // }
-
   return (
     <>
-        <AuthHeader
-          title="Welcome back"
-          description=""
-        />
-        {/* <form className={authCss.entryArea} onSubmit={handleSubmit}>
-          <AuthInput type="text" pHolder="username" icon={UserIcon} />
-          <AuthInput type="password" pHolder="password" icon={PassIcon} />
-          <AuthButton className={authCss.authBtn}>Sign in</AuthButton>
-        </form> */}
+      <AuthHeader title="Welcome back" description=""/>
+        <form className={css.entryArea}>
+          <div className={css.inputContainer}>
+            <img src={UserIcon} alt="X" />
+            <input type="text" required placeholder="username"/>
+            {/* {...register('username', { required: true, minLength: 3 })} */}
+          </div>
+          <div className={css.inputContainer}>
+            <img src={PassIcon} alt="X" />
+            <input type="password" required placeholder="password"/>
+            {/* {...register('password')} */}
+          </div>
+          <button type="submit" className={css.authBtn}>
+            Signin
+          </button>
         <ExternAuth />
+        </form>
     </>
   )
 }

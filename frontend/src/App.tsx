@@ -11,6 +11,7 @@ import PreLoader from './components/PreLoader/PreLoader';
 // import Login from './pages/Login';
 // import Login from './pages/Auth/Login';
 import Auth from './pages/Auth/Auth';
+import Profile from './pages/Profile/Profile';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Games from './pages/Games/Games';
 import Chat from './pages/Chat/Chat';
@@ -48,6 +49,7 @@ function AppContent() {
     '/store',
     '/leaderboard',
     '/settings',
+    '/profile'
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
@@ -72,6 +74,7 @@ function AppContent() {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
