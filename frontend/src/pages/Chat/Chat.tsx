@@ -1,6 +1,6 @@
 import css from './Chat.module.css';
 import moment from 'moment';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState, useRef, useEffect } from 'react';
 import ChatHeader from '../../components/chat/ChatHeader';
@@ -34,7 +34,6 @@ interface ChatMessage {
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
-  // const location = useLocation();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] =
     useState<SelectedMessageProps | null>(null);
@@ -61,21 +60,6 @@ const Chat = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  // useEffect(() => {
-  //   const selectedFriend = location.state?.selectedFriend;
-  //   if (selectedFriend) {
-  //     const friendMessage: SelectedMessageProps = {
-  //       avatar: selectedFriend.avatar,
-  //       name: selectedFriend.username,
-  //       lastMessage: '',
-  //       time: moment().format('HH:mm A'),
-  //       status: selectedFriend.isOnline ? 'online' : 'offline',
-  //       blocked: false,
-  //     };
-  //     setSelectedMessage(friendMessage);
-  //   }
-  // }, [location.state]);
 
   useEffect(() => {
     if (selectedMessage) {

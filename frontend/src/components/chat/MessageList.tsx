@@ -28,7 +28,7 @@ interface Message {
 
 interface MessageListProps {
   messages: Message[];
-  onSelectMessage: (message: Message) => void;
+  onSelectMessage: (message: Message | null) => void;
   isSearchActive: boolean;
   onSelectedSearch: (selectedSearch: boolean) => void;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -177,8 +177,10 @@ const MessageList: React.FC<MessageListProps> = ({
     }));
   };
   const handleClose = () => {
-    setSelectedMessageIndex(null);
-    onSelectMessage(null);
+    if (selectedMessageIndex !== null) {
+      onSelectMessage(null);
+      setSelectedMessageIndex(null);
+    }
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
@@ -237,7 +239,7 @@ const MessageList: React.FC<MessageListProps> = ({
           >
             <FaBan />
             <span>
-              {messages[selectedMessageIndex!].blocked ? 'Unblock' : 'Block'}
+              {messages[selectedMessageIndex!]?.blocked ? 'Unblock' : 'Block'}
             </span>
           </div>
           <div className={css.menuItem}>
