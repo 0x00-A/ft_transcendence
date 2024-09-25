@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
+import { useLocation } from 'react-router-dom';
+
 import {
   FaCheck,
   FaBell,
@@ -54,9 +56,34 @@ const MessageList: React.FC<MessageListProps> = ({
   });
   const menuRef = useRef(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    const selectedFriend = location.state?.selectedFriend;
+    if (selectedFriend) {
+      const messageIndex = messages.findIndex(
+        (message) => message.name === selectedFriend.username
+      );
+
+      if (messageIndex !== -1) {
+        const foundMessage = messages[messageIndex];
+
+        onSelectMessage(foundMessage);
+        console.log('Message Selected:', foundMessage);
+        setSelectedMessageIndex(messageIndex);
+        onSelectedSearch(false);
+        setQuery('');
+
+        setMenuState((prevState) => ({
+          ...prevState,
+          isOpen: false,
+          activeIndex: null,
+        }));
+      }
+    }
+  }, [location.state]);
 
   const handleClick = (index: number, message: Message) => {
-    console.log('********************');
     setSelectedMessageIndex(index);
     onSelectMessage(message);
     onSelectedSearch(false);
