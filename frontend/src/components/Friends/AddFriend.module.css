@@ -1,5 +1,6 @@
 .addFriend {
   padding: 20px;
+  height: 100%;
   color: var(--text-color);
 }
 
@@ -113,18 +114,21 @@
 }
 
 .emptyState {
-  text-align: center;
-  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 120px);
 }
 
-.emptyStateIcon {
-  width: 100px;
-  height: 100px;
-  color: #9faabe;
-  margin-bottom: 20px;
+.emptyStateCenter {
+  text-align: center;
+}
+
+.emptyStateCenter img {
+  width: 400px;
 }
 
 .emptyStateText {
-  font-size: 18px;
+  font-size: 16px;
   color: #72767d;
 }
