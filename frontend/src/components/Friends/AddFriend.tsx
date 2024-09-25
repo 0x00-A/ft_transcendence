@@ -38,13 +38,16 @@ const AddFriend: React.FC = () => {
     const term = event.target.value;
     setSearchTerm(term);
 
-    const filteredUsers = exampleUsers.filter(
-      (user) =>
-        user.username.toLowerCase().includes(term.toLowerCase()) ||
-        user.fullName.toLowerCase().includes(term.toLowerCase())
-    );
-
-    setSearchResults(filteredUsers);
+    if (term) {
+      const filteredUsers = exampleUsers.filter(
+        (user) =>
+          user.username.toLowerCase().includes(term.toLowerCase()) ||
+          user.fullName.toLowerCase().includes(term.toLowerCase())
+      );
+      setSearchResults(filteredUsers);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   return (
@@ -60,36 +63,43 @@ const AddFriend: React.FC = () => {
           className={css.searchInput}
         />
       </div>
-      <div className={css.results}>
-        {searchTerm == '' ? (
-          <div className={css.emptyState}>
-            <img src="/icons/friend/searchFriend.svg" alt="" />
+
+      {searchTerm === '' && (
+        <div className={css.emptyState}>
+          <div className={css.emptyStateCenter}>
+            <img src="/icons/friend/searchFriend.svg" alt="Search" />
             <p className={css.emptyStateText}>
               Search for friends by typing their name or username above.
             </p>
           </div>
-        ) : searchResults.length > 0 ? (
-          searchResults.map((user) => (
-            <div key={user.id} className={css.userCard}>
-              <img
-                src={user.avatar}
-                alt={user.username}
-                className={css.avatar}
-              />
-              <div className={css.userInfo}>
-                <span className={css.username}>{user.username}</span>
-                <span className={css.fullName}>{user.fullName}</span>
+        </div>
+      )}
+
+      {searchTerm !== '' && (
+        <div className={css.results}>
+          {searchResults.length > 0 ? (
+            searchResults.map((user) => (
+              <div key={user.id} className={css.userCard}>
+                <img
+                  src={user.avatar}
+                  alt={user.username}
+                  className={css.avatar}
+                />
+                <div className={css.userInfo}>
+                  <span className={css.username}>{user.username}</span>
+                  <span className={css.fullName}>{user.fullName}</span>
+                </div>
+                <div className={css.actions}>
+                  <button className={css.viewProfileBtn}>View Profile</button>
+                  <button className={css.addFriendBtn}>Add Friend</button>
+                </div>
               </div>
-              <div className={css.actions}>
-                <button className={css.viewProfileBtn}>View Profile</button>
-                <button className={css.addFriendBtn}>Add Friend</button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No users found</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p>No users found</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
