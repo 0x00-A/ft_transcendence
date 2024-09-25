@@ -56,6 +56,7 @@ const MessageList: React.FC<MessageListProps> = ({
   });
   const menuRef = useRef(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const messageListRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -94,7 +95,6 @@ const MessageList: React.FC<MessageListProps> = ({
       activeIndex: null,
     }));
   };
-  const messageListRef = useRef<HTMLDivElement>(null);
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
