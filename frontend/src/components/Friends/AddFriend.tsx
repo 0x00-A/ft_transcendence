@@ -96,7 +96,10 @@ const AddFriend: React.FC = () => {
               </div>
             ))
           ) : (
-            <p>No users found</p>
+            <div className={css.notFound}>
+              <img src="/icons/friend/notFound.svg" alt="Search" />
+              <p className={css.notFoundText}>No User Found</p>
+            </div>
           )}
         </div>
       )}
