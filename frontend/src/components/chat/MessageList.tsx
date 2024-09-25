@@ -12,6 +12,7 @@ import {
   FaArchive,
   FaTrash,
   FaThumbtack,
+  FaTimes,
 } from 'react-icons/fa';
 
 interface Message {
@@ -175,6 +176,15 @@ const MessageList: React.FC<MessageListProps> = ({
       activeIndex: null,
     }));
   };
+  const handleClose = () => {
+    setSelectedMessageIndex(null);
+    onSelectMessage(null);
+    setMenuState((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      activeIndex: null,
+    }));
+  };
   return (
     <div ref={messageListRef} className={css.messageList}>
       {messages.map((message, index) =>
@@ -210,6 +220,9 @@ const MessageList: React.FC<MessageListProps> = ({
         >
           <div className={css.menuItem}>
             <FaCheck /> <span>Mark as read</span>
+          </div>
+          <div className={css.menuItem} onClick={handleClose}>
+            <FaTimes /> <span>Close Chat</span>
           </div>
           <div className={css.menuItem}>
             <FaBell /> <span>Mute notifications</span>
