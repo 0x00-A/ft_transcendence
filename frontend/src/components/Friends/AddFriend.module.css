@@ -132,3 +132,13 @@
   font-size: 16px;
   color: #72767d;
 }
+
+.notFound {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.notFoundText {
+  font-size: 30px;
+  color: #72767d;
+}
