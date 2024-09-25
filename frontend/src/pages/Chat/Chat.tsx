@@ -34,7 +34,7 @@ interface ChatMessage {
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
-  const location = useLocation();
+  // const location = useLocation();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] =
     useState<SelectedMessageProps | null>(null);
@@ -62,20 +62,20 @@ const Chat = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const selectedFriend = location.state?.selectedFriend;
-    if (selectedFriend) {
-      const friendMessage: SelectedMessageProps = {
-        avatar: selectedFriend.avatar,
-        name: selectedFriend.username,
-        lastMessage: '',
-        time: moment().format('HH:mm A'),
-        status: selectedFriend.isOnline ? 'online' : 'offline',
-        blocked: false,
-      };
-      setSelectedMessage(friendMessage);
-    }
-  }, [location.state]);
+  // useEffect(() => {
+  //   const selectedFriend = location.state?.selectedFriend;
+  //   if (selectedFriend) {
+  //     const friendMessage: SelectedMessageProps = {
+  //       avatar: selectedFriend.avatar,
+  //       name: selectedFriend.username,
+  //       lastMessage: '',
+  //       time: moment().format('HH:mm A'),
+  //       status: selectedFriend.isOnline ? 'online' : 'offline',
+  //       blocked: false,
+  //     };
+  //     setSelectedMessage(friendMessage);
+  //   }
+  // }, [location.state]);
 
   useEffect(() => {
     if (selectedMessage) {
