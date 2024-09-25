@@ -12,25 +12,11 @@ const Auth = () => {
 
     return (
       <div className={css.container}>
-        {/* <div className={`${css.imgBox} ${authState ? css.switchImgBox : ''}`}>
-          <div className={css.authFooter}>
-            <p>{authState ? "Don't have an account?" : "Already have an account?"}</p>
-            <button onClick={() => {setAuthState(!authState)}}>{authState ? "Signup" : "Login"}</button>
-          </div>
-        </div> */}
         <div className={`${css.imgBox} ${authState ? css.switchImgBox : ''}`}>
           <PongBox />
           <div className={css.authFooter}>
-            <p>
-              {authState
-                ? "Don't have an account?"
-                : 'Already have an account?'}
-            </p>
-            <button
-              onClick={() => {
-                setAuthState(!authState);
-              }}
-            >
+            <p>{authState ? "Don't have an account?" : 'Already have an account?'}</p>
+            <button onClick={() => { setAuthState(!authState); }}>
               {authState ? 'Signup' : 'Login'}
             </button>
           </div>
