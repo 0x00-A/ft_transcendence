@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
-import { useState } from 'react';
 
 interface Friend {
   id: string;
@@ -13,13 +13,13 @@ interface Friend {
 const allFriends: Friend[] = [
   {
     id: '1',
-    username: 'abde latif',
+    username: 'hex01e',
     avatar: 'https://picsum.photos/215',
     isOnline: true,
   },
   {
     id: '2',
-    username: 'ilyas',
+    username: 'yasmine',
     avatar: 'https://picsum.photos/214',
     isOnline: false,
   },
@@ -31,7 +31,7 @@ const allFriends: Friend[] = [
   },
   {
     id: '4',
-    username: 'rachid',
+    username: 'oussama',
     avatar: 'https://picsum.photos/213',
     isOnline: false,
   },
@@ -39,10 +39,15 @@ const allFriends: Friend[] = [
 
 const AllFriends: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   const filteredUsers = allFriends.filter((friend) =>
     friend.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleMessageClick = (friend: Friend) => {
+    navigate('/chat', { state: { selectedFriend: friend } });
+  };
 
   return (
     <div className={css.allFriends}>
@@ -50,7 +55,6 @@ const AllFriends: React.FC = () => {
 
       <div className={css.searchContainer}>
         <FaSearch className={css.searchIcon} />
-
         <input
           type="text"
           className={css.searchInput}
@@ -78,14 +82,19 @@ const AllFriends: React.FC = () => {
                 )}
               </div>
               <div className={css.actions}>
-                <button className={css.actionButton}>Message</button>
+                <button
+                  className={css.actionButton}
+                  onClick={() => handleMessageClick(friend)}
+                >
+                  Message
+                </button>
                 <button className={css.actionButton}>Invite</button>
                 <button className={css.actionButton}>View Profile</button>
               </div>
             </div>
           ))
         ) : (
-          <p>No blocked users found</p>
+          <p>No friends found</p>
         )}
       </div>
     </div>
