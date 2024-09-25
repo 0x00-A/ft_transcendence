@@ -56,6 +56,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleClick = (index: number, message: Message) => {
+    console.log('********************');
     setSelectedMessageIndex(index);
     onSelectMessage(message);
     onSelectedSearch(false);
