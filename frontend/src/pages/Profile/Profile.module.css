@@ -1,24 +1,35 @@
+.profileContainer {
+    position: relative;
+}
+
 .container {
-    border: 1px solid wheat;
+    border: 1px solid rgb(214, 255, 8);
     height: 92%;
     margin: 0;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.containerBlur {
+    filter: blur(2px);
+    z-index: 0;
 }
 
 .profileHeader {
     border: 1px solid aliceblue;
-    height: 200px;
+    height: 20%;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /* margin-top: 20px; */
 }
 
 .avatar {
     border: 1px solid aqua;
     width: 20%;
-    height: 70%;
+    height: 100%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -26,13 +37,13 @@
 }
 
 .avatar img {
-    width: 70px;
+    width: 40%;
 }
 
 .playerStats {
     border: 1px solid blue;
     width: 60%;
-    height: 70%;
+    height: 100%;
     /* padding-left: 10px; */
     display: flex;
     justify-content: space-evenly;
@@ -84,16 +95,24 @@
 
 .coins {
     border: 1px solid azure;
-    width: 15%;
-    height: 60%;
+    width: 20%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
 }
 
-.gameHistory {
-    border: 1px solid black;
+.bodyContainer {
+    display: flex;
+}
+
+/****************/
+/* GAME HISTORY */
+/****************/
+
+.gamesHistoryContainer {
+    /* border: 1px solid black; */
     width: 30%;
     height: 700px;
     display: flex;
@@ -101,14 +120,14 @@
     flex-direction: column;
 }
 
-.game {
+.gameContainer {
     /* border: 1px solid blueviolet; */
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.gameDate {
+.gamesDate {
     /* border: 1px solid aquamarine; */
     display: flex;
     flex-direction: row;
@@ -116,21 +135,27 @@
     align-items: center;
 }
 
-.gameDate div {
+.gamesDate div {
     border-bottom: 1px solid white;
     width: 50%;
     margin-right: 20px;
-    margin-left: 10px;
 }
 
-.gameStatus {
+.gameDetail {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
 }
 
-.gameStatus img {
+.gameDetail div {
+    /* border: 1px solid wheat; */
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+}
+
+.gameDetail img {
     width: 50px;
 }
 
@@ -140,4 +165,40 @@
 
 .gameLose {
     color: red;
+}
+
+/****************/
+/* ACHIEVEMENTS */
+/****************/
+
+.achievementsContainer {
+    /* border: 1px solid burlywood; */
+    width: 40%;
+    display: flex;
+    justify-content: center;
+}
+
+/***********/
+/* FRIENDS */
+/***********/
+
+.friendsContainer {
+    /* border: 1px solid antiquewhite; */
+    width: 30%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.friendDetail {
+    /* border: 1px solid blueviolet; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+.friendDetail img {
+    width: 60px;
 }

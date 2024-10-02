@@ -1,13 +1,15 @@
+import { useState } from 'react'
 import css from '../Profile.module.css'
 import Avatar from '../assets/avatar.svg'
 import Badge from '../assets/badge.svg'
 
-const profileHeader = () => {
+const profileHeader = ({setFormpopup}:{setFormpopup:React.Dispatch<React.SetStateAction<boolean>>}) => {
+
   return (
     <div className={css.profileHeader}>
         <div className={css.avatar}>
-            <img src={Avatar} alt="" />
-            <p>Nickname</p>
+          <img src={Avatar} alt="" />
+          <p>Nickname</p>
         </div>
         <div className={css.playerStats}>
           <img src={Badge} alt="" />
@@ -25,7 +27,7 @@ const profileHeader = () => {
           </div>
         </div>
         <div className={css.coins}>
-          <a>Edit profile</a>
+          <button onClick={() => setFormpopup(true)}>Edit profile</button>
           <p>99999$</p>
         </div>
     </div>
