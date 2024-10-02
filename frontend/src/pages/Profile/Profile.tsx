@@ -1,49 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react'
 import css from './Profile.module.css'
 import ProfileHeader from './components/ProfileHeader'
+import GameHistory from './components/GameHistory'
+import ProfilePopup from './components/ProfilePopup'
 
 import Avatar1 from './assets/avatar1.svg'
 import Avatar2 from './assets/avatar2.svg'
 import Avatar3 from './assets/avatar3.svg'
 import Avatar4 from './assets/avatar4.svg'
 
-interface GameHistory {
+interface Friends {
   id: number;
-  date: string;
-  oppenent: string;
-  winLoss: string;
-  result: string;
+  avatar: string;
+  nickname: string;
 }
 
 const Profile = () => {
 
-  const historyGame = [
-    {id: 1, date: 'Today', oppenent: Avatar1, winLoss: 'WIN', result: '5 - 11'},
-    {id: 2, date: 'Yesterday', oppenent: Avatar2, winLoss: 'LOSE', result: '11 - 7'},
-    {id: 3, date: '2024-09-24', oppenent: Avatar3, winLoss: 'WIN', result: '8 - 11'},
-    {id: 4, date: '2024-09-23', oppenent: Avatar4, winLoss: 'WIN', result: '2 - 11'},
-  ];
+  const friendsList = [
+    {id: 1, avatar: Avatar1, nickname: 'chiwahed'},
+    {id: 2, avatar: Avatar2, nickname: 'chiwehda'},
+    {id: 3, avatar: Avatar3, nickname: 'chiwehedakhra'},
+    {id: 4, avatar: Avatar4, nickname: 'chiwahedakhor'}
+  ]
 
-  const ListHistory = historyGame.map((game) => (
-    <div key={game.id} className={css.game}>
-      <div className={css.gameDate}>
-        <div></div>
-        <p>{game.date}</p>
-      </div>
-      <div className={css.gameStatus}>
-        <img src={game.oppenent} alt="" />
-        <h4 className={game.winLoss === 'WIN' ? css.gameWin : css.gameLose}>{game.winLoss}</h4>
-        <p>{game.result}</p>
-      </div>
+  const ListFriends = friendsList.map((friend) => (
+    <div key={friend.id} className={css.friendDetail}>
+      <img src={friend.avatar} alt="" />
+      <p>{friend.nickname}</p>
+      <button>Invite</button>
     </div>
-  ))
+  ));
+
+  const [isFormPopup, setFormPopup] = useState(false);
+
+  // const showProfilePopup = () => { setFormPopup(true); }
+  
   return (
-    <div className={css.container}>
-      <ProfileHeader />
-      {/* GAME HISTORY */}
-      <div className={css.gameHistory}>
-        <h3>Game History</h3>
-        {ListHistory}
+    <div className={css.profileContainer}>
+      {isFormPopup && <ProfilePopup setFormpopup={setFormPopup} />}
+      <div className={`${css.container} ${isFormPopup ? css.containerBlur : ''}`}>
+        <ProfileHeader setFormpopup={setFormPopup}/>
+        <div className={css.bodyContainer}>
+          <GameHistory />
+          {/* ACHIEVEMENTS */}
+          <div className={css.achievementsContainer}>
+            <h3>Achievements</h3>
+          </div>
+          <div className={css.friendsContainer}>
+            <h3>Friends</h3>
+            {ListFriends}
+            {/* <div className={css.friendDetail}>
+            </div> */}
+          </div>
+        </div>
       </div>
     </div>
   )
