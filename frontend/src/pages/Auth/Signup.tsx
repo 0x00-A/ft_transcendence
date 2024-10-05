@@ -7,8 +7,9 @@ import UserIcon from "./assets/userIcon.svg";
 import EmailIcon from "./assets/emailIcon.svg";
 import PassIcon from "./assets/passIcon.svg";
 import { FieldValues, useForm } from "react-hook-form";
-import { Mutation, useMutation } from 'react-query';
+import { Mutation, useMutation, useQuery } from 'react-query';
 import axios from 'axios';
+import { FormEvent } from 'react';
 
 interface FormData {
   username: string;
@@ -25,20 +26,38 @@ const Signup = () => {
     // formState: { errors, isValid },
   } = useForm<FormData>();
 
-  // const mutation = useMutation<FormData>((newUser) => {
-  //   axios.post("", newUser)
+  // const createUser = async (data: FormData) => {
+  //   const {data: response} = await
+  //   axios
+  //     .post("http://localhost:8000/accounts/signup/", {data})
+  //   return response.data;
+  // };
+
+  // const { data: user, error } = useQuery({
+  //   queryKey: ['user'],
+  //   queryFn: createUser
+  // })
+  // const mutation = useMutation<FormData>((data) => {
+  //   axios.post("http://localhost:8000/accounts/signup/", data).
   // })
 
-  const onSubmit = (data: FieldValues) => {
+  const addUser = useMutation({
+    mutationFn: (user: FormData) =>
+      axios
+        .post("http://localhost:8000/accounts/signup/", {user})
+        .then(res => res.data)
+  });
+
+  const onSubmit = (data: FormData, event:any) => {
     console.log(data);
-    // mutation.mutate(data);
-    // console.log('submited');
+    event.preventDefault();
+    addUser.mutate(data);
   };
 
   return (
     <>
       <AuthHeader title="Welcome" description="Create you account and enjoy the game"/>
-      <form className={css.entryArea} onSubmit={handleSubmit(onSubmit)}>
+      <form className={css.entryArea} onSubmit={ handleSubmit(onSubmit) }>
         <div className={css.inputContainer}>
           <img src={UserIcon} alt="X" />
           <input type="text" required placeholder="username" {...register('username')}/>

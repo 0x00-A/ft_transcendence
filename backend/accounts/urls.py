@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
-from rest_framework import routers
+# from rest_framework import routers
 
-router = routers.SimpleRouter()
-router.register(r'accounts', views.AccountsList)
+# router = routers.SimpleRouter()
+# router.register(r'accounts', views.AccountsList)
 
-url_patterns = router.urls 
+urlpatterns = [
+    path('signup/', views.createAccount.as_view()),
+]
