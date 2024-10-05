@@ -1,4 +1,12 @@
 from pathlib import Path
+import environ
+
+
+# env = environ.Env(
+#     DEBUG=(bool, False)
+# )
+
+# environ.Env.read_env(BASE_DIR / '.env')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -6,7 +14,9 @@ SECRET_KEY = 'django-insecure-8@1uqvfec^roe+0cscb7iw+%()9mdrlv)fpns1pov!j=7quka@
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] 
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework',
+    'corsheaders',
     'accounts',
 ]
 
@@ -29,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -87,11 +99,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
