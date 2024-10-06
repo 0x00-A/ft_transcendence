@@ -36,10 +36,10 @@ jobs:
         uses: actions/checkout@v4 # Latest version, v3 should be good
 
       - name: Test
-        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
+        run: docker-compose run --rm backend sh -c "python manage.py wait_for_db && python manage.py test"
 
       - name: Lint
-        run: docker-compose run --rm app sh -c "flake8"
+        run: docker-compose run --rm backend sh -c "flake8"
 # name: No-Op Workflow
 
 # on:
