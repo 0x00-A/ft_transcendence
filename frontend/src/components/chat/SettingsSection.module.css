@@ -78,6 +78,11 @@
   transition: background-color 0.2s;
 }
 
+.messageStickers {
+  width: 60px;
+  height: 60px;
+  background-color: rebeccapurple;
+}
 .stickerButton:hover {
   background-color: #0e1725;
 }

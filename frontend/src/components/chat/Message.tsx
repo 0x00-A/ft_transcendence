@@ -39,7 +39,10 @@ const Message: React.FC<MessageProps> = ({
         </div>
         {/* <div className={css.messageBubble}> */}
         {isSticker ? (
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div
+            className={css.stickerContainer}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         ) : (
           <div className={css.messageBubble}>
             <p>{content}</p>
