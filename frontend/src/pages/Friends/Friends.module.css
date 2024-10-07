@@ -1,4 +1,27 @@
+.CenterContainer {
+  /* background-color: blue; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 700px;
+}
+
 .container {
-  /* height: 100vh; */
-  /* flex: 1; */
+  display: flex;
+  /* overflow: auto; */
+  width: 100%;
+  /* height: 80vh; */
+  height: 90%;
+  border-radius: 20px;
+  /* background-color: green; */
+}
+
+.content {
+  background-color: var(--chat-body);
+  flex-grow: 1;
+  padding: 20px;
+  min-width: 580px;
+  border-radius: 20px 0 0 20px;
 }

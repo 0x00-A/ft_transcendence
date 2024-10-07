@@ -22,13 +22,13 @@
 }
 
 .page-content {
+  /* background-color: red; */
   width: 100%;
-  /* max-width: 1400px; */
-  min-width: 300px;
-  height: auto;
+  height: calc(100vh - 116px);
   margin: 0 auto;
   padding: 15px;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 /* .body-container {

@@ -3,13 +3,43 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   padding: 10px;
+  padding-top: 0;
+  border-radius: 0 0 20px 0;
 }
 
+.messageBlock {
+  color: var(--text-color);
+  background-color: var(--selected-color);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 0 0 20px 0;
+  align-items: center;
+}
+.messageBlock h2 {
+  font-size: 1em;
+}
+.messageBlock h2 span {
+  font-size: 1em;
+}
+.messageBlock p {
+  color: var(--text-color);
+  font-size: 0.6em;
+  margin-bottom: 10px;
+}
+
+.messageBlock .buttonUnblock {
+  border: none;
+  background-color: #ff4c4b;
+  color: var(--text-color);
+  font-weight: 900;
+  letter-spacing: 1px;
+  width: 80%;
+  height: 40px;
+  border-radius: 30px;
+  cursor: pointer;
+}
 .messageInputContainer {
   display: flex;
   justify-content: center;
@@ -154,4 +184,24 @@
   100% {
     transform: scale(1.2);
   }
+}
+
+.sendSticker {
+  display: flex;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.sendSticker span:hover {
+  transform: scale(1.1);
+}
+.sendSticker img {
+  width: 40px;
+  height: 40px;
 }
