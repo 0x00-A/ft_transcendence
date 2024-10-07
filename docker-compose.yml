@@ -15,14 +15,15 @@ services:
               python manage.py runserver 0.0.0.0:8000"
     environment:
       # - DJANGO_ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1
-      - DB_HOST=db
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=changeme
+      - DB_HOST=$DB_HOST
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
     networks:
       - default_network
     depends_on:
-      - db
+      db:
+        condition: service_started
 
   frontend:
     build:
@@ -38,7 +39,8 @@ services:
     #   - ./frontend:/app/frontend
 
     depends_on:
-      - backend
+      backend:
+        condition: service_started
 
   db:
     image: postgres:13-alpine
@@ -47,9 +49,9 @@ services:
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASS
     networks:
       - default_network
 
