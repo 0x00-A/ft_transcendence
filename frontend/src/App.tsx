@@ -10,7 +10,7 @@ import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
-import Games from './pages/Games/Games';
+import ModeSelection from './pages/Game/ModeSelection';
 import Chat from './pages/Chat/Chat';
 import Friends from './pages/Friends/Friends';
 import Search from './pages/Search/Search';
@@ -25,6 +25,7 @@ import Topbar from './components/Topbar/Topbar';
 import Signup from './pages/Auth/Signup';
 import { useEffect, useState } from 'react';
 import usePreLoader from './hooks/usePreLoader';
+import PongGame from './components/Game/PongGame';
 
 function App() {
   return (
@@ -41,7 +42,7 @@ function App() {
 function AppContent() {
   const showSidebarRoutes = [
     '/',
-    '/games',
+    '/game',
     '/chat',
     '/friends',
     '/search',
@@ -70,7 +71,8 @@ function AppContent() {
         <div className="page-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/games" element={<Games />} />
+            <Route path="/game" element={<ModeSelection />} />
+            <Route path="/game/:mode/:gameId" element={<PongGame />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/search" element={<Search />} />
