@@ -5,7 +5,7 @@ LABEL maintainer='abdelatif'
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY ./requirements*.txt /tmp
+COPY ./requirements*.txt /tmp/
 # COPY ./requirements.dev.txt /tmp/requirements.dev.txt
 
 WORKDIR /app/backend
