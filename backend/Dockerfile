@@ -1,4 +1,3 @@
-# FROM python:3.9-alpine3.13
 FROM python:3.12.7-alpine3.20
 
 LABEL maintainer='abdelatif'
@@ -6,11 +5,10 @@ LABEL maintainer='abdelatif'
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY ./requirements.txt /tmp/requirements.txt
-COPY ./requirements.dev.txt /tmp/requirements.dev.txt
-COPY . /app/backend
+COPY ./requirements*.txt /tmp
+# COPY ./requirements.dev.txt /tmp/requirements.dev.txt
+
 WORKDIR /app/backend
-EXPOSE 8000
 
 ARG DEV=false
 
@@ -29,9 +27,11 @@ RUN pip install --upgrade pip && \
     --no-create-home \
     django-user
 
-# ENV PATH='/py/bin:/sbin:/bin:/usr/sbin:/usr/bin:$PATH'
+COPY . /app/backend
 
 USER django-user
+
+EXPOSE 8000
 
 # ENTRYPOINT [ "python" ]
 
