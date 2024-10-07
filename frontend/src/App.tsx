@@ -67,20 +67,21 @@ function AppContent() {
         {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
           <Topbar />
         )}
-        <div className="scattered-background"></div>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/games" element={<Games />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
+        <div className="page-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/games" element={<Games />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </div>
       </div>
     </div>
   );

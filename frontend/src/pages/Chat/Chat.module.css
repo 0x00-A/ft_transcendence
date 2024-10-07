@@ -1,4 +1,49 @@
+/* .CenterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 116px);
+} */
+
 .container {
-  /* height: 100vh; */
-  /* flex: 1; */
+  display: flex;
+  overflow: hidden;
+  height: 65vh;
+  min-height: 600px;
+  border-radius: 20px;
+  background-color: var(--main-surface-tertiary);
+}
+
+.expanded .sidebarRight {
+  display: none;
+}
+
+.sidebarLeft,
+.sidebarRight {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.chatBody {
+  flex: 1;
+  background-color: var(--chat-body);
+  min-width: 500px;
+  border-radius: 0 20px 20px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.messageArea {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-height: 85%;
+  overflow-y: auto;
+}
+
+.messageArea::-webkit-scrollbar {
+  display: none;
 }
