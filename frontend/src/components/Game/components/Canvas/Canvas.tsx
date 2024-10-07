@@ -1,4 +1,4 @@
-import useCanvas from '../../../../../hooks/useCanvas';
+import useCanvas from '../../../../hooks/useCanvas';
 import css from './Canvas.module.css';
 
 const Canvas = (props) => {
