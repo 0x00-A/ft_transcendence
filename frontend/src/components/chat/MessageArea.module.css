@@ -100,3 +100,13 @@
   margin-right: 5px;
   color: #dcdee2;
 }
+
+.stickerContainer {
+  display: inline-block;
+}
+
+.stickerContainer img {
+  height: 80px;
+  width: 80px;
+  object-fit: contain;
+}

@@ -21,6 +21,9 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
   // Custom SVG stickers
   const customStickers = [
     '<img src="/icons/chat/love.svg" alt="svg" />',
+    '<img src="/icons/chat/cat1.svg" alt="svg" />',
+    '<img src="/icons/chat/cat2.svg" alt="svg" />',
+    '<img src="/icons/chat/eat.svg" alt="svg" />',
     '<img src="/icons/chat/like.svg" alt="love" />',
     '<img src="/icons/chat/nolike.svg" alt="love" />',
     '<img src="/icons/chat/stickers1.svg" alt="love" />',
