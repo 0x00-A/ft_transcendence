@@ -58,14 +58,14 @@ const chatData: { [key: string]: ChatMessage[] } = {
   'mehadi f': [
     {
       name: 'mehadi f',
-      content: 'Hey,  cc',
+      content: 'w fin akhouy l3ziz ',
       sender: false,
       avatar: 'https://picsum.photos/200',
       time: '21:15 PM',
     },
     {
       name: 'rachid el ismaiyly',
-      content: 'I’m good, how abd sfsdf out you cc ?',
+      content: 'wahln wahln',
       sender: true,
       avatar: 'https://picsum.photos/200',
       time: '21:16 PM',

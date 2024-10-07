@@ -5,10 +5,18 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
 interface MessageInputProps {
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string, isSticker?: boolean) => void;
+  customSticker: string;
+  isBlocked: boolean;
+  onUnblock: () => void;
 }
 
-const MessageInput = ({ onSendMessage }: MessageInputProps) => {
+const MessageInput = ({
+  onSendMessage,
+  customSticker,
+  isBlocked,
+  onUnblock,
+}: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
@@ -16,24 +24,24 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const [inputFocused, setInputFocused] = useState(false);
-  const [emojiSend, setEmojiSend] = useState('👍');
 
   const handleSend = () => {
     if (message.trim()) {
-      console.log('Sending message:', message);
-      onSendMessage(message);
+      // Send message as text
+      onSendMessage(message, false);
       setMessage('');
+    } else if (customSticker) {
+      // Send sticker
+      onSendMessage(customSticker, true);
+    }
 
-      setIsFlying(true);
-      setInputFocused(false);
-      setTimeout(() => {
-        setIsFlying(false);
-      }, 500);
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    } else if (emojiSend) {
-      onSendMessage(emojiSend);
+    setIsFlying(true);
+    setInputFocused(false);
+    setTimeout(() => {
+      setIsFlying(false);
+    }, 500);
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   };
 
@@ -62,6 +70,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
       setShowEmojiPicker(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
 
@@ -71,14 +80,9 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) {
-      setMessage(value);
-      setInputFocused(true);
-    }
+    setMessage(e.target.value);
+    setInputFocused(true);
   };
-  // const handleInputFocus = () => {
-  // };
 
   const handleInputBlur = () => {
     if (!message.trim()) {
@@ -87,49 +91,64 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
   };
 
   return (
-    <div className={css.messageInputWrapper}>
-      {showEmojiPicker && (
-        <div ref={emojiRef} className={css.emojiPicker}>
-          <Picker data={data} onEmojiSelect={handleEmojiClick} />
+    <>
+      {isBlocked ? (
+        <div className={css.messageBlock}>
+          <h2>
+            Your blocked <span>Rachid el ismaiyly</span>
+          </h2>
+          <p>
+            You can't message them in this chat, and you won't receive their
+            messages.
+          </p>
+          <button className={css.buttonUnblock} onClick={onUnblock}>
+            UnBlock
+          </button>
+        </div>
+      ) : (
+        <div className={css.messageInputWrapper}>
+          {showEmojiPicker && (
+            <div ref={emojiRef} className={css.emojiPicker}>
+              <Picker data={data} onEmojiSelect={handleEmojiClick} />
+            </div>
+          )}
+          <div className={css.messageInputContainer}>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Write a message"
+              value={message}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onBlur={handleInputBlur}
+              className={css.input}
+            />
+            <button
+              ref={buttonEmojiRef}
+              className={css.buttonEmoji}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <FaSmile size={25} />
+            </button>
+            <button className={css.buttonClip}>
+              <FaPaperclip size={25} />
+            </button>
+          </div>
+          {inputFocused ? (
+            <button
+              onClick={handleSend}
+              className={`${css.sendButton} ${isFlying ? css.animateIcon : ''}`}
+            >
+              <FaPaperPlane size={25} />
+            </button>
+          ) : (
+            <button className={css.sendSticker} onClick={handleSend}>
+              <span dangerouslySetInnerHTML={{ __html: customSticker }} />
+            </button>
+          )}
         </div>
       )}
-      <div className={css.messageInputContainer}>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Write a message"
-          value={message}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          // onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          className={css.input}
-        />
-        <button
-          ref={buttonEmojiRef}
-          className={css.buttonEmoji}
-          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-        >
-          <FaSmile size={25} />
-        </button>
-        <button className={css.buttonClip}>
-          <FaPaperclip size={25} />
-        </button>
-      </div>
-
-      {inputFocused ? (
-        <button
-          onClick={handleSend}
-          className={`${css.sendButton} ${isFlying ? css.animateIcon : ''}`}
-        >
-          <FaPaperPlane size={25} />
-        </button>
-      ) : (
-        <button className={css.sendEmoji} onClick={handleSend}>
-          <span>👍</span>
-        </button>
-      )}
-    </div>
+    </>
   );
 };
 
