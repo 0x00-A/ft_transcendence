@@ -26,6 +26,9 @@ import Signup from './pages/Auth/Signup';
 import { useEffect, useState } from 'react';
 import usePreLoader from './hooks/usePreLoader';
 import PongGame from './components/Game/PongGame';
+import LocalGame from './components/Game/LocalGame/LocalGame';
+import RemoteGame from './components/Game/RemoteGame/RemoteGame';
+import PingPongGame from './components/Game/LocalGame/PingPongGame';
 
 function App() {
   return (
@@ -55,7 +58,7 @@ function AppContent() {
   const loading = usePreLoader();
 
   if (loading) {
-    return <PreLoader />;
+    // return <PreLoader />;
   }
 
   return (
@@ -72,7 +75,12 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/game" element={<ModeSelection />} />
-            <Route path="/game/:mode/:gameId" element={<PongGame />} />
+            <Route path="/game/local" element={<PingPongGame />} />
+            {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
+            <Route path="/game/remote" element={<RemoteGame />}>
+              {/* Remote game instance with game ID */}
+              {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
+            </Route>
             <Route path="/chat" element={<Chat />} />
             <Route path="/friends" element={<Friends />} />
             <Route path="/search" element={<Search />} />

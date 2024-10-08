@@ -18,7 +18,7 @@
   /* width: 100%; */
   min-height: 100vh;
   height: auto;
-  z-index: -2;
+  /* z-index: -2; */
 }
 
 .page-content {

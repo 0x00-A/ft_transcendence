@@ -30,9 +30,10 @@ const ModeSelection = () => {
 
   const navigate = useNavigate();
 
-  const startGame = (modeId) => {
+  const startGame = (modeId: number) => {
     const gameId = generateUniqueGameId(); // Generate a unique game ID
-    navigate(`/game/${modeId}/${gameId}`); // Navigate to the game URL with mode and ID
+    if (modeId === 0) navigate(`/game/local`); // Navigate to the game URL with mode and ID
+    if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
   };
 
   return (
