@@ -1,30 +1,33 @@
-// src/hooks/useGameLogic.ts
-import { useEffect, useState } from 'react';
-
-interface Ball {
-  x: number;
-  y: number;
-  radius: number;
-  dx: number; // change in x (speed)
-  dy: number; // change in y (speed)
-}
+import { useState, useEffect, useRef } from 'react';
 
 interface PaddleState {
   x: number;
   y: number;
   width: number;
   height: number;
+  vy: number;
 }
 
-const useGameLogic = (canvasWidth: number, canvasHeight: number) => {
+interface BallState {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  color: string;
+}
+
+export const useGameLogic = (canvasWidth: number, canvasHeight: number) => {
   const paddleWidth = 10;
-  const paddleHeight = 80;
+  const paddleHeight = 100;
+  const ballRadius = 10;
 
   const [paddle1, setPaddle1] = useState<PaddleState>({
     x: 0,
     y: canvasHeight / 2 - paddleHeight / 2,
     width: paddleWidth,
     height: paddleHeight,
+    vy: 0,
   });
 
   const [paddle2, setPaddle2] = useState<PaddleState>({
@@ -32,68 +35,139 @@ const useGameLogic = (canvasWidth: number, canvasHeight: number) => {
     y: canvasHeight / 2 - paddleHeight / 2,
     width: paddleWidth,
     height: paddleHeight,
+    vy: 0,
   });
 
-  const [ball, setBall] = useState<Ball>({
+  const [ball, setBall] = useState<BallState>({
     x: canvasWidth / 2,
     y: canvasHeight / 2,
-    radius: 10,
-    dx: 5, // Speed of the ball in x direction
-    dy: 5, // Speed of the ball in y direction
+    vx: 3,
+    vy: 3,
+    radius: ballRadius,
+    color: 'white',
   });
 
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
-  const movePaddle = (paddle: 'paddle1' | 'paddle2', direction: 'up' | 'down') => {
+  const smokeParticles = useRef<any[]>([]);
+  const explosionParticles = useRef<any[]>([]);
+
+  // Move Ball
+  const moveBall = () => {
+    setBall((prev) => {
+      let { x, y, vx, vy } = prev;
+
+      x += vx;
+      y += vy;
+
+      // Check wall collisions
+      if (y + prev.radius > canvasHeight || y - prev.radius < 0) {
+        vy *= -1;
+        createExplosion(x, y);
+      }
+
+      // Check paddle collisions
+      if (ballHitsPaddle(paddle1) || ballHitsPaddle(paddle2)) {
+        vx *= -1;
+        createExplosion(x, y);
+      }
+
+      // Scoring logic
+      if (x + prev.radius > canvasWidth) {
+        setScore1((prevScore) => prevScore + 1);
+        resetBall();
+      } else if (x - prev.radius < 0) {
+        setScore2((prevScore) => prevScore + 1);
+        resetBall();
+      }
+
+      createSmoke(x, y);
+      return { ...prev, x, y, vx, vy };
+    });
+  };
+
+  // Check if ball hits paddle
+  const ballHitsPaddle = (paddle: PaddleState) => {
+    return (
+      ball.x - ball.radius < paddle.x + paddle.width &&
+      ball.x + ball.radius > paddle.x &&
+      ball.y > paddle.y &&
+      ball.y < paddle.y + paddle.height
+    );
+  };
+
+  // Reset ball position
+  const resetBall = () => {
+    setBall((prev) => ({
+      ...prev,
+      x: canvasWidth / 2,
+      y: canvasHeight / 2,
+      vx: prev.vx * -1,
+      vy: (Math.random() - 0.5) * 6,
+    }));
+  };
+
+  // Move paddles
+  const movePaddle = (
+    paddle: 'paddle1' | 'paddle2',
+    direction: 'up' | 'down'
+  ) => {
     if (paddle === 'paddle1') {
       setPaddle1((prev) => ({
         ...prev,
-        y: direction === 'up' ? Math.max(prev.y - 10, 0) : Math.min(prev.y + 10, canvasHeight - paddleHeight),
+        vy: direction === 'up' ? -5 : 5,
       }));
     } else {
       setPaddle2((prev) => ({
         ...prev,
-        y: direction === 'up' ? Math.max(prev.y - 10, 0) : Math.min(prev.y + 10, canvasHeight - paddleHeight),
+        vy: direction === 'up' ? -5 : 5,
       }));
     }
   };
 
-  const updateGame = () => {
-    setBall((prevBall) => {
-      const newBall = { ...prevBall, x: prevBall.x + prevBall.dx, y: prevBall.y + prevBall.dy };
+  const stopPaddle = (paddle: 'paddle1' | 'paddle2') => {
+    if (paddle === 'paddle1') {
+      setPaddle1((prev) => ({ ...prev, vy: 0 }));
+    } else {
+      setPaddle2((prev) => ({ ...prev, vy: 0 }));
+    }
+  };
 
-      if (newBall.y - newBall.radius < 0 || newBall.y + newBall.radius > canvasHeight) {
-        newBall.dy = -newBall.dy; // Reverse direction
-      }
-
-      if (
-        (newBall.x - newBall.radius < paddle1.x + paddleWidth &&
-          newBall.y > paddle1.y &&
-          newBall.y < paddle1.y + paddleHeight) ||
-        (newBall.x + newBall.radius > paddle2.x &&
-          newBall.y > paddle2.y &&
-          newBall.y < paddle2.y + paddleHeight)
-      ) {
-        newBall.dx = -newBall.dx; // Reverse direction
-      }
-
-      if (newBall.x - newBall.radius < 0) {
-        setScore2((prev) => prev + 1); // Player 2 scores
-        newBall.x = canvasWidth / 2;
-        newBall.y = canvasHeight / 2;
-      }
-      if (newBall.x + newBall.radius > canvasWidth) {
-        setScore1((prev) => prev + 1); // Player 1 scores
-        newBall.x = canvasWidth / 2;
-        newBall.y = canvasHeight / 2;
-      }
-
-      return newBall;
+  // Create smoke particles
+  const createSmoke = (x: number, y: number) => {
+    smokeParticles.current.push({
+      x,
+      y,
+      opacity: 1,
+      radius: Math.random() * 5 + 2,
     });
   };
 
-  return { ball, paddle1, paddle2, movePaddle, score1, score2, updateGame };
-};
+  // Create explosion particles
+  const createExplosion = (x: number, y: number) => {
+    for (let i = 0; i < 10; i++) {
+      explosionParticles.current.push({
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
+        radius: Math.random() * 5 + 2,
+        life: 50,
+      });
+    }
+  };
 
-export default useGameLogic;
+  return {
+    paddle1,
+    paddle2,
+    ball,
+    score1,
+    score2,
+    smokeParticles: smokeParticles.current,
+    explosionParticles: explosionParticles.current,
+    movePaddle,
+    stopPaddle,
+    moveBall,
+  };
+};
