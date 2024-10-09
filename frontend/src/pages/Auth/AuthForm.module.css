@@ -9,7 +9,7 @@
     justify-content: center;
     gap: 10px;
     margin-top: 20px;
-
+    position: relative;
 }
 
 .inputContainer {
@@ -39,6 +39,9 @@
     left: 10px;
 }
 
+.inputContainer input:blank {
+    border: 1px solid red;
+}
 .inputContainer input:focus {
     background-color: #497285;
 }
@@ -51,10 +54,15 @@
     border: 1px solid green;
 }
 
+.inputContainer input::after {
+    background-color: red;
+}
+
 .inputContainer input::placeholder {
     text-align:start;
     font-size: large;
 }
+
 
 .authBtn {
     /* border: 1px solid rgb(255, 0, 0); */
@@ -76,3 +84,33 @@
     cursor: pointer;
 }
 
+.sigupState {
+    color: green;
+    /* position: absolute; */
+    top: -90px;
+    left: 0; 
+}
+
+.fieldError {
+    position: absolute;
+    color: red;
+    border: none;
+    font-size: 11px;
+    height: fit-content;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: white;
+    z-index: 999;
+    top: 60px;
+    left: 40px;
+}
+
+.fieldError::before {
+    content: '';
+    position: absolute;
+    top: -19px;
+    left: 15%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-bottom-color: white;
+}

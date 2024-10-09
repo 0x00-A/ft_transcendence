@@ -8,12 +8,15 @@ import Avatar1 from './assets/avatar1.svg'
 import Avatar2 from './assets/avatar2.svg'
 import Avatar3 from './assets/avatar3.svg'
 import Avatar4 from './assets/avatar4.svg'
+import { useQuery } from 'react-query'
 
 interface Friends {
   id: number;
   avatar: string;
   nickname: string;
 }
+
+
 
 const Profile = () => {
 
@@ -23,6 +26,8 @@ const Profile = () => {
     {id: 3, avatar: Avatar3, nickname: 'chiwehedakhra'},
     {id: 4, avatar: Avatar4, nickname: 'chiwahedakhor'}
   ]
+
+ const ProfileDetail = useQuery()
 
   const ListFriends = friendsList.map((friend) => (
     <div key={friend.id} className={css.friendDetail}>
