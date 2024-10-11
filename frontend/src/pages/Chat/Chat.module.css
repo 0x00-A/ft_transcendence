@@ -1,16 +1,20 @@
-/* .CenterContainer {
+.CenterContainer {
+  /* background-color: blue; */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 116px);
-} */
-
+  width: 100%;
+  height: 100%;
+  min-height: 700px;
+}
 .container {
   display: flex;
-  overflow: hidden;
-  height: 65vh;
-  min-height: 600px;
+  /* overflow: auto; */
+  width: 100%;
+  /* height: 80vh; */
+  height: 90%;
   border-radius: 20px;
+  /* background-color: green; */
   background-color: var(--main-surface-tertiary);
 }
 
@@ -20,15 +24,23 @@
 
 .sidebarLeft,
 .sidebarRight {
-  min-width: 300px;
+  /* background-color: yellow; */
+  width: 300px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
+.sidebarRight {
+  overflow: auto;
+  scrollbar-color: var(--selected-color) transparent;
+}
 .chatBody {
   flex: 1;
+  /* background-color: yellow; */
   background-color: var(--chat-body);
+  height: 100%;
   min-width: 500px;
   border-radius: 0 20px 20px 0;
   position: relative;
@@ -38,8 +50,10 @@
 
 .messageArea {
   display: flex;
+  flex: 1;
   flex-direction: column;
   padding: 20px;
+  padding-bottom: 0;
   max-height: 85%;
   overflow-y: auto;
 }

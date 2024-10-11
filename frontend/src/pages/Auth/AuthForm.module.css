@@ -1,0 +1,116 @@
+.entryArea {
+    display: flex;
+    flex-direction: column;
+    /* margin-top: 20px; */
+    width: auto;
+    height: auto;
+    /* height: 35%; */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.inputContainer {
+    /* display: flex; */
+    position: relative;
+    /* border: 1px solid aliceblue; */
+    /* margin-top: 5px; */
+    width: 270px;
+
+}
+
+.inputContainer input {
+    background: #41506b;
+    background-color: #2b4450;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding: 12px;
+    padding-left: 40px;
+    width: 100%;
+    font-size: medium;
+}
+
+.inputContainer img {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+}
+
+.inputContainer input:blank {
+    border: 1px solid red;
+}
+.inputContainer input:focus {
+    background-color: #497285;
+}
+
+.inputContainer input:focus:invalid {
+    border: 1px solid red;
+}
+
+.inputContainer input:valid {
+    border: 1px solid green;
+}
+
+.inputContainer input::after {
+    background-color: red;
+}
+
+.inputContainer input::placeholder {
+    text-align:start;
+    font-size: large;
+}
+
+
+.authBtn {
+    /* border: 1px solid rgb(255, 0, 0); */
+    /* width: 60%; */
+    /* height: 35px; */
+    border-radius: 20px;
+    background-color: #07689f;
+    color: var(--text-color);
+    font-size: large;
+    margin-top: 5px;
+    padding: 8px 50px;
+    outline: none;
+    border: none;
+    background-color: var(--color-brand--1);
+}
+
+.authBtn:hover {
+    background-color: var(--color-active);
+    cursor: pointer;
+}
+
+.sigupState {
+    color: green;
+    /* position: absolute; */
+    top: -90px;
+    left: 0; 
+}
+
+.fieldError {
+    position: absolute;
+    color: red;
+    border: none;
+    font-size: 11px;
+    height: fit-content;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: white;
+    z-index: 999;
+    top: 60px;
+    left: 40px;
+}
+
+.fieldError::before {
+    content: '';
+    position: absolute;
+    top: -19px;
+    left: 15%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-bottom-color: white;
+}

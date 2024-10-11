@@ -27,7 +27,7 @@ const MessageArea = ({ messages }: MessageAreaProps) => {
       {messages.map((message, index) => (
         <Message key={index} {...message} />
       ))}
-      <div ref={messageEndRef} />
+      <div className={css.scrollMessages} ref={messageEndRef} />
     </div>
   );
 };
