@@ -8,7 +8,10 @@ import PageNotFound from './pages/PageNotFound';
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
-import Login from './pages/Login';
+// import Login from './pages/Login';
+// import Login from './pages/Auth/Login';
+import Auth from './pages/Auth/Auth';
+import Profile from './pages/Profile/Profile';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ModeSelection from './pages/Game/ModeSelection';
 import Chat from './pages/Chat/Chat';
@@ -29,6 +32,7 @@ import PongGame from './components/Game/PongGame';
 import LocalGame from './components/Game/LocalGame/LocalGame';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import PingPongGame from './components/Game/LocalGame/PingPongGame';
+// import Signup from './pages/Auth/Signup';
 
 function App() {
   return (
@@ -52,6 +56,7 @@ function AppContent() {
     '/store',
     '/leaderboard',
     '/settings',
+    '/profile',
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
@@ -71,27 +76,26 @@ function AppContent() {
         {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
           <Topbar />
         )}
-        <div className="page-content">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/game" element={<ModeSelection />} />
-            <Route path="/game/local" element={<PingPongGame />} />
-            {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
-            <Route path="/game/remote" element={<RemoteGame />}>
-              {/* Remote game instance with game ID */}
-              {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
-            </Route>
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/friends" element={<Friends />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          {/* <Route path="/games" element={<Games />} /> */}
+          <Route path="/game" element={<ModeSelection />} />
+          <Route path="/game/local" element={<PingPongGame />} />
+          {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
+          <Route path="/game/remote" element={<RemoteGame />}>
+            {/* Remote game instance with game ID */}
+            {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
+          </Route>
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
       </div>
     </div>
   );

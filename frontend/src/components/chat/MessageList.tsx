@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
+import { useLocation } from 'react-router-dom';
+
 import {
   FaCheck,
   FaBell,
@@ -10,6 +12,7 @@ import {
   FaArchive,
   FaTrash,
   FaThumbtack,
+  FaTimes,
 } from 'react-icons/fa';
 
 interface Message {
@@ -20,13 +23,16 @@ interface Message {
   unreadCount?: number;
   status: 'online' | 'offline' | 'typing';
   lastSeen?: string;
+  blocked: boolean;
 }
 
 interface MessageListProps {
   messages: Message[];
-  onSelectMessage: (message: Message) => void;
+  onSelectMessage: (message: Message | null) => void;
   isSearchActive: boolean;
   onSelectedSearch: (selectedSearch: boolean) => void;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  onBlockUser: (userName: string) => void;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -34,6 +40,8 @@ const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
   isSearchActive,
   onSelectedSearch,
+  setQuery,
+  onBlockUser,
 }) => {
   const [selectedMessageIndex, setSelectedMessageIndex] = useState<
     number | null
@@ -49,18 +57,45 @@ const MessageList: React.FC<MessageListProps> = ({
   });
   const menuRef = useRef(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const messageListRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const selectedFriend = location.state?.selectedFriend;
+    if (selectedFriend) {
+      const messageIndex = messages.findIndex(
+        (message) => message.name === selectedFriend.username
+      );
+
+      if (messageIndex !== -1) {
+        const foundMessage = messages[messageIndex];
+
+        onSelectMessage(foundMessage);
+        console.log('Message Selected:', foundMessage);
+        setSelectedMessageIndex(messageIndex);
+        onSelectedSearch(false);
+        setQuery('');
+
+        setMenuState((prevState) => ({
+          ...prevState,
+          isOpen: false,
+          activeIndex: null,
+        }));
+      }
+    }
+  }, [location.state]);
 
   const handleClick = (index: number, message: Message) => {
     setSelectedMessageIndex(index);
     onSelectMessage(message);
     onSelectedSearch(false);
+    setQuery('');
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
       activeIndex: null,
     }));
   };
-  const messageListRef = useRef<HTMLDivElement>(null);
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
@@ -133,6 +168,25 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   }, [menuState.activeIndex]);
 
+  const handleBlock = (userName: string) => {
+    onBlockUser(userName);
+    setMenuState((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      activeIndex: null,
+    }));
+  };
+  const handleClose = () => {
+    if (selectedMessageIndex !== null) {
+      onSelectMessage(null);
+      setSelectedMessageIndex(null);
+    }
+    setMenuState((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      activeIndex: null,
+    }));
+  };
   return (
     <div ref={messageListRef} className={css.messageList}>
       {messages.map((message, index) =>
@@ -169,6 +223,9 @@ const MessageList: React.FC<MessageListProps> = ({
           <div className={css.menuItem}>
             <FaCheck /> <span>Mark as read</span>
           </div>
+          <div className={css.menuItem} onClick={handleClose}>
+            <FaTimes /> <span>Close Chat</span>
+          </div>
           <div className={css.menuItem}>
             <FaBell /> <span>Mute notifications</span>
           </div>
@@ -176,8 +233,14 @@ const MessageList: React.FC<MessageListProps> = ({
             <FaUser /> <span>View Profile</span>
           </div>
           <hr />
-          <div className={css.menuItem}>
-            <FaBan /> <span>Block</span>
+          <div
+            className={css.menuItem}
+            onClick={() => handleBlock(messages[menuState.activeIndex!].name)}
+          >
+            <FaBan />
+            <span>
+              {messages[selectedMessageIndex!]?.blocked ? 'Unblock' : 'Block'}
+            </span>
           </div>
           <div className={css.menuItem}>
             <FaArchive /> <span>Archive chat</span>

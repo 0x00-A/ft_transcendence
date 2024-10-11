@@ -22,6 +22,7 @@ interface SelectedMessageProps {
   unreadCount?: number;
   status: 'online' | 'offline' | 'typing';
   lastSeen?: string;
+  blocked: boolean;
 }
 interface ChatMessage {
   name: string;
@@ -40,6 +41,9 @@ const Chat = () => {
   const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [customSticker, setCustomSticker] = useState(
+    '<img src="/icons/chat/like.svg" alt="love" />'
+  );
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -79,7 +83,10 @@ const Chat = () => {
     message.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleSendMessage = (newMessage: string) => {
+  const handleSendMessage = (
+    newMessage: string,
+    isSticker: boolean = false
+  ) => {
     if (selectedMessage) {
       const message = {
         name: 'You',
@@ -88,8 +95,25 @@ const Chat = () => {
         avatar: 'https://picsum.photos/200',
         time: moment().format('HH:mm A'),
       };
+
+      if (isSticker) {
+        message.content = newMessage;
+      }
+
       setChatMessages((prevMessages) => [...prevMessages, message]);
     }
+  };
+
+  const handleStickerChange = (newSticker: string) => {
+    setCustomSticker(newSticker);
+  };
+
+  const handleBlockUser = (userName: string) => {
+    console.log('nameblock: ', userName);
+    const updatedMessages = messages.map((msg) =>
+      msg.name === userName ? { ...msg, blocked: !msg.blocked } : msg
+    );
+    console.log(updatedMessages);
   };
 
   return (
@@ -100,12 +124,16 @@ const Chat = () => {
           <SearchMessages
             onSearch={handleSearch}
             onSelectedSearch={setSelectedSearch}
+            query={searchQuery}
+            setQuery={setSearchQuery}
           />
           <MessageList
             messages={selectedSearch ? filteredMessages : messages}
             onSelectMessage={setSelectedMessage}
             isSearchActive={selectedSearch}
             onSelectedSearch={setSelectedSearch}
+            setQuery={setSearchQuery}
+            onBlockUser={handleBlockUser}
           />
         </div>
         <div className={css.chatBody}>
@@ -118,7 +146,12 @@ const Chat = () => {
               <div className={css.messageArea}>
                 <MessageArea messages={chatMessages} />
               </div>
-              <MessageInput onSendMessage={handleSendMessage} />
+              <MessageInput
+                onSendMessage={handleSendMessage}
+                customSticker={customSticker}
+                isBlocked={selectedMessage.blocked}
+                onUnblock={() => handleBlockUser(selectedMessage.name)}
+              />
             </>
           ) : (
             <NoChatSelected />
@@ -126,7 +159,10 @@ const Chat = () => {
         </div>
         {selectedMessage && !isExpanded && (
           <div className={css.sidebarRight}>
-            <SideInfoChat selectedMessage={selectedMessage} />
+            <SideInfoChat
+              selectedMessage={selectedMessage}
+              onEmojiChange={handleStickerChange}
+            />
           </div>
         )}
       </div>
