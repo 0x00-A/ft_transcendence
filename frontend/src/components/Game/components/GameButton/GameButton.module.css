@@ -1,0 +1,31 @@
+button {
+    margin: 0 6px;
+    background-color: black;
+    border: 3px lightgray solid;
+    border-radius: 10px;
+    color: lightgrey;
+    font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    width: 250px;
+    outline: 0
+}
+
+.buttonKey {
+    font-size: 16px
+}
+
+button:hover {
+    cursor: pointer;
+    border: 3px #3b3b3b solid;
+    background-color: lightgray;
+    color: #3b3b3b
+}
+
+    .button {
+        margin-top: '20px';
+        padding: '10px 20px';
+        font-size: '18px';
+        cursor: 'pointer';
+    }

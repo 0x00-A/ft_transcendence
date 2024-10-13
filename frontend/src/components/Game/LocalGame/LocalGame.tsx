@@ -1,72 +1,60 @@
-// src/components/LocalGame.tsx
-import React, { useEffect, useRef } from 'react';
-import useGameLogic from '../../../hooks/useGameLogic';
-import { log } from 'console';
+import { useState } from 'react';
+import css from './LocalGame.module.css';
+import GameModeScreen from '../components/GameModeScreen/GameModeScreen';
 
-const LocalGame: React.FC = () => {
-  const canvasWidth = 800;
-  const canvasHeight = 400;
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+import { GameScreens } from '../../../types/types';
+import Pong from '../components/Pong/Pong';
+import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 
-  const { ball, paddle1, paddle2, movePaddle, score1, score2, updateGame } =
-    useGameLogic(canvasWidth, canvasHeight);
+const LocalGame = () => {
+  const [currentScreen, setCurrentScreen] = useState<GameScreens>('mode'); // Starting screen is 'mode'
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isWinner, setIsWinner] = useState(false);
+  const [isOnePlayerMode, SetIsOnePlayerMode] = useState(false);
+  const [sound, SwitchSound] = useState(true);
 
-  // Handle keyboard input
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'w') {
-        console.log('ddddd');
-
-        movePaddle('paddle1', 'up');
-      }
-      if (e.key === 's') movePaddle('paddle1', 'down');
-      if (e.key === 'ArrowUp') movePaddle('paddle2', 'up');
-      if (e.key === 'ArrowDown') movePaddle('paddle2', 'down');
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [movePaddle]);
-
-  // Render the ball and paddles
-  const draw = () => {
-    const ctx = canvasRef.current?.getContext('2d');
-    if (!ctx) return;
-
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    // Draw paddles
-    ctx.fillStyle = 'white'; // Paddle color
-    ctx.fillRect(paddle1.x, paddle1.y, paddle1.width, paddle1.height); // Player 1 paddle
-    ctx.fillRect(paddle2.x, paddle2.y, paddle2.width, paddle2.height); // Player 2 paddle
-
-    // Draw ball
-    ctx.fillStyle = 'black'; // Ball color
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Draw scores
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    ctx.fillText(`Player 1: ${score1}`, 50, 30);
-    ctx.fillText(`Player 2: ${score2}`, canvasWidth - 150, 30);
+  const handleNextScreen = (nextScreen: GameScreens) => {
+    setCurrentScreen(nextScreen);
   };
-
-  // Game loop to update the canvas
-  const gameLoop = () => {
-    updateGame();
-    draw();
-    // requestAnimationFrame(gameLoop); // Request the next frame
-    setInterval(gameLoop, 1000 / 60);
+  const handleRetry = () => {
+    setCurrentScreen('game');
+    setIsGameOver(false);
   };
-
-  useEffect(() => {
-    gameLoop(); // Start the game loop when the component mounts
-  }, []);
-
-  return <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />;
+  const handleMainMenu = () => {
+    setCurrentScreen('mode');
+    setIsGameOver(false);
+  };
+  return (
+    <div className={css.gameArea}>
+      {currentScreen === 'mode' && (
+        <GameModeScreen
+          onNext={handleNextScreen}
+          SetIsOnePlayerMode={SetIsOnePlayerMode}
+          SwitchSound={SwitchSound}
+          sound={sound}
+        />
+      )}
+      {/* {currentScreen === 'difficulty' && (
+        <DifficultyScreen onNext={handleNextScreen} />
+      )} */}
+      {currentScreen === 'game' && (
+        <Pong
+          onNext={handleNextScreen}
+          isGameOver={isGameOver}
+          setIsGameOver={setIsGameOver}
+          setIsWinner={setIsWinner}
+          isOnePlayerMode={isOnePlayerMode}
+        />
+      )}
+      {currentScreen === 'end' && (
+        <EndGameScreen
+          isWinner={isWinner}
+          handleRetry={handleRetry}
+          handleMainMenu={handleMainMenu}
+        />
+      )}
+    </div>
+  );
 };
 
 export default LocalGame;

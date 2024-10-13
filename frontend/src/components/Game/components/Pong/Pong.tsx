@@ -1,17 +1,21 @@
 // Game.tsx
 import React, { useEffect, useRef, useState } from 'react';
-import Paddle from '../components/Paddle';
-import Ball from '../components/Ball';
+import Paddle from '../utils/Paddle';
+import Ball from '../utils/Ball';
 import {
   isCollidingWithPaddle,
   handlePaddleCollision,
-} from '../components/GameLogic';
+} from '../utils/GameLogic';
 import css from './Pong.module.css';
 import { log } from 'console';
+import { Link, Navigate } from 'react-router-dom';
+import GameButton from '../GameButton/GameButton';
+import { GameScreens } from '../../../../types/types';
+import useSound from 'use-sound';
 
 function create_ball(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
   const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4; // Random angle between -45° and 45°
-  const ballSpeed = 10;
+  const ballSpeed = 6;
   const ballRaduis = 8;
 
   // Initial random direction towards a player
@@ -29,16 +33,33 @@ function create_ball(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
   );
 }
 
-type GameMode = 'ai' | 'local';
-
 interface GameProps {
-  gameMode: GameMode;
+  controlMode?: 'keyboard' | 'mouse';
+  setIsGameOver: React.Dispatch<React.SetStateAction<boolean>>;
+  isGameOver: boolean;
+  setIsWinner: React.Dispatch<React.SetStateAction<boolean>>;
+  isOnePlayerMode: boolean;
+  onNext: (nextScreen: GameScreens) => void;
+  sound: boolean;
 }
 
-const Pong: React.FC<GameProps> = ({ gameMode }) => {
+const Pong: React.FC<GameProps> = ({
+  controlMode = 'mouse',
+  isGameOver,
+  setIsGameOver,
+  setIsWinner,
+  isOnePlayerMode,
+  onNext,
+  sound,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // const [hitWallSound] = useSound('../../sounds/wall-hit-1.mp3');
+
+  let hitWallSound = new Audio('wall-hit-1.mp3');
+  let paddleHitSound = new Audio('paddle-hit-1.mp3');
 
   useEffect(() => {
+    if (isGameOver) return;
     const resizeCanvas = () => {
       const rect = (
         canvasRef.current?.parentNode as Element
@@ -81,14 +102,16 @@ const Pong: React.FC<GameProps> = ({ gameMode }) => {
     return window.removeEventListener('resize', () => {
       resizeCanvas();
     });
-  }, []);
+  }, [isGameOver]);
 
   useEffect(() => {
+    if (isGameOver) return;
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
     const pW = 10;
     const pH = 100;
-    const paddleSpeed = 15;
+    const paddleSpeed = 5;
+    const winningScore = 5;
 
     const ball = create_ball(ctx, canvas);
     const paddle1: Paddle = new Paddle(
@@ -108,16 +131,14 @@ const Pong: React.FC<GameProps> = ({ gameMode }) => {
       paddleSpeed
     );
 
-    function getRandomIntegerHeightValue(paddleHeight: number): number {
+    function getRandomValue(paddleHeight: number): number {
       // Generate a random integer between 0 and paddleHeight (inclusive)
-      return Math.floor(Math.random() * (paddleHeight + 1)); // +1 to include paddleHeight
+      // return Math.floor(Math.random() * (paddleHeight + 1)); // +1 to include paddleHeight
+      return Math.floor(
+        Math.random() * ((3 * paddleHeight) / 4 - paddleHeight / 4) +
+          paddleHeight / 4
+      );
     }
-
-    const resetGame = () => {
-      resetBall();
-      paddle1.y = canvas.height / 2 - pH / 2;
-      paddle2.y = canvas.height / 2 - pH / 2;
-    };
 
     const resetBall = () => {
       ball.x = ball.dx > 0 ? (3 * canvas.width) / 4 : canvas.width / 4;
@@ -126,13 +147,31 @@ const Pong: React.FC<GameProps> = ({ gameMode }) => {
       ball.dy = (Math.random() - 0.5) * 6;
     };
 
+    const updateScore = (paddle: Paddle, isPlayer: boolean = false) => {
+      // left and right collision
+      // ball.dx *= -1;
+      paddle.score += 1;
+      if (paddle.score >= winningScore) {
+        setIsGameOver(true);
+        isPlayer ? setIsWinner(true) : setIsWinner(false);
+        onNext('end');
+      }
+      resetBall();
+    };
+
     const checkCollision = () => {
       // next move top and bottom collision
       let newX = ball.x + ball.dx + (ball.dx > 0 ? ball.radius : -ball.radius);
       let newY = ball.y + ball.dy + (ball.dy > 0 ? ball.radius : -ball.radius);
 
       // reverse the ball direction
-      if (newY >= canvas.height || newY <= 0) ball.dy *= -1;
+      if (newY >= canvas.height || newY <= 0) {
+        hitWallSound
+          .play()
+          .catch((err) => console.error('Error playing sound:', err));
+
+        ball.dy *= -1;
+      }
 
       if (newY <= 0) {
         // Collision with the top wall
@@ -151,19 +190,42 @@ const Pong: React.FC<GameProps> = ({ gameMode }) => {
         // ball.vx *= -1; // Reverse horizontal direction on collision
 
         handlePaddleCollision(ball, paddle1);
-        paddle1.paddleHitPoint = getRandomIntegerHeightValue(paddle1.height);
+        paddle1.paddleHitPoint = getRandomValue(paddle1.height);
+        paddleHitSound.play();
       } else if (isCollidingWithPaddle(ball, paddle2)) {
         handlePaddleCollision(ball, paddle2);
-        paddle2.paddleHitPoint = getRandomIntegerHeightValue(paddle2.height);
+        paddle2.paddleHitPoint = getRandomValue(paddle2.height);
+        paddleHitSound.play;
       } else if (newX >= canvas.width) {
-        // left and right collision
-        // ball.dx *= -1;
-        paddle1.score += 1;
-        resetGame();
+        updateScore(paddle1, true);
       } else if (newX <= 0) {
-        // ball.dx *= -1;
-        paddle2.score += 1;
-        resetGame();
+        updateScore(paddle2);
+      }
+    };
+
+    const drawDashedLine = () => {
+      ctx.setLineDash([10, 10]); // [dash length, gap length]
+      ctx.strokeStyle = 'gray';
+      ctx.lineWidth = 6;
+
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0); // Start at the top of the canvas
+      ctx.lineTo(canvas.width / 2, canvas.height); // Draw to the bottom of the canvas
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset the line dash to solid for other drawings
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect(); // Get the canvas's position and size
+      // const mouseX = e.clientX - rect.left; // X coordinate inside the canvas
+      const mouseY = e.clientY - rect.top; // Y coordinate inside the canvas
+      // console.log(`Mouse X: ${mouseX}, Mouse Y: ${mouseY}`);
+      if (controlMode === 'mouse') {
+        if (
+          mouseY >= paddle1.height / 2 &&
+          mouseY <= canvas.height - paddle1.height / 2
+        )
+          paddle1.y = mouseY - paddle1.height / 2;
       }
     };
 
@@ -181,45 +243,64 @@ const Pong: React.FC<GameProps> = ({ gameMode }) => {
 
     const drawScores = () => {
       // Draw scores on the canvas
+      // ctx.font = '48px Courier New'; // Increased font size to 48px
       ctx.font = '48px Courier New'; // Increased font size to 48px
       ctx.fillStyle = 'white';
       ctx.textAlign = 'center';
       // Player 1 score
-      ctx.fillText(`${paddle1.score}`, canvas.width / 4, 50);
+      ctx.fillText(`${paddle1.score}`, canvas.width / 3, 50);
 
       // Player 2 score
-      ctx.fillText(`${paddle2.score}`, (canvas.width * 3) / 4, 50);
+      ctx.fillText(`${paddle2.score}`, (canvas.width * 2) / 3, 50);
     };
 
+    let animationFrameId: number;
     const animate = () => {
+      if (isGameOver) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      drawDashedLine();
       checkCollision();
       ball.move();
-      paddle1.move();
+      if (controlMode !== 'mouse') paddle1.move();
       // paddle1.ai(ball, true);
-      if (gameMode === 'local') paddle2.move();
-      else paddle2.ai(ball);
+      isOnePlayerMode ? paddle2.ai(ball) : paddle2.move();
       ball.draw();
       paddle1.draw();
       paddle2.draw();
       drawScores();
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     window.addEventListener('keydown', (e) => handleKeyDown(e));
     window.addEventListener('keyup', (e) => handleKeyUp(e));
+    canvas.addEventListener('mousemove', (e) => handleMouseMove(e));
     animate();
-  }, []);
+
+    return () => {
+      window.removeEventListener('keydown', (e) => handleKeyDown(e));
+      window.removeEventListener('keyup', (e) => handleKeyUp(e));
+      canvas.removeEventListener('mousemove', (e) => handleMouseMove(e));
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isGameOver]);
 
   return (
-    <div className={css.canvasContainer}>
+    <div id="gameScreen" className={css.gameScreenDiv}>
+      {/* <div className={css.scoreWrapper}>
+        <div id="player1Score">10</div>
+        <div id="player2Score">3</div>
+      </div> */}
+      {/* <div id="pauseDiv" style="display: none;">
+        Paused, press P to continue
+      </div> */}
+      {/* <canvas
+        id="gameCanvas"
+        width="650"
+        height="480"
+        style="cursor: pointer;"
+      ></canvas> */}
       <canvas id={css.gameCanvas} ref={canvasRef} />
-
-      <div>
-        {/* <p>Player 1: {scores.player1}</p>
-        <p>Player 2: {scores.player2}</p> */}
-      </div>
     </div>
   );
 };
