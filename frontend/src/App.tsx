@@ -29,9 +29,10 @@ import Signup from './pages/Auth/Signup';
 import { useEffect, useState } from 'react';
 import usePreLoader from './hooks/usePreLoader';
 import PongGame from './components/Game/PongGame';
-import Pong from './components/Game/LocalGame/Pong';
+import Pong from './components/Game/components/Pong/Pong';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import PingPongGame from './components/Game/LocalGame/PingPongGame';
+import LocalGame from './components/Game/LocalGame/LocalGame';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -80,7 +81,8 @@ function AppContent() {
           <Route path="/" element={<Dashboard />} />
           {/* <Route path="/games" element={<Games />} /> */}
           <Route path="/game" element={<ModeSelection />} />
-          <Route path="/game/local" element={<Pong gameMode={'ai'} />} />
+          <Route path="/game/local" element={<LocalGame />} />
+          {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
           {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
           <Route path="/game/remote" element={<RemoteGame />}>
             {/* Remote game instance with game ID */}

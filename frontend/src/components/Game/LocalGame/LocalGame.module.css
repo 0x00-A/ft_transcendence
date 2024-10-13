@@ -1,0 +1,45 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.canvasContainer {
+      position: relative;
+      /* width: 100%; */
+    /* max-width: 650px; */
+    Width: 650px;
+    Height: 480px;
+    margin: 0 auto;
+}
+
+.gameArea {
+    position: relative;
+    left: 20px;
+    background-color: black;
+    width: 650px;
+    height: 480px;
+    color: lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: manipulation
+}
+
+@media only screen and (max-width: 1000px) {
+    #gameArea {
+        left:0
+    }
+}
+
+.gameArea * {
+    font-family: "Courier New",Courier,monospace
+}

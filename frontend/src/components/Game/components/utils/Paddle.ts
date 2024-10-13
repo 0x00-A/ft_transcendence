@@ -1,4 +1,4 @@
-import Ball from './Ball';
+import Ball from '../LocalGame/utils/Ball';
 
 class Paddle {
   private ctx: CanvasRenderingContext2D;

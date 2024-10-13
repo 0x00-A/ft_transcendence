@@ -34,6 +34,7 @@ const ModeSelection = () => {
     const gameId = generateUniqueGameId(); // Generate a unique game ID
     if (modeId === 0) navigate(`/game/local`); // Navigate to the game URL with mode and ID
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
+    if (modeId === 2) navigate(`/game/ai`); // Navigate to the game URL with mode and ID
   };
 
   return (
