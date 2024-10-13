@@ -1,11 +1,11 @@
 
 
-.gameCanvas {
+#gameCanvas {
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: var(--color-game-screen-bg);
     touch-action: manipulation;
-    border: 1px solid white;
+    /* border: 1px solid var(--game-screen-text-color); */
     /* cursor: none; */
 }
 
@@ -14,7 +14,7 @@
   top: 20px;       /* Position it relative to the canvas container */
   left: 50%;
   transform: translateX(-50%);
-  color: white;
+  color: var(--game-screen-text-color);
   font-size: 20px;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
@@ -41,17 +41,6 @@
 
 
 
-
-
-/* canvas {
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    touch-action: manipulation
-} */
-
-
-
 #gameScreen,#controlModeScreen,#difficultyScreen,#touchButtons {
     display: none
 }
@@ -68,6 +57,7 @@
     align-items: center;
     justify-content: center;
     display: flex;
+    /* border: 1px solid var(--game-screen-text-color); */
 }
 
 .gameScreenDiv>button {
@@ -76,47 +66,47 @@
 
 .scoreWrapper {
     position: relative;
-    top: 30px;
+    top: 20px;
     display: flex;
     height: 0;
     justify-content: center;
     cursor: none
 }
 
-#player1Score,#player2Score {
-    color: lightgray;
-    font-size: 68px;
-    font-weight: 700;
+.player1Score,.player2Score {
+    color: var(--game-screen-text-color);
+    font-size: 48px;
+    font-weight: 600;
     width: 100px
 }
 
-#player1Score {
+.player1Score {
     text-align: right;
-    margin-right: 40px
+    margin-right: 80px
 }
 
-#player2Score {
+.player2Score {
     text-align: left;
-    margin-left: 40px
+    margin-left: 80px
 }
 
-#pauseDiv {
+/* #pauseDiv {
     position: absolute;
     bottom: 30px;
     font-size: 30px;
     left: 20px;
     display: none
-}
+} */
 
 
 
 
 
-#winsDiv {
+/* #winsDiv {
     position: absolute;
     left: 20px;
     bottom: 12px
-}
+} */
 
 
 

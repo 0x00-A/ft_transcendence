@@ -11,50 +11,16 @@
     margin-bottom: 14px
 }
 
-.soundButtonWrapper {
-    position: absolute;
-    bottom: 76px;
-    left: 20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center
-}
 
-.soundButtonWrapper:hover, .optionsButton:hover {
-    opacity: .9
-}
-
-.soundButton {
-    height: 22px;
-    width: 22px;
-    margin: 0;
-    border-radius: 10px
-}
-
-.soundButtonLabel {
-    font-size: 28px;
-    font-weight: 700;
-    cursor: pointer;
-    padding-left: 6px
-}
-
-.soundButton:hover.soundOn,.soundOn {
-    border: 3px solid lightgray;
-    background-color: white
-}
-
-.soundButton:hover.soundOff,.soundOff {
-    border: 3px solid lightgray;
-    background-color: black
-}
 
 .optionsButton {
     position: absolute;
-    bottom: 40px;
-    left: 20px;
-    color: lightgrey;
+    bottom: 20px;
+    right: 30px;
+    color: var(--game-screen-text-color);
     font-size: 28px;
     font-weight: 700;
     text-transform: uppercase;
-    cursor: pointer
+    cursor: pointer;
+    margin: 0;
 }

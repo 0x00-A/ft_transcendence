@@ -22,7 +22,7 @@
 .title p {
   position: relative;
   display: inline-block;
-  background-color: var(--color-game-mode-bg);
+  background-color: var(--color-game-screen-bg);
   color: white;
   font-size: 20px;
   font-weight: 600;
