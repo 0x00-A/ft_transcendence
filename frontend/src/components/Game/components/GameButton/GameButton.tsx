@@ -4,9 +4,13 @@ import css from './GameButton.module.css';
 const GameButton = ({
   onClick,
   children,
-}: PropsWithChildren<{ onClick: any }>) => {
+  className = '',
+}: PropsWithChildren<{ onClick: any; className?: string }>) => {
   return (
-    <button className={css.button} onClick={onClick}>
+    <button
+      className={`${!className ? css.button : className}`}
+      onClick={onClick}
+    >
       {/* <span className={css.buttonKey}>(r)&nbsp;</span> */}
       {children}
     </button>

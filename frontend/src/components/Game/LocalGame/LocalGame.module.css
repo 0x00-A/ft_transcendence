@@ -1,27 +1,12 @@
-
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.canvasContainer {
-      position: relative;
-      /* width: 100%; */
-    /* max-width: 650px; */
-    Width: 650px;
-    Height: 480px;
-    margin: 0 auto;
-}
-
 .gameArea {
+    box-sizing: content-box;
     position: relative;
     left: 20px;
-    background-color: black;
+    /* background-color: black; */
+    background-color: var(--color-game-screen-bg);
     width: 650px;
     height: 480px;
-    color: lightgray;
+    color: var(--game-screen-text-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,7 +16,10 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    touch-action: manipulation
+    touch-action: manipulation;
+    margin: 0 auto;
+    /* border: 1px solid var(--game-screen-text-color); */
+
 }
 
 @media only screen and (max-width: 1000px) {
