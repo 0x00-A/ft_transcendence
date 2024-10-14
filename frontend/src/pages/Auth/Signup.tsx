@@ -6,17 +6,17 @@ import ExternAuth from './components/ExternAuth';
 import UserIcon from "./assets/userIcon.svg";
 import EmailIcon from "./assets/emailIcon.svg";
 import PassIcon from "./assets/passIcon.svg";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, set, useForm } from "react-hook-form";
 import { Mutation, UseMutationResult, isError, useMutation, useQuery } from 'react-query';
 import axios from 'axios';
-import { FormEvent, useState } from 'react';
-import { log } from 'console';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { error, log } from 'console';
 import ProfilePopup from '../Profile/components/ProfilePopup';
 import AuthPopup from './components/AuthPopup';
 
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup'; 
+import * as yup from 'yup';
 
 
 const schema = yup.object().shape({
@@ -44,37 +44,44 @@ interface SignupFormData {
 }
 
 const addNewUser = async (data: SignupFormData) => {
-  const response = await axios.post("http://localhost:8000/api/accounts/signup/", data)
+  const response = await axios.post<SignupFormData>("http://localhost:8000/ /accounts/signup/", data)
   return response.data;
 }
 
-const Signup = ({setAuthState}:{setAuthState:React.Dispatch<React.SetStateAction<boolean>>}) => {
+const Signup = ({setAuthState, setAuthResponse}) => {
 
   const {
     register,
     handleSubmit,
     formState: {errors},
-  } = useForm<SignupFormData>({resolver: yupResolver(schema)});
+  } = useForm<SignupFormData>({resolver: yupResolver(schema), delayError: 1000});
 
-  const mutation = useMutation({
+  // const [signupState, setSignupState] = useState(false);
+
+  const mutation = useMutation<SignupFormData, Error, SignupFormData>({
     mutationFn: addNewUser,
-    onSuccess(data) {
-      setAuthState(true);
+    onSuccess(data, va, con) {
       console.log(data);
+      console.log('---------------------');
+      console.log(va);
+      console.log('---------------------');
+      console.log(con);
+      console.log('---------------------');
+      setAuthState(true);
+      setAuthResponse({isRequesting: true, isSuccess: true, message: data, error: null});
     },
     onError(error) {
-      console.log('error');
-      console.log(error?.message);
-      console.log(error?.response?.data);
+      // setAuthResponse({isRequesting: true, isSuccess: true, data: data, error: null});
+      console.log(error);
+      // setSignupState(true);
     }
   });
 
+  mutation
+
   const handleSignup = (data: SignupFormData, event:any) => {
-    // console.log(data);
     event.preventDefault() ;
     mutation.mutate(data);
-
-    // setAuthResponse(mutation);
   };
 
   return (
@@ -83,7 +90,7 @@ const Signup = ({setAuthState}:{setAuthState:React.Dispatch<React.SetStateAction
       <form noValidate={true} className={css.entryArea} onSubmit={ handleSubmit(handleSignup) }>
         <div className={css.inputContainer}>
           <img src={UserIcon} alt="X" />
-          <input type="text" placeholder="username" {...register('username')}/>
+          <input type="text" placeholder="username" {...register('username')} />
           {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
         </div>
         <div className={css.inputContainer}>
@@ -102,10 +109,11 @@ const Signup = ({setAuthState}:{setAuthState:React.Dispatch<React.SetStateAction
           {errors.password2 && <span className={css.fieldError}>{errors.password2.message}</span>}
         </div>
         <button type="submit" className={css.authBtn}>
-          Signup
+          Sign up
         </button>
       </form>
       <ExternAuth />
+      {/* {mutation.error && <span className={css.signupState}>{mutation.error.message}</span>} */}
     </>
   );
 };
@@ -114,4 +122,3 @@ export default Signup
 function JoiResolver(schema: any): import("react-hook-form").Resolver<FormData, any> | undefined {
   throw new Error('Function not implemented.');
 }
-

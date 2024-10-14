@@ -13,12 +13,8 @@
 }
 
 .inputContainer {
-    /* display: flex; */
     position: relative;
-    /* border: 1px solid aliceblue; */
-    /* margin-top: 5px; */
     width: 270px;
-
 }
 
 .inputContainer input {
@@ -31,6 +27,7 @@
     padding-left: 40px;
     width: 100%;
     font-size: medium;
+    color: white;
 }
 
 .inputContainer img {
@@ -39,29 +36,67 @@
     left: 10px;
 }
 
-.inputContainer input:blank {
-    border: 1px solid red;
-}
 .inputContainer input:focus {
     background-color: #497285;
 }
 
-.inputContainer input:focus:invalid {
+/* .inputContainer input:blank {
     border: 1px solid red;
+} */
+
+.fieldError {
+    position: absolute;
+    color: rgb(255, 0, 0);
+    border: none;
+    font-size: 11px;
+    height: fit-content;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #fffbe1;
+    z-index: 999;
+    top: 60px;
+    left: 40px;
 }
 
-.inputContainer input:valid {
+.fieldError::after {
+    content: '';
+    position: absolute;
+    top: -19px;
+    left: 11%;
+    transform: translateX(-50%);
+    border: 10px solid transparent;
+    border-bottom-color: #fffbe1;
+}
+
+/* .inputContainer input:focus + .fieldError {
+    visibility: visible;
+    opacity: 1;
+} */
+
+/* .inputContainer input:blank {
+    border: 1px solid red;
+} */
+
+
+
+/* .inputContainer input:not(:focus) + .fieldError {
+    background-color: #497285;
+    visibility: hidden;
+    opacity: 0;
+} */
+
+/* .inputContainer input:valid {
     border: 1px solid green;
-}
+} */
 
-.inputContainer input::after {
+/* .inputContainer input::after {
     background-color: red;
-}
+} */
 
-.inputContainer input::placeholder {
+/* .inputContainer input::placeholder {
     text-align:start;
     font-size: large;
-}
+} */
 
 
 .authBtn {
@@ -82,35 +117,4 @@
 .authBtn:hover {
     background-color: var(--color-active);
     cursor: pointer;
-}
-
-.sigupState {
-    color: green;
-    /* position: absolute; */
-    top: -90px;
-    left: 0; 
-}
-
-.fieldError {
-    position: absolute;
-    color: red;
-    border: none;
-    font-size: 11px;
-    height: fit-content;
-    border-radius: 5px;
-    padding: 5px;
-    background-color: white;
-    z-index: 999;
-    top: 60px;
-    left: 40px;
-}
-
-.fieldError::before {
-    content: '';
-    position: absolute;
-    top: -19px;
-    left: 15%;
-    transform: translateX(-50%);
-    border: 10px solid transparent;
-    border-bottom-color: white;
 }
