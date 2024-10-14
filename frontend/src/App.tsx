@@ -53,7 +53,7 @@ function AppContent() {
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
-
+    
   return (
     <div className="app-container">
       {/* <PreLoader /> */}

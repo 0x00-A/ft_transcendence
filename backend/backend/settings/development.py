@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-8@1uqvfec^roe+0cscb7iw+%()9mdrlv)fpns1pov!j=7quka@
 
 DEBUG = True
 
-ALLOWED_HOSTS = [] 
+ALLOWED_HOSTS = []
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -139,6 +139,8 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -60,14 +60,14 @@
     transition-delay: 1s;                   mch7al ghaytssena 3ad bach yebda had lanimation
     transition-timing-function  ease;       kifach ghayt3amel m3a lanimation mn lewel 7ta lekher
     short hand
-    transition: property duration delay timing-function 
+    transition: property duration delay timing-function
 */
 
 /*
     transform-origin: tbdele lposition dyal lelement
     transform-style: kifach lelement ghatrendraa
     perspective: kifach lelement ghayballiik
-    perspective-origin 
+    perspective-origin
     backface-visibility
 */
 .authSwitch {
@@ -132,4 +132,44 @@
     cursor: pointer;
     margin-left: 10px;
     text-decoration: underline;
+}
+
+.authError {
+    position: absolute;
+    width: 100%;
+    border-radius: inherit;
+    height: 30px;
+    padding: 15px;
+    color: #a94442;
+    background-color: #BF7877;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    top: 0;
+    right: 0;
+    animation-name: disapear;
+    animation-delay: 5s;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.authSuccess {
+    position: absolute;
+    width: 100%;
+    border-radius: inherit;
+    height: 30px;
+    padding: 15px;
+    color: #09640f;
+    background-color: #8bf574;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    top: 0;
+    right: 0;
+    animation-name: disapear;
+    animation-delay: 5s;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
 }
