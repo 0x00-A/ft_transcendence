@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import LocalGame from './LocalGame/LocalGame';
-import RemoteGame from './RemoteGame/RemoteGame';
+import LocalGame from '../LocalGame/LocalGame';
+import RemoteGame from './RemoteGame';
 
 const PongGame = () => {
   const { mode, gameId } = useParams(); // Retrieve mode and gameId from the URL

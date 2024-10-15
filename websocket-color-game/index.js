@@ -1,39 +1,46 @@
-import http from 'http'
-import {server as WebSocketServer} from 'websocket'
+import http from 'http';
+import { server as WebSocketServer } from 'websocket';
 
-let connection = null;
-// const http = require('http');
-// const webSocketServer = require('websocket');
+// Create an HTTP server
+const server = http.createServer((req, res) => {
+    res.writeHead(404);
+    res.end();
+});
 
-const httpServer = http.createServer();
-httpServer.listen(8888, ()=> console.log('listeing on 8888'))
+server.listen(8888, () => {
+    console.log('Listening on port 8888');
+});
+
+// Create a global array for WebSocket connections
+global.connections = [];
 
 const wsServer = new WebSocketServer({
-    "httpServer": httpServer
-})
+    httpServer: server
+});
 
-wsServer.on("request", request => {
-    //connect
-    connection = request.accept(null, request.origin);
-    connection.on("open", ()=> console.log('opened!'));
-    connection.on("close", ()=> console.log('closed!'));
-    connection.on("message", message => {
+wsServer.on('request', function (request) {
+    // Accept the WebSocket connection
+    const connection = request.accept(null, request.origin);
+    console.log('Client connected');
 
-        //I have recieved a message from the client
-        console.log(`Recieved: ${message.utf8Data}`);
+    // Push the connection into the global array
+    global.connections.push(connection);
 
+    // Send an initial message to the client
+    connection.sendUTF('Hello, Client!');
 
-    })
+    // When the client sends a message
+    connection.on('message', function (message) {
+        console.log(`Received message${connections.length}:`, message.utf8Data);
+    });
 
-    sendevery5seconds();
-
-})
-
-function sendevery5seconds(){
-
-    connection.send(`Message ${Math.random()}`);
-
-    setTimeout(sendevery5seconds, 5000);
-
-
-}
+    // Handle connection close
+    connection.on('close', function () {
+        console.log('Client disconnected');
+        // Remove the connection from the array when disconnected
+        const index = global.connections.indexOf(connection);
+        if (index > -1) {
+            global.connections.splice(index, 1);
+        }
+    });
+});

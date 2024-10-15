@@ -16,7 +16,6 @@ from datetime import timedelta
 import environ
 
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,11 +47,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-    
+
     'corsheaders',
     'accounts',
     'rest_framework_simplejwt',
     'debug_toolbar',
+    'channels',
+    'game',
 ]
 
 MIDDLEWARE = [
@@ -158,4 +160,21 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
 
+
 AUTH_USER_MODEL = 'accounts.User'
+
+# Daphne
+ASGI_APPLICATION = "app.asgi.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # Use environment variables for Redis host and port
+            'hosts': [
+                (os.environ.get('REDIS_HOST', 'redis'),
+                 int(os.environ.get('REDIS_PORT', 6379)))
+            ],
+        },
+    },
+}

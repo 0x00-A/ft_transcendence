@@ -26,11 +26,13 @@ import './App.css';
 // import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
 import usePreLoader from './hooks/usePreLoader';
-import PongGame from './components/Game/PongGame';
+import PongGame from './components/Game/RemoteGame/PongGame';
 import Pong from './components/Game/components/Pong/Pong';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import PingPongGame from './components/Game/LocalGame/PingPongGame';
 import LocalGame from './components/Game/LocalGame/LocalGame';
+import GameChat from './components/Game/RemoteGame/GameChat';
+import Room from './components/Game/RemoteGame/Room';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -81,6 +83,8 @@ function AppContent() {
           {/* <Route path="/games" element={<Games />} /> */}
           <Route path="/game" element={<ModeSelection />} />
           <Route path="/game/local" element={<LocalGame />} />
+          <Route path="/game/chat" element={<GameChat />} />
+          <Route path="/game/chat/:room" element={<Room />} />
           {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
           {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
           <Route path="/game/remote" element={<RemoteGame />}>

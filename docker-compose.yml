@@ -19,10 +19,14 @@ services:
       - DB_NAME=$DB_NAME
       - DB_USER=$DB_USER
       - DB_PASS=$DB_PASS
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
     networks:
       - default_network
     depends_on:
       db:
+        condition: service_started
+      redis:
         condition: service_started
 
   frontend:
@@ -55,8 +59,18 @@ services:
     networks:
       - default_network
 
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - default_network
+
 volumes:
   dev-db-data:
+  redis_data:
 
 networks:
   default_network:
