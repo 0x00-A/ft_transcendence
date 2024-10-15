@@ -1,4 +1,3 @@
-// Game.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import Paddle from '../utils/Paddle';
 import Ball from '../utils/Ball';
@@ -15,7 +14,7 @@ function create_ball(
   ballSpeed: number
 ) {
   const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4; // Random angle between -45° and 45°
-  // const ballSpeed = 6;
+  // const ballSpeed = 3;
   const ballRaduis = 8;
 
   // Initial random direction towards a player
@@ -48,7 +47,6 @@ interface GameProps {
 }
 
 const Pong: React.FC<GameProps> = ({
-  controlMode = 'mouse',
   isGameOver,
   setIsGameOver,
   setIsWinner,

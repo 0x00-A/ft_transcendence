@@ -18,7 +18,7 @@
     user-select: none;
     touch-action: manipulation;
     margin: 0 auto;
-    /* border: 1px solid var(--game-screen-text-color); */
+    border: 3   px solid var(--game-screen-text-color);
 
 }
 
