@@ -18,6 +18,13 @@
   --gray-950: #0d0d0d;
   --red-500: #ef4444;
   --red-700: #b91c1c;
+
+  --b0: #121212;
+    --b1: #171717;
+    --b2: #1c1c1c;
+    --b3: #202224;
+    --b4: #3b4042;
+
   --brand-purple: #ab68ff;
 
   --color-brand--1: #ff2047;
@@ -53,7 +60,7 @@
 
   --sidebar-surface-secondary: var(--gray-800);
 
-  --color-game-screen-bg: var(--gray-800);
+  --color-game-screen-bg: var(--gray-900);
 }
 
 * {

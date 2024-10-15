@@ -25,8 +25,6 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 // import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
-import Signup from './pages/Auth/Signup';
-import { useEffect, useState } from 'react';
 import usePreLoader from './hooks/usePreLoader';
 import PongGame from './components/Game/PongGame';
 import Pong from './components/Game/components/Pong/Pong';
@@ -51,6 +49,7 @@ function AppContent() {
   const showSidebarRoutes = [
     '/',
     '/game',
+    '/game/local',
     '/chat',
     '/friends',
     '/search',
@@ -63,13 +62,13 @@ function AppContent() {
   const { isLoggedIn } = useAuth();
   const loading = usePreLoader();
 
-  if (loading) {
-    // return <PreLoader />;
-  }
+  // if (loading) {
+  //   return <PreLoader />;
+  // }
 
   return (
     <div className="app-container ">
-      {/* <PreLoader /> */}
+      <PreLoader />
       {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
         <Sidebar />
       )}
