@@ -1,42 +1,6 @@
 import Ball from './Ball';
 import Paddle from './Paddle';
 
-// Check if the ball is colliding with the paddle (use future position)
-// export function isCollidingWithPaddle(
-//   ball: Ball,
-//   paddle: Paddle,
-//   newX: number,
-//   newY: number
-// ): boolean {
-//   // Check if the future ball position is within the horizontal range of the paddle
-//   const withinHorizontalRange =
-//     newX + ball.radius >= paddle.x &&
-//     newX - ball.radius <= paddle.x + paddle.width;
-
-//   // Check if the future ball position is within the vertical range of the paddle
-//   const withinVerticalRange =
-//     newY + ball.radius >= paddle.y &&
-//     newY - ball.radius <= paddle.y + paddle.height;
-
-//   // Collision occurs only if both the horizontal and vertical ranges are overlapping
-//   return withinHorizontalRange && withinVerticalRange;
-// }
-
-// export function isCollidingWithPaddle(ball: Ball, paddle: Paddle): boolean {
-//   // Check if the ball is within the horizontal range of the paddle
-//   const withinHorizontalRange =
-//     ball.x + ball.radius >= paddle.x &&
-//     ball.x - ball.radius <= paddle.x + paddle.width;
-
-//   // Check if the ball is within the vertical range of the paddle
-//   const withinVerticalRange =
-//     ball.y + ball.radius >= paddle.y &&
-//     ball.y - ball.radius <= paddle.y + paddle.height;
-
-//   // Collision occurs only if both the horizontal and vertical ranges are overlapping
-//   return withinHorizontalRange && withinVerticalRange;
-// }
-
 // Utility function to check if two line segments intersect
 function doLineSegmentsIntersect(
   x1: number,
@@ -160,10 +124,10 @@ export const handlePaddleCollision = (ball: Ball, paddle: Paddle) => {
   if (ballFromTop || ballFromBottom) {
     ball.dy *= -1; // Reverse the vertical velocity
     // Correct the position so the ball doesn't get stuck inside the paddle
-    if (ballFromTop) {
-      ball.y = paddle.y - ball.radius; // Place the ball just above the top of the paddle
-    } else if (ballFromBottom) {
-      ball.y = paddle.y + paddle.height + ball.radius; // Place the ball just below the bottom of the paddle
-    }
+    // if (ballFromTop) {
+    //   ball.y = paddle.y - ball.radius; // Place the ball just above the top of the paddle
+    // } else if (ballFromBottom) {
+    //   ball.y = paddle.y + paddle.height + ball.radius; // Place the ball just below the bottom of the paddle
+    // }
   }
 };

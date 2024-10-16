@@ -17,6 +17,7 @@ const PreLoader = () => {
 
     return () => {
       window.onload = null;
+      setHidden(true);
     };
   }, []);
 

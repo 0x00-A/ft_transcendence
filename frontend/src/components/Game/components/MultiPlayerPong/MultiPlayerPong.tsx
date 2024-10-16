@@ -5,7 +5,7 @@ import {
   isCollidingWithPaddle,
   handlePaddleCollision,
 } from '../utils/GameLogic';
-import css from './Pong.module.css';
+import css from './MultiPlayerPong.module.css';
 import { Controller, GameScreens } from '../../../../types/types';
 
 function create_ball(
@@ -46,7 +46,7 @@ interface GameProps {
   winningScore: number;
 }
 
-const Pong: React.FC<GameProps> = ({
+const MultiPlayerPong: React.FC<GameProps> = ({
   isGameOver,
   setIsGameOver,
   setIsWinner,
@@ -71,51 +71,51 @@ const Pong: React.FC<GameProps> = ({
     'https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3'
   );
 
-  // useEffect(() => {
-  //   if (isGameOver) return;
-  //   const resizeCanvas = () => {
-  //     const rect = (
-  //       canvasRef.current?.parentNode as Element
-  //     )?.getBoundingClientRect();
+  useEffect(() => {
+    if (isGameOver) return;
+    const resizeCanvas = () => {
+      const rect = (
+        canvasRef.current?.parentNode as Element
+      )?.getBoundingClientRect();
 
-  //     // Get the computed styles of the parent to calculate border width
-  //     const computedStyle = window.getComputedStyle(
-  //       canvasRef.current?.parentNode as Element
-  //     );
-  //     const borderLeft = parseFloat(computedStyle.borderLeftWidth);
-  //     const borderRight = parseFloat(computedStyle.borderRightWidth);
-  //     const borderTop = parseFloat(computedStyle.borderTopWidth);
-  //     const borderBottom = parseFloat(computedStyle.borderBottomWidth);
+      // Get the computed styles of the parent to calculate border width
+      const computedStyle = window.getComputedStyle(
+        canvasRef.current?.parentNode as Element
+      );
+      const borderLeft = parseFloat(computedStyle.borderLeftWidth);
+      const borderRight = parseFloat(computedStyle.borderRightWidth);
+      const borderTop = parseFloat(computedStyle.borderTopWidth);
+      const borderBottom = parseFloat(computedStyle.borderBottomWidth);
 
-  //     // Set canvas width and height by subtracting borders from parent width and height
-  //     if (canvasRef.current) {
-  //       canvasRef.current.width = rect.width - borderLeft - borderRight;
-  //       canvasRef.current.height = rect.height - borderTop - borderBottom;
-  //     }
+      // Set canvas width and height by subtracting borders from parent width and height
+      if (canvasRef.current) {
+        canvasRef.current.width = rect.width - borderLeft - borderRight;
+        canvasRef.current.height = rect.height - borderTop - borderBottom;
+      }
 
-  //     const pixelRatio = window.devicePixelRatio || 1;
+      const pixelRatio = window.devicePixelRatio || 1;
 
-  //     // Set transformation
-  //     //   ctx.setTransform(
-  //     //     (canvas.width / coordinateWidth) * pixelRatio,
-  //     //     0,
-  //     //     0,
-  //     //     (canvas.height / coordinateHeight) * pixelRatio,
-  //     //     0,
-  //     //     0
-  //     //   );
-  //   };
+      // Set transformation
+      //   ctx.setTransform(
+      //     (canvas.width / coordinateWidth) * pixelRatio,
+      //     0,
+      //     0,
+      //     (canvas.height / coordinateHeight) * pixelRatio,
+      //     0,
+      //     0
+      //   );
+    };
 
-  //   resizeCanvas();
+    resizeCanvas();
 
-  //   window.addEventListener('resize', () => {
-  //     resizeCanvas();
-  //   });
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+    });
 
-  //   return window.removeEventListener('resize', () => {
-  //     resizeCanvas();
-  //   });
-  // }, [isGameOver]);
+    return window.removeEventListener('resize', () => {
+      resizeCanvas();
+    });
+  }, [isGameOver]);
 
   useEffect(() => {
     hitWallSound.preload = 'auto';
@@ -300,15 +300,14 @@ const Pong: React.FC<GameProps> = ({
       {/* <div id="pauseDiv" style="display: none;">
         Paused, press P to continue
       </div> */}
-      {/* <canvas
-        id="gameCanvas"
-        width="650"
-        height="480"
-        style="cursor: pointer;"
-      ></canvas> */}
-      <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
+      <canvas
+        width={canvasWidth}
+        height={canvasHeight}
+        id={css.gameCanvas}
+        ref={canvasRef}
+      />
     </div>
   );
 };
 
-export default Pong;
+export default MultiPlayerPong;
