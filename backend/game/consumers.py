@@ -251,21 +251,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({"message": message}))
 
 
-class MatchmakingConsumer(AsyncWebsocketConsumer):
+class GameConsumer(AsyncWebsocketConsumer):
     waiting_players = set()
 
     async def connect(self):
-        # Accept the WebSocket connection
         await self.accept()
 
-        self.player_id = str(uuid.uuid4())
-        await self.send(text_data=json.dumps({
-            'type': 'connection',
-            'player_id': self.player_id,
-        }))
-        # Add the player to the waiting room
-        MatchmakingConsumer.waiting_players.add(self.channel_name)
-        # Attempt to find a match
+        # self.player_id = str(uuid.uuid4())
+        # await self.send(text_data=json.dumps({
+        #     'type': 'connection',
+        #     'player_id': self.player_id,
+        # }))
+        # GameConsumer.waiting_players.add(self.channel_name)
         await self.find_match()
 
     async def receive(self, text_data):
@@ -276,15 +273,13 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             self.canvas_width = data.get('canvasWidth')
             self.canvas_height = data.get('canvasHeight')
 
-            # You can store these dimensions in the game instance or any relevant data structure
-
         # Handle other incoming messages...
 
     async def disconnect(self, close_code):
         # Remove player from the waiting room
-        MatchmakingConsumer.waiting_players.discard(self.channel_name)
-        # Get the game room the player is in from the scope
         game_room_id = self.scope.get('game_room')
+        GameConsumer.waiting_players.discard(game_room_id)
+        # Get the game room the player is in from the scope
         remove_game(game_room_id)
 
         if game_room_id:
@@ -295,40 +290,87 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 game_room_id,
                 {
-                    'type': 'player_disconnected',
+                    'type': 'player.disconnected',
                     'message': 'Your opponent has disconnected.'
                 }
             )
 
     async def find_match(self):
-        # Check if there are at least two players waiting
-        if len(MatchmakingConsumer.waiting_players) >= 2:
-            # Create a new game room ID
+        # Lock the critical section to avoid race conditions
+        if not len(GameConsumer.waiting_players):
+            # If no one is waiting, assign player1 and add to waiting list
+            self.player_id = 'player1'
             game_room_id = 'game_' + str(uuid.uuid4())
             self.scope['game_room'] = game_room_id
+            await self.channel_layer.group_add(game_room_id, self.channel_name)
 
+            GameConsumer.waiting_players.add(game_room_id)
+
+            await self.send(text_data=json.dumps({
+                'type': 'connection',
+                'player_id': self.player_id,
+                'game_room_id': game_room_id,
+            }))
+            # await self.send(text_data=json.dumps({
+            #     'type': 'connection',
+            #     'player_id': self.player_id,
+            # }))
+        else:
+            self.player_id = 'player2'
+            game_room_id = GameConsumer.waiting_players.pop()
+            await self.channel_layer.group_add(game_room_id, self.channel_name)
+            self.scope['game_room'] = game_room_id
+
+            # other_player_channel.scope['game_room'] = game_room_id
             create_game(game_room_id)
 
-            # Create a list of members to match
-            members = list(MatchmakingConsumer.waiting_players)[:2]
+            # Add both players to the same game room
+            # await self.channel_layer.group_add(game_room_id, other_player_channel)
 
-            # Add the members to the game room
-            for member in members:
-                await self.channel_layer.group_add(game_room_id, member)
-
-            # Send a message to all members that they are matched
+            # Send information to both players
+            await self.send(text_data=json.dumps({
+                'type': 'connection',
+                'player_id': self.player_id,
+                'game_room_id': game_room_id,
+            }))
             await self.channel_layer.group_send(
                 game_room_id,
                 {
-                    "type": "game_message",  # This matches the method name
+                    "type": "game.message",  # This matches the method name
                     "room_id": game_room_id,
                     "message": 'game_started'
                 }
             )
 
-            # Remove all players from the waiting room
-            for member in members:
-                MatchmakingConsumer.waiting_players.discard(member)
+    # async def find_match(self):
+    #     # Check if there are at least two players waiting
+    #     if len(GameConsumer.waiting_players) >= 2:
+    #         # Create a new game room ID
+    #         game_room_id = 'game_' + str(uuid.uuid4())
+    #         self.scope['game_room'] = game_room_id
+
+    #         create_game(game_room_id)
+
+    #         # Create a list of members to match
+    #         members = list(GameConsumer.waiting_players)[:2]
+
+    #         # Add the members to the game room
+    #         for member in members:
+    #             await self.channel_layer.group_add(game_room_id, member)
+
+    #         # Send a message to all members that they are matched
+    #         await self.channel_layer.group_send(
+    #             game_room_id,
+    #             {
+    #                 "type": "game.message",  # This matches the method name
+    #                 "room_id": game_room_id,
+    #                 "message": 'game_started'
+    #             }
+    #         )
+
+    #         # Remove all players from the waiting room
+    #         for member in members:
+    #             GameConsumer.waiting_players.discard(member)
 
     async def game_message(self, event):
         message = event["message"]

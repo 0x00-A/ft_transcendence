@@ -87,10 +87,12 @@ function AppContent() {
           <Route path="/game/chat/:room" element={<Room />} />
           {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
           {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
-          <Route path="/game/remote" element={<RemoteGame />}>
-            {/* Remote game instance with game ID */}
-            {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
-          </Route>
+          <Route path="/game/remote" element={<RemoteGame />} />
+          <Route path="/game/remote/:game_id  " element={<RemoteGame />} />
+          {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
+          {/* Remote game instance with game ID */}
+          {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
+          {/* </Route> */}
           <Route path="/chat" element={<Chat />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/search" element={<Search />} />
