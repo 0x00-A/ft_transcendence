@@ -26,7 +26,7 @@ import './App.css';
 // import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
 import usePreLoader from './hooks/usePreLoader';
-import PongGame from './components/Game/RemoteGame/PongGame';
+import PongGame from './components/Game/PongGame';
 import Pong from './components/Game/components/Pong/Pong';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import PingPongGame from './components/Game/LocalGame/PingPongGame';
