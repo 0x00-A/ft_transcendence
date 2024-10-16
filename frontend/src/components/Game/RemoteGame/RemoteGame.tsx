@@ -51,19 +51,24 @@ const RemoteGame: React.FC = () => {
         setGameState('waiting');
 
         // Send the canvas dimensions
-        const message = {
-          type: 'CONNECT',
-          canvasWidth: canvasWidth,
-          canvasHeight: canvasHeight,
-        };
-        gameSocket.send(JSON.stringify(message));
+        // const message = {
+        //   type: 'CONNECT',
+        //   canvasWidth: canvasWidth,
+        //   canvasHeight: canvasHeight,
+        // };
+        // gameSocket.send(JSON.stringify(message));
       };
 
       gameSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
+        if (data.type === 'connection') {
+          console.log(`p: ${data.player_id} | room: ${data.game_room_id}`);
+          // setGameState('disconnected');
+        }
         if (data.type === 'game_started') {
           console.log('game_stared...', data.game_room_id);
           setGameState('started');
+          window.history.pushState({}, '', '/new-url');
         }
         if (data.type === 'player_disconnected') {
           console.log('player_disconnected...');
