@@ -4,11 +4,16 @@ import os
 from datetime import timedelta
 
 
-# env = environ.Env(
-#     DEBUG=(bool, False)
-# )
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # environ.Env.read_env(BASE_DIR / '.env')
+
+DISCORD_AUTHORIZATION_URL = env('DISCORD_AUTHORIZATION_URL')
+DISCORD_TOKEN_URL = env('DISCORD_TOKEN_URL')
+CLIENT_ID = env('CLIENT_ID')
+CLIENT_SECRET = env('CLIENT_SECRET')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

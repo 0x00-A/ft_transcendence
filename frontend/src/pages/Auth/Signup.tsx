@@ -44,7 +44,7 @@ interface SignupFormData {
 }
 
 const addNewUser = async (data: SignupFormData) => {
-  const response = await axios.post<SignupFormData>("http://localhost:8000/ /accounts/signup/", data)
+  const response = await axios.post<SignupFormData>("http://localhost:8000/api/accounts/signup/", data)
   return response.data;
 }
 

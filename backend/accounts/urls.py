@@ -1,14 +1,13 @@
-# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import path
-from . import views
+from .views import SignupView
+from .views import LoginView
+from .views import discord_authorize
+from .views import oauth2_discord
+
 
 urlpatterns = [
-    path('signup/', views.SignupView.as_view()),
-    # path('signup/', views.signup_user),
-    # path('login/', views.login_view),
-    path('login/', views.LoginView.as_view()),
-    # path('token/', TokenObtainPairView.as_view()),
-    # path('token/refresh/', TokenRefreshView.as_view()),
-    # path('profile/<str:username>/', views.profile_detail),
-    path('profile/<str:username>/', views.ProfileDetail.as_view()),
+    path('auth/signup/', SignupView.as_view()),
+    path('auth/login/', LoginView.as_view()),
+    path('oauth2/discord/authorize/', discord_authorize),
+    path('oauth2/discord/', oauth2_discord),
 ]
