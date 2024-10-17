@@ -5,13 +5,18 @@ import uuid
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+from channels.layers import get_channel_layer
+import asyncio
+
+channel_layer = get_channel_layer()
+
 canvas_width: int = 650
 canvas_height: int = 480
 winning_score: int = 5
 pW: int = 10
 pH: int = 100
 ball_raduis: int = 8
-initial_ball_speed = 3
+initial_ball_speed = 10
 
 
 class Paddle:
@@ -20,12 +25,9 @@ class Paddle:
         self.y = y
         self.width = width
         self.height = height
-        self.speed = 10  # Paddle speed
+        self.speed = 0  # Paddle speed
 
-    def move_up(self):
-        self.y -= self.speed
-
-    def move_down(self):
+    def move(self):
         self.y += self.speed
 
 
@@ -48,6 +50,7 @@ class Ball:
 
 class GameInstance:
     def __init__(self, room_id):
+        self.update_lock = asyncio.Lock()
         self.room_id = room_id
         self.player1_paddle = Paddle(
             x=10, y=canvas_height / 2 - pH / 2, width=pW, height=pH)
@@ -56,6 +59,9 @@ class GameInstance:
         self.ball = self.init_ball()
         self.player1_score = 0
         self.player2_score = 0
+        self.is_over = False
+        self.winner = ''
+        # self.broadcast_initial_game_state()
 
     def init_ball(self):
         initial_angle = (random.random() * math.pi) / 2 - math.pi / 4
@@ -69,9 +75,56 @@ class GameInstance:
 
         return Ball(x=canvas_width / 2, y=canvas_height / 2, radius=ball_raduis, dx=ball_dx, dy=ball_dy)
 
+    def reset_ball(self):
+        self.ball.x = 3 * canvas_width / 4 if self.ball.dx > 0 else canvas_width / 4
+        self.ball.y = canvas_height / 2
+        self.ball.dx *= -1
+        self.ball.dy = (random.random() - 0.5) * 6
+
+    # async def broadcast_initial_game_state(self):
+
+        # await channel_layer.group_send(
+        #     self.room_id,
+        #     game_state
+        # )
+        # loop = asyncio.get_event_loop()
+        # loop.run_until_complete(
+        #     send_message_to_group(self.room_id, game_state))
+
     def update(self):
         # Logic to update the game state, such as moving the ball and checking for collisions
+        # async with self.update_lock:
         self.ball.move()
+        self.player1_paddle.move()
+        self.player2_paddle.move()
+        self.check_collision()
+        # self.ball.x += self.ball.dx
+        # self.ball.y += self.ball.dy
+
+        # Collision detection with left and right walls
+        # if self.ball.x - self.ball.radius <= 0 or self.ball.x + self.ball.radius >= canvas_width:
+        #     self.ball.dx = -self.ball.dx  # Reverse horizontal direction
+        #     # Correct the ball position to stay within bounds
+        #     if self.ball.x - self.ball.radius <= 0:
+        #         self.ball.x = self.ball.radius
+        #     else:
+        #         self.ball.x = canvas_width - self.ball.radius
+
+        # Collision detection with top and bottom walls
+        if self.ball.y - self.ball.radius <= 0 or self.ball.y + self.ball.radius >= canvas_height:
+            self.ball.dy = -self.ball.dy  # Reverse vertical direction
+            # Correct the ball position to stay within bounds
+            if self.ball.y - self.ball.radius <= 0:
+                self.ball.y = self.ball.radius
+            else:
+                self.ball.y = canvas_height - self.ball.radius
+
+        if self.ball.x - self.ball.radius <= 0:
+            self.player2_score += 1
+            self.reset_ball()
+        if self.ball.x + self.ball.radius >= canvas_width:
+            self.player1_score += 1
+            self.reset_ball()
 
     def check_for_winner(self):
         # Logic to determine if a player has won and handle the end of the game
@@ -80,6 +133,125 @@ class GameInstance:
         elif self.player2_score >= 10:
             return "Player 2 wins!"
         return None
+
+    def check_collision(self):
+        newX = self.ball.x + self.ball.dx + \
+            (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
+        newY = self.ball.y + self.ball.dy + \
+            (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
+
+        # if newY >= canvas_height or newY <= 0:
+        #     self.ball.dy *= -1
+        # if newX >= canvas_width or newX <= 0:
+        #     self.ball.dx = -self.ball.dx
+
+        # if newY <= 0:
+        #     self.ball.y = self.ball.radius
+        # elif newY >= canvas_height:
+        #     self.ball.y = canvas_height - self.ball.radius
+
+        if self.is_colliding_with_paddle(self.player1_paddle):
+            self.handle_paddle_collision(self.player1_paddle)
+        elif self.is_colliding_with_paddle(self.player2_paddle):
+            self.handle_paddle_collision(self.player2_paddle)
+        # elif newX >= canvas_width:
+        #     self.player1_score += 1
+        #     if self.player1_score >= winning_score:
+        #         self.is_over = True
+        #         self.winner = 'player1'
+        # elif (newX <= 0):
+        #     self.player2_score += 1
+        #     if self.player2_score >= winning_score:
+        #         self.is_over = True
+        #         self.winner = 'player2'
+
+    def do_line_segments_intersect(self, x1, y1, x2, y2, x3, y3, x4, y4):
+        denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+
+        # Lines are parallel if the denominator is 0
+        if denominator == 0:
+            return False
+
+        t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
+        u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denominator
+
+        return 0 <= t <= 1 and 0 <= u <= 1
+
+    def is_colliding_with_paddle(self, paddle):
+        # Previous and current position of the ball
+        next_x = self.ball.x + self.ball.dx + \
+            (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
+        next_y = self.ball.y + self.ball.dy + \
+            (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
+
+        # Paddle edges as line segments
+        paddle_left = paddle.x
+        paddle_right = paddle.x + paddle.width
+        paddle_top = paddle.y
+        paddle_bottom = paddle.y + paddle.height
+
+        # Check for intersection with paddle's vertical sides (left and right)
+        intersects_left = self.do_line_segments_intersect(
+            self.ball.x, self.ball.y, next_x, next_y,
+            paddle_left, paddle_top, paddle_left, paddle_bottom
+        )
+
+        intersects_right = self.do_line_segments_intersect(
+            self.ball.x, self.ball.y, next_x, next_y,
+            paddle_right, paddle_top, paddle_right, paddle_bottom
+        )
+
+        # Check for intersection with paddle's horizontal sides (top and bottom)
+        intersects_top = self.do_line_segments_intersect(
+            self.ball.x, self.ball.y, next_x, next_y,
+            paddle_left, paddle_top, paddle_right, paddle_top
+        )
+
+        intersects_bottom = self.do_line_segments_intersect(
+            self.ball.x, self.ball.y, next_x, next_y,
+            paddle_left, paddle_bottom, paddle_right, paddle_bottom
+        )
+
+        # Return true if any of the paddle's edges intersect with the ball's path
+        return intersects_left or intersects_right or intersects_top or intersects_bottom
+
+    def handle_paddle_collision(self, paddle):
+        # Check if the ball is hitting the top/bottom or the sides
+        ball_from_left = self.ball.x < paddle.x
+        ball_from_right = self.ball.x > paddle.x + paddle.width
+
+        ball_from_top = self.ball.y < paddle.y
+        ball_from_bottom = self.ball.y > paddle.y + paddle.height
+
+        # Handle side collision
+        if ball_from_left or ball_from_right:
+            self.ball.dx *= -1  # Reverse the horizontal velocity
+            if ball_from_left:
+                self.ball.x = paddle.x - self.ball.radius
+            elif ball_from_right:
+                self.ball.x = paddle.x + paddle.width + self.ball.radius
+
+            relative_impact = (
+                self.ball.y - (paddle.y + paddle.height / 2)) / (paddle.height / 2)
+            max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+
+            # Calculate new angle based on relative impact
+            new_angle = relative_impact * max_bounce_angle
+
+            # Update ball's velocity (dx, dy) based on the new angle
+            direction = 1 if self.ball.dx > 0 else -1
+            speed = self.ball.speed
+            self.ball.dx = direction * speed * \
+                math.cos(new_angle)  # Horizontal velocity
+            self.ball.dy = speed * math.sin(new_angle)  # Vertical velocity
+
+        # Handle top/bottom collision
+        if ball_from_top or ball_from_bottom:
+            self.ball.dy *= -1
+            if ball_from_top:
+                self.ball.y = paddle.y - self.ball.radius
+            elif ball_from_bottom:
+                self.ball.y = paddle.y + paddle.height + self.ball.radius
 
 
 # Managing multiple game instances
@@ -106,117 +278,6 @@ create_game("room_1")
 game_instance = get_game("room_1")
 if game_instance:
     game_instance.update()
-
-
-def do_line_segments_intersect(x1, y1, x2, y2, x3, y3, x4, y4):
-    denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
-
-    # Lines are parallel if the denominator is 0
-    if denominator == 0:
-        return False
-
-    t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
-    u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denominator
-
-    return 0 <= t <= 1 and 0 <= u <= 1
-
-
-def is_colliding_with_paddle(ball, paddle):
-    # Previous and current position of the ball
-    next_x = ball['x'] + ball['dx']
-    next_y = ball['y'] + ball['dy']
-
-    # Paddle edges as line segments
-    paddle_left = paddle['x']
-    paddle_right = paddle['x'] + paddle['width']
-    paddle_top = paddle['y']
-    paddle_bottom = paddle['y'] + paddle['height']
-
-    # Check for intersection with paddle's vertical sides (left and right)
-    intersects_left = do_line_segments_intersect(
-        ball['x'], ball['y'], next_x, next_y,
-        paddle_left, paddle_top, paddle_left, paddle_bottom
-    )
-
-    intersects_right = do_line_segments_intersect(
-        ball['x'], ball['y'], next_x, next_y,
-        paddle_right, paddle_top, paddle_right, paddle_bottom
-    )
-
-    # Check for intersection with paddle's horizontal sides (top and bottom)
-    intersects_top = do_line_segments_intersect(
-        ball['x'], ball['y'], next_x, next_y,
-        paddle_left, paddle_top, paddle_right, paddle_top
-    )
-
-    intersects_bottom = do_line_segments_intersect(
-        ball['x'], ball['y'], next_x, next_y,
-        paddle_left, paddle_bottom, paddle_right, paddle_bottom
-    )
-
-    # Return true if any of the paddle's edges intersect with the ball's path
-    return intersects_left or intersects_right or intersects_top or intersects_bottom
-
-
-def handle_paddle_collision(ball, paddle):
-    # Check if the ball is hitting the top/bottom or the sides
-    ball_from_left = ball['x'] < paddle['x']
-    ball_from_right = ball['x'] > paddle['x'] + paddle['width']
-
-    ball_from_top = ball['y'] < paddle['y']
-    ball_from_bottom = ball['y'] > paddle['y'] + paddle['height']
-
-    # Handle side collision
-    if ball_from_left or ball_from_right:
-        ball['dx'] *= -1  # Reverse the horizontal velocity
-
-        relative_impact = (
-            ball['y'] - (paddle['y'] + paddle['height'] / 2)) / (paddle['height'] / 2)
-        max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
-
-        # Calculate new angle based on relative impact
-        new_angle = relative_impact * max_bounce_angle
-
-        # Update ball's velocity (dx, dy) based on the new angle
-        direction = 1 if ball['dx'] > 0 else -1
-        speed = ball['speed']
-        ball['dx'] = direction * speed * \
-            math.cos(new_angle)  # Horizontal velocity
-        ball['dy'] = speed * math.sin(new_angle)  # Vertical velocity
-
-    # Handle top/bottom collision
-    if ball_from_top or ball_from_bottom:
-        ball['dy'] *= -1
-
-
-def check_collision(game: GameInstance):
-    newX = game.ball.x + game.ball.dx + \
-        game.ball.radius if game.ball.dx > 0 else -game.ball.radius
-    newY = game.ball.y + game.ball.dy + \
-        game.ball.radius if game.ball.dy > 0 else -game.ball.radius
-
-    if newY >= canvas_height or newY <= 0:
-        game.ball.dy *= -1
-
-    if newY <= 0:
-        game.ball.y = game.ball.radius
-    elif newY >= canvas_height:
-        game.ball.y = canvas_height - game.ball.radius
-
-    if is_colliding_with_paddle(game.ball, game.player1_paddle):
-        handle_paddle_collision(game.ball, game.player1_paddle)
-    elif is_colliding_with_paddle(game.ball, game.player2_paddle):
-        handle_paddle_collision(game.ball, game.player2_paddle)
-    elif newX >= canvas_width:
-        game.player1_score += 1
-        if game.player1_score >= winning_score:
-            game.is_over = True
-            game.winner = 'player1'
-    elif (newX <= 0):
-        game.player2_score += 1
-        if game.player2_score >= winning_score:
-            game.is_over = True
-            game.winner = 'player2'
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -273,7 +334,25 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.canvas_width = data.get('canvasWidth')
             self.canvas_height = data.get('canvasHeight')
 
-        # Handle other incoming messages...
+        if data.get('type') == 'keyDown':
+            game: GameInstance = get_game(self.scope.get('game_room'))
+            if (self.player_id == 'player1'):
+                if data.get('action') == 'moveUp':
+                    game.player1_paddle.speed = -10
+                elif data.get('action') == 'moveDown':
+                    game.player1_paddle.speed = 10
+            else:
+                if data.get('action') == 'moveUp':
+                    game.player2_paddle.speed = -10
+                elif data.get('action') == 'moveDown':
+                    game.player2_paddle.speed = 10
+
+        if data.get('type') == 'keyUp':
+            game: GameInstance = get_game(self.scope.get('game_room'))
+            if (self.player_id == 'player1'):
+                game.player1_paddle.speed = 0
+            else:
+                game.player2_paddle.speed = 0
 
     async def disconnect(self, close_code):
         # Remove player from the waiting room
@@ -336,12 +415,47 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                 game_room_id,
                 {
-                    "type": "game.message",  # This matches the method name
-                    "room_id": game_room_id,
-                    "message": 'game_started'
+                    "type": "game.init",  # This matches the method name
+                    # "room_id": game_room_id,
+                    # "message": 'game_started'
                 }
             )
+            # Start the game loop
+            asyncio.create_task(self.start_game(game_room_id))
 
+    async def start_game(self, room_id):
+        game_instance: GameInstance = games[room_id]
+
+        # Game loop
+        while True:
+            game_instance.update()
+
+            # Broadcast updated game state to players
+            await self.broadcast_game_state(game_instance)
+
+            await asyncio.sleep(1 / 60)  # Run at 60 FPS
+
+    async def broadcast_game_state(self, game):
+        # Here you would send the game state to all players in the room
+        game_state = {
+            'player1_paddle_y': game.player1_paddle.y,
+            'player1_score': game.player1_score,
+            'player2_paddle_y': game.player2_paddle.y,
+            'player2_score': game.player2_score,
+            'ball': {
+                'x': game.ball.x,
+                'y': game.ball.y,
+            },
+            'game_over': game.is_over,
+            'winner': game.winner,
+        }
+        await self.channel_layer.group_send(
+            game.room_id,
+            {
+                'type': 'game.state.update',
+                'state': game_state,
+            }
+        )
     # async def find_match(self):
     #     # Check if there are at least two players waiting
     #     if len(GameConsumer.waiting_players) >= 2:
@@ -372,29 +486,53 @@ class GameConsumer(AsyncWebsocketConsumer):
     #         for member in members:
     #             GameConsumer.waiting_players.discard(member)
 
-    async def game_message(self, event):
-        message = event["message"]
-        room_id = event["room_id"]
+    async def game_state_update(self, event):
+        state = event["state"]
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'game_update',
+                'state': state,
+            }
+        ))
+
+    async def game_init(self, event):
+        # message = event["message"]
+        room_id = self.scope.get('game_room')
+        game: GameInstance = get_game(room_id)
+
         await self.send(text_data=json.dumps(
             {
                 "type": 'game_started',
                 "game_room_id": room_id,
+                'player_id': self.player_id,
                 "players": {
                     "player1": {
-                        "id": self.player_id,
-                        "role": "host"  # or "client", depending on the role
+                        'paddle': {
+                            'x': game.player1_paddle.x,
+                            'y': game.player1_paddle.y,
+                            'w': game.player1_paddle.width,
+                            'h': game.player1_paddle.height
+                        },
+                        'score': game.player1_score,
+                        'is_winner': False,
                     },
                     "player2": {
-                        "id": "player2_id",
-                        "role": "client"  # or "host" for the second player
+                        'paddle': {
+                            'x': game.player2_paddle.x,
+                            'y': game.player2_paddle.y,
+                            'w': game.player2_paddle.width,
+                            'h': game.player2_paddle.height
+                        },
+                        'score': game.player2_score,
+                        'is_winner': False,
                     }
                 },
-                # "game_start": True,
-                # "game_config": {
-                #     "game_mode": "1v1",
-                #     "difficulty": "medium",
-                #     "ball_speed": 1.5
-                # }
+                'ball': {
+                    'x': game.ball.x,
+                    'y': game.ball.y,
+                    'radius': game.ball.radius,
+                    # 'color': game.ball.color
+                }
             }
         ))
 
