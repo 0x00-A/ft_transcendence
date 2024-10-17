@@ -96,13 +96,11 @@ export const handlePaddleCollision = (ball: Ball, paddle: Paddle) => {
   // Handle side collision
   if (ballFromLeft || ballFromRight) {
     // Correct the position so the ball doesn't get stuck inside the paddle
-    // if (ballFromLeft) {
-    //   console.log('from left');
-    //   ball.x = paddle.x - ball.radius; // Place the ball just outside the left side of the paddle
-    // } else if (ballFromRight) {
-    //   console.log('from right');
-    //   ball.x = paddle.x + paddle.width + ball.radius; // Place the ball just outside the right side of the paddle
-    // }
+    if (ballFromLeft) {
+      ball.x = paddle.x - ball.radius;
+    } else if (ballFromRight) {
+      ball.x = paddle.x + paddle.width + ball.radius;
+    }
 
     ball.dx *= -1; // Reverse the horizontal velocity
 
