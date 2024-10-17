@@ -22,6 +22,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('rest_framework.urls')),
-    path('api/accounts/', include('accounts.urls')),
+    # path('api/', include('rest_framework.urls')),
+    path('api/', include('accounts.urls')),
 ] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
