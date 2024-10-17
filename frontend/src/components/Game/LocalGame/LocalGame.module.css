@@ -3,7 +3,7 @@
     position: relative;
     left: 20px;
     /* background-color: black; */
-    background-color: var(--color-game-screen-bg);
+    background-color: var(--main-surface-tertiary);
     width: 650px;
     height: 480px;
     color: var(--game-screen-text-color);

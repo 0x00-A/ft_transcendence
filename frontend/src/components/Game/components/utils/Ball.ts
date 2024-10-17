@@ -30,9 +30,10 @@ class Ball {
 
   draw() {
     this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    this.ctx.fillStyle = 'white';
-    this.ctx.fill();
+    // this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    this.ctx.fillStyle = '#f8f3e3';
+    // this.ctx.fill();
+    this.ctx.fillRect(this.x, this.y, this.radius * 2, this.radius * 2);
     this.ctx.closePath();
   }
 

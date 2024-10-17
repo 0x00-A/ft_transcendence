@@ -128,8 +128,8 @@ const Pong: React.FC<GameProps> = ({
     if (isGameOver) return;
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
-    const pW = 10;
-    const pH = 100;
+    const pW = 20;
+    const pH = 80;
     // const paddleSpeed = 5;
     // const winningScore = 5;
 
@@ -224,13 +224,13 @@ const Pong: React.FC<GameProps> = ({
     };
 
     const drawDashedLine = () => {
-      ctx.setLineDash([10, 10]); // [dash length, gap length]
-      ctx.strokeStyle = 'gray';
-      ctx.lineWidth = 6;
+      ctx.setLineDash([15, 7.1]); // [dash length, gap length]
+      ctx.strokeStyle = '#f8f3e3';
+      ctx.lineWidth = 3;
 
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2, 0); // Start at the top of the canvas
-      ctx.lineTo(canvas.width / 2, canvas.height); // Draw to the bottom of the canvas
+      ctx.moveTo(canvas.width / 2, 10); // Start at the top of the canvas
+      ctx.lineTo(canvas.width / 2, canvas.height - 10); // Draw to the bottom of the canvas
       ctx.stroke();
       ctx.setLineDash([]); // Reset the line dash to solid for other drawings
     };
