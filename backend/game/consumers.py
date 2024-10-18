@@ -13,10 +13,10 @@ channel_layer = get_channel_layer()
 canvas_width: int = 650
 canvas_height: int = 480
 winning_score: int = 5
-pW: int = 10
-pH: int = 100
+pW: int = 20
+pH: int = 80
 ball_raduis: int = 8
-initial_ball_speed = 10
+initial_ball_speed = 4
 
 
 class Paddle:
@@ -92,39 +92,10 @@ class GameInstance:
         #     send_message_to_group(self.room_id, game_state))
 
     def update(self):
-        # Logic to update the game state, such as moving the ball and checking for collisions
-        # async with self.update_lock:
+        # Logic to update the game state
         self.ball.move()
-        self.player1_paddle.move()
-        self.player2_paddle.move()
+
         self.check_collision()
-        # self.ball.x += self.ball.dx
-        # self.ball.y += self.ball.dy
-
-        # Collision detection with left and right walls
-        # if self.ball.x - self.ball.radius <= 0 or self.ball.x + self.ball.radius >= canvas_width:
-        #     self.ball.dx = -self.ball.dx  # Reverse horizontal direction
-        #     # Correct the ball position to stay within bounds
-        #     if self.ball.x - self.ball.radius <= 0:
-        #         self.ball.x = self.ball.radius
-        #     else:
-        #         self.ball.x = canvas_width - self.ball.radius
-
-        # Collision detection with top and bottom walls
-        if self.ball.y - self.ball.radius <= 0 or self.ball.y + self.ball.radius >= canvas_height:
-            self.ball.dy = -self.ball.dy  # Reverse vertical direction
-            # Correct the ball position to stay within bounds
-            if self.ball.y - self.ball.radius <= 0:
-                self.ball.y = self.ball.radius
-            else:
-                self.ball.y = canvas_height - self.ball.radius
-
-        if self.ball.x - self.ball.radius <= 0:
-            self.player2_score += 1
-            self.reset_ball()
-        if self.ball.x + self.ball.radius >= canvas_width:
-            self.player1_score += 1
-            self.reset_ball()
 
     def check_for_winner(self):
         # Logic to determine if a player has won and handle the end of the game
@@ -135,35 +106,27 @@ class GameInstance:
         return None
 
     def check_collision(self):
-        newX = self.ball.x + self.ball.dx + \
-            (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
-        newY = self.ball.y + self.ball.dy + \
-            (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
-
-        # if newY >= canvas_height or newY <= 0:
-        #     self.ball.dy *= -1
-        # if newX >= canvas_width or newX <= 0:
-        #     self.ball.dx = -self.ball.dx
-
-        # if newY <= 0:
-        #     self.ball.y = self.ball.radius
-        # elif newY >= canvas_height:
-        #     self.ball.y = canvas_height - self.ball.radius
-
+        # Collision detection with paddle
         if self.is_colliding_with_paddle(self.player1_paddle):
             self.handle_paddle_collision(self.player1_paddle)
         elif self.is_colliding_with_paddle(self.player2_paddle):
             self.handle_paddle_collision(self.player2_paddle)
-        # elif newX >= canvas_width:
-        #     self.player1_score += 1
-        #     if self.player1_score >= winning_score:
-        #         self.is_over = True
-        #         self.winner = 'player1'
-        # elif (newX <= 0):
-        #     self.player2_score += 1
-        #     if self.player2_score >= winning_score:
-        #         self.is_over = True
-        #         self.winner = 'player2'
+
+        # Collision detection with top and bottom walls
+        if self.ball.y - self.ball.radius <= 0 or self.ball.y + self.ball.radius >= canvas_height:
+            self.ball.dy = -self.ball.dy  # Reverse vertical direction
+            # Correct the ball position to stay within bounds
+            if self.ball.y - self.ball.radius <= 0:
+                self.ball.y = self.ball.radius
+            else:
+                self.ball.y = canvas_height - self.ball.radius
+        # Collision detection with left and right walls
+        if self.ball.x - self.ball.radius <= 0:
+            self.player2_score += 1
+            self.reset_ball()
+        if self.ball.x + self.ball.radius >= canvas_width:
+            self.player1_score += 1
+            self.reset_ball()
 
     def do_line_segments_intersect(self, x1, y1, x2, y2, x3, y3, x4, y4):
         denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
@@ -263,21 +226,15 @@ def create_game(room_id):
 
 
 def get_game(room_id):
+    # game_instance = get_game("room_id")
+    # if not game_instance:
+    #     pass
     return games.get(room_id)
 
 
 def remove_game(room_id):
     if room_id in games:
         del games[room_id]
-
-
-# Example of creating a new game instance
-create_game("room_1")
-
-# Example of updating the game instance
-game_instance = get_game("room_1")
-if game_instance:
-    game_instance.update()
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -329,30 +286,84 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
 
+        if data['type'] == 'keydown':
+            await self.handle_keydown(data['direction'])
+        # elif data['type'] == 'keyup':
+        #     await self.handle_keyup()
         # Check if it's a connect message
-        if data.get('type') == 'CONNECT':
-            self.canvas_width = data.get('canvasWidth')
-            self.canvas_height = data.get('canvasHeight')
+        # if data.get('type') == 'CONNECT':
+        #     self.canvas_width = data.get('canvasWidth')
+        #     self.canvas_height = data.get('canvasHeight')
 
-        if data.get('type') == 'keyDown':
-            game: GameInstance = get_game(self.scope.get('game_room'))
-            if (self.player_id == 'player1'):
-                if data.get('action') == 'moveUp':
-                    game.player1_paddle.speed = -10
-                elif data.get('action') == 'moveDown':
-                    game.player1_paddle.speed = 10
-            else:
-                if data.get('action') == 'moveUp':
-                    game.player2_paddle.speed = -10
-                elif data.get('action') == 'moveDown':
-                    game.player2_paddle.speed = 10
+        # if data.get('type') == 'paddle_move':
+        #     game: GameInstance = get_game(self.scope.get('game_room'))
 
-        if data.get('type') == 'keyUp':
-            game: GameInstance = get_game(self.scope.get('game_room'))
-            if (self.player_id == 'player1'):
-                game.player1_paddle.speed = 0
-            else:
-                game.player2_paddle.speed = 0
+        #     if self.player_id == 'player1':
+        #         # Update Player 1's paddle
+        #         # self.game_state["player_1_paddle"]["y"] = data["paddle_y"]
+        #         game.player1_paddle.y = data["paddle_y"]
+        #     else:
+        #         # Update Player 2's paddle (no need to mirror input)
+        #         # self.game_state["player_2_paddle"]["y"] = data["paddle_y"]
+        #         game.player2_paddle.y = data["paddle_y"]
+
+        # if data.get('type') == 'keyDown':
+        #     game: GameInstance = get_game(self.scope.get('game_room'))
+        #     if (self.player_id == 'player1'):
+        #         if data.get('action') == 'moveUp':
+        #             game.player1_paddle.speed = -10
+        #         elif data.get('action') == 'moveDown':
+        #             game.player1_paddle.speed = 10
+        #     else:
+        #         if data.get('action') == 'moveUp':
+        #             game.player2_paddle.speed = -10
+        #         elif data.get('action') == 'moveDown':
+        #             game.player2_paddle.speed = 10
+
+        # if data.get('type') == 'keyUp':
+        #     game: GameInstance = get_game(self.scope.get('game_room'))
+        #     if (self.player_id == 'player1'):
+        #         game.player1_paddle.speed = 0
+        #     else:
+        #         game.player2_paddle.speed = 0
+
+    async def handle_keydown(self, direction):
+        game: GameInstance = get_game(self.scope.get('game_room'))
+        paddle_position = game.player1_paddle.y if self.player_id == 'player1' else game.player2_paddle.y
+        # Update paddle position based on the direction
+        if direction == 'up':
+            # Move paddle up (server logic to calculate)
+            new_position = max(0, paddle_position - 10)
+        elif direction == 'down':
+            # Move paddle down (server logic to calculate)
+            new_position = min(canvas_height - pH, paddle_position +
+                               10)
+        if self.player_id == 'player1':
+            game.player1_paddle.y = new_position
+        else:
+            game.player2_paddle.y = new_position
+
+        # # Broadcast new paddle position to both clients
+        # await self.channel_layer.group_send(
+        #     self.room_name,
+        #     {
+        #         "type": "paddle_update",
+        #         "position": new_position,
+        #     }
+        # )
+
+    # async def paddle_update(self, event):
+    #     position = event['position']
+
+    #     # Send the updated paddle position to WebSocket clients
+    #     await self.send(text_data=json.dumps({
+    #         'type': 'paddle_update',
+    #         'position': position
+    #     }))
+
+    async def handle_keyup(self):
+        # You can stop paddle movement on keyup if necessary
+        pass
 
     async def disconnect(self, close_code):
         # Remove player from the waiting room
@@ -435,25 +446,44 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             await asyncio.sleep(1 / 60)  # Run at 60 FPS
 
-    async def broadcast_game_state(self, game):
+    async def broadcast_game_state(self, game: GameInstance):
         # Here you would send the game state to all players in the room
         game_state = {
+            'player1_paddle_x': game.player1_paddle.x,
             'player1_paddle_y': game.player1_paddle.y,
             'player1_score': game.player1_score,
+
+            'player2_paddle_x': game.player2_paddle.x,
             'player2_paddle_y': game.player2_paddle.y,
             'player2_score': game.player2_score,
             'ball': {
                 'x': game.ball.x,
                 'y': game.ball.y,
             },
-            'game_over': game.is_over,
-            'winner': game.winner,
+            # 'game_over': game.is_over,
+            # 'winner': game.winner,
+        }
+        mirror_state = {
+            'player1_paddle_x': canvas_width - game.player2_paddle.x - game.player2_paddle.width,
+            'player1_paddle_y': game.player2_paddle.y,
+            'player1_score': game.player2_score,
+
+            'player2_paddle_x': canvas_width - game.player1_paddle.x - game.player1_paddle.width,
+            'player2_paddle_y': game.player1_paddle.y,
+            'player2_score': game.player1_score,
+            'ball': {
+                'x': canvas_width - game.ball.x,
+                'y': game.ball.y,
+            },
+            # 'game_over': game.is_over,
+            # 'winner': game.winner,
         }
         await self.channel_layer.group_send(
             game.room_id,
             {
                 'type': 'game.state.update',
-                'state': game_state,
+                'state1': game_state,
+                'state2': mirror_state,
             }
         )
     # async def find_match(self):
@@ -487,7 +517,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     #             GameConsumer.waiting_players.discard(member)
 
     async def game_state_update(self, event):
-        state = event["state"]
+        state = event["state1"] if self.player_id == 'player1' else event["state2"]
         await self.send(text_data=json.dumps(
             {
                 'type': 'game_update',
@@ -503,36 +533,36 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(
             {
                 "type": 'game_started',
-                "game_room_id": room_id,
-                'player_id': self.player_id,
-                "players": {
-                    "player1": {
-                        'paddle': {
-                            'x': game.player1_paddle.x,
-                            'y': game.player1_paddle.y,
-                            'w': game.player1_paddle.width,
-                            'h': game.player1_paddle.height
-                        },
-                        'score': game.player1_score,
-                        'is_winner': False,
-                    },
-                    "player2": {
-                        'paddle': {
-                            'x': game.player2_paddle.x,
-                            'y': game.player2_paddle.y,
-                            'w': game.player2_paddle.width,
-                            'h': game.player2_paddle.height
-                        },
-                        'score': game.player2_score,
-                        'is_winner': False,
-                    }
-                },
-                'ball': {
-                    'x': game.ball.x,
-                    'y': game.ball.y,
-                    'radius': game.ball.radius,
-                    # 'color': game.ball.color
-                }
+                # "game_room_id": room_id,
+                # 'player_id': self.player_id,
+                # "players": {
+                #     "player1": {
+                #         'paddle': {
+                #             'x': game.player1_paddle.x,
+                #             'y': game.player1_paddle.y,
+                #             'w': game.player1_paddle.width,
+                #             'h': game.player1_paddle.height
+                #         },
+                #         'score': game.player1_score,
+                #         'is_winner': False,
+                #     },
+                #     "player2": {
+                #         'paddle': {
+                #             'x': game.player2_paddle.x,
+                #             'y': game.player2_paddle.y,
+                #             'w': game.player2_paddle.width,
+                #             'h': game.player2_paddle.height
+                #         },
+                #         'score': game.player2_score,
+                #         'is_winner': False,
+                #     }
+                # },
+                # 'ball': {
+                #     'x': game.ball.x,
+                #     'y': game.ball.y,
+                #     'radius': game.ball.radius,
+                #     # 'color': game.ball.color
+                # }
             }
         ))
 
