@@ -8,29 +8,10 @@ import {
 import css from './Pong.module.css';
 import { Controller, GameScreens } from '../../../../types/types';
 
-function create_ball(
-  ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
-  ballSpeed: number
-) {
-  const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4; // Random angle between -45° and 45°
-  // const ballSpeed = 3;
-  const ballRaduis = 8;
-
-  // Initial random direction towards a player
-  const serveDirection = Math.random() < 0.5 ? 1 : -1; // 1 = right (Player 2), -1 = left (Player 1)
-
-  let ballDx = serveDirection * ballSpeed * Math.cos(initialAngle);
-  let ballDy = ballSpeed * Math.sin(initialAngle);
-  return new Ball(
-    ctx,
-    canvas.width / 2,
-    canvas.height / 2,
-    ballRaduis,
-    ballDx,
-    ballDy
-  );
-}
+const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
+const ballRaduis = 8;
+const pW = 20;
+const pH = 80;
 
 interface GameProps {
   controlMode?: 'keyboard' | 'mouse';
@@ -61,15 +42,51 @@ const Pong: React.FC<GameProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const ballRef = useRef<Ball | null>(null);
+  const paddle1Ref = useRef<Paddle | null>(null);
+  const paddle2Ref = useRef<Paddle | null>(null);
+  const hitWallSound = useRef(
+    new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
+  );
+  const paddleHitSound = useRef(
+    new Audio('https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3')
+  );
+
+  useEffect(() => {
+    ballRef.current = new Ball(
+      canvasRef.current!.width / 2,
+      canvasRef.current!.height / 2,
+      ballRaduis,
+      ballSpeed,
+      initialAngle
+    );
+
+    paddle1Ref.current = new Paddle(
+      10,
+      canvasRef.current!.height / 2 - pH / 2,
+      pW,
+      pH,
+      paddleSpeed
+    );
+    paddle2Ref.current = new Paddle(
+      canvasRef.current!.width - 10 - pW,
+      canvasRef.current!.height / 2 - pH / 2,
+      pW,
+      pH,
+      paddleSpeed
+    );
+  }, []);
 
   // const [hitWallSound] = useSound('../../sounds/wall-hit-1.mp3');
 
-  let hitWallSound = new Audio(
-    'https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3'
-  );
-  let paddleHitSound = new Audio(
-    'https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3'
-  );
+  // let hitWallSound = new Audio(
+  //   'https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3'
+  // );
+  // let paddleHitSound = new Audio(
+  //   'https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3'
+  // );
 
   // useEffect(() => {
   //   if (isGameOver) return;
@@ -117,39 +134,29 @@ const Pong: React.FC<GameProps> = ({
   //   });
   // }, [isGameOver]);
 
+  const togglePause = () => {
+    setPaused(!paused);
+  };
+
   useEffect(() => {
-    hitWallSound.preload = 'auto';
-    hitWallSound.load(); // Preloads the audio into the browser's memory
-    paddleHitSound.preload = 'auto';
-    paddleHitSound.load(); // Preloads the audio into the browser's memory
+    hitWallSound.current.preload = 'auto';
+    hitWallSound.current.load(); // Preloads the audio into the browser's memory
+    paddleHitSound.current.preload = 'auto';
+    paddleHitSound.current.load(); // Preloads the audio into the browser's memory
   }, [sound]);
 
   useEffect(() => {
     if (isGameOver) return;
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
-    const pW = 20;
-    const pH = 80;
+
     // const paddleSpeed = 5;
     // const winningScore = 5;
 
-    const ball = create_ball(ctx, canvas, ballSpeed);
-    const paddle1: Paddle = new Paddle(
-      ctx,
-      10,
-      canvas.height / 2 - pH / 2,
-      pW,
-      pH,
-      paddleSpeed
-    );
-    const paddle2: Paddle = new Paddle(
-      ctx,
-      canvas.width - 10 - pW,
-      canvas.height / 2 - pH / 2,
-      pW,
-      pH,
-      paddleSpeed
-    );
+    const ball: Ball | null = ballRef.current;
+    const paddle1: Paddle | null = paddle1Ref.current;
+    const paddle2: Paddle | null = paddle2Ref.current;
+    if (!ball || !paddle1 || !paddle2) return;
 
     function getRandomValue(paddleHeight: number): number {
       // Generate a random integer between 0 and paddleHeight (inclusive)
@@ -161,10 +168,13 @@ const Pong: React.FC<GameProps> = ({
     }
 
     const resetBall = () => {
-      ball.x = ball.dx > 0 ? (3 * canvas.width) / 4 : canvas.width / 4;
+      ball.x = ball.dx > 0 ? 3 * (canvas.width / 4) : canvas.width / 4;
       ball.y = canvas.height / 2;
-      ball.dx *= -1; // Switch direction of the serve
-      ball.dy = (Math.random() - 0.5) * 6;
+      ball.angle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
+      ball.speed = ballSpeed;
+      const serveDirection = ball.dx > 0 ? -1 : 1;
+      ball.dx = serveDirection * ballSpeed * Math.cos(ball.angle);
+      ball.dy = ballSpeed * Math.sin(ball.angle);
     };
 
     const updateScore = (isPlayer: boolean = false) => {
@@ -188,7 +198,7 @@ const Pong: React.FC<GameProps> = ({
       if (newY >= canvas.height || newY <= 0) {
         // hitWallSound.load();
         // paddleHitSound.load();
-        sound && hitWallSound.play();
+        sound && hitWallSound.current.play();
 
         ball.dy *= -1;
       }
@@ -209,11 +219,11 @@ const Pong: React.FC<GameProps> = ({
         // Handle collision, like reversing the ball's direction
         // ball.vx *= -1; // Reverse horizontal direction on collision
 
-        sound && paddleHitSound.play();
+        sound && paddleHitSound.current.play();
         handlePaddleCollision(ball, paddle1);
         paddle1.paddleHitPoint = getRandomValue(paddle1.height);
       } else if (isCollidingWithPaddle(ball, paddle2)) {
-        sound && paddleHitSound.play();
+        sound && paddleHitSound.current.play();
         handlePaddleCollision(ball, paddle2);
         paddle2.paddleHitPoint = getRandomValue(paddle2.height);
       } else if (newX >= canvas.width) {
@@ -261,26 +271,85 @@ const Pong: React.FC<GameProps> = ({
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') paddle2.dy = 0;
     };
 
+    const drawBall = () => {
+      ctx.beginPath();
+      // ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#f8f3e3';
+      // ctx.fill();
+      ctx.fillRect(
+        ball.x - ball.radius,
+        ball.y - ball.radius,
+        ball.radius * 2,
+        ball.radius * 2
+      );
+      ctx.closePath();
+    };
+
+    const drawPaddle = (paddle: Paddle) => {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    };
+
+    const movePaddle = (paddle: Paddle) => {
+      // Update the y position by the current dy value
+      paddle.y += paddle.dy;
+
+      // Prevent the paddle from going off the canvas
+      if (paddle.y < 0) {
+        paddle.y = 0;
+      } else if (paddle.y + paddle.height > ctx.canvas.height) {
+        paddle.y = ctx.canvas.height - paddle.height;
+      }
+    };
+
+    const paddle1bot = () => {
+      if (ball.dx < 0) {
+        if (ball.y < paddle1.y + paddle1.paddleHitPoint)
+          paddle1.y -= paddle1.speed;
+        if (paddle1.y <= 0) paddle1.y = 0;
+
+        if (ball.y > paddle1.y + paddle1.paddleHitPoint)
+          paddle1.y += paddle1.speed;
+        if (paddle1.y + paddle1.height >= ctx.canvas.height)
+          paddle1.y = ctx.canvas.height - paddle1.height;
+      }
+    };
+    const paddle2bot = () => {
+      if (ball.dx > 0) {
+        if (ball.y < paddle2.y + paddle2.paddleHitPoint)
+          paddle2.y -= paddle2.speed;
+        if (paddle2.y <= 0) paddle2.y = 0;
+
+        if (ball.y > paddle2.y + paddle2.paddleHitPoint)
+          paddle2.y += paddle2.speed;
+        if (paddle2.y + paddle2.height >= ctx.canvas.height)
+          paddle2.y = ctx.canvas.height - paddle2.height;
+      }
+    };
+
     let animationFrameId: number;
     const animate = () => {
       if (isGameOver) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!paused) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      drawDashedLine();
-      checkCollision();
-      ball.move();
-      if (controller !== 'mouse') paddle1.move();
-      // paddle1.ai(ball, true);
-      isOnePlayerMode ? paddle2.ai(ball) : paddle2.move();
-      ball.draw();
-      paddle1.draw();
-      paddle2.draw();
+        drawDashedLine();
+        checkCollision();
+        ball.move();
+        if (controller !== 'mouse') movePaddle(paddle1);
+        // paddle1.ai(ball, true);
+        isOnePlayerMode ? paddle2bot() : movePaddle(paddle2);
+        drawBall();
+        drawPaddle(paddle1);
+        drawPaddle(paddle2);
+      }
       animationFrameId = requestAnimationFrame(animate);
     };
 
     window.addEventListener('keydown', (e) => handleKeyDown(e));
     window.addEventListener('keyup', (e) => handleKeyUp(e));
     canvas.addEventListener('mousemove', (e) => handleMouseMove(e));
+
     animate();
 
     return () => {
@@ -289,7 +358,7 @@ const Pong: React.FC<GameProps> = ({
       canvas.removeEventListener('mousemove', (e) => handleMouseMove(e));
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isGameOver, score1, score2]);
+  }, [isGameOver, score1, score2, paused]);
 
   return (
     <div id="gameScreen" className={css.gameScreenDiv}>
@@ -297,16 +366,9 @@ const Pong: React.FC<GameProps> = ({
         <div className={css.player1Score}>{score1}</div>
         <div className={css.player2Score}>{score2}</div>
       </div>
-      {/* <div id="pauseDiv" style="display: none;">
-        Paused, press P to continue
-      </div> */}
-      {/* <canvas
-        id="gameCanvas"
-        width="650"
-        height="480"
-        style="cursor: pointer;"
-      ></canvas> */}
+      {/* {paused && <div id="pauseDiv">Paused, press P to continue</div>} */}
       <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
+      <button onClick={togglePause}>{paused ? 'Resume' : 'Pause'}</button>
     </div>
   );
 };
