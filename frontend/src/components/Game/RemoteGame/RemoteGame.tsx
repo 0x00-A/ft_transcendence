@@ -71,7 +71,7 @@ const RemoteGame: React.FC = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setGameState(null);
-      const gameSocket = new WebSocket('ws://localhost:8000/ws/matchmaking/');
+      const gameSocket = new WebSocket('ws://10.11.6.14:8000/ws/matchmaking/');
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
@@ -130,11 +130,9 @@ const RemoteGame: React.FC = () => {
           setPaused(false);
         }
         if (data.type === 'collision_event') {
-          console.log('wall collision');
           if (data.collision === 'wall') {
             if (hitWallSound.current) sound && hitWallSound.current.play();
           } else if (data.collision === 'paddle') {
-            console.log('paddle collision');
             if (paddleHitSound.current) sound && paddleHitSound.current.play();
           }
         }

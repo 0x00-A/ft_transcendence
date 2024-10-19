@@ -40,6 +40,8 @@
     background-color: var(--color-game-screen-bg);
     touch-action: manipulation;
     /* cursor: none; */
+    border: 3   px solid lightgray;
+
 }
 
 .score {

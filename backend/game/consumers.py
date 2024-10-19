@@ -21,7 +21,7 @@ pH: int = 80
 ball_raduis: int = 8
 initial_ball_speed = 4
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
-paddle_speed = 2
+paddle_speed = 4
 
 
 class Paddle:
