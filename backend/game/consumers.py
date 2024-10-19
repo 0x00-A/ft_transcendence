@@ -6,6 +6,9 @@ import uuid
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from channels.layers import get_channel_layer
+
+from asgiref.sync import async_to_sync
+
 import asyncio
 
 channel_layer = get_channel_layer()
@@ -17,6 +20,8 @@ pW: int = 20
 pH: int = 80
 ball_raduis: int = 8
 initial_ball_speed = 4
+initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
+paddle_speed = 2
 
 
 class Paddle:
@@ -32,13 +37,16 @@ class Paddle:
 
 
 class Ball:
-    def __init__(self, x, y, radius, dx, dy):
+    def __init__(self, x, y, radius, angle):
+        serve_direction = 1 if random.random() < 0.5 else -1
         self.x = x
         self.y = y
         self.radius = radius
-        self.dx = dx
-        self.dy = dy
-        self.speed = math.sqrt(self.dx * self.dx + self.dy * self.dy)
+        self.angle = angle
+        self.dx = serve_direction * \
+            initial_ball_speed * math.cos(self.angle)
+        self.dy = initial_ball_speed * math.sin(self.angle)
+        self.speed = initial_ball_speed
 
     def move(self):
         self.x += self.dx
@@ -56,40 +64,27 @@ class GameInstance:
             x=10, y=canvas_height / 2 - pH / 2, width=pW, height=pH)
         self.player2_paddle = Paddle(
             x=canvas_width - 10 - pW, y=canvas_height / 2 - pH / 2, width=pW, height=pH)
-        self.ball = self.init_ball()
+        self.ball = Ball(x=canvas_width / 2, y=canvas_height / 2,
+                         radius=ball_raduis, angle=initial_ball_angle)
         self.player1_score = 0
         self.player2_score = 0
         self.is_over = False
         self.winner = ''
+        self.paused = False
+        self.wall_collision = False
+        self.paddle_collision = False
+
         # self.broadcast_initial_game_state()
-
-    def init_ball(self):
-        initial_angle = (random.random() * math.pi) / 2 - math.pi / 4
-
-        # 1 = right (Player 2), -1 = left (Player 1)
-        serve_direction = 1 if random.random() < 0.5 else -1
-
-        ball_dx = serve_direction * \
-            initial_ball_speed * math.cos(initial_angle)
-        ball_dy = initial_ball_speed * math.sin(initial_angle)
-
-        return Ball(x=canvas_width / 2, y=canvas_height / 2, radius=ball_raduis, dx=ball_dx, dy=ball_dy)
 
     def reset_ball(self):
         self.ball.x = 3 * canvas_width / 4 if self.ball.dx > 0 else canvas_width / 4
         self.ball.y = canvas_height / 2
-        self.ball.dx *= -1
-        self.ball.dy = (random.random() - 0.5) * 6
-
-    # async def broadcast_initial_game_state(self):
-
-        # await channel_layer.group_send(
-        #     self.room_id,
-        #     game_state
-        # )
-        # loop = asyncio.get_event_loop()
-        # loop.run_until_complete(
-        #     send_message_to_group(self.room_id, game_state))
+        self.ball.angle = (random.random() * math.pi) / 2 - math.pi / 4
+        self.ball.speed = initial_ball_speed
+        serve_sirection = -1 if self.ball.dx > 0 else 1
+        self.ball.dx = serve_sirection * initial_ball_speed * \
+            math.cos(self.ball.angle)
+        self.ball.dy = initial_ball_speed * math.sin(self.ball.angle)
 
     def update(self):
         # Logic to update the game state
@@ -114,6 +109,8 @@ class GameInstance:
 
         # Collision detection with top and bottom walls
         if self.ball.y - self.ball.radius <= 0 or self.ball.y + self.ball.radius >= canvas_height:
+
+            self.wall_collision = True
             self.ball.dy = -self.ball.dy  # Reverse vertical direction
             # Correct the ball position to stay within bounds
             if self.ball.y - self.ball.radius <= 0:
@@ -175,8 +172,10 @@ class GameInstance:
             paddle_left, paddle_bottom, paddle_right, paddle_bottom
         )
 
-        # Return true if any of the paddle's edges intersect with the ball's path
-        return intersects_left or intersects_right or intersects_top or intersects_bottom
+        check = intersects_left or intersects_right or intersects_top or intersects_bottom
+        if check:
+            self.paddle_collision = True
+        return check
 
     def handle_paddle_collision(self, paddle):
         # Check if the ball is hitting the top/bottom or the sides
@@ -203,10 +202,11 @@ class GameInstance:
 
             # Update ball's velocity (dx, dy) based on the new angle
             direction = 1 if self.ball.dx > 0 else -1
-            speed = self.ball.speed
-            self.ball.dx = direction * speed * \
+            self.ball.speed += 0.1
+            self.ball.dx = direction * self.ball.speed * \
                 math.cos(new_angle)  # Horizontal velocity
-            self.ball.dy = speed * math.sin(new_angle)  # Vertical velocity
+            self.ball.dy = self.ball.speed * \
+                math.sin(new_angle)  # Vertical velocity
 
         # Handle top/bottom collision
         if ball_from_top or ball_from_bottom:
@@ -285,62 +285,46 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+        game: GameInstance = get_game(self.scope.get('game_room'))
 
         if data['type'] == 'keydown':
             await self.handle_keydown(data['direction'])
-        # elif data['type'] == 'keyup':
-        #     await self.handle_keyup()
-        # Check if it's a connect message
-        # if data.get('type') == 'CONNECT':
-        #     self.canvas_width = data.get('canvasWidth')
-        #     self.canvas_height = data.get('canvasHeight')
-
-        # if data.get('type') == 'paddle_move':
-        #     game: GameInstance = get_game(self.scope.get('game_room'))
-
-        #     if self.player_id == 'player1':
-        #         # Update Player 1's paddle
-        #         # self.game_state["player_1_paddle"]["y"] = data["paddle_y"]
-        #         game.player1_paddle.y = data["paddle_y"]
-        #     else:
-        #         # Update Player 2's paddle (no need to mirror input)
-        #         # self.game_state["player_2_paddle"]["y"] = data["paddle_y"]
-        #         game.player2_paddle.y = data["paddle_y"]
-
-        # if data.get('type') == 'keyDown':
-        #     game: GameInstance = get_game(self.scope.get('game_room'))
-        #     if (self.player_id == 'player1'):
-        #         if data.get('action') == 'moveUp':
-        #             game.player1_paddle.speed = -10
-        #         elif data.get('action') == 'moveDown':
-        #             game.player1_paddle.speed = 10
-        #     else:
-        #         if data.get('action') == 'moveUp':
-        #             game.player2_paddle.speed = -10
-        #         elif data.get('action') == 'moveDown':
-        #             game.player2_paddle.speed = 10
-
-        # if data.get('type') == 'keyUp':
-        #     game: GameInstance = get_game(self.scope.get('game_room'))
-        #     if (self.player_id == 'player1'):
-        #         game.player1_paddle.speed = 0
-        #     else:
-        #         game.player2_paddle.speed = 0
+        if data['type'] == 'pause':
+            game.paused = True
+            await self.channel_layer.group_send(
+                game.room_id,
+                {
+                    "type": "pause.resume",
+                    "action": "pause",
+                }
+            )
+        elif data['type'] == 'resume':
+            game.paused = False
+            await self.channel_layer.group_send(
+                game.room_id,
+                {
+                    "type": "pause.resume",
+                    "action": "resume",
+                }
+            )
 
     async def handle_keydown(self, direction):
         game: GameInstance = get_game(self.scope.get('game_room'))
-        paddle_position = game.player1_paddle.y if self.player_id == 'player1' else game.player2_paddle.y
-        # Update paddle position based on the direction
-        if direction == 'up':
-            # Move paddle up (server logic to calculate)
-            new_position = max(0, paddle_position - 10)
-        elif direction == 'down':
-            # Move paddle down (server logic to calculate)
-            new_position = min(canvas_height - pH, paddle_position +
-                               10)
+        # paddle_position = game.player1_paddle.y if self.player_id == 'player1' else game.player2_paddle.y
         if self.player_id == 'player1':
+            # Update paddle position based on the direction
+            if direction == 'up':
+                new_position = max(0, game.player1_paddle.y - paddle_speed)
+            elif direction == 'down':
+                new_position = min(canvas_height - pH,
+                                   game.player1_paddle.y + paddle_speed)
             game.player1_paddle.y = new_position
         else:
+            if direction == 'up':
+                new_position = max(0, game.player2_paddle.y - paddle_speed)
+            elif direction == 'down':
+                new_position = min(canvas_height - pH,
+                                   game.player2_paddle.y + paddle_speed)
             game.player2_paddle.y = new_position
 
         # # Broadcast new paddle position to both clients
@@ -352,25 +336,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         #     }
         # )
 
-    # async def paddle_update(self, event):
-    #     position = event['position']
-
-    #     # Send the updated paddle position to WebSocket clients
-    #     await self.send(text_data=json.dumps({
-    #         'type': 'paddle_update',
-    #         'position': position
-    #     }))
-
-    async def handle_keyup(self):
-        # You can stop paddle movement on keyup if necessary
-        pass
-
     async def disconnect(self, close_code):
         # Remove player from the waiting room
         game_room_id = self.scope.get('game_room')
         GameConsumer.waiting_players.discard(game_room_id)
         # Get the game room the player is in from the scope
-        remove_game(game_room_id)
 
         if game_room_id:
             # Remove the player from the game room group
@@ -384,6 +354,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     'message': 'Your opponent has disconnected.'
                 }
             )
+        # remove_game(game_room_id)
 
     async def find_match(self):
         # Lock the critical section to avoid race conditions
@@ -439,14 +410,36 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         # Game loop
         while True:
-            game_instance.update()
+            if not game_instance.paused:
+                game_instance.update()
 
-            # Broadcast updated game state to players
-            await self.broadcast_game_state(game_instance)
+                if game_instance.wall_collision:
+                    await self.channel_layer.group_send(
+                        game_instance.room_id,
+                        {
+                            "type": "collision_event",
+                            "collision": "wall"
+                        }
+                    )
+                    game_instance.wall_collision = False
+                if game_instance.paddle_collision:
+                    await self.channel_layer.group_send(
+                        game_instance.room_id,
+                        {
+                            "type": "collision_event",
+                            "collision": "paddle"
+                        }
+                    )
+                    game_instance.paddle_collision = False
+
+                # Broadcast updated game state to players
+                await self.broadcast_game_state(room_id)
 
             await asyncio.sleep(1 / 60)  # Run at 60 FPS
 
-    async def broadcast_game_state(self, game: GameInstance):
+    async def broadcast_game_state(self, room_id):
+        game: GameInstance = games[room_id]
+
         # Here you would send the game state to all players in the room
         game_state = {
             'player1_paddle_x': game.player1_paddle.x,
@@ -525,6 +518,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             }
         ))
 
+    async def collision_event(self, event):
+        await self.send(text_data=json.dumps({
+            'type': event['type'],
+            'collision': event['collision']
+        }))
+
     async def game_init(self, event):
         # message = event["message"]
         room_id = self.scope.get('game_room')
@@ -570,7 +569,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         message = event["type"]
         await self.send(text_data=json.dumps(
             {
-                "type": message,
+                "type": 'player_disconnected',
+            }
+        ))
+
+    async def pause_resume(self, event):
+        await self.send(text_data=json.dumps(
+            {
+                "type": event['action'],
             }
         ))
 

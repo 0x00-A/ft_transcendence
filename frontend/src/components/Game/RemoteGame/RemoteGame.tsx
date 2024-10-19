@@ -3,6 +3,7 @@ import { Controller, GameScreens, GameState } from '../../../types/types';
 import css from './RemoteGame.module.css';
 import MultiPlayerPong from '../components/MultiPlayerPong/MultiPlayerPong';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
+import { boolean } from 'yup';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -32,6 +33,14 @@ const RemoteGame: React.FC = () => {
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
+  const [paused, setPaused] = useState(false);
+  const hitWallSound = useRef(
+    new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
+  );
+  const paddleHitSound = useRef(
+    new Audio('https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3')
+  );
+
   const ballRef = useRef({
     x: canvasWidth / 2,
     y: canvasHeight / 2,
@@ -51,6 +60,13 @@ const RemoteGame: React.FC = () => {
     h: pH,
     dy: 0,
   });
+
+  useEffect(() => {
+    hitWallSound.current.preload = 'auto';
+    hitWallSound.current.load(); // Preloads the audio into the browser's memory
+    paddleHitSound.current.preload = 'auto';
+    paddleHitSound.current.load(); // Preloads the audio into the browser's memory
+  }, [sound]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -94,7 +110,7 @@ const RemoteGame: React.FC = () => {
         }
         if (data.type === 'player_disconnected') {
           console.log('player_disconnected...');
-          setGameState('disconnected');
+          // setGameState('disconnected');
         }
         if (data.type === 'game_update') {
           // console.log(`recieved game update:`, data.state);
@@ -106,6 +122,21 @@ const RemoteGame: React.FC = () => {
           paddle2Ref.current.x = data.state[`player2_paddle_x`];
           setScore1(data.state[`player1_score`]);
           setScore2(data.state[`player2_score`]);
+        }
+        if (data.type === 'pause') {
+          setPaused(true);
+        }
+        if (data.type === 'resume') {
+          setPaused(false);
+        }
+        if (data.type === 'collision_event') {
+          console.log('wall collision');
+          if (data.collision === 'wall') {
+            if (hitWallSound.current) sound && hitWallSound.current.play();
+          } else if (data.collision === 'paddle') {
+            console.log('paddle collision');
+            if (paddleHitSound.current) sound && paddleHitSound.current.play();
+          }
         }
       };
 
@@ -139,21 +170,30 @@ const RemoteGame: React.FC = () => {
       ctx.setLineDash([]); // Reset the line dash to solid for other drawings
     };
 
+    const keysPressed: boolean[] = [false];
     const handleKeyDown = (event: KeyboardEvent) => {
-      // if (e.key === 'w' || e.key === 'W') paddle1Ref.current.dy = -paddleSpeed;
-      // if (e.key === 's' || e.key === 'S') paddle1Ref.current.dy = paddleSpeed;
-      if (event.key === 'w' || event.key === 's') {
-        const direction = event.key === 'w' ? 'up' : 'down';
-        ws.current?.send(JSON.stringify({ type: 'keydown', direction }));
-      }
+      if (event.key === 'w' || event.key === 'W') keysPressed[0] = true;
+      if (event.key === 's' || event.key === 'S') keysPressed[1] = true;
+      // if (event.key === 'w' || event.key === 's') {
+      //   const direction = event.key === 'w' ? 'up' : 'down';
+      //   console.log('moving...');
+
+      //   ws.current?.send(JSON.stringify({ type: 'keydown', direction }));
+      // }
     };
     const handleKeyUp = (event: KeyboardEvent) => {
-      // if (e.key === 'w' || e.key === 's' || e.key === 'W' || e.key === 'S') {
-      //   paddle1Ref.current.dy = 0;
-      // }
-      if (event.key === 'w' || event.key === 's') {
-        ws.current?.send(JSON.stringify({ type: 'keyup' }));
+      if (
+        event.key === 'w' ||
+        event.key === 's' ||
+        event.key === 'W' ||
+        event.key === 'S'
+      ) {
+        keysPressed[0] = false;
+        keysPressed[1] = false;
       }
+      // if (event.key === 'w' || event.key === 's') {
+      //   ws.current?.send(JSON.stringify({ type: 'keyup' }));
+      // }
     };
 
     const draw = (ctx: CanvasRenderingContext2D) => {
@@ -180,25 +220,31 @@ const RemoteGame: React.FC = () => {
 
     const update = () => {
       // Update paddle position
-      if (paddle1Ref.current.dy) {
-        paddle1Ref.current.y += paddle1Ref.current.dy;
-        // Prevent the paddle from going out
-        if (paddle1Ref.current.y < 0) {
-          paddle1Ref.current.y = 0;
-        } else if (
-          paddle1Ref.current.y + paddle1Ref.current.h >
-          ctx.canvas.height
-        ) {
-          paddle1Ref.current.y = ctx.canvas.height - paddle1Ref.current.h;
-        }
-        // send the updated state to server
+      // if (paddle1Ref.current.dy) {
+      //   paddle1Ref.current.y += paddle1Ref.current.dy;
+      //   // Prevent the paddle from going out
+      //   if (paddle1Ref.current.y < 0) {
+      //     paddle1Ref.current.y = 0;
+      //   } else if (
+      //     paddle1Ref.current.y + paddle1Ref.current.h >
+      //     ctx.canvas.height
+      //   ) {
+      //     paddle1Ref.current.y = ctx.canvas.height - paddle1Ref.current.h;
+      //   }
+      //   // send the updated state to server
+      //   ws.current?.send(
+      //     JSON.stringify({
+      //       type: 'paddle_move',
+      //       paddle_y: paddle1Ref.current.y,
+      //     })
+      //   );
+      // }
+      if (keysPressed[0])
+        ws.current?.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
+      if (keysPressed[1])
         ws.current?.send(
-          JSON.stringify({
-            type: 'paddle_move',
-            paddle_y: paddle1Ref.current.y,
-          })
+          JSON.stringify({ type: 'keydown', direction: 'down' })
         );
-      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -223,11 +269,14 @@ const RemoteGame: React.FC = () => {
     let animationFrameId: number;
     const animate = () => {
       if (isGameOver) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!paused) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      update();
+        update();
 
-      draw(ctx);
+        draw(ctx);
+        // console.log(paddle1Ref.current.y);
+      }
 
       // setTimeout(animate, interval);
       animationFrameId = requestAnimationFrame(animate);
@@ -244,7 +293,7 @@ const RemoteGame: React.FC = () => {
       // canvas.removeEventListener('mousemove', (e) => handleMouseMove(e));
       // cancelAnimationFrame(animationFrameId);
     };
-  }, [isGameOver, score1, score2, gameState]);
+  }, [isGameOver, gameState, paused]);
 
   const handleNextScreen = (nextScreen: GameScreens) => {
     setCurrentScreen(nextScreen);
@@ -258,6 +307,18 @@ const RemoteGame: React.FC = () => {
   const handleMainMenu = () => {
     setCurrentScreen('mode');
     setIsGameOver(false);
+  };
+
+  const togglePause = () => {
+    setPaused(!paused);
+  };
+
+  const handlePause = () => {
+    ws.current!.send(JSON.stringify({ type: 'pause' }));
+  };
+
+  const handleResume = () => {
+    ws.current!.send(JSON.stringify({ type: 'resume' }));
   };
 
   return (
@@ -287,6 +348,9 @@ const RemoteGame: React.FC = () => {
                 id={css.gameCanvas}
                 ref={canvasRef}
               />
+              <button onClick={paused ? handleResume : handlePause}>
+                {paused ? 'Resume' : 'Pause'}
+              </button>
             </div>
           )}
           {currentScreen === 'end' && (

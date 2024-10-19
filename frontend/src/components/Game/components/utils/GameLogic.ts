@@ -113,9 +113,9 @@ export const handlePaddleCollision = (ball: Ball, paddle: Paddle) => {
 
     // Update ball's velocity (dx, dy) based on the new angle
     const direction = ball.dx > 0 ? 1 : -1;
-    const speed = ball.speed;
-    ball.dx = direction * speed * Math.cos(newAngle); // Horizontal velocity
-    ball.dy = speed * Math.sin(newAngle); // Vertical velocity
+    ball.speed += 0.1;
+    ball.dx = direction * ball.speed * Math.cos(newAngle); // Horizontal velocity
+    ball.dy = ball.speed * Math.sin(newAngle); // Vertical velocity
   }
 
   // Handle top/bottom collision
