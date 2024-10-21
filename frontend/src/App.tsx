@@ -50,7 +50,7 @@ function App() {
 function AppContent() {
   const showSidebarRoutes = [
     '/',
-    '/game',
+    // '/game',
     '/game/local',
     '/chat',
     '/friends',

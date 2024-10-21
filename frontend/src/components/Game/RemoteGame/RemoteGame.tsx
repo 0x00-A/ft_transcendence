@@ -71,7 +71,7 @@ const RemoteGame: React.FC = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setGameState(null);
-      const gameSocket = new WebSocket('ws://10.11.6.14:8000/ws/matchmaking/');
+      const gameSocket = new WebSocket('ws://localhost:8000/ws/game/');
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
