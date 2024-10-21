@@ -4,6 +4,7 @@ import css from './ModeSelection.module.css';
 import GameMode from '../../components/Game/components/GameMode/GameMode';
 // import Canvas from './components/Canvas/Canvas';
 import { useNavigate } from 'react-router-dom';
+import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 
 const generateUniqueGameId = () => {
   return Math.random().toString(36).substr(2, 9); // Simple unique ID generation
@@ -28,6 +29,7 @@ const Modes = [
 const ModeSelection = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(0);
   const [state, setState] = useState('');
+  const [gameAdrress, setGameAdrress] = useState(null);
   const ws = useRef<WebSocket | null>(null);
 
   const navigate = useNavigate();
@@ -64,6 +66,7 @@ const ModeSelection = () => {
         }
         if (data.event === 'game_address') {
           console.log(data.message);
+          setGameAdrress(data.game_address);
           setState('matched');
         }
       };
@@ -87,6 +90,10 @@ const ModeSelection = () => {
       })
     );
   };
+
+  if (state === 'matched') {
+    if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
+  }
 
   return (
     <>

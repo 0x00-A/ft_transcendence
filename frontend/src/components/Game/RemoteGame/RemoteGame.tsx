@@ -13,7 +13,7 @@ const pW = 20;
 const pH = 80;
 const paddleSpeed = 2;
 
-const RemoteGame: React.FC = () => {
+const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
   const [restart, setRestart] = useState(false);
@@ -71,7 +71,7 @@ const RemoteGame: React.FC = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setGameState(null);
-      const gameSocket = new WebSocket('ws://localhost:8000/ws/game/');
+      const gameSocket = new WebSocket(`ws://localhost:8000/${game_address}/`);
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
@@ -89,20 +89,8 @@ const RemoteGame: React.FC = () => {
 
       gameSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        // if (data.type === 'connection') {
-        //   console.log(`p: ${data.player_id} | room: ${data.game_room_id}`);
-        //   // setGameState('disconnected');
-        //   // if (data.player_id === 'player1') {
-        //   //   player1Ref.current = data.player_id;
-        //   //   player2Ref.current = 'player2';
-        //   // } else {
-        //   //   player1Ref.current = data.player_id;
-        //   //   player2Ref.current = 'player1';
-        //   // }
-        //   // roomIdRef.current = data.game_room_id;
-        // }
+        console.log(data);
         if (data.type === 'game_started') {
-          console.log('game_stared...', data);
           // setTimeout(() => {
           //   // init_game_state(data);
           // }, 100);
@@ -129,12 +117,17 @@ const RemoteGame: React.FC = () => {
         if (data.type === 'resume') {
           setPaused(false);
         }
-        if (data.type === 'collision_event') {
+        if (data.type === 'play_sound') {
           if (data.collision === 'wall') {
             if (hitWallSound.current) sound && hitWallSound.current.play();
           } else if (data.collision === 'paddle') {
             if (paddleHitSound.current) sound && paddleHitSound.current.play();
           }
+        }
+        if (data.type === 'game_over') {
+          setIsWinner(data.state.is_winner);
+          setIsGameOver(true);
+          setCurrentScreen('end');
         }
       };
 

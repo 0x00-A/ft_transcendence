@@ -1,3 +1,6 @@
+from matchmaker.matchmaker import Matchmaker
+from matchmaker.models import Game
+from asgiref.sync import sync_to_async
 import math
 import json
 import random
@@ -15,7 +18,7 @@ channel_layer = get_channel_layer()
 
 canvas_width: int = 650
 canvas_height: int = 480
-winning_score: int = 5
+winning_score: int = 3
 pW: int = 20
 pH: int = 80
 ball_raduis: int = 8
@@ -64,9 +67,9 @@ class Ball:
 
 
 class GameInstance:
-    def __init__(self, room_id):
+    def __init__(self, game_id):
         self.update_lock = asyncio.Lock()
-        self.room_id = room_id
+        self.game_id = game_id
         self.player1_paddle = Paddle(
             x=10, y=canvas_height / 2 - pH / 2, width=pW, height=pH)
         self.player2_paddle = Paddle(
@@ -80,6 +83,10 @@ class GameInstance:
         self.paused = False
         self.wall_collision = False
         self.paddle_collision = False
+        self.connected_players = 0
+        self.player1_user_id = None
+        self.player2_user_id = None
+        self.winner_id = None
 
         # self.broadcast_initial_game_state()
 
@@ -98,14 +105,17 @@ class GameInstance:
         self.ball.move()
 
         self.check_collision()
+        self.check_for_winner()
 
     def check_for_winner(self):
         # Logic to determine if a player has won and handle the end of the game
-        if self.player1_score >= 10:
-            return "Player 1 wins!"
-        elif self.player2_score >= 10:
-            return "Player 2 wins!"
-        return None
+        if self.player1_score >= winning_score:
+            self.winner = 'player1'
+            self.winner_id = self.player1_user_id
+        elif self.player2_score >= winning_score:
+            # self.is_over = True
+            self.winner_id = self.player2_user_id
+            self.winner = 'player2'
 
     def check_collision(self):
         # Collision detection with paddle
@@ -224,20 +234,20 @@ class GameInstance:
                 self.ball.y = paddle.y + paddle.height + self.ball.radius
 
 
-def create_game(room_id):
-    games[room_id] = GameInstance(room_id)
+def create_game(game_id):
+    games[game_id] = GameInstance(game_id)
 
 
-def get_game(room_id):
-    # game_instance = get_game("room_id")
+def get_game(game_id):
+    # game_instance = get_game("game_id")
     # if not game_instance:
     #     pass
-    return games.get(room_id)
+    return games.get(game_id)
 
 
-def remove_game(room_id):
-    if room_id in games:
-        del games[room_id]
+def remove_game(game_id):
+    if game_id in games:
+        del games[game_id]
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -273,29 +283,44 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
 class GameConsumer(AsyncWebsocketConsumer):
-    waiting_players = set()
 
     async def connect(self):
+        # Get the game_id from the URL route, e.g., ws://localhost/1
         await self.accept()
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
+        await self.channel_layer.group_add(f"game_{self.game_id}", self.channel_name)
 
-        # self.player_id = str(uuid.uuid4())
-        # await self.send(text_data=json.dumps({
-        #     'type': 'connection',
-        #     'player_id': self.player_id,
-        # }))
-        # GameConsumer.waiting_players.add(self.channel_name)
-        await self.find_match()
+        # Initialize the waiting room for this game if it doesn't exist
+        if not get_game(self.game_id):
+            create_game(self.game_id)
+            get_game(self.game_id).connected_players += 1
+            get_game(self.game_id).player1_user_id = self.scope['user'].id
+            self.player_id = 'player1'
+        else:
+            get_game(self.game_id).connected_players += 1
+            get_game(self.game_id).player2_user_id = self.scope['user'].id
+            self.player_id = 'player2'
+            await self.channel_layer.group_send(
+                f"game_{self.game_id}",
+                {
+                    "type": "game.init",  # This matches the method name
+                    # "room_id": game_room_id,
+                    # "message": 'game_started'
+                }
+            )
+            # Start the game loop
+            asyncio.create_task(self.start_game(self.game_id))
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        game: GameInstance = get_game(self.scope.get('game_room'))
+        game: GameInstance = get_game(self.game_id)
 
         if data['type'] == 'keydown':
             await self.handle_keydown(data['direction'])
         if data['type'] == 'pause':
             game.paused = True
             await self.channel_layer.group_send(
-                game.room_id,
+                game.game_id,
                 {
                     "type": "pause.resume",
                     "action": "pause",
@@ -304,7 +329,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         elif data['type'] == 'resume':
             game.paused = False
             await self.channel_layer.group_send(
-                game.room_id,
+                game.game_id,
                 {
                     "type": "pause.resume",
                     "action": "resume",
@@ -312,10 +337,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
 
     async def handle_keydown(self, direction):
-        game: GameInstance = get_game(self.scope.get('game_room'))
-        # paddle_position = game.player1_paddle.y if self.player_id == 'player1' else game.player2_paddle.y
+        game: GameInstance = get_game(self.game_id)
         if self.player_id == 'player1':
-            # Update paddle position based on the direction
             if direction == 'up':
                 new_position = max(0, game.player1_paddle.y - paddle_speed)
             elif direction == 'down':
@@ -330,34 +353,41 @@ class GameConsumer(AsyncWebsocketConsumer):
                                    game.player2_paddle.y + paddle_speed)
             game.player2_paddle.y = new_position
 
-        # # Broadcast new paddle position to both clients
-        # await self.channel_layer.group_send(
-        #     self.room_name,
-        #     {
-        #         "type": "paddle_update",
-        #         "position": new_position,
-        #     }
-        # )
-
     async def disconnect(self, close_code):
         # Remove player from the waiting room
-        game_room_id = self.scope.get('game_room')
-        GameConsumer.waiting_players.discard(game_room_id)
-        # Get the game room the player is in from the scope
+        game_id = self.game_id
 
-        if game_room_id:
+        if game_id:
+            game: GameInstance = get_game(game_id)
             # Remove the player from the game room group
-            await self.channel_layer.group_discard(game_room_id, self.channel_name)
-
+            await self.channel_layer.group_discard(f"game_{self.game_id}", self.channel_name)
             # Optionally notify the other player that their opponent disconnected
             await self.channel_layer.group_send(
-                game_room_id,
+                f"game_{self.game_id}",
                 {
                     'type': 'player.disconnected',
                     'message': 'Your opponent has disconnected.'
                 }
             )
-        # remove_game(game_room_id)
+            if game.connected_players <= 1:
+                await self.abort_game()
+                remove_game(game_id)
+            else:
+                game.connected_players -= 1
+
+    async def abort_game(self):
+        # Synchronously retrieve the Game object and update its state
+        game = await sync_to_async(Game.objects.get)(game_id=self.game_id)
+
+        # Update the game's state in the database
+        # game.player1_score = self.player1_score
+        # game.player2_score = self.player2_score
+        game.is_over = True
+        game.winner = -1
+        game.status = 'aborted'
+
+        # Save the changes to the database
+        await sync_to_async(game.save)()
 
     async def find_match(self):
         # Lock the critical section to avoid race conditions
@@ -408,42 +438,44 @@ class GameConsumer(AsyncWebsocketConsumer):
             # Start the game loop
             asyncio.create_task(self.start_game(game_room_id))
 
-    async def start_game(self, room_id):
-        game_instance: GameInstance = games[room_id]
+    async def start_game(self, game_id):
+        game_instance: GameInstance = games[game_id]
 
         # Game loop
-        while True:
+        while not game_instance.is_over:
             if not game_instance.paused:
                 game_instance.update()
 
                 if game_instance.wall_collision:
                     await self.channel_layer.group_send(
-                        game_instance.room_id,
+                        game_instance.game_id,
                         {
-                            "type": "collision_event",
+                            "type": "play_sound",
                             "collision": "wall"
                         }
                     )
                     game_instance.wall_collision = False
                 if game_instance.paddle_collision:
                     await self.channel_layer.group_send(
-                        game_instance.room_id,
+                        game_instance.game_id,
                         {
-                            "type": "collision_event",
+                            "type": "play_sound",
                             "collision": "paddle"
                         }
                     )
                     game_instance.paddle_collision = False
 
                 # Broadcast updated game state to players
-                await self.broadcast_game_state(room_id)
+                if game_instance.winner:
+                    await self.broadcast_winner_state(game_id)
+                else:
+                    await self.broadcast_game_state(game_id)
 
             await asyncio.sleep(1 / 60)  # Run at 60 FPS
 
-    async def broadcast_game_state(self, room_id):
-        game: GameInstance = games[room_id]
+    async def broadcast_game_state(self, game_id):
+        game: GameInstance = games[game_id]
 
-        # Here you would send the game state to all players in the room
         game_state = {
             'player1_paddle_x': game.player1_paddle.x,
             'player1_paddle_y': game.player1_paddle.y,
@@ -456,8 +488,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'x': game.ball.x,
                 'y': game.ball.y,
             },
-            # 'game_over': game.is_over,
-            # 'winner': game.winner,
         }
         mirror_state = {
             'player1_paddle_x': canvas_width - game.player2_paddle.x - game.player2_paddle.width,
@@ -471,46 +501,35 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'x': canvas_width - game.ball.x,
                 'y': game.ball.y,
             },
-            # 'game_over': game.is_over,
-            # 'winner': game.winner,
         }
         await self.channel_layer.group_send(
-            game.room_id,
+            f"game_{game.game_id}",
             {
                 'type': 'game.state.update',
                 'state1': game_state,
                 'state2': mirror_state,
             }
         )
-    # async def find_match(self):
-    #     # Check if there are at least two players waiting
-    #     if len(GameConsumer.waiting_players) >= 2:
-    #         # Create a new game room ID
-    #         game_room_id = 'game_' + str(uuid.uuid4())
-    #         self.scope['game_room'] = game_room_id
 
-    #         create_game(game_room_id)
+    async def broadcast_winner_state(self, game_id):
+        game: GameInstance = games[game_id]
 
-    #         # Create a list of members to match
-    #         members = list(GameConsumer.waiting_players)[:2]
-
-    #         # Add the members to the game room
-    #         for member in members:
-    #             await self.channel_layer.group_add(game_room_id, member)
-
-    #         # Send a message to all members that they are matched
-    #         await self.channel_layer.group_send(
-    #             game_room_id,
-    #             {
-    #                 "type": "game.message",  # This matches the method name
-    #                 "room_id": game_room_id,
-    #                 "message": 'game_started'
-    #             }
-    #         )
-
-    #         # Remove all players from the waiting room
-    #         for member in members:
-    #             GameConsumer.waiting_players.discard(member)
+        game_state = {
+            "is_winner": True if game.winner == 'player1' else False
+        }
+        mirror_state = {
+            "is_winner": True if game.winner == 'player2' else False
+        }
+        game.is_over = True
+        await self.channel_layer.group_send(
+            f"game_{game.game_id}",
+            {
+                'type': 'game.over',
+                'state1': game_state,
+                'state2': mirror_state,
+            }
+        )
+        await Matchmaker.process_game_result(game_id, game.winner_id)
 
     async def game_state_update(self, event):
         state = event["state1"] if self.player_id == 'player1' else event["state2"]
@@ -521,7 +540,16 @@ class GameConsumer(AsyncWebsocketConsumer):
             }
         ))
 
-    async def collision_event(self, event):
+    async def game_over(self, event):
+        state = event["state1"] if self.player_id == 'player1' else event["state2"]
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'game_over',
+                'state': state,
+            }
+        ))
+
+    async def play_sound(self, event):
         await self.send(text_data=json.dumps({
             'type': event['type'],
             'collision': event['collision']
@@ -529,42 +557,12 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def game_init(self, event):
         # message = event["message"]
-        room_id = self.scope.get('game_room')
-        game: GameInstance = get_game(room_id)
+        game_id = self.game_id
+        game: GameInstance = get_game(game_id)
 
         await self.send(text_data=json.dumps(
             {
                 "type": 'game_started',
-                # "game_room_id": room_id,
-                # 'player_id': self.player_id,
-                # "players": {
-                #     "player1": {
-                #         'paddle': {
-                #             'x': game.player1_paddle.x,
-                #             'y': game.player1_paddle.y,
-                #             'w': game.player1_paddle.width,
-                #             'h': game.player1_paddle.height
-                #         },
-                #         'score': game.player1_score,
-                #         'is_winner': False,
-                #     },
-                #     "player2": {
-                #         'paddle': {
-                #             'x': game.player2_paddle.x,
-                #             'y': game.player2_paddle.y,
-                #             'w': game.player2_paddle.width,
-                #             'h': game.player2_paddle.height
-                #         },
-                #         'score': game.player2_score,
-                #         'is_winner': False,
-                #     }
-                # },
-                # 'ball': {
-                #     'x': game.ball.x,
-                #     'y': game.ball.y,
-                #     'radius': game.ball.radius,
-                #     # 'color': game.ball.color
-                # }
             }
         ))
 
@@ -582,30 +580,3 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "type": event['action'],
             }
         ))
-
-    # async def connect(self):
-    #     # Check if waiting room exists
-    #     if not self.channel_layer.exists('waiting_room'):
-    #         # First player connects
-    #         await self.channel_layer.group_add('waiting_room', self.channel_name)
-    #         self.is_waiting = True
-    #     else:
-    #         # Create a unique game room ID
-    #         game_room_id = 'game_' + str(uuid.uuid4())
-
-    #         # Move both players to the game room
-    #         await self.channel_layer.group_add(game_room_id, self.channel_name)
-
-    #         # Retrieve members of waiting_room
-    #         members = await self.channel_layer.group_channels('waiting_room')
-    #         await self.channel_layer.group_add(game_room_id, members[0])
-    #         await self.channel_layer.group_discard('waiting_room', members[0])
-
-    #         await self.channel_layer.group_send(
-    #             game_room_id,
-    #             {
-    #                 "type": "chat_message",  # This matches the method name
-    #                 "room_id": game_room_id,
-    #                 "message": 'game_started'
-    #             }
-    #         )
