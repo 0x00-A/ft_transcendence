@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // import GameMode from './components/GameMode/GameMode';
 import css from './ModeSelection.module.css';
 import GameMode from '../../components/Game/components/GameMode/GameMode';
@@ -27,6 +27,8 @@ const Modes = [
 
 const ModeSelection = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(0);
+  const [state, setState] = useState('');
+  const ws = useRef<WebSocket | null>(null);
 
   const navigate = useNavigate();
 
@@ -34,12 +36,61 @@ const ModeSelection = () => {
     const gameId = generateUniqueGameId(); // Generate a unique game ID
     if (modeId === 0) navigate(`/game/local`); // Navigate to the game URL with mode and ID
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
-    if (modeId === 2) navigate(`/game/ai`); // Navigate to the game URL with mode and ID
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const socket = new WebSocket('ws://localhost:8000/ws/matchmaking/');
+      ws.current = socket;
+
+      socket.onopen = () => {
+        console.log('Socket connected');
+        setState('connected');
+      };
+
+      socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        console.log(data);
+
+        if (data.event === 'in_queue') {
+          setState('inqueue');
+        }
+
+        if (data.event === 'already_inqueue') {
+          console.log('already in queue');
+        }
+        if (data.event === 'already_ingame') {
+          console.log('already in a game');
+        }
+        if (data.event === 'game_address') {
+          console.log(data.message);
+          setState('matched');
+        }
+      };
+      socket.onclose = () => {
+        console.log('Socket disconnected');
+        setState('disconnected');
+      };
+      return () => {
+        socket.close();
+      };
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const requestRemoteGame = () => {
+    console.log('request remote game');
+    ws.current?.send(
+      JSON.stringify({
+        event: 'request_remote_game',
+      })
+    );
   };
 
   return (
     <>
-      <div className={css.title}>
+      {/* <div className={css.title}>
         <p className={css.cornerBorder}>mode</p>
       </div>
       <ul className={css.modes}>
@@ -51,7 +102,15 @@ const ModeSelection = () => {
             desc={m.description}
           />
         ))}
-      </ul>
+      </ul> */}
+      <button onClick={requestRemoteGame}>Request Remote Game</button>
+      <button>Request Tournament</button>
+      {state == '' && <h1>Connecting...</h1>}
+      {state == 'connected' && <h1>Connected</h1>}
+      {state == 'matchmaking' && <h1>Matchmaking...</h1>}
+      {state == 'inqueue' && <h1>in queue</h1>}
+      {state == 'matched' && <h1>created game</h1>}
+      {state == 'disconnected' && <h1>disconnected</h1>}
     </>
   );
 };

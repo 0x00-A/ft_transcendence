@@ -23,6 +23,13 @@ initial_ball_speed = 4
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 paddle_speed = 4
 
+# Global variables
+connected_clients = {}
+# Managing multiple game instances
+games = {}
+
+# Client class for handling clients
+
 
 class Paddle:
     def __init__(self, x, y, width, height):
@@ -215,10 +222,6 @@ class GameInstance:
                 self.ball.y = paddle.y - self.ball.radius
             elif ball_from_bottom:
                 self.ball.y = paddle.y + paddle.height + self.ball.radius
-
-
-# Managing multiple game instances
-games = {}
 
 
 def create_game(room_id):
