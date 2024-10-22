@@ -4,51 +4,43 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 import requests
 from ..serializers import Oauth2UserSerializer
 from ..models import User
 from ..views.login import get_token_for_user
+from django.http import JsonResponse
 
-REDIRECT_URI = "http://localhost:8000/api/oauth2/discord/"
+REDIRECT_URI = "http://localhost:8000/api/oauth2/intra/"
 
-
-def discord_authorize(request):
+def intra_authorize(request):
     if request.method == 'GET':
-        return redirect(settings.DISCORD_AUTHORIZATION_URL)
+        return redirect(settings.INTRA_AUTHORIZATION_URL)
 
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def oauth2_set_username(request):
-    print('--------------', request.session.get('discord_user', None), '----------------')
-    return Response(data={'meassage': "sessio regaloo"})
 
 @api_view()
 @permission_classes([AllowAny])
-def oauth2_discord(request):
+def oauth2_intra(request):
     code = request.GET.get('code')
     if code is None:
-        return redirect(discord_authorize)
-        return Response(data={"message": "Not authorized!, go to '/oauth2/discord/authorize/' to get authorozation"}, status=status.HTTP_401_UNAUTHORIZED)
+        return redirect(intra_authorize)
+        # return Response(data={"message": "Not authorized!, go to '/oauth2/intra/authorize/' to get authorozation"}, status=status.HTTP_401_UNAUTHORIZED)
     token = exchange_code(code)
     if token is None:
-        return Response(data={"error": "Failed to get the token from discord!"}, status=status.HTTP_400_BAD_REQUEST)
-    discord_user = get_discord_user(token)
-    if discord_user is None:
-        return Response(data={"error": "Failed to get user discord resources!"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={"error": "Failed to get the token from intra!"}, status=status.HTTP_400_BAD_REQUEST)
+    intra_user = get_intra_user(token)
+    if intra_user is None:
+        return Response(data={"error": "Failed to get user intra resources!"}, status=status.HTTP_400_BAD_REQUEST)
     try:
-        check_user = User.objects.get(email=discord_user['email'])
+        check_user = User.objects.get(email=intra_user['email'])
     except User.DoesNotExist:
         check_user = None
     if check_user is None:
-        if User.objects.filter(username=discord_user['username']).exists():
-            return Response(data={ 'message': "Username already taken, Please choose a new one.!" }, status=status.HTTP_409_CONFLICT)
         serializer = Oauth2UserSerializer(data = {
-            # 'provider_id': discord_user['id'],
-            'username': discord_user['username'],
-            'email' : discord_user['email'],
-            'avatar_link' : f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png",
+            # 'id': intra_user['id'],
+            # 'username': intra_user['login'],
+            'email' : intra_user['email'],
+            'avatar_link' : intra_user['image']['link'],
         })
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -69,8 +61,8 @@ def exchange_code(code:str):
         'Content-Type': 'application/x-www-form-urlencoded'
     }
     try:
-        res = requests.post(settings.DISCORD_TOKEN_URL, data=data, headers=headers,
-                            auth=(settings.DISCORD_CLIENT_ID, settings.DISCORD_CLIENT_SECRET))
+        res = requests.post(settings.INTRA_TOKEN_URL, data=data, headers=headers,
+                            auth=(settings.INTRA_CLIENT_ID, settings.INTRA_CLIENT_SECRET))
         res.raise_for_status()
         return res.json()
     except requests.exceptions.HTTPError as err:
@@ -81,10 +73,10 @@ def exchange_code(code:str):
         return None
 
 
-def get_discord_user(token):
+def get_intra_user(token):
     access_token = token['access_token']
     try:
-        res = requests.get(settings.DISCORD_USER_URL, headers={
+        res = requests.get(settings.INTRA_USER_URL, headers={
             'Authorization': "Bearer %s" % access_token
         })
         res.raise_for_status()

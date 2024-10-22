@@ -10,10 +10,32 @@ env = environ.Env(
 
 # environ.Env.read_env(BASE_DIR / '.env')
 
+###############
+# DISCORD ENV #
+###############
 DISCORD_AUTHORIZATION_URL = env('DISCORD_AUTHORIZATION_URL')
 DISCORD_TOKEN_URL = env('DISCORD_TOKEN_URL')
-CLIENT_ID = env('CLIENT_ID')
-CLIENT_SECRET = env('CLIENT_SECRET')
+DISCORD_CLIENT_ID = env('DISCORD_CLIENT_ID')
+DISCORD_CLIENT_SECRET = env('DISCORD_CLIENT_SECRET')
+DISCORD_USER_URL = env('DISCORD_USER_URL')
+
+###############
+#  INTRA ENV  #
+###############
+INTRA_CLIENT_ID = env('INTRA_CLIENT_ID')
+INTRA_CLIENT_SECRET = env('INTRA_CLIENT_SECRET')
+INTRA_AUTHORIZATION_URL = env('INTRA_AUTHORIZATION_URL')
+INTRA_TOKEN_URL = env('INTRA_TOKEN_URL')
+INTRA_USER_URL = env('INTRA_USER_URL')
+
+################
+#  GOOGLE ENV  #
+################
+GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
+GOOGLE_AUTHORIZATION_URL = env('GOOGLE_AUTHORIZATION_URL')
+GOOGLE_TOKEN_URL = env('GOOGLE_TOKEN_URL')
+GOOGLE_USER_URL = env('GOOGLE_USER_URL')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -56,6 +78,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 TEMPLATES = [
     {
@@ -136,6 +162,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.oauth2AuthBackend.Oauth2AuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 SIMPLE_JWT = {
