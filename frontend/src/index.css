@@ -50,6 +50,7 @@
   --game-screen-text-color: lightgray;
   --tournament-form-bg: #1e2533;
   --tournament-input-bg: #2b4450;
+  --scrollbar-thumb-color: #191a2d;
 
 }
 
@@ -66,6 +67,9 @@
   --color-game-screen-bg: var(--gray-900);
   --tournament-form-bg: #323232;
   --tournament-input-bg: #626262;
+  --scrollbar-thumb-color: var(--b0);
+
+  /* --text-color: #858585; */
 
 
 }
@@ -113,23 +117,28 @@ input:focus {
   background-color: #fff;
 }
 
-/* .cta:link,
-.cta:visited {
-  display: inline-block;
-  background-color: var(--color-brand--2);
-  color: var(--sidebar-surface-primary);
-  text-transform: uppercase;
-  text-decoration: none;
-  font-size: 1.6rem;
-  font-weight: 600;
-  padding: 1rem 3rem;
-  border-radius: 5px;
-} */
+::-webkit-scrollbar {
+    width: 14px;
+    height: 14px
+}
 
-/* "importCSSModule": {
-    "prefix": "csm",
-    "scope": "javascript,typescript,javascriptreact",
-    "body": ["import styles from './${TM_FILENAME_BASE}.module.css'"],
-    "description": "Import CSS Module as `styles`"
-  },
- */
+::-webkit-scrollbar-button {
+    display: none
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--tournament-form-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color);
+    /* border: 1px solid var(--b1) */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    /* background-color: var(--colors-gray-a4) */
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--main-surface-primary)
+}
