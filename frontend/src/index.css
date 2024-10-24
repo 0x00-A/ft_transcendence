@@ -48,6 +48,9 @@
   --search-color: #283245;
   --icons-color: #f8f3e3;
   --game-screen-text-color: lightgray;
+  --tournament-form-bg: #1e2533;
+  --tournament-input-bg: #2b4450;
+
 }
 
 [data-theme='dark'] {
@@ -61,6 +64,10 @@
   --sidebar-surface-secondary: var(--gray-800);
 
   --color-game-screen-bg: var(--gray-900);
+  --tournament-form-bg: #323232;
+  --tournament-input-bg: #626262;
+
+
 }
 
 * {

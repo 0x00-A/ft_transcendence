@@ -33,6 +33,7 @@ import PingPongGame from './components/Game/LocalGame/PingPongGame';
 import LocalGame from './components/Game/LocalGame/LocalGame';
 import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
+import Tournament from './components/Game/Tournament/Tournament';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -50,7 +51,8 @@ function App() {
 function AppContent() {
   const showSidebarRoutes = [
     '/',
-    // '/game',
+    '/game',
+    '/game/tournament',
     '/game/local',
     '/chat',
     '/friends',
@@ -83,12 +85,13 @@ function AppContent() {
           {/* <Route path="/games" element={<Games />} /> */}
           <Route path="/game" element={<ModeSelection />} />
           <Route path="/game/local" element={<LocalGame />} />
+          <Route path="/game/tournament" element={<Tournament />} />
           <Route path="/game/chat" element={<GameChat />} />
           <Route path="/game/chat/:room" element={<Room />} />
           {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
           {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
-          <Route path="/game/remote" element={<RemoteGame />} />
-          <Route path="/game/remote/:game_id  " element={<RemoteGame />} />
+          {/* <Route path="/game/remote" element={<RemoteGame />} /> */}
+          {/* <Route path="/game/remote/:game_id  " element={<RemoteGame />} /> */}
           {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
           {/* Remote game instance with game ID */}
           {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
