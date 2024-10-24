@@ -1,8 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import css from './Tournament.module.css';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { IoMdArrowRoundForward } from 'react-icons/io';
 import Paddle from '../components/utils/Paddle';
 import Ball from '../components/utils/Ball';
 import {
@@ -37,7 +34,7 @@ const Pong: React.FC<GameProps> = ({
   updateWinner,
   sound = true,
   paddleSpeed = 2,
-  ballSpeed = 3,
+  ballSpeed = 1.5,
   winningScore = 3,
   player1 = 'player 1',
   player2 = 'player 2',
@@ -47,6 +44,8 @@ const Pong: React.FC<GameProps> = ({
   const [score2, setScore2] = useState(0);
   const [paused, setPaused] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   const ballRef = useRef<Ball | null>(null);
   const paddle1Ref = useRef<Paddle | null>(null);
@@ -82,11 +81,6 @@ const Pong: React.FC<GameProps> = ({
       paddleSpeed
     );
   }, []);
-
-  const togglePause = () => {
-    setPaused(!paused);
-    console.log('pause', paused);
-  };
 
   useEffect(() => {
     hitWallSound.current.preload = 'auto';
@@ -147,7 +141,7 @@ const Pong: React.FC<GameProps> = ({
 
       // reverse the ball direction
       if (newY >= canvas.height || newY <= 0) {
-        sound && hitWallSound.current.play();
+        if (hitWallSound.current.paused) sound && hitWallSound.current.play();
 
         ball.dy *= -1;
       }
@@ -168,10 +162,12 @@ const Pong: React.FC<GameProps> = ({
         // Handle collision, like reversing the ball's direction
         // ball.vx *= -1; // Reverse horizontal direction on collision
 
-        sound && paddleHitSound.current.play();
+        if (paddleHitSound.current.paused)
+          sound && paddleHitSound.current.play();
         handlePaddleCollision(ball, paddle1);
       } else if (isCollidingWithPaddle(ball, paddle2)) {
-        sound && paddleHitSound.current.play();
+        if (paddleHitSound.current.paused)
+          sound && paddleHitSound.current.play();
         handlePaddleCollision(ball, paddle2);
       } else if (newX >= canvas.width) {
         updateScore(1);
@@ -245,7 +241,7 @@ const Pong: React.FC<GameProps> = ({
 
         drawDashedLine();
         checkCollision();
-        ball.move();
+        if (gameStarted) ball.move();
         movePaddle(paddle1);
         movePaddle(paddle2);
         drawBall();
@@ -266,7 +262,27 @@ const Pong: React.FC<GameProps> = ({
       window.removeEventListener('keyup', (e) => handleKeyUp(e));
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isGameOver, score1, score2, paused]);
+  }, [isGameOver, score1, score2, paused, gameStarted]);
+
+  const togglePause = () => {
+    setPaused(!paused);
+    console.log('pause', paused);
+  };
+
+  const startCountdown = () => {
+    setCountdown(3); // Start countdown at 3
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown !== null && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000); // Decrement every second
+    } else if (countdown === 0) {
+      setCountdown(null); // Remove countdown when it finishes
+      setGameStarted(true); // Start the game
+    }
+    return () => clearTimeout(timer); // Clean up the timer
+  }, [countdown]);
 
   return (
     <div id="gameScreen" className={css.gameScreenDiv}>
@@ -274,15 +290,33 @@ const Pong: React.FC<GameProps> = ({
         <div className={css.player1}>{player1}</div>
         <div className={css.player2}>{player2}</div>
       </div>
-      <div className={css.scoreWrapper}>
-        <div className={css.player1Score}>{score1}</div>
-        <div className={css.player2Score}>{score2}</div>
-      </div>
       {/* {paused && <div id="pauseDiv">Paused, press P to continue</div>} */}
-      <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
-      <button className={css.pauseButton} onClick={togglePause}>
-        {paused ? 'Resume' : 'Pause'}
-      </button>
+      <div className={css.canvasDiv}>
+        <div className={css.scoreWrapper}>
+          <div className={css.player1Score}>{score1}</div>
+          <div className={css.player2Score}>{score2}</div>
+        </div>
+        {!gameStarted && countdown === null && (
+          <div className={css.gameOverlay} onClick={startCountdown}>
+            <div className={css.gameOverlayContent}>
+              <h2>Click to Start</h2>
+            </div>
+          </div>
+        )}
+        {countdown !== null && (
+          <div className={css.gameOverlay}>
+            <div className={css.gameOverlayContent}>
+              <h2>{countdown > 0 ? countdown : 'Start!'}</h2>
+            </div>
+          </div>
+        )}
+        <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
+      </div>
+      {gameStarted && (
+        <button className={css.pauseButton} onClick={togglePause}>
+          {paused ? 'Resume' : 'Pause'}
+        </button>
+      )}
     </div>
   );
 };
@@ -300,6 +334,14 @@ function IconLabelButtons({ onClick }: { onClick: () => void }) {
     <button onClick={onClick} className={`${css.playButton}`}>
       Go
     </button>
+  );
+}
+
+function Round({ children }: PropsWithChildren) {
+  return (
+    <div className={css.round}>
+      <p className={css.roundLabel}>{children}</p>
+    </div>
   );
 }
 
@@ -343,13 +385,13 @@ const Connector = () => {
   );
 };
 
-type PlayerFormProps = {
+type FormProps = {
   onSubmit: (players: string[]) => void;
   players: string[];
   setPlayers: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const PlayerForm = ({ onSubmit, players, setPlayers }: PlayerFormProps) => {
+const PlayerForm = ({ onSubmit, players, setPlayers }: FormProps) => {
   const handleInputChange = (index: number, value: string) => {
     const updatedPlayers = [...players];
     updatedPlayers[index] = value;
@@ -414,13 +456,209 @@ const WinnerCard = ({ winner }: { winner: string }) => {
   );
 };
 
-const Tournament = () => {
-  const [players, setPlayers] = useState<string[]>(Array(8).fill(''));
+// const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
+//   // const [players, setPlayers] = useState<string[]>([]);
+//   const [playerName, setPlayerName] = useState<string>('');
 
+//   const handleAddPlayer = () => {
+//     if (playerName && players.length < 8) {
+//       setPlayers([...players, playerName]);
+//       setPlayerName(''); // Clear input after adding
+//     }
+//   };
+
+//   const handleRemovePlayer = (index: number) => {
+//     const updatedPlayers = players.filter((_, i) => i !== index);
+//     setPlayers(updatedPlayers);
+//   };
+
+//   // const handleStartTournament = () => {
+//   //   if (players.length === 8) {
+//   //     alert('Tournament Started!');
+//   //     // Logic for starting the tournament goes here
+//   //   }
+//   // };
+//   const handleStartTournament = (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (players.length === 8) onSubmit(players);
+//   };
+
+//   return (
+//     <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+//       <h2>Tournament Registration</h2>
+
+//       <input
+//         type="text"
+//         value={playerName}
+//         onChange={(e) => setPlayerName(e.target.value)}
+//         placeholder="Enter player name"
+//         style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+//       />
+
+//       <button
+//         onClick={handleAddPlayer}
+//         disabled={!playerName || players.length >= 8}
+//         style={{ marginBottom: '10px', width: '100%', padding: '10px' }}
+//       >
+//         Add Player
+//       </button>
+
+//       <ul>
+//         {players.map((player, index) => (
+//           <li
+//             key={index}
+//             style={{
+//               marginBottom: '10px',
+//               display: 'flex',
+//               justifyContent: 'space-between',
+//             }}
+//           >
+//             {player}
+//             <button
+//               onClick={() => handleRemovePlayer(index)}
+//               style={{
+//                 color: 'white',
+//                 backgroundColor: 'red',
+//                 border: 'none',
+//                 cursor: 'pointer',
+//                 padding: '5px',
+//               }}
+//             >
+//               &#x2716; {/* Cross icon */}
+//             </button>
+//           </li>
+//         ))}
+//       </ul>
+
+//       <button
+//         onClick={handleStartTournament}
+//         disabled={players.length !== 8}
+//         style={{
+//           marginTop: '20px',
+//           width: '100%',
+//           padding: '10px',
+//           backgroundColor: players.length === 8 ? 'green' : 'grey',
+//           color: 'white',
+//           cursor: players.length === 8 ? 'pointer' : 'not-allowed',
+//         }}
+//       >
+//         Start Tournament
+//       </button>
+//     </div>
+//   );
+// };
+
+const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
+  // const [players, setPlayers] = useState<string[]>([]);
+  const [playerName, setPlayerName] = useState<string>('');
+  const [error, setError] = useState<string>(''); // To store error messages
+
+  const handleAddPlayer = () => {
+    // Check for empty input
+    if (!playerName.trim()) {
+      setError('Player name cannot be empty');
+      return;
+    }
+
+    // Check for duplicate player names
+    if (players.includes(playerName)) {
+      setError('Player name must be unique');
+      return;
+    }
+
+    // Add player if there are fewer than 8 players and the name is unique
+    if (players.length < 8) {
+      setPlayers([...players, playerName.trim()]);
+      setPlayerName(''); // Clear input after adding
+      setError(''); // Clear any previous error
+    }
+  };
+
+  const handleRemovePlayer = (index: number) => {
+    const updatedPlayers = players.filter((_, i) => i !== index);
+    setPlayers(updatedPlayers);
+  };
+
+  const handleStartTournament = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (players.length === 8) onSubmit(players);
+  };
+
+  return (
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+      <h2>Tournament Registration</h2>
+
+      <input
+        type="text"
+        value={playerName}
+        onChange={(e) => setPlayerName(e.target.value)}
+        placeholder="Enter player name"
+        maxLength={15}
+        style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+      />
+
+      <button
+        onClick={handleAddPlayer}
+        disabled={!playerName || players.length >= 8}
+        style={{ marginBottom: '10px', width: '100%', padding: '10px' }}
+      >
+        Add Player
+      </button>
+
+      {/* Display error message for duplicate names */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <ul>
+        {players.map((player, index) => (
+          <li
+            key={index}
+            style={{
+              marginBottom: '10px',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            {player}
+            <button
+              onClick={() => handleRemovePlayer(index)}
+              style={{
+                color: 'white',
+                backgroundColor: 'red',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '5px',
+              }}
+            >
+              &#x2716; {/* Cross icon */}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <button
+        onClick={handleStartTournament}
+        disabled={players.length !== 8}
+        style={{
+          marginTop: '20px',
+          width: '100%',
+          padding: '10px',
+          backgroundColor: players.length === 8 ? 'green' : 'grey',
+          color: 'white',
+          cursor: players.length === 8 ? 'pointer' : 'not-allowed',
+        }}
+      >
+        Start Tournament
+      </button>
+    </div>
+  );
+};
+
+const Tournament = () => {
+  const [players, setPlayers] = useState<string[]>([]);
   const [activeMatch, setActiveMatch] = useState(1);
   const [showForm, setShowForm] = useState(true);
   const [showPong, setShowPong] = useState(false);
-  const [showWinner, setShowWinner] = useState(true);
+  const [showWinner, setShowWinner] = useState(false);
   const [selectedRound, setSelectedRound] = useState<number>(0);
   const [selectedMatch, setSelectedMatch] = useState<number>(0);
   const [rounds, setRounds] = useState<Rounds>({
@@ -531,7 +769,7 @@ const Tournament = () => {
   return (
     <div className={css.container}>
       {showForm && (
-        <PlayerForm
+        <TournamentForm
           onSubmit={handleSubmit}
           players={players}
           setPlayers={setPlayers}
@@ -547,91 +785,98 @@ const Tournament = () => {
         />
       ) : (
         !showForm && (
-          <div className={css.bracket}>
-            <section className={`${css.round} ${css.quarterfinals}`}>
-              <div className={css.winners}>
-                <div className={css.matchups}>
-                  <Match
-                    matchNumber={1}
-                    player1={rounds[0][0].player1}
-                    player2={rounds[0][0].player2}
-                    winner={rounds[0][0].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(0, 0)}
-                  />
-                  <Match
-                    matchNumber={2}
-                    player1={rounds[0][1].player1}
-                    player2={rounds[0][1].player2}
-                    winner={rounds[0][1].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(0, 1)}
-                  />
+          <div className={css.tournamentBody}>
+            <div className={css.rounds}>
+              <Round>Round 1</Round>
+              <Round>Semifinals</Round>
+              <Round>Finals</Round>
+            </div>
+            <div className={css.bracket}>
+              <section className={`${css.round} ${css.quarterfinals}`}>
+                <div className={css.winners}>
+                  <div className={css.matchups}>
+                    <Match
+                      matchNumber={1}
+                      player1={rounds[0][0].player1}
+                      player2={rounds[0][0].player2}
+                      winner={rounds[0][0].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(0, 0)}
+                    />
+                    <Match
+                      matchNumber={2}
+                      player1={rounds[0][1].player1}
+                      player2={rounds[0][1].player2}
+                      winner={rounds[0][1].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(0, 1)}
+                    />
+                  </div>
+                  <Connector />
                 </div>
-                <Connector />
-              </div>
 
-              <div className={css.winners}>
-                <div className={css.matchups}>
-                  <Match
-                    matchNumber={3}
-                    player1={rounds[0][2].player1}
-                    player2={rounds[0][2].player2}
-                    winner={rounds[0][2].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(0, 2)}
-                  />
-                  <Match
-                    matchNumber={4}
-                    player1={rounds[0][3].player1}
-                    player2={rounds[0][3].player2}
-                    winner={rounds[0][3].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(0, 3)}
-                  />
+                <div className={css.winners}>
+                  <div className={css.matchups}>
+                    <Match
+                      matchNumber={3}
+                      player1={rounds[0][2].player1}
+                      player2={rounds[0][2].player2}
+                      winner={rounds[0][2].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(0, 2)}
+                    />
+                    <Match
+                      matchNumber={4}
+                      player1={rounds[0][3].player1}
+                      player2={rounds[0][3].player2}
+                      winner={rounds[0][3].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(0, 3)}
+                    />
+                  </div>
+                  <Connector />
                 </div>
-                <Connector />
-              </div>
-            </section>
+              </section>
 
-            <section className={`${css.round} ${css.semifinals}`}>
-              <div className={css.winners}>
-                <div className={css.matchups}>
-                  <Match
-                    matchNumber={5}
-                    player1={rounds[1][0].player1}
-                    player2={rounds[1][0].player2}
-                    winner={rounds[1][0].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(1, 0)}
-                  />
-                  <Match
-                    matchNumber={6}
-                    player1={rounds[1][1].player1}
-                    player2={rounds[1][1].player2}
-                    winner={rounds[1][1].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(1, 1)}
-                  />
+              <section className={`${css.round} ${css.semifinals}`}>
+                <div className={css.winners}>
+                  <div className={css.matchups}>
+                    <Match
+                      matchNumber={5}
+                      player1={rounds[1][0].player1}
+                      player2={rounds[1][0].player2}
+                      winner={rounds[1][0].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(1, 0)}
+                    />
+                    <Match
+                      matchNumber={6}
+                      player1={rounds[1][1].player1}
+                      player2={rounds[1][1].player2}
+                      winner={rounds[1][1].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(1, 1)}
+                    />
+                  </div>
+                  <Connector />
                 </div>
-                <Connector />
-              </div>
-            </section>
+              </section>
 
-            <section className={`${css.round} ${css.finals}`}>
-              <div className={css.winners}>
-                <div className={css.matchups}>
-                  <Match
-                    matchNumber={7}
-                    player1={rounds[2][0].player1}
-                    player2={rounds[2][0].player2}
-                    winner={rounds[2][0].winner}
-                    activeMatch={activeMatch}
-                    onClick={() => playMatch(2, 0)}
-                  />
+              <section className={`${css.round} ${css.finals}`}>
+                <div className={css.winners}>
+                  <div className={css.matchups}>
+                    <Match
+                      matchNumber={7}
+                      player1={rounds[2][0].player1}
+                      player2={rounds[2][0].player2}
+                      winner={rounds[2][0].winner}
+                      activeMatch={activeMatch}
+                      onClick={() => playMatch(2, 0)}
+                    />
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            </div>
           </div>
         )
       )}

@@ -6,6 +6,7 @@
   background-color: var(--color-game-screen-bg);
   height: calc(100vh - 116px);
   border-radius: 10px;
+  min-height: 600px;
 
 }
 html {
@@ -47,7 +48,7 @@ body {
 
 .round .winners > div.matchups .matchup .participants .participant {
   box-sizing: border-box;
-  color: #858585;
+  color: var(--text-color);
   border-left: 0.5rem solid #858585;
   /* background: white; */
   /* background: #D8D8D8; */
@@ -55,6 +56,7 @@ body {
   width: 22rem;
   height: 5rem;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+  margin-bottom: 1px;
 }
 
 .round .winners > div.matchups .matchup .participants .participant.winner {
@@ -68,7 +70,7 @@ body {
 }
 
 .round .winners > div.matchups .matchup .participants .participant:not(:last-child) {
-  border-bottom: thin solid #f0f2f2;
+  /* border-bottom: thin solid #f0f2f2; */
 }
 
 .round .winners > div.matchups .matchup .participants .participant span {
@@ -164,7 +166,7 @@ body {
   left: 100%;
   height: 100%;
   z-index: 1;
-  background: coral;
+  background: #ff7f5096;
   border: none;
  padding: 4px;
   border-radius:  0 8px   8px 0;
@@ -197,6 +199,12 @@ body {
     border: 2px solid var(--text-color);
 }
 
+.canvasDiv {
+  position: relative;
+
+  width: 654px;
+  height: 484px;
+}
 .score {
   position: absolute;
   top: 20px;       /* Position it relative to the canvas container */
@@ -326,6 +334,13 @@ box-sizing: border-box;
   align-items: center;
   width: 100%;
 }
+.player1, .player2 {
+    padding: 5px 0;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 38px;
+    font-weight: 600;
+}
 
 .pauseButton {
   margin: 5px;
@@ -334,6 +349,8 @@ box-sizing: border-box;
   background-color: #cf5a45;
   border: none;
   width: 70px;
+    color: var(--text-color);
+
 }
 
 /* Winner Overlay */
@@ -374,6 +391,35 @@ box-sizing: border-box;
 
 .overlayContent button:hover {
   background-color: #0056b3;
+}
+
+/* Click to start overlay */
+.gameOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Dark transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.gameOverlayContent h2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.gameOverlayContent {
+  text-align: center;
+}
+
+.gameOverlay:hover {
+  background: rgba(0, 0, 0, 0.9); /* Slightly darken on hover */
 }
 
 /* WinnerCard */
@@ -418,4 +464,38 @@ box-sizing: border-box;
 
 .gradientLine.Gold {
     background: linear-gradient(68.15deg, #FFEFA4 2.54%, #C97F03 97.6%)
+}
+
+/* Round */
+
+.rounds {
+    font-size: 12px;
+        display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.rounds .round {
+    /* float: left; */
+    text-align: center;
+    line-height: 15px;
+    background-color: var(--tournament-form-bg);
+    border-right: 1px solid #444;
+    width: 250px;
+}
+
+.rounds .round .roundLabel {
+    display: block;
+    padding: 5px 0;
+    color: var(--text-color);
+    text-decoration: none
+}
+
+
+.tournamentBody {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex-wrap: nowrap;
 }
