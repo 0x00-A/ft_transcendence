@@ -32,7 +32,6 @@ class Oauth2UserSerializer(serializers.ModelSerializer):
             return None
 
     def create(self, validated_data):
-        print('--------------', validated_data, '----------------')
         user = User.objects.create(
             username = validated_data['username'],
             email = validated_data['email'],
@@ -40,12 +39,6 @@ class Oauth2UserSerializer(serializers.ModelSerializer):
         )
         user.set_unusable_password()
         user.save()
-        # oauth_user = Oauth2User.objects.create(
-        #     provider_id = validated_data['provider_id'],
-        #     provider_name = validated_data['provider_name'],
-        #     user = user,
-        # )
-        # oauth_user.save()
         profile = Profile.objects.create(user=user)
         avatarContent = self.get_avatar_content(validated_data['avatar_link'])
         if avatarContent is not None:

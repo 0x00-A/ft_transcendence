@@ -17,6 +17,7 @@ import AuthPopup from './components/AuthPopup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { redirect } from 'react-router-dom';
 
 
 const schema = yup.object().shape({
@@ -36,53 +37,16 @@ const schema = yup.object().shape({
     .required('password confirmation is required!')
 })
 
-interface SignupFormData {
-  username: string;
-  email: string;
-  password: string;
-  password2: string;
-}
+
 
 const addNewUser = async (data: SignupFormData) => {
-  const response = await axios.post<SignupFormData>("http://localhost:8000/api/accounts/signup/", data)
+  const response = await axios.post<SignupFormData>("http://localhost:8000/api/auth/signup/", data)
   return response.data;
 }
 
 const Signup = ({setAuthState, setAuthResponse}) => {
 
-  const {
-    register,
-    handleSubmit,
-    formState: {errors},
-  } = useForm<SignupFormData>({resolver: yupResolver(schema), delayError: 1000});
 
-  // const [signupState, setSignupState] = useState(false);
-
-  const mutation = useMutation<SignupFormData, Error, SignupFormData>({
-    mutationFn: addNewUser,
-    onSuccess(data, va, con) {
-      console.log(data);
-      console.log('---------------------');
-      console.log(va);
-      console.log('---------------------');
-      console.log(con);
-      console.log('---------------------');
-      setAuthState(true);
-      setAuthResponse({isRequesting: true, isSuccess: true, message: data, error: null});
-    },
-    onError(error) {
-      // setAuthResponse({isRequesting: true, isSuccess: true, data: data, error: null});
-      console.log(error);
-      // setSignupState(true);
-    }
-  });
-
-  mutation
-
-  const handleSignup = (data: SignupFormData, event:any) => {
-    event.preventDefault() ;
-    mutation.mutate(data);
-  };
 
   return (
     <>
