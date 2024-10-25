@@ -2,7 +2,8 @@
     /* border: 1px solid white; */
     margin-top: 30px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     box-sizing: border-box;
 }
@@ -12,6 +13,17 @@
     color: aliceblue;
 }
 
-.authFooter a {
-    /* text-decoration: none; */
+.authFooter button {
+    border: none;
+    background: none;
+    color: aliceblue;
+    cursor: pointer;
 }
+
+.authSwitch {
+    
+}
+
+/* .authFooter a {
+    
+} */

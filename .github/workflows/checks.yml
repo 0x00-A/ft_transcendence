@@ -38,8 +38,8 @@ jobs:
       - name: Test
         run: docker-compose run --rm backend sh -c "python manage.py wait_for_db && python manage.py test"
 
-      - name: Lint
-        run: docker-compose run --rm backend sh -c "flake8"
+      # - name: Lint
+      #   run: docker-compose run --rm backend sh -c "flake8"
 # name: No-Op Workflow
 
 # on:

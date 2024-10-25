@@ -8,7 +8,10 @@ import PageNotFound from './pages/PageNotFound';
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
-import Login from './pages/Login';
+// import Login from './pages/Login';
+// import Login from './pages/Auth/Login';
+import Auth from './pages/Auth/Auth';
+import Profile from './pages/Profile/Profile';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Games from './pages/Games/Games';
 import Chat from './pages/Chat/Chat';
@@ -25,6 +28,7 @@ import Topbar from './components/Topbar/Topbar';
 import Signup from './pages/Auth/Signup';
 import { useEffect, useState } from 'react';
 import usePreLoader from './hooks/usePreLoader';
+// import Signup from './pages/Auth/Signup';
 
 function App() {
   return (
@@ -48,6 +52,7 @@ function AppContent() {
     '/store',
     '/leaderboard',
     '/settings',
+    '/profile'
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
@@ -67,21 +72,19 @@ function AppContent() {
         {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
           <Topbar />
         )}
-        <div className="page-content">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/games" element={<Games />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/friends" element={<Friends />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/store" element={<Store />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
       </div>
     </div>
   );
