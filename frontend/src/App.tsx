@@ -13,7 +13,7 @@ import PreLoader from './components/PreLoader/PreLoader';
 import Auth from './pages/Auth/Auth';
 import Profile from './pages/Profile/Profile';
 import Dashboard from './pages/Dashboard/Dashboard';
-import Games from './pages/Games/Games';
+import ModeSelection from './pages/Game/ModeSelection';
 import Chat from './pages/Chat/Chat';
 import Friends from './pages/Friends/Friends';
 import Search from './pages/Search/Search';
@@ -25,9 +25,15 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 // import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
-import Signup from './pages/Auth/Signup';
-import { useEffect, useState } from 'react';
 import usePreLoader from './hooks/usePreLoader';
+import PongGame from './components/Game/PongGame';
+import Pong from './components/Game/components/Pong/Pong';
+import RemoteGame from './components/Game/RemoteGame/RemoteGame';
+import PingPongGame from './components/Game/LocalGame/PingPongGame';
+import LocalGame from './components/Game/LocalGame/LocalGame';
+import GameChat from './components/Game/RemoteGame/GameChat';
+import Room from './components/Game/RemoteGame/Room';
+import Tournament from './components/Game/Tournament/Tournament';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -45,26 +51,28 @@ function App() {
 function AppContent() {
   const showSidebarRoutes = [
     '/',
-    '/games',
+    '/game',
+    '/game/tournament',
+    '/game/local',
     '/chat',
     '/friends',
     '/search',
     '/store',
     '/leaderboard',
     '/settings',
-    '/profile'
+    '/profile',
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
   const loading = usePreLoader();
 
-  if (loading) {
-    return <PreLoader />;
-  }
+  // if (loading) {
+  //   return <PreLoader />;
+  // }
 
   return (
     <div className="app-container ">
-      {/* <PreLoader /> */}
+      <PreLoader />
       {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
         <Sidebar />
       )}
@@ -74,7 +82,20 @@ function AppContent() {
         )}
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/games" element={<Games />} />
+          {/* <Route path="/games" element={<Games />} /> */}
+          <Route path="/game" element={<ModeSelection />} />
+          <Route path="/game/local" element={<LocalGame />} />
+          <Route path="/game/tournament" element={<Tournament />} />
+          <Route path="/game/chat" element={<GameChat />} />
+          <Route path="/game/chat/:room" element={<Room />} />
+          {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
+          {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
+          {/* <Route path="/game/remote" element={<RemoteGame />} /> */}
+          {/* <Route path="/game/remote/:game_id  " element={<RemoteGame />} /> */}
+          {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
+          {/* Remote game instance with game ID */}
+          {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
+          {/* </Route> */}
           <Route path="/chat" element={<Chat />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/search" element={<Search />} />

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ping Pong Game</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000;
+      }
+
+      #gameCanvas {
+        background-color: #111;
+        border: 2px solid #fff;
+        transition: transform 0.1s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+    <script>
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const paddleWidth = 10;
+      const paddleHeight = 100;
+      const ballRadius = 10;
+      const maxScore = 10;
+
+      // Paddles
+      const paddle1 = {
+        x: 0,
+        y: canvas.height / 2 - paddleHeight / 2,
+        width: paddleWidth,
+        height: paddleHeight,
+        vy: 0,
+      };
+      const paddle2 = {
+        x: canvas.width - paddleWidth,
+        y: canvas.height / 2 - paddleHeight / 2,
+        width: paddleWidth,
+        height: paddleHeight,
+        vy: 0,
+      };
+
+      // Ball properties
+      const ball = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        vx: 3,
+        vy: 3,
+        radius: ballRadius,
+        color: 'white',
+      };
+
+      // Scores
+      let score1 = 0;
+      let score2 = 0;
+
+      // Sounds
+      const hitWallSound = new Audio('wall-hit-1.mp3');
+      const paddleHitSound = new Audio('paddle-hit-1.mp3');
+
+      // Smoke particles array
+      let smokeParticles = [];
+      let explosionParticles = [];
+
+      function moveBall() {
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+
+        // Collision with top and bottom walls
+        if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+          ball.vy *= -1;
+          createExplosion(ball.x, ball.y);
+          shakeCanvas();
+          hitWallSound.play(); // Play sound on wall hit
+        }
+
+        // Collision with paddles
+        if (ballHitsPaddle(paddle1) || ballHitsPaddle(paddle2)) {
+          ball.vx *= -1;
+          createExplosion(ball.x, ball.y);
+          paddleHitSound.play(); // Play sound on paddle hit
+        }
+
+        // Score update and ball reset
+        if (ball.x + ball.radius > canvas.width) {
+          score1++;
+          resetBall();
+        } else if (ball.x - ball.radius < 0) {
+          score2++;
+          resetBall();
+        }
+
+        createSmoke(ball.x, ball.y);
+      }
+
+      function shakeCanvas() {
+        canvas.style.transform =
+          'translate(' +
+          (Math.random() * 10 - 5) +
+          'px, ' +
+          (Math.random() * 10 - 5) +
+          'px)';
+        setTimeout(() => {
+          canvas.style.transform = 'translate(0, 0)';
+        }, 100);
+      }
+
+      function ballHitsPaddle(paddle) {
+        return (
+          ball.x - ball.radius < paddle.x + paddle.width &&
+          ball.x + ball.radius > paddle.x &&
+          ball.y > paddle.y &&
+          ball.y < paddle.y + paddle.height
+        );
+      }
+
+      function createSmoke(x, y) {
+        smokeParticles.push({
+          x: x,
+          y: y,
+          opacity: 1,
+          radius: Math.random() * 5 + 2,
+        });
+      }
+
+      function createExplosion(x, y) {
+        for (let i = 0; i < 10; i++) {
+          explosionParticles.push({
+            x: x,
+            y: y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            radius: Math.random() * 5 + 2,
+            life: 50,
+          });
+        }
+      }
+
+      function drawSmoke() {
+        smokeParticles.forEach((particle, index) => {
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(150, 150, 150, ${particle.opacity})`;
+          ctx.fill();
+          ctx.closePath();
+
+          particle.opacity -= 0.01;
+          particle.radius += 0.1;
+
+          if (particle.opacity <= 0) {
+            smokeParticles.splice(index, 1);
+          }
+        });
+      }
+
+      function drawExplosion() {
+        explosionParticles.forEach((particle, index) => {
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, ${Math.random() * 255}, 0, 1)`;
+          ctx.fill();
+          ctx.closePath();
+
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+          particle.life--;
+
+          if (particle.life <= 0) {
+            explosionParticles.splice(index, 1);
+          }
+        });
+      }
+
+      function drawBall() {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.fillStyle = ball.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      function drawPaddle(paddle) {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+      }
+
+      function drawScores() {
+        ctx.font = '30px Arial';
+        ctx.fillStyle = 'white';
+        ctx.fillText(score1, canvas.width / 4, 30);
+        ctx.fillText(score2, (canvas.width / 4) * 3, 30);
+      }
+
+      function resetBall() {
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
+        ball.vx *= -1; // Switch direction of the serve
+        ball.vy = (Math.random() - 0.5) * 6;
+      }
+
+      function movePaddles() {
+        paddle1.y += paddle1.vy;
+        paddle2.y += paddle2.vy;
+
+        // Prevent paddles from going out of bounds
+        paddle1.y = Math.max(
+          Math.min(paddle1.y, canvas.height - paddleHeight),
+          0
+        );
+        paddle2.y = Math.max(
+          Math.min(paddle2.y, canvas.height - paddleHeight),
+          0
+        );
+      }
+
+      function handleKeydown(event) {
+        switch (event.key) {
+          case 'w':
+            paddle1.vy = -5;
+            break;
+          case 's':
+            paddle1.vy = 5;
+            break;
+          case 'ArrowUp':
+            paddle2.vy = -5;
+            break;
+          case 'ArrowDown':
+            paddle2.vy = 5;
+            break;
+        }
+      }
+
+      function handleKeyup(event) {
+        switch (event.key) {
+          case 'w':
+          case 's':
+            paddle1.vy = 0;
+            break;
+          case 'ArrowUp':
+          case 'ArrowDown':
+            paddle2.vy = 0;
+            break;
+        }
+      }
+
+      function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        moveBall();
+        movePaddles();
+        drawPaddle(paddle1);
+        drawPaddle(paddle2);
+        drawBall();
+        drawSmoke();
+        drawExplosion();
+        drawScores();
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      document.addEventListener('keydown', handleKeydown);
+      document.addEventListener('keyup', handleKeyup);
+
+      gameLoop();
+    </script>
+  </body>
+</html>

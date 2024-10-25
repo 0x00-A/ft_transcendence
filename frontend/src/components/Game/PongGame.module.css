@@ -1,0 +1,54 @@
+.modes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin: 0 0 30px 0;
+}
+.canvasContainer {
+  /* box-sizing: content-box; */
+  width: 80%;
+  height: 80%;
+  margin: auto;
+  /* border: 5px solid rgba(240, 9, 9, 0.822); */
+  /* border-radius: 10px; */
+
+  /* background-size: cover;  */
+  /* background-repeat: no-repeat; */
+  /* background-position: center; */
+}
+
+.title p {
+  position: relative;
+  display: inline-block;
+  background-color: var(--color-game-screen-bg);
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 15px 50px;
+  /* margin: 30px; */
+  text-transform: uppercase;
+}
+
+.cornerBorder::before,
+.cornerBorder::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 4px solid #ffffff;
+}
+.cornerBorder::before {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.cornerBorder::after {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
