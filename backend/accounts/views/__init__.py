@@ -6,4 +6,6 @@ from .ouath2_intra import intra_authorize
 from .ouath2_intra import oauth2_intra
 from .ouath2_google import google_authorize
 from .ouath2_google import oauth2_google
-from .oauth2_discord import oauth2_set_username
+from .oauth2_utils import get_oauth2_user
+from .oauth2_utils import exchange_code
+from .oauth2_utils import oauth2_set_username

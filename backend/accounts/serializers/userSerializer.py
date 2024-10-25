@@ -8,7 +8,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.files.base import ContentFile
 
 
-
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})
     password2 = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})

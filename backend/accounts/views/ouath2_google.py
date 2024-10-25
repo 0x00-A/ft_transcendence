@@ -5,10 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-import requests
 from ..serializers import Oauth2UserSerializer
 from ..models import User
 from ..views.login import get_token_for_user
+from ..views.oauth2_utils import exchange_code,get_oauth2_user
 
 
 REDIRECT_URI = "http://localhost:8000/api/oauth2/google/"
@@ -26,10 +26,15 @@ def oauth2_google(request):
     code = request.GET.get('code')
     if code is None:
         return redirect(google_authorize)
-    token = exchange_code(code)
+    token = exchange_code(code, {
+        'redirect_uri': REDIRECT_URI,
+        'token_url': settings.GOOGLE_TOKEN_URL,
+        'client_id': settings.GOOGLE_CLIENT_ID,
+        'client_secret': settings.GOOGLE_CLIENT_SECRET
+    })
     if token is None:
         return Response(data={"error": "Failed to get the token from google!"}, status=status.HTTP_400_BAD_REQUEST)
-    google_user = get_google_user(token)
+    google_user = get_oauth2_user(token, settings.GOOGLE_USER_URL)
     if google_user is None:
         return Response(data={"error": "Failed to get user google resources!"}, status=status.HTTP_400_BAD_REQUEST)
     try :
@@ -37,9 +42,13 @@ def oauth2_google(request):
     except User.DoesNotExist:
         check_user = None
     if check_user is None:
+        google_username = f"{google_user['given_name']}_{google_user['family_name']}"
+        if User.objects.filter(username=google_username).exists():
+            request.session['user_data'] = {'email': google_user['email'],'avatar_link' : google_user['picture']}
+            return Response(data={ 'message': "The provider's username already taken, Please choose a new one!",
+                                  'link': "http://localhost:8000/api/oauth2/set_username/" }, status=status.HTTP_409_CONFLICT)
         serializer = Oauth2UserSerializer(data = {
-            # 'provider_id': google_user['id'],
-            # 'provider_name': 'google',
+            'username' : google_username,
             'email' : google_user['email'],
             'avatar_link' : google_user['picture'],
         })
@@ -50,41 +59,3 @@ def oauth2_google(request):
             return Response({'message': 'Invalid credentials, error creation oauth2 user!'}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(data=get_token_for_user(user=user), status=status.HTTP_200_OK)
     return Response(data=get_token_for_user(check_user), status=status.HTTP_200_OK)
-
-
-def exchange_code(code:str):
-    data = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': REDIRECT_URI
-    }
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    try:
-        res = requests.post(settings.GOOGLE_TOKEN_URL, data=data, headers=headers,
-                            auth=(settings.GOOGLE_CLIENT_ID, settings.GOOGLE_CLIENT_SECRET))
-        res.raise_for_status()
-        return res.json()
-    except requests.exceptions.HTTPError as err:
-        print('-->', err)
-        return None
-    except Exception as err:
-        print('-->', err)
-        return None
-
-
-def get_google_user(token):
-    access_token = token['access_token']
-    try:
-        res = requests.get(settings.GOOGLE_USER_URL, headers={
-            'Authorization': "Bearer %s" % access_token
-        })
-        res.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        print('-->', e)
-        return None
-    except Exception as e:
-        print('-->', e)
-        return None
-    return res.json()
