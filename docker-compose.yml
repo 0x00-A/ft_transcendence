@@ -14,15 +14,19 @@ services:
               python manage.py migrate &&
               python manage.py runserver 0.0.0.0:8000"
     environment:
-      # - DJANGO_ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1
+      - DJANGO_ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
       - DB_HOST=$DB_HOST
       - DB_NAME=$DB_NAME
       - DB_USER=$DB_USER
       - DB_PASS=$DB_PASS
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
     networks:
       - default_network
     depends_on:
       db:
+        condition: service_started
+      redis:
         condition: service_started
 
   frontend:
@@ -35,6 +39,8 @@ services:
     volumes:
       - ./frontend/src:/app/frontend/src
       - ./frontend/public:/app/frontend/public
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     # volumes:
     #   - ./frontend:/app/frontend
 
@@ -55,8 +61,18 @@ services:
     networks:
       - default_network
 
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - default_network
+
 volumes:
   dev-db-data:
+  redis_data:
 
 networks:
   default_network:
