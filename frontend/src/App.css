@@ -14,6 +14,7 @@
   flex: 1 1 0%;
   background-color: var(--main-surface-primary);
   background-repeat: no-repeat;
+  /* background-color: red; */
 
   /* width: 100%; */
   min-height: 100vh;
