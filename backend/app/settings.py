@@ -19,6 +19,40 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+###############
+# DISCORD ENV #
+###############
+DISCORD_AUTHORIZATION_URL = env('DISCORD_AUTHORIZATION_URL')
+DISCORD_TOKEN_URL = env('DISCORD_TOKEN_URL')
+DISCORD_CLIENT_ID = env('DISCORD_CLIENT_ID')
+DISCORD_CLIENT_SECRET = env('DISCORD_CLIENT_SECRET')
+DISCORD_USER_URL = env('DISCORD_USER_URL')
+
+###############
+#  INTRA ENV  #
+###############
+INTRA_CLIENT_ID = env('INTRA_CLIENT_ID')
+INTRA_CLIENT_SECRET = env('INTRA_CLIENT_SECRET')
+INTRA_AUTHORIZATION_URL = env('INTRA_AUTHORIZATION_URL')
+INTRA_TOKEN_URL = env('INTRA_TOKEN_URL')
+INTRA_USER_URL = env('INTRA_USER_URL')
+
+################
+#  GOOGLE ENV  #
+################
+GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
+GOOGLE_AUTHORIZATION_URL = env('GOOGLE_AUTHORIZATION_URL')
+GOOGLE_TOKEN_URL = env('GOOGLE_TOKEN_URL')
+GOOGLE_USER_URL = env('GOOGLE_USER_URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -69,6 +103,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'app.urls'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 TEMPLATES = [
     {
@@ -151,7 +189,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
 }
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -159,10 +222,17 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
 }
 
 
 AUTH_USER_MODEL = 'accounts.User'
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.oauth2AuthBackend.Oauth2AuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Daphne
 ASGI_APPLICATION = "app.asgi.application"
