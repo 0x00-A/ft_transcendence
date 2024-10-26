@@ -19,15 +19,34 @@ interface LoginUser {
   password: string;
 }
 
+const loginUser = async (user: LoginUser) => {
+  const response = await axios.post<LoginUser>("http://localhost:8000/api/accounts/login/", user)
+  return response.data;
+}
+
 const Login = () => {
 
   const { register, handleSubmit} = useForm();
 
-  const mutation = useMutation({
-    mutationFn: (user: LoginUser) =>
-      axios
-        .post("http://localhost:8000/api/accounts/login/", user)
-        .then(res => console.log(res.data))
+  const mutation = useMutation<LoginUser, Error, LoginUser>({
+    mutationFn: loginUser,
+    onSuccess(data, va, con) {
+      console.log(data);
+      console.log('---------------------');
+      console.log(va);
+      console.log('---------------------');
+      console.log(con);
+      console.log('---------------------');
+      localStorage.setItem('access_token', data.access);
+      localStorage.setItem('refresh_token', data.refresh);
+      // redirect to profile
+      // setAuthResponse({isRequesting: true, isSuccess: true, message: data, error: null});
+    },
+    onError(error) {
+      // setAuthResponse({isRequesting: true, isSuccess: true, data: data, error: null});
+      console.log(error);
+      // setSignupState(true);
+    }
   });
 
   const onSubmit = (data: any, event:any) => {
@@ -49,7 +68,7 @@ const Login = () => {
             <input type="password" required placeholder="password" {...register('password')}/>
           </div>
           <button type="submit" className={css.authBtn}>
-            Signin
+            Sign in
           </button>
         <ExternAuth />
         </form>

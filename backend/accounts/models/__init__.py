@@ -1,3 +1,3 @@
 from .user import User
-from .userManager import UserManager
 from .profile import Profile
+from .friends import FriendRequest

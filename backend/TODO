@@ -1,0 +1,25 @@
+first we customize the model AbstractUser with: as User
+    email unique field
+    setting up Our AUTH_USER_MODEL as the User model
+
+adding a Profile model for the player and link it with User model onToOneField
+
+set the rest_framework_simple jwt authentication as the DEFAULT_AUTHENTICATION_CLASSE
+set the setting FOR SIMPLE_JWT (access token lifetime and so on ...)
+
+make serializers for User and Profile:
+
+Token Obtain Pair Serializer: get_token
+
+Register Serializer :
+define validate the data (passwords matching ..)
+define the create method with validated data
+
+oauth2 authentication:
+    cases :
+        new user
+        new user with the same username of an exist user
+        new user with the same email of an exist user
+        new user with the same email of an exist email oauth2
+        new user with the same username of an exist username oauth2
+        old user
