@@ -1,38 +1,16 @@
 from rest_framework import serializers
-from .models.user import User
-from .models.profile import Profile
-from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework_simplejwt.tokens import Token
+from ..models.user import User
+from ..models.profile import Profile
+from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.core.files.base import ContentFile
 
-class UserSerializer(serializers.ModelSerializer):
-
-    password2 = serializers.CharField(write_only=True, required=True)
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password', 'password2']
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError('Passwords does not match')
-        return attrs
-
-    def create(self, validated_data):
-        validated_data.pop('password2')
-        password = validated_data.pop('password')
-        user = User.objects.create(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
-
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = ['avatar', 'age', 'level']
 
 class UserRegisterSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})
 
     class Meta:
         model = User
@@ -46,6 +24,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        if len(attrs['username']) < 4:
+            raise serializers.ValidationError('Username must be at least 4 characters!')
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError('Passwords does not match')
         return attrs
@@ -60,16 +40,25 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         profile.save()
         return user
 
+class TokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user: User) -> Token:
+        token = super().get_token(user)
+        token['user_id'] = user.pk
+        token['username'] = user.username
+        return token
+
 class UserLoginSerializer(serializers.ModelSerializer):
 
-    username = serializers.CharField(max_length=255)
+    username = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
         fields = ['username', 'password']
 
-        
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ['avatar', 'age', 'level']
+    # def validate(self, attrs):
+    #     try:
+    #         User.objects.get(username=attrs['username'])
+    #     except User.DoesNotExist:
+    #         raise serializers.ValidationError('username not exists!')
+    #     return attrs
