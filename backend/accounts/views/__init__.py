@@ -9,3 +9,9 @@ from .ouath2_google import oauth2_google
 from .oauth2_utils import get_oauth2_user
 from .oauth2_utils import exchange_code
 from .oauth2_utils import oauth2_set_username
+from .friendRequest import SendFriendRequestView
+from .friendRequest import AcceptFriendRequestView
+from .friendRequest import RejectFriendRequestView
+from .friendRequest import PendingFriendRequestsView
+
+# from .profile import ProfileModelViewSet
