@@ -12,6 +12,7 @@ from .views import SendFriendRequestView
 from .views import AcceptFriendRequestView
 from .views import RejectFriendRequestView
 from .views import PendingFriendRequestsView
+from .views import UserFriendsView
 
 urlpatterns = [
     path('auth/signup/', SignupView.as_view()),
@@ -24,7 +25,8 @@ urlpatterns = [
     path('oauth2/google/authorize/', google_authorize),
     path('oauth2/google/', oauth2_google),
 
-    path('friend-request/send/<int:profile_id>/', SendFriendRequestView.as_view(), name='send-friend-request'),
+    path('friends/', UserFriendsView.as_view(), name='user-friends'),
+    path('friend-request/send/<str:username>/', SendFriendRequestView.as_view(), name='send-friend-request'),
     path('friend-request/accept/<int:request_id>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('friend-request/reject/<int:request_id>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
     path('friend-requests/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),

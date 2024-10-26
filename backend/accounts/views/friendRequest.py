@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from ..models import FriendRequest, Profile
-from ..serializers import FriendRequestSerializer
+from ..serializers import FriendRequestSerializer, ProfileSerializer
 
 
 class UserFriendsView(APIView):
@@ -12,16 +12,17 @@ class UserFriendsView(APIView):
     def get(self, request):
         profile = Profile.objects.get(user=request.user)
         friends = profile.friends.all()
-        serializer = FriendRequestSerializer(friends, many=True)
+        serializer = ProfileSerializer(friends, many=True)
         return Response(serializer.data)
 
 
 class SendFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, profile_id):
+    def post(self, request, username):
         try:
-            receiver = Profile.objects.get(id=profile_id)
+            receiver = Profile.objects.get(user__username=username)
+            # receiver = Profile.objects.get(id=profile_id)
         except Profile.DoesNotExist:
             return Response(data={'error': 'profile does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         sender_profile = Profile.objects.get(user=request.user)
@@ -49,12 +50,8 @@ class AcceptFriendRequestView(APIView):
         friend_request.save()
         friend_request.save()
 
-        # receiver.friends.add(friend_request.sender)
         receiver.friends.add(friend_request.sender)
         friend_request.sender.friends.add(receiver)
-        # Add each other as friends (for demonstration, assume a ManyToMany friends relationship on User model)
-        # request.user.friends.add(friend_request.sender)
-        # friend_request.sender.friends.add(request.user)
 
         return Response({"message": "Friend request accepted"}, status=status.HTTP_200_OK)
 
