@@ -6,6 +6,7 @@ class Profile(models.Model):
     avatar = models.ImageField(upload_to='avatars/', default='defaultAvatar.svg')
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True, blank=True)
+    friends = models.ManyToManyField('self', blank=True, symmetrical=False)
 
     def __str__(self) -> str:
         return self.user.username
