@@ -92,6 +92,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -244,8 +245,29 @@ CHANNEL_LAYERS = {
             # Use environment variables for Redis host and port
             'hosts': [
                 (os.environ.get('REDIS_HOST', 'redis'),
-                 int(os.environ.get('REDIS_PORT', 6379)))
+                int(os.environ.get('REDIS_PORT', 6379)))
             ],
         },
     },
 }
+
+# Allow specific origins
+CORS_ALLOWED_ORIGINS = [
+    'http://0.0.0.0:3000',
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True

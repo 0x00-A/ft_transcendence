@@ -8,7 +8,7 @@ class Profile(models.Model):
         upload_to='media/avatars/', default='defaultAvatar.svg')
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True, blank=True)
-    friends = models.ManyToManyField('self', blank=True, symmetrical=False)
+    friends = models.ManyToManyField('self', blank=True, symmetrical=True)
 
     stats = models.JSONField(default=dict, blank=True)
 
