@@ -12,6 +12,8 @@ from .views import SendFriendRequestView
 from .views import AcceptFriendRequestView
 from .views import RejectFriendRequestView
 from .views import PendingFriendRequestsView
+from .views import ProfileApiView
+
 
 urlpatterns = [
     path('auth/signup/', SignupView.as_view()),
@@ -28,5 +30,7 @@ urlpatterns = [
     path('friend-request/accept/<int:request_id>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('friend-request/reject/<int:request_id>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
     path('friend-requests/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),
+
+    path('profile/', ProfileApiView.as_view()),
     # path('profiles/', ProfileModelViewSet.as_view({'get': 'list'})),
 ]
