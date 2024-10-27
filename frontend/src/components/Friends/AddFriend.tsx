@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
+import axios from 'axios';
 
 interface User {
   id: string;
@@ -9,37 +10,34 @@ interface User {
   avatar: string;
 }
 
-const exampleUsers: User[] = [
-  {
-    id: '1',
-    username: 'relimsa',
-    fullName: 'Rachid El Ismaiyly',
-    avatar: 'https://picsum.photos/200',
-  },
-  {
-    id: '2',
-    username: 'johndoe',
-    fullName: 'John Doe',
-    avatar: 'https://picsum.photos/200',
-  },
-  {
-    id: '3',
-    username: 'janedoe',
-    fullName: 'Jane Doe',
-    avatar: 'https://picsum.photos/200',
-  },
-];
 
 const AddFriend: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [users, setUsers] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get('/api/users/');
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
     setSearchTerm(term);
 
     if (term) {
-      const filteredUsers = exampleUsers.filter(
+      const filteredUsers = users.filter(
         (user) =>
           user.username.toLowerCase().includes(term.toLowerCase()) ||
           user.fullName.toLowerCase().includes(term.toLowerCase())
@@ -64,7 +62,12 @@ const AddFriend: React.FC = () => {
         />
       </div>
 
-      {searchTerm === '' && (
+      {isLoading ? (
+        <div className={css.loadingState}>
+          <p>Loading users...</p>
+        </div>
+      ) : (
+        <>{searchTerm === '' && (
         <div className={css.emptyState}>
           <div className={css.emptyStateCenter}>
             <img src="/icons/friend/searchFriend.svg" alt="Search" />
@@ -102,6 +105,8 @@ const AddFriend: React.FC = () => {
             </div>
           )}
         </div>
+      )}
+      </>
       )}
     </div>
   );

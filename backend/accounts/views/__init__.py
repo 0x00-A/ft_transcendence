@@ -14,5 +14,8 @@ from .friendRequest import AcceptFriendRequestView
 from .friendRequest import RejectFriendRequestView
 from .friendRequest import PendingFriendRequestsView
 from .friendRequest import UserFriendsView
+from .friendRequest import SentFriendRequestsView
+from .friendRequest import CancelFriendRequestView
+from .profile import AllUsersView
 
 # from .profile import ProfileModelViewSet
