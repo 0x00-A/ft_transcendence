@@ -10,6 +10,11 @@ from ..models import Profile
 from ..serializers import ProfileSerializer
 
 
+class ProfileApiView(ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [AllowAny]
+
 # class ProfileModelViewSet(ViewSet):
 #     queryset = Profile.objects.all()
 #     serializer_class = ProfileSerializer
