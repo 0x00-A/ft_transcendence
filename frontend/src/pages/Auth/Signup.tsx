@@ -14,6 +14,8 @@ import { error, log } from 'console';
 import ProfilePopup from '../Profile/components/ProfilePopup';
 import AuthPopup from './components/AuthPopup';
 
+import useSignup from './hooks/useSignup';
+
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -38,15 +40,30 @@ const schema = yup.object().shape({
 })
 
 
-
-const addNewUser = async (data: SignupFormData) => {
-  const response = await axios.post<SignupFormData>("http://localhost:8000/api/auth/signup/", data)
-  return response.data;
+interface SignupFormData {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
 }
 
-const Signup = ({setAuthState, setAuthResponse}) => {
+const Signup = () => {
+
+   const { register, handleSubmit, formState: { errors },} = useForm<SignupFormData>({
+     resolver: yupResolver(schema),
+     delayError: 1000,
+   });
+
+   const signupMutation = useSignup()
+  //  const { mutation, isLoading, error } = useSignup()
+   if (signupMutation.isSuccess)
+    console.log('-------successs--------');
 
 
+   const handleSignup = (data: SignupFormData, event: any) => {
+     event.preventDefault();
+     signupMutation.mutate(data);
+   };
 
   return (
     <>

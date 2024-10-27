@@ -70,7 +70,7 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
+    # "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,18 +80,19 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'rest_framework.authtoken',
-    'drf_spectacular',
+    # 'drf_spectacular',
 
     'corsheaders',
     'accounts',
     'rest_framework_simplejwt',
     'debug_toolbar',
-    'channels',
-    'game',
-    'matchmaker',
+    # 'channels',
+    # 'game',
+    # 'matchmaker',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -100,6 +101,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -126,18 +131,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': "django.db.backends.postgresql",
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASS'),
+#         'HOST': os.environ.get('DB_HOST'),
+#         # 'PORT': '5432',
+#     }
+# }
 
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': os.environ.get('DB_HOST'),
-        # 'PORT': '5432',
+        'NAME': 'developement',
+        'USER': 'postgres',
+        'PASSWORD': 'mahdi',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -188,7 +203,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # AUTH_USER_MODEL = 'core.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -235,17 +250,17 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Daphne
-ASGI_APPLICATION = "app.asgi.application"
+# ASGI_APPLICATION = "app.asgi.application"
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            # Use environment variables for Redis host and port
-            'hosts': [
-                (os.environ.get('REDIS_HOST', 'redis'),
-                 int(os.environ.get('REDIS_PORT', 6379)))
-            ],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             # Use environment variables for Redis host and port
+#             'hosts': [
+#                 (os.environ.get('REDIS_HOST', 'redis'),
+#                  int(os.environ.get('REDIS_PORT', 6379)))
+#             ],
+#         },
+#     },
+# }
