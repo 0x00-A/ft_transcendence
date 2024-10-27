@@ -22,9 +22,9 @@ class SendFriendRequestView(APIView):
     def post(self, request, username):
         try:
             receiver = Profile.objects.get(user__username=username)
-            # receiver = Profile.objects.get(id=profile_id)
         except Profile.DoesNotExist:
             return Response(data={'error': 'profile does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
         sender_profile = Profile.objects.get(user=request.user)
         friend_request, created = FriendRequest.objects.get_or_create(sender=sender_profile, receiver=receiver)
         if not created:
@@ -37,34 +37,43 @@ class SendFriendRequestView(APIView):
 class AcceptFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, request_id):
-        receiver = Profile.objects.get(user=request.user)
+    def post(self, request, username):
+        receiver_profile = Profile.objects.get(user=request.user)
+        
         try:
-            friend_request = FriendRequest.objects.get(id=request_id, receiver=receiver)
-        except  FriendRequest.DoesNotExist:
-            return Response(data={'error': 'friend request does not exist!'}, status=status.HTTP_400_BAD_REQUEST)
-        if friend_request.status != 'pending':
-            return Response({"message": "Friend request is no longer pending"}, status=status.HTTP_400_BAD_REQUEST)
+            sender_profile = Profile.objects.get(user__username=username)
+            friend_request = FriendRequest.objects.get(sender=sender_profile, receiver=receiver_profile, status='pending')
+        except Profile.DoesNotExist:
+            return Response({'error': 'Sender profile does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        except FriendRequest.DoesNotExist:
+            return Response({'error': 'Friend request does not exist or is not pending'}, status=status.HTTP_400_BAD_REQUEST)
 
         friend_request.status = 'accepted'
         friend_request.save()
-        friend_request.save()
 
-        receiver.friends.add(friend_request.sender)
-        friend_request.sender.friends.add(receiver)
+        receiver_profile.friends.add(sender_profile)
+        sender_profile.friends.add(receiver_profile)
 
         return Response({"message": "Friend request accepted"}, status=status.HTTP_200_OK)
+
+
 
 
 class RejectFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, request_id):
-        friend_request = FriendRequest.objects.get(id=request_id, receiver=request.user)
+    def post(self, request, username):
+        receiver_profile = Profile.objects.get(user=request.user)
+        
+        try:
+            sender_profile = Profile.objects.get(user__username=username)
+            friend_request = FriendRequest.objects.get(sender=sender_profile, receiver=receiver_profile, status='pending')
+        except Profile.DoesNotExist:
+            return Response({'error': 'Sender profile does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        except FriendRequest.DoesNotExist:
+            return Response({'error': 'Friend request does not exist or is not pending'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if friend_request.status != 'pending':
-            return Response({"message": "Friend request is no longer pending"}, status=status.HTTP_400_BAD_REQUEST)
-
+        # Reject friend request
         friend_request.status = 'rejected'
         friend_request.save()
 
