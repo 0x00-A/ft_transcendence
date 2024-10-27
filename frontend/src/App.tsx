@@ -34,6 +34,7 @@ import LocalGame from './components/Game/LocalGame/LocalGame';
 import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
 import Tournament from './components/Game/Tournament/Tournament';
+import Test from './components/Game/Tournament/Test';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -70,7 +71,6 @@ function AppContent() {
   //   return <PreLoader />;
   // }
 
-
   return (
     <div className="app-container ">
       <PreLoader />
@@ -85,6 +85,7 @@ function AppContent() {
           <Route path="/" element={<Dashboard />} />
           {/* <Route path="/games" element={<Games />} /> */}
           <Route path="/game" element={<ModeSelection />} />
+          <Route path="/test" element={<Test />} />
           <Route path="/game/local" element={<LocalGame />} />
           <Route path="/game/tournament" element={<Tournament />} />
           <Route path="/game/chat" element={<GameChat />} />
