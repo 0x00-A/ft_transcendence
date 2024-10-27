@@ -8,7 +8,7 @@ import Avatar1 from './assets/avatar1.svg'
 import Avatar2 from './assets/avatar2.svg'
 import Avatar3 from './assets/avatar3.svg'
 import Avatar4 from './assets/avatar4.svg'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query';
 
 interface Friends {
   id: number;
@@ -27,7 +27,7 @@ const Profile = () => {
     {id: 4, avatar: Avatar4, nickname: 'chiwahedakhor'}
   ]
 
- const ProfileDetail = useQuery()
+//  const ProfileDetail = useQuery() 
 
   const ListFriends = friendsList.map((friend) => (
     <div key={friend.id} className={css.friendDetail}>
@@ -40,7 +40,7 @@ const Profile = () => {
   const [isFormPopup, setFormPopup] = useState(false);
 
   // const showProfilePopup = () => { setFormPopup(true); }
-  
+
   return (
     <div className={css.profileContainer}>
       {isFormPopup && <ProfilePopup setFormpopup={setFormPopup} />}

@@ -1,7 +1,8 @@
-from datetime import timezone
+from django.utils import timezone
 from itertools import combinations
 from django.contrib.auth import get_user_model
 from django.db import models
+from accounts.models import Profile
 
 User = get_user_model()
 
@@ -20,7 +21,7 @@ class GameManager(models.Manager):
             player1=player1,
             player2=player2,
             game_address=game_address,
-            # game_start_time=timezone.now(),
+            game_start_time=timezone.now(),
         )
         return game
 
@@ -44,24 +45,24 @@ class Game(models.Model):
         ('ended', 'Game ended'),
         ('aborted', 'Game aborted'),
     ]
-    # player1 = models.ForeignKey(
-    #     User, related_name='games_as_player1', on_delete=models.CASCADE)
-    # player2 = models.ForeignKey(
-    #     User, related_name='games_as_player2', on_delete=models.CASCADE)
+    player1 = models.ForeignKey(
+        Profile, related_name='games_as_player1', on_delete=models.CASCADE)
+    player2 = models.ForeignKey(
+        Profile, related_name='games_as_player2', on_delete=models.CASCADE)
     game_id = models.CharField(max_length=100, unique=True)
 
     tournament = models.ForeignKey(
         'Tournament', on_delete=models.CASCADE, related_name='matches')
-    player1_id = models.IntegerField()
-    player2_id = models.IntegerField()
+    # player1_id = models.IntegerField()
+    # player2_id = models.IntegerField()
     winner = models.ForeignKey(
-        User, related_name='games_as_winner', on_delete=models.CASCADE, null=True)
+        Profile, related_name='games_as_winner', on_delete=models.CASCADE, null=True)
     p1_score = models.IntegerField(default=0)
     p2_score = models.IntegerField(default=0)
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
 
-    # start_time = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField(auto_now=True)
     end_time = models.DateTimeField(blank=True, null=True)
     game_address = models.URLField(max_length=200)
 
@@ -93,7 +94,7 @@ class Game(models.Model):
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.game_status = 'ended'
-        # self.end_time = timezone.now()
+        self.end_time = timezone.now()
         self.save()
 
     def abort_game(self):
@@ -102,7 +103,7 @@ class Game(models.Model):
         """
         self.game_status = 'aborted'
         self.game_winner = -1
-        # self.game_end_time = timezone.now()
+        self.game_end_time = timezone.now()
         self.save()
 
     def __str__(self):
@@ -122,18 +123,19 @@ class Tournament(models.Model):
         ('aborted', 'Aborted'),
     ]
 
-    # creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    creator = models.CharField(max_length=100)
+    creator = models.ForeignKey(
+        Profile, related_name='created_tournaments', on_delete=models.CASCADE)
+    # creator = models.CharField(max_length=100)
 
     name = models.CharField(max_length=100)
     number_of_players = models.IntegerField()
-    # start_time = models.DateTimeField(default=timezone.now)
+    start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(blank=True, null=True)
 
     status = models.CharField(max_length=20)
     winner = models.ForeignKey(
-        User, related_name='won_tournaments', on_delete=models.CASCADE, null=True)
-    players = models.ManyToManyField(User, related_name='tournaments')
+        Profile, related_name='won_tournaments', on_delete=models.CASCADE, null=True)
+    players = models.ManyToManyField(Profile, related_name='tournaments')
     current_match_index = models.IntegerField(default=0)
 
     objects = TournamentManager()
@@ -165,13 +167,13 @@ class Tournament(models.Model):
 
     def end_tournament(self):
         self.status = 'ended'
-        # self.end_time = timezone.now()
+        self.end_time = timezone.now()
         self.save()
 
     def abort_tournament(self):
         self.status = 'aborted'
         self.winner = None
-        # self.end_time = timezone.now()
+        self.end_time = timezone.now()
         self.save()
 
     def calculate_winner(self):

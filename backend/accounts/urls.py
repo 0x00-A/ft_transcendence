@@ -12,7 +12,11 @@ from .views import SendFriendRequestView
 from .views import AcceptFriendRequestView
 from .views import RejectFriendRequestView
 from .views import PendingFriendRequestsView
-from .views import ProfileApiView
+from .views import UserFriendsView
+from .views import SentFriendRequestsView
+from .views import CancelFriendRequestView
+from .views import AllUsersView
+# from .views import ProfileApiView
 
 
 urlpatterns = [
@@ -26,11 +30,15 @@ urlpatterns = [
     path('oauth2/google/authorize/', google_authorize),
     path('oauth2/google/', oauth2_google),
 
-    path('friend-request/send/<int:profile_id>/', SendFriendRequestView.as_view(), name='send-friend-request'),
-    path('friend-request/accept/<int:request_id>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
-    path('friend-request/reject/<int:request_id>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
+    path('users/', AllUsersView.as_view(), name='all_users'),
+    path('friends/', UserFriendsView.as_view(), name='user-friends'),
+    path('friend-request/send/<str:username>/', SendFriendRequestView.as_view(), name='send-friend-request'),
+    path('friend-request/accept/<str:username>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
+    path('friend-request/reject/<str:username>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
     path('friend-requests/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),
+    path('friend-requests/sent/', SentFriendRequestsView.as_view(), name='sent-friend-requests'),
+    path('friend-request/cancel/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
 
-    path('profile/', ProfileApiView.as_view()),
+    # path('profile/', ProfileApiView.as_view()),
     # path('profiles/', ProfileModelViewSet.as_view({'get': 'list'})),
 ]
