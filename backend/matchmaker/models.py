@@ -20,7 +20,7 @@ class GameManager(models.Manager):
             player1=player1,
             player2=player2,
             game_address=game_address,
-            game_start_time=timezone.now(),
+            # game_start_time=timezone.now(),
         )
         return game
 
@@ -61,7 +61,7 @@ class Game(models.Model):
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
 
-    start_time = models.DateTimeField(auto_now=True)
+    # start_time = models.DateTimeField(auto_now=True)
     end_time = models.DateTimeField(blank=True, null=True)
     game_address = models.URLField(max_length=200)
 
@@ -93,7 +93,7 @@ class Game(models.Model):
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.game_status = 'ended'
-        self.end_time = timezone.now()
+        # self.end_time = timezone.now()
         self.save()
 
     def abort_game(self):
@@ -102,7 +102,7 @@ class Game(models.Model):
         """
         self.game_status = 'aborted'
         self.game_winner = -1
-        self.game_end_time = timezone.now()
+        # self.game_end_time = timezone.now()
         self.save()
 
     def __str__(self):
@@ -127,7 +127,7 @@ class Tournament(models.Model):
 
     name = models.CharField(max_length=100)
     number_of_players = models.IntegerField()
-    start_time = models.DateTimeField(default=timezone.now)
+    # start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(blank=True, null=True)
 
     status = models.CharField(max_length=20)
@@ -165,13 +165,13 @@ class Tournament(models.Model):
 
     def end_tournament(self):
         self.status = 'ended'
-        self.end_time = timezone.now()
+        # self.end_time = timezone.now()
         self.save()
 
     def abort_tournament(self):
         self.status = 'aborted'
         self.winner = None
-        self.end_time = timezone.now()
+        # self.end_time = timezone.now()
         self.save()
 
     def calculate_winner(self):
