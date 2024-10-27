@@ -9,8 +9,7 @@ class Profile(models.Model):
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True, blank=True)
     friends = models.ManyToManyField('self', blank=True, symmetrical=True)
-
-    stats = models.JSONField(default=dict, blank=True)
+    # stats = models.JSONField(default=dict, blank=True)
 
     def __str__(self) -> str:
         return self.user.username
