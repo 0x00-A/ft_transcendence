@@ -7,4 +7,3 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         model = FriendRequest
         fields = ['id', 'receiver', 'sender', 'status', 'timestamp']
 
-    # def create(self, validated_data):

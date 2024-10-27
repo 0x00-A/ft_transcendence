@@ -1,19 +1,17 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
+# views.py
 from rest_framework.views import APIView
-from rest_framework.viewsets import ViewSet
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import authenticate
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from ..models import Profile
 from ..serializers import ProfileSerializer
 
-
-class ProfileApiView(ListAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+class AllUsersView(APIView):
     permission_classes = [AllowAny]
+
+    def get(self, request):
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        return Response(serializer.data)
 
 # class ProfileModelViewSet(ViewSet):
 #     queryset = Profile.objects.all()
