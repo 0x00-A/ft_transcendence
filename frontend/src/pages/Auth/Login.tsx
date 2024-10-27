@@ -11,7 +11,7 @@ import { FormEvent } from 'react';
 import css from './AuthForm.module.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { useMutation, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
 import { log } from 'console';
 
 interface LoginUser {

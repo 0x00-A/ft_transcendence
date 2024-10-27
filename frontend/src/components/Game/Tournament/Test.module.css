@@ -5,7 +5,10 @@
   min-height: 100vh;
   color: white;
 }
-
+.flexContainer {
+  display: flex;
+  gap: 2rem; /* equivalent to gap-8 */
+}
 .header {
   display: flex;
   justify-content: space-between;

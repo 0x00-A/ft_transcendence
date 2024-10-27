@@ -106,7 +106,7 @@ const TournamentBracket = ({ players }) => {
           Reset
         </button>
       </div> */}
-      <div className="flex gap-8">
+      <div className={styles.flexContainer}>
         {matches.map((round, roundIndex) => (
           <div key={roundIndex} className={styles.matchColumn}>
             <div>

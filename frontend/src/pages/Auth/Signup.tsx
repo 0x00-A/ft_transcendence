@@ -7,7 +7,7 @@ import UserIcon from "./assets/userIcon.svg";
 import EmailIcon from "./assets/emailIcon.svg";
 import PassIcon from "./assets/passIcon.svg";
 import { FieldValues, set, useForm } from "react-hook-form";
-import { Mutation, UseMutationResult, isError, useMutation, useQuery } from 'react-query';
+import { Mutation, UseMutationResult, isError, useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { error, log } from 'console';

@@ -59,7 +59,7 @@ class Matchmaker:
 
         # Store the game in your database (using Django ORM models)
         await sync_to_async(Game.objects.create)(
-            player1_id=player1_id, player2_id=player2_id, game_address=game_address
+            player1=player1_id, player2=player2_id, game_address=game_address
         )
 
     # @classmethod
@@ -114,7 +114,7 @@ class Matchmaker:
             return True
         if await sync_to_async(
             Game.objects.filter(
-                (Q(player1_id=player_id) | Q(player2_id=player_id)) & Q(
+                (Q(player1=player_id) | Q(player2=player_id)) & Q(
                     status="ongoing")
             ).exists
         )():

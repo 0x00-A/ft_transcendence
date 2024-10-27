@@ -1,11 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api/',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
 });
 
 // interface ApiResponse<T> {

@@ -70,7 +70,7 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    # "daphne",
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,15 +80,15 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'rest_framework.authtoken',
-    # 'drf_spectacular',
+    'drf_spectacular',
 
     'corsheaders',
     'accounts',
     'rest_framework_simplejwt',
     'debug_toolbar',
-    # 'channels',
-    # 'game',
-    # 'matchmaker',
+    'channels',
+    'game',
+    'matchmaker',
 ]
 
 MIDDLEWARE = [
@@ -250,17 +250,39 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Daphne
-# ASGI_APPLICATION = "app.asgi.application"
+ASGI_APPLICATION = "app.asgi.application"
 
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             # Use environment variables for Redis host and port
-#             'hosts': [
-#                 (os.environ.get('REDIS_HOST', 'redis'),
-#                  int(os.environ.get('REDIS_PORT', 6379)))
-#             ],
-#         },
-#     },
-# }
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # Use environment variables for Redis host and port
+            'hosts': [
+                (os.environ.get('REDIS_HOST', 'redis'),
+                 int(os.environ.get('REDIS_PORT', 6379)))
+            ],
+        },
+    },
+}
+
+
+# Allow specific origins
+CORS_ALLOWED_ORIGINS = [
+    'http://0.0.0.0:3000',
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
