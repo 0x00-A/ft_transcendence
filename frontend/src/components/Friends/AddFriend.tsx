@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
-import axios from 'axios';
+import APIClient from '../../api/apiClient';
+import { useGetData } from '../../api/apiHooks';
+import { axiosInstance } from '../../api/apiClient';
 
 interface User {
   id: string;
@@ -12,25 +14,34 @@ interface User {
 
 
 const AddFriend: React.FC = () => {
+
+  console.log('rerender')
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get('/api/users/');
-        setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
+  const { data , isLoading, error } = useGetData<User[]>('users');
+
+
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     // setIsLoading(true);
+  //     try {
+  //       const response = await axiosInstance.get('users/');
+  //       setUsers(response.data);
+  //     } catch (error) {
+    //       console.error('Error fetching users:', error);
+    //     } finally {
+      //       setIsLoading(false);
+      //     }
+      //   };
+      //   fetchUsers();
+      // }, []);
+      
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+    console.log("data: ", data)
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;

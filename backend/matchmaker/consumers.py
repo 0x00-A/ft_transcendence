@@ -3,7 +3,7 @@ from uuid import uuid1
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
-from .global_vars import GlobalData
+# from .global_vars import GlobalData
 from .matchmaker import Matchmaker
 
 # Consumer for handling WebSocket connections
