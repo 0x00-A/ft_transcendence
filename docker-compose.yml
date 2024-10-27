@@ -51,7 +51,11 @@ services:
         condition: service_started
 
   db:
-    image: postgres:13-alpine
+    # image: postgres:13-alpine
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+
     ports:
       - '5432:5432'
     volumes:

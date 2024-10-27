@@ -6,7 +6,7 @@ from datetime import datetime
 import json
 from django.db.models import Q
 
-from .global_vars import GlobalData
+# from .global_vars import GlobalData
 
 
 class Matchmaker:
