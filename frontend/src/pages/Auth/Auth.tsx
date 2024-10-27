@@ -19,12 +19,12 @@ interface AuthState {
 
 const Auth = () => {
     const [authState, setAuthState] = useState(false);
-    const [authResponse, setAuthResponse] = useState<AuthState>();
+    // const [authResponse, setAuthResponse] = useState<AuthState>();
 
-    console.log(authResponse);
-    if (authResponse?.isSuccess) {
-      redirect('/profile');
-    }
+    // console.log(authResponse);
+    // if (authResponse?.isSuccess) {
+    //   redirect('/profile');
+    // }
 
     return (
       <div className={css.container}>
@@ -38,10 +38,11 @@ const Auth = () => {
           </div>
         </div>
         <div className={`${css.authBox} ${authState ? css.authSwitch : ''}`}>
-          {authState ? <Login setAuthResponse={setAuthResponse} /> : <Signup setAuthState={setAuthState} setAuthResponse={setAuthResponse} />}
+          {/* {authState ? <Login setAuthResponse={setAuthResponse} /> : <Signup setAuthState={setAuthState} setAuthResponse={setAuthResponse} />} */}
+          {authState ? <Login /> : <Signup />}
         </div>
-        { authResponse?.isSuccess && <span className={css.authSuccess}>{authResponse.message}</span> }
-        { authResponse?.isFailed && <span className={css.authError}>{authResponse?.error}</span> }
+        {/* { authResponse?.isSuccess && <span className={css.authSuccess}>{authResponse.message}</span> }
+        { authResponse?.isFailed && <span className={css.authError}>{authResponse?.error}</span> } */}
       </div>
     );
 }
