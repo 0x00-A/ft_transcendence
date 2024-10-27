@@ -1,0 +1,99 @@
+/* TournamentBracket.module.css */
+.bracketContainer {
+  padding: 2rem;
+  background-color: #1a1d24;
+  min-height: 100vh;
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.roundTitlesContainer {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  border-bottom: 1px solid #3a3a3a;
+  padding-bottom: 1rem;
+}
+
+.roundTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.resetButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: transparent;
+  color: #a0a0a0;
+  border: 1px solid #4d4d4d;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.resetButton:hover {
+  background-color: #3a3a3a;
+}
+
+.matchColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.matchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 4rem;
+}
+
+.matchItem {
+  display: flex;
+  align-items: center;
+}
+
+.matchBar {
+  width: 0.25rem;
+  height: 3rem;
+}
+
+.matchBox {
+  margin-left: 0.5rem;
+  padding: 0.75rem;
+  width: 16rem;
+  cursor: pointer;
+  background-color: #2e2e2e;
+  border-radius: 0.25rem;
+  border: 1px solid #4d4d4d;
+  transition: background-color 0.2s ease;
+}
+
+.matchBox:hover {
+  background-color: #3a3a3a;
+}
+
+.matchBoxText {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.textWinner {
+  color: #ff4d4d;
+}
+
+.barWinner {
+  background-color: #ff4d4d;
+}
+
+.barDefault {
+  background-color: #4d4d4d;
+}

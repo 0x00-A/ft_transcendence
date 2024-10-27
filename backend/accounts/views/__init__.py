@@ -19,3 +19,4 @@ from .friendRequest import CancelFriendRequestView
 from .profile import AllUsersView
 
 # from .profile import ProfileModelViewSet
+# from .profile import ProfileApiView
