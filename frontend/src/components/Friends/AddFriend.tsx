@@ -6,7 +6,7 @@ import { useGetData } from '../../api/apiHooks';
 interface User {
   id: string;
   username: string;
-  fullName: string;
+  full_name: string; // Change this to match the API response
   avatar: string;
 }
 
@@ -27,18 +27,18 @@ const AddFriend: React.FC = () => {
     const term = event.target.value;
     setSearchTerm(term);
 
-    console.log("data: ", data)
-    if (term && data) {
-      const filteredUsers = data.filter(
-        (user) =>
-          user.username.toLowerCase().includes(term.toLowerCase()) ||
-          user.fullName.toLowerCase().includes(term.toLowerCase())
-      );
-      setSearchResults(filteredUsers);
-    } else if (data) {
-      setSearchResults(data.slice(0, 10));
+    if (term && Array.isArray(data)) {
+        const filteredUsers = data.filter((user) => {
+            const userName = user.username?.toLowerCase() || '';
+            const fullName = user.full_name?.toLowerCase() || ''; // Use full_name here
+            return userName.includes(term.toLowerCase()) || fullName.includes(term.toLowerCase());
+        });
+        setSearchResults(filteredUsers);
+    } else if (Array.isArray(data)) {
+        setSearchResults(data.slice(0, 10));
     }
-  };
+};
+
 
   return (
     <div className={css.addFriend}>
