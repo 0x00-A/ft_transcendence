@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
+import { useGetData } from '../../api/apiHooks';
+
+interface Friend {
+  id: string;
+  username: string;
+  avatar: string;
+  isOnline: boolean;
+}
 
 interface Friend {
   id: string;
@@ -41,9 +49,12 @@ const AllFriends: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const filteredUsers = allFriends.filter((friend) =>
+
+  // const { data: friendsData, isLoading, error } = useGetData<Friend[]>('friends');
+  
+  const filteredFriends = allFriends.filter((friend) =>
     friend.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) || [];
 
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
@@ -65,11 +76,15 @@ const AllFriends: React.FC = () => {
       </div>
 
       <div className={css.friendList}>
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map((friend) => (
+        {false ? (
+          <p>Loading friends...</p>
+        ) : false ? (
+          <p>Error loading friends</p>
+        ) : filteredFriends.length > 0 ? (
+          filteredFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
-                src={friend.avatar}
+                src={friend.avatar || 'https://via.placeholder.com/150'}
                 alt={friend.username}
                 className={css.avatar}
               />

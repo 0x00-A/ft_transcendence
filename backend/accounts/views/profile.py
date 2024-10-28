@@ -13,13 +13,3 @@ class AllUsersView(APIView):
         serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data)
 
-# class ProfileModelViewSet(ViewSet):
-#     queryset = Profile.objects.all()
-#     serializer_class = ProfileSerializer
-
-# @api_view()
-# @permission_classes([IsAuthenticated])
-# def profiles_list(request):
-#     if request.method == 'GET':
-#         query_set = Profile.objects.all()
-#         serializer = ProfileSerializer
