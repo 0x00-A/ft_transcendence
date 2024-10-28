@@ -8,6 +8,7 @@ from ..serializers import FriendRequestSerializer, ProfileSerializer
 
 class UserFriendsView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
 
     def get(self, request):
         try:
@@ -122,7 +123,8 @@ class AcceptFriendRequestView(APIView):
 
 class RejectFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
-
+    serializer_class = FriendRequestSerializer
+    
     def post(self, request, username):
         try:
             receiver_profile = Profile.objects.select_related('user').get(user=request.user)
@@ -158,6 +160,7 @@ class RejectFriendRequestView(APIView):
 
 class SentFriendRequestsView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendRequestSerializer 
     
     def get(self, request):
         try:
@@ -178,6 +181,7 @@ class SentFriendRequestsView(APIView):
 
 class PendingFriendRequestsView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendRequestSerializer
 
     def get(self, request):
         try:
@@ -198,6 +202,7 @@ class PendingFriendRequestsView(APIView):
 
 class CancelFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendRequestSerializer
     
     def delete(self, request, username):
         try:
