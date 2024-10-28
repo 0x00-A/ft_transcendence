@@ -44,9 +44,13 @@ class Matchmaker:
     @classmethod
     async def create_remote_game(cls, player1_id, player2_id):
         print(f"creating game... p1: {player1_id} | p2: {player2_id}")
+        # Store the game in your database (using Django ORM models)
+        game = await sync_to_async(Game.objects.create)(
+            player1=player1_id, player2=player2_id
+        )
         # Simulate game creation with game_id and address
-        game_id = await cls.get_new_game_id()
-        game_address = f"ws/game/{game_id}"
+        # game_id = await cls.get_new_game_id()
+        game_address = f"ws/game/{game.id}"
 
         # Send the game address to both players
         message = {
@@ -56,11 +60,6 @@ class Matchmaker:
         }
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)
-
-        # Store the game in your database (using Django ORM models)
-        await sync_to_async(Game.objects.create)(
-            player1=player1_id, player2=player2_id, game_address=game_address
-        )
 
     # @classmethod
     # async def create_tournament(cls, creator_id, tournament_name, number_of_players):

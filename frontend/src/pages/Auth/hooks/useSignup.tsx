@@ -18,9 +18,10 @@ const signupApi = async (data: SignupFormData) => {
 }
 
 const useSignup = () => {
-
   // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
-  return useMutation(signupApi);
+  return useMutation({
+    mutationFn: signupApi,
+  });
 
 }
       // onSuccess(data, va, con) {
