@@ -34,8 +34,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Unregister the client when disconnected
-        if self.player_id:
-            Matchmaker.games_queue.remove(self.player_id)
+        # if self.player_id:
+        # Matchmaker.games_queue.remove(self.player_id)
         await Matchmaker.unregister_client(self.player_id)
 
     async def receive(self, text_data):
