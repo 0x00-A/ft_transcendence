@@ -17,9 +17,12 @@ from .views import SentFriendRequestsView
 from .views import CancelFriendRequestView
 from .views import AllUsersView
 # from .views import ProfileApiView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
 
 
 urlpatterns = [
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
     path('oauth2/set_username/', oauth2_set_username),
@@ -36,9 +39,7 @@ urlpatterns = [
     path('friend-request/accept/<str:username>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('friend-request/reject/<str:username>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
     path('friend-requests/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),
-    path('friend-requests/sent/', SentFriendRequestsView.as_view(), name='sent-friend-requests'),
+    path('friend-requests/sent/', SentFriendRequestsView.as_view(), name='friend-request-list'),
     path('friend-request/cancel/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
 
-    # path('profile/', ProfileApiView.as_view()),
-    # path('profiles/', ProfileModelViewSet.as_view({'get': 'list'})),
 ]

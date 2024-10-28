@@ -1,7 +1,7 @@
-from django.test import TestCase, SimpleTestCase
-from .models import User
-
-# Create your tests here.
+from django.test import TestCase
+from ..models.user import User
+from django.urls import reverse
+from rest_framework import status
 
 
 class ModelTests(TestCase):
