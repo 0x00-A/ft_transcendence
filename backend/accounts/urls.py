@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
 from .views import discord_authorize
@@ -22,6 +23,7 @@ from .views import AllUsersView
 urlpatterns = [
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
+    path('auth/login/refresh/', TokenRefreshView.as_view()),
     path('oauth2/set_username/', oauth2_set_username),
     path('oauth2/discord/authorize/', discord_authorize),
     path('oauth2/discord/', oauth2_discord),
