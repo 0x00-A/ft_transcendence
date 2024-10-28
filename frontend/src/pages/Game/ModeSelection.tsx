@@ -5,6 +5,7 @@ import GameMode from '../../components/Game/components/GameMode/GameMode';
 // import Canvas from './components/Canvas/Canvas';
 import { useNavigate } from 'react-router-dom';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
+import useWebSocket from '../../hooks/useWebsocket';
 
 const generateUniqueGameId = () => {
   return Math.random().toString(36).substr(2, 9); // Simple unique ID generation
@@ -26,6 +27,9 @@ const Modes = [
   { id: 4, title: 'tournament', description: 'join or create a tournament' },
 ];
 
+const token = localStorage.getItem('access_token');
+// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMTI5MzIwLCJpYXQiOjE3MzAxMjU3MjAsImp0aSI6ImZhM2RiZDhkNmY1ZjQ5OWViNzJmZGUxODMwOWYxYWRjIiwidXNlcl9pZCI6MX0.qN_N2JDKglR6L-OPS9EJmayruuOp4JjZehESR3G5z70';
+
 const ModeSelection = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(0);
   const [state, setState] = useState('');
@@ -39,18 +43,21 @@ const ModeSelection = () => {
     if (modeId === 0) navigate(`/game/local`); // Navigate to the game URL with mode and ID
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
   };
+  // const socket : WebSocket | null = useWebSocket('matchmaking/');
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      const socket = new WebSocket('ws://localhost:8000/ws/matchmaking/');
-      ws.current = socket;
+      const socket = new WebSocket(`ws://localhost:8000/ws/matchmaking/?token=${token}`);
 
+      if (!socket) return
+      ws.current = socket;
       socket.onopen = () => {
         console.log('Socket connected');
         setState('connected');
       };
 
       socket.onmessage = (e) => {
+        console.log(e.data);
         const data = JSON.parse(e.data);
         console.log(data);
 
