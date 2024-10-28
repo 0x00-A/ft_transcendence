@@ -6,7 +6,7 @@ import { useGetData } from '../../api/apiHooks';
 interface User {
   id: string;
   username: string;
-  full_name: string; // Change this to match the API response
+  full_name: string;
   avatar: string;
 }
 
@@ -64,7 +64,7 @@ const AddFriend: React.FC = () => {
                 <img src={user.avatar} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
-                  <span className={css.fullName}>{user.fullName}</span>
+                  <span className={css.fullName}>{user.full_name}</span>
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
@@ -86,7 +86,7 @@ const AddFriend: React.FC = () => {
                 <img src={user.avatar} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
-                  <span className={css.fullName}>{user.fullName}</span>
+                  <span className={css.fullName}>{user.full_name}</span>
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
