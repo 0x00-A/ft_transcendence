@@ -2,6 +2,21 @@
   padding: 20px;
   height: 100%;
   color: var(--text-color);
+  display: flex;
+  flex-direction: column; 
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #394056;
+}
+
+.results {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+  flex-grow: 1;
+  overflow-y: auto;
+  /* background-color: #394056; */
 }
 
 .title {
@@ -44,18 +59,14 @@
   background-color: #d0d8e7;
 }
 
-.results {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 30px;
-}
 
 .userCard {
   display: flex;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  background-color: #394056;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 .avatar {
@@ -80,6 +91,12 @@
   color: #b9bbbe;
 }
 
+.level{
+  display: block;
+  font-size: 13px;
+  color: #b9bbbe;
+
+}
 .actions {
   display: flex;
   gap: 10px;
@@ -141,4 +158,18 @@
 .notFoundText {
   font-size: 30px;
   color: #72767d;
+}
+
+.topPlayers {
+  margin-top: 50px;
+  padding: 15px;
+  background-color: #283245;
+  border-radius: 10px;
+}
+
+.topPlayersTitle {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  color: #d0d8e7;
 }

@@ -8,37 +8,41 @@ interface User {
   username: string;
   full_name: string;
   avatar: string;
+  level: number;
 }
 
 const AddFriend: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [topPlayers, setTopPlayers] = useState<User[]>([]);
   const { data, isLoading, error } = useGetData<User[]>('users');
 
   if (error) return <p>Error: {error.message}</p>;
 
   useEffect(() => {
-    if (!searchTerm && data) {
-      setSearchResults(data.slice(0, 10));
+    if (data) {
+      const sortedPlayers = [...data]
+        .sort((a, b) => b.level - a.level) 
+        .slice(0, 5);
+      setTopPlayers(sortedPlayers);
     }
-  }, [searchTerm, data]);
+  }, [data]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
     setSearchTerm(term);
 
     if (term && Array.isArray(data)) {
-        const filteredUsers = data.filter((user) => {
-            const userName = user.username?.toLowerCase() || '';
-            const fullName = user.full_name?.toLowerCase() || ''; // Use full_name here
-            return userName.includes(term.toLowerCase()) || fullName.includes(term.toLowerCase());
-        });
-        setSearchResults(filteredUsers);
-    } else if (Array.isArray(data)) {
-        setSearchResults(data.slice(0, 10));
+      const filteredUsers = data.filter((user) => {
+        const userName = user.username?.toLowerCase() || '';
+        const fullName = user.full_name?.toLowerCase() || '';
+        return userName.includes(term.toLowerCase()) || fullName.includes(term.toLowerCase());
+      });
+      setSearchResults(filteredUsers);
+    } else {
+      setSearchResults([]);
     }
-};
-
+  };
 
   return (
     <div className={css.addFriend}>
@@ -54,17 +58,18 @@ const AddFriend: React.FC = () => {
         />
       </div>
 
-      {searchTerm === '' && searchResults.length > 0 && (
-        <div className={css.results}>
+      {searchTerm === '' && topPlayers.length > 0 && (
+        <div className={css.topPlayers}>
+          <h3 className={css.topPlayersTitle}>Top Players</h3>
           {isLoading ? (
-            <p>Loading users...</p>
+            <p>Loading top players...</p>
           ) : (
-            searchResults.map((user) => (
+            topPlayers.map((user) => (
               <div key={user.id} className={css.userCard}>
                 <img src={user.avatar} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
-                  <span className={css.fullName}>{user.full_name}</span>
+                  <span className={css.level}>Level: {user.level}</span>
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
