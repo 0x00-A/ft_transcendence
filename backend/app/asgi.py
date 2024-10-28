@@ -16,10 +16,12 @@ from channels.routing import ProtocolTypeRouter
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
+from .middlewares import JwtAuthMiddleware
 
 import app.routing
 import matchmaker.routing
 import game.routing
+import accounts.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 # Initialize Django ASGI application early to ensure the AppRegistry
@@ -30,8 +32,10 @@ django_asgi_app = get_asgi_application()
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(URLRouter(matchmaker.routing.websocket_urlpatterns +
-                                      game.routing.websocket_urlpatterns))
+        JwtAuthMiddleware(URLRouter(matchmaker.routing.websocket_urlpatterns +
+                                    game.routing.websocket_urlpatterns +
+                                    accounts.routing.websocket_urlpatterns
+                                    ))
     )
 })
 

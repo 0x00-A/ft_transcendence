@@ -2,25 +2,40 @@ import random
 from uuid import uuid1
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from accounts.models import Profile
+from asgiref.sync import sync_to_async
 
-# from .global_vars import GlobalData
+
 from .matchmaker import Matchmaker
-
-# Consumer for handling WebSocket connections
 
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # self.player_id = self.scope['user'].id
+        user = self.scope['user']
+        self.player_id = None
         # self.player_id = GlobalData.increment_user_id_counter()
-        self.player_id = random.randint(1, 100000)
-        await self.accept()
+        # self.player_id = random.randint(1, 100000)
+        # await self.accept()
         # Register the client when connected
-        await Matchmaker.register_client(self.player_id, self)
+
+        if user and not user.is_anonymous:
+            await self.accept()
+            profile = await sync_to_async(Profile.objects.get)(
+                user=user
+            )
+            self.player_id = profile.id
+            await Matchmaker.register_client(self.player_id, self)
+            # You can now use self.scope['user'] to identify the user
+            await self.send(text_data=f"Hello {user.username}, you are authenticated!")
+        else:
+            # Reject the connection if user is not authenticated
+            print(f"##################### User not found ##########################")
+            await self.close()
 
     async def disconnect(self, close_code):
         # Unregister the client when disconnected
-        Matchmaker.games_queue.remove(self.player_id)
+        if self.player_id:
+            Matchmaker.games_queue.remove(self.player_id)
         await Matchmaker.unregister_client(self.player_id)
 
     async def receive(self, text_data):
