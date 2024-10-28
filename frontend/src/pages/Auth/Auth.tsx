@@ -8,23 +8,32 @@ import PongBox from './components/PongBox/PongBox';
 import { UseMutationResult } from 'react-query';
 import { set } from 'react-hook-form';
 import { redirect } from 'react-router-dom';
+import useSignup from './hooks/useSignup';
+import useLogin from './hooks/useLogin';
+import { useAuth } from '../../contexts/AuthContext';
 
 
-interface AuthState {
-  isSuccess: boolean;
-  isFailed: boolean;
-  message: string[];
-  error: string[];
-}
+// interface AuthState {
+//   isSuccess: boolean;
+//   isFailed: boolean;
+//   message: string[];
+//   error: string[];
+// }
 
 const Auth = () => {
     const [authState, setAuthState] = useState(false);
-    // const [authResponse, setAuthResponse] = useState<AuthState>();
+    // const { setIsLoggedIn } = useAuth()
 
-    // console.log(authResponse);
-    // if (authResponse?.isSuccess) {
-    //   redirect('/profile');
-    // }
+    const signupMutation = useSignup()
+    const loginMutation = useLogin()
+
+    // if (signupMutation.isSuccess)
+    //   console.log('-------haaaaaa--------');
+    //   setAuthState(true)
+    // if (loginMutation.isSuccess)
+    //   setAuthState(false)
+      // loginMutation.reset();
+
 
     return (
       <div className={css.container}>
@@ -39,7 +48,7 @@ const Auth = () => {
         </div>
         <div className={`${css.authBox} ${authState ? css.authSwitch : ''}`}>
           {/* {authState ? <Login setAuthResponse={setAuthResponse} /> : <Signup setAuthState={setAuthState} setAuthResponse={setAuthResponse} />} */}
-          {authState ? <Login /> : <Signup />}
+          {authState ? <Login loginMutation={loginMutation} /> : <Signup signupMutation={signupMutation}/>}
         </div>
         {/* { authResponse?.isSuccess && <span className={css.authSuccess}>{authResponse.message}</span> }
         { authResponse?.isFailed && <span className={css.authError}>{authResponse?.error}</span> } */}

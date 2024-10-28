@@ -64,7 +64,7 @@ class Game(models.Model):
 
     start_time = models.DateTimeField(auto_now=True)
     end_time = models.DateTimeField(blank=True, null=True)
-    game_address = models.URLField(max_length=200)
+    # game_address = models.URLField(max_length=200)
 
     objects = GameManager()
 

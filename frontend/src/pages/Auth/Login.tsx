@@ -14,51 +14,42 @@ import axios from 'axios';
 import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
 import { log } from 'console';
 
-interface LoginUser {
+import { useNavigate } from 'react-router-dom';
+
+import useLogin from './hooks/useLogin';
+import { redirect } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
+interface LoginFormData {
   username: string;
   password: string;
 }
 
-const loginUser = async (user: LoginUser) => {
-  const response = await axios.post<LoginUser>("http://localhost:8000/api/accounts/login/", user)
-  return response.data;
-}
+const Login = ({loginMutation}) => {
 
-const Login = () => {
+  // const navigate = useNavigate();
+  const { register, handleSubmit, reset} = useForm<LoginFormData>();
 
-  const { register, handleSubmit} = useForm();
+  // const loginMutation = useLogin();
 
-  const mutation = useMutation<LoginUser, Error, LoginUser>({
-    mutationFn: loginUser,
-    onSuccess(data, va, con) {
-      console.log(data);
-      console.log('---------------------');
-      console.log(va);
-      console.log('---------------------');
-      console.log(con);
-      console.log('---------------------');
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-      // redirect to profile
-      // setAuthResponse({isRequesting: true, isSuccess: true, message: data, error: null});
-    },
-    onError(error) {
-      // setAuthResponse({isRequesting: true, isSuccess: true, data: data, error: null});
-      console.log(error);
-      // setSignupState(true);
-    }
-  });
-
-  const onSubmit = (data: any, event:any) => {
-    console.log(data);
-    event.preventDefault();
-    mutation.mutate(data);
+  const handleLogin = (data: LoginFormData) => {
+    loginMutation.mutate(data);
+    // reset();
   };
+
+  // const { setIsLoggedIn } = useAuth()
+
+// if (loginMutation.isSuccess)
+//     alert('login success!')
+//     setIsLoggedIn(true)
+//     // navigate('/')
+//   if (loginMutation.isError)
+//     console.log('--------ERROR--------', loginMutation.error);
 
   return (
     <>
       <AuthHeader title="Welcome back" description=""/>
-        <form className={css.entryArea} onSubmit={handleSubmit(onSubmit)}>
+        <form className={css.entryArea} onSubmit={handleSubmit(handleLogin)}>
           <div className={css.inputContainer}>
             <img src={UserIcon} alt="X" />
             <input type="text" required placeholder="username" {...register('username')}/>

@@ -25,9 +25,6 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf.urls.static import static
 
 
-
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
@@ -40,4 +37,4 @@ urlpatterns = [
     # path('api/accounts/', include('accounts.urls')),
     # path('api/', include('rest_framework.urls')),
     path('api/', include('accounts.urls')),
-] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

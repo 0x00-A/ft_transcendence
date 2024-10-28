@@ -47,22 +47,24 @@ interface SignupFormData {
   password2: string;
 }
 
-const Signup = () => {
+const Signup = ({signupMutation}) => {
 
-   const { register, handleSubmit, formState: { errors },} = useForm<SignupFormData>({
+   const { register, handleSubmit, formState: { errors }, reset} = useForm<SignupFormData>({
      resolver: yupResolver(schema),
-     delayError: 1000,
+    //  delayError: 1000,
    });
 
-   const signupMutation = useSignup()
+  //  const signupMutation = useSignup()
   //  const { mutation, isLoading, error } = useSignup()
-   if (signupMutation.isSuccess)
-    console.log('-------successs--------');
-
+  //  if (signupMutation.isSuccess)
+    // reset();
+  // if (signupMutation.isError)
+  //   console.log('---------Error---------', signupMutation.error)
 
    const handleSignup = (data: SignupFormData, event: any) => {
      event.preventDefault();
      signupMutation.mutate(data);
+    //  reset();
    };
 
   return (

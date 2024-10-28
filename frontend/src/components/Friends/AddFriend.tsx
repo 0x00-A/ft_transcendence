@@ -88,7 +88,7 @@ const AddFriend: React.FC = () => {
           ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
               <div key={user.id} className={css.userCard}>
-                <img src={user.avatar} alt={user.username} className={css.avatar} />
+                <img src={ "http://localhost:8000"+user.avatar} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
                   <span className={css.fullName}>{user.full_name}</span>
