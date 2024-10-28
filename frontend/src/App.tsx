@@ -49,7 +49,11 @@ function App() {
   );
 }
 
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMTMxODg4LCJpYXQiOjE3MzAxMjgyODgsImp0aSI6IjI5YzIyYzA0MDQyZTQwNjg4MGIxNGFlNWUyYzExOGE4IiwidXNlcl9pZCI6Mn0.o397MLDmZDCdgWThFBcZbtnbcmS4B_5XqoRK-ndeuvc'
+
 function AppContent() {
+  // const socket = new WebSocket(`ws://localhost:8000/ws/online-status/?token=${token}`);
+
   const showSidebarRoutes = [
     '/',
     '/game',
