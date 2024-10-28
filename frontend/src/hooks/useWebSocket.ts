@@ -58,11 +58,11 @@ const useWebSocket = (endpoint: string) => {
             socket.current = new WebSocket(`${baseUrl}${endpoint}?token=${token}`);
 
             // Clean up on component unmount
-            return () => {
-                if (socket.current) {
-                    socket.current.close();
-                }
-            };
+            // return () => {
+            //     if (socket.current) {
+            //         socket.current.close();
+            //     }
+            // };
         }, 500);
         return () => clearTimeout(timeout);
     }, [endpoint, token]);
