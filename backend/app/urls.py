@@ -27,14 +27,15 @@ from django.conf.urls.static import static
 
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
-    # path(
-    #     'api/docs/',
-    #     SpectacularSwaggerView.as_view(url_name='api-schema'),
-    #     name='api-docs',
-    # ),
+    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
+    path(
+        'api/docs/',
+        SpectacularSwaggerView.as_view(url_name='api-schema'),
+        name='api-docs',
+    ),
     # path('api/', include('rest_framework.urls')),
     # path('api/accounts/', include('accounts.urls')),
     # path('api/', include('rest_framework.urls')),

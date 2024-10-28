@@ -28,6 +28,7 @@ class UserFriendsView(APIView):
 
 class SendFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendRequestSerializer
 
     def post(self, request, username):
         try:
@@ -85,6 +86,7 @@ class SendFriendRequestView(APIView):
 
 class AcceptFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = FriendRequestSerializer
 
     def post(self, request, username):
         try:
