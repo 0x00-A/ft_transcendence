@@ -11,10 +11,11 @@ interface AuthContextType {
   isLoggedIn: boolean | null;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>

@@ -3,6 +3,7 @@ import {
   Route,
   Routes,
   useLocation,
+  Navigate,
 } from 'react-router-dom';
 import PageNotFound from './pages/PageNotFound';
 
@@ -35,6 +36,7 @@ import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
 import Tournament from './components/Game/Tournament/Tournament';
 import Test from './components/Game/Tournament/Test';
+import ProtectedRoute from './components/ProtectedRoute';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -65,7 +67,7 @@ function AppContent() {
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
-  const loading = usePreLoader();
+  // const loading = usePreLoader();
 
   // if (loading) {
   //   return <PreLoader />;
@@ -82,31 +84,34 @@ function AppContent() {
           <Topbar />
         )}
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          {/* <Route path="/games" element={<Games />} /> */}
-          <Route path="/game" element={<ModeSelection />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/game/local" element={<LocalGame />} />
-          <Route path="/game/tournament" element={<Tournament />} />
-          <Route path="/game/chat" element={<GameChat />} />
-          <Route path="/game/chat/:room" element={<Room />} />
-          {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
-          {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
-          {/* <Route path="/game/remote" element={<RemoteGame />} /> */}
-          {/* <Route path="/game/remote/:game_id  " element={<RemoteGame />} /> */}
-          {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
-          {/* Remote game instance with game ID */}
-          {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
-          {/* </Route> */}
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/auth" element={ !isLoggedIn ? <Auth /> : <Navigate to={'/'} />} />
           <Route path="*" element={<PageNotFound />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Dashboard />} />
+            {/* <Route path="/games" element={<Games />} /> */}
+            <Route path="/game" element={<ModeSelection />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/game/local" element={<LocalGame />} />
+            <Route path="/game/tournament" element={<Tournament />} />
+            <Route path="/game/chat" element={<GameChat />} />
+            <Route path="/game/chat/:room" element={<Room />} />
+            {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
+            {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
+            {/* <Route path="/game/remote" element={<RemoteGame />} /> */}
+            {/* <Route path="/game/remote/:game_id  " element={<RemoteGame />} /> */}
+            {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
+            {/* Remote game instance with game ID */}
+            {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}
+            {/* </Route> */}
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
         </Routes>
       </div>
     </div>

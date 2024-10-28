@@ -33,6 +33,7 @@ export default function Sidebar() {
       loadingBarRef.current?.complete();
       setIsLoggedIn(false);
       setShowConfirm(false);
+      localStorage.clear();
     }, 1000);
   };
 
