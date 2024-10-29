@@ -52,7 +52,7 @@ const AllFriends: React.FC = () => {
           filteredFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
-                src={friend.avatar || 'https://via.placeholder.com/150'}
+                src={"http://localhost:8000"+friend.avatar}
                 alt={friend.username}
                 className={css.avatar}
               />
