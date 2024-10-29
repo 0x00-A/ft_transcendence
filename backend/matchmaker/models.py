@@ -46,17 +46,17 @@ class Game(models.Model):
         ('aborted', 'Game aborted'),
     ]
     player1 = models.ForeignKey(
-        Profile, related_name='games_as_player1', on_delete=models.CASCADE)
+        User, related_name='games_as_player1', on_delete=models.CASCADE)
     player2 = models.ForeignKey(
-        Profile, related_name='games_as_player2', on_delete=models.CASCADE)
-    game_id = models.CharField(max_length=100, unique=True)
+        User, related_name='games_as_player2', on_delete=models.CASCADE)
+    # game_id = models.CharField(max_length=100, unique=True)
 
-    tournament = models.ForeignKey(
-        'Tournament', on_delete=models.CASCADE, related_name='matches')
+    # tournament = models.ForeignKey(
+    #     'Tournament', on_delete=models.CASCADE, related_name='matches', null=True)
     # player1_id = models.IntegerField()
     # player2_id = models.IntegerField()
     winner = models.ForeignKey(
-        Profile, related_name='games_as_winner', on_delete=models.CASCADE, null=True)
+        User, related_name='games_as_winner', on_delete=models.CASCADE, null=True)
     p1_score = models.IntegerField(default=0)
     p2_score = models.IntegerField(default=0)
     status = models.CharField(
@@ -110,6 +110,34 @@ class Game(models.Model):
         return f"Game {self.id} ({self.status})"
 
 
+class Match(models.Model):
+    GAME_STATUS_CHOICES = [
+        ('waiting', 'Game Waiting'),
+        ('started', 'Game started'),
+        ('ended', 'Game ended'),
+        ('aborted', 'Game aborted'),
+    ]
+    player1 = models.ForeignKey(
+        User, related_name='matches_as_player1', on_delete=models.CASCADE)
+    player2 = models.ForeignKey(
+        User, related_name='matches_as_player2', on_delete=models.CASCADE)
+    game_id = models.CharField(max_length=100, unique=True)
+
+    tournament = models.ForeignKey(
+        'Tournament', on_delete=models.CASCADE, related_name='matches', null=True)
+    # player1_id = models.IntegerField()
+    # player2_id = models.IntegerField()
+    winner = models.ForeignKey(
+        User, related_name='matches_as_winner', on_delete=models.CASCADE, null=True)
+    p1_score = models.IntegerField(default=0)
+    p2_score = models.IntegerField(default=0)
+    status = models.CharField(
+        max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
+
+    start_time = models.DateTimeField(auto_now=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+
+
 class TournamentManager(models.Manager):
     def active_tournaments(self):
         return self.filter(status='active')
@@ -124,7 +152,7 @@ class Tournament(models.Model):
     ]
 
     creator = models.ForeignKey(
-        Profile, related_name='created_tournaments', on_delete=models.CASCADE)
+        User, related_name='created_tournaments', on_delete=models.CASCADE)
     # creator = models.CharField(max_length=100)
 
     name = models.CharField(max_length=100)
@@ -134,7 +162,7 @@ class Tournament(models.Model):
 
     status = models.CharField(max_length=20)
     winner = models.ForeignKey(
-        Profile, related_name='won_tournaments', on_delete=models.CASCADE, null=True)
+        User, related_name='won_tournaments', on_delete=models.CASCADE, null=True)
     players = models.ManyToManyField(Profile, related_name='tournaments')
     current_match_index = models.IntegerField(default=0)
 

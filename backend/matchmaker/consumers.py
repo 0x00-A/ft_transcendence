@@ -12,7 +12,7 @@ from .matchmaker import Matchmaker
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
-        self.player_id = None
+        # self.player_id = None
         # self.player_id = GlobalData.increment_user_id_counter()
         # self.player_id = random.randint(1, 100000)
         # await self.accept()
@@ -20,10 +20,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         if user and not user.is_anonymous:
             await self.accept()
-            profile = await sync_to_async(Profile.objects.get)(
-                user=user
-            )
-            self.player_id = profile.id
+            # profile = await sync_to_async(Profile.objects.get)(
+            #     user=user
+            # )
+            self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self)
             # You can now use self.scope['user'] to identify the user
             await self.send(text_data=f"Hello {user.username}, you are authenticated!")

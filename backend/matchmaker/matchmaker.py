@@ -1,3 +1,4 @@
+from accounts.models.profile import Profile
 from .models import Game, Tournament
 from .models import Tournament, Game
 from asgiref.sync import sync_to_async
@@ -5,6 +6,7 @@ from channels.layers import get_channel_layer
 from datetime import datetime
 import json
 from django.db.models import Q
+from django.contrib.auth import get_user_model
 
 # from .global_vars import GlobalData
 
@@ -28,8 +30,8 @@ class Matchmaker:
     @classmethod
     async def request_remote_game(cls, player_id):
         # Handle remote game matchmaking here
-        if await cls.is_client_already_playing(player_id):
-            return
+        # if await cls.is_client_already_playing(player_id):
+        #     return
         # Add player to the queue, etc.
         # After finding a match:
         cls.games_queue.append(player_id)
@@ -45,8 +47,11 @@ class Matchmaker:
     async def create_remote_game(cls, player1_id, player2_id):
         print(f"creating game... p1: {player1_id} | p2: {player2_id}")
         # Store the game in your database (using Django ORM models)
+        User = get_user_model()
+        p1 = await sync_to_async(User.objects.get)(id=player1_id)
+        p2 = await sync_to_async(User.objects.get)(id=player2_id)
         game = await sync_to_async(Game.objects.create)(
-            player1=player1_id, player2=player2_id
+            player1=p1, player2=p2
         )
         # Simulate game creation with game_id and address
         # game_id = await cls.get_new_game_id()
@@ -123,11 +128,6 @@ class Matchmaker:
             await cls.send_message_to_client(player_id, message)
             return True
         return False  # Stub implementation
-
-    @classmethod
-    async def get_new_game_id(cls):
-
-        return GlobalData.increment_game_id_counter()
 
     @classmethod
     async def find_two_players(cls):

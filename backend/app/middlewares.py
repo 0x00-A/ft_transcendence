@@ -1,5 +1,6 @@
 from channels.middleware import BaseMiddleware
 from urllib.parse import parse_qs
+from accounts.models.profile import Profile
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.contrib.auth.models import AnonymousUser
@@ -29,7 +30,9 @@ class JwtAuthMiddleware(BaseMiddleware):
 
         if token:
             # Strip the token and authenticate the user
-            scope['user'] = await get_user_from_token(token[0])
+            user = await get_user_from_token(token[0])
+            scope['user'] = user
+            scope['profile'] = await sync_to_async(Profile.objects.get)(user=user)
             # profile = Profile.objects.get(user=user)
             # scope['user'] = user
         else:
