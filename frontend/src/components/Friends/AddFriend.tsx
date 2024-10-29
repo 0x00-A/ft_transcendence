@@ -17,6 +17,7 @@ const AddFriend: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [topPlayers, setTopPlayers] = useState<User[]>([]);
   const { data, isLoading, error } = useGetData<User[]>('users');
+  const [notification, setNotification] = useState<string | null>(null);
 
   if (error) return <p>Error: {error.message}</p>;
 
@@ -47,18 +48,31 @@ const AddFriend: React.FC = () => {
 
   const sendFriendRequest = async (username: string) => {
     try {
-      await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
+      const response = await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
-      alert('Friend request sent');
+      console.log("response: ", response.data);
+      setNotification('Friend request sent');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     } catch (error) {
       console.error('Error sending friend request:', error);
-      alert('Failed to send friend request');
+      setNotification('Failed to send friend request');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     }
   };
 
   return (
     <div className={css.addFriend}>
+      {notification && (
+        <div className={css.notification}>
+          {notification}
+        </div>
+      )}
+
       <h1 className={css.title}>Add Friend</h1>
       <div className={css.searchContainer}>
         <FaSearch className={css.searchIcon} />
