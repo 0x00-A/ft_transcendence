@@ -122,7 +122,7 @@ const AddFriend: React.FC = () => {
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
-                  <button className={css.addFriendBtn}>Add Friend</button>
+                  <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
                 </div>
               </div>
             ))
