@@ -20,8 +20,8 @@
   flex-direction: column;
   justify-content: space-between;
   /* min-height: 100vh; */
-
   height: calc(100vh - 55px);
+      /* height: auto; */
 }
 
 .logoBox {

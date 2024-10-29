@@ -3,7 +3,8 @@ from .user import User
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(
         upload_to='media/avatars/', default='defaultAvatar.svg')
     age = models.PositiveSmallIntegerField(null=True, blank=True)
