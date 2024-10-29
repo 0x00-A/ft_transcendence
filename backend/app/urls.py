@@ -37,4 +37,4 @@ urlpatterns = [
     # path('api/accounts/', include('accounts.urls')),
     # path('api/', include('rest_framework.urls')),
     path('api/', include('accounts.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

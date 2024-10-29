@@ -5,7 +5,7 @@ from .user import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(
-        upload_to='avatars/', default='avatars/avatar.svg')
+        upload_to='avatars/', default='avatars/avatar.jpeg')
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True, blank=True)
     friends = models.ManyToManyField('self', blank=True, symmetrical=True)
