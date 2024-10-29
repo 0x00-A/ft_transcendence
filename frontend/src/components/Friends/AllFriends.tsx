@@ -8,7 +8,7 @@ interface Friend {
   id: string;
   username: string;
   avatar: string;
-  isOnline: boolean;
+  is_online: boolean;
 }
 
 const AllFriends: React.FC = () => {
@@ -58,7 +58,7 @@ const AllFriends: React.FC = () => {
               />
               <div className={css.userInfo}>
                 <span className={css.username}>{friend.username}</span>
-                {friend.isOnline ? (
+                {friend.is_online ? (
                   <span className={css.Online}>Online</span>
                 ) : (
                   <span className={css.Offline}>Offline</span>
