@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
+import axios from 'axios';
 
 interface User {
   id: string;
@@ -44,6 +45,18 @@ const AddFriend: React.FC = () => {
     }
   };
 
+  const sendFriendRequest = async (username: string) => {
+    try {
+      await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      alert('Friend request sent');
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+      alert('Failed to send friend request');
+    }
+  };
+
   return (
     <div className={css.addFriend}>
       <h1 className={css.title}>Add Friend</h1>
@@ -73,7 +86,7 @@ const AddFriend: React.FC = () => {
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
-                  <button className={css.addFriendBtn}>Add Friend</button>
+                  <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
                 </div>
               </div>
             ))
