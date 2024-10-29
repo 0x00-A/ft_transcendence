@@ -6,6 +6,8 @@ import GameMode from '../../components/Game/components/GameMode/GameMode';
 import { useNavigate } from 'react-router-dom';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import useWebSocket from '../../hooks/useWebSocket';
+import getWebSocketUrl from '../../utils/getWebSocketUrl';
+import { getToken } from '../../utils/getToken';
 
 const generateUniqueGameId = () => {
   return Math.random().toString(36).substr(2, 9); // Simple unique ID generation
@@ -42,18 +44,18 @@ const ModeSelection = () => {
     if (modeId === 0) navigate(`/game/local`); // Navigate to the game URL with mode and ID
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
   };
-  // const socket : WebSocket | null = useWebSocket('matchmaking/');
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
 
-    const timeout = setTimeout(() => {
-      const socket = new WebSocket(`ws://localhost:8000/ws/matchmaking/?token=${token}`);
-
-      if (!socket) {
-        console.log('nuuuull');
-        return
+    const timeout = setTimeout(async () => {
+      const token = await getToken();
+      if (!token) {
+        console.log(`No valid token: ${token}`);
+        return;
       }
+      const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
+      const socket = new WebSocket(wsUrl);
+
       ws.current = socket;
       socket.onopen = () => {
         console.log('Socket connected');
