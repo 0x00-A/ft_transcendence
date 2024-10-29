@@ -21,19 +21,20 @@ interface FriendRequest {
 
 const FriendRequests: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
-  const { data: friendPending, isLoading, error } = useGetData<FriendRequest[]>('friend-requests/pending');
+  
+  const { data: friendPending, isLoading, error, refetch } = useGetData<FriendRequest[]>('friend-requests/pending');
 
   const handleAccept = async (username: string) => { 
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:8000/api/friend-request/accept/${username}/`,
         null,
         {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         }
       );
-      console.log("Response: ", response.data);
       setNotification('Friend request accepted');
+      refetch(); 
       setTimeout(() => {
         setNotification(null);
       }, 3000);
