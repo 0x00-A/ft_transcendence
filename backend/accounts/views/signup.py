@@ -14,8 +14,8 @@ class SignupView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        reply = 'Your account has been created, you can login now.';
-        return Response({'message': reply}, status=status.HTTP_201_CREATED, headers=headers)
+        message = 'Your account has been created, you can login now.';
+        return Response(data={'message': message}, status=status.HTTP_201_CREATED, headers=headers)
 
 
 # @api_view(['POST'])
