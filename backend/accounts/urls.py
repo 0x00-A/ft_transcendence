@@ -16,6 +16,7 @@ from .views import PendingFriendRequestsView
 from .views import UserFriendsView
 from .views import SentFriendRequestsView
 from .views import CancelFriendRequestView
+from .views import OnlineFriendsView
 from .views import AllUsersView
 # from .views import ProfileApiView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
@@ -37,6 +38,7 @@ urlpatterns = [
 
     path('users/', AllUsersView.as_view(), name='all_users'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
+    path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),
     path('friend-request/send/<str:username>/', SendFriendRequestView.as_view(), name='send-friend-request'),
     path('friend-request/accept/<str:username>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('friend-request/reject/<str:username>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),

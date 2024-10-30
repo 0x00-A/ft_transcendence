@@ -31,6 +31,29 @@ class UserFriendsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+class OnlineFriendsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
+
+    def get(self, request):
+        try:
+            user = request.user
+            online_friends = user.friends.filter(profile__is_online=True)
+            serializer = UserSerializer(online_friends, many=True)
+            return Response(serializer.data)
+
+        except Profile.DoesNotExist:
+            return Response(
+                {'error': 'User profile not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': 'Internal server error'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 class SendFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FriendRequestSerializer

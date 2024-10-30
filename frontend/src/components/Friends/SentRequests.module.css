@@ -3,6 +3,21 @@
   color: var(--text-color);
 }
 
+.noRequests {
+  background-color: #7892b8;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  font-size: 16px;
+  color: #888;
+  text-align: center;
+}
+.noRequests span {
+  font-size: 16px;
+  color: #fdffe7;
+  text-align: center;
+}
+
 .userInfo {
   flex-grow: 1;
 }
