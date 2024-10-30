@@ -1,34 +1,61 @@
 import React, { useState } from 'react';
 import css from './BlockedList.module.css';
 import { FaSearch } from 'react-icons/fa';
+import { useGetData } from '../../api/apiHooks';
+
+import axios from 'axios';
 
 interface BlockedUser {
-  id: string;
-  username: string;
-  avatar: string;
+  blocker: {
+    id: string;
+    username: string;
+    profile: {
+      avatar: string;
+    };
+  };
+  blocked: {
+    id: string;
+    username: string;
+    profile: {
+      avatar: string;
+    };
+  };
+  date_blocked: string;
 }
-
-const blockedUsers: BlockedUser[] = [
-  { id: '1', username: 'abde latif', avatar: 'https://picsum.photos/201' },
-  {
-    id: '2',
-    username: 'imad king og 1337',
-    avatar: 'https://picsum.photos/208',
-  },
-  { id: '3', username: 'kasimo l9ra3', avatar: 'https://picsum.photos/209' },
-  { id: '4', username: 'mehdi emouzzane', avatar: 'https://picsum.photos/210' },
-];
 
 const BlockedList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleUnblock = (userId: string) => {
-    console.log(`Unblocked user with ID: ${userId}`);
+  const { data: blockedUsers = [], isLoading, error, refetch } = useGetData<BlockedUser[]>('blocked');
+
+  const handleUnblock = async (username: string) => {
+    try {
+      await axios.post(
+        `http://localhost:8000/api/unblock/${username}/`,
+        null,
+        {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+        }
+      );
+      console.log(`Unblocked user: ${username}`);
+      // Optionally refetch blocked users after unblocking
+      refetch();
+    } catch (error) {
+      console.error('Error unblocking user:', error);
+    }
   };
 
   const filteredUsers = blockedUsers.filter((user) =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+    user.blocked.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p className={css.error}>Error fetching blocked users: {error.message}</p>;
+  }
 
   return (
     <div className={css.blockedList}>
@@ -50,16 +77,16 @@ const BlockedList: React.FC = () => {
       <div className={css.list}>
         {filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
-            <div key={user.id} className={css.userCard}>
+            <div key={user.blocked.id} className={css.userCard}>
               <img
-                src={user.avatar}
-                alt={user.username}
+                src={"http://localhost:8000" + user.blocked.profile.avatar}
+                alt={user.blocked.username}
                 className={css.avatar}
               />
-              <span className={css.username}>{user.username}</span>
+              <span className={css.username}>{user.blocked.username}</span>
               <button
                 className={css.unblockButton}
-                onClick={() => handleUnblock(user.id)}
+                onClick={() => handleUnblock(user.blocked.username)}
               >
                 Unblock
               </button>

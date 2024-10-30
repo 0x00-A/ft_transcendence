@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from ..models import FriendRequest, Profile
+from ..models import FriendRequest, Profile, BlockRelationship
 from ..serializers import FriendRequestSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
 
@@ -12,13 +12,15 @@ User = get_user_model()
 
 class UserFriendsView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ProfileSerializer
+    serializer_class = UserSerializer
 
     def get(self, request):
         try:
             user = request.user
             friends = user.friends.all()
-            serializer = UserSerializer(friends, many=True)
+            blocked_users = BlockRelationship.objects.filter(blocker=user).values_list('blocked', flat=True)
+            friends = friends.exclude(id__in=blocked_users)
+            serializer = self.serializer_class(friends, many=True)
             return Response(serializer.data)
         except Profile.DoesNotExist:
             return Response(
