@@ -25,15 +25,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if len(attrs['username']) < 4:
-            raise serializers.ValidationError('Username must be at least 4 characters!')
+            raise serializers.ValidationError({'username': 'Username must be at least 4 characters!'})
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError('Passwords does not match')
+            raise serializers.ValidationError({'password': 'Passwords do not match'})
         return attrs
 
     def create(self, validated_data):
         validated_data.pop('password2')
         password = validated_data.pop('password')
-        user = User.objects.create(**validated_data)
+        user, created = User.objects.get_or_create(**validated_data)
+        if not created:
+            raise serializers.ValidationError('User already exist!')
+        # user = User.objects.create(**validated_data)
         user.set_password(password)
         user.save()
         profile = Profile.objects.create(user=user)
