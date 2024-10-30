@@ -25,12 +25,12 @@ interface LoginFormData {
   password: string;
 }
 
-const Login = ({loginMutation}) => {
+const Login = ({}) => {
 
   // const navigate = useNavigate();
   const { register, handleSubmit, reset} = useForm<LoginFormData>();
 
-  // const loginMutation = useLogin();
+  const loginMutation = useLogin();
 
   const handleLogin = (data: LoginFormData) => {
     loginMutation.mutate(data);
