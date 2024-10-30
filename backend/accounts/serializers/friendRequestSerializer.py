@@ -1,12 +1,16 @@
+from accounts.serializers.userSerializer import UserSerializer
 from rest_framework import serializers
 from ..models import FriendRequest
-from .profileSerialzer import ProfileSerializer
+from rest_framework import serializers
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class FriendRequestSerializer(serializers.ModelSerializer):
-    sender = ProfileSerializer()
-    receiver = ProfileSerializer() 
+    sender = UserSerializer()
+    receiver = UserSerializer() 
     class Meta:
         model = FriendRequest
         fields = ['id', 'receiver', 'sender', 'status', 'timestamp']
