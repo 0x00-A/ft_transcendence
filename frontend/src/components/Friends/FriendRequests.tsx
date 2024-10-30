@@ -58,7 +58,7 @@ const FriendRequests: React.FC = () => {
   }
 
   const formatTimestamp = (timestamp: string) => {
-    return moment(timestamp).format('MMMM Do YYYY, h:mm A');
+    return moment(timestamp).calendar();
   };
 
   return (
