@@ -4,27 +4,30 @@ import { useNavigate } from 'react-router-dom';
 import { useGetData } from '../../api/apiHooks';
 
 interface Friend {
-  id: string;
-  username: string;
-  avatar: string;
+  id: number;
+  username: string; 
+  profile: {
+    id: number;
+    avatar: string;
+    is_online: boolean;
+  };
 }
 
 const OnlineFriends: React.FC = () => {
   const navigate = useNavigate();
   const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('friends/online');
 
+  console.log("onlineFriends: ", onlineFriends);
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
 
-  // Handle loading state
   if (isLoading) {
-    return <div>Loading...</div>; // Show loading state or spinner
+    return <div>Loading...</div>;
   }
 
-  // Handle error state
   if (error) {
-    return <div>Error: {error.message}</div>; // Show error message
+    return <div>Error: {error.message}</div>;
   }
 
   return (
@@ -34,7 +37,7 @@ const OnlineFriends: React.FC = () => {
         {onlineFriends?.map((friend) => (
           <div key={friend.id} className={css.friendCard}>
             <img
-              src={friend.avatar}
+              src={"http://localhost:8000" + friend.profile.avatar}
               alt={friend.username}
               className={css.avatar}
             />
