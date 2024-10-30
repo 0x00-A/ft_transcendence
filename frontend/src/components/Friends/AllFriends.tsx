@@ -4,11 +4,15 @@ import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
 
+interface FriendProfile {
+  avatar: string;
+  is_online: boolean;
+}
+
 interface Friend {
   id: string;
   username: string;
-  avatar: string;
-  is_online: boolean;
+  profile: FriendProfile;
 }
 
 const AllFriends: React.FC = () => {
@@ -23,7 +27,8 @@ const AllFriends: React.FC = () => {
       )
     : [];
   
-  console.log("friendsData: ", friendsData)
+  console.log("friendsData: ", friendsData);
+  
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
@@ -52,13 +57,13 @@ const AllFriends: React.FC = () => {
           filteredFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
-                src={"http://localhost:8000"+friend.avatar}
+                src={"http://localhost:8000" + friend.profile.avatar}
                 alt={friend.username}
                 className={css.avatar}
               />
               <div className={css.userInfo}>
                 <span className={css.username}>{friend.username}</span>
-                {friend.is_online ? (
+                {friend.profile.is_online ? (
                   <span className={css.Online}>Online</span>
                 ) : (
                   <span className={css.Offline}>Offline</span>

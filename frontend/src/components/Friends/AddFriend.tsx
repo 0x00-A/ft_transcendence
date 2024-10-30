@@ -5,11 +5,20 @@ import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
 
 interface User {
-  id: string;
+  id: number;
   username: string;
-  full_name: string;
-  avatar: string;
-  level: number;
+  email: string;
+  is_oauth_user: boolean;
+  first_name: string;
+  last_name: string;
+  profile: {
+    id: number;
+    avatar: string;
+    age: number | null;
+    level: number | null;
+    stats: Record<string, unknown>;
+    is_online: boolean;
+  };
 }
 
 const AddFriend: React.FC = () => {
@@ -23,12 +32,18 @@ const AddFriend: React.FC = () => {
 
   useEffect(() => {
     if (data) {
+      // const playersWithLevel = data.filter((user) => user.profile.level !== null);
+      // const sortedPlayers = playersWithLevel
       const sortedPlayers = [...data]
-        .sort((a, b) => b.level - a.level) 
+        .sort((a, b) => (b.profile.level ?? 0) - (a.profile.level ?? 0))
         .slice(0, 5);
       setTopPlayers(sortedPlayers);
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log("Top Players:", topPlayers);
+  }, [topPlayers]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
@@ -37,7 +52,7 @@ const AddFriend: React.FC = () => {
     if (term && Array.isArray(data)) {
       const filteredUsers = data.filter((user) => {
         const userName = user.username?.toLowerCase() || '';
-        const fullName = user.full_name?.toLowerCase() || '';
+        const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
         return userName.includes(term.toLowerCase()) || fullName.includes(term.toLowerCase());
       });
       setSearchResults(filteredUsers);
@@ -93,10 +108,10 @@ const AddFriend: React.FC = () => {
           ) : (
             topPlayers.map((user) => (
               <div key={user.id} className={css.userCard}>
-                <img src={"http://localhost:8000"+user.avatar} alt={user.username} className={css.avatar} />
+                <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
-                  <span className={css.level}>Level: {user.level}</span>
+                  <span className={css.level}>Level: {user.profile.level}</span>
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
@@ -115,10 +130,10 @@ const AddFriend: React.FC = () => {
           ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
               <div key={user.id} className={css.userCard}>
-                <img src={ "http://localhost:8000"+user.avatar} alt={user.username} className={css.avatar} />
+                <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
-                  <span className={css.fullName}>{user.full_name}</span>
+                  <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
