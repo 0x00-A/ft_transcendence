@@ -1,7 +1,6 @@
 from accounts.serializers.userSerializer import UserSerializer
 from rest_framework import serializers
 from ..models import FriendRequest
-from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
