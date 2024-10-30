@@ -6,6 +6,8 @@ from ..models.profile import Profile
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.files.base import ContentFile
+from ..serializers import ProfileSerializer
+
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -62,3 +64,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
     #     except User.DoesNotExist:
     #         raise serializers.ValidationError('username not exists!')
     #     return attrs
+
+
+class UserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'is_oauth_user', 'first_name', 'last_name', 'profile']
