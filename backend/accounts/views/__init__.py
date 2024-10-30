@@ -16,6 +16,7 @@ from .friendRequest import PendingFriendRequestsView
 from .friendRequest import UserFriendsView
 from .friendRequest import SentFriendRequestsView
 from .friendRequest import CancelFriendRequestView
+from .friendRequest import OnlineFriendsView
 from .profile import AllUsersView
 
 # from .profile import ProfileModelViewSet

@@ -51,27 +51,31 @@ const SentRequests: React.FC = () => {
   return (
     <div className={css.sentRequests}>
       <h1 className={css.title}>Sent Requests</h1>
-      <div className={css.list}>
-        {sentRequests?.map((request) => (
-          <div key={request.id} className={css.requestCard}>
-            <img
-              src={"http://localhost:8000" + request.receiver.profile.avatar}
-              alt={request.receiver.username}
-              className={css.avatar}
-            />
-            <div className={css.userInfo}>
-              <span className={css.username}>{request.receiver.username}</span>
-              <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
+      {sentRequests && sentRequests.length === 0 ? (
+        <div className={css.noRequests}> <span>You don't have any sent requests.</span></div>
+      ) : (
+        <div className={css.list}>
+          {sentRequests?.map((request) => (
+            <div key={request.id} className={css.requestCard}>
+              <img
+                src={"http://localhost:8000" + request.receiver.profile.avatar}
+                alt={request.receiver.username}
+                className={css.avatar}
+              />
+              <div className={css.userInfo}>
+                <span className={css.username}>{request.receiver.username}</span>
+                <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
+              </div>
+              <button
+                className={css.cancelButton}
+                onClick={() => handleCancel(request.receiver.username)}
+              >
+                Cancel
+              </button>
             </div>
-            <button
-              className={css.cancelButton}
-              onClick={() => handleCancel(request.receiver.username)}
-            >
-              Cancel
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
