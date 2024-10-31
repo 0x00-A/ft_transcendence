@@ -3,6 +3,7 @@ import css from './SentRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
 import moment from 'moment';
+import Loading from './Loading';
 
 interface Profile {
   id: number;
@@ -35,13 +36,6 @@ const SentRequests: React.FC = () => {
       console.error('Error canceling friend request:', err);
     }
   };
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className={css.error}>{error.message}</div>;
-  }
 
   const formatTimestamp = (timestamp: string) => {
     return moment(timestamp).calendar();
@@ -55,7 +49,11 @@ const SentRequests: React.FC = () => {
         <div className={css.noRequests}> <span>You don't have any sent requests.</span></div>
       ) : (
         <div className={css.list}>
-          {sentRequests?.map((request) => (
+          {isLoading ? (
+            <Loading /> 
+          ) : error ? (
+            <p>Error loading friends</p>
+          ) : sentRequests?.map((request) => (
             <div key={request.id} className={css.requestCard}>
               <img
                 src={"http://localhost:8000" + request.receiver.profile.avatar}

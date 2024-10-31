@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import css from './BlockedList.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
+import Loading from './Loading';
 
 import axios from 'axios';
 
@@ -49,10 +50,6 @@ const BlockedList: React.FC = () => {
     user.blocked.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   if (error) {
     return <p className={css.error}>Error fetching blocked users: {error.message}</p>;
   }
@@ -75,7 +72,12 @@ const BlockedList: React.FC = () => {
       </div>
 
       <div className={css.list}>
-        {filteredUsers.length > 0 ? (
+      {isLoading ? (
+          <Loading /> 
+        ) : error ? (
+          <p>Error loading friends</p>
+        ) : 
+        filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
             <div key={user.blocked.id} className={css.userCard}>
               <img
