@@ -9,6 +9,32 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class SuggestedConnectionsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+
+        # Example logic: Get users who share mutual friends with the current user
+        mutual_friend_ids = User.objects.filter(friends__in=user.friends.all()).exclude(id=user.id).distinct()
+        
+        # Check friendship status with each suggested user
+        suggested_users = []
+        for suggested_user in mutual_friend_ids:
+            if suggested_user in user.friends.all():
+                status = "Friends"
+            elif FriendRequest.objects.filter(sender=user, receiver=suggested_user, status='pending').exists():
+                status = "Pending"
+            else:
+                status = "Add Friend"
+            
+            suggested_users.append({
+                "user": UserSerializer(suggested_user).data,
+                "status": status
+            })
+
+        return Response(suggested_users)
+    
 
 class UserFriendsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -18,8 +44,6 @@ class UserFriendsView(APIView):
         try:
             user = request.user
             friends = user.friends.all()
-            blocked_users = BlockRelationship.objects.filter(blocker=user).values_list('blocked', flat=True)
-            friends = friends.exclude(id__in=blocked_users)
             serializer = self.serializer_class(friends, many=True)
             return Response(serializer.data)
         except Profile.DoesNotExist:
@@ -64,7 +88,6 @@ class SendFriendRequestView(APIView):
             receiver = User.objects.get(username=username)
             sender_user = request.user
 
-            # Check if either user has blocked the other
             if BlockRelationship.objects.filter(
                 blocker=sender_user, blocked=receiver
             ).exists() or BlockRelationship.objects.filter(

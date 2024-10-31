@@ -4,6 +4,15 @@ import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
 
+interface Profile {
+  user: number;
+  avatar: string;
+  age: number | null;
+  level: number | null;
+  stats: Record<string, unknown>;
+  is_online: boolean;
+}
+
 interface User {
   id: number;
   username: string;
@@ -11,72 +20,55 @@ interface User {
   is_oauth_user: boolean;
   first_name: string;
   last_name: string;
-  profile: {
-    id: number;
-    avatar: string;
-    age: number | null;
-    level: number | null;
-    stats: Record<string, unknown>;
-    is_online: boolean;
-  };
+  profile: Profile;
+}
+
+interface SuggestedUser {
+  user: User;
+  status: "Friends" | "Pending" | "Add Friend";
 }
 
 const AddFriend: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [topPlayers, setTopPlayers] = useState<User[]>([]);
-  const { data, isLoading, error } = useGetData<User[]>('users');
+  const { data: suggestedConnections, isLoading: loadingSuggested, error: suggestedError } = useGetData<SuggestedUser[]>('suggested-connections');
+  const { data: users, isLoading: loadingUsers, error: usersError } = useGetData<User[]>('users');
   const [notification, setNotification] = useState<string | null>(null);
 
-  if (error) return <p>Error: {error.message}</p>;
+  if (suggestedError) return <p>Error loading suggested connections: {suggestedError.message}</p>;
+  if (usersError) return <p>Error loading users: {usersError.message}</p>;
 
   useEffect(() => {
-    if (data) {
-      // const playersWithLevel = data.filter((user) => user.profile.level !== null);
-      // const sortedPlayers = playersWithLevel
-      const sortedPlayers = [...data]
-        .sort((a, b) => (b.profile.level ?? 0) - (a.profile.level ?? 0))
-        .slice(0, 5);
-      setTopPlayers(sortedPlayers);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    console.log("Top Players:", topPlayers);
-  }, [topPlayers]);
+    const filterUsers = () => {
+      if (searchTerm) {
+        const filteredUsers = users?.filter((user) => {
+          const userName = user.username.toLowerCase();
+          const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+          return userName.includes(searchTerm.toLowerCase()) || fullName.includes(searchTerm.toLowerCase());
+        }) || [];
+        setSearchResults(filteredUsers);
+      } else {
+        setSearchResults([]);
+      }
+    };
+    filterUsers();
+  }, [searchTerm, users]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const term = event.target.value;
-    setSearchTerm(term);
-
-    if (term && Array.isArray(data)) {
-      const filteredUsers = data.filter((user) => {
-        const userName = user.username?.toLowerCase() || '';
-        const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
-        return userName.includes(term.toLowerCase()) || fullName.includes(term.toLowerCase());
-      });
-      setSearchResults(filteredUsers);
-    } else {
-      setSearchResults([]);
-    }
+    setSearchTerm(event.target.value);
   };
 
   const sendFriendRequest = async (username: string) => {
     try {
-      const response = await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
+      await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
-      console.log("response: ", response.data);
       setNotification('Friend request sent');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      setTimeout(() => setNotification(null), 3000);
     } catch (error) {
       console.error('Error sending friend request:', error);
       setNotification('Failed to send friend request');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -100,36 +92,44 @@ const AddFriend: React.FC = () => {
         />
       </div>
 
-      {searchTerm === '' && topPlayers.length > 0 && (
-        <div className={css.topPlayers}>
-          <h3 className={css.topPlayersTitle}>Top Players</h3>
-          {isLoading ? (
-            <p>Loading top players...</p>
+      {searchTerm === '' && suggestedConnections && (
+        <div className={css.suggestedConnections}>
+          <h3 className={css.suggestedConnectionsTitle}>Suggested Connections</h3>
+          {loadingSuggested ? (
+            <p>Loading suggested connections...</p>
           ) : (
-            topPlayers.map((user) => (
-              <div key={user.id} className={css.userCard}>
-                <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
-                <div className={css.userInfo}>
-                  <span className={css.username}>{user.username}</span>
-                  <span className={css.level}>Level: {user.profile.level}</span>
+            <div className={css.results}>
+              {suggestedConnections.map(({ user, status }) => (
+                <div key={user.username} className={css.userCard}>
+                  <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
+                  <div className={css.userInfo}>
+                    <span className={css.username}>{user.username}</span>
+                  </div>
+                  <div className={css.actions}>
+                    {status === "Friends" ? (
+                      <span className={css.friendsBtn}>Friends</span>
+                    ) : status === "Pending" ? (
+                      <span className={css.pendingBtn}>Pending</span>
+                    ) : (
+                      <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
+                    )}
+                    <button className={css.viewProfileBtn}>View Profile</button>
+                  </div>
                 </div>
-                <div className={css.actions}>
-                  <button className={css.viewProfileBtn}>View Profile</button>
-                  <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
-                </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
       )}
 
+      {/* Display search results */}
       {searchTerm !== '' && (
         <div className={css.results}>
-          {isLoading ? (
+          {loadingUsers ? (
             <p>Loading users...</p>
           ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
-              <div key={user.id} className={css.userCard}>
+              <div key={user.username} className={css.userCard}>
                 <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
