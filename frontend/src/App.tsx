@@ -55,7 +55,7 @@ function App() {
 }
 
 function AppContent() {
-  const onlineSocketRef = useRef<WebSocket | null>(null);  // useRef to store the WebSocket instance
+  const onlineSocketRef = useRef<WebSocket | null>(null);
 
   const showSidebarRoutes = [
     '/',

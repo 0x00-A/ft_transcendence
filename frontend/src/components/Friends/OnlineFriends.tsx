@@ -1,40 +1,43 @@
 import React from 'react';
 import css from './OnlineFriends.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useGetData } from '../../api/apiHooks';
 
 interface Friend {
-  id: string;
-  username: string;
-  avatar: string;
+  id: number;
+  username: string; 
+  profile: {
+    id: number;
+    avatar: string;
+    is_online: boolean;
+  };
 }
-
-const onlineFriends: Friend[] = [
-  { id: '1', username: 'yasmine', avatar: 'https://picsum.photos/209' },
-  { id: '2', username: 'oussama', avatar: 'https://picsum.photos/209' },
-  { id: '3', username: 'mehadi f', avatar: 'https://picsum.photos/209' },
-  {
-    id: '4',
-    username: 'imad king of 1337',
-    avatar: 'https://picsum.photos/209',
-  },
-  { id: '5', username: 'kasimo l9re3', avatar: 'https://picsum.photos/209' },
-];
 
 const OnlineFriends: React.FC = () => {
   const navigate = useNavigate();
+  const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('friends/online');
 
+  console.log("onlineFriends: ", onlineFriends);
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className={css.onlineFriends}>
       <h1 className={css.title}>Online Friends</h1>
       <div className={css.friendList}>
-        {onlineFriends.map((friend) => (
+        {onlineFriends?.map((friend) => (
           <div key={friend.id} className={css.friendCard}>
             <img
-              src={friend.avatar}
+              src={"http://localhost:8000" + friend.profile.avatar}
               alt={friend.username}
               className={css.avatar}
             />

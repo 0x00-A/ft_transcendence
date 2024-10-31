@@ -1,50 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
+import { useGetData } from '../../api/apiHooks';
+
+interface FriendProfile {
+  avatar: string;
+  is_online: boolean;
+}
 
 interface Friend {
   id: string;
   username: string;
-  avatar: string;
-  isOnline: boolean;
+  profile: FriendProfile;
 }
-
-const allFriends: Friend[] = [
-  {
-    id: '1',
-    username: 'hex01e',
-    avatar: 'https://picsum.photos/215',
-    isOnline: true,
-  },
-  {
-    id: '2',
-    username: 'yasmine',
-    avatar: 'https://picsum.photos/214',
-    isOnline: false,
-  },
-  {
-    id: '3',
-    username: 'abde latif',
-    avatar: 'https://picsum.photos/212',
-    isOnline: true,
-  },
-  {
-    id: '4',
-    username: 'oussama',
-    avatar: 'https://picsum.photos/213',
-    isOnline: false,
-  },
-];
 
 const AllFriends: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const filteredUsers = allFriends.filter((friend) =>
-    friend.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { data: friendsData, isLoading, error } = useGetData<Friend[]>('friends');
 
+  const filteredFriends = friendsData
+    ? friendsData.filter((friend) =>
+        friend.username.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+  
+  console.log("friendsData: ", friendsData);
+  
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
@@ -65,17 +49,21 @@ const AllFriends: React.FC = () => {
       </div>
 
       <div className={css.friendList}>
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map((friend) => (
+        {isLoading ? (
+          <p>Loading friends...</p>
+        ) : error ? (
+          <p>Error loading friends</p>
+        ) : filteredFriends.length > 0 ? (
+          filteredFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
-                src={friend.avatar}
+                src={"http://localhost:8000" + friend.profile.avatar}
                 alt={friend.username}
                 className={css.avatar}
               />
               <div className={css.userInfo}>
                 <span className={css.username}>{friend.username}</span>
-                {friend.isOnline ? (
+                {friend.profile.is_online ? (
                   <span className={css.Online}>Online</span>
                 ) : (
                   <span className={css.Offline}>Offline</span>

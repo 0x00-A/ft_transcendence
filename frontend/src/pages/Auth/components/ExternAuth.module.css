@@ -6,6 +6,10 @@
     place-items: center;
 }
 
+.container button {
+    color: black;
+}
+
 .or {
     display: flex;
     place-items: center;
