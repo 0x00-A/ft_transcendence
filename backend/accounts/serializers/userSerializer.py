@@ -9,10 +9,11 @@ from django.core.files.base import ContentFile
 from ..serializers import ProfileSerializer
 
 
-
 class UserRegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})
-    password2 = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})
+    password = serializers.CharField(write_only=True, required=True, style={
+                                     'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={
+                                      'input_type': 'password'})
 
     class Meta:
         model = User
@@ -27,9 +28,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if len(attrs['username']) < 4:
-            raise serializers.ValidationError({'username': 'Username must be at least 4 characters!'})
+            raise serializers.ValidationError(
+                {'username': 'Username must be at least 4 characters!'})
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({'password': 'Passwords do not match'})
+            raise serializers.ValidationError(
+                {'password': 'Passwords do not match'})
         return attrs
 
     def create(self, validated_data):
@@ -41,9 +44,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # user = User.objects.create(**validated_data)
         user.set_password(password)
         user.save()
-        profile = Profile.objects.create(user=user)
-        profile.save()
+        # profile = Profile.objects.create(user=user)
+        # profile.save()
         return user
+
 
 class TokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -52,6 +56,7 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         token['user_id'] = user.pk
         token['username'] = user.username
         return token
+
 
 class UserLoginSerializer(serializers.ModelSerializer):
 
@@ -71,6 +76,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_oauth_user', 'first_name', 'last_name', 'profile']
+        fields = ['id', 'username', 'email', 'is_oauth_user',
+                  'first_name', 'last_name', 'profile']

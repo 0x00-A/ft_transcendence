@@ -70,7 +70,8 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
+    'accounts.apps.AccountsConfig',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,7 +83,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     'corsheaders',
-    'accounts',
+    # 'accounts',
     'rest_framework_simplejwt',
     'debug_toolbar',
     'channels',
