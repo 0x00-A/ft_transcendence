@@ -22,7 +22,7 @@ interface User {
   first_name: string;
   last_name: string;
   profile: Profile;
-  friend_request_status?: "accepted" | "pending" | "Add Friend";
+  friend_request_status?: "accepted" | "pending" | "Add Friend" | "cancel";
 }
 
 interface SuggestedUser {
@@ -34,7 +34,7 @@ const AddFriend: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const { data: suggestedConnections, isLoading: loadingSuggested, error: suggestedError } = useGetData<SuggestedUser[]>('suggested-connections');
-  const { data: users, isLoading: loadingUsers, error: usersError } = useGetData<User[]>('users');
+  const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
   const [notification, setNotification] = useState<string | null>(null);
 
   if (suggestedError) return <p>Error loading suggested connections: {suggestedError.message}</p>;
@@ -65,6 +65,7 @@ const AddFriend: React.FC = () => {
       await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
+      refetch()
       setNotification('Friend request sent');
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
@@ -83,6 +84,7 @@ const AddFriend: React.FC = () => {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         }
       );
+      refetch()
       setNotification('Friend request rejected');
       setTimeout(() => {
         setNotification(null);
@@ -106,6 +108,7 @@ const AddFriend: React.FC = () => {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
         }
       );
+      refetch()
       setNotification('Friend request accepted');
       setTimeout(() => {
         setNotification(null);
@@ -120,6 +123,17 @@ const AddFriend: React.FC = () => {
   };
 
 
+  const handleCancel = async (username: string) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/friend-request/cancel/${username}/`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+    } catch (err) {
+      console.error('Error canceling friend request:', err);
+    }
+  };
   return (
     <div className={css.addFriend}>
       {notification && (
@@ -170,45 +184,58 @@ const AddFriend: React.FC = () => {
         </div>
       )}
 
-      {/* Display search results */}
+     {/* Display search results */}
       {searchTerm !== '' && (
-  <div className={css.results}>
-    {loadingUsers ? (
-      <Loading />
-    ) : searchResults.length > 0 ? (
-      searchResults.map((user) => (
-        <div key={user.username} className={css.userCard}>
-          <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
-          <div className={css.userInfo}>
-            <span className={css.username}>{user.username}</span>
-            <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
-          </div>
-          <div className={css.actions}>
-            <button className={css.viewProfileBtn}>View Profile</button>
-            
-            {/* Conditionally render buttons based on friend_request_status */}
-            {user.friend_request_status === "accepted" ? (
-              <span className={css.friendsStatus}>Friends</span>
-            ) : user.friend_request_status === "pending" ? (
-              <>
-                <button onClick={() => acceptFriendRequest(user.username)} className={css.acceptBtn}>Accept</button>
-                <button onClick={() => rejectFriendRequest(user.username)} className={css.rejectBtn}>Reject</button>
-              </>
-            ) : (
-              <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
-            )}
-          </div>
-        </div>
-      ))
-    ) : (
-      <div className={css.notFound}>
-        <img src="/icons/friend/notFound.svg" alt="Not Found" />
-        <p className={css.notFoundText}>No User Found</p>
-      </div>
-    )}
-  </div>
-)}
+        <div className={css.results}>
+          {loadingUsers ? (
+            <Loading />
+          ) : searchResults.length > 0 ? (
+            searchResults.map((user) => (
+              <div key={user.username} className={css.userCard}>
+                <img 
+                  src={`http://localhost:8000${user.profile.avatar}`} 
+                  alt={user.username} 
+                  className={css.avatar} 
+                />
+                <div className={css.userInfo}>
+                  <span className={css.username}>{user.username}</span>
+                  <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
+                </div>
+                <div className={css.actions}>
+                  <button className={css.viewProfileBtn}>View Profile</button>
 
+                  {/* Conditionally render buttons based on friend_request_status */}
+                  {user.friend_request_status === "accepted" ? (
+                    <span className={css.friendsStatus}>Friends</span>
+                  ) : user.friend_request_status === "pending" ? (
+                    <>
+                      <button onClick={() => acceptFriendRequest(user.username)} className={css.acceptBtn}>
+                        Accept
+                      </button>
+                      <button onClick={() => rejectFriendRequest(user.username)} className={css.rejectBtn}>
+                        Reject
+                      </button>
+                    </>
+                  ) : user.friend_request_status === "cancel" ? (
+                    <button onClick={() => handleCancel(user.username)} className={css.cancelBtn}>
+                      Cancel
+                    </button>
+                  ) : (
+                    <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>
+                      Add Friend
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className={css.notFound}>
+              <img src="/icons/friend/notFound.svg" alt="Not Found" />
+              <p className={css.notFoundText}>No User Found</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

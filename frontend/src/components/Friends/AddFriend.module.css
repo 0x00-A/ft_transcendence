@@ -257,3 +257,24 @@
   background-color: #45a049;
 }
 
+
+.cancelBtn {
+  background-color: #e74c3c;      
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s, transform 0.2s;
+  background-color: #d0d8e7;
+}
+
+.cancelBtn:hover {
+  background-color: #c0392b;    
+  transform: scale(1.05);        
+}
+
+.cancelBtn:focus {
+  outline: none;            
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); 
+}
