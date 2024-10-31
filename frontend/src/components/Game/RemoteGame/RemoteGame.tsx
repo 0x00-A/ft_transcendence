@@ -4,6 +4,8 @@ import css from './RemoteGame.module.css';
 import MultiPlayerPong from '../components/MultiPlayerPong/MultiPlayerPong';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import { boolean } from 'yup';
+import getWebSocketUrl from '../../../utils/getWebSocketUrl';
+import { getToken } from '../../../utils/getToken';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -30,6 +32,7 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const tokenRef = useRef(null);
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
@@ -61,6 +64,25 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
     dy: 0,
   });
 
+  // useEffect(() => {
+  //   (async () => {
+  //       const token = await getToken();
+  //       if (!token) {
+  //         console.log(`No valid token: ${token}`);
+  //         return;
+  //       }
+  //       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${token}`;
+  //       const socket = new WebSocket(wsUrl);
+  //       ws.current = socket;
+  //   })()
+
+  //   return () => {
+  //       if (ws.current) {
+  //           ws.current.close();
+  //       }
+  //   };
+  // }, [])
+
   useEffect(() => {
     hitWallSound.current.preload = 'auto';
     hitWallSound.current.load(); // Preloads the audio into the browser's memory
@@ -69,9 +91,21 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
   }, [sound]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    (async () => {
+      tokenRef.current = await getToken();
+    })()
+  }, [])
+
+  useEffect(() => {
+    const timeout = setTimeout( () => {
       setGameState(null);
-      const gameSocket = new WebSocket(`ws://localhost:8000/${game_address}/`);
+      // const token = await getToken();
+      if (!tokenRef.current) {
+        console.log(`No valid token: ${tokenRef.current}`);
+        return;
+      }
+      const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${tokenRef.current}`;
+      const gameSocket = new WebSocket(wsUrl);
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
@@ -89,7 +123,7 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
 
       gameSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        console.log(data);
+        // console.log(data);
         if (data.type === 'game_started') {
           // setTimeout(() => {
           //   // init_game_state(data);
@@ -135,13 +169,13 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
         console.log('WebSocket Disconnected');
         setGameState('ended');
       };
-
-      return () => {
-        gameSocket.close();
-      };
     }, 500);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      if (ws.current)
+        ws.current.close();
+        clearTimeout(timeout);
+    };
   }, [restart]);
 
   useEffect(() => {
@@ -155,10 +189,10 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
       ctx.lineWidth = 3;
 
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2, 10); // Start at the top of the canvas
-      ctx.lineTo(canvas.width / 2, canvas.height - 10); // Draw to the bottom of the canvas
+      ctx.moveTo(canvas.width / 2, 10);
+      ctx.lineTo(canvas.width / 2, canvas.height - 10);
       ctx.stroke();
-      ctx.setLineDash([]); // Reset the line dash to solid for other drawings
+      ctx.setLineDash([]);
     };
 
     const keysPressed: boolean[] = [false];
