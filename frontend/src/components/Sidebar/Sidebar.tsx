@@ -14,7 +14,7 @@ import {
 } from '../../config/constants';
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const loadingBarRef = useLoadingBar();
   const { setIsLoggedIn } = useAuth();
 
@@ -46,7 +46,7 @@ export default function Sidebar() {
       setOpen(false);
     }
     if (window.innerWidth > SIDEBAR_RESIZE_WIDTH) {
-      setOpen(true);
+      setOpen(false);
     }
   };
 
