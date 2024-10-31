@@ -64,6 +64,17 @@ class SendFriendRequestView(APIView):
             receiver = User.objects.get(username=username)
             sender_user = request.user
 
+            # Check if either user has blocked the other
+            if BlockRelationship.objects.filter(
+                blocker=sender_user, blocked=receiver
+            ).exists() or BlockRelationship.objects.filter(
+                blocker=receiver, blocked=sender_user
+            ).exists():
+                return Response(
+                    {'error': 'Cannot send friend request as one of the users has blocked the other'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
             if sender_user == receiver:
                 return Response(
                     {'error': 'Cannot send friend request to yourself'}, 
