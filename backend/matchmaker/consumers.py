@@ -14,10 +14,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
         self.player_id = None
-        # self.player_id = GlobalData.increment_user_id_counter()
-        # self.player_id = random.randint(1, 100000)
-        # await self.accept()
-        # Register the client when connected
 
         if user and not isinstance(user, AnonymousUser):
             await self.accept()

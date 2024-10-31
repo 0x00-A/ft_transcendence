@@ -60,20 +60,23 @@ class Game(models.Model):
     objects = GameManager()
 
     def save(self, *args, **kwargs):
-        if not self.game_id:
+        if not self.id:
+            super().save(*args, **kwargs)
             self.game_id = f"game_{self.id}"
-        super().save(*args, **kwargs)
+            super().save(update_fields=["game_id"])
+        else:
+            super().save(*args, **kwargs)
 
-    # def join_game(self, player, client):
-    #     """
-    #     Player joins the game if the second player slot is empty.
-    #     """
-    #     if not self.player2:
-    #         self.player2 = player
-    #         self.client2 = client
-    #         self.save()
-    #         return True
-    #     return False
+        # def join_game(self, player, client):
+        #     """
+        #     Player joins the game if the second player slot is empty.
+        #     """
+        #     if not self.player2:
+        #         self.player2 = player
+        #         self.client2 = client
+        #         self.save()
+        #         return True
+        #     return False
 
     def start_game(self):
         """
@@ -82,10 +85,12 @@ class Game(models.Model):
         self.game_status = 'started'
         self.save()
 
-    def end_game(self, winner_id, p1_score=None, p2_score=None):
+    def end_game(self, winner_id, p1_score, p2_score):
         """
         End the game, store the winner, and update win stats.
         """
+        print(f"--------------- Game: {self.id} ended -------------------")
+
         winner = User.objects.get(id=winner_id)
         self.winner = winner
         self.p1_score = p1_score
@@ -134,9 +139,12 @@ class Match(models.Model):
     end_time = models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.match_id:
+        if not self.id:
+            super().save(*args, **kwargs)
             self.match_id = f"match_{self.id}"
-        super().save(*args, **kwargs)
+            super().save(update_fields=["match_id"])
+        else:
+            super().save(*args, **kwargs)
 
 
 class TournamentManager(models.Manager):

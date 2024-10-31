@@ -1,10 +1,12 @@
 from matchmaker.matchmaker import Matchmaker
-from matchmaker.models import Game
+from matchmaker.models import Game, Match
 from asgiref.sync import sync_to_async
 import math
 import json
 import random
 import uuid
+from django.contrib.auth.models import AnonymousUser
+
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -110,8 +112,8 @@ class GameInstance:
     def check_for_winner(self):
         # Logic to determine if a player has won and handle the end of the game
         if self.player1_score >= winning_score:
-            self.winner = 1
             self.winner_id = self.player1_user_id
+            self.winner = 1
         elif self.player2_score >= winning_score:
             # self.is_over = True
             self.winner_id = self.player2_user_id
@@ -285,31 +287,59 @@ class ChatConsumer(AsyncWebsocketConsumer):
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        # Get the game_id from the URL route, e.g., ws://localhost/1
-        await self.accept()
-        self.game_id = self.scope['url_route']['kwargs']['game_id']
-        await self.channel_layer.group_add(self.game_id, self.channel_name)
+        user = self.scope['user']
+        self.game_id = None
 
-        if not get_game(self.game_id):
-            create_game(self.game_id)
-            get_game(self.game_id).connected_players += 1
-            get_game(self.game_id).player1_user_id = self.scope['user'].id
-            self.player_id = 'player1'
+        if user and not isinstance(user, AnonymousUser):
+            await self.accept()
+            self.game_id = self.scope['url_route']['kwargs']['game_id']
+            await self.channel_layer.group_add(self.game_id, self.channel_name)
 
+            if not get_game(self.game_id):
+                create_game(self.game_id)
+                get_game(self.game_id).connected_players += 1
+                get_game(self.game_id).player1_user_id = user.id
+                # if await Game.objects.filter(game_id=self.game_id).aexists():
+                #     if user.games_as_player1.filter(game_id=self.game_id).exists():
+                #         self.player_id = 'player1'
+                #     else:
+                #         self.player_id = 'player2'
+                # elif await Match.objects.filter(match_id=self.game_id).aexists():
+                #     if user.matches_as_player1.filter(match_id=self.game_id).exists():
+                #         self.player_id = 'player1'
+                #     else:
+                #         self.player_id = 'player2'
+                await self.set_player_id_name()
+            else:
+                get_game(self.game_id).connected_players += 1
+                get_game(self.game_id).player2_user_id = user.id
+                # self.player_id = 'player2'
+                await self.set_player_id_name()
+                await self.channel_layer.group_send(
+                    self.game_id,
+                    {
+                        "type": "game.init",  # This matches the method name
+                        # "room_id": game_room_id,
+                        # "message": 'game_started'
+                    }
+                )
+                # Start the game loop
+                asyncio.create_task(self.start_game(self.game_id))
         else:
-            get_game(self.game_id).connected_players += 1
-            get_game(self.game_id).player2_user_id = self.scope['user'].id
-            self.player_id = 'player2'
-            await self.channel_layer.group_send(
-                self.game_id,
-                {
-                    "type": "game.init",  # This matches the method name
-                    # "room_id": game_room_id,
-                    # "message": 'game_started'
-                }
-            )
-            # Start the game loop
-            asyncio.create_task(self.start_game(self.game_id))
+            await self.close()
+
+    async def set_player_id_name(self):
+        user = self.scope['user']
+        if await Game.objects.filter(game_id=self.game_id).aexists():
+            if await user.games_as_player1.filter(game_id=self.game_id).aexists():
+                self.player_id = 'player1'
+            else:
+                self.player_id = 'player2'
+        elif await Match.objects.filter(match_id=self.game_id).aexists():
+            if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
+                self.player_id = 'player1'
+            else:
+                self.player_id = 'player2'
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -354,9 +384,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             game.player2_paddle.y = new_position
 
     async def disconnect(self, close_code):
-        # Remove player from the waiting room
         game_id = self.game_id
-
+        print(
+            f"------------ player {self.scope['user'].username} disconnected ------------")
         if game_id:
             game: GameInstance = get_game(game_id)
             await self.channel_layer.group_discard(f"game_{self.game_id}", self.channel_name)
@@ -369,7 +399,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             )
             if game.connected_players <= 1:
                 await self.abort_game()
-                remove_game(game_id)
             else:
                 game.connected_players -= 1
 
@@ -382,55 +411,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         # game = await sync_to_async(Game.objects.get)(game_id=self.game_id)
         # await sync_to_async(game.abort_game)()
-
-    # async def find_match(self):
-    #     # Lock the critical section to avoid race conditions
-    #     if not len(GameConsumer.waiting_players):
-    #         # If no one is waiting, assign player1 and add to waiting list
-    #         self.player_id = 'player1'
-    #         game_room_id = 'game_' + str(uuid.uuid4())
-    #         self.scope['game_room'] = game_room_id
-    #         await self.channel_layer.group_add(game_room_id, self.channel_name)
-
-    #         GameConsumer.waiting_players.add(game_room_id)
-
-    #         await self.send(text_data=json.dumps({
-    #             'type': 'connection',
-    #             'player_id': self.player_id,
-    #             'game_room_id': game_room_id,
-    #         }))
-    #         # await self.send(text_data=json.dumps({
-    #         #     'type': 'connection',
-    #         #     'player_id': self.player_id,
-    #         # }))
-    #     else:
-    #         self.player_id = 'player2'
-    #         game_room_id = GameConsumer.waiting_players.pop()
-    #         await self.channel_layer.group_add(game_room_id, self.channel_name)
-    #         self.scope['game_room'] = game_room_id
-
-    #         # other_player_channel.scope['game_room'] = game_room_id
-    #         create_game(game_room_id)
-
-    #         # Add both players to the same game room
-    #         # await self.channel_layer.group_add(game_room_id, other_player_channel)
-
-    #         # Send information to both players
-    #         await self.send(text_data=json.dumps({
-    #             'type': 'connection',
-    #             'player_id': self.player_id,
-    #             'game_room_id': game_room_id,
-    #         }))
-    #         await self.channel_layer.group_send(
-    #             game_room_id,
-    #             {
-    #                 "type": "game.init",  # This matches the method name
-    #                 # "room_id": game_room_id,
-    #                 # "message": 'game_started'
-    #             }
-    #         )
-    #         # Start the game loop
-    #         asyncio.create_task(self.start_game(game_room_id))
 
     async def start_game(self, game_id):
         game_instance: GameInstance = games[game_id]
@@ -509,10 +489,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         game: GameInstance = games[game_id]
 
         game_state = {
-            "is_winner": True if game.winner == 'player1' else False
+            "is_winner": True if game.winner == 1 else False
         }
         mirror_state = {
-            "is_winner": True if game.winner == 'player2' else False
+            "is_winner": True if game.winner == 2 else False
         }
         game.is_over = True
         await self.channel_layer.group_send(
@@ -523,7 +503,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'state2': mirror_state,
             }
         )
-        await Matchmaker.process_game_result(game_id, game.winner_id)
+        if game.winner == -1:
+            remove_game(game_id)
+            await Matchmaker.process_result(game_id, -1)
+        else:
+            await Matchmaker.process_result(game_id, game.winner, game.player1_score, game.player2_score)
 
     async def game_state_update(self, event):
         state = event["state1"] if self.player_id == 'player1' else event["state2"]

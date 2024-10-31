@@ -26,12 +26,14 @@ class Matchmaker:
     async def unregister_client(cls, player_id):
         if player_id in cls.connected_clients:
             del cls.connected_clients[player_id]
+        if player_id in cls.games_queue:
+            cls.games_queue.remove(player_id)
 
     @classmethod
     async def request_remote_game(cls, player_id):
         # Handle remote game matchmaking here
-        # if await cls.is_client_already_playing(player_id):
-        #     return
+        if await cls.is_client_already_playing(player_id):
+            return
         # Add player to the queue, etc.
         # After finding a match:
         cls.games_queue.append(player_id)
@@ -53,7 +55,7 @@ class Matchmaker:
         game = await sync_to_async(Game.objects.create)(
             player1=p1, player2=p2
         )
-        game_address = f"ws/game/game_{game.id}"
+        game_address = f"game/game_{game.id}"
         # Simulate game creation with game_id and address
         # game_id = await cls.get_new_game_id()
 
@@ -116,17 +118,17 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        if await sync_to_async(
-            Game.objects.filter(
-                (Q(player1=player_id) | Q(player2=player_id)) & Q(
-                    status="ongoing")
-            ).exists
-        )():
-            message = {
-                'event': 'already_ingame'
-            }
-            await cls.send_message_to_client(player_id, message)
-            return True
+        # if await sync_to_async(
+        #     Game.objects.filter(
+        #         (Q(player1=player_id) | Q(player2=player_id)) & Q(
+        #             status="ongoing")
+        #     ).exists
+        # )():
+        #     message = {
+        #         'event': 'already_ingame'
+        #     }
+        #     await cls.send_message_to_client(player_id, message)
+        #     return True
         return False  # Stub implementation
 
     @classmethod
@@ -137,8 +139,8 @@ class Matchmaker:
             return (player1, player2)
         return None
 
-    @staticmethod
-    async def process_game_result(self, game_id, winner_id):
+    @classmethod
+    async def process_result(cls, game_id, winner_id, p1_score, p2_score):
         """
         Process the result of a game. Determine if it is a single game or tournament match.
         :param game_id: The ID of the game.
@@ -146,8 +148,8 @@ class Matchmaker:
         :param is_tournament: Whether this is a tournament match.
         :param match_id: The specific match ID within the tournament (if applicable).
         """
-        if Game.objects.exists(game_id=game_id):
-            await self.process_game_result(game_id, winner_id)
+        if await Game.objects.filter(game_id=game_id).aexists():
+            await cls.process_game_result(game_id, winner_id, p1_score, p2_score)
             # self.games.remove(game)
             return
 
@@ -173,15 +175,15 @@ class Matchmaker:
             # Process the tournament match and advance the tournament state
             await self.process_tournament_match(match_id, winner_id)
 
-    @staticmethod
-    async def process_game_result(self, game_id, winner_id):
+    @classmethod
+    async def process_game_result(cls, game_id, winner_id, p1_score, p2_score):
         """Process a single game result and update the database"""
         game = await sync_to_async(Game.objects.get)(game_id=game_id)
 
         if winner_id == -1:
             await sync_to_async(game.abort_game)()
         else:
-            await sync_to_async(game.end_game)(winner_id)
+            await sync_to_async(game.end_game)(winner_id, p1_score, p2_score)
 
         # Update the game result and mark it as finished
         # game.winner = winner_id

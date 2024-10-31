@@ -46,54 +46,55 @@ const ModeSelection = () => {
   };
 
   useEffect(() => {
-
     const timeout = setTimeout(async () => {
-      const token = await getToken();
-      if (!token) {
-        console.log(`No valid token: ${token}`);
-        return;
-      }
-      const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
-      const socket = new WebSocket(wsUrl);
-
-      ws.current = socket;
-      socket.onopen = () => {
-        console.log('Socket connected');
-        setState('connected');
-      };
-
-      socket.onmessage = (e) => {
-        console.log(e.data);
-        const data = JSON.parse(e.data);
-        console.log(data);
-
-        if (data.event === 'in_queue') {
-          setState('inqueue');
+        const token = await getToken();
+        if (!token) {
+          console.log(`No valid token: ${token}`);
+          return;
         }
+        const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
+        const socket = new WebSocket(wsUrl);
+        ws.current = socket;
 
-        if (data.event === 'already_inqueue') {
-          console.log('already in queue');
-        }
-        if (data.event === 'already_ingame') {
-          console.log('already in a game');
-        }
-        if (data.event === 'game_address') {
-          console.log(data.message);
-          setGameAdrress(data.game_address);
-          setState('matched');
-        }
-      };
-      socket.onclose = () => {
-        console.log('Socket disconnected');
-        setState('disconnected');
-      };
-      return () => {
-        socket.close();
-      };
-    }, 500);
+        socket.onopen = () => {
+          console.log('Socket connected');
+          setState('connected');
+        };
 
-    return () => clearTimeout(timeout);
-  }, []);
+        socket.onmessage = (e) => {
+          console.log(e.data);
+          const data = JSON.parse(e.data);
+          console.log(data);
+
+          if (data.event === 'in_queue') {
+            setState('inqueue');
+          }
+
+          if (data.event === 'already_inqueue') {
+            console.log('already in queue');
+          }
+          if (data.event === 'already_ingame') {
+            console.log('already in a game');
+          }
+          if (data.event === 'game_address') {
+            console.log(data.message);
+            setGameAdrress(data.game_address);
+            setState('matched');
+          }
+        };
+        socket.onclose = () => {
+          console.log('Socket disconnected');
+          setState('disconnected');
+        };
+    }, 500)
+
+    return () => {
+        if (ws.current) {
+            ws.current.close();
+        }
+        clearTimeout(timeout);
+    };
+  }, [])
 
   const requestRemoteGame = () => {
     console.log('request remote game');
