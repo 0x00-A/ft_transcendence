@@ -32,9 +32,6 @@ class JwtAuthMiddleware(BaseMiddleware):
             # Strip the token and authenticate the user
             user = await get_user_from_token(token[0])
             scope['user'] = user
-            scope['profile'] = await sync_to_async(Profile.objects.get)(user=user)
-            # profile = Profile.objects.get(user=user)
-            # scope['user'] = user
         else:
             scope['user'] = AnonymousUser()
 

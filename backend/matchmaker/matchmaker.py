@@ -53,9 +53,9 @@ class Matchmaker:
         game = await sync_to_async(Game.objects.create)(
             player1=p1, player2=p2
         )
+        game_address = f"ws/game/game_{game.id}"
         # Simulate game creation with game_id and address
         # game_id = await cls.get_new_game_id()
-        game_address = f"ws/game/{game.id}"
 
         # Send the game address to both players
         message = {
@@ -146,11 +146,10 @@ class Matchmaker:
         :param is_tournament: Whether this is a tournament match.
         :param match_id: The specific match ID within the tournament (if applicable).
         """
-        for game in self.games:
-            if game == game_id:
-                await self.process_single_game_result(game, winner_id)
-                self.games.remove(game)
-                return
+        if Game.objects.exists(game_id=game_id):
+            await self.process_game_result(game_id, winner_id)
+            # self.games.remove(game)
+            return
 
         # for tournament in self.tournaments:
         #     for match in tournament.matches:
@@ -175,14 +174,19 @@ class Matchmaker:
             await self.process_tournament_match(match_id, winner_id)
 
     @staticmethod
-    async def process_single_game(self, game_id, winner_id):
+    async def process_game_result(self, game_id, winner_id):
         """Process a single game result and update the database"""
         game = await sync_to_async(Game.objects.get)(game_id=game_id)
 
+        if winner_id == -1:
+            await sync_to_async(game.abort_game)()
+        else:
+            await sync_to_async(game.end_game)(winner_id)
+
         # Update the game result and mark it as finished
-        game.winner = winner_id
-        game.state = 'ended'
-        await sync_to_async(game.save)()
+        # game.winner = winner_id
+        # game.state = 'ended'
+        # await sync_to_async(game.save)()
 
         # Notify players that the game has ended
         # await self.notify_players(game_id, game.player1_id, game.player2_id, winner_id)
