@@ -3,6 +3,8 @@ import css from './FriendRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
 import moment from 'moment';
+import Loading from './Loading';
+
 
 interface Profile {
   id: number;
@@ -49,14 +51,6 @@ const FriendRequests: React.FC = () => {
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error fetching friend requests: {error.message}</div>;
-  }
-
   const formatTimestamp = (timestamp: string) => {
     return moment(timestamp).calendar();
   };
@@ -70,7 +64,11 @@ const FriendRequests: React.FC = () => {
         </div>
       )}
       <div className={css.list}>
-        {friendPending?.map((request) => (
+      {isLoading ? (
+          <Loading /> 
+        ) : error ? (
+          <p>Error fetching friend requests: {error.message}</p>
+        ) : friendPending?.map((request) => (
           <div key={request.id} className={css.requestCard}>
             <img
               src={"http://localhost:8000" + request.sender.profile.avatar}

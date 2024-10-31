@@ -2,6 +2,7 @@ import React from 'react';
 import css from './OnlineFriends.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useGetData } from '../../api/apiHooks';
+import Loading from './Loading';
 
 interface Friend {
   id: number;
@@ -22,19 +23,15 @@ const OnlineFriends: React.FC = () => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
   return (
     <div className={css.onlineFriends}>
       <h1 className={css.title}>Online Friends</h1>
       <div className={css.friendList}>
-        {onlineFriends?.map((friend) => (
+        {isLoading ? (
+          <Loading /> 
+        ) : error ? (
+          <p>Error: loading </p>
+        ) : onlineFriends?.map((friend) => (
           <div key={friend.id} className={css.friendCard}>
             <img
               src={"http://localhost:8000" + friend.profile.avatar}

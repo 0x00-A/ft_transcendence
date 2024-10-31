@@ -3,6 +3,7 @@ import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
+import Loading from './Loading';
 
 interface Profile {
   user: number;
@@ -25,7 +26,7 @@ interface User {
 
 interface SuggestedUser {
   user: User;
-  status: "Friends" | "Pending" | "Add Friend";
+  status: "Accepted" | "Pending" | "Add Friend";
 }
 
 const AddFriend: React.FC = () => {
@@ -96,7 +97,7 @@ const AddFriend: React.FC = () => {
         <div className={css.suggestedConnections}>
           <h3 className={css.suggestedConnectionsTitle}>Suggested Connections</h3>
           {loadingSuggested ? (
-            <p>Loading suggested connections...</p>
+            <Loading /> 
           ) : (
             <div className={css.results}>
               {suggestedConnections.map(({ user, status }) => (
@@ -106,7 +107,7 @@ const AddFriend: React.FC = () => {
                     <span className={css.username}>{user.username}</span>
                   </div>
                   <div className={css.actions}>
-                    {status === "Friends" ? (
+                    {status === "Accepted" ? (
                       <span className={css.friendsBtn}>Friends</span>
                     ) : status === "Pending" ? (
                       <span className={css.pendingBtn}>Pending</span>
@@ -126,7 +127,7 @@ const AddFriend: React.FC = () => {
       {searchTerm !== '' && (
         <div className={css.results}>
           {loadingUsers ? (
-            <p>Loading users...</p>
+            <Loading /> 
           ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
               <div key={user.username} className={css.userCard}>

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
+import Loading from './Loading';
+
 
 interface FriendProfile {
   avatar: string;
@@ -50,7 +52,7 @@ const AllFriends: React.FC = () => {
 
       <div className={css.friendList}>
         {isLoading ? (
-          <p>Loading friends...</p>
+          <Loading /> 
         ) : error ? (
           <p>Error loading friends</p>
         ) : filteredFriends.length > 0 ? (
@@ -80,6 +82,7 @@ const AllFriends: React.FC = () => {
                 <button className={css.actionButton}>View Profile</button>
               </div>
             </div>
+            
           ))
         ) : (
           <p>No friends found</p>

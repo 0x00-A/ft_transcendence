@@ -263,8 +263,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-
 # Allow specific origins
 CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0:3000',
