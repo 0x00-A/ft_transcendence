@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   Dispatch,
+  useEffect,
 } from 'react';
 
 interface AuthContextType {
@@ -15,7 +16,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const savedStat = localStorage.getItem('isLoggedIn');
+    return savedStat ? JSON.parse(savedStat) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+  }, [isLoggedIn]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>

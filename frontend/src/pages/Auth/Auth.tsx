@@ -20,34 +20,36 @@ import { useAuth } from '../../contexts/AuthContext';
 //   error: string[];
 // }
 
+
 const Auth = () => {
-    const [authState, setAuthState] = useState(false);
-    // const { setIsLoggedIn } = useAuth()
-
-    const signupMutation = useSignup()
-    const loginMutation = useLogin()
-
-    if (signupMutation.isSuccess)
-      setAuthState(false)
-    if (loginMutation.isSuccess)
-      setAuthState(true)
-      // loginMutation.reset();
-
+    const [isLogin, setIslogin] = useState(true);
+    const [authStat, setAuthStat] = useState<string | null>(null);
 
     return (
       <div className={css.container}>
-        <div className={`${css.imgBox} ${authState ? css.switchImgBox : ''}`}>
+        {authStat && <div className={css.notification}>{authStat}</div>}
+        <div className={`${css.imgBox} ${isLogin ? css.switchImgBox : ''}`}>
           <PongBox />
           <div className={css.authFooter}>
-            <p>{authState ? "Don't have an account?" : 'Already have an account?'}</p>
-            <button onClick={() => { setAuthState(!authState); }}>
-              {authState ? 'Signup' : 'Login'}
+            <p>
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
+            </p>
+            <button
+              onClick={() => {
+                setIslogin(!isLogin);
+              }}
+            >
+              {isLogin ? 'Signup' : 'Login'}
             </button>
           </div>
         </div>
-        <div className={`${css.authBox} ${authState ? css.authSwitch : ''}`}>
+        <div className={`${css.authBox} ${isLogin ? css.authSwitch : ''}`}>
           {/* {authState ? <Login setAuthResponse={setAuthResponse} /> : <Signup setAuthState={setAuthState} setAuthResponse={setAuthResponse} />} */}
-          {authState ? <Login loginMutation={loginMutation} /> : <Signup signupMutation={signupMutation}/>}
+          {isLogin ? (
+            <Login />
+          ) : (
+            <Signup setIslogin={setIslogin} onSetAuthStat={setAuthStat} />
+          )}
         </div>
         {/* { authResponse?.isSuccess && <span className={css.authSuccess}>{authResponse.message}</span> }
         { authResponse?.isFailed && <span className={css.authError}>{authResponse?.error}</span> } */}

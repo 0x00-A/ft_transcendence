@@ -1,43 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
 import css from './FriendRequests.module.css';
+import { useGetData } from '../../api/apiHooks';
+import axios from 'axios';
+import moment from 'moment';
 
-interface FriendRequest {
-  id: string;
+interface Profile {
+  id: number;
   username: string;
-  avatar: string;
+  profile: {
+    avatar: string;
+    level: number | null;
+  };
 }
 
-const friendRequests: FriendRequest[] = [
-  { id: '1', username: 'abde latif', avatar: 'https://picsum.photos/202' },
-  {
-    id: '2',
-    username: 'imad king og 1337',
-    avatar: 'https://picsum.photos/206',
-  },
-  { id: '3', username: 'kasimo l9ra3', avatar: 'https://picsum.photos/207' },
-];
+interface FriendRequest {
+  id: number;
+  sender: Profile;
+  receiver: Profile;
+  status: string;
+  timestamp: string;
+}
 
 const FriendRequests: React.FC = () => {
-  const handleAccept = (userId: string) => {
-    // Implement cancel functionality here
-    console.log(`Cancelled friend request for user with ID: ${userId}`);
+  const [notification, setNotification] = useState<string | null>(null);
+
+  const { data: friendPending, isLoading, error, refetch } = useGetData<FriendRequest[]>('friend-requests/pending');
+
+  const handleAccept = async (username: string) => {
+    try {
+      await axios.post(
+        `http://localhost:8000/api/friend-request/accept/${username}/`,
+        null,
+        {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+        }
+      );
+      setNotification('Friend request accepted');
+      refetch();
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Error accepting friend request:', error);
+      setNotification('Failed to accept friend request');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error fetching friend requests: {error.message}</div>;
+  }
+
+  const formatTimestamp = (timestamp: string) => {
+    return moment(timestamp).calendar();
   };
 
   return (
     <div className={css.friendRequests}>
       <h1 className={css.title}>Friend Requests</h1>
+      {notification && (
+        <div className={css.notification}>
+          {notification}
+        </div>
+      )}
       <div className={css.list}>
-        {friendRequests.map((request) => (
+        {friendPending?.map((request) => (
           <div key={request.id} className={css.requestCard}>
             <img
-              src={request.avatar}
-              alt={request.username}
+              src={"http://localhost:8000" + request.sender.profile.avatar}
+              alt={request.sender.username}
               className={css.avatar}
             />
-            <span className={css.username}>{request.username}</span>
+            <div className={css.userInfo}>
+              <span className={css.username}>{request.sender.username}</span>
+              <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
+            </div>
             <button
-              className={css.cancelButton}
-              onClick={() => handleAccept(request.id)}
+              className={css.acceptButton}
+              onClick={() => handleAccept(request.sender.username)}
             >
               Accept
             </button>

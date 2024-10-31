@@ -24,8 +24,8 @@ env = environ.Env(
 )
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ###############
 # DISCORD ENV #
@@ -81,7 +81,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-
     'corsheaders',
     'accounts',
     'rest_framework_simplejwt',

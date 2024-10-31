@@ -1,66 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
-import APIClient from '../../api/apiClient';
 import { useGetData } from '../../api/apiHooks';
-import { axiosInstance } from '../../api/apiClient';
+import axios from 'axios';
 
 interface User {
-  id: string;
+  id: number;
   username: string;
-  fullName: string;
-  avatar: string;
+  email: string;
+  is_oauth_user: boolean;
+  first_name: string;
+  last_name: string;
+  profile: {
+    id: number;
+    avatar: string;
+    age: number | null;
+    level: number | null;
+    stats: Record<string, unknown>;
+    is_online: boolean;
+  };
 }
 
-
 const AddFriend: React.FC = () => {
-
-  console.log('rerender')
   const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  // const [isLoading, setIsLoading] = useState(true);
+  const [topPlayers, setTopPlayers] = useState<User[]>([]);
+  const { data, isLoading, error } = useGetData<User[]>('users');
+  const [notification, setNotification] = useState<string | null>(null);
 
-  const { data , isLoading, error } = useGetData<User[]>('users');
+  if (error) return <p>Error: {error.message}</p>;
 
+  useEffect(() => {
+    if (data) {
+      // const playersWithLevel = data.filter((user) => user.profile.level !== null);
+      // const sortedPlayers = playersWithLevel
+      const sortedPlayers = [...data]
+        .sort((a, b) => (b.profile.level ?? 0) - (a.profile.level ?? 0))
+        .slice(0, 5);
+      setTopPlayers(sortedPlayers);
+    }
+  }, [data]);
 
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     // setIsLoading(true);
-  //     try {
-  //       const response = await axiosInstance.get('users/');
-  //       setUsers(response.data);
-  //     } catch (error) {
-    //       console.error('Error fetching users:', error);
-    //     } finally {
-      //       setIsLoading(false);
-      //     }
-      //   };
-      //   fetchUsers();
-      // }, []);
-      
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
-    console.log("data: ", data)
+  useEffect(() => {
+    console.log("Top Players:", topPlayers);
+  }, [topPlayers]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
     setSearchTerm(term);
 
-    if (term) {
-      const filteredUsers = users.filter(
-        (user) =>
-          user.username.toLowerCase().includes(term.toLowerCase()) ||
-          user.fullName.toLowerCase().includes(term.toLowerCase())
-      );
+    if (term && Array.isArray(data)) {
+      const filteredUsers = data.filter((user) => {
+        const userName = user.username?.toLowerCase() || '';
+        const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+        return userName.includes(term.toLowerCase()) || fullName.includes(term.toLowerCase());
+      });
       setSearchResults(filteredUsers);
     } else {
       setSearchResults([]);
     }
   };
 
+  const sendFriendRequest = async (username: string) => {
+    try {
+      const response = await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      console.log("response: ", response.data);
+      setNotification('Friend request sent');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+      setNotification('Failed to send friend request');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    }
+  };
+
   return (
     <div className={css.addFriend}>
+      {notification && (
+        <div className={css.notification}>
+          {notification}
+        </div>
+      )}
+
       <h1 className={css.title}>Add Friend</h1>
       <div className={css.searchContainer}>
         <FaSearch className={css.searchIcon} />
@@ -73,51 +100,54 @@ const AddFriend: React.FC = () => {
         />
       </div>
 
-      {isLoading ? (
-        <div className={css.loadingState}>
-          <p>Loading users...</p>
-        </div>
-      ) : (
-        <>{searchTerm === '' && (
-        <div className={css.emptyState}>
-          <div className={css.emptyStateCenter}>
-            <img src="/icons/friend/searchFriend.svg" alt="Search" />
-            <p className={css.emptyStateText}>
-              Search for friends by typing their name or username above.
-            </p>
-          </div>
+      {searchTerm === '' && topPlayers.length > 0 && (
+        <div className={css.topPlayers}>
+          <h3 className={css.topPlayersTitle}>Top Players</h3>
+          {isLoading ? (
+            <p>Loading top players...</p>
+          ) : (
+            topPlayers.map((user) => (
+              <div key={user.id} className={css.userCard}>
+                <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
+                <div className={css.userInfo}>
+                  <span className={css.username}>{user.username}</span>
+                  <span className={css.level}>Level: {user.profile.level}</span>
+                </div>
+                <div className={css.actions}>
+                  <button className={css.viewProfileBtn}>View Profile</button>
+                  <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
 
       {searchTerm !== '' && (
         <div className={css.results}>
-          {searchResults.length > 0 ? (
+          {isLoading ? (
+            <p>Loading users...</p>
+          ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
               <div key={user.id} className={css.userCard}>
-                <img
-                  src={user.avatar}
-                  alt={user.username}
-                  className={css.avatar}
-                />
+                <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
-                  <span className={css.fullName}>{user.fullName}</span>
+                  <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
-                  <button className={css.addFriendBtn}>Add Friend</button>
+                  <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
                 </div>
               </div>
             ))
           ) : (
             <div className={css.notFound}>
-              <img src="/icons/friend/notFound.svg" alt="Search" />
+              <img src="/icons/friend/notFound.svg" alt="Not Found" />
               <p className={css.notFoundText}>No User Found</p>
             </div>
           )}
         </div>
-      )}
-      </>
       )}
     </div>
   );

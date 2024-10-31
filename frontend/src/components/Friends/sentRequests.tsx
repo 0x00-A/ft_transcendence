@@ -1,49 +1,81 @@
 import React from 'react';
 import css from './SentRequests.module.css';
+import { useGetData } from '../../api/apiHooks';
+import axios from 'axios';
+import moment from 'moment';
 
-interface SentRequest {
-  id: string;
+interface Profile {
+  id: number;
   username: string;
-  avatar: string;
+  profile: {
+    avatar: string;
+  };
 }
 
-const sentRequests: SentRequest[] = [
-  { id: '1', username: 'abde latif', avatar: 'https://picsum.photos/202' },
-  {
-    id: '2',
-    username: 'imad king og 1337',
-    avatar: 'https://picsum.photos/206',
-  },
-  { id: '3', username: 'kasimo l9ra3', avatar: 'https://picsum.photos/207' },
-];
+interface SentRequest {
+  id: number;
+  sender: Profile;
+  receiver: Profile;
+  status: string;
+  timestamp: string;
+}
 
 const SentRequests: React.FC = () => {
-  const handleCancel = (userId: string) => {
-    // Implement cancel functionality here
-    console.log(`Cancelled friend request for user with ID: ${userId}`);
+  const { data: sentRequests, isLoading, error, refetch } = useGetData<SentRequest[]>('friend-requests/sent');
+
+  const handleCancel = async (username: string) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/friend-request/cancel/${username}/`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      refetch();
+    } catch (err) {
+      console.error('Error canceling friend request:', err);
+    }
   };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className={css.error}>{error.message}</div>;
+  }
+
+  const formatTimestamp = (timestamp: string) => {
+    return moment(timestamp).calendar();
+  };
+
 
   return (
     <div className={css.sentRequests}>
       <h1 className={css.title}>Sent Requests</h1>
-      <div className={css.list}>
-        {sentRequests.map((request) => (
-          <div key={request.id} className={css.requestCard}>
-            <img
-              src={request.avatar}
-              alt={request.username}
-              className={css.avatar}
-            />
-            <span className={css.username}>{request.username}</span>
-            <button
-              className={css.cancelButton}
-              onClick={() => handleCancel(request.id)}
-            >
-              Cancel
-            </button>
-          </div>
-        ))}
-      </div>
+      {sentRequests && sentRequests.length === 0 ? (
+        <div className={css.noRequests}> <span>You don't have any sent requests.</span></div>
+      ) : (
+        <div className={css.list}>
+          {sentRequests?.map((request) => (
+            <div key={request.id} className={css.requestCard}>
+              <img
+                src={"http://localhost:8000" + request.receiver.profile.avatar}
+                alt={request.receiver.username}
+                className={css.avatar}
+              />
+              <div className={css.userInfo}>
+                <span className={css.username}>{request.receiver.username}</span>
+                <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
+              </div>
+              <button
+                className={css.cancelButton}
+                onClick={() => handleCancel(request.receiver.username)}
+              >
+                Cancel
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -16,11 +16,18 @@ from .views import PendingFriendRequestsView
 from .views import UserFriendsView
 from .views import SentFriendRequestsView
 from .views import CancelFriendRequestView
+from .views import OnlineFriendsView
 from .views import AllUsersView
+from .views import BlockedUsersView
+from .views import BlockUserView
+from .views import UnblockUserView
 # from .views import ProfileApiView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
 
 
 urlpatterns = [
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
     path('auth/login/refresh/', TokenRefreshView.as_view()),
@@ -34,13 +41,16 @@ urlpatterns = [
 
     path('users/', AllUsersView.as_view(), name='all_users'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
+    path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),
     path('friend-request/send/<str:username>/', SendFriendRequestView.as_view(), name='send-friend-request'),
     path('friend-request/accept/<str:username>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('friend-request/reject/<str:username>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
     path('friend-requests/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),
-    path('friend-requests/sent/', SentFriendRequestsView.as_view(), name='sent-friend-requests'),
+    path('friend-requests/sent/', SentFriendRequestsView.as_view(), name='friend-request-list'),
     path('friend-request/cancel/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
 
-    # path('profile/', ProfileApiView.as_view()),
-    # path('profiles/', ProfileModelViewSet.as_view({'get': 'list'})),
+    path('block/<str:username>/', BlockUserView.as_view(), name='block_user'),
+    path('unblock/<str:username>/', UnblockUserView.as_view(), name='unblock_user'),
+    path('blocked/', BlockedUsersView.as_view(), name='blocked_users'),
+
 ]
