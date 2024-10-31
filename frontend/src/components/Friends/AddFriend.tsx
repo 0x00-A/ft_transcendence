@@ -30,6 +30,7 @@ interface SuggestedUser {
   status: "Accepted" | "Pending" | "Add Friend";
 }
 
+
 const AddFriend: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);

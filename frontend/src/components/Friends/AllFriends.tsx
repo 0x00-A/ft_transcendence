@@ -4,6 +4,7 @@ import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
+import NoFound from './NoFound';
 
 
 interface FriendProfile {
@@ -50,6 +51,7 @@ const AllFriends: React.FC = () => {
         />
       </div>
 
+      
       <div className={css.friendList}>
         {isLoading ? (
           <Loading /> 
@@ -85,7 +87,7 @@ const AllFriends: React.FC = () => {
             
           ))
         ) : (
-          <p>No friends found</p>
+          <NoFound />
         )}
       </div>
     </div>
