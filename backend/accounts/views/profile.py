@@ -1,4 +1,3 @@
-# views.py
 from accounts.serializers.userSerializer import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -26,7 +25,10 @@ class AllUsersView(APIView):
                     ).first()
 
                     if friend_request:
-                        user_data['friend_request_status'] = friend_request.status
+                        if friend_request.receiver == request.user:
+                            user_data['friend_request_status'] = friend_request.status
+                        else:
+                            user_data['friend_request_status'] = 'cancel'
                     else:
                         user_data['friend_request_status'] = 'Add Friend'
                 except FriendRequest.DoesNotExist:

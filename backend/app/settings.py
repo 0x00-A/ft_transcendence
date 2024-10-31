@@ -241,7 +241,6 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-
 AUTH_USER_MODEL = 'accounts.User'
 
 AUTHENTICATION_BACKENDS = [
@@ -259,7 +258,7 @@ CHANNEL_LAYERS = {
             # Use environment variables for Redis host and port
             'hosts': [
                 (os.environ.get('REDIS_HOST', 'redis'),
-                 int(os.environ.get('REDIS_PORT', 6379)))
+                int(os.environ.get('REDIS_PORT', 6379)))
             ],
         },
     },
