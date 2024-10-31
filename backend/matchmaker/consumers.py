@@ -4,6 +4,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from accounts.models import Profile
 from asgiref.sync import sync_to_async
+from django.contrib.auth.models import AnonymousUser
 
 
 from .matchmaker import Matchmaker
@@ -18,12 +19,12 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         # await self.accept()
         # Register the client when connected
 
-        if user and not user.is_anonymous:
+        if user and not isinstance(user, AnonymousUser):
             await self.accept()
-            profile = await sync_to_async(Profile.objects.get)(
-                user=user
-            )
-            self.player_id = profile.id
+            # profile = await sync_to_async(Profile.objects.get)(
+            #     user=user
+            # )
+            self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self)
             # You can now use self.scope['user'] to identify the user
             await self.send(text_data=f"Hello {user.username}, you are authenticated!")

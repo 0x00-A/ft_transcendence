@@ -1,3 +1,4 @@
+from accounts.models.profile import Profile
 from .models import Game, Tournament
 from .models import Tournament, Game
 from asgiref.sync import sync_to_async
@@ -5,6 +6,7 @@ from channels.layers import get_channel_layer
 from datetime import datetime
 import json
 from django.db.models import Q
+from django.contrib.auth import get_user_model
 
 # from .global_vars import GlobalData
 
@@ -28,8 +30,8 @@ class Matchmaker:
     @classmethod
     async def request_remote_game(cls, player_id):
         # Handle remote game matchmaking here
-        if await cls.is_client_already_playing(player_id):
-            return
+        # if await cls.is_client_already_playing(player_id):
+        #     return
         # Add player to the queue, etc.
         # After finding a match:
         cls.games_queue.append(player_id)
@@ -45,12 +47,15 @@ class Matchmaker:
     async def create_remote_game(cls, player1_id, player2_id):
         print(f"creating game... p1: {player1_id} | p2: {player2_id}")
         # Store the game in your database (using Django ORM models)
+        User = get_user_model()
+        p1 = await sync_to_async(User.objects.get)(id=player1_id)
+        p2 = await sync_to_async(User.objects.get)(id=player2_id)
         game = await sync_to_async(Game.objects.create)(
-            player1=player1_id, player2=player2_id
+            player1=p1, player2=p2
         )
+        game_address = f"ws/game/game_{game.id}"
         # Simulate game creation with game_id and address
         # game_id = await cls.get_new_game_id()
-        game_address = f"ws/game/{game.id}"
 
         # Send the game address to both players
         message = {
@@ -125,11 +130,6 @@ class Matchmaker:
         return False  # Stub implementation
 
     @classmethod
-    async def get_new_game_id(cls):
-
-        return GlobalData.increment_game_id_counter()
-
-    @classmethod
     async def find_two_players(cls):
         if len(cls.games_queue) >= 2:
             player1 = cls.games_queue.pop(0)
@@ -146,11 +146,10 @@ class Matchmaker:
         :param is_tournament: Whether this is a tournament match.
         :param match_id: The specific match ID within the tournament (if applicable).
         """
-        for game in self.games:
-            if game == game_id:
-                await self.process_single_game_result(game, winner_id)
-                self.games.remove(game)
-                return
+        if Game.objects.exists(game_id=game_id):
+            await self.process_game_result(game_id, winner_id)
+            # self.games.remove(game)
+            return
 
         # for tournament in self.tournaments:
         #     for match in tournament.matches:
@@ -175,14 +174,19 @@ class Matchmaker:
             await self.process_tournament_match(match_id, winner_id)
 
     @staticmethod
-    async def process_single_game(self, game_id, winner_id):
+    async def process_game_result(self, game_id, winner_id):
         """Process a single game result and update the database"""
         game = await sync_to_async(Game.objects.get)(game_id=game_id)
 
+        if winner_id == -1:
+            await sync_to_async(game.abort_game)()
+        else:
+            await sync_to_async(game.end_game)(winner_id)
+
         # Update the game result and mark it as finished
-        game.winner = winner_id
-        game.state = 'ended'
-        await sync_to_async(game.save)()
+        # game.winner = winner_id
+        # game.state = 'ended'
+        # await sync_to_async(game.save)()
 
         # Notify players that the game has ended
         # await self.notify_players(game_id, game.player1_id, game.player2_id, winner_id)

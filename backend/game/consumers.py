@@ -79,7 +79,7 @@ class GameInstance:
         self.player1_score = 0
         self.player2_score = 0
         self.is_over = False
-        self.winner = ''
+        self.winner = 0
         self.paused = False
         self.wall_collision = False
         self.paddle_collision = False
@@ -110,12 +110,12 @@ class GameInstance:
     def check_for_winner(self):
         # Logic to determine if a player has won and handle the end of the game
         if self.player1_score >= winning_score:
-            self.winner = 'player1'
+            self.winner = 1
             self.winner_id = self.player1_user_id
         elif self.player2_score >= winning_score:
             # self.is_over = True
             self.winner_id = self.player2_user_id
-            self.winner = 'player2'
+            self.winner = 2
 
     def check_collision(self):
         # Collision detection with paddle
@@ -288,20 +288,20 @@ class GameConsumer(AsyncWebsocketConsumer):
         # Get the game_id from the URL route, e.g., ws://localhost/1
         await self.accept()
         self.game_id = self.scope['url_route']['kwargs']['game_id']
-        await self.channel_layer.group_add(f"game_{self.game_id}", self.channel_name)
+        await self.channel_layer.group_add(self.game_id, self.channel_name)
 
-        # Initialize the waiting room for this game if it doesn't exist
         if not get_game(self.game_id):
             create_game(self.game_id)
             get_game(self.game_id).connected_players += 1
             get_game(self.game_id).player1_user_id = self.scope['user'].id
             self.player_id = 'player1'
+
         else:
             get_game(self.game_id).connected_players += 1
             get_game(self.game_id).player2_user_id = self.scope['user'].id
             self.player_id = 'player2'
             await self.channel_layer.group_send(
-                f"game_{self.game_id}",
+                self.game_id,
                 {
                     "type": "game.init",  # This matches the method name
                     # "room_id": game_room_id,
@@ -359,11 +359,9 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if game_id:
             game: GameInstance = get_game(game_id)
-            # Remove the player from the game room group
             await self.channel_layer.group_discard(f"game_{self.game_id}", self.channel_name)
-            # Optionally notify the other player that their opponent disconnected
             await self.channel_layer.group_send(
-                f"game_{self.game_id}",
+                self.game_id,
                 {
                     'type': 'player.disconnected',
                     'message': 'Your opponent has disconnected.'
@@ -377,66 +375,62 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def abort_game(self):
         # Synchronously retrieve the Game object and update its state
-        game = await sync_to_async(Game.objects.get)(game_id=self.game_id)
+        game_instance: GameInstance = get_game(self.game_id)
+        # game_instance.is_over = True
+        game_instance.winner = -1
+        self.winner_id = -1
 
-        # Update the game's state in the database
-        # game.player1_score = self.player1_score
-        # game.player2_score = self.player2_score
-        game.is_over = True
-        game.winner = -1
-        game.status = 'aborted'
+        # game = await sync_to_async(Game.objects.get)(game_id=self.game_id)
+        # await sync_to_async(game.abort_game)()
 
-        # Save the changes to the database
-        await sync_to_async(game.save)()
+    # async def find_match(self):
+    #     # Lock the critical section to avoid race conditions
+    #     if not len(GameConsumer.waiting_players):
+    #         # If no one is waiting, assign player1 and add to waiting list
+    #         self.player_id = 'player1'
+    #         game_room_id = 'game_' + str(uuid.uuid4())
+    #         self.scope['game_room'] = game_room_id
+    #         await self.channel_layer.group_add(game_room_id, self.channel_name)
 
-    async def find_match(self):
-        # Lock the critical section to avoid race conditions
-        if not len(GameConsumer.waiting_players):
-            # If no one is waiting, assign player1 and add to waiting list
-            self.player_id = 'player1'
-            game_room_id = 'game_' + str(uuid.uuid4())
-            self.scope['game_room'] = game_room_id
-            await self.channel_layer.group_add(game_room_id, self.channel_name)
+    #         GameConsumer.waiting_players.add(game_room_id)
 
-            GameConsumer.waiting_players.add(game_room_id)
+    #         await self.send(text_data=json.dumps({
+    #             'type': 'connection',
+    #             'player_id': self.player_id,
+    #             'game_room_id': game_room_id,
+    #         }))
+    #         # await self.send(text_data=json.dumps({
+    #         #     'type': 'connection',
+    #         #     'player_id': self.player_id,
+    #         # }))
+    #     else:
+    #         self.player_id = 'player2'
+    #         game_room_id = GameConsumer.waiting_players.pop()
+    #         await self.channel_layer.group_add(game_room_id, self.channel_name)
+    #         self.scope['game_room'] = game_room_id
 
-            await self.send(text_data=json.dumps({
-                'type': 'connection',
-                'player_id': self.player_id,
-                'game_room_id': game_room_id,
-            }))
-            # await self.send(text_data=json.dumps({
-            #     'type': 'connection',
-            #     'player_id': self.player_id,
-            # }))
-        else:
-            self.player_id = 'player2'
-            game_room_id = GameConsumer.waiting_players.pop()
-            await self.channel_layer.group_add(game_room_id, self.channel_name)
-            self.scope['game_room'] = game_room_id
+    #         # other_player_channel.scope['game_room'] = game_room_id
+    #         create_game(game_room_id)
 
-            # other_player_channel.scope['game_room'] = game_room_id
-            create_game(game_room_id)
+    #         # Add both players to the same game room
+    #         # await self.channel_layer.group_add(game_room_id, other_player_channel)
 
-            # Add both players to the same game room
-            # await self.channel_layer.group_add(game_room_id, other_player_channel)
-
-            # Send information to both players
-            await self.send(text_data=json.dumps({
-                'type': 'connection',
-                'player_id': self.player_id,
-                'game_room_id': game_room_id,
-            }))
-            await self.channel_layer.group_send(
-                game_room_id,
-                {
-                    "type": "game.init",  # This matches the method name
-                    # "room_id": game_room_id,
-                    # "message": 'game_started'
-                }
-            )
-            # Start the game loop
-            asyncio.create_task(self.start_game(game_room_id))
+    #         # Send information to both players
+    #         await self.send(text_data=json.dumps({
+    #             'type': 'connection',
+    #             'player_id': self.player_id,
+    #             'game_room_id': game_room_id,
+    #         }))
+    #         await self.channel_layer.group_send(
+    #             game_room_id,
+    #             {
+    #                 "type": "game.init",  # This matches the method name
+    #                 # "room_id": game_room_id,
+    #                 # "message": 'game_started'
+    #             }
+    #         )
+    #         # Start the game loop
+    #         asyncio.create_task(self.start_game(game_room_id))
 
     async def start_game(self, game_id):
         game_instance: GameInstance = games[game_id]
@@ -503,7 +497,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             },
         }
         await self.channel_layer.group_send(
-            f"game_{game.game_id}",
+            game.game_id,
             {
                 'type': 'game.state.update',
                 'state1': game_state,
@@ -522,7 +516,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         }
         game.is_over = True
         await self.channel_layer.group_send(
-            f"game_{game.game_id}",
+            game.game_id,
             {
                 'type': 'game.over',
                 'state1': game_state,

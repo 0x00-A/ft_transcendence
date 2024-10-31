@@ -4,6 +4,7 @@ from channels.db import database_sync_to_async
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from accounts.models import Profile
+from django.contrib.auth.models import AnonymousUser
 
 
 User = get_user_model()
@@ -13,7 +14,7 @@ class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope['user']
 
-        if self.user and not self.user.is_anonymous:
+        if self.user and not isinstance(self.scope['user'], AnonymousUser):
             await self.accept()
 
             await self.set_online_status(True)
