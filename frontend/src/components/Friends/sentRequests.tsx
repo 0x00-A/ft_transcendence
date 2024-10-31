@@ -4,6 +4,7 @@ import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
 import moment from 'moment';
 import Loading from './Loading';
+import NoSentRequests from './NoSentRequests';
 
 interface Profile {
   id: number;
@@ -46,7 +47,7 @@ const SentRequests: React.FC = () => {
     <div className={css.sentRequests}>
       <h1 className={css.title}>Sent Requests</h1>
       {sentRequests && sentRequests.length === 0 ? (
-        <div className={css.noRequests}> <span>You don't have any sent requests.</span></div>
+        <NoSentRequests/>
       ) : (
         <div className={css.list}>
           {isLoading ? (
