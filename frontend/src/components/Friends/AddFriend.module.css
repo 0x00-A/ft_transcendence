@@ -128,25 +128,18 @@
   cursor: pointer;
   font-size: 13px;
   transition: background-color 0.2s, transform 0.2s;
-}
-
-.viewProfileBtn {
-  background-color: #d0d8e7;
-  color: #1e2533;
-}
-
-.viewProfileBtn:hover {
-  background-color: #9faabe;
-  transform: scale(1.05);
-}
-
-.addFriendBtn {
-  background-color: #445c85;
+  background-color: #1e2533;
   color: #f8f3e3;
 }
 
+
+.viewProfileBtn:hover {
+  background-color: #5774a1;
+  transform: scale(1.05);
+}
+
 .addFriendBtn:hover {
-  background-color: #334462;
+  background-color: #5774a1;
   transform: scale(1.05);
 }
 
@@ -209,7 +202,7 @@
 }
 
 .pendingBtn {
-  background-color: #ff9800; 
+  background-color: #5774a1; 
   color: white;
 }
 
@@ -222,11 +215,8 @@
   cursor: pointer;
   font-size: 13px;
   transition: background-color 0.2s, transform 0.2s;
-  background-color: #d0d8e7;
-}
-
-.viewProfileBtn {
-  color: #1e2533;
+  background-color: #1e2533;
+  color: #f8f3e3;
 }
 
 .acceptBtn:hover {
@@ -235,7 +225,6 @@
 }
 
 .rejectBtn:hover {
-  color: #d0d8e7;
   background-color: #e53935; 
   transform: scale(1.05);
 }
@@ -246,7 +235,7 @@
   font-size: 14px;
   font-weight: bold;
   color: #f8f3e3; 
-  background-color: #4caf50; 
+  background-color: #1e2533; 
   display: inline-block; 
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
@@ -254,7 +243,8 @@
 }
 
 .friendsStatus:hover {
-  background-color: #45a049;
+  background-color: #1E2538;
+  transform: scale(1.05);        
 }
 
 
