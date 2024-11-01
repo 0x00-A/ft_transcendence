@@ -23,14 +23,22 @@ class AllUsersView(APIView):
                     friend_request = FriendRequest.objects.filter(
                         Q(sender=request.user, receiver=user) | Q(sender=user, receiver=request.user)
                     ).first()
-
                     if friend_request:
-                        if friend_request.receiver == request.user:
+                        if friend_request.status == 'accepted':
+                            user_data['friend_request_status'] = 'accepted'
+                        elif friend_request.receiver == request.user:
                             user_data['friend_request_status'] = friend_request.status
                         else:
                             user_data['friend_request_status'] = 'cancel'
                     else:
                         user_data['friend_request_status'] = 'Add Friend'
+                    # if friend_request:
+                    #     if friend_request.receiver == request.user:
+                    #         user_data['friend_request_status'] = friend_request.status
+                    #     else:
+                    #         user_data['friend_request_status'] = 'cancel'
+                    # else:
+                    #     user_data['friend_request_status'] = 'Add Friend'
                 except FriendRequest.DoesNotExist:
                     user_data['friend_request_status'] = 'Add Friend'
                 user_data_with_status.append(user_data)
