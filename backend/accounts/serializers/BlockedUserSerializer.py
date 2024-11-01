@@ -1,5 +1,3 @@
-# serializers/blocked_user_serializer.py
-
 from rest_framework import serializers
 from ..models.BlockRelationship import BlockRelationship
 from accounts.serializers.userSerializer import UserSerializer 
