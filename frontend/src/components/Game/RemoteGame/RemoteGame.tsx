@@ -104,8 +104,11 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
         console.log(`No valid token: ${tokenRef.current}`);
         return;
       }
+      let gameSocket: WebSocket | null = null;
       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${tokenRef.current}`;
-      const gameSocket = new WebSocket(wsUrl);
+      if (!ws.current)
+        gameSocket = new WebSocket(wsUrl);
+      if (!gameSocket) return
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
@@ -162,12 +165,14 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
           setIsWinner(data.state.is_winner);
           setIsGameOver(true);
           setCurrentScreen('end');
+          gameSocket.close();
+          ws.current = null;
         }
       };
 
       gameSocket.onclose = (e) => {
         console.log('WebSocket Disconnected');
-        setGameState('ended');
+        // setGameState('ended');
       };
     }, 500);
 
@@ -264,10 +269,11 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
       //     })
       //   );
       // }
+      if (!ws.current) return;
       if (keysPressed[0])
-        ws.current?.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
+        ws.current.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
       if (keysPressed[1])
-        ws.current?.send(
+        ws.current.send(
           JSON.stringify({ type: 'keydown', direction: 'down' })
         );
     };

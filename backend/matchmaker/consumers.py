@@ -17,15 +17,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         if user and not isinstance(user, AnonymousUser):
             await self.accept()
-            # profile = await sync_to_async(Profile.objects.get)(
-            #     user=user
-            # )
             self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self)
-            # You can now use self.scope['user'] to identify the user
-            await self.send(text_data=f"Hello {user.username}, you are authenticated!")
+            await self.send(text_data=json.dumps(f"Hello {user.username}, you are authenticated!"))
         else:
-            # Reject the connection if user is not authenticated
             print(f"##################### User not found ##########################")
             await self.close()
 
