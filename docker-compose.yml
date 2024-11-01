@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app/backend
+    # volumes:
+    #   - ./backend:/app/backend
     command: >
       sh -c "python manage.py wait_for_db &&
               python manage.py migrate &&
@@ -32,6 +32,15 @@ services:
         condition: service_started
       redis:
         condition: service_started
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app/backend
+          # ignore:
+          # -
+        - action: rebuild
+          path: requirements.txt
 
   frontend:
     build:
@@ -40,9 +49,9 @@ services:
 
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend/src:/app/frontend/src
-      - ./frontend/public:/app/frontend/public
+    # volumes:
+    #   - ./frontend/src:/app/frontend/src
+    #   - ./frontend/public:/app/frontend/public
     environment:
       - CHOKIDAR_USEPOLLING=true
     # volumes:
@@ -51,15 +60,24 @@ services:
     depends_on:
       backend:
         condition: service_started
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app/frontend
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
 
   db:
-    # image: postgres:13-alpine
-    build:
-      context: ./db
-      dockerfile: Dockerfile
+    image: postgres:13-alpine
+    # build:
+    #   context: ./db
+    #   dockerfile: Dockerfile
 
-    ports:
-      - '5432:5432'
+    # ports:
+    #   - '5432:5432'
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:
