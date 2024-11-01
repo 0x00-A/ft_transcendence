@@ -86,11 +86,15 @@ class GameInstance:
         self.wall_collision = False
         self.paddle_collision = False
         self.connected_players = 0
-        self.player1_user_id = None
-        self.player2_user_id = None
-        self.winner_id = None
+        # self.player1_user_id = None
+        # self.player2_user_id = None
+        # self.winner_id = None
 
         # self.broadcast_initial_game_state()
+        self.state = {
+            "player1_paddle.y": 150,
+            "player2_paddle.y": 200,
+        }
 
     def reset_ball(self):
         self.ball.x = 3 * canvas_width / 4 if self.ball.dx > 0 else canvas_width / 4
@@ -112,11 +116,11 @@ class GameInstance:
     def check_for_winner(self):
         # Logic to determine if a player has won and handle the end of the game
         if self.player1_score >= winning_score:
-            self.winner_id = self.player1_user_id
+            # self.winner_id = self.player1_user_id
             self.winner = 1
         elif self.player2_score >= winning_score:
             # self.is_over = True
-            self.winner_id = self.player2_user_id
+            # self.winner_id = self.player2_user_id
             self.winner = 2
 
     def check_collision(self):
@@ -298,27 +302,14 @@ class GameConsumer(AsyncWebsocketConsumer):
             if not get_game(self.game_id):
                 create_game(self.game_id)
                 get_game(self.game_id).connected_players += 1
-                get_game(self.game_id).player1_user_id = user.id
-                # if await Game.objects.filter(game_id=self.game_id).aexists():
-                #     if user.games_as_player1.filter(game_id=self.game_id).exists():
-                #         self.player_id = 'player1'
-                #     else:
-                #         self.player_id = 'player2'
-                # elif await Match.objects.filter(match_id=self.game_id).aexists():
-                #     if user.matches_as_player1.filter(match_id=self.game_id).exists():
-                #         self.player_id = 'player1'
-                #     else:
-                #         self.player_id = 'player2'
                 await self.set_player_id_name()
             else:
                 get_game(self.game_id).connected_players += 1
-                get_game(self.game_id).player2_user_id = user.id
-                # self.player_id = 'player2'
                 await self.set_player_id_name()
                 await self.channel_layer.group_send(
                     self.game_id,
                     {
-                        "type": "game.init",  # This matches the method name
+                        "type": "game.init",
                         # "room_id": game_room_id,
                         # "message": 'game_started'
                     }
@@ -335,11 +326,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.player_id = 'player1'
             else:
                 self.player_id = 'player2'
-        elif await Match.objects.filter(match_id=self.game_id).aexists():
-            if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
-                self.player_id = 'player1'
-            else:
-                self.player_id = 'player2'
+        # elif await Match.objects.filter(match_id=self.game_id).aexists():
+        #     if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
+        #         self.player_id = 'player1'
+        #     else:
+        #         self.player_id = 'player2'
 
     async def receive(self, text_data):
         data = json.loads(text_data)
