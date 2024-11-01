@@ -131,6 +131,8 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
           // setTimeout(() => {
           //   // init_game_state(data);
           // }, 100);
+          paddle1Ref.current.x = data.state[`player1_paddle_x`];
+          paddle2Ref.current.x = data.state[`player2_paddle_x`];
           setGameState('started');
         }
         if (data.type === 'player_disconnected') {
@@ -143,10 +145,10 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
           ballRef.current.y = data.state.ball.y;
           paddle1Ref.current.y = data.state[`player1_paddle_y`];
           paddle2Ref.current.y = data.state[`player2_paddle_y`];
-          paddle1Ref.current.x = data.state[`player1_paddle_x`];
-          paddle2Ref.current.x = data.state[`player2_paddle_x`];
-          setScore1(data.state[`player1_score`]);
-          setScore2(data.state[`player2_score`]);
+          // paddle1Ref.current.x = data.state[`player1_paddle_x`];
+          // paddle2Ref.current.x = data.state[`player2_paddle_x`];
+          // setScore1(data.state[`player1_score`]);
+          // setScore2(data.state[`player2_score`]);
         }
         if (data.type === 'pause') {
           setPaused(true);
@@ -167,6 +169,10 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
           setCurrentScreen('end');
           gameSocket.close();
           ws.current = null;
+        }
+        if (data.type === 'score_update') {
+          setScore1(data.state[`player1_score`]);
+          setScore2(data.state[`player2_score`]);
         }
       };
 
@@ -269,10 +275,9 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
       //     })
       //   );
       // }
-      if (!ws.current) return;
-      if (keysPressed[0])
+      if (ws.current && keysPressed[0])
         ws.current.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
-      if (keysPressed[1])
+      if (ws.current && keysPressed[1])
         ws.current.send(
           JSON.stringify({ type: 'keydown', direction: 'down' })
         );
