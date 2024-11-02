@@ -54,5 +54,4 @@ urlpatterns = [
     path('block/<str:username>/', BlockUserView.as_view(), name='block_user'),
     path('unblock/<str:username>/', UnblockUserView.as_view(), name='unblock_user'),
     path('blocked/', BlockedUsersView.as_view(), name='blocked_users'),
-
 ]
