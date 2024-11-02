@@ -1,0 +1,18 @@
+.oauth2Container {
+    min-height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.usernameForm {
+    background-color: var(--main-surface-tertiary);
+    width: 400px;
+    height: 500px;
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

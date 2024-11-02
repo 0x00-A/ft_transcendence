@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -11,6 +12,7 @@ from ..views.login import get_token_for_user
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def oauth2_set_username(request):
+
     user_data = request.session.get('user_data')
     if user_data is None:
         return Response(data={'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)

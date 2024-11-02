@@ -45,9 +45,9 @@ const Signup = ({setIslogin, onSetAuthStat}) => {
    useEffect(() => {
      if (mutation.isError) {
         const err = mutation.error?.response.data as SignupFormData;
-        err?.username && setError("username", {type: '', message: err?.username})
-        err?.email && setError("email", {type: '', message: err?.email})
-        err?.password && setError("password", {type: '', message: err?.password})
+        err?.username && setError("username", {type: '', message: err?.username}, {shouldFocus:true})
+        err?.email && setError("email", {type: '', message: err?.email}, {shouldFocus:true})
+        err?.password && setError("password", {type: '', message: err?.password}, {shouldFocus:true})
      }
    }, [mutation.isError, mutation.error])
 
