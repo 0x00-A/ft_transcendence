@@ -56,6 +56,29 @@ const FriendRequests: React.FC = () => {
     }
   };
 
+  const rejectFriendRequest = async (username: string) => {
+    try {
+      await axios.post(
+        `http://localhost:8000/api/friend-request/reject/${username}/`,
+        null,
+        {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+        }
+      );
+      refetch()
+      setNotification('Friend request rejected');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Error rejecting friend request:', error);
+      setNotification('Failed to reject friend request');
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    }
+  };
+
   const formatTimestamp = (timestamp: string) => {
     return moment(timestamp).calendar();
   };
@@ -91,12 +114,18 @@ const FriendRequests: React.FC = () => {
                   <span className={css.username}>{request.sender.username}</span>
                   <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
                 </div>
-                <button
-                  className={css.acceptButton}
-                  onClick={() => handleAccept(request.sender.username)}
-                >
-                  Accept
-                </button>
+                <div className={css.actions}>
+                  <button
+                    className={css.acceptButton}
+                    onClick={() => handleAccept(request.sender.username)}
+                  >
+                    Accept
+                  </button>
+                  <button onClick={() => rejectFriendRequest(request.sender.username)} className={css.rejectBtn}>
+                    Reject
+                  </button>
+                </div>
+                
               </div>
             ))}
           </div>

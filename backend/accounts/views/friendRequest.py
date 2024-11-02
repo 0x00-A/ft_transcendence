@@ -250,12 +250,7 @@ class RejectFriendRequestView(APIView):
                 receiver=receiver_user,
                 status='pending'
             )
-
             friend_request.delete()
-            # # Update request status to rejected
-            # friend_request.status = 'rejected'
-            # friend_request.save()
-
             return Response({"message": "Friend request rejected"}, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
