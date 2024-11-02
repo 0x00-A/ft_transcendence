@@ -38,7 +38,7 @@ const Oauth2Callback = () => {
             console.log(params);
           }
         }
-        if (status == '409') {
+        if (status == '409' || status == '400') {
           setUsernameForm(true)
           const status = params.get('error') as string;
           setFormStatus(status)

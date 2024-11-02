@@ -193,16 +193,15 @@
   border-radius: 8px; 
   font-size: 13px;
   cursor: pointer;
+  color: #f8f3e3;
 }
 
 .friendsBtn {
-  background-color: #4caf50; 
-  color: white;
+  background-color: #5774a1; 
 }
 
 .pendingBtn {
   background-color: #5774a1; 
-  color: white;
 }
 
 
