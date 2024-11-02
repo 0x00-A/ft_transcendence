@@ -3,32 +3,26 @@ import IntraLogo from "../assets/42Logo.svg";
 import DiscordIcon from "../assets/discordIcon.svg";
 import { FcGoogle } from "react-icons/fc";
 import { IconContext } from "react-icons";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 
+const oauth2 = async (url) => {
+  // try {
+    const response = await axios.get(
+      url
+    );
+    return response.data
+}
 
 const ExternAuthBtn = ({icon, btnText} : {icon:string, btnText:string}) => {
 
   const handleClick = () => {
-    // ev.preventDefault()
-    const url = `http://localhost:8000/api/oauth2/${icon}/authorize/`
-    console.log(url);
+    const redirect_uri = encodeURIComponent('http://localhost:3000/oauth2/callback');
+    const url = `http://localhost:8000/api/oauth2/${icon}?redirect_uri=${redirect_uri}`;
     window.location.href = url;
   }
-
-  const {setIsLoggedIn} = useAuth()
-  useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-    // const refreshtoken = new URLSearchParams(window.location.search).get("token");
-    if (token) {
-      setIsLoggedIn(true);
-      localStorage.setItem("access_token", token);
-      // Navigate to your dashboard or main app screen after successful login
-      window.location.href = "http://localhost:3000/";
-    }
-  }, []);
 
   return (
     <button type="submit" className={css.intraAuthBtn} onClick={handleClick}>

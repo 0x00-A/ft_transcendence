@@ -61,12 +61,14 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password']
 
-    # def validate(self, attrs):
-    #     try:
-    #         User.objects.get(username=attrs['username'])
-    #     except User.DoesNotExist:
-    #         raise serializers.ValidationError('username not exists!')
-    #     return attrs
+    def validate(self, attrs):
+        try:
+            user = User.objects.get(username=attrs['username'])
+            if (not user.check_password(attrs['password'])):
+                raise serializers.ValidationError({'password': 'password not valid'})
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'username': 'username not exist'})
+        return attrs
 
 
 class UserSerializer(serializers.ModelSerializer):
