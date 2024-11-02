@@ -27,7 +27,7 @@ interface User {
 
 interface SuggestedUser {
   user: User;
-  status: "Accepted" | "Pending" | "Add Friend";
+  status: "Friends" | "Pending" | "Add Friend";
 }
 
 
@@ -148,7 +148,7 @@ const AddFriend: React.FC = () => {
                     <span className={css.username}>{user.username}</span>
                   </div>
                   <div className={css.actions}>
-                    {status === "Accepted" ? (
+                    {status === "Friends" ? (
                       <span className={css.friendsBtn}>Friends</span>
                     ) : status === "Pending" ? (
                       <span className={css.pendingBtn}>Pending</span>
