@@ -30,9 +30,11 @@ class AllUsersView(APIView):
 
     def get(self, request):
         try:
-            users = User.objects.exclude(username=request.user.username)
+            users = User.objects.exclude(
+                Q(blocked_users__blocked=request.user) | Q(blockers__blocker=request.user)
+            ).exclude(username=request.user.username)
+
             user_data_with_status = []
-            
             for user in users:
                 user_data = UserSerializer(user).data
                 user_data['friend_request_status'] = get_friend_status(request.user, user)

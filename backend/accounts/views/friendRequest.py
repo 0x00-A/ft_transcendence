@@ -15,10 +15,8 @@ class SuggestedConnectionsView(APIView):
     def get(self, request):
         user = request.user
 
-        # Example logic: Get users who share mutual friends with the current user
         mutual_friend_ids = User.objects.filter(friends__in=user.friends.all()).exclude(id=user.id).distinct()
         
-        # Check friendship status with each suggested user
         suggested_users = []
         for suggested_user in mutual_friend_ids:
             if suggested_user in user.friends.all():
@@ -34,7 +32,6 @@ class SuggestedConnectionsView(APIView):
             })
 
         return Response(suggested_users)
-    
 
 class UserFriendsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -144,59 +141,6 @@ class SendFriendRequestView(APIView):
                 {'error': 'Internal server error'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
-# class SendFriendRequestView(APIView):
-#     permission_classes = [IsAuthenticated]
-#     serializer_class = FriendRequestSerializer
-
-#     def post(self, request, username):
-#         try:
-#             receiver = User.objects.get(username=username)
-#             sender_user = request.user
-
-#             if sender_user == receiver:
-#                 return Response(
-#                     {'error': 'Cannot send friend request to yourself'}, 
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
-#             if receiver in sender_user.friends.all():
-#                 return Response(
-#                     {'error': 'Already friends with this user'},
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
-
-#             friend_request, created = FriendRequest.objects.get_or_create(
-#                 sender=sender_user,
-#                 receiver=receiver,
-#                 defaults={'status': 'pending'}
-#             )
-
-#             if not created:
-#                 if friend_request.status == 'pending':
-#                     return Response(
-#                         {'error': 'Friend request already sent'}, 
-#                         status=status.HTTP_400_BAD_REQUEST
-#                     )
-#                 elif friend_request.status == 'rejected':
-#                     friend_request.status = 'pending'
-#                     friend_request.save()
-#                     created = True
-
-#             if created:
-#                 serializer = FriendRequestSerializer(friend_request)
-#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#         except User.DoesNotExist:
-#             return Response(
-#                 {'error': 'Profile does not exist'}, 
-#                 status=status.HTTP_404_NOT_FOUND
-#             )
-#         except Exception as e:
-#             return Response(
-#                 {f'error: Internal server error {e}'}, 
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
 
 class AcceptFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
