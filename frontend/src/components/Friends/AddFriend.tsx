@@ -63,15 +63,19 @@ const AddFriend: React.FC = () => {
 
   const sendFriendRequest = async (username: string) => {
     try {
-      await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
+      const response = await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
       });
       refetch()
-      setNotification('Friend request sent');
+      setNotification(response.data.message || 'Friend request sent');
       setTimeout(() => setNotification(null), 3000);
-    } catch (error) {
-      console.error('Error sending friend request:', error);
-      setNotification('Failed to send friend request');
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setNotification(error.response.data.error);
+      } else {
+        setNotification('Failed to send friend request');
+      }
+    } finally {
       setTimeout(() => setNotification(null), 3000);
     }
   };
@@ -102,7 +106,7 @@ const AddFriend: React.FC = () => {
   
   const acceptFriendRequest = async (username: string) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://localhost:8000/api/friend-request/accept/${username}/`,
         null,
         {
@@ -110,16 +114,19 @@ const AddFriend: React.FC = () => {
         }
       );
       refetch()
+      setNotification(response.data.message || 'Friend request accepted');
       setNotification('Friend request accepted');
       setTimeout(() => {
         setNotification(null);
       }, 3000);
-    } catch (error) {
-      console.error('Error accepting friend request:', error);
-      setNotification('Failed to accept friend request');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setNotification(error.response.data.error);
+      } else {
+        setNotification('Failed to accept friend request');
+      }
+    } finally {
+      setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -135,6 +142,8 @@ const AddFriend: React.FC = () => {
       console.error('Error canceling friend request:', err);
     }
   };
+
+
   return (
     <div className={css.addFriend}>
       {notification && (
