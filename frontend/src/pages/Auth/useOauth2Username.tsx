@@ -44,8 +44,9 @@ const useOauth2Username = () => {
   const mutation = useMutation({
     mutationFn: submitUsername,
     onError: (error: AxiosError) => {
-      console.log(error);
-
+      const errs = error?.response.data as UsernameFormData;
+      errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
+      error?.response.data?.message && setError("root", {type: '', message: error.response.data.message});
       // if (error.response) {
       //     console.error('Error message:', error.response.data);
       //   } else {
