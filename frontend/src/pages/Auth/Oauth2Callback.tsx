@@ -80,7 +80,7 @@ const Oauth2Callback = () => {
               <img src={UserIcon} alt="X" />
               <input type="text" placeholder="username" {...register('username')} />
               {errors.username && <span className={authcss.fieldError}>{errors.username.message}</span>}
-            </div>
+            </div>78-------x-
             <button type="submit" className={authcss.authBtn}>
               Submit
             </button>
