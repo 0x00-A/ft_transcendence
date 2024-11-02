@@ -1,7 +1,22 @@
 /* Example for AllFriends.module.css */
 .allFriends {
   padding: 20px;
+  height: 100%;
   color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #394056;
+}
+
+.friendList {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .userInfo {
@@ -45,11 +60,6 @@
   background-color: #d0d8e7;
 }
 
-.friendList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
 .friendCard {
   display: flex;

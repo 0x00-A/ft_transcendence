@@ -1,6 +1,12 @@
 .friendRequests {
   padding: 20px;
+  height: 100%;
   color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #394056;
 }
 
 .userInfo {
@@ -40,10 +46,13 @@
   color: #d0d8e7;
 }
 
-.list {
+.listContainer {
+  padding: 5px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .requestCard {

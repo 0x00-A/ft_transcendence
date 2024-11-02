@@ -1,6 +1,21 @@
 .blockedList {
   padding: 20px;
+  height: 100%;
   color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #394056;
+}
+
+.list {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .userInfo {
@@ -49,11 +64,7 @@
 .searchInput:focus {
   background-color: #d0d8e7;
 }
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+
 
 .userCard {
   display: flex;
