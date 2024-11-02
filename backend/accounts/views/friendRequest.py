@@ -129,7 +129,8 @@ class SendFriendRequestView(APIView):
 
             if created:
                 serializer = FriendRequestSerializer(friend_request)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response({'message': 'Friend request sent successfully'},
+                        status=status.HTTP_201_CREATED)
 
         except User.DoesNotExist:
             return Response(
@@ -215,7 +216,7 @@ class AcceptFriendRequestView(APIView):
             # Add as friends (symmetrical)
             receiver.friends.add(sender_user)
 
-            return Response({"message": "Friend request accepted"}, status=status.HTTP_200_OK)
+            return Response({"message": "Friend request accepted successfully"}, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
             return Response(
