@@ -60,7 +60,6 @@
   transition: transform 0.2s ease, background-color 0.3s;
 }
 
-
 .friendCard:hover {
   transform: scale(1.01);
 }

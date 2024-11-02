@@ -138,6 +138,7 @@ const AddFriend: React.FC = () => {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
       });
+      refetch()
     } catch (err) {
       console.error('Error canceling friend request:', err);
     }
@@ -213,8 +214,7 @@ const AddFriend: React.FC = () => {
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
-
-                  {/* Conditionally render buttons based on friend_request_status */}
+                  
                   {user.friend_request_status === "accepted" ? (
                     <span className={css.friendsStatus}>Friends</span>
                   ) : user.friend_request_status === "pending" ? (
