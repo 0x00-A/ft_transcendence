@@ -153,7 +153,7 @@ const AddFriend: React.FC = () => {
         </div>
       )}
 
-      <h1 className={css.title}>Add Friend</h1>
+      <h1 className={css.title}>Search & Add Friends</h1>
       <div className={css.searchContainer}>
         <FaSearch className={css.searchIcon} />
         <input
@@ -214,7 +214,7 @@ const AddFriend: React.FC = () => {
                 </div>
                 <div className={css.actions}>
                   <button className={css.viewProfileBtn}>View Profile</button>
-                  
+
                   {user.friend_request_status === "accepted" ? (
                     <span className={css.friendsStatus}>Friends</span>
                   ) : user.friend_request_status === "pending" ? (
