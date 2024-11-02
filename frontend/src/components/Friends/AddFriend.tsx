@@ -4,6 +4,7 @@ import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
 import axios from 'axios';
 import Loading from './Loading';
+import { apiAcceptFriendRequest, apiCancelFriendRequest, apiRejectFriendRequest, apiSendFriendRequest } from '../../api/friendApi';
 
 interface Profile {
   user: number;
@@ -63,87 +64,55 @@ const AddFriend: React.FC = () => {
 
   const sendFriendRequest = async (username: string) => {
     try {
-      const response = await axios.post(`http://localhost:8000/api/friend-request/send/${username}/`, null, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-      });
-      refetch()
-      setNotification(response.data.message || 'Friend request sent');
+      const message = await apiSendFriendRequest(username);
+      setNotification(message);
+      refetch();
       setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.error) {
-        setNotification(error.response.data.error);
-      } else {
-        setNotification('Failed to send friend request');
-      }
+      setNotification(error.message || 'Failed to send friend request');
     } finally {
       setTimeout(() => setNotification(null), 3000);
     }
   };
-
+  
   const rejectFriendRequest = async (username: string) => {
     try {
-      await axios.post(
-        `http://localhost:8000/api/friend-request/reject/${username}/`,
-        null,
-        {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-      );
-      refetch()
-      setNotification('Friend request rejected');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    } catch (error) {
-      console.error('Error rejecting friend request:', error);
-      setNotification('Failed to reject friend request');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      const message = await apiRejectFriendRequest(username);
+      setNotification(message);
+      refetch();
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error: any) {
+      setNotification(error.message || 'Failed to reject friend request');
+    } finally {
+      setTimeout(() => setNotification(null), 3000);
     }
   };
-
   
   const acceptFriendRequest = async (username: string) => {
     try {
-      const response = await axios.post(
-        `http://localhost:8000/api/friend-request/accept/${username}/`,
-        null,
-        {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-      );
-      refetch()
-      setNotification(response.data.message || 'Friend request accepted');
-      setNotification('Friend request accepted');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      const message = await apiAcceptFriendRequest(username);
+      setNotification(message);
+      refetch();
+      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.error) {
-        setNotification(error.response.data.error);
-      } else {
-        setNotification('Failed to accept friend request');
-      }
+      setNotification(error.message || 'Failed to accept friend request');
     } finally {
       setTimeout(() => setNotification(null), 3000);
     }
   };
 
-
   const handleCancel = async (username: string) => {
     try {
-      await axios.delete(`http://localhost:8000/api/friend-request/cancel/${username}/`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-      refetch()
-    } catch (err) {
-      console.error('Error canceling friend request:', err);
+      const message = await apiCancelFriendRequest(username);
+      setNotification(message);
+      refetch();
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error: any) {
+      setNotification(error.message || 'Failed to cancel friend request');
+    } finally {
+      setTimeout(() => setNotification(null), 3000);
     }
   };
-
 
   return (
     <div className={css.addFriend}>
