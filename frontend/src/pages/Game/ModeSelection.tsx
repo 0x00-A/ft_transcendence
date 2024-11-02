@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import css from './ModeSelection.module.css';
 import GameMode from '../../components/Game/components/GameMode/GameMode';
 // import Canvas from './components/Canvas/Canvas';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import useWebSocket from '../../hooks/useWebSocket';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
@@ -83,13 +83,14 @@ const ModeSelection = () => {
           }
         };
         socket.onclose = () => {
-          console.log('Socket disconnected');
+          console.log('Matchmaker Socket disconnected');
           setState('disconnected');
         };
     }, 500)
 
     return () => {
         if (ws.current) {
+          console.log('Closing matchmaker websocket ....');
             ws.current.close();
         }
         clearTimeout(timeout);
@@ -107,6 +108,9 @@ const ModeSelection = () => {
 
   if (state === 'matched') {
     if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
+    // if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
+    // return <Navigate to={`/${gameAdrress}`} />;
+
   }
 
   return (

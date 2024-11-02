@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { getApiUrl } from '../utils/getApiUrl';
 // import jwt_decode from 'jwt-decode';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: getApiUrl(''),
   headers: { Authorization: `bearer ${localStorage.getItem('access_token')}` },
   // headers: {
   //   'Content-Type': 'application/json',

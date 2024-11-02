@@ -35,7 +35,6 @@ class Game(models.Model):
     GAME_STATUS_CHOICES = [
         ('started', 'Game started'),
         ('ended', 'Game ended'),
-        ('aborted', 'Game aborted'),
     ]
     game_id = models.CharField(
         max_length=100, unique=True, blank=True, null=True)
@@ -67,17 +66,6 @@ class Game(models.Model):
         else:
             super().save(*args, **kwargs)
 
-        # def join_game(self, player, client):
-        #     """
-        #     Player joins the game if the second player slot is empty.
-        #     """
-        #     if not self.player2:
-        #         self.player2 = player
-        #         self.client2 = client
-        #         self.save()
-        #         return True
-        #     return False
-
     def start_game(self):
         """
         Set the game status to 'started'.
@@ -85,14 +73,13 @@ class Game(models.Model):
         self.game_status = 'started'
         self.save()
 
-    def end_game(self, winner_id, p1_score, p2_score):
+    def end_game(self, winner, p1_score, p2_score):
         """
         End the game, store the winner, and update win stats.
         """
         print(f"--------------- Game: {self.id} ended -------------------")
 
-        winner = User.objects.get(id=winner_id)
-        self.winner = winner
+        self.winner = self.player1 if winner == 1 else self.player2
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.status = 'ended'
