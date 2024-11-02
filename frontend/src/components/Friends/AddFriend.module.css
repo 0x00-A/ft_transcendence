@@ -126,7 +126,6 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
   transition: background-color 0.2s, transform 0.2s;
   background-color: #1e2533;
   color: #f8f3e3;
@@ -256,7 +255,8 @@
   cursor: pointer;
   font-size: 13px;
   transition: background-color 0.2s, transform 0.2s;
-  background-color: #d0d8e7;
+  color: #f8f3e3; 
+  background-color: #1e2533; 
 }
 
 .cancelBtn:hover {
