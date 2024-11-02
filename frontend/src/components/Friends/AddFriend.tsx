@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
-import axios from 'axios';
 import Loading from './Loading';
 import { apiAcceptFriendRequest, apiCancelFriendRequest, apiRejectFriendRequest, apiSendFriendRequest } from '../../api/friendApi';
 
@@ -114,6 +113,7 @@ const AddFriend: React.FC = () => {
     }
   };
 
+  console.log("suggestedConnections: ", suggestedConnections)
   return (
     <div className={css.addFriend}>
       {notification && (
@@ -134,7 +134,7 @@ const AddFriend: React.FC = () => {
         />
       </div>
 
-      {searchTerm === '' && suggestedConnections && (
+      {searchTerm === '' && suggestedConnections && suggestedConnections.length > 0 && (
         <div className={css.suggestedConnections}>
           <h3 className={css.suggestedConnectionsTitle}>Suggested Connections</h3>
           {loadingSuggested ? (
