@@ -118,3 +118,8 @@
     background-color: var(--color-active);
     cursor: pointer;
 }
+
+.loginError {
+    color: red;
+    border: #fffbe1;
+}

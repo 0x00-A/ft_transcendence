@@ -1,68 +1,60 @@
-// import css from './Login.module.css';
-// import authCss from './Signup.module.css';
 import AuthHeader from './components/AuthHeader';
-// import AuthInput from './components/AuthInput';
-// import AuthButton from './components/AuthButton';
 import UserIcon from "./assets/userIcon.svg";
 import PassIcon from "./assets/passIcon.svg";
 import ExternAuth from './components/ExternAuth';
-import AuthFooter from './components/AuthFooter';
-import { FormEvent } from 'react';
 import css from './AuthForm.module.css';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
-import { log } from 'console';
-
 import { useNavigate } from 'react-router-dom';
-
 import useLogin from './hooks/useLogin';
-import { redirect } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useEffect } from 'react';
 
 interface LoginFormData {
   username: string;
   password: string;
 }
 
-const Login = ({}) => {
+const Login = ({onSetAuthStat}) => {
 
-  // const navigate = useNavigate();
-  const { register, handleSubmit, reset} = useForm<LoginFormData>();
+  const {register, handleSubmit, errors, mutation, reset} = useLogin();
+  const navigate = useNavigate()
+  const {setIsLoggedIn} = useAuth()
 
-  const loginMutation = useLogin();
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      reset();
+      onSetAuthStat(mutation.data.message);
+      setTimeout(() => onSetAuthStat(null), 5000)
+      setIsLoggedIn(true);
+      navigate('/');
+    }
+  }, [mutation.isSuccess])
+
 
   const handleLogin = (data: LoginFormData) => {
-    loginMutation.mutate(data);
-    // reset();
+    mutation.mutate(data);
   };
-
-  // const { setIsLoggedIn } = useAuth()
-
-// if (loginMutation.isSuccess)
-//     alert('login success!')
-//     setIsLoggedIn(true)
-//     // navigate('/')
-//   if (loginMutation.isError)
-//     console.log('--------ERROR--------', loginMutation.error);
 
   return (
     <>
       <AuthHeader title="Welcome back" description=""/>
-        <form className={css.entryArea} onSubmit={handleSubmit(handleLogin)}>
+        <form className={css.entryArea} onSubmit={ handleSubmit(handleLogin) }>
           <div className={css.inputContainer}>
             <img src={UserIcon} alt="X" />
             <input type="text" required placeholder="username" {...register('username')}/>
+            {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
           </div>
           <div className={css.inputContainer}>
             <img src={PassIcon} alt="X" />
             <input type="password" required placeholder="password" {...register('password')}/>
+            {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
           </div>
+          {errors.root && <span className={css.loginError}>{errors.root.message}</span>}
+          <p>Forgot password?</p>
           <button type="submit" className={css.authBtn}>
             Sign in
           </button>
-        <ExternAuth />
         </form>
+        <ExternAuth />
     </>
   )
 }

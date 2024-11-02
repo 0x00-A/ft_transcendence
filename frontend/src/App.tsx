@@ -40,6 +40,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { useEffect, useRef } from 'react';
 import { getToken } from './utils/getToken';
 import getWebSocketUrl from './utils/getWebSocketUrl';
+import Oauth2Callback from './pages/Auth/Oauth2Callback';
 // import Signup from './pages/Auth/Signup';
 
 function App() {
@@ -110,6 +111,7 @@ function AppContent() {
         )}
         <Routes>
           <Route path="/auth" element={ !isLoggedIn ? <Auth /> : <Navigate to={'/'} />} />
+          <Route path="/oauth2/callback" element={<Oauth2Callback />} />
           <Route path="*" element={<PageNotFound />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />

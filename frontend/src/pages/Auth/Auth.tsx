@@ -46,7 +46,7 @@ const Auth = () => {
         <div className={`${css.authBox} ${isLogin ? css.authSwitch : ''}`}>
           {/* {authState ? <Login setAuthResponse={setAuthResponse} /> : <Signup setAuthState={setAuthState} setAuthResponse={setAuthResponse} />} */}
           {isLogin ? (
-            <Login />
+            <Login onSetAuthStat={setAuthStat} />
           ) : (
             <Signup setIslogin={setIslogin} onSetAuthStat={setAuthStat} />
           )}
