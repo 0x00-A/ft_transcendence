@@ -3,6 +3,16 @@
   color: var(--text-color);
 }
 
+.userInfo {
+  flex-grow: 1;
+}
+
+.timestamp {
+  display: block;
+  font-size: 13px;
+  color: #888;
+}
+
 .title {
   font-size: 32px;
   margin-bottom: 20px;
@@ -65,8 +75,8 @@
 }
 
 .username {
-  flex-grow: 1;
-  font-size: 16px;
+  display: block;
+  font-weight: bold;
 }
 
 .unblockButton {
