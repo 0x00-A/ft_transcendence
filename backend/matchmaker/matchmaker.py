@@ -118,17 +118,17 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        # if await sync_to_async(
-        #     Game.objects.filter(
-        #         (Q(player1=player_id) | Q(player2=player_id)) & Q(
-        #             status="ongoing")
-        #     ).exists
-        # )():
-        #     message = {
-        #         'event': 'already_ingame'
-        #     }
-        #     await cls.send_message_to_client(player_id, message)
-        #     return True
+        if await sync_to_async(
+            Game.objects.filter(
+                (Q(player1=player_id) | Q(player2=player_id)) & Q(
+                    status="started")
+            ).exists
+        )():
+            message = {
+                'event': 'already_ingame'
+            }
+            await cls.send_message_to_client(player_id, message)
+            return True
         return False  # Stub implementation
 
     @classmethod
@@ -140,7 +140,7 @@ class Matchmaker:
         return None
 
     @classmethod
-    async def process_result(cls, game_id, winner_id, p1_score, p2_score):
+    async def process_result(cls, game_id, winner, p1_score, p2_score):
         """
         Process the result of a game. Determine if it is a single game or tournament match.
         :param game_id: The ID of the game.
@@ -149,7 +149,7 @@ class Matchmaker:
         :param match_id: The specific match ID within the tournament (if applicable).
         """
         if await Game.objects.filter(game_id=game_id).aexists():
-            await cls.process_game_result(game_id, winner_id, p1_score, p2_score)
+            await cls.process_game_result(game_id, winner, p1_score, p2_score)
             # self.games.remove(game)
             return
 
@@ -176,14 +176,11 @@ class Matchmaker:
             await self.process_tournament_match(match_id, winner_id)
 
     @classmethod
-    async def process_game_result(cls, game_id, winner_id, p1_score, p2_score):
+    async def process_game_result(cls, game_id, winner, p1_score, p2_score):
         """Process a single game result and update the database"""
         game = await sync_to_async(Game.objects.get)(game_id=game_id)
 
-        if winner_id == -1:
-            await sync_to_async(game.abort_game)()
-        else:
-            await sync_to_async(game.end_game)(winner_id, p1_score, p2_score)
+        await sync_to_async(game.end_game)(winner, p1_score, p2_score)
 
         # Update the game result and mark it as finished
         # game.winner = winner_id

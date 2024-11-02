@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useMutation } from '@tanstack/react-query';
 import { useAuth } from "../../../contexts/AuthContext";
+import { getApiUrl } from "../../../utils/getApiUrl";
 
 interface LoginData {
   username: string;
@@ -9,7 +10,8 @@ interface LoginData {
 
 const loginUser = async (user: LoginData) => {
   const response = await axios.post(
-    'http://localhost:8000/api/auth/login/',
+    // 'http://localhost:8000/api/auth/login/',
+    getApiUrl('auth/login/'),
     user
   );
   return response.data;
