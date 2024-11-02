@@ -5,6 +5,7 @@ import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 
 import axios from 'axios';
+import moment from 'moment';
 
 interface BlockedUser {
   blocker: {
@@ -79,6 +80,10 @@ const BlockedList: React.FC = () => {
     </div>
   );
 
+  const formatTimestamp = (timestamp: string) => {
+    return moment(timestamp).calendar();
+  };
+
   return (
     <div className={css.blockedList}>
       <h1 className={css.title}>Blocked List</h1>
@@ -110,7 +115,10 @@ const BlockedList: React.FC = () => {
                 alt={user.blocked.username}
                 className={css.avatar}
               />
+              <div className={css.userInfo}>
               <span className={css.username}>{user.blocked.username}</span>
+                <span className={css.timestamp}>{formatTimestamp(user.date_blocked)}</span>
+              </div>
               <button
                 className={css.unblockButton}
                 onClick={() => handleUnblock(user.blocked.username)}
