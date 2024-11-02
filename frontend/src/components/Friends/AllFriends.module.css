@@ -54,8 +54,15 @@
 .friendCard {
   display: flex;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  background-color: #394056;
+  border-radius: 10px;
+  padding: 10px;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+
+.friendCard:hover {
+  transform: scale(1.01);
 }
 
 .avatar {
@@ -115,12 +122,11 @@
 
 .actionButton {
   padding: 8px 16px;
-  background-color: #d0d8e7;
-  color: #1e2533;
+  background-color: #1e2533;
+  color: #f8f3e3;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 10px;
   font-weight: 600;
   transition: background-color 0.2s;
 }
