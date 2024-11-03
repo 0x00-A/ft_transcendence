@@ -25,25 +25,26 @@ const Oauth2Callback = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status')
-        if (status == '200') {
-          const access = params.get('access')
-          const refresh = params.get('refresh')
-          if (access && refresh) {
-            localStorage.setItem('access_token', access)
-            localStorage.setItem('refresh_token', refresh)
-            navigate('/');
-            setIsLoggedIn(true);
-          }
-          else {
-            console.log(params);
-          }
+        if (status === 'success') {
+          // confirm login
+          axios.get('http://localhost:8000/api/oauth2/verify_login', { withCredentials: true })
+          .then(response => {
+            if (response.status === 200) {
+              navigate('/');
+              setIsLoggedIn(true);
+            }
+          })
+          .catch(() => navigate('/auth'));
         }
-        if (status == '409' || status == '400') {
-          setUsernameForm(true)
-          const status = params.get('error') as string;
+        else if (status === 'set_username') {
+          const status = params.get('message') as string;
           setFormStatus(status)
+          setUsernameForm(true)
         }
-    }, []);
+        else {
+          navigate('/auth')
+        }
+    }, [navigate]);
 
     useEffect(() => {
      if (mutation.isSuccess) {
@@ -80,7 +81,7 @@ const Oauth2Callback = () => {
               <img src={UserIcon} alt="X" />
               <input type="text" placeholder="username" {...register('username')} />
               {errors.username && <span className={authcss.fieldError}>{errors.username.message}</span>}
-            </div>78-------x-
+            </div>
             <button type="submit" className={authcss.authBtn}>
               Submit
             </button>

@@ -1,11 +1,16 @@
+from typing import Tuple
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, Token
 from ..models import User
 from ..serializers import UserLoginSerializer
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import AuthenticationFailed
 
 
 class LoginView(CreateAPIView):
@@ -17,23 +22,69 @@ class LoginView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = authenticate(
             username = serializer.validated_data['username'],
-            password = serializer.validated_data['password'])
+            password = serializer.validated_data['password']
+            )
         if user is not None:
-            return Response(data=get_token_for_user(user),
-                                status=status.HTTP_200_OK)
+            token = get_token_for_user(user)
+            if token:
+                response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)
+                response.set_cookie(
+                    key = 'access_token',
+                    value = token['access'],
+                    httponly = True,
+                    secure = True,
+                    samesite = 'Strict'
+                )
+                response.set_cookie(
+                    key = 'refresh_token',
+                    value = token['refresh'],
+                    httponly = True,
+                    secure = True,
+                    samesite = 'Strict'
+                )
+                return response
+            else:
+                return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         else:
-            return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class CookieJWTAuthentication(JWTAuthentication):
+    def authenticate(self, request: Request):
+        # Check if token exists in cookies
+        access_token = request.COOKIES.get('access_token')
+        if access_token is None:
+            return None
+    # Try to authenticate using the access token from the cookie
+        validated_token = self.get_validated_token(access_token)
+        return self.get_user(validated_token), validated_token
+
+# class RefreshToken(CreateAPIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request, *args, **kwargs):
+#         refresh_token = request.COOKIES.get('refresh_token')
+#         if refresh_token:
+#             try:
+#                 refresh = RefreshToken(refresh_token)
+#                 if refresh:
+#                     response = Response(data={''})
+#                     access_token = refresh.access_token
+#                 return Response(data={'access_token': str(access_token)}, status=status.HTTP_200_OK)
+#             except Exception as err:
+#                 return Response({'error': 'Invalid or expired refresh token', 'detail': err}, status=status.HTTP_401_UNAUTHORIZED)
+#         return Response({'error': 'Refresh token missing'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_token_for_user(user:User):
-    refresh = RefreshToken.for_user(user)
 
-    return {
-        'username': user.username,
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-        'message': 'Login successful',
-    }
+    refresh = RefreshToken.for_user(user)
+    if refresh:
+        return {
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+        }
+    return None
 
 
 # @api_view(['POST'])

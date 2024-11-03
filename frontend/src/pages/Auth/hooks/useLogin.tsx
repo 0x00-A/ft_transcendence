@@ -44,17 +44,14 @@ const useLogin = () => {
   });
   const mutation = useMutation({
     mutationFn: loginUser,
-    onSuccess(data) {
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-    },
     onError(error) {
       const errs = error?.response.data as LoginData;
       errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
       errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-      error?.response.data?.message && setError("root", {type: '', message: error.response.data.message});
+      error?.response.data?.message && setError("root", {type: '', message: error.response.data.error});
     }
   });
+
   return {
     register,
     handleSubmit,
