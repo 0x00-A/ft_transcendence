@@ -22,16 +22,20 @@ from .views import BlockedUsersView
 from .views import BlockUserView
 from .views import UnblockUserView
 from .views import SuggestedConnectionsView
+from .views import RefreshToken
+from .views import ConfirmOauth2Login
 # from .views import ProfileApiView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
-    path('auth/login/refresh/', TokenRefreshView.as_view()),
+    path('auth/logout/', LoginView.as_view()),
+
+    # path('auth/refresh_token/', RefreshToken.as_view()),
+    path('oauth2/verify_login', ConfirmOauth2Login.as_view()),
     path('oauth2/set_username/', oauth2_set_username),
     path('oauth2/discord/authorize/', discord_authorize),
     path('oauth2/discord/', oauth2_discord),

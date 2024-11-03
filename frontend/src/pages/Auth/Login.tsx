@@ -22,10 +22,11 @@ const Login = ({onSetAuthStat}) => {
   useEffect(() => {
     if (mutation.isSuccess) {
       reset();
-      onSetAuthStat(mutation.data.message);
-      setTimeout(() => onSetAuthStat(null), 5000)
+      console.log(mutation.data.message);
       setIsLoggedIn(true);
       navigate('/');
+      onSetAuthStat(mutation.data.message);
+      setTimeout(() => onSetAuthStat(null), 5000)
     }
   }, [mutation.isSuccess])
 
