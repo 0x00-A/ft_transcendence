@@ -125,7 +125,7 @@ class SendFriendRequestView(APIView):
                     )
 
             if created:
-                serializer = FriendRequestSerializer(friend_request)
+                # serializer = FriendRequestSerializer(friend_request)
                 return Response({'message': 'Friend request sent successfully'},
                         status=status.HTTP_201_CREATED)
 
