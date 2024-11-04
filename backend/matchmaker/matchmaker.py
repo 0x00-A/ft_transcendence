@@ -50,9 +50,9 @@ class Matchmaker:
         print(f"creating game... p1: {player1_id} | p2: {player2_id}")
         # Store the game in your database (using Django ORM models)
         User = get_user_model()
-        p1 = await sync_to_async(User.objects.get)(id=player1_id)
-        p2 = await sync_to_async(User.objects.get)(id=player2_id)
-        game = await sync_to_async(Game.objects.create)(
+        p1 = await User.objects.aget(id=player1_id)
+        p2 = await User.objects.aget(id=player2_id)
+        game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
         game_address = f"game/game_{game.id}"
@@ -77,9 +77,12 @@ class Matchmaker:
         #     await cls.send_message_to_client(creator_id, message)
         #     return
 
-        new_tournament = await sync_to_async(Tournament.objects.create)(
+        new_tournament = await Tournament.objects.acreate(
             creator_id=creator_id, name=tournament_name
         )
+        await new_tournament.players.aadd(
+            cls.connected_clients.get(creator_id).scope['user'])
+        await new_tournament.asave()
         # Notify the creator that the tournament has been created
         message = {
             'action': 'tournament_created',
@@ -88,19 +91,21 @@ class Matchmaker:
         }
         await cls.send_message_to_client(creator_id, message)
 
-    # @classmethod
-    # async def join_tournament(cls, player_id, tournament_id):
-    #     # Logic for joining a tournament
-    #     tournament = await sync_to_async(Tournament.objects.get)(id=tournament_id)
-    #     if tournament.is_full():
-    #         message = {'action': 'tournament_full',
-    #                    'message': 'Tournament is full'}
-    #         await cls.send_message_to_client(player_id, message)
-    #     else:
-    #         await sync_to_async(tournament.add_player)(player_id)
-    #         message = {'action': 'tournament_joined',
-    #                    'tournament_id': tournament_id}
-    #         await cls.send_message_to_client(player_id, message)
+    @classmethod
+    async def join_tournament(cls, player_id, tournament_id):
+        try:
+            tournament = await Tournament.objects.aget(id=tournament_id)
+            if await sync_to_async(tournament.check_is_full)():
+                message = {'action': 'tournament_full',
+                           'message': 'Tournament is full'}
+                await cls.send_message_to_client(player_id, message)
+            else:
+                await tournament.players.aadd(player_id)
+                message = {'action': 'tournament_joined',
+                           'tournament_id': tournament_id}
+                await cls.send_message_to_client(player_id, message)
+        except Tournament.DoesNotExist:
+            await cls.send_message_to_client(player_id, {'error': 'Tournament does not exist'})
 
     @classmethod
     async def send_message_to_client(cls, player_id, message):
@@ -117,12 +122,10 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        if await sync_to_async(
-            Game.objects.filter(
-                (Q(player1=player_id) | Q(player2=player_id)) & Q(
-                    status="started")
-            ).exists
-        )():
+        if await Game.objects.afilter(
+            (Q(player1=player_id) | Q(player2=player_id)) & Q(
+                status="started")
+        ).aexists():
             message = {
                 'event': 'already_ingame'
             }
@@ -147,7 +150,7 @@ class Matchmaker:
         :param is_tournament: Whether this is a tournament match.
         :param match_id: The specific match ID within the tournament (if applicable).
         """
-        if await Game.objects.filter(game_id=game_id).aexists():
+        if await Game.objects.afilter(game_id=game_id).aexists():
             await cls.process_game_result(game_id, winner, p1_score, p2_score)
             # self.games.remove(game)
             return
@@ -177,7 +180,7 @@ class Matchmaker:
     @classmethod
     async def process_game_result(cls, game_id, winner, p1_score, p2_score):
         """Process a single game result and update the database"""
-        game = await sync_to_async(Game.objects.get)(game_id=game_id)
+        game = await Game.objects.aget(game_id=game_id)
 
         await sync_to_async(game.end_game)(winner, p1_score, p2_score)
 

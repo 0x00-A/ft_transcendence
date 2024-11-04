@@ -40,6 +40,8 @@ class Tournament(models.Model):
         if self.participants.count() >= self.max_participants:
             self.is_full = True
             self.save()
+            return True
+        return False
 
     def join_tournament(self, player):
         if self.players.count() < self.number_of_players:

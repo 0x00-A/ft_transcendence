@@ -179,6 +179,17 @@ const ModeSelection = () => {
 
   }
 
+  const handleJoin = (tournamentId: number, refetch: () => void) => {
+    console.log('join tournament');
+    ws.current?.send(
+      JSON.stringify({
+        event: "join_tournament",
+        tournament_id: tournamentId,
+      })
+    );
+    refetch()
+  };
+
   return (
     <div className={css.container}>
 
@@ -213,7 +224,7 @@ const ModeSelection = () => {
       </div>
         <p className={css.activeTournaments}>Active Tournaments</p>
       <div className={css.tournamentsDiv}>
-        <TournamentList></TournamentList>
+        <TournamentList handleJoin={handleJoin}></TournamentList>
       </div>
     </div>
   );

@@ -33,6 +33,7 @@ services:
         condition: service_started
       redis:
         condition: service_started
+    restart: on-failure
     # develop:
     #   watch:
     #     - action: sync
@@ -42,6 +43,12 @@ services:
     #       # -
     #     - action: rebuild
     #       path: requirements.txt
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "check"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
   frontend:
     build:
@@ -60,7 +67,7 @@ services:
 
     depends_on:
       backend:
-        condition: service_started
+        condition: service_healthy
     # develop:
     #   watch:
     #     - action: sync

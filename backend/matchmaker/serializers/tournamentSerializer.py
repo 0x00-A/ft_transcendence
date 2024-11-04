@@ -7,6 +7,7 @@ from matchmaker.models import Tournament
 class TournamentSerializer(serializers.ModelSerializer):
     participants_count = serializers.SerializerMethodField()
     creator = UserSerializer()
+    user_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Tournament
@@ -16,3 +17,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     def get_participants_count(self, obj):
         return obj.players.count()
+
+    def get_user_id(self, obj):
+        # Access the user_id from the context
+        return self.context.get('user_id')

@@ -21,6 +21,12 @@ class TournamentViewSet(viewsets.ReadOnlyModelViewSet):
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
 
+    def get_serializer_context(self):
+        # Add user_id to the context, which can be accessed in the serializer
+        context = super().get_serializer_context()
+        context['user_id'] = self.request.user.id
+        return context
+
     # def perform_create(self, serializer):
     #     # Automatically set the creator as the user making the request
     #     serializer.save(creator=self.request.user)
