@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
+from .views import LogoutView
 from .views import discord_authorize
 from .views import oauth2_discord
 from .views import intra_authorize
@@ -24,7 +25,7 @@ from .views import UnblockUserView
 from .views import SuggestedConnectionsView
 from .views import RefreshToken
 from .views import ConfirmOauth2Login
-# from .views import ProfileApiView
+from .views import ProfileApiView
 
 
 
@@ -32,7 +33,7 @@ urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
-    path('auth/logout/', LoginView.as_view()),
+    path('auth/logout/', LogoutView.as_view()),
 
     # path('auth/refresh_token/', RefreshToken.as_view()),
     path('oauth2/verify_login', ConfirmOauth2Login.as_view()),
@@ -45,6 +46,7 @@ urlpatterns = [
     path('oauth2/google/', oauth2_google),
 
     path('users/', AllUsersView.as_view(), name='all_users'),
+    path('profile/<str:username>', ProfileApiView.as_view(), name='profile'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),

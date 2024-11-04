@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import css from './Profile.module.css'
 import ProfileHeader from './components/ProfileHeader'
 import GameHistory from './components/GameHistory'
@@ -9,12 +9,27 @@ import Avatar2 from './assets/avatar2.svg'
 import Avatar3 from './assets/avatar3.svg'
 import Avatar4 from './assets/avatar4.svg'
 import { useQuery } from '@tanstack/react-query';
+import apiClient from '../../api/apiClient'
 
-interface Friends {
-  id: number;
-  avatar: string;
-  nickname: string;
+// interface Friends {
+//   id: number;
+//   avatar: string;
+//   nickname: string;
+// }
+
+const getProfile = async () => {
+  // try {
+    const response = await apiClient.get(
+      '/profile/user1'
+    );
+    return response.data
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4NjI4LCJpYXQiOjE3MzA3NTgzNTcsImp0aSI6IjI2NDI0M2MxYWNkZjQzYTJiZTI2MmI3MTk4NzJhNzMzIiwidXNlcl9pZCI6MTh9.V7oflfKYLQQqOfapnE_yduG_k0xa2OOSj-rlFy9biVc
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4NzEwLCJpYXQiOjE3MzA3NTgzNTcsImp0aSI6ImM5MjRjZTU4NTY3MDQ1MzY5ZTQyZTk4MGJiMDBhZmM5IiwidXNlcl9pZCI6MTh9.UYsMvk9ZzdimyzvLom8M_JowzFcdJfQmMzPJtE9Quf8
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4OTQ0LCJpYXQiOjE3MzA3NTg5MzQsImp0aSI6IjRlYWEwODYwZjEzMjRiMjFiMzc0ZjQ0YWE0ZTQ5MGUwIiwidXNlcl9pZCI6MTh9.JLuhKVQWOBlQy1rIcwvU7cVRV4JhAMmT9Hw-Zx8vmR0
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4OTQ0LCJpYXQiOjE3MzA3NTg5MzQsImp0aSI6IjRlYWEwODYwZjEzMjRiMjFiMzc0ZjQ0YWE0ZTQ5MGUwIiwidXNlcl9pZCI6MTh9.JLuhKVQWOBlQy1rIcwvU7cVRV4JhAMmT9Hw-Zx8vmR0
+
 
 const Profile = () => {
 
@@ -25,7 +40,18 @@ const Profile = () => {
   //   {id: 4, avatar: Avatar4, nickname: 'chiwahedakhor'}
   // ]
 
-//  const ProfileDetail = useQuery()
+ const {data, isLoading, isError, isSuccess, error} = useQuery({
+    queryKey: ["myquerykey1"],
+    queryFn: getProfile
+  });
+
+  // if (isLoading) return <div>Loading...</div>
+  // if (isError) return <div>Error: {error.message}</div>
+
+  // useEffect(() => {
+  //   console.log('--data--', data);
+  // }, [isSuccess])
+
 
   // const ListFriends = friendsList.map((friend) => (
   //   <div key={friend.id} className={css.friendDetail}>
@@ -36,7 +62,6 @@ const Profile = () => {
   // ));
 
   const [isFormPopup, setFormPopup] = useState(false);
-
 
   return (
     <div className={css.profileContainer}>

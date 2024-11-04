@@ -4,6 +4,8 @@ import { useAuth } from "../../../contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import apiClient from "../../../api/apiClient";
+
 
 interface LoginData {
   username: string;
@@ -23,9 +25,11 @@ const schema = yup.object().shape({
 });
 
 const loginUser = async (user: LoginData) => {
+  return apiClient.post('/auth/login/', user);
   const response = await axios.post(
     'http://localhost:8000/api/auth/login/',
-    user
+    user,
+    {withCredentials: true},
   );
   return response.data;
 };

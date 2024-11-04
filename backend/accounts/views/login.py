@@ -5,10 +5,11 @@ from django.contrib.auth import authenticate
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken, Token
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from ..models import User
 from ..serializers import UserLoginSerializer
-
+from datetime import datetime, timezone
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -53,11 +54,51 @@ class CookieJWTAuthentication(JWTAuthentication):
     def authenticate(self, request: Request):
         # Check if token exists in cookies
         access_token = request.COOKIES.get('access_token')
-        if access_token is None:
+        refresh_token = request.COOKIES.get('refresh_token')
+        if access_token is None or refresh_token is None:
             return None
-    # Try to authenticate using the access token from the cookie
-        validated_token = self.get_validated_token(access_token)
-        return self.get_user(validated_token), validated_token
+        try:
+            validated_token = self.get_validated_token(access_token)
+            return self.get_user(validated_token), validated_token
+        except InvalidToken as e:
+            try:
+                new_access_token = RefreshToken(refresh_token).access_token
+                validated_token = self.get_validated_token(str(new_access_token))
+                response = Response()
+                response.set_cookie(
+                    key = 'access_token',
+                    value = str(new_access_token),
+                    httponly = True,
+                    secure = True,
+                    samesite = 'Strict'
+                )
+                request.new_access_token = str(new_access_token)
+                return self.get_user(validated_token), validated_token
+            except TokenError:
+                return None
+        except AccessToken as e:
+            print('--------', e, '---------')
+
+
+
+        # except TokenError as e:
+        #     print('--------error', e, '---------')
+
+    #     print('------------------------')
+    #     token = AccessToken(access_token)
+    #     print('------------------------')
+    #     expiration = token['exp']
+    #     now = datetime.now(timezone.utc)
+    #     if now > datetime.fromtimestamp(expiration, tz=timezone.utc):
+    #         return False
+
+    #     print('----------', expiration, '-----------')
+    #     print('----------', access_token, '-------------')
+    # # Try to authenticate using the access token from the cookie
+    #     validated_token = self.get_validated_token(access_token)
+    #     print('----------', validated_token, '-------------')
+
+        # return self.get_user(validated_token), validated_token
 
 # class RefreshToken(CreateAPIView):
 #     permission_classes = [IsAuthenticated]
