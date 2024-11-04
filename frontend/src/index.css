@@ -20,10 +20,10 @@
   --red-700: #b91c1c;
 
   --b0: #121212;
-    --b1: #171717;
-    --b2: #1c1c1c;
-    --b3: #202224;
-    --b4: #3b4042;
+  --b1: #171717;
+  --b2: #1c1c1c;
+  --b3: #202224;
+  --b4: #3b4042;
 
   --brand-purple: #ab68ff;
 
@@ -55,6 +55,8 @@
   --tournament-header: rgb(55 65 81);
   --tournament-row: rgb(31 41 55);
   --tournament-row-odd: #313749;
+
+  --tw-shadow-colored: 0 4px 6px -1px rgb(30 66 159 / 0.8), 0 2px 4px -2px rgb(30 66 159 / 0.8);
 }
 
 [data-theme='dark'] {

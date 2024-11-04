@@ -7,7 +7,7 @@ import ArcadeLoader from './ArcadeLoader/ArcadeLoader';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 
 
-interface Creator {
+interface User {
     id: number;
     username: string;
 }
@@ -15,14 +15,16 @@ interface Creator {
 interface Tournament {
     id: number;
     name: string;
-    creator: Creator;
+    creator: User;
     created_at: string; // Use `Date` if you plan to parse it into a Date object
     participants_count: number;
     number_of_players: number;
+    user_id: number,
+    players: number[],
 }
 
 
-const TournamentList = () => {
+const TournamentList = ({handleJoin}: {handleJoin:(tournamentId: number, refetch: () => void) => void}) => {
     // const [tournaments, setTournaments] = useState([]);
 
     // useEffect(() => {
@@ -37,26 +39,14 @@ const TournamentList = () => {
 
     //     fetchTournaments();
     // }, []);
-  const { data: tournaments, isLoading, error } = useGetData<Tournament[]>('matchmaker/tournaments');
+  const { data: tournaments, isLoading, error, refetch } = useGetData<Tournament[]>('matchmaker/tournaments');
+
+    function isInTournament(players: number[], player_id: number) {
+        return players.some(id => id === player_id);
+    }
 
 
-    const handleJoin = (tournamentId: number) => {
-        // client.onopen = () => {
-        //     client.send(JSON.stringify({
-        //         action: "join_tournament",
-        //         tournament_id: tournamentId,
-        //     }));
-        // };
 
-        // client.onmessage = (message) => {
-        //     const data = JSON.parse(message.data);
-        //     if (data.success) {
-        //         alert("Successfully joined the tournament!");
-        //     } else if (data.error) {
-        //         alert(data.error);
-        //     }
-        // };
-    };
 
     // if (error) return <p>error</p>
 
@@ -76,7 +66,7 @@ const TournamentList = () => {
 
             <div className={css.tournamentList}>
                 {tournaments?.map((tournament) => (
-                    <div key={tournament.id} className={css.row}>
+                    <div key={tournament.id} className={`${css.row}`}>
                         <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
                         <div className={`${css.col} ${css.name}`}>{tournament.name}</div>
                         <div className={`${css.col} ${css.creator}`}>{tournament.creator.username}</div>
@@ -85,7 +75,9 @@ const TournamentList = () => {
                             {tournament.participants_count}/{tournament.number_of_players}
                         </div>
                         <div className={`${css.col} ${css.action}`}>
-                            <button onClick={() => alert(`Joining tournament ${tournament.id}`)}>Join</button>
+                            {!isInTournament(tournament.players, tournament.user_id)?
+                            <button onClick={() => handleJoin(tournament.id, refetch)}>Join</button> :
+                            <button onClick={() => alert(`view tournament ${tournament.id}`)}>View</button>}
                         </div>
                     </div>
                 ))}
