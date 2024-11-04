@@ -53,18 +53,18 @@ class Tournament(models.Model):
             self.save()
             self.generate_matches()
 
-    def generate_matches(self):
-        players = list(self.players.all())
-        matches = combinations(players, 2)
-        for match in matches:
-            game_id = f"game_{self.id}_{self.matches.count() + 1}"
-            Game.objects.create(
-                game_id=game_id,
-                tournament=self,
-                player1=match[0].player_id,
-                player2=match[1].player_id,
-                game_status='waiting'
-            )
+    # def generate_matches(self):
+    #     players = list(self.players.all())
+    #     matches = combinations(players, 2)
+    #     for match in matches:
+    #         game_id = f"game_{self.id}_{self.matches.count() + 1}"
+    #         Game.objects.create(
+    #             game_id=game_id,
+    #             tournament=self,
+    #             player1=match[0].player_id,
+    #             player2=match[1].player_id,
+    #             game_status='waiting'
+    #         )
 
     def end_tournament(self):
         self.status = 'ended'

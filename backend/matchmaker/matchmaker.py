@@ -68,26 +68,25 @@ class Matchmaker:
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)
 
-    # @classmethod
-    # async def create_tournament(cls, creator_id, tournament_name, number_of_players):
-    #     # Create a tournament, check for limits, and notify the creator
-    #     # Assuming 10 is the max number of tournaments
-    #     if await sync_to_async(Tournament.objects.count)() >= 10:
-    #         message = {'action': 'error',
-    #                    'message': 'Maximum tournaments reached'}
-    #         await cls.send_message_to_client(creator_id, message)
-    #         return
+    @classmethod
+    async def create_tournament(cls, creator_id, tournament_name):
+        # Create a tournament, check for limits, and notify the creator
+        # if await sync_to_async(Tournament.objects.count)() >= 10:
+        #     message = {'action': 'error',
+        #                'message': 'Maximum tournaments reached'}
+        #     await cls.send_message_to_client(creator_id, message)
+        #     return
 
-    #     new_tournament = await sync_to_async(Tournament.objects.create)(
-    #         creator_id=creator_id, name=tournament_name, number_of_players=number_of_players
-    #     )
-    #     # Notify the creator that the tournament has been created
-    #     message = {
-    #         'action': 'tournament_created',
-    #         'message': f'Tournament {new_tournament.name} created',
-    #         'tournament_id': new_tournament.id
-    #     }
-    #     await cls.send_message_to_client(creator_id, message)
+        new_tournament = await sync_to_async(Tournament.objects.create)(
+            creator_id=creator_id, name=tournament_name
+        )
+        # Notify the creator that the tournament has been created
+        message = {
+            'action': 'tournament_created',
+            'message': f'Tournament {new_tournament.name} created',
+            'tournament_id': new_tournament.id
+        }
+        await cls.send_message_to_client(creator_id, message)
 
     # @classmethod
     # async def join_tournament(cls, player_id, tournament_id):

@@ -37,8 +37,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await Matchmaker.request_remote_game(self.player_id)
         elif event == 'request_tournament':
             tournament_name = data.get('tournament_name')
-            number_of_players = int(data.get('number_of_players'))
-            await Matchmaker.create_tournament(self.player_id, tournament_name, number_of_players)
+            await Matchmaker.create_tournament(self.player_id, tournament_name)
         elif event == 'join_tournament':
             tournament_id = data.get('tournament_id')
             await Matchmaker.join_tournament(self.player_id, tournament_id)

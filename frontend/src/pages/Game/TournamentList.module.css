@@ -1,0 +1,49 @@
+.activeTournaments {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.activeTournaments h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.tournamentTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tournamentTable th,
+.tournamentTable td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.tournamentTable th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.tournamentTable td {
+    background-color: white;
+}
+
+.tournamentTable button {
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tournamentTable button:hover {
+    background-color: #218838;
+}
