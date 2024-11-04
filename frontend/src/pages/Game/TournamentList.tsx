@@ -54,35 +54,36 @@ const TournamentList = () => {
         // };
     };
 
+    if (isLoading) return <p>Loading ...</p>
+    if (error) return <p>error</p>
+
     return (
-        <div className={css.activeTournaments}>
-            <h2>Active Tournaments</h2>
-            <table className={css.tournamentTable}>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Creator</th>
-                        <th>Creation Date</th>
-                        <th>Players</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tournaments.map((tournament) => (
-                        <tr key={tournament.id}>
-                            <td>{tournament.id}</td>
-                            <td>{tournament.name}</td>
-                            <td>{tournament.creator.username}</td>
-                            <td>{new Date(tournament.created_at).toLocaleDateString()}</td>
-                            <td>{tournament.participants_count}/{tournament.max_participants}</td>
-                            <td>
-                                <button onClick={() => handleJoin(tournament.id)}>Join</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className={css.container}>
+            {/* Header Row */}
+            <div className={css.header}>
+                <div className={`${css.col} ${css.id}`}>ID</div>
+                <div className={`${css.col} ${css.name}`}>Name</div>
+                <div className={`${css.col} ${css.creator}`}>Creator</div>
+                <div className={`${css.col} ${css.date}`}>Creation Date</div>
+                <div className={`${css.col} ${css.players}`}>Players</div>
+                <div className={`${css.col} ${css.action}`}>Action</div>
+            </div>
+
+            {/* List of Tournaments */}
+            {tournaments?.map((tournament) => (
+                <div key={tournament.id} className={css.row}>
+                    <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
+                    <div className={`${css.col} ${css.name}`}>{tournament.name}</div>
+                    <div className={`${css.col} ${css.creator}`}>{tournament.creator.username}</div>
+                    <div className={`${css.col} ${css.date}`}>{new Date(tournament.created_at).toLocaleDateString()}</div>
+                    <div className={`${css.col} ${css.players}`}>
+                        {tournament.participants_count}/{tournament.max_participants}
+                    </div>
+                    <div className={`${css.col} ${css.action}`}>
+                        <button onClick={() => alert(`Joining tournament ${tournament.id}`)}>Join</button>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 };

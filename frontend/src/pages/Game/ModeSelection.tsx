@@ -9,6 +9,7 @@ import useWebSocket from '../../hooks/useWebSocket';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import { getToken } from '../../utils/getToken';
 import useToken from '../../hooks/useToken';
+import TournamentList from './TournamentList';
 
 const CreateTournamentModal = ({ isOpen, onClose, onSubmit } : {isOpen:boolean , onClose: () => void, onSubmit: (name: string) => void}) => {
     const [tournamentName, setTournamentName] = useState('');
@@ -205,6 +206,9 @@ const ModeSelection = () => {
       {state == 'inqueue' && <h1>in queue</h1>}
       {state == 'matched' && <h1>created game</h1>}
       {state == 'disconnected' && <h1>disconnected</h1>}
+      <div className={css.tournamentsDev}>
+        <TournamentList></TournamentList>
+      </div>
     </>
   );
 };
