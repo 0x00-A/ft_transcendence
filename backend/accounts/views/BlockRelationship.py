@@ -12,6 +12,7 @@ User = get_user_model()
 
 class BlockUserView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = BlockedUserSerializer
 
     def post(self, request, username):
         try:
@@ -44,6 +45,7 @@ class BlockUserView(APIView):
 
 class UnblockUserView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = BlockedUserSerializer
 
     def post(self, request, username):
         try:
@@ -60,6 +62,7 @@ class UnblockUserView(APIView):
 
 class BlockedUsersView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = BlockedUserSerializer
 
     def get(self, request):
         try:
