@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   createContext,
   useState,
@@ -7,6 +8,9 @@ import {
   Dispatch,
   useEffect,
 } from 'react';
+import apiClient from '../api/apiClient';
+import { error } from 'console';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isLoggedIn: boolean | null;
@@ -21,9 +25,34 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     return savedStat ? JSON.parse(savedStat) : false;
   });
 
+  const navigate = useNavigate();
+
+  const logout = async () => {
+      console.log('----logout-----');
+
+      const response = await apiClient.post('/auth/logout/', {}, {withCredentials: true});
+      console.log('----response from interceptors.response-error-------', response);
+      setIsLoggedIn(false);
+      navigate('/auth')
+  }
+
   useEffect(() => {
     localStorage.setItem('isLoggedIn', isLoggedIn);
   }, [isLoggedIn]);
+
+
+  useEffect(() => {
+    const interceptor = apiClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => axios.interceptors.response.eject(interceptor);
+  }, [logout]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>

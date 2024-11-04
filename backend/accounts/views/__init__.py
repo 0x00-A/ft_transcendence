@@ -32,4 +32,4 @@ from .BlockRelationship import BlockedUsersView
 from .BlockRelationship import UnblockUserView
 
 # from .profile import ProfileModelViewSet
-# from .profile import ProfileApiView
+from .profile import ProfileApiView

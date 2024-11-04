@@ -3,13 +3,13 @@ import css from '../Profile.module.css'
 import Avatar from '../assets/avatar.svg'
 import Badge from '../assets/badge.svg'
 
-const profileHeader = ({setFormpopup}:{setFormpopup:React.Dispatch<React.SetStateAction<boolean>>}) => {
+const profileHeader = ({setFormpopup}) => {
 
   return (
     <div className={css.profileHeader}>
         <div className={css.avatar}>
           <img src={Avatar} alt="" />
-          <p>Nickname</p>
+          <p>username</p>
         </div>
         <div className={css.playerStats}>
           <img src={Badge} alt="" />

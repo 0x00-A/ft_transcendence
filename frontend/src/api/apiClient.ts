@@ -2,8 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { error } from 'console';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-
-
+import { useAuth } from '../contexts/AuthContext';
+import confirmLogout from '../components/Sidebar/Sidebar'
 // const getExpiryTime = (token) => {
 //   const decoded = jwtDecode(token);
 //   return decoded.exp * 1000;
@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: 'http://localhost:8000/api',
   withCredentials: true,
 });
 
@@ -30,18 +30,26 @@ const apiClient = axios.create({
 
 // here handle if a response fron api is 401_UNAUTHORIZED that means the token in note in httpOnly cookies or is expired
 // so you should request api to logout (clear the cookies) and nivaigate to auth page , set user as not logged in
-apiClient.interceptors.response.use(
-  response => {
-    return response;
-  },
-  async error => {
-    if (error.response && error.response.status === 401) {
-      await apiClient.post('api/logout')
-      navigate('auth/')
-    }
-    return Promise.reject(error)
-  }
-)
+// const navigate = useNavigate();
+// const {setIsLoggedIn} = useAuth();
+
+// apiClient.interceptors.response.use(
+//   response => {
+//     return response;
+//   },
+//   async error => {
+//     if (error.response && error.response.status === 401) {
+//       console.log('----interceptors-----');
+
+//       confirmLogout()
+//       // const response = await apiClient.post('http://localhost:8000/api/auth/logout/', {}, {withCredentials: true});
+//       // console.log('----response from interceptors.response-error-------', response);
+//       // setIsLoggedIn(false);
+//       // navigate('/auth')
+//     }
+//     return Promise.reject(error)
+//   }
+// )
 
 
 // const refreshAccessToken = async () => {
