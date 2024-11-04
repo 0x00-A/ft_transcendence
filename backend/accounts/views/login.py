@@ -35,7 +35,6 @@ def get_token_for_user(user:User):
         'message': 'Login successful',
     }
 
-
 # @api_view(['POST'])
 # @permission_classes([AllowAny])
 # def login_view(request):

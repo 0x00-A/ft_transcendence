@@ -11,7 +11,8 @@ User = get_user_model()
 
 class SuggestedConnectionsView(APIView):
     permission_classes = [IsAuthenticated]
-    
+    serializer_class = FriendRequestSerializer
+
     def get(self, request):
         user = request.user
 
@@ -177,7 +178,6 @@ class AcceptFriendRequestView(APIView):
                 {'error': 'Internal server error'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
 class RejectFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
