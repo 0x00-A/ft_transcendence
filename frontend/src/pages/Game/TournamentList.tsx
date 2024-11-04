@@ -3,6 +3,10 @@ import axios from 'axios';
 import css from './TournamentList.module.css'
 import { useGetData } from '../../api/apiHooks';
 
+import ArcadeLoader from './ArcadeLoader/ArcadeLoader';
+import ErrorMessage from './ErrorMessage/ErrorMessage';
+
+
 interface Creator {
     id: number;
     username: string;
@@ -14,7 +18,7 @@ interface Tournament {
     creator: Creator;
     created_at: string; // Use `Date` if you plan to parse it into a Date object
     participants_count: number;
-    max_participants: number;
+    number_of_players: number;
 }
 
 
@@ -54,8 +58,7 @@ const TournamentList = () => {
         // };
     };
 
-    if (isLoading) return <p>Loading ...</p>
-    if (error) return <p>error</p>
+    // if (error) return <p>error</p>
 
     return (
         <div className={css.container}>
@@ -70,20 +73,32 @@ const TournamentList = () => {
             </div>
 
             {/* List of Tournaments */}
-            {tournaments?.map((tournament) => (
-                <div key={tournament.id} className={css.row}>
-                    <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
-                    <div className={`${css.col} ${css.name}`}>{tournament.name}</div>
-                    <div className={`${css.col} ${css.creator}`}>{tournament.creator.username}</div>
-                    <div className={`${css.col} ${css.date}`}>{new Date(tournament.created_at).toLocaleDateString()}</div>
-                    <div className={`${css.col} ${css.players}`}>
-                        {tournament.participants_count}/{tournament.max_participants}
+
+            <div className={css.tournamentList}>
+                {tournaments?.map((tournament) => (
+                    <div key={tournament.id} className={css.row}>
+                        <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
+                        <div className={`${css.col} ${css.name}`}>{tournament.name}</div>
+                        <div className={`${css.col} ${css.creator}`}>{tournament.creator.username}</div>
+                        <div className={`${css.col} ${css.date}`}>{new Date(tournament.created_at).toLocaleDateString()}</div>
+                        <div className={`${css.col} ${css.players}`}>
+                            {tournament.participants_count}/{tournament.number_of_players}
+                        </div>
+                        <div className={`${css.col} ${css.action}`}>
+                            <button onClick={() => alert(`Joining tournament ${tournament.id}`)}>Join</button>
+                        </div>
                     </div>
-                    <div className={`${css.col} ${css.action}`}>
-                        <button onClick={() => alert(`Joining tournament ${tournament.id}`)}>Join</button>
-                    </div>
-                </div>
-            ))}
+                ))}
+                {!error && !isLoading && !tournaments?.length && <div className={css.noTournaments}>
+                        <p>No tournaments available at the moment.</p>
+                    </div>}
+                {error && <div className={css.errorWrapper}>
+                    <ErrorMessage/>
+                    </div>}
+                {!error && isLoading && <div className={css.loaderWrapper}>
+                    <ArcadeLoader/>
+                </div>}
+            </div>
         </div>
     );
 };

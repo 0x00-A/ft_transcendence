@@ -1,10 +1,12 @@
 from rest_framework import serializers
 
+from accounts.serializers import UserSerializer
 from matchmaker.models import Tournament
 
 
 class TournamentSerializer(serializers.ModelSerializer):
     participants_count = serializers.SerializerMethodField()
+    creator = UserSerializer()
 
     class Meta:
         model = Tournament

@@ -10,6 +10,7 @@ import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import { getToken } from '../../utils/getToken';
 import useToken from '../../hooks/useToken';
 import TournamentList from './TournamentList';
+import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
 
 const CreateTournamentModal = ({ isOpen, onClose, onSubmit } : {isOpen:boolean , onClose: () => void, onSubmit: (name: string) => void}) => {
     const [tournamentName, setTournamentName] = useState('');
@@ -179,37 +180,42 @@ const ModeSelection = () => {
   }
 
   return (
-    <>
-      {/* <div className={css.title}>
-        <p className={css.cornerBorder}>mode</p>
+    <div className={css.container}>
+
+      <div className={css.modeSelectDiv}>
+
+        {/* <div className={css.title}>
+          <p className={css.cornerBorder}>mode</p>
+        </div>
+        <ul className={css.modes}>
+          {Modes.map((m, i) => (
+            <GameMode
+              key={i}
+              onSelect={() => startGame(m.id)}
+              title={m.title}
+              desc={m.description}
+            />
+          ))}
+        </ul> */}
+        <button onClick={requestRemoteGame}>Request Remote Game</button>
+        <button onClick={requestTournament}>Request Tournament</button>
+        <CreateTournamentModal
+            isOpen={isModalOpen}
+            onClose={handleModalClose}
+            onSubmit={handleTournamentSubmit}
+        />
+        {state == '' && <h1>Connecting...</h1>}
+        {state == 'connected' && <h1>Connected</h1>}
+        {state == 'matchmaking' && <h1>Matchmaking...</h1>}
+        {state == 'inqueue' && <h1>in queue</h1>}
+        {state == 'matched' && <h1>created game</h1>}
+        {state == 'disconnected' && <h1>disconnected</h1>}
       </div>
-      <ul className={css.modes}>
-        {Modes.map((m, i) => (
-          <GameMode
-            key={i}
-            onSelect={() => startGame(m.id)}
-            title={m.title}
-            desc={m.description}
-          />
-        ))}
-      </ul> */}
-      <button onClick={requestRemoteGame}>Request Remote Game</button>
-      <button onClick={requestTournament}>Request Tournament</button>
-      <CreateTournamentModal
-          isOpen={isModalOpen}
-          onClose={handleModalClose}
-          onSubmit={handleTournamentSubmit}
-      />
-      {state == '' && <h1>Connecting...</h1>}
-      {state == 'connected' && <h1>Connected</h1>}
-      {state == 'matchmaking' && <h1>Matchmaking...</h1>}
-      {state == 'inqueue' && <h1>in queue</h1>}
-      {state == 'matched' && <h1>created game</h1>}
-      {state == 'disconnected' && <h1>disconnected</h1>}
-      <div className={css.tournamentsDev}>
+        <p className={css.activeTournaments}>Active Tournaments</p>
+      <div className={css.tournamentsDiv}>
         <TournamentList></TournamentList>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -217,13 +223,13 @@ export default ModeSelection;
 
 // import { Navigate } from 'react-router-dom';
 // import { useAuth } from '../../contexts/AuthContext';
-// import css from './Games.module.css';
+// import css from './ModeSelection.module.css';
 // import FlexHeader from '../../components/Layout/FlexHeader/FlexHeader';
 // import { useState } from 'react';
-// import PongGame from '../../components/Game/PongGame/PongGame';
 // import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
 // import BodyContainer from '../../components/Layout/BodyContainer/BodyContainer';
 // import { useNavigate } from "react-router-dom";
+// import PongGame from '../../components/Game/PongGame';
 
 // const generateUniqueGameId = () => {
 //   return Math.random().toString(36).substr(2, 9); // Simple unique ID generation
