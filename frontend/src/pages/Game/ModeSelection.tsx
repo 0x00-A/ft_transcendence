@@ -8,6 +8,43 @@ import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import useWebSocket from '../../hooks/useWebSocket';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import { getToken } from '../../utils/getToken';
+import useToken from '../../hooks/useToken';
+
+const CreateTournamentModal = ({ isOpen, onClose, onSubmit } : {isOpen:boolean , onClose: () => void, onSubmit: (name: string) => void}) => {
+    const [tournamentName, setTournamentName] = useState('');
+
+    const handleInputChange = (e) => {
+        setTournamentName(e.target.value);
+    };
+
+    const handleSubmit = () => {
+        if (tournamentName.trim()) {
+            onSubmit(tournamentName);
+            setTournamentName('');
+            onClose();
+        } else {
+            alert("Please enter a tournament name.");
+        }
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className={css.modalOverlay}>
+            <div className={css.modalContent}>
+                <h2>Create Tournament</h2>
+                <input
+                    type="text"
+                    placeholder="Enter tournament name"
+                    value={tournamentName}
+                    onChange={handleInputChange}
+                />
+                <button onClick={handleSubmit}>Submit</button>
+                <button onClick={onClose}>Cancel</button>
+            </div>
+        </div>
+    );
+};
 
 const generateUniqueGameId = () => {
   return Math.random().toString(36).substr(2, 9); // Simple unique ID generation
@@ -29,13 +66,27 @@ const Modes = [
   { id: 4, title: 'tournament', description: 'join or create a tournament' },
 ];
 
-// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMTI5MzIwLCJpYXQiOjE3MzAxMjU3MjAsImp0aSI6ImZhM2RiZDhkNmY1ZjQ5OWViNzJmZGUxODMwOWYxYWRjIiwidXNlcl9pZCI6MX0.qN_N2JDKglR6L-OPS9EJmayruuOp4JjZehESR3G5z70';
 
 const ModeSelection = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(0);
   const [state, setState] = useState('');
   const [gameAdrress, setGameAdrress] = useState(null);
   const ws = useRef<WebSocket | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalClose = () => {
+      setIsModalOpen(false);
+  };
+
+  const handleTournamentSubmit = (name: string) => {
+
+    ws.current?.send(
+      JSON.stringify({
+        event: 'request_tournament',
+        tournament_name: name,
+      })
+    );
+  };
 
   const navigate = useNavigate();
 
@@ -44,6 +95,8 @@ const ModeSelection = () => {
     if (modeId === 0) navigate(`/game/local`); // Navigate to the game URL with mode and ID
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
   };
+
+  const token = useToken()
 
   useEffect(() => {
     const timeout = setTimeout(async () => {
@@ -81,6 +134,11 @@ const ModeSelection = () => {
             setGameAdrress(data.game_address);
             setState('matched');
           }
+          if (data.event === 'tournament_created') {
+            console.log(data.message);
+            // setGameAdrress(data.game_address);
+            // setState('matched');
+          }
         };
         socket.onclose = () => {
           console.log('Matchmaker Socket disconnected');
@@ -106,6 +164,12 @@ const ModeSelection = () => {
     );
   };
 
+  const requestTournament = () => {
+      setIsModalOpen(true);
+    console.log('request tournament');
+
+  };
+
   if (state === 'matched') {
     if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
     // if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
@@ -129,7 +193,12 @@ const ModeSelection = () => {
         ))}
       </ul> */}
       <button onClick={requestRemoteGame}>Request Remote Game</button>
-      <button>Request Tournament</button>
+      <button onClick={requestTournament}>Request Tournament</button>
+      <CreateTournamentModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSubmit={handleTournamentSubmit}
+      />
       {state == '' && <h1>Connecting...</h1>}
       {state == 'connected' && <h1>Connected</h1>}
       {state == 'matchmaking' && <h1>Matchmaking...</h1>}

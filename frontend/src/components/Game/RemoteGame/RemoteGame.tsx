@@ -66,48 +66,23 @@ const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
     dy: 0,
   });
 
-  // useEffect(() => {
-  //   (async () => {
-  //       const token = await getToken();
-  //       if (!token) {
-  //         console.log(`No valid token: ${token}`);
-  //         return;
-  //       }
-  //       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${token}`;
-  //       const socket = new WebSocket(wsUrl);
-  //       ws.current = socket;
-  //   })()
-
-  //   return () => {
-  //       if (ws.current) {
-  //           ws.current.close();
-  //       }
-  //   };
-  // }, [])
-
   useEffect(() => {
     hitWallSound.current.preload = 'auto';
     hitWallSound.current.load(); // Preloads the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
-    paddleHitSound.current.load(); // Preloads the audio into the browser's memory
+    paddleHitSound.current.load();
   }, [sound]);
 
   useEffect(() => {
-    (async () => {
-      tokenRef.current = await getToken();
-    })()
-  }, [])
-
-  useEffect(() => {
-    const timeout = setTimeout( () => {
+    const timeout = setTimeout(async () => {
       setGameState(null);
-      // const token = await getToken();
-      if (!tokenRef.current) {
-        console.log(`No valid token: ${tokenRef.current}`);
+      const token = await getToken();
+      if (!token) {
+        console.log(`No valid token: ${token}`);
         return;
       }
       let gameSocket: WebSocket | null = null;
-      const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${tokenRef.current}`;
+      const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${token}`;
       if (!ws.current)
         gameSocket = new WebSocket(wsUrl);
       if (!gameSocket) return
