@@ -54,7 +54,7 @@ const TournamentList = ({
       {/* List of Tournaments */}
 
       <div className={css.tournamentList}>
-        {tournaments?.map((tournament) => (
+        {!error && tournaments?.map((tournament) => (
           <div key={tournament.id} className={`${css.row}`}>
             <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
             <div className={`${css.col} ${css.name}`}>
