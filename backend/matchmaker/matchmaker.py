@@ -122,7 +122,7 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        if await Game.objects.afilter(
+        if await Game.objects.filter(
             (Q(player1=player_id) | Q(player2=player_id)) & Q(
                 status="started")
         ).aexists():
@@ -150,7 +150,7 @@ class Matchmaker:
         :param is_tournament: Whether this is a tournament match.
         :param match_id: The specific match ID within the tournament (if applicable).
         """
-        if await Game.objects.afilter(game_id=game_id).aexists():
+        if await Game.objects.filter(game_id=game_id).aexists():
             await cls.process_game_result(game_id, winner, p1_score, p2_score)
             # self.games.remove(game)
             return

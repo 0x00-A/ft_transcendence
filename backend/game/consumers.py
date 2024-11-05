@@ -20,7 +20,7 @@ channel_layer = get_channel_layer()
 
 canvas_width: int = 650
 canvas_height: int = 480
-winning_score: int = 100
+winning_score: int = 3
 
 ball_raduis: int = 8
 initial_ball_speed = 4
