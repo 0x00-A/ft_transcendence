@@ -78,7 +78,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
-    friend_request_status = serializers.CharField(required=False) 
+    friend_request_status = serializers.CharField(required=False)
 
     class Meta:
         model = User

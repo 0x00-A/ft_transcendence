@@ -20,15 +20,10 @@ import apiClient from '../../api/apiClient'
 const getProfile = async () => {
   // try {
     const response = await apiClient.get(
-      '/profile/user1'
+      '/profile'
     );
     return response.data
 }
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4NjI4LCJpYXQiOjE3MzA3NTgzNTcsImp0aSI6IjI2NDI0M2MxYWNkZjQzYTJiZTI2MmI3MTk4NzJhNzMzIiwidXNlcl9pZCI6MTh9.V7oflfKYLQQqOfapnE_yduG_k0xa2OOSj-rlFy9biVc
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4NzEwLCJpYXQiOjE3MzA3NTgzNTcsImp0aSI6ImM5MjRjZTU4NTY3MDQ1MzY5ZTQyZTk4MGJiMDBhZmM5IiwidXNlcl9pZCI6MTh9.UYsMvk9ZzdimyzvLom8M_JowzFcdJfQmMzPJtE9Quf8
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4OTQ0LCJpYXQiOjE3MzA3NTg5MzQsImp0aSI6IjRlYWEwODYwZjEzMjRiMjFiMzc0ZjQ0YWE0ZTQ5MGUwIiwidXNlcl9pZCI6MTh9.JLuhKVQWOBlQy1rIcwvU7cVRV4JhAMmT9Hw-Zx8vmR0
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNzU4OTQ0LCJpYXQiOjE3MzA3NTg5MzQsImp0aSI6IjRlYWEwODYwZjEzMjRiMjFiMzc0ZjQ0YWE0ZTQ5MGUwIiwidXNlcl9pZCI6MTh9.JLuhKVQWOBlQy1rIcwvU7cVRV4JhAMmT9Hw-Zx8vmR0
 
 
 const Profile = () => {
