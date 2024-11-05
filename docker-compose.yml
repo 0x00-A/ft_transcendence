@@ -68,15 +68,15 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend
-          target: /app/frontend
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: package.json
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./frontend
+    #       target: /app/frontend
+    #       ignore:
+    #         - node_modules/
+    #     - action: rebuild
+    #       path: package.json
 
   db:
     image: postgres:13-alpine
