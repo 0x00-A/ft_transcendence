@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError as DjangoValidationError
+from matchmaker.serializers.gameSerializer import GameSerializer
 from rest_framework_simplejwt.tokens import Token
 from ..models.user import User
 from ..models.profile import Profile
@@ -79,8 +80,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
     friend_request_status = serializers.CharField(required=False)
+    # games = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_oauth_user',
-                  'first_name', 'last_name', 'profile', 'friend_request_status']
+        fields = ['id', 'username',  'profile', 'friend_request_status']
+
+    # def get_games(self, obj):
+    #     games_as_player1 = obj.games_as_player1.all()
+    #     games_as_player2 = obj.games_as_player2.all()
+
+    #     all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
+    #     last_5_games = all_games[:5]
+
+
+    #     return GameSerializer(last_5_games, many=True).data

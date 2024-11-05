@@ -6,8 +6,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from ..models import Profile, FriendRequest
-from ..serializers import ProfileSerializer
-from ..views.login import CookieJWTAuthentication
+from ..serializers import UserSerializer
 
 User = get_user_model()
 
@@ -28,15 +27,13 @@ def get_friend_status(current_user, other_user):
 
 
 class ProfileApiView(APIView):
-    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = ProfileSerializer
+    serializer_class = UserSerializer
 
     def get(self, request):
         try:
             user = request.user
-            # profile = Profile.objects.get(user=user)
-            serializer = ProfileSerializer(user.profile)
+            serializer = UserSerializer(user)
             # response = Response(serializer.data, status=status.HTTP_200_OK)
             # if hasattr(request, 'new_access_token'):
             #     response.set_cookie(
