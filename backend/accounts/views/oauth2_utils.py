@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from ..views.login import CookieJWTAuthentication
+from accounts.authenticate import CookieJWTAuthentication
 import requests
 from ..serializers import Oauth2UserSerializer
 from ..views.login import get_token_for_user
