@@ -1,0 +1,38 @@
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.db import models
+
+User = get_user_model()
+
+class Match(models.Model):
+    GAME_STATUS_CHOICES = [
+        ('waiting', 'Game Waiting'),
+        ('started', 'Game started'),
+        ('ended', 'Game ended'),
+        ('aborted', 'Game aborted'),
+    ]
+    player1 = models.ForeignKey(
+        User, related_name='matches_as_player1', on_delete=models.CASCADE)
+    player2 = models.ForeignKey(
+        User, related_name='matches_as_player2', on_delete=models.CASCADE)
+    match_id = models.CharField(
+        max_length=100, unique=True, blank=True, null=True)
+    tournament = models.ForeignKey(
+        'Tournament', on_delete=models.CASCADE, related_name='matches', null=True)
+    winner = models.ForeignKey(
+        User, related_name='matches_as_winner', on_delete=models.CASCADE, null=True)
+    p1_score = models.IntegerField(default=0)
+    p2_score = models.IntegerField(default=0)
+    status = models.CharField(
+        max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
+
+    start_time = models.DateTimeField(auto_now=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            super().save(*args, **kwargs)
+            self.match_id = f"match_{self.id}"
+            super().save(update_fields=["match_id"])
+        else:
+            super().save(*args, **kwargs)

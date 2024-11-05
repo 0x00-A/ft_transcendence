@@ -4,6 +4,9 @@ import css from './RemoteGame.module.css';
 import MultiPlayerPong from '../components/MultiPlayerPong/MultiPlayerPong';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import { boolean } from 'yup';
+import getWebSocketUrl from '../../../utils/getWebSocketUrl';
+import { getToken } from '../../../utils/getToken';
+import { useParams } from 'react-router-dom';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -13,7 +16,8 @@ const pW = 20;
 const pH = 80;
 const paddleSpeed = 2;
 
-const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
+const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
+  // const { game_address } = useParams();
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
   const [restart, setRestart] = useState(false);
@@ -30,6 +34,7 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const tokenRef = useRef(null);
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
@@ -65,13 +70,22 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
     hitWallSound.current.preload = 'auto';
     hitWallSound.current.load(); // Preloads the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
-    paddleHitSound.current.load(); // Preloads the audio into the browser's memory
+    paddleHitSound.current.load();
   }, [sound]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const timeout = setTimeout(async () => {
       setGameState(null);
-      const gameSocket = new WebSocket(`ws://localhost:8000/${game_address}/`);
+      const token = await getToken();
+      if (!token) {
+        console.log(`No valid token: ${token}`);
+        return;
+      }
+      let gameSocket: WebSocket | null = null;
+      const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${token}`;
+      if (!ws.current)
+        gameSocket = new WebSocket(wsUrl);
+      if (!gameSocket) return
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
@@ -89,33 +103,20 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
 
       gameSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        console.log(data);
+        // console.log(data);
         if (data.type === 'game_started') {
           // setTimeout(() => {
           //   // init_game_state(data);
           // }, 100);
+          paddle1Ref.current.x = data.state[`player1_paddle_x`];
+          paddle2Ref.current.x = data.state[`player2_paddle_x`];
           setGameState('started');
         }
-        if (data.type === 'player_disconnected') {
-          console.log('player_disconnected...');
-          // setGameState('disconnected');
-        }
         if (data.type === 'game_update') {
-          // console.log(`recieved game update:`, data.state);
           ballRef.current.x = data.state.ball.x;
           ballRef.current.y = data.state.ball.y;
           paddle1Ref.current.y = data.state[`player1_paddle_y`];
           paddle2Ref.current.y = data.state[`player2_paddle_y`];
-          paddle1Ref.current.x = data.state[`player1_paddle_x`];
-          paddle2Ref.current.x = data.state[`player2_paddle_x`];
-          setScore1(data.state[`player1_score`]);
-          setScore2(data.state[`player2_score`]);
-        }
-        if (data.type === 'pause') {
-          setPaused(true);
-        }
-        if (data.type === 'resume') {
-          setPaused(false);
         }
         if (data.type === 'play_sound') {
           if (data.collision === 'wall') {
@@ -124,24 +125,33 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
             if (paddleHitSound.current) sound && paddleHitSound.current.play();
           }
         }
-        if (data.type === 'game_over') {
-          setIsWinner(data.state.is_winner);
-          setIsGameOver(true);
-          setCurrentScreen('end');
+        if (data.type === 'score_update') {
+          setScore1(data.state[`player1_score`]);
+          setScore2(data.state[`player2_score`]);
+          if (data.state.game_over) {
+            setIsWinner(data.state.is_winner);
+            setIsGameOver(true);
+            setCurrentScreen('end');
+            gameSocket.close();
+            ws.current = null;
+          }
         }
       };
 
       gameSocket.onclose = (e) => {
-        console.log('WebSocket Disconnected');
-        setGameState('ended');
-      };
-
-      return () => {
-        gameSocket.close();
+        console.log('Game WebSocket Disconnected');
+        // setGameState('ended');
       };
     }, 500);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      if (ws.current) {
+          console.log('Closing game websocket ....');
+          ws.current.close();
+
+      }
+        clearTimeout(timeout);
+    };
   }, [restart]);
 
   useEffect(() => {
@@ -155,10 +165,10 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
       ctx.lineWidth = 3;
 
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2, 10); // Start at the top of the canvas
-      ctx.lineTo(canvas.width / 2, canvas.height - 10); // Draw to the bottom of the canvas
+      ctx.moveTo(canvas.width / 2, 10);
+      ctx.lineTo(canvas.width / 2, canvas.height - 10);
       ctx.stroke();
-      ctx.setLineDash([]); // Reset the line dash to solid for other drawings
+      ctx.setLineDash([]);
     };
 
     const keysPressed: boolean[] = [false];
@@ -230,10 +240,10 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
       //     })
       //   );
       // }
-      if (keysPressed[0])
-        ws.current?.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
-      if (keysPressed[1])
-        ws.current?.send(
+      if (ws.current && ws.current.readyState === WebSocket.OPEN  && keysPressed[0])
+        ws.current.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
+      if (ws.current && ws.current.readyState === WebSocket.OPEN &&  keysPressed[1])
+        ws.current.send(
           JSON.stringify({ type: 'keydown', direction: 'down' })
         );
     };
@@ -300,18 +310,6 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
     setIsGameOver(false);
   };
 
-  const togglePause = () => {
-    setPaused(!paused);
-  };
-
-  const handlePause = () => {
-    ws.current!.send(JSON.stringify({ type: 'pause' }));
-  };
-
-  const handleResume = () => {
-    ws.current!.send(JSON.stringify({ type: 'resume' }));
-  };
-
   return (
     <div>
       {!gameState && <h1>Remote Play - connecting to websocket!</h1>}
@@ -330,18 +328,12 @@ const RemoteGame: React.FC<{ game_address: number }> = ({ game_address }) => {
                 <div className={css.player1Score}>{score1}</div>
                 <div className={css.player2Score}>{score2}</div>
               </div>
-              {/* <div id="pauseDiv" style="display: none;">
-                Paused, press P to continue
-              </div> */}
               <canvas
                 width={canvasWidth}
                 height={canvasHeight}
                 id={css.gameCanvas}
                 ref={canvasRef}
               />
-              <button onClick={paused ? handleResume : handlePause}>
-                {paused ? 'Resume' : 'Pause'}
-              </button>
             </div>
           )}
           {currentScreen === 'end' && (
