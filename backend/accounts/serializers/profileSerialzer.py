@@ -1,17 +1,16 @@
 from rest_framework import serializers
 from ..models.profile import Profile
-from matchmaker.serializers.gameSerializer import PlayedGamesField
+
 
 
 class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
-    games = PlayedGamesField()
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'avatar', 'level', 'stats', 'is_online', 'games']
+        fields = ['id', 'username', 'avatar', 'level', 'stats', 'is_online']
 
     def get_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.avatar}"
