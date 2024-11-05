@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from ..models.profile import Profile
-from .gameSerializer import PlayedGamesField
+from matchmaker.serializers.gameSerializer import PlayedGamesField
 
 
 class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
-    games = serializers.SerializerMethodField()
+    games = PlayedGamesField()
 
     class Meta:
         model = Profile
@@ -19,5 +19,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_username(self, obj):
         return obj.user.username
 
-    def get_games(self, obj):
-        pass
+    # def get_games(self, obj):
+    #     return PlayedGamesField(obj, many=True).data

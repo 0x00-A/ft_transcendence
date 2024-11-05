@@ -25,12 +25,14 @@ class Matchmaker:
     async def unregister_client(cls, player_id):
         if player_id in cls.connected_clients:
             del cls.connected_clients[player_id]
+        if player_id in cls.games_queue:
+            cls.games_queue.remove(player_id)
 
     @classmethod
     async def request_remote_game(cls, player_id):
         # Handle remote game matchmaking here
-        # if await cls.is_client_already_playing(player_id):
-        #     return
+        if await cls.is_client_already_playing(player_id):
+            return
         # Add player to the queue, etc.
         # After finding a match:
         cls.games_queue.append(player_id)
@@ -47,12 +49,12 @@ class Matchmaker:
         print(f"creating game... p1: {player1_id} | p2: {player2_id}")
         # Store the game in your database (using Django ORM models)
         User = get_user_model()
-        p1 = await sync_to_async(User.objects.get)(id=player1_id)
-        p2 = await sync_to_async(User.objects.get)(id=player2_id)
-        game = await sync_to_async(Game.objects.create)(
+        p1 = await User.objects.aget(id=player1_id)
+        p2 = await User.objects.aget(id=player2_id)
+        game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
-        game_address = f"ws/game/game_{game.id}"
+        game_address = f"game/game_{game.id}"
         # Simulate game creation with game_id and address
         # game_id = await cls.get_new_game_id()
 
@@ -65,40 +67,44 @@ class Matchmaker:
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)
 
-    # @classmethod
-    # async def create_tournament(cls, creator_id, tournament_name, number_of_players):
-    #     # Create a tournament, check for limits, and notify the creator
-    #     # Assuming 10 is the max number of tournaments
-    #     if await sync_to_async(Tournament.objects.count)() >= 10:
-    #         message = {'action': 'error',
-    #                    'message': 'Maximum tournaments reached'}
-    #         await cls.send_message_to_client(creator_id, message)
-    #         return
+    @classmethod
+    async def create_tournament(cls, creator_id, tournament_name):
+        # Create a tournament, check for limits, and notify the creator
+        # if await sync_to_async(Tournament.objects.count)() >= 10:
+        #     message = {'action': 'error',
+        #                'message': 'Maximum tournaments reached'}
+        #     await cls.send_message_to_client(creator_id, message)
+        #     return
 
-    #     new_tournament = await sync_to_async(Tournament.objects.create)(
-    #         creator_id=creator_id, name=tournament_name, number_of_players=number_of_players
-    #     )
-    #     # Notify the creator that the tournament has been created
-    #     message = {
-    #         'action': 'tournament_created',
-    #         'message': f'Tournament {new_tournament.name} created',
-    #         'tournament_id': new_tournament.id
-    #     }
-    #     await cls.send_message_to_client(creator_id, message)
+        new_tournament = await Tournament.objects.acreate(
+            creator_id=creator_id, name=tournament_name
+        )
+        await new_tournament.players.aadd(
+            cls.connected_clients.get(creator_id).scope['user'])
+        await new_tournament.asave()
+        # Notify the creator that the tournament has been created
+        message = {
+            'action': 'tournament_created',
+            'message': f'Tournament {new_tournament.name} created',
+            'tournament_id': new_tournament.id
+        }
+        await cls.send_message_to_client(creator_id, message)
 
-    # @classmethod
-    # async def join_tournament(cls, player_id, tournament_id):
-    #     # Logic for joining a tournament
-    #     tournament = await sync_to_async(Tournament.objects.get)(id=tournament_id)
-    #     if tournament.is_full():
-    #         message = {'action': 'tournament_full',
-    #                    'message': 'Tournament is full'}
-    #         await cls.send_message_to_client(player_id, message)
-    #     else:
-    #         await sync_to_async(tournament.add_player)(player_id)
-    #         message = {'action': 'tournament_joined',
-    #                    'tournament_id': tournament_id}
-    #         await cls.send_message_to_client(player_id, message)
+    @classmethod
+    async def join_tournament(cls, player_id, tournament_id):
+        try:
+            tournament = await Tournament.objects.aget(id=tournament_id)
+            if await sync_to_async(tournament.check_is_full)():
+                message = {'action': 'tournament_full',
+                           'message': 'Tournament is full'}
+                await cls.send_message_to_client(player_id, message)
+            else:
+                await tournament.players.aadd(player_id)
+                message = {'action': 'tournament_joined',
+                           'tournament_id': tournament_id}
+                await cls.send_message_to_client(player_id, message)
+        except Tournament.DoesNotExist:
+            await cls.send_message_to_client(player_id, {'error': 'Tournament does not exist'})
 
     @classmethod
     async def send_message_to_client(cls, player_id, message):
@@ -115,12 +121,10 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        if await sync_to_async(
-            Game.objects.filter(
-                (Q(player1=player_id) | Q(player2=player_id)) & Q(
-                    status="ongoing")
-            ).exists
-        )():
+        if await Game.objects.filter(
+            (Q(player1=player_id) | Q(player2=player_id)) & Q(
+                status="started")
+        ).aexists():
             message = {
                 'event': 'already_ingame'
             }
@@ -136,8 +140,8 @@ class Matchmaker:
             return (player1, player2)
         return None
 
-    @staticmethod
-    async def process_game_result(self, game_id, winner_id):
+    @classmethod
+    async def process_result(cls, game_id, winner, p1_score, p2_score):
         """
         Process the result of a game. Determine if it is a single game or tournament match.
         :param game_id: The ID of the game.
@@ -145,8 +149,8 @@ class Matchmaker:
         :param is_tournament: Whether this is a tournament match.
         :param match_id: The specific match ID within the tournament (if applicable).
         """
-        if Game.objects.exists(game_id=game_id):
-            await self.process_game_result(game_id, winner_id)
+        if await Game.objects.filter(game_id=game_id).aexists():
+            await cls.process_game_result(game_id, winner, p1_score, p2_score)
             # self.games.remove(game)
             return
 
@@ -172,15 +176,12 @@ class Matchmaker:
             # Process the tournament match and advance the tournament state
             await self.process_tournament_match(match_id, winner_id)
 
-    @staticmethod
-    async def process_game_result(self, game_id, winner_id):
+    @classmethod
+    async def process_game_result(cls, game_id, winner, p1_score, p2_score):
         """Process a single game result and update the database"""
-        game = await sync_to_async(Game.objects.get)(game_id=game_id)
+        game = await Game.objects.aget(game_id=game_id)
 
-        if winner_id == -1:
-            await sync_to_async(game.abort_game)()
-        else:
-            await sync_to_async(game.end_game)(winner_id)
+        await sync_to_async(game.end_game)(winner, p1_score, p2_score)
 
         # Update the game result and mark it as finished
         # game.winner = winner_id

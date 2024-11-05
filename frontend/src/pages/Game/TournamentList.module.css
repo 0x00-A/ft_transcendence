@@ -1,0 +1,146 @@
+/* TournamentList.module.css */
+
+.container {
+    /* width: 90%; */
+    height: 100%;
+    min-width: 600px;
+    margin: 0 auto;
+    /* margin-bottom: 30px; */
+    /* background-color: #2d2d2d; */
+    border-radius: 10px;
+    /* overflow: hidden; */
+    font-family: Arial, sans-serif;
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.6),
+        0 2px 5px rgba(0, 0, 0, 0.4) inset;
+    border-radius: 30px 30px 0 0;
+
+}
+
+.tournamentList {
+    height: 90%;
+    overflow: auto;
+    /* border-radius: 0 0 10px 10px; */
+
+}
+
+.loaderWrapper, .errorWrapper {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.noTournaments {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #666;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    /* background-color: #f9f9f9; */
+    /* border: 2px dashed #ddd; */
+    /* border-radius: 8px; */
+}
+
+
+.header,
+.row {
+    display: flex;
+    padding: 10px 15px;
+    color: var(--text-color);
+    align-items: center;
+}
+
+.header {
+    /* background-color: #1a1a1a; */
+    background-color:  var(--tournament-header);
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    height: 15%;
+    border-radius: 30px 30px 0 0;
+
+}
+
+.row {
+    /* background-color: #333333; */
+    background-color:  var(--tournament-row);
+    border-top: 1px solid #444444;
+}
+
+.row:nth-child(odd) {
+    /* background-color: #2a2a2a; */
+    background-color:  var(--tournament-row-odd);
+}
+
+.col {
+    flex: 1;
+    text-align: center;
+}
+
+.id {
+    flex: 0.5;
+}
+
+.name {
+    flex: 2;
+}
+
+.creator,
+.date,
+.players {
+    flex: 1;
+}
+
+.action {
+    flex: 0.75;
+}
+
+/* .action button {
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.action button:hover {
+    background-color: #218838;
+} */
+
+.action button {
+    padding: 8px 32px;
+    background-color: #ffc107; /* Yellow background */
+    color: #000000; /* Black text */
+    font-weight: bold;
+    border: 1px solid #ffc107;
+    border-radius: 1px;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out, background-color 0.2s ease;
+}
+
+.action button:hover {
+    background-color: #ffca2c; /* Lighter yellow on hover */
+    transform: scale(1.05); /* Slightly larger on hover */
+}
+
+.action button:active {
+    background-color: #ffb300; /* Darker yellow on click */
+    transform: scale(0.95); /* Slightly smaller when clicked */
+    border-radius: 0;
+    border: 1px solid #ffb300;
+
+}
+
+.action button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5); /* Add a focus ring for accessibility */
+}
