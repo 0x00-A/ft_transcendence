@@ -84,15 +84,27 @@ class Game(models.Model):
         self.end_time = timezone.now()
         self.save()
 
-    def abort_game(self):
-        """
-        Abort the game and mark it as aborted.
-        """
-        print(f"--------------- Game: {self.id} aborted -------------------")
-        self.game_status = 'aborted'
-        self.game_winner = -1
-        self.game_end_time = timezone.now()
-        self.save()
+    def update_stats(self):
+        for player in [self.player1, self.player2]:
+            # Initialize stats if needed
+            if 'wins' not in player.profile.stats:
+                player.profile.stats['wins'] = 0
+            if 'losses' not in player.profile.stats:
+                player.profile.stats['losses'] = 0
+            if 'games_played' not in player.profile.stats:
+                player.profile.stats['games_played'] = 0
+            player.save()
 
-    def __str__(self):
-        return f"Game {self.id} ({self.status})"
+        self.player1.profile.stats['games_played'] += 1
+        self.player2.profile.stats['games_played'] += 1
+
+        if self.winner == self.player1:
+            self.player1.profile.stats['wins'] += 1
+            self.player2.profile.stats['losses'] += 1
+        elif self.winner == self.player2:
+            self.player2.profile.stats['wins'] += 1
+            self.player1.profile.stats['losses'] += 1
+
+        # Save the updated stats
+        self.player1.save()
+        self.player2.save()

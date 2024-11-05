@@ -183,6 +183,7 @@ class Matchmaker:
         game = await Game.objects.aget(game_id=game_id)
 
         await sync_to_async(game.end_game)(winner, p1_score, p2_score)
+        await sync_to_async(game.update_stats)()
 
         # Update the game result and mark it as finished
         # game.winner = winner_id
