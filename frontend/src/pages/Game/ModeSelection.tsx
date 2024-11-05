@@ -11,41 +11,51 @@ import { getToken } from '../../utils/getToken';
 import useToken from '../../hooks/useToken';
 import TournamentList from './TournamentList';
 import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
+import { useGetData } from '../../api/apiHooks';
+import { Tournament } from '../../types/apiTypes';
 
-const CreateTournamentModal = ({ isOpen, onClose, onSubmit } : {isOpen:boolean , onClose: () => void, onSubmit: (name: string) => void}) => {
-    const [tournamentName, setTournamentName] = useState('');
+const CreateTournamentModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (name: string) => void;
+}) => {
+  const [tournamentName, setTournamentName] = useState('');
 
-    const handleInputChange = (e) => {
-        setTournamentName(e.target.value);
-    };
+  const handleInputChange = (e) => {
+    setTournamentName(e.target.value);
+  };
 
-    const handleSubmit = () => {
-        if (tournamentName.trim()) {
-            onSubmit(tournamentName);
-            setTournamentName('');
-            onClose();
-        } else {
-            alert("Please enter a tournament name.");
-        }
-    };
+  const handleSubmit = () => {
+    if (tournamentName.trim()) {
+      onSubmit(tournamentName);
+      setTournamentName('');
+      onClose();
+    } else {
+      alert('Please enter a tournament name.');
+    }
+  };
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    return (
-        <div className={css.modalOverlay}>
-            <div className={css.modalContent}>
-                <h2>Create Tournament</h2>
-                <input
-                    type="text"
-                    placeholder="Enter tournament name"
-                    value={tournamentName}
-                    onChange={handleInputChange}
-                />
-                <button onClick={handleSubmit}>Submit</button>
-                <button onClick={onClose}>Cancel</button>
-            </div>
-        </div>
-    );
+  return (
+    <div className={css.modalOverlay}>
+      <div className={css.modalContent}>
+        <h2>Create Tournament</h2>
+        <input
+          type="text"
+          placeholder="Enter tournament name"
+          value={tournamentName}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={onClose}>Cancel</button>
+      </div>
+    </div>
+  );
 };
 
 const generateUniqueGameId = () => {
@@ -68,7 +78,6 @@ const Modes = [
   { id: 4, title: 'tournament', description: 'join or create a tournament' },
 ];
 
-
 const ModeSelection = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(0);
   const [state, setState] = useState('');
@@ -77,17 +86,17 @@ const ModeSelection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalClose = () => {
-      setIsModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const handleTournamentSubmit = (name: string) => {
-
     ws.current?.send(
       JSON.stringify({
         event: 'request_tournament',
         tournament_name: name,
       })
     );
+    refetch();
   };
 
   const navigate = useNavigate();
@@ -98,64 +107,71 @@ const ModeSelection = () => {
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
   };
 
-  const token = useToken()
+  const token = useToken();
+
+  const {
+    data: tournaments,
+    isLoading,
+    error,
+    refetch,
+  } = useGetData<Tournament[]>('matchmaker/tournaments');
 
   useEffect(() => {
     const timeout = setTimeout(async () => {
-        const token = await getToken();
-        if (!token) {
-          console.log(`No valid token: ${token}`);
-          return;
+      const token = await getToken();
+      if (!token) {
+        console.log(`No valid token: ${token}`);
+        return;
+      }
+      const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
+      const socket = new WebSocket(wsUrl);
+      ws.current = socket;
+
+      socket.onopen = () => {
+        console.log('Socket connected');
+        setState('connected');
+      };
+
+      socket.onmessage = (e) => {
+        console.log(e.data);
+        const data = JSON.parse(e.data);
+        console.log(data);
+
+        if (data.event === 'in_queue') {
+          setState('inqueue');
         }
-        const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
-        const socket = new WebSocket(wsUrl);
-        ws.current = socket;
 
-        socket.onopen = () => {
-          console.log('Socket connected');
-          setState('connected');
-        };
-
-        socket.onmessage = (e) => {
-          console.log(e.data);
-          const data = JSON.parse(e.data);
-          console.log(data);
-
-          if (data.event === 'in_queue') {
-            setState('inqueue');
-          }
-
-          if (data.event === 'already_inqueue') {
-            console.log('already in queue');
-          }
-          if (data.event === 'already_ingame') {
-            console.log('already in a game');
-          }
-          if (data.event === 'game_address') {
-            console.log(data.message);
-            setGameAdrress(data.game_address);
-            setState('matched');
-          }
-          if (data.event === 'tournament_created') {
-            console.log(data.message);
-            // setGameAdrress(data.game_address);
-            // setState('matched');
-          }
-        };
-        socket.onclose = () => {
-          console.log('Matchmaker Socket disconnected');
-          setState('disconnected');
-        };
-    }, 500)
+        if (data.event === 'already_inqueue') {
+          console.log('already in queue');
+        }
+        if (data.event === 'already_ingame') {
+          console.log('already in a game');
+        }
+        if (data.event === 'game_address') {
+          console.log(data.message);
+          setGameAdrress(data.game_address);
+          setState('matched');
+        }
+        if (data.event === 'tournament_created') {
+          console.log(data.message);
+          // setGameAdrress(data.game_address);
+          // setState('matched');
+        }
+      };
+      socket.onclose = () => {
+        console.log('Matchmaker Socket disconnected');
+        setState('disconnected');
+      };
+    }, 500);
 
     return () => {
-        if (ws.current) {
-          console.log('Closing matchmaker websocket ....');
-            ws.current.close();
-        }
-        clearTimeout(timeout);
+      if (ws.current) {
+        console.log('Closing matchmaker websocket ....');
+        ws.current.close();
+      }
+      clearTimeout(timeout);
     };
-  }, [])
+  }, []);
 
   const requestRemoteGame = () => {
     console.log('request remote game');
@@ -167,34 +183,30 @@ const ModeSelection = () => {
   };
 
   const requestTournament = () => {
-      setIsModalOpen(true);
+    setIsModalOpen(true);
     console.log('request tournament');
-
   };
 
   if (state === 'matched') {
     if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
     // if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
     // return <Navigate to={`/${gameAdrress}`} />;
-
   }
 
-  const handleJoin = (tournamentId: number, refetch: () => void) => {
+  const handleJoin = (tournamentId: number) => {
     console.log('join tournament');
     ws.current?.send(
       JSON.stringify({
-        event: "join_tournament",
+        event: 'join_tournament',
         tournament_id: tournamentId,
       })
     );
-    refetch()
+    refetch();
   };
 
   return (
     <div className={css.container}>
-
       <div className={css.modeSelectDiv}>
-
         {/* <div className={css.title}>
           <p className={css.cornerBorder}>mode</p>
         </div>
@@ -211,9 +223,9 @@ const ModeSelection = () => {
         <button onClick={requestRemoteGame}>Request Remote Game</button>
         <button onClick={requestTournament}>Request Tournament</button>
         <CreateTournamentModal
-            isOpen={isModalOpen}
-            onClose={handleModalClose}
-            onSubmit={handleTournamentSubmit}
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSubmit={handleTournamentSubmit}
         />
         {state == '' && <h1>Connecting...</h1>}
         {state == 'connected' && <h1>Connected</h1>}
@@ -222,9 +234,14 @@ const ModeSelection = () => {
         {state == 'matched' && <h1>created game</h1>}
         {state == 'disconnected' && <h1>disconnected</h1>}
       </div>
-        <p className={css.activeTournaments}>Active Tournaments</p>
+      <p className={css.activeTournaments}>Active Tournaments</p>
       <div className={css.tournamentsDiv}>
-        <TournamentList handleJoin={handleJoin}></TournamentList>
+        <TournamentList
+          handleJoin={handleJoin}
+          tournaments={tournaments}
+          error={error}
+          isLoading={isLoading}
+        ></TournamentList>
       </div>
     </div>
   );
