@@ -33,14 +33,14 @@ class LoginView(CreateAPIView):
                     key = 'access_token',
                     value = token['access'],
                     httponly = True,
-                    secure = True,
+                    secure = False,
                     samesite = 'Strict'
                 )
                 response.set_cookie(
                     key = 'refresh_token',
                     value = token['refresh'],
                     httponly = True,
-                    secure = True,
+                    secure = False,
                     samesite = 'Strict'
                 )
                 return response
@@ -56,6 +56,7 @@ class CookieJWTAuthentication(JWTAuthentication):
         access_token = request.COOKIES.get('access_token')
         refresh_token = request.COOKIES.get('refresh_token')
         if access_token is None or refresh_token is None:
+            print('----access_token or refresh token not in the request-----')
             return None
         try:
             validated_token = self.get_validated_token(access_token)
@@ -64,17 +65,11 @@ class CookieJWTAuthentication(JWTAuthentication):
             try:
                 new_access_token = RefreshToken(refresh_token).access_token
                 validated_token = self.get_validated_token(str(new_access_token))
-                response = Response()
-                response.set_cookie(
-                    key = 'access_token',
-                    value = str(new_access_token),
-                    httponly = True,
-                    secure = True,
-                    samesite = 'Strict'
-                )
-                request.new_access_token = str(new_access_token)
+                request.session['new_access_token'] = str(new_access_token)
+                print('---request.new_access_token---')
                 return self.get_user(validated_token), validated_token
             except TokenError:
+                print('----error refreshing token-----')
                 return None
         except AccessToken as e:
             print('--------', e, '---------')

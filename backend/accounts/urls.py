@@ -46,7 +46,7 @@ urlpatterns = [
     path('oauth2/google/', oauth2_google),
 
     path('users/', AllUsersView.as_view(), name='all_users'),
-    path('profile/<str:username>', ProfileApiView.as_view(), name='profile'),
+    path('profile/', ProfileApiView.as_view(), name='profile'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),
