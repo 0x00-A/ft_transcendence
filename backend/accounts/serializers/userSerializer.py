@@ -27,10 +27,16 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(str(exc))
         return value
 
-    def validate(self, attrs):
-        if len(attrs['username']) < 4:
+    def validate_username(self, value):
+        if any(ch.isupper() for ch in value):
+            raise serializers.ValidationError(
+                {'username': 'Username must be lowercase!'})
+        if len(value) < 4:
             raise serializers.ValidationError(
                 {'username': 'Username must be at least 4 characters!'})
+        return value
+
+    def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
