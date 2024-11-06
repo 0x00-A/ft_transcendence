@@ -12,7 +12,7 @@ const Dashboard = () => {
         </div>
         <div className={css.leaderboard}>
           <h3>Leaderboard</h3>
-          {/* Add leaderboard items here */}
+          {/* Add leaderboardfff items here */}
         </div>
       </div>
 
