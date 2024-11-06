@@ -57,7 +57,6 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         return token
 
-
 class UserLoginSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(write_only=True, required=True)
@@ -83,4 +82,4 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'is_oauth_user',
-                  'first_name', 'last_name', 'profile', 'friend_request_status']
+                'first_name', 'last_name', 'profile', 'friend_request_status']

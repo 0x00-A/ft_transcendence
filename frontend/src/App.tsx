@@ -61,15 +61,25 @@ function AppContent() {
   const showSidebarRoutes = [
     '/',
     '/game',
+    '/game/',
     '/game/tournament',
+    '/game/tournament/',
     '/game/local',
+    '/game/local/',
     '/chat',
+    '/chat/',
     '/friends',
+    '/friends/',
     '/search',
+    '/search/',
     '/store',
+    '/store/',
     '/leaderboard',
+    '/leaderboard/',
     '/settings',
+    '/settings/',
     '/profile',
+    '/profile/',
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
@@ -125,7 +135,7 @@ function AppContent() {
             {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
             {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
             {/* <Route path="/game/remote" element={<RemoteGame />} /> */}
-            {/* <Route path="/game/remote/:game_id  " element={<RemoteGame />} /> */}
+            <Route path="/game/:game_address" element={<RemoteGame />} />
             {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
             {/* Remote game instance with game ID */}
             {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}

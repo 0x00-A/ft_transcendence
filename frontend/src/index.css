@@ -52,6 +52,9 @@
   --tournament-input-bg: #2b4450;
   --scrollbar-thumb-color: #191a2d;
 
+  --tournament-header: rgb(55 65 81);
+  --tournament-row: rgb(31 41 55);
+  --tournament-row-odd: #313749;
 }
 
 [data-theme='dark'] {
@@ -68,6 +71,13 @@
   --tournament-form-bg: #323232;
   --tournament-input-bg: #626262;
   --scrollbar-thumb-color: var(--b0);
+
+  --tournament-header: #1a1a1a;
+  --tournament-row: #333333;
+  --tournament-row-odd: #2a2a2a;
+
+
+
 
   /* --text-color: #858585; */
 

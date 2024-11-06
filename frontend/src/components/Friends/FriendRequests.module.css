@@ -45,8 +45,7 @@
   font-weight: 500;
   color: #d0d8e7;
 }
-
-.listContainer {
+.list {
   padding: 5px;
   display: flex;
   flex-direction: column;

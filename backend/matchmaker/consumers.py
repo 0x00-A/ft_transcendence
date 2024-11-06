@@ -12,22 +12,13 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
         self.player_id = None
-        # self.player_id = GlobalData.increment_user_id_counter()
-        # self.player_id = random.randint(1, 100000)
-        # await self.accept()
-        # Register the client when connected
 
         if user and not isinstance(user, AnonymousUser):
             await self.accept()
-            # profile = await sync_to_async(Profile.objects.get)(
-            #     user=user
-            # )
             self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self)
-            # You can now use self.scope['user'] to identify the user
-            await self.send(text_data=f"Hello {user.username}, you are authenticated!")
+            await self.send(text_data=json.dumps(f"Hello {user.username}, you are authenticated!"))
         else:
-            # Reject the connection if user is not authenticated
             print(f"##################### User not found ##########################")
             await self.close()
 
@@ -44,8 +35,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await Matchmaker.request_remote_game(self.player_id)
         elif event == 'request_tournament':
             tournament_name = data.get('tournament_name')
-            number_of_players = int(data.get('number_of_players'))
-            await Matchmaker.create_tournament(self.player_id, tournament_name, number_of_players)
+            await Matchmaker.create_tournament(self.player_id, tournament_name)
         elif event == 'join_tournament':
             tournament_id = data.get('tournament_id')
             await Matchmaker.join_tournament(self.player_id, tournament_id)
