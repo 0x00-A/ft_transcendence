@@ -11,3 +11,6 @@ export const SIDEBAR_RESIZE_WIDTH = 768;
 // websocket
 // export const wsBaseUrl = process.env.REACT_APP_WS_BASE_URL || 'ws://localhost:8000/ws';
 // export const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api';
+
+
+export const SERVER_PORT = 8000
