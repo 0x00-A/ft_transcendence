@@ -23,7 +23,7 @@ def intra_authorize(request):
 def oauth2_intra(request):
     if request.session.get('callback_uri') is None:
         request.session['callback_uri'] = request.GET.get('redirect_uri')
-        if request.session.get['callback_uri'] is None:
+        if request.session.get('callback_uri') is None:
             return Response(data={'message': 'Bad request, a callback uri is missing'}, status=status.HTTP_400_BAD_REQUEST)
     code = request.GET.get('code')
     if code is None:
