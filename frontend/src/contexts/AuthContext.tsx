@@ -9,7 +9,6 @@ import {
   useEffect,
 } from 'react';
 import apiClient from '../api/apiClient';
-import { error } from 'console';
 import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
@@ -29,7 +28,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const logout = async () => {
       console.log('----logout-----');
-
       const response = await apiClient.post('/auth/logout/', {}, {withCredentials: true});
       console.log('----response from interceptors.response-error-------', response);
       setIsLoggedIn(false);
@@ -45,14 +43,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const interceptor = apiClient.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response && error.response.status === 401) {
+        if (isLoggedIn && error.response && error.response.status === 401) {
           logout();
         }
         return Promise.reject(error);
       }
     );
     return () => axios.interceptors.response.eject(interceptor);
-  }, [logout]);
+  }, [logout, isLoggedIn]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>

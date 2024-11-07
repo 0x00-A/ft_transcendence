@@ -40,6 +40,7 @@ const Topbar = () => {
 
     ws.onmessage = (event) => {
       console.log('message received', event.data);
+      ws.send(JSON.stringify({'message': 'hello message recieved!' }));
     };
 
     ws.onclose = () => {

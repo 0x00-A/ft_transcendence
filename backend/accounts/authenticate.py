@@ -14,16 +14,14 @@ class CookieJWTAuthentication(JWTAuthentication):
             return None
         try:
             validated_token = self.get_validated_token(access_token)
-            return self.get_user(validated_token), validated_token
-        except InvalidToken as e:
+            return  self.get_user(validated_token), validated_token
+        except (InvalidToken, TokenError) as e:
             try:
                 new_access_token = RefreshToken(refresh_token).access_token
                 validated_token = self.get_validated_token(str(new_access_token))
                 request.session['new_access_token'] = str(new_access_token)
                 print('---request.new_access_token---')
                 return self.get_user(validated_token), validated_token
-            except TokenError:
+            except (InvalidToken, TokenError):
                 print('----error refreshing token-----')
                 return None
-        except AccessToken as e:
-            print('--------', e, '---------')
