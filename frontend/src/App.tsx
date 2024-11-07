@@ -91,12 +91,12 @@ function AppContent() {
 
   useEffect(() => {
     (async () => {
-        const token = await getToken();
-        if (!token) {
-          console.log(`No valid token: ${token}`);
-          return;
-        }
-        const wsUrl = `${getWebSocketUrl('online-status/')}?token=${token}`;
+        // const token = await getToken();
+        // if (!token) {
+        //   console.log(`No valid token: ${token}`);
+        //   return;
+        // }
+        const wsUrl = `${getWebSocketUrl('online-status/')}`;
         const socket = new WebSocket(wsUrl);
         onlineSocketRef.current = socket;
     })()
@@ -135,7 +135,7 @@ function AppContent() {
             {/* <Route path="/game/ai" element={<Pong gameMode={'ai'} />} /> */}
             {/* <Route path="/game/:mode/:gameId" element={<PongGame />} /> */}
             {/* <Route path="/game/remote" element={<RemoteGame />} /> */}
-            <Route path="/game/:game_address" element={<RemoteGame />} />
+            {/* <Route path="/game/:game_address" element={<RemoteGame />} /> */}
             {/* <Route path="/game/remote/:gameId" element={<RemoteGame />}> */}
             {/* Remote game instance with game ID */}
             {/* <Route path=":gameId" element={<RemoteGameInstance />} /> */}

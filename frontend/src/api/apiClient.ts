@@ -1,22 +1,22 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { error } from 'console';
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import confirmLogout from '../components/Sidebar/Sidebar'
-// const getExpiryTime = (token) => {
-//   const decoded = jwtDecode(token);
-//   return decoded.exp * 1000;
-// }
-
-
-// const isTokenExpired = (token) => Date.now() > getExpiryTime(token);
+// import { API_BASE_URL } from '../config/constants';
 
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: "http://localhost:8000/api",
   withCredentials: true,
 });
+
+
+export const getData = async <T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> => {
+  const response: AxiosResponse<T> = await apiClient.get(endpoint, config);
+  return response.data;
+}
+
+export const postData = async <T, D>(endpoint: string, data: D, config?: AxiosRequestConfig): Promise<T> => {
+  const response: AxiosResponse<T> = await apiClient.post(endpoint, data, config);
+  return response.data;
+}
 
 // apiClient.interceptors.request.use(async (config) => {
 //   const access_token = localStorage.getItem('access_token');
