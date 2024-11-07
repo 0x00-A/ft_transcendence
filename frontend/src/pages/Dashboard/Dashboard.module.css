@@ -19,12 +19,6 @@
   gap: 1rem;
 }
 
-/* .welcome {
-  height: 40%;
-  background-color: #ff7f50;
-  padding: 1.5rem;
-  border-radius: 10px;
-} */
 
 .leaderboard {
   height: 60%;
@@ -41,14 +35,14 @@
 }
 
 .competitiveOverview {
-  height: 50%;
+  height: 40%;
   background-color: #384B6C;
   padding: 30px;
   border-radius: 50px;
 }
 
 .achievements {
-  height: 50%;
+  height: 60%;
   background-color: #384B6C;
   padding: 30px;
   border-radius: 50px;
