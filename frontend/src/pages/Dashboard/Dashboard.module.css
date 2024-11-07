@@ -4,7 +4,7 @@
   /* flex-wrap: wrap; */
   gap: 1rem;
   padding: 2rem;
-  background-color: #1e1e2f;
+  /* background-color: #1e1e2f; */
   color: #ffffff;
   width: 100%;
   min-width: 1440px;
@@ -28,9 +28,9 @@
 
 .leaderboard {
   height: 60%;
-  background-color: #3a3c5c;
-  padding: 1.5rem;
-  border-radius: 10px;
+  background-color: #384B6C;
+  padding: 30px;
+  border-radius: 50px;
 }
 
 .mainContent {
@@ -42,21 +42,21 @@
 
 .competitiveOverview {
   height: 50%;
-  background-color: #f4a261;
-  padding: 1.5rem;
-  border-radius: 10px;
+  background-color: #384B6C;
+  padding: 30px;
+  border-radius: 50px;
 }
 
 .achievements {
   height: 50%;
-  background-color: #8a4dff;
-  padding: 1.5rem;
-  border-radius: 10px;
+  background-color: #384B6C;
+  padding: 30px;
+  border-radius: 50px;
 }
 
 .lastMatch {
   width: 30%;
-  background-color: #2a9d8f;
-  padding: 1.5rem;
-  border-radius: 10px;
+  background-color: #384B6C;
+  padding: 30px;
+  border-radius: 50px;
 }
