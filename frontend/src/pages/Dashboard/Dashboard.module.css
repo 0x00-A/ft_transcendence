@@ -1,49 +1,38 @@
-/* Main Container */
+
 .container {
   display: flex;
+  /* flex-wrap: wrap; */
   gap: 1rem;
   padding: 2rem;
   background-color: #1e1e2f;
   color: #ffffff;
-  min-height: 100vh;
+  width: 100%;
+  min-width: 1440px;
+  height: calc(100vh - 116px);
+  min-height: 700px;
 }
 
-/* Hero Section (Left Column) */
 .heroSection {
-  width: 40%;
+  width: 50%;
   display: flex;
   flex-direction: column;
-  background-color: #2d2f46;
-  padding: 1.5rem;
-  border-radius: 10px;
+  gap: 1rem;
 }
 
-.welcome {
-  height: 45%;
+/* .welcome {
+  height: 40%;
   background-color: #ff7f50;
   padding: 1.5rem;
   border-radius: 10px;
-  margin-bottom: 1rem;
-}
-
-.playButton {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #ffffff;
-  color: #ff7f50;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+} */
 
 .leaderboard {
-  height: 45%;
+  height: 60%;
   background-color: #3a3c5c;
   padding: 1.5rem;
   border-radius: 10px;
 }
 
-/* Main Content (Middle Column) */
 .mainContent {
   width: 35%;
   display: flex;
@@ -52,22 +41,21 @@
 }
 
 .competitiveOverview {
-  height: 45%;
+  height: 50%;
   background-color: #f4a261;
   padding: 1.5rem;
   border-radius: 10px;
 }
 
 .achievements {
-  height: 45%;
+  height: 50%;
   background-color: #8a4dff;
   padding: 1.5rem;
   border-radius: 10px;
 }
 
-/* Last Match (Right Column) */
 .lastMatch {
-  width: 25%;
+  width: 30%;
   background-color: #2a9d8f;
   padding: 1.5rem;
   border-radius: 10px;
