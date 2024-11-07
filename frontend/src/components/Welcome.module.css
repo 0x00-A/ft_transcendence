@@ -1,8 +1,7 @@
 .welcome {
   height: 40%;
   background-color: #384B6C;
-  padding-right: 1.5rem;
-  padding-left: 3.5rem;
+  padding-right: 2.5rem;
   border-radius: 50px;
   display: flex;
   align-items: center;
@@ -27,31 +26,39 @@
   width: 60%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
+  justify-content: space-between;
+  padding: 20px 0 40px 40px;
 }
 
 .title {
+  color: #F8F3E3;
   font-size: 5rem;
   font-weight: bold;
 }
 
 .description {
+  font-size: 1.7rem;
+}
+.description span{
+  color: #FF2047;
+  font-weight: bold;
   font-size: 2.2rem;
 }
 
 .playButton {
-  background-color: #1e1e2f;
-  color: #ffffff;
+  margin: 0 auto;
+  width: 130px;
+  background-color: #283245;
+  color: #F8F3E3;
   border: none;
-  padding: 0.8rem 1.5rem;
+  padding: 10px;
   font-size: 2rem;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
+
+
 
 .playButton:hover {
   background-color: #2a2a3f;
