@@ -20,10 +20,10 @@ const CompetitiveOverview = () => {
         </div>
         
         <div className={styles.winsLosses}>
-          <div className={styles.statBox}>
+          <div className={styles.statBoxWin}>
             <span className={styles.wins}>555 WINS</span>
           </div>
-          <div className={styles.statBox}>
+          <div className={styles.statBoxLose}>
             <span className={styles.losses}>555 LOSE</span>
           </div>
         </div>
@@ -31,10 +31,10 @@ const CompetitiveOverview = () => {
       </div>
         <div className={styles.scores}>
           <div className={styles.scoreBox}>
-            <span className={styles.score}>635 SCORE</span>
+            <span className={styles.score}> <span className={styles.scoreNum}>635  </span>SCORE</span>
           </div>
           <div className={styles.totalGamesBox}>
-            <span className={styles.totalGames}>1990 TOTAL GAMES</span>
+            <span className={styles.totalGames}>1990 GAMES</span>
           </div>
         </div>
     </div>
