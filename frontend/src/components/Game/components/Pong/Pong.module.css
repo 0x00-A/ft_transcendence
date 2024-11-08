@@ -5,6 +5,7 @@
     height: 100%;
     background-color: var(--main-surface-tertiary);
     touch-action: manipulation;
+    border: 2px solid var(--text-color);
     /* cursor: none; */
 }
 

@@ -1,9 +1,10 @@
 from accounts.models.profile import Profile
-from .models import Game, Tournament
-from .models import Tournament, Game
+from .models import Game, Tournament, Match
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from datetime import datetime
+from django.utils import timezone
+
 import json
 from django.db.models import Q
 from django.contrib.auth import get_user_model
@@ -21,6 +22,7 @@ class Matchmaker:
     @classmethod
     async def register_client(cls, player_id, consumer):
         cls.connected_clients[player_id] = consumer
+        await cls.check_is_player_in_any_tournament(player_id)
 
     @classmethod
     async def unregister_client(cls, player_id):
@@ -72,10 +74,15 @@ class Matchmaker:
     async def create_tournament(cls, creator_id, tournament_name):
         # Create a tournament, check for limits, and notify the creator
         # if await sync_to_async(Tournament.objects.count)() >= 10:
-        #     message = {'action': 'error',
+        #     message = {'event': 'error',
         #                'message': 'Maximum tournaments reached'}
         #     await cls.send_message_to_client(creator_id, message)
         #     return
+        if await Tournament.objects.filter(players__id=creator_id).exclude(status='ended').aexists():
+            message = {'event': 'error',
+                       'message': 'Cannot create more tournaments'}
+            await cls.send_message_to_client(creator_id, message)
+            return
 
         new_tournament = await Tournament.objects.acreate(
             creator_id=creator_id, name=tournament_name
@@ -85,25 +92,44 @@ class Matchmaker:
         await new_tournament.asave()
         # Notify the creator that the tournament has been created
         message = {
-            'action': 'tournament_created',
+            'event': 'tournament_created',
             'message': f'Tournament {new_tournament.name} created',
-            'tournament_id': new_tournament.id
+            'tournament_id': new_tournament.id,
+            'tournament_stat': await sync_to_async(new_tournament.to_presentation)(),
         }
         await cls.send_message_to_client(creator_id, message)
 
     @classmethod
     async def join_tournament(cls, player_id, tournament_id):
+        if await Tournament.objects.filter(players__id=player_id).exclude(status='ended').aexists():
+            message = {'event': 'error',
+                       'message': 'Cannot join more tournaments'}
+            await cls.send_message_to_client(player_id, message)
+            return
         try:
             tournament = await Tournament.objects.aget(id=tournament_id)
-            if await sync_to_async(tournament.check_is_full)():
-                message = {'action': 'tournament_full',
+            if await sync_to_async(tournament.check_if_full)():
+                message = {'event': 'tournament_full',
                            'message': 'Tournament is full'}
                 await cls.send_message_to_client(player_id, message)
             else:
                 await tournament.players.aadd(player_id)
-                message = {'action': 'tournament_joined',
-                           'tournament_id': tournament_id}
+                message = {'event': 'tournament_joined',
+                           'message': f'Joined tournament {tournament.name} successfully',
+                           'tournament_id': tournament_id,
+                           'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                           }
                 await cls.send_message_to_client(player_id, message)
+                await sync_to_async(tournament.check_if_full)()
+                if await sync_to_async(tournament.start_tournament)():
+                    message = {'event': 'tournament_update',
+                               'tournament_id': tournament_id,
+                               'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                               }
+                    players = await sync_to_async(list)(tournament.players.all())
+                    for p in players:
+                        await cls.send_message_to_client(p.id, message)
+
         except Tournament.DoesNotExist:
             await cls.send_message_to_client(player_id, {'error': 'Tournament does not exist'})
 
@@ -115,7 +141,6 @@ class Matchmaker:
 
     @classmethod
     async def is_client_already_playing(cls, player_id):
-        # Check if the player is already in a game or tournament
         if player_id in cls.games_queue:
             message = {
                 'event': 'already_inqueue'
@@ -132,6 +157,19 @@ class Matchmaker:
             await cls.send_message_to_client(player_id, message)
             return True
         return False  # Stub implementation
+
+    @classmethod
+    async def check_is_player_in_any_tournament(cls, player_id):
+        if await Tournament.objects.filter(players__id=player_id).exclude(status='ended').aexists():
+            tournament = await sync_to_async(Tournament.objects.exclude(status='ended').get)(
+                players__id=player_id
+            )
+            message = {
+                'event': 'already_in_tournament',
+                'tournament_id': tournament.id,
+                'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+            }
+            await cls.send_message_to_client(player_id, message)
 
     @classmethod
     async def find_two_players(cls):
@@ -152,6 +190,10 @@ class Matchmaker:
         """
         if await Game.objects.filter(game_id=game_id).aexists():
             await cls.process_game_result(game_id, winner, p1_score, p2_score)
+            # self.games.remove(game)
+            return
+        if await Match.objects.filter(match_id=game_id).aexists():
+            await cls.process_tournament_match(game_id, winner, p1_score, p2_score)
             # self.games.remove(game)
             return
 
@@ -185,26 +227,53 @@ class Matchmaker:
         await sync_to_async(game.end_game)(winner, p1_score, p2_score)
         await sync_to_async(game.update_stats)()
 
-        # Update the game result and mark it as finished
-        # game.winner = winner_id
-        # game.state = 'ended'
-        # await sync_to_async(game.save)()
+    @classmethod
+    async def process_tournament_match(cls, match_id, winner, p1_score, p2_score):
+        """Process a tournament match result and advance the tournament"""
+        match = await Match.objects.aget(match_id=match_id)
 
-        # Notify players that the game has ended
-        # await self.notify_players(game_id, game.player1_id, game.player2_id, winner_id)
+        await sync_to_async(match.end_match)(winner, p1_score, p2_score)
 
-    # @staticmethod
-    # async def process_tournament_match(self, match_id, winner_id):
-    #     """Process a tournament match result and advance the tournament"""
-    #     match = await sync_to_async(Tournament.objects.get)(id=match_id)
+        tournament = await sync_to_async(lambda: match.tournament)()
+        if not await tournament.matches.filter(status='waiting').aexists():
+            completed_count = await sync_to_async(tournament.matches.filter(status='ended').count)()
+            if completed_count == tournament.number_of_players // 2:
+                await sync_to_async(tournament.progress_to_next_round)()
+            elif completed_count == tournament.number_of_players - 1:
+                await sync_to_async(tournament.finalize_tournament)()
 
-    #     # Update the match result in the tournament
-    #     match.winner = winner_id
-    #     match.is_over = True
-    #     await sync_to_async(match.save)()
+        message = {'event': 'tournament_update',
+                   'tournament_id': match.tournament.id,
+                   'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                   }
+        players = await sync_to_async(list)(tournament.players.all())
+        for player in players:
+            await cls.send_message_to_client(player.id, message)
 
-    #     # Check if the tournament needs to advance to the next round or end
-    #     await self.advance_tournament(match.tournament_id)
+    @classmethod
+    async def handle_player_ready(cls, player_id, match_id):
+        match = await sync_to_async(Match.objects.get)(match_id=match_id)
+
+        if match.player1_id == player_id:
+            match.player1_ready = True
+        elif match.player2_id == player_id:
+            match.player2_ready = True
+
+        await sync_to_async(match.save)()
+
+        if match.ready():
+            match.status = 'started'
+            match.start_time = timezone.now()
+            await sync_to_async(match.save)()
+            match_address = f"game/match_{match.id}"
+
+            message = {
+                'event': 'match_start',
+                'match_address': match_address,
+                "message": "Match started!",
+            }
+            await cls.send_message_to_client(match.player1_id, message)
+            await cls.send_message_to_client(match.player2_id, message)
 
     # @staticmethod
     # async def notify_players(self, game_id, player1_id, player2_id, winner_id):

@@ -8,10 +8,10 @@
   background-color: var(--color-game-screen-bg);
   cursor: pointer;
 
-  width: 17%;
+  width: 200px;
   max-width: 200px;
   min-width: 100px;
-  height: 350px;
+  height: 150px;
   padding: 0 10px;
   transform: skewX(-5deg);
   color: white;

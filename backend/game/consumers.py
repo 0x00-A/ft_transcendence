@@ -286,11 +286,11 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.player_id = 'player1'
             else:
                 self.player_id = 'player2'
-        # elif await Match.objects.filter(match_id=self.game_id).aexists():
-        #     if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
-        #         self.player_id = 'player1'
-        #     else:
-        #         self.player_id = 'player2'
+        elif await Match.objects.filter(match_id=self.game_id).aexists():
+            if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
+                self.player_id = 'player1'
+            else:
+                self.player_id = 'player2'
         else:
             await self.close()
 

@@ -14,7 +14,7 @@ import {
 } from '../../config/constants';
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const loadingBarRef = useLoadingBar();
   const { setIsLoggedIn } = useAuth();
 
@@ -50,13 +50,14 @@ export default function Sidebar() {
     }
   };
 
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener('resize', handleResize);
+  //   handleResize();
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
+
   return (
     <aside className={`${css.sidebar} ${open ? '' : css.closed}`}>
       <img

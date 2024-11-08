@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import css from './TournamentList.module.css';
-import { useGetData } from '../../api/apiHooks';
+import { useGetData } from '../../../../api/apiHooks';
 
-import ArcadeLoader from './ArcadeLoader/ArcadeLoader';
-import ErrorMessage from './ErrorMessage/ErrorMessage';
-import { Tournament } from '../../types/apiTypes';
+import ArcadeLoader from '../../../Game/components/ArcadeLoader/ArcadeLoader';
+import ErrorMessage from '../../../Game/components/ErrorMessage/ErrorMessage';
+import { Tournament } from '../../../../types/apiTypes';
 
 const TournamentList = ({
   handleJoin,
+  handleView,
   tournaments,
   error,
   isLoading,
 }: {
   handleJoin: (tournamentId: number) => void;
+  handleView: () => void;
   tournaments: Tournament[] | undefined;
   error: Error | null;
   isLoading: boolean;
@@ -54,35 +56,34 @@ const TournamentList = ({
       {/* List of Tournaments */}
 
       <div className={css.tournamentList}>
-        {!error && tournaments?.map((tournament) => (
-          <div key={tournament.id} className={`${css.row}`}>
-            <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
-            <div className={`${css.col} ${css.name}`}>
-              {tournament.name.slice(0, 15)}
-              {tournament.name.length >= 15 ? '...' : ''}
+        {!error &&
+          tournaments?.map((tournament) => (
+            <div key={tournament.id} className={`${css.row}`}>
+              <div className={`${css.col} ${css.id}`}>{tournament.id}</div>
+              <div className={`${css.col} ${css.name}`}>
+                {tournament.name.slice(0, 15)}
+                {tournament.name.length >= 15 ? '...' : ''}
+              </div>
+              <div className={`${css.col} ${css.creator}`}>
+                {tournament.creator.username}
+              </div>
+              <div className={`${css.col} ${css.date}`}>
+                {new Date(tournament.created_at).toLocaleDateString()}
+              </div>
+              <div className={`${css.col} ${css.players}`}>
+                {tournament.participants_count}/{tournament.number_of_players}
+              </div>
+              <div className={`${css.col} ${css.action}`}>
+                {!isInTournament(tournament.players, tournament.user_id) ? (
+                  <button onClick={() => handleJoin(tournament.id)}>
+                    Join
+                  </button>
+                ) : (
+                  <button onClick={handleView}>View</button>
+                )}
+              </div>
             </div>
-            <div className={`${css.col} ${css.creator}`}>
-              {tournament.creator.username}
-            </div>
-            <div className={`${css.col} ${css.date}`}>
-              {new Date(tournament.created_at).toLocaleDateString()}
-            </div>
-            <div className={`${css.col} ${css.players}`}>
-              {tournament.participants_count}/{tournament.number_of_players}
-            </div>
-            <div className={`${css.col} ${css.action}`}>
-              {!isInTournament(tournament.players, tournament.user_id) ? (
-                <button onClick={() => handleJoin(tournament.id)}>Join</button>
-              ) : (
-                <button
-                  onClick={() => alert(`view tournament ${tournament.id}`)}
-                >
-                  View
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+          ))}
         {!error && !isLoading && !tournaments?.length && (
           <div className={css.noTournaments}>
             <p>No tournaments available at the moment.</p>

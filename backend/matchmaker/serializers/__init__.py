@@ -1,2 +1,2 @@
-from .tournamentSerializer import TournamentSerializer
-from .gameSerializer import GameSerializer
+from .TournamentSerializer import TournamentSerializer
+from .GameSerializer import GameSerializer

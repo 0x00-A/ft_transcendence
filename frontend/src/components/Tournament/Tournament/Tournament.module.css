@@ -9,20 +9,10 @@
   min-height: 600px;
 
 }
-html {
-  font-size: 1rem;
-}
-
-body {
-  background: #f0f2f2;
-}
 
 .bracket {
-  /* display: inline-block; */
-  /* position: absolute; */
   left: 50%;
   top: 50%;
-  /* transform: translate(-50%, -50%); */
   white-space: nowrap;
   font-size: 0;
 }
@@ -67,10 +57,6 @@ body {
 .round .winners > div.matchups .matchup .participants .participant.loser {
   color: #dc563f;
   border-color: #dc563f;
-}
-
-.round .winners > div.matchups .matchup .participants .participant:not(:last-child) {
-  /* border-bottom: thin solid #f0f2f2; */
 }
 
 .round .winners > div.matchups .matchup .participants .participant span {
@@ -134,26 +120,9 @@ body {
   margin-bottom: 2rem;
 }
 
-/* Semifinals-specific styling */
-.round.semifinals .winners .matchups .matchup:not(:last-child) {
-  margin-bottom: 14rem;
-}
-
-.round.semifinals .winners .connector .merger {
-  height: 24rem;
-}
-
-.round.semifinals .winners .connector .line {
-  height: 12rem;
-}
-
 /* Finals-specific styling */
-.round.finals .winners .connector .merger {
-  height: 3rem;
-}
-
-.round.finals .winners .connector .line {
-  height: 1.5rem;
+.round.finals .winners .matchups .matchup:not(:last-child) {
+  margin-bottom: 14rem;
 }
 
 .matchup {
@@ -182,6 +151,15 @@ body {
   min-width: 30px;
   color: var(--color-brand--1);
   border: var(--color-brand--1);
+}
+
+
+
+.tournamentBody {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex-wrap: nowrap;
 }
 
 
@@ -353,45 +331,7 @@ box-sizing: border-box;
 
 }
 
-/* Winner Overlay */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
 
-.overlayContent {
-  background-color: white;
-  /* padding: 20px; */
-  border-radius: 8px;
-  text-align: center;
-  width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.overlayContent h2 {
-  margin-bottom: 20px;
-}
-
-.overlayContent button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.overlayContent button:hover {
-  background-color: #0056b3;
-}
 
 /* Click to start overlay */
 .gameOverlay {
@@ -420,82 +360,4 @@ box-sizing: border-box;
 
 .gameOverlay:hover {
   background: rgba(0, 0, 0, 0.9); /* Slightly darken on hover */
-}
-
-/* WinnerCard */
-
-.winnerCard {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    /* background-color: #414141; */
-    background-color: var(--sidebar-surface-primary);
-    width: 100%;
-    height: 100%;
-}
-
-.winnerCard>.body {
-    padding: 16px;
-    display: flex;
-    align-items: center
-}
-
-.winnerCard>.body.-topalign {
-    align-items: flex-start
-}
-
-.winnerCard>.body>.rank {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  align-items: center;
-    /* flex: 0 0 64px; */
-    /* margin-right: 8px */
-    margin: auto;
-}
-
-.winnerCard>.body>.rank>.icon {
-    width: 100%;
-    max-width: 56px
-}
-
-.gradientLine {
-    height: 3px
-}
-
-.gradientLine.Gold {
-    background: linear-gradient(68.15deg, #FFEFA4 2.54%, #C97F03 97.6%)
-}
-
-/* Round */
-
-.rounds {
-    font-size: 12px;
-        display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-}
-
-.rounds .round {
-    /* float: left; */
-    text-align: center;
-    line-height: 15px;
-    background-color: var(--tournament-form-bg);
-    border-right: 1px solid #444;
-    width: 250px;
-}
-
-.rounds .round .roundLabel {
-    display: block;
-    padding: 5px 0;
-    color: var(--text-color);
-    text-decoration: none
-}
-
-
-.tournamentBody {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  flex-wrap: nowrap;
 }

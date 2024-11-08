@@ -8,6 +8,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     participants_count = serializers.SerializerMethodField()
     creator = UserSerializer()
     user_id = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Tournament

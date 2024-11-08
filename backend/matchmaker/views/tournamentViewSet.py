@@ -6,6 +6,8 @@ from rest_framework import viewsets
 from matchmaker.models import Tournament
 from matchmaker.serializers import TournamentSerializer
 
+from django.shortcuts import get_object_or_404
+
 
 class TournamentViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -26,6 +28,18 @@ class TournamentViewSet(viewsets.ReadOnlyModelViewSet):
         context = super().get_serializer_context()
         context['user_id'] = self.request.user.id
         return context
+
+    @action(detail=False, methods=['get'], url_path='user-tournament')
+    def get_user_tournament(self, request):
+        # Retrieve the tournament where the current user is a player and it hasn't ended
+        tournament = Tournament.objects.exclude(
+            status='ended').filter(players=request.user).first()
+
+        if tournament:
+            serializer = self.get_serializer(tournament)
+            return Response(serializer.data)
+        else:
+            return Response({"detail": "No active tournament found."})
 
     # def perform_create(self, serializer):
     #     # Automatically set the creator as the user making the request

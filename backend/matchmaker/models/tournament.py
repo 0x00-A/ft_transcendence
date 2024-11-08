@@ -1,6 +1,9 @@
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db import models
+from matchmaker.models import Match
+from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 
@@ -23,7 +26,7 @@ class Tournament(models.Model):
     # creator = models.CharField(max_length=100)
 
     name = models.CharField(max_length=100)
-    number_of_players = models.IntegerField(default=8)
+    number_of_players = models.IntegerField(default=4)
     created_at = models.DateTimeField(default=timezone.now)
 
     status = models.CharField(
@@ -37,7 +40,7 @@ class Tournament(models.Model):
     objects = TournamentManager()
 
     def check_if_full(self):
-        if self.participants.count() >= self.max_participants:
+        if self.players.count() >= self.number_of_players:
             self.is_full = True
             self.save()
             return True
@@ -55,19 +58,6 @@ class Tournament(models.Model):
             self.save()
             self.generate_matches()
 
-    # def generate_matches(self):
-    #     players = list(self.players.all())
-    #     matches = combinations(players, 2)
-    #     for match in matches:
-    #         game_id = f"game_{self.id}_{self.matches.count() + 1}"
-    #         Game.objects.create(
-    #             game_id=game_id,
-    #             tournament=self,
-    #             player1=match[0].player_id,
-    #             player2=match[1].player_id,
-    #             game_status='waiting'
-    #         )
-
     def end_tournament(self):
         self.status = 'ended'
         self.save()
@@ -76,6 +66,120 @@ class Tournament(models.Model):
         self.status = 'aborted'
         self.winner = None
         self.save()
+
+    def to_presentation(self):
+        # tournament = get_object_or_404(Tournament, id=self.)
+
+        matches = Match.objects.filter(
+            tournament=self).order_by('start_time')
+
+        rounds = {"1": [], "2": []}
+
+        for match in matches:
+            if len(rounds["1"]) < 2:
+                rounds["1"].append({
+                    'match_id': match.match_id,
+                    'player1': match.player1.username if match.player1 else None,
+                    'player2': match.player2.username if match.player2 else None,
+                    'p1_score': match.p1_score,
+                    'p2_score': match.p2_score,
+                    'status': match.status,
+                    'winner': match.winner.username if match.winner else None
+                })
+            else:
+                rounds["2"].append({
+                    'match_id': match.match_id,
+                    'player1': match.player1.username if match.player1 else None,
+                    'player2': match.player2.username if match.player2 else None,
+                    'p1_score': match.p1_score,
+                    'p2_score': match.p2_score,
+                    'status': match.status,
+                    'winner': match.winner.username if match.winner else None
+                })
+
+        tournament_state = {
+            'tournament_id': self.id,
+            'name': self.name,
+            'status': self.status,
+            'created_at': self.created_at.strftime("%B %d, %Y %I:%M %p"),
+            'players': [player.username for player in self.players.all()],
+            'winner': self.winner.username if self.winner else None,
+            'rounds': rounds
+        }
+
+        return tournament_state
+
+    def generate_matches_for_tournament(self):
+        players = list(self.players.all())
+
+        if len(players) != self.number_of_players:
+            raise ValueError(
+                "Tournament must have exactly 4 players to start.")
+
+        round1_match1 = Match.objects.create(
+            tournament=self,
+            player1=players[0],
+            player2=players[1],
+            status='waiting',
+            start_time=timezone.now()
+        )
+
+        round1_match2 = Match.objects.create(
+            tournament=self,
+            player1=players[2],
+            player2=players[3],
+            status='waiting',
+            start_time=timezone.now()
+        )
+
+        matches = {
+            "1": [round1_match1, round1_match2],
+            "2": []
+        }
+
+        return matches
+
+    def start_tournament(self):
+        if not self.is_full:
+            return False
+
+        self.status = 'ongoing'
+        self.save()
+
+        matches = self.generate_matches_for_tournament()
+
+        return True
+
+    def progress_to_next_round(self):
+        round_1_matches = Match.objects.filter(
+            tournament=self, status='ended')
+
+        if round_1_matches.count() == 2:
+            player1 = round_1_matches[0].winner
+            player2 = round_1_matches[1].winner
+
+            final_match = Match.objects.create(
+                tournament=self,
+                player1=player1,
+                player2=player2,
+                status='waiting',
+                start_time=timezone.now()
+            )
+            return final_match
+        elif round_1_matches.count() == 3:
+            self.finalize_tournament()
+
+    def finalize_tournament(self):
+        # Get the final match
+        final_match = Match.objects.filter(
+            tournament=self, status='ended').order_by('-end_time').first()
+
+        if final_match:
+            self.winner = final_match.winner
+            self.status = 'ended'
+            self.save()
+        else:
+            raise ValueError("Final match is not completed yet.")
 
     def __str__(self):
         return f"Tournament {self.name} - Status: {self.status}"

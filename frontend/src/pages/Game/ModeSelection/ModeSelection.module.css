@@ -1,0 +1,52 @@
+
+/********************/
+
+
+.lobby {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  width: 100%;
+}
+.header {
+  justify-content: space-between;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.gameSelect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.gameCoins {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  color: var(--text-color);
+}
+
+select {
+
+  padding-right: 10px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-color);
+  font-size: 16px;
+
+  cursor: pointer;
+  outline: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+option {
+  background-color: #43506b;
+}
