@@ -4,6 +4,7 @@ from django.db import models
 
 User = get_user_model()
 
+
 class Match(models.Model):
     GAME_STATUS_CHOICES = [
         ('waiting', 'Game Waiting'),
@@ -29,6 +30,12 @@ class Match(models.Model):
     start_time = models.DateTimeField(auto_now=True)
     end_time = models.DateTimeField(blank=True, null=True)
 
+    player1_ready = models.BooleanField(default=False)
+    player2_ready = models.BooleanField(default=False)
+
+    def ready(self):
+        return self.player1_ready and self.player2_ready
+
     def save(self, *args, **kwargs):
         if not self.id:
             super().save(*args, **kwargs)
@@ -36,3 +43,16 @@ class Match(models.Model):
             super().save(update_fields=["match_id"])
         else:
             super().save(*args, **kwargs)
+
+    def end_match(self, winner, p1_score, p2_score):
+        """
+        End the match, store the winner, and update win stats.
+        """
+        print(f"--------------- Match: {self.id} ended -------------------")
+
+        self.winner = self.player1 if winner == 1 else self.player2
+        self.p1_score = p1_score
+        self.p2_score = p2_score
+        self.status = 'ended'
+        self.end_time = timezone.now()
+        self.save()

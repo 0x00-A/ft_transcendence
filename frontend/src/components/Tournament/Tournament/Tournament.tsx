@@ -1,16 +1,71 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import css from './Tournament.module.css';
-import Paddle from '../components/utils/Paddle';
-import Ball from '../components/utils/Ball';
+import Paddle from '../../Game/components/utils/Paddle';
+import Ball from '../../Game/components/utils/Ball';
 import {
   isCollidingWithPaddle,
   handlePaddleCollision,
-} from '../components/utils/GameLogic';
+} from '../../Game/components/utils/GameLogic';
+import TournamentHeader from '../components/TournamentHeader/TournamentHeader';
+import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
+// import {
+//   Round,
+//   Connector,
+//   Match,
+// } from '../components/BracketComponents/BracketComponents';
 
 const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
 const ballRaduis = 8;
 const pW = 20;
 const pH = 80;
+
+function IconLabelButtons({ onClick }: { onClick: () => void }) {
+  return (
+    <button onClick={onClick} className={`${css.playButton}`}>
+      Go
+    </button>
+  );
+}
+
+const Match = ({
+  matchNumber,
+  player1,
+  player2,
+  winner,
+  activeMatch,
+  onClick,
+}: {
+  matchNumber: Number;
+  player1: string;
+  player2: string;
+  winner: Number;
+  activeMatch: Number;
+  onClick: () => void;
+}) => {
+  return (
+    <div className={css.matchup}>
+      <div className={css.participants}>
+        <div className={`${css.participant} ${winner === 1 ? css.winner : ''}`}>
+          <span>{player1}</span>
+        </div>
+        <div className={`${css.participant} ${winner === 2 ? css.winner : ''}`}>
+          <span>{player2}</span>
+        </div>
+      </div>
+      {matchNumber === activeMatch && <IconLabelButtons onClick={onClick} />}
+      <div></div>
+    </div>
+  );
+};
+
+const Connector = () => {
+  return (
+    <div className={css.connector}>
+      <div className={css.merger}></div>
+      <div className={css.line}></div>
+    </div>
+  );
+};
 
 interface GameProps {
   sound?: boolean;
@@ -177,15 +232,15 @@ const Pong: React.FC<GameProps> = ({
     };
 
     const drawDashedLine = () => {
-      ctx.setLineDash([15, 7.1]); // [dash length, gap length]
+      ctx.setLineDash([15, 7.1]);
       ctx.strokeStyle = '#f8f3e3';
       ctx.lineWidth = 3;
 
       ctx.beginPath();
-      ctx.moveTo(canvas.width / 2, 10); // Start at the top of the canvas
-      ctx.lineTo(canvas.width / 2, canvas.height - 10); // Draw to the bottom of the canvas
+      ctx.moveTo(canvas.width / 2, 10);
+      ctx.lineTo(canvas.width / 2, canvas.height - 10);
       ctx.stroke();
-      ctx.setLineDash([]); // Reset the line dash to solid for other drawings
+      ctx.setLineDash([]);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -194,7 +249,6 @@ const Pong: React.FC<GameProps> = ({
       if (e.key === 'ArrowUp') paddle2.dy = -paddle2.speed;
       if (e.key === 'ArrowDown') paddle2.dy = paddle2.speed;
       if (e.key === ' ') togglePause();
-      console.log(e.key);
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'w' || e.key === 's' || e.key === 'W' || e.key === 'S')
@@ -266,22 +320,21 @@ const Pong: React.FC<GameProps> = ({
 
   const togglePause = () => {
     setPaused(!paused);
-    console.log('pause', paused);
   };
 
   const startCountdown = () => {
-    setCountdown(3); // Start countdown at 3
+    setCountdown(3);
   };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (countdown !== null && countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000); // Decrement every second
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
     } else if (countdown === 0) {
-      setCountdown(null); // Remove countdown when it finishes
-      setGameStarted(true); // Start the game
+      setCountdown(null);
+      setGameStarted(true);
     }
-    return () => clearTimeout(timer); // Clean up the timer
+    return () => clearTimeout(timer);
   }, [countdown]);
 
   return (
@@ -321,256 +374,41 @@ const Pong: React.FC<GameProps> = ({
   );
 };
 
-function IconLabelButtons({ onClick }: { onClick: () => void }) {
-  return (
-    // <Stack className={`${css.playButton}`} direction="row" spacing={2}>
-    //   <Button
-    //     onClick={onClick}
-    //     className={css.button}
-    //     variant="outlined"
-    //     startIcon={<IoMdArrowRoundForward />}
-    //   ></Button>
-    // </Stack>
-    <button onClick={onClick} className={`${css.playButton}`}>
-      Go
-    </button>
-  );
-}
-
-function Round({ children }: PropsWithChildren) {
-  return (
-    <div className={css.round}>
-      <p className={css.roundLabel}>{children}</p>
-    </div>
-  );
-}
-
-const Match = ({
-  matchNumber,
-  player1,
-  player2,
-  winner,
-  activeMatch,
-  onClick,
-}: {
-  matchNumber: Number;
-  player1: string;
-  player2: string;
-  winner: Number;
-  activeMatch: Number;
-  onClick: () => void;
-}) => {
-  return (
-    <div className={css.matchup}>
-      <div className={css.participants}>
-        <div className={`${css.participant} ${winner === 1 ? css.winner : ''}`}>
-          <span>{player1}</span>
-        </div>
-        <div className={`${css.participant} ${winner === 2 ? css.winner : ''}`}>
-          <span>{player2}</span>
-        </div>
-      </div>
-      {matchNumber === activeMatch && <IconLabelButtons onClick={onClick} />}
-      <div></div>
-    </div>
-  );
-};
-
-const Connector = () => {
-  return (
-    <div className={css.connector}>
-      <div className={css.merger}></div>
-      <div className={css.line}></div>
-    </div>
-  );
-};
-
 type FormProps = {
   onSubmit: (players: string[]) => void;
   players: string[];
   setPlayers: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const PlayerForm = ({ onSubmit, players, setPlayers }: FormProps) => {
-  const handleInputChange = (index: number, value: string) => {
-    const updatedPlayers = [...players];
-    updatedPlayers[index] = value;
-    setPlayers(updatedPlayers);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(players);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className={css.form}>
-      <h2 className={css.title}>Enter Players</h2>
-      {players.map((player, index) => (
-        <div key={index} className={css.inputContainer}>
-          <label className={css.label}>
-            Player {index + 1}:
-            <input
-              type="text"
-              value={player}
-              maxLength={20}
-              onChange={(e) => handleInputChange(index, e.target.value)}
-              required
-              className={css.input}
-            />
-          </label>
-        </div>
-      ))}
-      <button type="submit" className={css.button}>
-        Start Tournament
-      </button>
-    </form>
-  );
-};
-
 type Match = {
   player1: string;
   player2: string;
-  winner: number; // Could be a number indicating the winner (like player1 or player2) or you could use `string` if it's a player name.
+  winner: number;
 };
 
 type Rounds = {
   [key: number]: Match[];
 };
 
-const WinnerCard = ({ winner }: { winner: string }) => {
-  return (
-    <div className={css.winnerCard}>
-      <div className={`${css.gradientLine} ${css.Gold}`}></div>
-      <div className={css.body}>
-        <div className={css.rank}>
-          <img
-            className={css.icon}
-            src="/icon-medal-first.svg"
-            alt="Icon medal first"
-          />
-          <p>{winner} 🎉🎉🎉</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
-//   // const [players, setPlayers] = useState<string[]>([]);
-//   const [playerName, setPlayerName] = useState<string>('');
-
-//   const handleAddPlayer = () => {
-//     if (playerName && players.length < 8) {
-//       setPlayers([...players, playerName]);
-//       setPlayerName(''); // Clear input after adding
-//     }
-//   };
-
-//   const handleRemovePlayer = (index: number) => {
-//     const updatedPlayers = players.filter((_, i) => i !== index);
-//     setPlayers(updatedPlayers);
-//   };
-
-//   // const handleStartTournament = () => {
-//   //   if (players.length === 8) {
-//   //     alert('Tournament Started!');
-//   //     // Logic for starting the tournament goes here
-//   //   }
-//   // };
-//   const handleStartTournament = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (players.length === 8) onSubmit(players);
-//   };
-
-//   return (
-//     <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-//       <h2>Tournament Registration</h2>
-
-//       <input
-//         type="text"
-//         value={playerName}
-//         onChange={(e) => setPlayerName(e.target.value)}
-//         placeholder="Enter player name"
-//         style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-//       />
-
-//       <button
-//         onClick={handleAddPlayer}
-//         disabled={!playerName || players.length >= 8}
-//         style={{ marginBottom: '10px', width: '100%', padding: '10px' }}
-//       >
-//         Add Player
-//       </button>
-
-//       <ul>
-//         {players.map((player, index) => (
-//           <li
-//             key={index}
-//             style={{
-//               marginBottom: '10px',
-//               display: 'flex',
-//               justifyContent: 'space-between',
-//             }}
-//           >
-//             {player}
-//             <button
-//               onClick={() => handleRemovePlayer(index)}
-//               style={{
-//                 color: 'white',
-//                 backgroundColor: 'red',
-//                 border: 'none',
-//                 cursor: 'pointer',
-//                 padding: '5px',
-//               }}
-//             >
-//               &#x2716; {/* Cross icon */}
-//             </button>
-//           </li>
-//         ))}
-//       </ul>
-
-//       <button
-//         onClick={handleStartTournament}
-//         disabled={players.length !== 8}
-//         style={{
-//           marginTop: '20px',
-//           width: '100%',
-//           padding: '10px',
-//           backgroundColor: players.length === 8 ? 'green' : 'grey',
-//           color: 'white',
-//           cursor: players.length === 8 ? 'pointer' : 'not-allowed',
-//         }}
-//       >
-//         Start Tournament
-//       </button>
-//     </div>
-//   );
-// };
-
 const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
-  // const [players, setPlayers] = useState<string[]>([]);
   const [playerName, setPlayerName] = useState<string>('');
   const [error, setError] = useState<string>(''); // To store error messages
 
   const handleAddPlayer = () => {
-    // Check for empty input
     if (!playerName.trim()) {
       setError('Player name cannot be empty');
       return;
     }
 
-    // Check for duplicate player names
     if (players.includes(playerName)) {
       setError('Player name must be unique');
       return;
     }
 
-    // Add player if there are fewer than 8 players and the name is unique
-    if (players.length < 8) {
+    if (players.length < 4) {
       setPlayers([...players, playerName.trim()]);
-      setPlayerName(''); // Clear input after adding
-      setError(''); // Clear any previous error
+      setPlayerName('');
+      setError('');
     }
   };
 
@@ -581,7 +419,7 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
 
   const handleStartTournament = (e: React.FormEvent) => {
     e.preventDefault();
-    if (players.length === 8) onSubmit(players);
+    if (players.length === 4) onSubmit(players);
   };
 
   return (
@@ -599,13 +437,12 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
 
       <button
         onClick={handleAddPlayer}
-        disabled={!playerName || players.length >= 8}
+        disabled={!playerName || players.length >= 4}
         style={{ marginBottom: '10px', width: '100%', padding: '10px' }}
       >
         Add Player
       </button>
 
-      {/* Display error message for duplicate names */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <ul>
@@ -629,7 +466,7 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
                 padding: '5px',
               }}
             >
-              &#x2716; {/* Cross icon */}
+              &#x2716;
             </button>
           </li>
         ))}
@@ -637,14 +474,14 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
 
       <button
         onClick={handleStartTournament}
-        disabled={players.length !== 8}
+        disabled={players.length !== 4}
         style={{
           marginTop: '20px',
           width: '100%',
           padding: '10px',
-          backgroundColor: players.length === 8 ? 'green' : 'grey',
+          backgroundColor: players.length === 4 ? 'green' : 'grey',
           color: 'white',
-          cursor: players.length === 8 ? 'pointer' : 'not-allowed',
+          cursor: players.length === 4 ? 'pointer' : 'not-allowed',
         }}
       >
         Start Tournament
@@ -662,33 +499,12 @@ const Tournament = () => {
   const [selectedRound, setSelectedRound] = useState<number>(0);
   const [selectedMatch, setSelectedMatch] = useState<number>(0);
   const [rounds, setRounds] = useState<Rounds>({
-    0: [
-      { player1: '', player2: '', winner: 0 },
-      { player1: '', player2: '', winner: 0 },
-      { player1: '', player2: '', winner: 0 },
-      { player1: '', player2: '', winner: 0 },
-    ],
     1: [
       { player1: '', player2: '', winner: 0 },
       { player1: '', player2: '', winner: 0 },
     ],
     2: [{ player1: '', player2: '', winner: 0 }],
   });
-
-  //   const updateWinner = (
-  //     roundIndex: number,
-  //     matchIndex: number,
-  //     newWinner: number
-  //   ) => {
-  //     setRounds((prevRounds) => ({
-  //       ...prevRounds,
-  //       [roundIndex]: prevRounds[roundIndex].map((match, idx) =>
-  //         idx === matchIndex ? { ...match, winner: newWinner } : match
-  //       ),
-  //     }));
-  //     setActiveMatch((curr) => curr + 1);
-  //     setShowPong(false);
-  //   };
 
   const updateWinner = (
     roundIndex: number,
@@ -698,27 +514,9 @@ const Tournament = () => {
     setRounds((prevRounds) => {
       const updatedRounds = { ...prevRounds };
 
-      // Update the current match winner
       const match = updatedRounds[roundIndex][matchIndex];
       match.winner = newWinner;
 
-      if (roundIndex === 0) {
-        // This is the quarterfinals, so we need to update the semifinals (roundIndex 1)
-
-        // Find which player won the current match
-        const winnerName = newWinner === 1 ? match.player1 : match.player2;
-
-        // Determine which semifinal match to update based on the quarterfinal match index
-        const semifinalMatchIndex = Math.floor(matchIndex / 2);
-        const isFirstInPair = matchIndex % 2 === 0;
-
-        // Update the player in the corresponding semifinal match
-        if (isFirstInPair) {
-          updatedRounds[1][semifinalMatchIndex].player1 = winnerName;
-        } else {
-          updatedRounds[1][semifinalMatchIndex].player2 = winnerName;
-        }
-      }
       if (roundIndex === 1) {
         const winnerName = newWinner === 1 ? match.player1 : match.player2;
 
@@ -733,7 +531,7 @@ const Tournament = () => {
     });
     setActiveMatch((curr) => curr + 1);
     setShowPong(false);
-    if (activeMatch === 7) setShowWinner(true);
+    if (activeMatch === 3) setShowWinner(true);
   };
 
   const playMatch = (roundIndex: number, matchIndex: number) => {
@@ -743,27 +541,16 @@ const Tournament = () => {
   };
 
   const handleSubmit = () => {
-    console.log(players);
-
     setPlayers((players) => [...players].sort(() => Math.random() - 0.5));
     setRounds((prevRounds) => {
       let newRounds = { ...prevRounds };
-      newRounds[0] = [
-        { player1: players[0], player2: players[4], winner: 0 },
-        { player1: players[1], player2: players[5], winner: 0 },
-        { player1: players[2], player2: players[6], winner: 0 },
-        { player1: players[3], player2: players[7], winner: 0 },
+      newRounds[1] = [
+        { player1: players[0], player2: players[2], winner: 0 },
+        { player1: players[1], player2: players[3], winner: 0 },
       ];
       return newRounds;
     });
     setShowForm(false);
-  };
-
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    // Check if the click is outside the overlay content
-    if ((e.target as HTMLElement).classList.contains(css.overlay)) {
-      setShowWinner(false); // Close the overlay
-    }
   };
 
   return (
@@ -786,63 +573,13 @@ const Tournament = () => {
       ) : (
         !showForm && (
           <div className={css.tournamentBody}>
-            <div className={css.rounds}>
-              <Round>Round 1</Round>
-              <Round>Semifinals</Round>
-              <Round>Finals</Round>
-            </div>
+            <TournamentHeader />
             <div className={css.bracket}>
               <section className={`${css.round} ${css.quarterfinals}`}>
                 <div className={css.winners}>
                   <div className={css.matchups}>
                     <Match
                       matchNumber={1}
-                      player1={rounds[0][0].player1}
-                      player2={rounds[0][0].player2}
-                      winner={rounds[0][0].winner}
-                      activeMatch={activeMatch}
-                      onClick={() => playMatch(0, 0)}
-                    />
-                    <Match
-                      matchNumber={2}
-                      player1={rounds[0][1].player1}
-                      player2={rounds[0][1].player2}
-                      winner={rounds[0][1].winner}
-                      activeMatch={activeMatch}
-                      onClick={() => playMatch(0, 1)}
-                    />
-                  </div>
-                  <Connector />
-                </div>
-
-                <div className={css.winners}>
-                  <div className={css.matchups}>
-                    <Match
-                      matchNumber={3}
-                      player1={rounds[0][2].player1}
-                      player2={rounds[0][2].player2}
-                      winner={rounds[0][2].winner}
-                      activeMatch={activeMatch}
-                      onClick={() => playMatch(0, 2)}
-                    />
-                    <Match
-                      matchNumber={4}
-                      player1={rounds[0][3].player1}
-                      player2={rounds[0][3].player2}
-                      winner={rounds[0][3].winner}
-                      activeMatch={activeMatch}
-                      onClick={() => playMatch(0, 3)}
-                    />
-                  </div>
-                  <Connector />
-                </div>
-              </section>
-
-              <section className={`${css.round} ${css.semifinals}`}>
-                <div className={css.winners}>
-                  <div className={css.matchups}>
-                    <Match
-                      matchNumber={5}
                       player1={rounds[1][0].player1}
                       player2={rounds[1][0].player2}
                       winner={rounds[1][0].winner}
@@ -850,7 +587,7 @@ const Tournament = () => {
                       onClick={() => playMatch(1, 0)}
                     />
                     <Match
-                      matchNumber={6}
+                      matchNumber={2}
                       player1={rounds[1][1].player1}
                       player2={rounds[1][1].player2}
                       winner={rounds[1][1].winner}
@@ -866,7 +603,7 @@ const Tournament = () => {
                 <div className={css.winners}>
                   <div className={css.matchups}>
                     <Match
-                      matchNumber={7}
+                      matchNumber={3}
                       player1={rounds[2][0].player1}
                       player2={rounds[2][0].player2}
                       winner={rounds[2][0].winner}
@@ -881,17 +618,14 @@ const Tournament = () => {
         )
       )}
       {showWinner && (
-        <div className={css.overlay} onClick={handleOverlayClick}>
-          <div className={css.overlayContent}>
-            <WinnerCard
-              winner={
-                rounds[2][0].winner === 1
-                  ? rounds[2][0].player1
-                  : rounds[2][0].player2
-              }
-            />
-          </div>
-        </div>
+        <WinnerOverlay
+          winner={
+            rounds[2][0].winner === 1
+              ? rounds[2][0].player1
+              : rounds[2][0].player2
+          }
+          setShowWinner={setShowWinner}
+        />
       )}
     </div>
   );

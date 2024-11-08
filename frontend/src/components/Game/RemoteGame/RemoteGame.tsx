@@ -7,6 +7,7 @@ import { boolean } from 'yup';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import { getToken } from '../../../utils/getToken';
 import { useParams } from 'react-router-dom';
+import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -16,7 +17,7 @@ const pW = 20;
 const pH = 80;
 const paddleSpeed = 2;
 
-const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
+const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
   // const { game_address } = useParams();
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
@@ -83,9 +84,8 @@ const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
       }
       let gameSocket: WebSocket | null = null;
       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${token}`;
-      if (!ws.current)
-        gameSocket = new WebSocket(wsUrl);
-      if (!gameSocket) return
+      if (!ws.current) gameSocket = new WebSocket(wsUrl);
+      if (!gameSocket) return;
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
@@ -146,11 +146,10 @@ const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
 
     return () => {
       if (ws.current) {
-          console.log('Closing game websocket ....');
-          ws.current.close();
-
+        console.log('Closing game websocket ....');
+        ws.current.close();
       }
-        clearTimeout(timeout);
+      clearTimeout(timeout);
     };
   }, [restart]);
 
@@ -240,12 +239,18 @@ const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
       //     })
       //   );
       // }
-      if (ws.current && ws.current.readyState === WebSocket.OPEN  && keysPressed[0])
+      if (
+        ws.current &&
+        ws.current.readyState === WebSocket.OPEN &&
+        keysPressed[0]
+      )
         ws.current.send(JSON.stringify({ type: 'keydown', direction: 'up' }));
-      if (ws.current && ws.current.readyState === WebSocket.OPEN &&  keysPressed[1])
-        ws.current.send(
-          JSON.stringify({ type: 'keydown', direction: 'down' })
-        );
+      if (
+        ws.current &&
+        ws.current.readyState === WebSocket.OPEN &&
+        keysPressed[1]
+      )
+        ws.current.send(JSON.stringify({ type: 'keydown', direction: 'down' }));
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -310,16 +315,24 @@ const RemoteGame: React.FC<{game_address: string}> = ({game_address}) => {
     setIsGameOver(false);
   };
 
+  if (!gameState || gameState != 'started') {
+    return (
+      <div className={css.matchmakingLoaderWrapper}>
+        <ArcadeLoader className={css.matchmakingLoader} />
+      </div>
+    );
+  }
+
   return (
     <div>
-      {!gameState && <h1>Remote Play - connecting to websocket!</h1>}
-      {gameState === 'disconnected' && (
+      {/* {!gameState && <h1>Remote Play - connecting to websocket!</h1>} */}
+      {/* {gameState === 'disconnected' && (
         <div>
           <h1>Remote Play - disconnected!</h1>
           <button onClick={() => setRestart((s) => !s)}>Play Again</button>
         </div>
       )}
-      {gameState === 'waiting' && <h1>Remote Play - waiting!</h1>}
+      {gameState === 'waiting' && <h1>Remote Play - waiting!</h1>} */}
       {gameState === 'started' && (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (

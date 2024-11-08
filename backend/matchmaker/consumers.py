@@ -19,7 +19,13 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.accept()
             self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self)
-            await self.send(text_data=json.dumps(f"Hello {user.username}, you are authenticated!"))
+            await self.send(text_data=json.dumps(
+                {'event': 'authenticated',
+                 'username': user.username,
+                 'id': user.id,
+                 }
+            ))
+
         else:
             print(f"##################### User not found ##########################")
             await self.close()
@@ -41,6 +47,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         elif event == 'join_tournament':
             tournament_id = data.get('tournament_id')
             await Matchmaker.join_tournament(self.player_id, tournament_id)
+        if event == 'player_ready':
+            await Matchmaker.handle_player_ready(self.player_id, data.get('match_id'))
         # Handle other events similarly...
 
     # This method sends a message to the WebSocket client

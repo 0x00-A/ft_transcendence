@@ -170,3 +170,14 @@
     margin-left: 0;
     margin-right: 0
 }
+
+.matchmakingLoader {
+  width: 150px;
+  height: 140px;
+}
+.matchmakingLoaderWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 116px);
+}

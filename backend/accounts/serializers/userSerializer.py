@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.core.exceptions import ValidationError as DjangoValidationError
-from matchmaker.serializers.gameSerializer import GameSerializer
+from matchmaker.serializers.GameSerializer import GameSerializer
 from rest_framework_simplejwt.tokens import Token
 from ..models.user import User
 from ..models.profile import Profile
