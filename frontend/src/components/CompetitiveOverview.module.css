@@ -7,7 +7,7 @@
     font-size: 1.6rem;
     font-weight: bold;
     margin-bottom: 2rem;
-    color: #ffffff;
+    color: #F8F3E3;
 }
 
 .buttons {
@@ -28,18 +28,19 @@
 
 .singleGame {
     background-color: #9bb1c8;
-    color: #ffffff;
+    color: #F8F3E3;
 }
 
 .tournamentsGame {
     background-color: #1e1e2f;
-    color: #ffffff;
+    color: #F8F3E3;
 }
 
 .stats {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .winRate {
@@ -58,14 +59,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
+    color: #F8F3E3;
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .winRateText {
     font-size: 0.8rem;
-    color: #ffffff;
+    color: #F8F3E3;
 }
 
 .winRatePercentage {
@@ -86,7 +87,7 @@
     padding: 1rem 2rem;
     text-align: center;
     font-weight: bold;
-    color: #ffffff;
+    color: #F8F3E3;
     font-size: 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     flex: 1;
@@ -108,7 +109,7 @@
     padding: 1rem 2rem;
     text-align: center;
     font-weight: bold;
-    color: #ffffff;
+    color: #F8F3E3;
     font-size: 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     flex: 1;
@@ -147,7 +148,7 @@
     padding: 1rem 2rem;
     text-align: center;
     font-weight: bold;
-    color: #ffffff;
+    color: #F8F3E3;
     font-size: 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     flex: 1;
@@ -165,5 +166,5 @@
 }
 
 /* .scoreNum {
-    color: yellow;
+    color: #f8c15c;
 } */
