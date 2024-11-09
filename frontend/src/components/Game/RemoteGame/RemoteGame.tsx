@@ -17,7 +17,7 @@ const pW = 20;
 const pH = 80;
 const paddleSpeed = 2;
 
-const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
+const RemoteGame: React.FC<{ game_address: string; requestRemoteGame:() => void; setState: React.Dispatch<React.SetStateAction<string>>}> = ({ game_address,requestRemoteGame, setState }) => {
   // const { game_address } = useParams();
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
@@ -26,20 +26,15 @@ const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('game');
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
-  const [isOnePlayerMode, SetIsOnePlayerMode] = useState(false);
-  const [ballSpeed, setBallSpeed] = useState(5);
   // const [paddleSpeed, SetPaddleSpeed] = useState(10);
   const [sound, SwitchSound] = useState(true);
-  const [controller, setController] = useState<Controller>('mouse');
   const [winningScore, setWinningScore] = useState(7);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const tokenRef = useRef(null);
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
-  const [paused, setPaused] = useState(false);
   const hitWallSound = useRef(
     new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
   );
@@ -219,26 +214,6 @@ const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
     };
 
     const update = () => {
-      // Update paddle position
-      // if (paddle1Ref.current.dy) {
-      //   paddle1Ref.current.y += paddle1Ref.current.dy;
-      //   // Prevent the paddle from going out
-      //   if (paddle1Ref.current.y < 0) {
-      //     paddle1Ref.current.y = 0;
-      //   } else if (
-      //     paddle1Ref.current.y + paddle1Ref.current.h >
-      //     ctx.canvas.height
-      //   ) {
-      //     paddle1Ref.current.y = ctx.canvas.height - paddle1Ref.current.h;
-      //   }
-      //   // send the updated state to server
-      //   ws.current?.send(
-      //     JSON.stringify({
-      //       type: 'paddle_move',
-      //       paddle_y: paddle1Ref.current.y,
-      //     })
-      //   );
-      // }
       if (
         ws.current &&
         ws.current.readyState === WebSocket.OPEN &&
@@ -253,66 +228,39 @@ const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
         ws.current.send(JSON.stringify({ type: 'keydown', direction: 'down' }));
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const paddle1 = paddle1Ref.current;
-      const rect = canvas.getBoundingClientRect(); // Get the canvas's position and size
-      // const mouseX = e.clientX - rect.left; // X coordinate inside the canvas
-      const mouseY = e.clientY - rect.top; // Y coordinate inside the canvas
-      // console.log(`Mouse X: ${mouseX}, Mouse Y: ${mouseY}`);
-      if (controller === 'mouse') {
-        if (mouseY >= pH / 2 && mouseY <= canvasHeight - pH / 2)
-          paddle1.y = mouseY - pH / 2;
-        // send the updated state to server
-        ws.current?.send(
-          JSON.stringify({
-            type: 'paddle_move',
-            paddle_y: paddle1Ref.current.y,
-          })
-        );
-      }
-    };
-
     let animationFrameId: number;
     const animate = () => {
       if (isGameOver) return;
-      if (!paused) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        update();
+      update();
 
-        draw(ctx);
-        // console.log(paddle1Ref.current.y);
-      }
+      draw(ctx);
 
-      // setTimeout(animate, interval);
       animationFrameId = requestAnimationFrame(animate);
     };
 
     window.addEventListener('keydown', (e) => handleKeyDown(e));
     window.addEventListener('keyup', (e) => handleKeyUp(e));
-    // canvas.addEventListener('mousemove', (e) => handleMouseMove(e));
     animate();
 
     return () => {
       window.removeEventListener('keydown', (e) => handleKeyDown(e));
       window.removeEventListener('keyup', (e) => handleKeyUp(e));
-      // canvas.removeEventListener('mousemove', (e) => handleMouseMove(e));
-      // cancelAnimationFrame(animationFrameId);
     };
-  }, [isGameOver, gameState, paused]);
+  }, [isGameOver, gameState]);
 
-  const handleNextScreen = (nextScreen: GameScreens) => {
-    setCurrentScreen(nextScreen);
-  };
+
   const handleRetry = () => {
+    requestRemoteGame()
     setGameState(null);
-    setCurrentScreen('game');
     setIsGameOver(false);
     setRestart((s) => !s);
   };
   const handleMainMenu = () => {
-    setCurrentScreen('mode');
-    setIsGameOver(false);
+    setState('')
+    // setCurrentScreen('mode');
+    // setIsGameOver(false);
   };
 
   if (!gameState || gameState != 'started') {
@@ -324,7 +272,7 @@ const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
   }
 
   return (
-    <div>
+    <div className={css.container}>
       {/* {!gameState && <h1>Remote Play - connecting to websocket!</h1>} */}
       {/* {gameState === 'disconnected' && (
         <div>
@@ -354,6 +302,7 @@ const RemoteGame: React.FC<{ game_address: string }> = ({ game_address }) => {
               isWinner={isWinner}
               handleRetry={handleRetry}
               handleMainMenu={handleMainMenu}
+              secondAction={'Go Back'}
             />
           )}
         </div>

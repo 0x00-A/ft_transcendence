@@ -1,13 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700');
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: var(--color-game-screen-bg);
   height: calc(100vh - 116px);
   border-radius: 10px;
   min-height: 600px;
-
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.6),
+    0 2px 5px rgba(0, 0, 0, 0.4) inset;
+  padding: 30px;
 }
 
 .bracket {
@@ -199,8 +203,10 @@
 }
 
 .gameScreenDiv {
-    width: 100%;
-    height: 100%;
+  position: relative;
+    /* width: 100%;
+    height: 100%; */
+    padding: 10px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -306,31 +312,54 @@ box-sizing: border-box;
   background-color: var(--sidebar-tab-hover);
 }
 
+
 .playerNamesWrapper {
+  width: 650px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  width: 100%;
+  /* width: 100%; */
+  /* border: 1px solid red; */
+    box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.6),
+    0 2px 5px rgba(0, 0, 0, 0.4) inset;
+    margin-bottom: 20px;;
 }
 .player1, .player2 {
     padding: 5px 0;
     color: var(--text-color);
     text-decoration: none;
-    font-size: 38px;
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.vsDiv {
+      color: var(--text-color);
+    text-decoration: none;
+    font-size: 25px;
     font-weight: 600;
 }
 
-.pauseButton {
-  margin: 5px;
-  padding: 2px;
-  border-radius: 5px;
-  background-color: #cf5a45;
-  border: none;
-  width: 70px;
-    color: var(--text-color);
-
+.pauseDiv {
+    position: absolute;
+    /* bottom: 30px; */
+    font-size: 40px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 0);
 }
 
+.pauseButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    padding: 10px;
+    /* left: 50%; */
+    top: 105%;
+    border-radius: 10px;
+}
 
 
 /* Click to start overlay */
@@ -340,24 +369,29 @@ box-sizing: border-box;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8); /* Dark transparent background */
+  /* background: rgba(0, 0, 0, 0.8); */
+    backdrop-filter: blur(4px);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: var(--text-color);
   cursor: pointer;
   z-index: 2;
 }
 
 .gameOverlayContent h2 {
-  font-size: 2rem;
+  /* font-size: 2rem; */
   text-align: center;
 }
 
 .gameOverlayContent {
+  font-size: 2rem;
   text-align: center;
 }
 
 .gameOverlay:hover {
-  background: rgba(0, 0, 0, 0.9); /* Slightly darken on hover */
+  /* background: rgba(0, 0, 0, 0.9); */
+    backdrop-filter: blur(5px);
+
 }
