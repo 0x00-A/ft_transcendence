@@ -39,17 +39,17 @@
 
 .title {
   color: #F8F3E3;
-  font-size: 5rem;
+  font-size: 4rem;
   font-weight: bold;
 }
 
 .description {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 }
 .description span{
   color: #FF2047;
   font-weight: bold;
-  font-size: 2.2rem;
+  font-size: 2rem;
 }
 
 .playButton {
