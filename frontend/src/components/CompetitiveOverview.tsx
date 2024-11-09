@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './CompetitiveOverview.module.css';
+import WinRateDoughnut from './WinRateDoughnut';
 
 const CompetitiveOverview = () => {
   return (
@@ -11,14 +12,19 @@ const CompetitiveOverview = () => {
         <button className={`${styles.button} ${styles.tournamentsGame}`}>TOURNAMENTS GAME</button>
       </div>
       
-      <div className={styles.stats}>
-        <div className={styles.winRate}>
-          <div className={styles.circle}>
-            <span className={styles.winRateText}>Win Rate</span>
-            <span className={styles.winRatePercentage}>76%</span>
+      <div className={styles.scores}>
+          <div className={styles.totalGamesBox}>
+            <span className={styles.totalGames}><span className={styles.scoreNum}>1010  </span>GAMES</span>
+          </div>
+          <div className={styles.scoreBox}>
+            <span className={styles.score}> <span className={styles.scoreNum}>635  </span>SCORE</span>
           </div>
         </div>
-        
+
+      <div className={styles.stats}>
+        <div className={styles.winRate}>
+          <WinRateDoughnut /> 
+        </div>
         <div className={styles.winsLosses}>
           <div className={styles.statBoxWin}>
             <span className={styles.wins}>555 WINS</span>
@@ -27,15 +33,6 @@ const CompetitiveOverview = () => {
             <span className={styles.losses}>555 LOSE</span>
           </div>
         </div>
-        
-      </div>
-        <div className={styles.scores}>
-          <div className={styles.scoreBox}>
-            <span className={styles.score}> <span className={styles.scoreNum}>635  </span>SCORE</span>
-          </div>
-          <div className={styles.totalGamesBox}>
-            <span className={styles.totalGames}>1990 GAMES</span>
-          </div>
         </div>
     </div>
   );
