@@ -29,7 +29,7 @@
   }
   
   .singleGame {
-    background-color: #9bb1c8;
+    background-color: #445C85;
     color: #F8F3E3;
   }
   
@@ -47,13 +47,13 @@
   
   .scoreBox, .totalGamesBox {
     flex: 1;
-    background: linear-gradient(90deg, #7892B8 0%, #586F92 31%, #415577 100%);
+    /* background: linear-gradient(90deg, #7892B8 0%, #586F92 31%, #415577 100%); */
+    background: linear-gradient(90deg, #384B6C 0%, #2B374D 63%, #1E2533 100%);
     padding: 0.5rem;
     text-align: center;
     font-weight: bold;
-    color: #F8F3E3;
+    color: #F5F5F5;
     font-size: 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     align-items: center;
@@ -103,16 +103,18 @@
     font-weight: bold;
     color: #F8F3E3;
     font-size: 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     position: relative;
   }
   
   .statBoxWin {
-    background: linear-gradient(90deg, rgba(39, 127, 129, 0.50) 0%, rgba(51, 90, 114, 0.50) 23%, rgba(51, 90, 114, 0.50) 38.5%, rgba(56, 75, 108, 0.44) 82.59%);
+    background: linear-gradient(90deg, rgba(39, 127, 129, 0.50) 0%, rgba(51, 90, 114, 0.50) 23%, rgba(51, 90, 114, 0.50) 38.5%, rgba(39, 59, 77, 0.46) 64.5%, rgba(30, 37, 51, 0.44) 100%);
+    /* background: linear-gradient(90deg, rgba(39, 127, 129, 0.50) 0%, rgba(51, 90, 114, 0.50) 23%, rgba(51, 90, 114, 0.50) 38.5%, rgba(56, 75, 108, 0.44) 82.59%); */
   }
   
   .statBoxLose {
-    background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(56, 75, 108, 0.50) 100%);
+    background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(30, 37, 51, 0.50) 100%);
+    /* background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(56, 75, 108, 0.50) 100%); */
   }
   
   .statBoxWin:before {

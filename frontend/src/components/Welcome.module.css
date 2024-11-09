@@ -1,6 +1,6 @@
 .welcome {
-  height: 40%;
-  background-color: #384B6C;
+  height: 30%;
+  background-color: #1E2533;
   padding-right: 2.5rem;
   border-radius: 50px;
   display: flex;
@@ -55,7 +55,7 @@
 .playButton {
   margin: 0 auto;
   width: 130px;
-  background-color: #283245;
+  background-color: #384B6C;
   color: #F8F3E3;
   border: none;
   padding: 10px;

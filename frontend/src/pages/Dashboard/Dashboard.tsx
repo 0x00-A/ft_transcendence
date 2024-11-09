@@ -2,6 +2,7 @@ import css from './Dashboard.module.css';
 import Welcome from '../../components/Welcome';
 import CompetitiveOverview from '../../components/CompetitiveOverview';
 import Achievements from '../../components/Achievements';
+import Leaderboard from '../../components/Leaderboard';
 
 const Dashboard = () => {
   return (
@@ -9,8 +10,8 @@ const Dashboard = () => {
       <div className={css.heroSection}>
         <Welcome />
         <div className={css.leaderboard}>
-          <h3>Leaderboard</h3>
-        </div>
+        </div> 
+        <Leaderboard />
       </div>
 
       <div className={css.mainContent}>
