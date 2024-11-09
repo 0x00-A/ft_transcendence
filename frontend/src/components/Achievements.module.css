@@ -1,136 +1,80 @@
-.containerAchievements {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.achievementsContainer {
+  width: 100%;
+  height: 100%;
+  color: #F8F3E3;
 }
-.container {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #384B6C;
-    border-radius: 50px;
-    padding: 2rem;
-  }
-  
-  .title {
-    top: 2rem;
-    left: 2rem;
-    font-size: 1.875rem;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .carouselContainer {
-    width: 100%;
-    height: 75%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .slide {
-      width: 100%;
-      height: 100%;
-    transition: opacity 0.3s ease;
-  }
-  
-  .activeSlide {
-    opacity: 1;
-  }
-  
-  .hiddenSlide {
-    opacity: 0;
-    display: none;
-  }
-  
-  .card {
-    width: 100%;
-    height: 100%;
-    background-color: #283245;
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    gap: 1rem;
-  }
-  
-  .cardTitle {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .iconContainer {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .medalIcon {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .medalIcon.bronze {
-    fill: #CD7F32;
-  }
-  
-  .medalIcon.silver {
-    fill: #C0C0C0;
-  }
-  
-  .progressBar {
-    width: 100%;
-    height: 15px;
-    background-color: #374151;
-    border-radius: 9999px;
-    overflow: hidden;
-  }
-  
-  .progressFill {
-    height: 100%;
-    border-radius: 9999px;
-    transition: width 0.3s ease;
-  }
-  
-  .navButton {
-    width: 50px;
-    height: 50px;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.3s ease;
-  }
-  
-  .navButton:hover {
-    color: #d1d5db;
-  }
-  
-  .navButton:focus {
-    outline: none;
-  }
-  
-  .navButton:first-child {
-    left: 1rem;
-  }
-  
-  .navButtonRight {
-    right: 1rem;
-  }
-  
-  .arrow {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
+
+h3 {
+  font-size: 2.5rem;
+  color: #F8F3E3;
+}
+
+.achievementsCarousel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.arrow {
+  color: #F8F3E3;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.achievementCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 60%;
+  height: 80%;
+  background-color: #2C3E50;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 0 10px;
+  text-align: center;
+}
+
+.achievementTitle {
+  font-size: 3rem;
+}
+
+.achievementImage {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+.progressBar {
+  width: 80%;
+  height: 15px;
+  background-color: #D9D9D9;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #F8C25C;
+}
+
+.progressText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #F8F3E3;
+  font-size: 0.9rem;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.progressBar:hover .progressText {
+  opacity: 1;
+}

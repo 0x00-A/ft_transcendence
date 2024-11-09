@@ -29,16 +29,15 @@ const WinRateDoughnut = () => {
       <div
         style={{
           position: 'absolute',
-          top: '55%',
-          left: '50%',
+          top: '50%', // Adjusted to 50%
+          left: '50%', // Adjusted to 50%
           transform: 'translate(-50%, -50%)',
           textAlign: 'center',
-          fontSize: '1rem',
         }}
       >
-        <span style={{ fontSize: '1rem', color: '#F8F3E3' }}>Win Rate</span>
+        <span style={{ color: '#F8F3E3' }}>Win Rate</span>
         <br />
-        <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#F8F3E3' }}>76%</span>
+        <span style={{fontWeight: 'bold', color: '#F8F3E3' }}>76%</span>
       </div>
     </div>
   );

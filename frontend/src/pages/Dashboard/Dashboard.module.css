@@ -9,7 +9,7 @@
   width: 100%;
   min-width: 1440px;
   height: calc(100vh - 116px);
-  min-height: 700px;
+  min-height: 900px;
 }
 
 .heroSection {
@@ -35,14 +35,14 @@
 }
 
 .competitiveOverview {
-  height: 40%;
+  height: 50%;
   background-color: #384B6C;
   padding: 30px;
   border-radius: 50px;
 }
 
 .achievements {
-  height: 60%;
+  height: 50%;
   background-color: #384B6C;
   padding: 30px;
   border-radius: 50px;

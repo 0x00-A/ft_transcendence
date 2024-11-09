@@ -4,6 +4,7 @@ import WinRateDoughnut from './WinRateDoughnut';
 
 const CompetitiveOverview = () => {
   return (
+    
     <div className={styles.container}>
       <h3 className={styles.title}>COMPETITIVE OVERVIEW</h3>
       
