@@ -10,12 +10,8 @@ import TournamentHeader from '../components/TournamentHeader/TournamentHeader';
 import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import TournamentForm from '../components/TournamentForm/TournamentForm';
 import { FaPause, FaPlay } from 'react-icons/fa';
+import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 
-// import {
-//   Round,
-//   Connector,
-//   Match,
-// } from '../components/BracketComponents/BracketComponents';
 
 const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
 const ballRaduis = 8;
@@ -392,7 +388,7 @@ type Rounds = {
   [key: number]: Match[];
 };
 
-const Tournament = () => {
+const Tournament = ({onReturn}: {onReturn: ()=>void}) => {
   const [players, setPlayers] = useState<string[]>([]);
   const [activeMatch, setActiveMatch] = useState(1);
   const [showForm, setShowForm] = useState(true);
@@ -529,6 +525,7 @@ const Tournament = () => {
           setShowWinner={setShowWinner}
         />
       )}
+      <ReturnBack onClick={onReturn} />
     </div>
   );
 };

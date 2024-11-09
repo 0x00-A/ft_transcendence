@@ -256,8 +256,18 @@ class Matchmaker:
 
         if match.player1_id == player_id:
             match.player1_ready = True
+            message = {
+                'event': 'opponent_ready',
+                "message": "Your oponent is ready!",
+            }
+            await cls.send_message_to_client(match.player2_id, message)
         elif match.player2_id == player_id:
             match.player2_ready = True
+            message = {
+                'event': 'opponent_ready',
+                "message": "Your oponent is ready!",
+            }
+            await cls.send_message_to_client(match.player1_id, message)
 
         await sync_to_async(match.save)()
 

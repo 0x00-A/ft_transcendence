@@ -56,6 +56,8 @@ const Game = () => {
   const [tournamentStat, setTournamentStat] = useState(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [user, setUser] = useState('');
+  const [opponentReady, setOpponentReady] = useState(false);
+
 
   // const { data: user } = useGetData<User>('matchmaker/current-user');
 
@@ -163,6 +165,12 @@ const Game = () => {
           tournamentIdRef.current = data.tournament_id;
           setTournamentStat(data.tournament_stat);
         }
+        if (data.event === 'opponent_ready') {
+            setOpponentReady(true);
+        }
+        if (data.event === 'opponent_unready') {
+            setOpponentReady(false);
+        }
       };
       socket.onclose = () => {
         console.log('Matchmaker Socket disconnected');
@@ -220,8 +228,14 @@ const Game = () => {
     toast('This is a top-center notification!', {});
   };
 
+  const handleReturn = () => {
+    setState('');
+    setSelectedMode(null);
+    setShowTournamentView(false);
+  }
+
   if (selectedMode === 0) {
-    return <LocalGame />;
+    return <LocalGame onReturn={handleReturn} />;
   }
 
   if (selectedMode === 1) {
@@ -234,7 +248,7 @@ const Game = () => {
   }
 
   if (selectedMode === 3) {
-    return <Tournament />;
+    return <Tournament onReturn={handleReturn} />;
   }
 
   if (state === 'inqueue') {
@@ -246,7 +260,7 @@ const Game = () => {
   }
 
   if (state === 'game_start') {
-    if (gameAdrress) return <RemoteGame setState={setState} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
+    if (gameAdrress) return <RemoteGame onReturn={handleReturn} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
   }
 
   if (showTournamentView)
@@ -259,6 +273,8 @@ const Game = () => {
         tournamentStat={tournamentStat}
         user={user}
         ws={ws.current}
+        onReturn={handleReturn}
+        opponentReady={opponentReady}
       />
     );
 

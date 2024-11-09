@@ -6,8 +6,9 @@ import { Controller, GameScreens } from '../../../types/types';
 import Pong from '../components/Pong/Pong';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import DifficultyScreen from '../../DifficultyScreen/DifficultyScreen';
+import ReturnBack from '../components/ReturnBack/ReturnBack';
 
-const LocalGame = () => {
+const LocalGame = ({onReturn}:{onReturn?: ()=>void}) => {
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('mode'); // Starting screen is 'mode'
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
@@ -73,6 +74,7 @@ const LocalGame = () => {
           />
         )}
       </div>
+      <ReturnBack onClick={onReturn} />
     </div>
   );
 };
