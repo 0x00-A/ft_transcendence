@@ -7,6 +7,8 @@ import {
 } from '../utils/GameLogic';
 import css from './Pong.module.css';
 import { Controller, GameScreens } from '../../../../types/types';
+import { FaPause, FaPlay } from 'react-icons/fa';
+
 
 const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
 const ballRaduis = 8;
@@ -366,9 +368,9 @@ const Pong: React.FC<GameProps> = ({
         <div className={css.player1Score}>{score1}</div>
         <div className={css.player2Score}>{score2}</div>
       </div>
-      {/* {paused && <div id="pauseDiv">Paused, press P to continue</div>} */}
       <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
-      <button onClick={togglePause}>{paused ? 'Resume' : 'Pause'}</button>
+      {paused && <div className={css.pauseDiv}>Paused</div>}
+      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay /> : <FaPause />}</button>
     </div>
   );
 };

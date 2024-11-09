@@ -30,47 +30,49 @@ const LocalGame = () => {
     setIsGameOver(false);
   };
   return (
-    <div className={css.gameArea}>
-      {currentScreen === 'mode' && (
-        <GameModeScreen
-          onNext={handleNextScreen}
-          SetIsOnePlayerMode={SetIsOnePlayerMode}
-          SwitchSound={SwitchSound}
-          sound={sound}
-          setController={setController}
-          setWinningScore={setWinningScore}
-          controller={controller}
-          winningScore={winningScore}
-        />
-      )}
-      {currentScreen === 'difficulty' && (
-        <DifficultyScreen
-          onNext={handleNextScreen}
-          setBallSpeed={setBallSpeed}
-          setPaddleSpeed={SetPaddleSpeed}
-        />
-      )}
-      {currentScreen === 'game' && (
-        <Pong
-          onNext={handleNextScreen}
-          isGameOver={isGameOver}
-          setIsGameOver={setIsGameOver}
-          setIsWinner={setIsWinner}
-          isOnePlayerMode={isOnePlayerMode}
-          sound={sound}
-          ballSpeed={ballSpeed}
-          paddleSpeed={paddleSpeed}
-          controller={controller}
-          winningScore={winningScore}
-        />
-      )}
-      {currentScreen === 'end' && (
-        <EndGameScreen
-          isWinner={isWinner}
-          handleRetry={handleRetry}
-          handleMainMenu={handleMainMenu}
-        />
-      )}
+    <div className={css.container}>
+      <div className={css.gameArea}>
+        {currentScreen === 'mode' && (
+          <GameModeScreen
+            onNext={handleNextScreen}
+            SetIsOnePlayerMode={SetIsOnePlayerMode}
+            SwitchSound={SwitchSound}
+            sound={sound}
+            setController={setController}
+            setWinningScore={setWinningScore}
+            controller={controller}
+            winningScore={winningScore}
+          />
+        )}
+        {currentScreen === 'difficulty' && (
+          <DifficultyScreen
+            onNext={handleNextScreen}
+            setBallSpeed={setBallSpeed}
+            setPaddleSpeed={SetPaddleSpeed}
+          />
+        )}
+        {currentScreen === 'game' && (
+          <Pong
+            onNext={handleNextScreen}
+            isGameOver={isGameOver}
+            setIsGameOver={setIsGameOver}
+            setIsWinner={setIsWinner}
+            isOnePlayerMode={isOnePlayerMode}
+            sound={sound}
+            ballSpeed={ballSpeed}
+            paddleSpeed={paddleSpeed}
+            controller={controller}
+            winningScore={winningScore}
+          />
+        )}
+        {currentScreen === 'end' && (
+          <EndGameScreen
+            isWinner={isWinner}
+            handleRetry={handleRetry}
+            handleMainMenu={handleMainMenu}
+          />
+        )}
+      </div>
     </div>
   );
 };

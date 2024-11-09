@@ -8,10 +8,12 @@ const EndGameScreen = ({
   isWinner,
   handleRetry,
   handleMainMenu,
+  secondAction='Main Menu',
 }: {
   isWinner: boolean;
   handleRetry: () => void;
   handleMainMenu: () => void;
+  secondAction?: string;
 }) => {
   return (
     <div className={css.endGameScreen}>
@@ -19,7 +21,7 @@ const EndGameScreen = ({
         {isWinner ? 'You Win!' : 'You Lose!'}
       </div>
       <GameButton onClick={handleRetry}>Play Again</GameButton>
-      <GameButton onClick={handleMainMenu}>Main Menu</GameButton>
+      <GameButton onClick={handleMainMenu}>{secondAction}</GameButton>
     </div>
   );
 };

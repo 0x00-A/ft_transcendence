@@ -100,8 +100,8 @@ const RemoteTournament = ({
 
   useEffect(() => {
     setRounds(tournamentStat.rounds);
-    setWinnerOfMatch1(rounds[1][0]?.winner);
-    setWinnerOfMatch2(rounds[1][1]?.winner);
+    setWinnerOfMatch1(tournamentStat.rounds[1][0]?.winner);
+    setWinnerOfMatch2(tournamentStat.rounds[1][1]?.winner);
     if (tournamentStat.winner) setShowWinner(true);
   }, [tournamentStat]);
 

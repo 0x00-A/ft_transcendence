@@ -8,6 +8,9 @@ import {
 } from '../../Game/components/utils/GameLogic';
 import TournamentHeader from '../components/TournamentHeader/TournamentHeader';
 import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
+import TournamentForm from '../components/TournamentForm/TournamentForm';
+import { FaPause, FaPlay } from 'react-icons/fa';
+
 // import {
 //   Round,
 //   Connector,
@@ -338,12 +341,12 @@ const Pong: React.FC<GameProps> = ({
   }, [countdown]);
 
   return (
-    <div id="gameScreen" className={css.gameScreenDiv}>
+    <div className={css.gameScreenDiv}>
       <div className={css.playerNamesWrapper}>
         <div className={css.player1}>{player1}</div>
+        <div className={css.vsDiv}>VS</div>
         <div className={css.player2}>{player2}</div>
       </div>
-      {/* {paused && <div id="pauseDiv">Paused, press P to continue</div>} */}
       <div className={css.canvasDiv}>
         <div className={css.scoreWrapper}>
           <div className={css.player1Score}>{score1}</div>
@@ -366,10 +369,9 @@ const Pong: React.FC<GameProps> = ({
         <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
       </div>
       {gameStarted && (
-        <button className={css.pauseButton} onClick={togglePause}>
-          {paused ? 'Resume' : 'Pause'}
-        </button>
+      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay /> : <FaPause />}</button>
       )}
+      {gameStarted && paused && <div className={css.pauseDiv}>Paused</div>}
     </div>
   );
 };
@@ -388,106 +390,6 @@ type Match = {
 
 type Rounds = {
   [key: number]: Match[];
-};
-
-const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
-  const [playerName, setPlayerName] = useState<string>('');
-  const [error, setError] = useState<string>(''); // To store error messages
-
-  const handleAddPlayer = () => {
-    if (!playerName.trim()) {
-      setError('Player name cannot be empty');
-      return;
-    }
-
-    if (players.includes(playerName)) {
-      setError('Player name must be unique');
-      return;
-    }
-
-    if (players.length < 4) {
-      setPlayers([...players, playerName.trim()]);
-      setPlayerName('');
-      setError('');
-    }
-  };
-
-  const handleRemovePlayer = (index: number) => {
-    const updatedPlayers = players.filter((_, i) => i !== index);
-    setPlayers(updatedPlayers);
-  };
-
-  const handleStartTournament = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (players.length === 4) onSubmit(players);
-  };
-
-  return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-      <h2>Tournament Registration</h2>
-
-      <input
-        type="text"
-        value={playerName}
-        onChange={(e) => setPlayerName(e.target.value)}
-        placeholder="Enter player name"
-        maxLength={15}
-        style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-      />
-
-      <button
-        onClick={handleAddPlayer}
-        disabled={!playerName || players.length >= 4}
-        style={{ marginBottom: '10px', width: '100%', padding: '10px' }}
-      >
-        Add Player
-      </button>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <ul>
-        {players.map((player, index) => (
-          <li
-            key={index}
-            style={{
-              marginBottom: '10px',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            {player}
-            <button
-              onClick={() => handleRemovePlayer(index)}
-              style={{
-                color: 'white',
-                backgroundColor: 'red',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '5px',
-              }}
-            >
-              &#x2716;
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <button
-        onClick={handleStartTournament}
-        disabled={players.length !== 4}
-        style={{
-          marginTop: '20px',
-          width: '100%',
-          padding: '10px',
-          backgroundColor: players.length === 4 ? 'green' : 'grey',
-          color: 'white',
-          cursor: players.length === 4 ? 'pointer' : 'not-allowed',
-        }}
-      >
-        Start Tournament
-      </button>
-    </div>
-  );
 };
 
 const Tournament = () => {

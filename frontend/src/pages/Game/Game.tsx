@@ -11,7 +11,7 @@ import useToken from '../../hooks/useToken';
 import TournamentList from '../../components/Tournament/components/TournamentList/TournamentList';
 import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
 import { useGetData } from '../../api/apiHooks';
-import { Tournament } from '../../types/apiTypes';
+import { Tournament as TournmentType } from '../../types/apiTypes';
 import TournamentCard from '../../components/Tournament/components/TournamentCard/TournamentCard';
 import RemoteTournament from '../../components/Tournament/RemoteTournament/RemoteTournament';
 import CreateTournamentModal from '../../components/Tournament/components/CreateTournamentModal/CreateTournamentModal';
@@ -19,6 +19,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LocalGame from '../../components/Game/LocalGame/LocalGame';
 import ArcadeLoader from '../../components/Game/components/ArcadeLoader/ArcadeLoader';
+import Tournament from '../../components/Tournament/Tournament/Tournament';
 
 const Modes = [
   {
@@ -27,12 +28,12 @@ const Modes = [
     description: 'Play locally with a firend or computer',
   },
   { id: 1, title: 'remote play', description: 'Compete against other players' },
-  //   {
-  //     id: 3,
-  //     title: 'battle royal',
-  //     description: 'remote play with multiple players',
-  //   },
   { id: 2, title: 'tournament', description: 'View or create a tournament' },
+  {
+    id: 3,
+    title: 'Local Tournament',
+    description: 'Host a tournament locally',
+  },
 ];
 
 type User = [
@@ -77,14 +78,14 @@ const Game = () => {
   const token = useToken();
 
   const { data: tournament, refetch: refetchUserTournament } =
-    useGetData<Tournament>('matchmaker/tournaments/user-tournament');
+    useGetData<TournmentType>('matchmaker/tournaments/user-tournament');
 
   const {
     data: tournaments,
     isLoading,
     error,
     refetch,
-  } = useGetData<Tournament[]>('matchmaker/tournaments');
+  } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
   useEffect(() => {
     const timeout = setTimeout(async () => {
@@ -232,6 +233,10 @@ const Game = () => {
     setSelectedMode(null);
   }
 
+  if (selectedMode === 3) {
+    return <Tournament />;
+  }
+
   if (state === 'inqueue') {
     return (
       <div className={css.matchmakingLoaderWrapper}>
@@ -241,9 +246,7 @@ const Game = () => {
   }
 
   if (state === 'game_start') {
-    if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
-    // if (gameAdrress) return <RemoteGame game_address={gameAdrress} />;
-    // return <Navigate to={`/${gameAdrress}`} />;
+    if (gameAdrress) return <RemoteGame setState={setState} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
   }
 
   if (showTournamentView)
