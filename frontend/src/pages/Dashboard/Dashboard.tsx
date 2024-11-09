@@ -1,6 +1,7 @@
 import css from './Dashboard.module.css';
 import Welcome from '../../components/Welcome';
 import CompetitiveOverview from '../../components/CompetitiveOverview';
+import Achievements from '../../components/Achievements';
 
 const Dashboard = () => {
   return (
@@ -17,7 +18,7 @@ const Dashboard = () => {
           <CompetitiveOverview />
         </div>
         <div className={css.achievements}>
-          <h3>Achievements</h3>
+          <Achievements />
         </div>
       </div>
 
