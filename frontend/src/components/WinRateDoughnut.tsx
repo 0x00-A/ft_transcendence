@@ -24,7 +24,7 @@ const WinRateDoughnut = () => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '150px', height: '150px' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <Doughnut data={data} options={options} />
       <div
         style={{
