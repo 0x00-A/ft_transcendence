@@ -21,9 +21,8 @@
 
 
 .leaderboard {
-  height: 60%;
-  background-color: #384B6C;
-  padding: 30px;
+  height: 30%;
+  background-color: #1E2533;
   border-radius: 50px;
 }
 
@@ -36,21 +35,21 @@
 
 .competitiveOverview {
   height: 50%;
-  background-color: #384B6C;
+  background-color: #1E2533;
   padding: 30px;
   border-radius: 50px;
 }
 
 .achievements {
   height: 50%;
-  background-color: #384B6C;
+  background-color: #1E2533;
   padding: 30px;
   border-radius: 50px;
 }
 
 .lastMatch {
   width: 30%;
-  background-color: #384B6C;
+  background-color: #1E2533;
   padding: 30px;
   border-radius: 50px;
 }

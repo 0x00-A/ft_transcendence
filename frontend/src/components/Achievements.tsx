@@ -5,7 +5,7 @@ import css from './Achievements.module.css';
 
 const achievementsData = [
   { title: "Bronze", image: "/icons/pngegg.png", progress: 60 },
-  { title: "Silver", image: "/icons/pngegg.png", progress: 80 },
+  { title: "Silver", image: "/icons/bronze.png", progress: 80 },
   { title: "Gold", image: "/icons/pngegg.png", progress: 50 },
   { title: "Platinum", image: "/icons/pngegg.png", progress: 40 },
   { title: "Diamond", image: "/icons/pngegg.png", progress: 70 },
