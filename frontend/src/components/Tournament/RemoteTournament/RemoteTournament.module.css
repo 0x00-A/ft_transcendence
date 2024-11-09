@@ -10,7 +10,7 @@
   height: calc(100vh - 116px);
   border-radius: 10px;
   min-height: 600px;
-
+  position: relative;
 }
 html {
   font-size: 1rem;
@@ -231,4 +231,11 @@ body {
 
 .infoList>.item>.text {
     display: inline-block
+}
+
+
+.participant {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

@@ -8,6 +8,7 @@ import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import { getToken } from '../../../utils/getToken';
 import { useParams } from 'react-router-dom';
 import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
+import ReturnBack from '../components/ReturnBack/ReturnBack';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -17,7 +18,14 @@ const pW = 20;
 const pH = 80;
 const paddleSpeed = 2;
 
-const RemoteGame: React.FC<{ game_address: string; requestRemoteGame:() => void; setState: React.Dispatch<React.SetStateAction<string>>}> = ({ game_address,requestRemoteGame, setState }) => {
+interface GameProps { game_address: string;
+                     requestRemoteGame?:() => void;
+                    // setState: React.Dispatch<React.SetStateAction<string>>;
+                    onReturn: (()=>void);
+                    isMatchTournament?: boolean;
+                  }
+
+const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}, onReturn, isMatchTournament = false }) => {
   // const { game_address } = useParams();
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
@@ -258,7 +266,7 @@ const RemoteGame: React.FC<{ game_address: string; requestRemoteGame:() => void;
     setRestart((s) => !s);
   };
   const handleMainMenu = () => {
-    setState('')
+    onReturn();
     // setCurrentScreen('mode');
     // setIsGameOver(false);
   };
@@ -302,11 +310,12 @@ const RemoteGame: React.FC<{ game_address: string; requestRemoteGame:() => void;
               isWinner={isWinner}
               handleRetry={handleRetry}
               handleMainMenu={handleMainMenu}
-              secondAction={'Go Back'}
+              isMatchTournament={isMatchTournament}
             />
           )}
         </div>
       )}
+      <ReturnBack onClick={onReturn} />
     </div>
   );
 };

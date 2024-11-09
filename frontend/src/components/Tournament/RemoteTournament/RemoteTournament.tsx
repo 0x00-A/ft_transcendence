@@ -4,6 +4,8 @@ import { useGetData } from '../../../api/apiHooks';
 import RemoteGame from '../../Game/RemoteGame/RemoteGame';
 import TournamentHeader from '../components/TournamentHeader/TournamentHeader';
 import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
+import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
+import CheckBox from '../../Game/CkeckBox/CheckBox';
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
   return (
@@ -22,6 +24,8 @@ const Match = ({
   status,
   winnerOfMatch1 = null,
   winnerOfMatch2 = null,
+  opponentReady,
+  isReady,
 }: {
   player1: string;
   player2: string;
@@ -31,6 +35,8 @@ const Match = ({
   status: string;
   winnerOfMatch1?: string | null;
   winnerOfMatch2?: string | null;
+  opponentReady: boolean;
+  isReady:boolean;
 }) => {
   return (
     <div className={css.matchup}>
@@ -39,16 +45,19 @@ const Match = ({
           className={`${css.participant} ${winner && winner === player1 ? css.winner : ''}`}
         >
           <span>{player1 || winnerOfMatch1 || 'TBD'}</span>
+          {(currentUser === player1) && (isReady ? <CheckBox checked={true} /> : <CheckBox />)}
+          {(currentUser !== player1) && (opponentReady ? <CheckBox checked={true} /> : <CheckBox />)}
         </div>
         <div
           className={`${css.participant} ${winner && winner === player2 ? css.winner : ''}`}
         >
           <span>{player2 || winnerOfMatch2 || 'TBD'}</span>
+          {(currentUser === player2) && (isReady ? <CheckBox checked={true} /> : <CheckBox />)}
+          {(currentUser !== player2) && (opponentReady ? <CheckBox checked={true} /> : <CheckBox />)}
         </div>
       </div>
       {(currentUser === player1 || currentUser === player2) &&
-        status == 'waiting' && <IconLabelButtons onClick={onClick} />}
-      <div></div>
+        status == 'waiting' && !isReady && <IconLabelButtons onClick={onClick} />}
     </div>
   );
 };
@@ -81,6 +90,8 @@ const RemoteTournament = ({
   matchAddress,
   setTournamentStatus,
   ws,
+  onReturn,
+  opponentReady,
 }: {
   tournamentStat: any;
   user: string;
@@ -88,6 +99,8 @@ const RemoteTournament = ({
   matchAddress: string | null;
   setTournamentStatus: React.Dispatch<React.SetStateAction<string>>;
   ws: WebSocket | null;
+  onReturn: ()=>void;
+  opponentReady: boolean;
 }) => {
   const [rounds, setRounds] = useState<Rounds>(tournamentStat.rounds);
   const [winnerOfMatch1, setWinnerOfMatch1] = useState<string | null>(
@@ -97,6 +110,7 @@ const RemoteTournament = ({
     rounds[1][1]?.winner
   );
   const [showWinner, setShowWinner] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     setRounds(tournamentStat.rounds);
@@ -108,6 +122,7 @@ const RemoteTournament = ({
   console.log(tournamentStat);
 
   const playerReady = (match_id: number) => {
+    setIsReady(true);
     ws?.send(
       JSON.stringify({
         event: 'player_ready',
@@ -122,14 +137,15 @@ const RemoteTournament = ({
     }
   };
 
+  const handleReturn = () => {
+    setTournamentStatus('')
+  }
+
   if (tournamentStatus === 'match_started') {
     if (matchAddress)
       return (
         <>
-          <button onClick={() => setTournamentStatus('match_ended')}>
-            Go Back
-          </button>
-          <RemoteGame game_address={matchAddress} />
+          <RemoteGame isMatchTournament={true} onReturn={handleReturn} game_address={matchAddress} />
         </>
       );
   }
@@ -149,6 +165,8 @@ const RemoteTournament = ({
                   status={rounds[1][0]?.status}
                   currentUser={user}
                   onClick={() => playerReady(rounds[1][0].match_id)}
+                  opponentReady={opponentReady}
+                  isReady={isReady}
                 />
                 <Match
                   player1={rounds[1][1]?.player1}
@@ -157,6 +175,8 @@ const RemoteTournament = ({
                   status={rounds[1][1]?.status}
                   currentUser={user}
                   onClick={() => playerReady(rounds[1][1].match_id)}
+                  opponentReady={opponentReady}
+                  isReady={isReady}
                 />
               </div>
               <Connector />
@@ -175,6 +195,8 @@ const RemoteTournament = ({
                   status={rounds[2][0]?.status}
                   currentUser={user}
                   onClick={() => playerReady(rounds[2][0].match_id)}
+                  opponentReady={opponentReady}
+                  isReady={isReady}
                 />
               </div>
             </div>
@@ -207,6 +229,15 @@ const RemoteTournament = ({
           setShowWinner={setShowWinner}
         />
       )}
+      <ReturnBack onClick={() => {
+          setIsReady(false);
+          ws?.send(
+          JSON.stringify({
+            event: 'player_unready',
+            // match_id: match_id,
+          })
+        );
+        onReturn()}} />
     </div>
   );
 };
