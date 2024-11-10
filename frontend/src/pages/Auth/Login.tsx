@@ -1,17 +1,22 @@
-import AuthHeader from './components/AuthHeader';
-import UserIcon from "./assets/userIcon.svg";
-import PassIcon from "./assets/passIcon.svg";
-import ExternAuth from './components/ExternAuth';
-import css from './AuthForm.module.css';
+// React
 import { useNavigate } from 'react-router-dom';
-import useLogin from './hooks/useLogin';
-import { useAuth } from '../../contexts/AuthContext';
 import { useEffect } from 'react';
+// Hooks
+import useLogin from '../../hooks/auth/useLogin';
+// Contexts
+import { useAuth } from '../../contexts/AuthContext';
+// Styles
+import css from './AuthForm.module.css';
+import UserIcon from "../../assets/userIcon.svg";
+import PassIcon from "../../assets/passIcon.svg";
+
+
 
 interface LoginFormData {
   username: string;
   password: string;
 }
+
 
 const Login = ({onSetAuthStat}) => {
 
@@ -36,27 +41,23 @@ const Login = ({onSetAuthStat}) => {
   };
 
   return (
-    <>
-      <AuthHeader title="Welcome back" description=""/>
-        <form className={css.entryArea} onSubmit={ handleSubmit(handleLogin) }>
-          <div className={css.inputContainer}>
-            <img src={UserIcon} alt="X" />
-            <input type="text" required placeholder="username" {...register('username')}/>
-            {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
-          </div>
-          <div className={css.inputContainer}>
-            <img src={PassIcon} alt="X" />
-            <input type="password" required placeholder="password" {...register('password')}/>
-            {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
-          </div>
-          {errors.root && <span className={css.loginError}>{errors.root.message}</span>}
-          <p>Forgot password?</p>
-          <button type="submit" className={css.authBtn}>
-            Sign in
-          </button>
-        </form>
-        <ExternAuth />
-    </>
+      <form className={css.entryArea} onSubmit={ handleSubmit(handleLogin) }>
+        <div className={css.inputContainer}>
+          <img src={UserIcon} alt="X" />
+          <input type="text" required placeholder="username" {...register('username')}/>
+          {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
+        </div>
+        <div className={css.inputContainer}>
+          <img src={PassIcon} alt="X" />
+          <input type="password" required placeholder="password" {...register('password')}/>
+          {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
+        </div>
+        {errors.root && <span className={css.loginError}>{errors.root.message}</span>}
+        <p>Forgot password?</p>
+        <button type="submit" className={css.authBtn}>
+          Sign in
+        </button>
+      </form>
   )
 }
 

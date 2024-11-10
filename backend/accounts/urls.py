@@ -23,7 +23,6 @@ from .views import BlockedUsersView
 from .views import BlockUserView
 from .views import UnblockUserView
 from .views import SuggestedConnectionsView
-from .views import RefreshToken
 from .views import ConfirmOauth2Login
 from .views import ProfileApiView
 
@@ -34,6 +33,7 @@ urlpatterns = [
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
     path('auth/logout/', LogoutView.as_view()),
+    path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
 
     # path('auth/refresh_token/', RefreshToken.as_view()),
     path('oauth2/verify_login', ConfirmOauth2Login.as_view()),

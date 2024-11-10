@@ -43,6 +43,7 @@ import getWebSocketUrl from './utils/getWebSocketUrl';
 import Oauth2Callback from './pages/Auth/Oauth2Callback';
 // import Signup from './pages/Auth/Signup';
 
+
 function App() {
   return (
     <Router>
@@ -56,6 +57,7 @@ function App() {
 }
 
 function AppContent() {
+
   const onlineSocketRef = useRef<WebSocket | null>(null);
 
   const showSidebarRoutes = [
