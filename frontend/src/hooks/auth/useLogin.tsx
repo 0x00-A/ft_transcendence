@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import apiClient from "../../../api/apiClient";
+import apiClient from "../../api/apiClient";
 
 
 interface LoginData {

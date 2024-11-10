@@ -28,12 +28,13 @@ User = get_user_model()
 
 class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
-        print('----scope----', scope)
         headers = dict(scope['headers'])
 
         cookie = headers.get(b'cookie', b'').decode('utf-8')
-        cookies = SimpleCookie(cookie)
-        access_token = cookies.get('access_token').value
+        cookies = SimpleCookie()
+        cookies.load(cookie)
+        access_token = cookies.get('access_token')
+        access_token = access_token.value if access_token else None
         # refresh_token = cookies.get('refresh_token').value
         if access_token:
             try:

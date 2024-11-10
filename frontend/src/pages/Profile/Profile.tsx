@@ -43,9 +43,9 @@ const Profile = () => {
   // if (isLoading) return <div>Loading...</div>
   // if (isError) return <div>Error: {error.message}</div>
 
-  // useEffect(() => {
-  //   console.log('--data--', data);
-  // }, [isSuccess])
+  useEffect(() => {
+    console.log('--data--', data);
+  }, [isSuccess, data])
 
 
   // const ListFriends = friendsList.map((friend) => (

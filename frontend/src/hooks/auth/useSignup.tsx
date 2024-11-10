@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { error } from 'console';
-import { getApiUrl } from '../../../utils/getApiUrl';
+import { getApiUrl } from '../../utils/getApiUrl';
 
 interface SignupFormData {
   username: string;

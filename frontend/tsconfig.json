@@ -8,9 +8,10 @@
       "path": "./tsconfig.node.json"
     }
   ],
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react"
-  }
+    "compilerOptions": {
+      "baseUrl": "src",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "jsx": "react"
+    }
 }
