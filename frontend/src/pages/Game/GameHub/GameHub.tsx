@@ -228,10 +228,6 @@ const GameHub = () => {
     }
   };
 
-  const showToast = () => {
-    // toast('This is a top-center notification!', {});
-    toast('This is a top-center notification!', {});
-  };
 
   const handleReturn = () => {
     setState('');
@@ -329,7 +325,7 @@ const GameHub = () => {
                         setTournamentStatus(tournament.status);
                         setShowTournamentView(true);
                     }}>
-                        <div className={styles.tournamentName}>
+                        {/* <div className={styles.tournamentName}>
                             <p>Name: <span>{tournament.name}</span></p>
                         </div>
                         <div className={styles.tournamentStatus}>
@@ -340,7 +336,19 @@ const GameHub = () => {
                         </div>
                         <div className={styles.tournamentDate}>
                             <p>Date: <span>{tournament.created_at}</span></p>
-                        </div>
+                        </div> */}
+                        {/* <div key={tournament.id}
+                          className="flex items-center justify-between p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors cursor-pointer"
+                        >
+                        </div> */}
+                          <div>
+                            <h3 className={styles.tournamentName}>{tournament.name}</h3>
+                            <p className={styles.tournamentPlayerCount}>Players: {tournament.players}</p>
+                          </div>
+                          <div className={styles.rightAligned}>
+                            <p className={styles.tournamentStatus}>Status: {tournament.status}</p>
+                            <p className={styles.tournamentDate}>Started: {tournament.created_at}</p>
+                          </div>
                     </div>
                 ))}
                     {!userTournamentsError && !userTournamentsIsLoading && !userTournaments?.length && (

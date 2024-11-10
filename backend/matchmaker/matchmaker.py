@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 
 # from .global_vars import GlobalData
 
+
 class Matchmaker:
 
     connected_clients = {}
@@ -63,7 +64,7 @@ class Matchmaker:
         # Send the game address to both players
         message = {
             'event': 'game_address',
-            'message': 'Game successfully created. Join via:',
+            'message': 'Game successfully created',
             'game_address': game_address,
         }
         await cls.send_message_to_client(player1_id, message)
@@ -79,7 +80,7 @@ class Matchmaker:
         #     return
         if await Tournament.objects.filter(players__id=creator_id).exclude(status='ended').aexists():
             message = {'event': 'error',
-                       'message': 'Cannot create more tournaments'}
+                       'message': 'You can\'t create a new tournament until your current tournament ends.'}
             await cls.send_message_to_client(creator_id, message)
             return
 
