@@ -2,11 +2,11 @@ import React from 'react';
 import css from './Leaderboard.module.css';
 
 const leaderboardData = [
-  { rank: 1, name: 'essam', games: 586, winRate: '70%', loseRate: '30%', score: 635, avatar: 'https://picsum.photos/200' },
-  { rank: 2, name: 'rel-sima', games: 586, winRate: '65%', loseRate: '35%', score: 635, avatar: 'https://picsum.photos/201' },
-  { rank: 3, name: 'rel-sima', games: 586, winRate: '65%', loseRate: '35%', score: 635, avatar: 'https://picsum.photos/202' },
-  { rank: 4, name: 'rel-sima', games: 586, winRate: '65%', loseRate: '35%', score: 635, avatar: 'https://picsum.photos/203' },
-  { rank: 5, name: 'rel-sima', games: 586, winRate: '65%', loseRate: '35%', score: 635, avatar: 'https://picsum.photos/204' },
+  { rank: 1, name: 'essam', games: 586, winRate: '70%', loseRate: '30%', score: 6305, avatar: 'https://picsum.photos/200' },
+  { rank: 2, name: 'rel-sima', games: 586, winRate: '65%', loseRate: '35%', score: 1135, avatar: 'https://picsum.photos/201' },
+  { rank: 3, name: 'nel-baz', games: 586, winRate: '53%', loseRate: '35%', score: 935, avatar: 'https://picsum.photos/202' },
+  { rank: 4, name: 'aigounad', games: 586, winRate: '40%', loseRate: '35%', score: 835, avatar: 'https://picsum.photos/203' },
+  { rank: 5, name: 'ezz-ghba', games: 586, winRate: '30%', loseRate: '35%', score: 535, avatar: 'https://picsum.photos/204' },
   // Repeat similar items to match the layout shown in your screenshot
 ];
 

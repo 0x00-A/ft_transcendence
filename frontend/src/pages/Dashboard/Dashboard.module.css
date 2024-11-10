@@ -20,10 +20,11 @@
 }
 
 
-.leaderboard {
-  height: 30%;
+.other {
+  height: 20%;
   background-color: #1E2533;
-  border-radius: 50px;
+  padding: 30px;
+  border-radius: 30px;
 }
 
 .mainContent {
@@ -37,19 +38,31 @@
   height: 50%;
   background-color: #1E2533;
   padding: 30px;
-  border-radius: 50px;
+  border-radius: 30px;
 }
 
 .achievements {
   height: 50%;
   background-color: #1E2533;
   padding: 30px;
-  border-radius: 50px;
+  border-radius: 30px;
 }
 
-.lastMatch {
+.lastSection {
   width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+/* .friends {
+  height: 50%;
   background-color: #1E2533;
   padding: 30px;
-  border-radius: 50px;
+  border-radius: 30px;
+} */
+.lastMatch {
+  height: 50%;
+  background-color: #1E2533;
+  padding: 30px;
+  border-radius: 30px;
 }

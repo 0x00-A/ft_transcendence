@@ -10,7 +10,6 @@
     height: 100%;
   }
   
-  /* Rest of your existing styles remain the same */
   .buttons {
     display: flex;
     gap: 0.8rem;
@@ -103,18 +102,15 @@
     font-weight: bold;
     color: #F8F3E3;
     font-size: 2rem;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     position: relative;
   }
   
   .statBoxWin {
-    background: linear-gradient(90deg, rgba(39, 127, 129, 0.50) 0%, rgba(51, 90, 114, 0.50) 23%, rgba(51, 90, 114, 0.50) 38.5%, rgba(39, 59, 77, 0.46) 64.5%, rgba(30, 37, 51, 0.44) 100%);
-    /* background: linear-gradient(90deg, rgba(39, 127, 129, 0.50) 0%, rgba(51, 90, 114, 0.50) 23%, rgba(51, 90, 114, 0.50) 38.5%, rgba(56, 75, 108, 0.44) 82.59%); */
+    background: linear-gradient(90deg, rgba(190, 158, 93, 0.89) 2.5%, rgba(155, 136, 94, 0.82) 27%, rgba(102, 103, 95, 0.72) 73.5%, rgba(30, 37, 51, 0.44) 100%);
   }
   
   .statBoxLose {
     background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(30, 37, 51, 0.50) 100%);
-    /* background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(56, 75, 108, 0.50) 100%); */
   }
   
   .statBoxWin:before {
@@ -124,7 +120,7 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background-color: #17A98C;
+    background-color: #F1C324;
   }
   
   .statBoxLose:before {
