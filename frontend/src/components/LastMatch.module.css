@@ -1,6 +1,6 @@
 .lastMatchContainer {
     height: 50%;
-    background-color: #101828;
+    background-color: #1E2533;
     border-radius: 30px;
     padding: 30px;
     color: #F8F3E3;
@@ -89,8 +89,6 @@
   
   .yellow {
     background: linear-gradient(90deg, #1E2533 0%, rgba(69, 78, 79, 0.82) 39.5%, rgba(107, 119, 108, 0.64) 59.5%, rgba(177, 156, 100, 0.82) 95.5%);
-    /* background: linear-gradient(90deg, rgba(51, 90, 114, 0.50) 0%, rgba(107, 119, 108, 0.64) 37.5%, rgba(148, 141, 103, 0.75) 74.5%, rgba(177, 156, 100, 0.82) 95.5%); */
-
   }
 
   .green::after {
@@ -102,8 +100,8 @@
   }
   
   .avatar {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
   }
   
