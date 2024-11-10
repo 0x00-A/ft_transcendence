@@ -1,5 +1,6 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import styles from './CompetitiveOverview.module.css';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -9,35 +10,46 @@ const WinRateDoughnut = () => {
     datasets: [
       {
         data: [76, 24],
-        backgroundColor: ['#F8C25C', '#D9D9D9'],
+        backgroundColor: ['#F8C25C', 'rgba(217, 217, 217, 0.2)'],
         borderWidth: 0,
-        hoverOffset: 2,
+        borderRadius: 5,
+        hoverOffset: 4,
       },
     ],
   };
 
   const options = {
-    cutout: '75%', 
+    cutout: '75%',
+    rotation: -90,
+    circumference: 360,
+    maintainAspectRatio: false,
+    animation: {
+      animateRotate: true,
+      animateScale: true,
+    },
     plugins: {
-      tooltip: { enabled: false },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: (context) => {
+            return `${context.raw}%`;
+          },
+        },
+      },
+      legend: {
+        display: false,
+      },
     },
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <Doughnut data={data} options={options} />
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%', // Adjusted to 50%
-          left: '50%', // Adjusted to 50%
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-        }}
-      >
-        <span style={{ color: '#F8F3E3' }}>Win Rate</span>
-        <br />
-        <span style={{fontWeight: 'bold', color: '#F8F3E3' }}>76%</span>
+    <div className={styles.doughnutContainer}>
+      <div className={styles.doughnutChart}>
+        <Doughnut data={data} options={options} />
+        <div className={styles.doughnutLabel}>
+          <span className={styles.winRateLabel}>Win Rate</span>
+          <span className={styles.winRateValue}>76%</span>
+        </div>
       </div>
     </div>
   );
