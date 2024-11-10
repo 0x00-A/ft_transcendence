@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
+import Loading from './Loading';
+import NoFound from './NoFound';
+import axios from 'axios';
+
 
 interface FriendProfile {
   avatar: string;
@@ -19,7 +23,7 @@ const AllFriends: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const { data: friendsData, isLoading, error } = useGetData<Friend[]>('friends');
+  const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
 
   const filteredFriends = friendsData
     ? friendsData.filter((friend) =>
@@ -32,6 +36,24 @@ const AllFriends: React.FC = () => {
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
+
+  const handleBlock = async (username : string) => {
+    try {
+      await axios.post(
+        `http://localhost:8000/api/block/${username}/`,
+        null,
+        {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+        }
+      );
+      console.log(`Blocked user: ${username}`);
+      // Optionally refetch friends list or update state to remove blocked friend from UI
+      refetch(); // Fetch updated friends list after blocking
+    } catch (error) {
+      console.error('Error blocking user:', error);
+    }
+  };
+
 
   return (
     <div className={css.allFriends}>
@@ -48,9 +70,10 @@ const AllFriends: React.FC = () => {
         />
       </div>
 
+      
       <div className={css.friendList}>
         {isLoading ? (
-          <p>Loading friends...</p>
+          <Loading /> 
         ) : error ? (
           <p>Error loading friends</p>
         ) : filteredFriends.length > 0 ? (
@@ -78,11 +101,17 @@ const AllFriends: React.FC = () => {
                 </button>
                 <button className={css.actionButton}>Invite</button>
                 <button className={css.actionButton}>View Profile</button>
+                <button
+                  className={css.actionButton}
+                  onClick={() => handleBlock(friend.username)}
+                >
+                  Block</button>
               </div>
             </div>
+            
           ))
         ) : (
-          <p>No friends found</p>
+          <NoFound />
         )}
       </div>
     </div>

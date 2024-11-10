@@ -1,0 +1,150 @@
+.lastMatchContainer {
+    height: 50%;
+    background-color: #1E2533;
+    border-radius: 30px;
+    padding: 30px;
+    color: #F8F3E3;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .containerBody {
+    height: 100%;
+    display: flex;
+  }
+  .containerList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .line {
+    width: 2px;
+    height: 100%;
+    background-color: #B0B9D0;
+    position: relative;
+  }
+
+  .line::after {
+    content: '';
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    background-color: red;
+    top: 7px;
+    right: -3px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .header h3 {
+    font-size: 2rem;
+  }
+  
+  .viewMore {
+    font-size: 1.2rem;
+    color: #B0B9D0;
+    text-decoration: none;
+  }
+  
+  .weekLabel {
+    font-size: 1.5rem;
+    color: #F8F3E3;
+    opacity: 0.7;
+    margin-bottom: 10px;
+    margin-left: 10px;
+  }
+  
+  .matchList {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+  }
+  
+  .matchItem {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    position: relative;
+    gap: 1rem;
+  }
+  
+  .matchItem::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 5px;
+    right: 0;
+  }
+  
+  .green {
+    background: linear-gradient(90deg, #1E2533 1%, rgba(76, 64, 79, 0.78) 47.5%, rgba(137, 99, 115, 0.50) 75%, rgba(218, 107, 117, 0.50) 98%);
+  }
+  
+  .yellow {
+    background: linear-gradient(90deg, #1E2533 0%, rgba(69, 78, 79, 0.82) 39.5%, rgba(107, 119, 108, 0.64) 59.5%, rgba(177, 156, 100, 0.82) 95.5%);
+  }
+
+  .green::after {
+    background-color: #FF2047;
+  }
+  
+  .yellow::after {
+    background-color: #FFB800;
+  }
+  
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+  
+  .matchInfo {
+    flex-grow: 1;
+  }
+  
+  .name {
+    display: block;
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+  
+  .date {
+    display: block;
+    font-size: 1rem;
+    color: #B0B9D0;
+  }
+  
+  .score {
+    flex-grow: 1;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #F8F3E3;
+  }
+  
+  .pointsContainer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #33425E;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .points {
+    color: #ffb902;
+  }
+  
+  .pointsContainer img {
+    width: 10px;
+    height: 10px;
+  }
+  

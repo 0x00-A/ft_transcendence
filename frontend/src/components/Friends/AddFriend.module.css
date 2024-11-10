@@ -3,7 +3,8 @@
   height: 100%;
   color: var(--text-color);
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #6c757d #394056;
 }
@@ -19,7 +20,7 @@
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  transition: opacity 0.5s ease; 
+  transition: opacity 0.5s ease;
 }
 
 .results {
@@ -30,19 +31,20 @@
   margin-top: 30px;
   flex-grow: 1;
   overflow-y: auto;
-  /* background-color: #394056; */
 }
 
 .title {
   font-size: 32px;
   margin-bottom: 20px;
   font-weight: 500;
+  color: #d0d8e7;
 }
 
 .searchContainer {
   position: relative;
   margin-bottom: 20px;
-  width: 300px;
+  width: 100%;
+  max-width: 400px;
 }
 
 .searchIcon {
@@ -63,6 +65,7 @@
   border-radius: 15px;
   color: #283245;
   font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .searchInput::placeholder {
@@ -70,17 +73,22 @@
 }
 
 .searchInput:focus {
-  background-color: #d0d8e7;
+  background-color: #c7d2e3;
+  outline: none;
 }
-
 
 .userCard {
   display: flex;
   align-items: center;
   background-color: #394056;
   border-radius: 10px;
-  margin-bottom: 10px;
   padding: 10px;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.userCard:hover {
+  transform: scale(1.01);
+  /* background-color: #4a5868; */
 }
 
 .avatar {
@@ -97,20 +105,16 @@
 .username {
   display: block;
   font-weight: bold;
+  color: #f8f3e3;
 }
 
-.fullName {
+.fullName,
+.level {
   display: block;
   font-size: 13px;
   color: #b9bbbe;
 }
 
-.level{
-  display: block;
-  font-size: 13px;
-  color: #b9bbbe;
-
-}
 .actions {
   display: flex;
   gap: 10px;
@@ -118,30 +122,24 @@
 
 .viewProfileBtn,
 .addFriendBtn {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
-  transition: background-color 0.2s;
-}
-
-.viewProfileBtn {
-  background-color: #d0d8e7;
-  color: #1e2533;
-}
-
-.viewProfileBtn:hover {
-  background-color: #9faabe;
-}
-
-.addFriendBtn {
-  background-color: #445c85;
+  transition: background-color 0.2s, transform 0.2s;
+  background-color: #1e2533;
   color: #f8f3e3;
 }
 
+
+.viewProfileBtn:hover {
+  background-color: #5774a1;
+  transform: scale(1.05);
+}
+
 .addFriendBtn:hover {
-  background-color: #334462;
+  background-color: #5774a1;
+  transform: scale(1.05);
 }
 
 .emptyState {
@@ -156,7 +154,7 @@
 }
 
 .emptyStateCenter img {
-  width: 400px;
+  width: 300px;
 }
 
 .emptyStateText {
@@ -170,20 +168,102 @@
 }
 
 .notFoundText {
-  font-size: 30px;
+  font-size: 24px;
   color: #72767d;
 }
 
-.topPlayers {
-  margin-top: 50px;
+.suggestedConnections {
+  margin-top: 30px;
   padding: 15px;
-  background-color: #283245;
-  border-radius: 10px;
+  background-color: #283245; 
+  border-radius: 10px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-.topPlayersTitle {
-  font-size: 24px;
-  font-weight: 500;
-  margin-bottom: 15px;
+.suggestedConnectionsTitle {
+  font-size: 24px; 
+  font-weight: 500; 
+  margin-bottom: 15px; 
   color: #d0d8e7;
+}
+
+.friendsBtn,
+.pendingBtn {
+  padding: 6px 12px; 
+  border-radius: 8px; 
+  font-size: 13px;
+  cursor: pointer;
+  color: #f8f3e3;
+}
+
+.friendsBtn {
+  background-color: #5774a1; 
+}
+
+.pendingBtn {
+  background-color: #5774a1; 
+}
+
+
+.acceptBtn,
+.rejectBtn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s, transform 0.2s;
+  background-color: #1e2533;
+  color: #f8f3e3;
+}
+.rejectBtn:hover {
+  background-color: #e53935; 
+  transform: scale(1.05);
+}
+
+.acceptBtn:hover {
+  background-color: #45a049; 
+  transform: scale(1.05); 
+}
+
+
+.friendsStatus {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #f8f3e3; 
+  background-color: #1e2533; 
+  display: inline-block; 
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+  transition: background-color 0.3s; 
+}
+
+.friendsStatus:hover {
+  background-color: #1E2538;
+  transform: scale(1.05);        
+}
+
+
+.cancelBtn {
+  background-color: #e74c3c;      
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s, transform 0.2s;
+  color: #f8f3e3; 
+  background-color: #1e2533; 
+}
+
+.cancelBtn:hover {
+  background-color: #c0392b;    
+  transform: scale(1.05);        
+}
+
+.cancelBtn:focus {
+  outline: none;            
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); 
 }

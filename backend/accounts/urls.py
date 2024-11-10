@@ -21,6 +21,7 @@ from .views import AllUsersView
 from .views import BlockedUsersView
 from .views import BlockUserView
 from .views import UnblockUserView
+from .views import SuggestedConnectionsView
 # from .views import ProfileApiView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
@@ -41,6 +42,7 @@ urlpatterns = [
 
     path('users/', AllUsersView.as_view(), name='all_users'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
+    path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),
     path('friend-request/send/<str:username>/', SendFriendRequestView.as_view(), name='send-friend-request'),
     path('friend-request/accept/<str:username>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
@@ -52,5 +54,4 @@ urlpatterns = [
     path('block/<str:username>/', BlockUserView.as_view(), name='block_user'),
     path('unblock/<str:username>/', UnblockUserView.as_view(), name='unblock_user'),
     path('blocked/', BlockedUsersView.as_view(), name='blocked_users'),
-
 ]

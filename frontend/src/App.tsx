@@ -36,6 +36,7 @@ import { useEffect, useRef } from 'react';
 import { getToken } from './utils/getToken';
 import getWebSocketUrl from './utils/getWebSocketUrl';
 import Game from './pages/Game/Game';
+import Oauth2Callback from './pages/Auth/Oauth2Callback';
 // import Signup from './pages/Auth/Signup';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -136,6 +137,8 @@ function AppContent() {
             path="/auth"
             element={!isLoggedIn ? <Auth /> : <Navigate to={'/'} />}
           />
+          <Route path="/auth" element={ !isLoggedIn ? <Auth /> : <Navigate to={'/'} />} />
+          <Route path="/oauth2/callback" element={<Oauth2Callback />} />
           <Route path="*" element={<PageNotFound />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />

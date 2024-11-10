@@ -1,0 +1,228 @@
+.title {
+  font-weight: bold;
+  color: #F8F3E3;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.8rem;
+  height: 35px;
+}
+
+.button {
+  padding: 0 1rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.singleGame {
+  background-color: #445C85;
+  color: #F8F3E3;
+}
+
+.tournamentsGame {
+  background-color: #1e1e2f;
+  color: #F8F3E3;
+}
+
+.scores {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  height: 45px;
+  margin-top: 10px;
+}
+
+.scoreBox, .totalGamesBox {
+  flex: 1;
+  /* background: linear-gradient(90deg, #7892B8 0%, #586F92 31%, #415577 100%); */
+  background: linear-gradient(90deg, #384B6C 0%, #2B374D 63%, #1E2533 100%);
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: #F5F5F5;
+  font-size: 2rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoreBox:before, .totalGamesBox:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #EAEDF4;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3.8rem;
+}
+
+.winRate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 45%;
+}
+
+.winsLosses {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 55%;
+}
+
+.statBoxWin, .statBoxLose {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: #F8F3E3;
+  font-size: 2rem;
+  position: relative;
+}
+
+.statBoxWin {
+  background: linear-gradient(90deg, rgba(190, 158, 93, 0.89) 2.5%, rgba(155, 136, 94, 0.82) 27%, rgba(102, 103, 95, 0.72) 73.5%, rgba(30, 37, 51, 0.44) 100%);
+}
+
+.statBoxLose {
+  background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(30, 37, 51, 0.50) 100%);
+}
+
+.statBoxWin:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #F1C324;
+}
+
+.statBoxLose:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #FF2047;
+}
+
+.wins, .losses {
+  color: #F8F3E3;
+}
+
+.scoreNum {
+  display: inline-block;
+  margin-right: 1.3rem;
+}
+
+.personalBests {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.bestCard {
+  flex: 1;
+  background: linear-gradient(90deg, #384B6C 0%, #2B374D 63%, #1E2533 100%);
+  padding: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.bestCard:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #EAEDF4;
+}
+
+.bestIcon {
+  color: #F8C25C;
+}
+
+.bestInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.bestLabel {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #F8F3E3;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.bestValue {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #F8F3E3;
+}
+
+.doughnutContainer {
+  position: relative;
+  width: 100%;
+  height: 150px;
+}
+
+.doughnutChart {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.doughnutLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.winRateLabel {
+  display: block;
+  color: #F8F3E3;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.winRateValue {
+  display: block;
+  color: #F8F3E3;
+  font-size: 1.4rem;
+  font-weight: 
+}
