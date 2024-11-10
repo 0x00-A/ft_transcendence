@@ -8,6 +8,7 @@ emailAlready exist
 - [x] handle if player ready and returned (send unready player to server)
 - [ ] display names
 - [ ] alert users expected for next match
+- [ ] leave tournament option if in waiting state
 
 ## Game
 

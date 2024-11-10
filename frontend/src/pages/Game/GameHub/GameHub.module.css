@@ -52,7 +52,7 @@
   justify-content: center;
   border-radius: 0 0 10px 10px;
   padding: 0 20px 20px 20px;
-
+  /* border: 1px solid #3b82f6 ; */
 }
 
 .innerContent {
@@ -83,6 +83,7 @@
   overflow: hidden;
   height: 100%;
   width: 100%;
+  /* border: 1px solid red ; */
 
 }
 
@@ -92,7 +93,7 @@
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 2rem;
   color: #ffffff;
 }
 
@@ -174,7 +175,7 @@
 }
 
 .cardHoveredMode {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .cardContentMode {
@@ -254,10 +255,11 @@
     justify-content: space-between;
     align-items: center;
     background-color: #374151;
-    padding: 16px;
-    border-radius: 10px;
     min-width: 400px;
     cursor: pointer;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
 }
 
 .tournamentItem:not(:last-child) {
@@ -266,6 +268,28 @@
 
 .tournamentItem span {
   font-size: 1.2rem;
+}
+
+
+.rightAligned {
+  text-align: right;
+}
+
+.tournamentDate, .tournamentPlayerCount {
+  color: #9ca3af;
+}
+.tournamentStatus {
+  text-transform: capitalize;
+  color: #f87171;
+  font-size: 1.8rem;
+
+}
+.tournamentName {
+  font-weight: 600;
+  color: black;
+  text-transform: capitalize;
+  font-size: 2rem;
+
 }
 
 .loaderWrapper, .errorWrapper {
