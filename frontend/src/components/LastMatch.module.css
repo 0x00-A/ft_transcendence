@@ -9,6 +9,7 @@
   }
 
   .containerBody {
+    height: 100%;
     display: flex;
   }
   .containerList {
@@ -21,6 +22,17 @@
     width: 2px;
     height: 100%;
     background-color: #B0B9D0;
+    position: relative;
+  }
+
+  .line::after {
+    content: '';
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    background-color: red;
+    top: 7px;
+    right: -3px;
   }
   .header {
     display: flex;
@@ -40,7 +52,7 @@
   }
   
   .weekLabel {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #F8F3E3;
     opacity: 0.7;
     margin-bottom: 10px;
