@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from rest_framework import renderers
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -29,17 +30,15 @@ class TournamentViewSet(viewsets.ReadOnlyModelViewSet):
         context['user_id'] = self.request.user.id
         return context
 
-    @action(detail=False, methods=['get'], url_path='user-tournament')
-    def get_user_tournament(self, request):
-        # Retrieve the tournament where the current user is a player and it hasn't ended
-        tournament = Tournament.objects.exclude(
-            status='ended').filter(players=request.user).first()
+    @action(detail=False, methods=['get'], url_path='user-tournaments')
+    def get_user_tournaments(self, request):
+        tournaments = Tournament.objects.filter(players=request.user)
 
-        if tournament:
-            serializer = self.get_serializer(tournament)
-            return Response(serializer.data)
+        if tournaments.exists():
+            serializer = self.get_serializer(tournaments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response({"detail": "No active tournament found."})
+            return Response({"detail": "No tournaments found."}, status=status.HTTP_404_NOT_FOUND)
 
     # def perform_create(self, serializer):
     #     # Automatically set the creator as the user making the request

@@ -5,4 +5,11 @@ emailAlready exist
 
 ## Tournament
 
-- [ ] handle if player ready and returned (send unready player to server)
+- [x] handle if player ready and returned (send unready player to server)
+- [ ] display names
+- [ ] alert users expected for next match
+
+## Game
+
+- [ ] player icons 1 vs 1
+- [ ] invite friend to play through chat interface

@@ -25,4 +25,7 @@ export interface Tournament {
   number_of_players: number;
   user_id: number;
   players: number[];
+  status: string;
+  winner: User;
+  // state: {};
 }

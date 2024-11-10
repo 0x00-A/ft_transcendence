@@ -99,12 +99,15 @@ body {
 
 .round .winners > div.connector .line {
   border-bottom: thin solid #c0c0c8;
-  height: 6rem;
+  height: 9rem;
+
+
 }
 
 .round .winners > div.connector .merger {
   position: relative;
-  height: 12rem;
+  height: 18rem;
+
 }
 
 .round .winners > div.connector .merger:before,
@@ -134,7 +137,7 @@ body {
 }
 
 .round.quarterfinals .winners .matchups .matchup:not(:last-child) {
-  margin-bottom: 2rem;
+  margin-bottom: 80px;
 }
 
 /* Finals-specific styling */
@@ -142,20 +145,20 @@ body {
   margin-bottom: 14rem;
 }
 
-.round.finals .winners .connector .merger {
-  height: 24rem;
+/* .round.finals .winners .connector .merger {
+  height: 18rem;
 }
 
 .round.finals .winners .connector .line {
-  height: 12rem;
-}
+  height: 9rem;
+} */
 
 
 .matchup {
   position: relative;
 }
 
-.playButton {
+/* .playButton {
   position: absolute;
   top: 0;
   left: 100%;
@@ -177,13 +180,14 @@ body {
   min-width: 30px;
   color: var(--color-brand--1);
   border: var(--color-brand--1);
-}
+} */
 
 .tournamentBody {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 60px;
   flex-wrap: nowrap;
+  /* margin-bottom: 80px; */
 }
 
 

@@ -6,6 +6,7 @@ import TournamentHeader from '../components/TournamentHeader/TournamentHeader';
 import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import CheckBox from '../../Game/CkeckBox/CheckBox';
+import ReadyButton from '../components/ReadyButton/ReadyButton';
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
   return (
@@ -16,48 +17,57 @@ function IconLabelButtons({ onClick }: { onClick: () => void }) {
 }
 
 const Match = ({
-  player1,
-  player2,
-  winner,
+  // player1,
+  // player2,
+  // winner,
+  // status,
   currentUser,
-  onClick,
-  status,
+  handleReady,
+  handleCancel,
   winnerOfMatch1 = null,
   winnerOfMatch2 = null,
   opponentReady,
   isReady,
+  setIsReady,
+  match,
 }: {
-  player1: string;
-  player2: string;
-  winner: string;
-  onClick: () => void;
+  // player1: string;
+  // player2: string;
+  // winner: string;
+  // status: string;
+  handleReady: () => void;
+  handleCancel: () => void;
   currentUser: string;
-  status: string;
   winnerOfMatch1?: string | null;
   winnerOfMatch2?: string | null;
   opponentReady: boolean;
   isReady:boolean;
+  setIsReady:React.Dispatch<React.SetStateAction<boolean>>;
+  match: Match;
 }) => {
   return (
     <div className={css.matchup}>
       <div className={css.participants}>
         <div
-          className={`${css.participant} ${winner && winner === player1 ? css.winner : ''}`}
+          className={`${css.participant} ${match?.winner && match?.winner === match?.player1 ? css?.winner : ''}`}
         >
-          <span>{player1 || winnerOfMatch1 || 'TBD'}</span>
-          {(currentUser === player1) && (isReady ? <CheckBox checked={true} /> : <CheckBox />)}
-          {(currentUser !== player1) && (opponentReady ? <CheckBox checked={true} /> : <CheckBox />)}
+          <span>{match?.player1 || winnerOfMatch1 || 'TBD'}</span>
+          {(currentUser === match?.player1) && !match?.winner && (isReady ? <CheckBox checked={true} /> : <CheckBox />)}
+          {(currentUser === match?.player2) && !match?.winner && (opponentReady ? <CheckBox checked={true} /> : <CheckBox />)}
         </div>
         <div
-          className={`${css.participant} ${winner && winner === player2 ? css.winner : ''}`}
+          className={`${css.participant} ${match?.winner && match?.winner === match?.player2 ? css?.winner : ''}`}
         >
-          <span>{player2 || winnerOfMatch2 || 'TBD'}</span>
-          {(currentUser === player2) && (isReady ? <CheckBox checked={true} /> : <CheckBox />)}
-          {(currentUser !== player2) && (opponentReady ? <CheckBox checked={true} /> : <CheckBox />)}
+          <span>{match?.player2 || winnerOfMatch2 || 'TBD'}</span>
+          {(currentUser === match?.player2) && !match?.winner && (isReady ? <CheckBox checked={true} /> : <CheckBox />)}
+          {(currentUser === match?.player1) && !match?.winner && (opponentReady ? <CheckBox checked={true} /> : <CheckBox />)}
         </div>
       </div>
-      {(currentUser === player1 || currentUser === player2) &&
-        status == 'waiting' && !isReady && <IconLabelButtons onClick={onClick} />}
+      {(currentUser === match?.player1 || currentUser === match?.player2) &&
+        match?.status == 'waiting' &&
+        <ReadyButton isReady={isReady} setIsReady={setIsReady} handleCancel={handleCancel} handleReady={handleReady} />
+        }
+
     </div>
   );
 };
@@ -77,6 +87,8 @@ type Match = {
   winner: string;
   match_id: number;
   status: string;
+  player1_ready: boolean;
+  player2_ready: boolean;
 };
 
 type Rounds = {
@@ -92,6 +104,7 @@ const RemoteTournament = ({
   ws,
   onReturn,
   opponentReady,
+  setOpponentReady,
 }: {
   tournamentStat: any;
   user: string;
@@ -101,6 +114,7 @@ const RemoteTournament = ({
   ws: WebSocket | null;
   onReturn: ()=>void;
   opponentReady: boolean;
+  setOpponentReady: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [rounds, setRounds] = useState<Rounds>(tournamentStat.rounds);
   const [winnerOfMatch1, setWinnerOfMatch1] = useState<string | null>(
@@ -117,18 +131,61 @@ const RemoteTournament = ({
     setWinnerOfMatch1(tournamentStat.rounds[1][0]?.winner);
     setWinnerOfMatch2(tournamentStat.rounds[1][1]?.winner);
     if (tournamentStat.winner) setShowWinner(true);
+    // for (const round in tournamentStat.rounds) {
+    //   for (const match of tournamentStat.rounds[round]) {
+    //     if (match.player1 === user || match.player2 === user) {
+    //       if (match.player1 === user) {
+    //         setIsReady(match.player1_ready)
+    //         setOpponentReady(match.player2_ready)
+    //       }
+    //       if (match.player2 === user) {
+    //         setIsReady(match.player2_ready)
+    //         setOpponentReady(match.player1_ready)
+    //       }
+    //     }
+    //   }
+    // }
   }, [tournamentStat]);
+
+
+  useEffect(() => {
+    return () => {
+      console.log('INNNNNN');
+
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        console.log('>>>>>>>> Setting player unready');
+        ws?.send(
+            JSON.stringify({
+              event: 'player_unready',
+            })
+            );
+        }
+      }
+  }, [])
 
   console.log(tournamentStat);
 
   const playerReady = (match_id: number) => {
-    setIsReady(true);
+    // setIsReady(true);
+  if (ws && ws.readyState === WebSocket.OPEN) {
     ws?.send(
       JSON.stringify({
-        event: 'player_ready',
-        match_id: match_id,
-      })
-    );
+          event: 'player_ready',
+          match_id: match_id,
+        })
+      );
+    }
+  };
+  const playerUnready = (match_id: number) => {
+    // setIsReady(true);
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws?.send(
+      JSON.stringify({
+          event: 'player_unready',
+          match_id: match_id,
+        })
+      );
+    }
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -139,9 +196,12 @@ const RemoteTournament = ({
 
   const handleReturn = () => {
     setTournamentStatus('')
+    setIsReady(false);
+    setOpponentReady(false);
   }
 
   if (tournamentStatus === 'match_started') {
+
     if (matchAddress)
       return (
         <>
@@ -159,24 +219,22 @@ const RemoteTournament = ({
             <div className={css.winners}>
               <div className={css.matchups}>
                 <Match
-                  player1={rounds[1][0]?.player1}
-                  player2={rounds[1][0]?.player2}
-                  winner={rounds[1][0]?.winner}
-                  status={rounds[1][0]?.status}
+                  match={rounds[1][0]}
                   currentUser={user}
-                  onClick={() => playerReady(rounds[1][0].match_id)}
+                  handleReady={() => playerReady(rounds[1][0].match_id)}
+                  handleCancel={() => playerUnready(rounds[1][0].match_id)}
                   opponentReady={opponentReady}
                   isReady={isReady}
+                  setIsReady={setIsReady}
                 />
                 <Match
-                  player1={rounds[1][1]?.player1}
-                  player2={rounds[1][1]?.player2}
-                  winner={rounds[1][1]?.winner}
-                  status={rounds[1][1]?.status}
+                  match={rounds[1][1]}
                   currentUser={user}
-                  onClick={() => playerReady(rounds[1][1].match_id)}
+                  handleReady={() => playerReady(rounds[1][1].match_id)}
+                  handleCancel={() => playerUnready(rounds[1][1].match_id)}
                   opponentReady={opponentReady}
                   isReady={isReady}
+                  setIsReady={setIsReady}
                 />
               </div>
               <Connector />
@@ -187,16 +245,15 @@ const RemoteTournament = ({
             <div className={css.winners}>
               <div className={css.matchups}>
                 <Match
-                  player1={rounds[2][0]?.player1}
-                  player2={rounds[2][0]?.player2}
                   winnerOfMatch1={winnerOfMatch1}
                   winnerOfMatch2={winnerOfMatch2}
-                  winner={rounds[2][0]?.winner}
-                  status={rounds[2][0]?.status}
+                  match={rounds[2][0]}
                   currentUser={user}
-                  onClick={() => playerReady(rounds[2][0].match_id)}
+                  handleReady={() => playerReady(rounds[2][0].match_id)}
+                  handleCancel={() => playerUnready(rounds[2][0].match_id)}
                   opponentReady={opponentReady}
                   isReady={isReady}
+                  setIsReady={setIsReady}
                 />
               </div>
             </div>

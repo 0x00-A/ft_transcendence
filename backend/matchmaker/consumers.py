@@ -34,6 +34,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         # Unregister the client when disconnected
         # if self.player_id:
         # Matchmaker.games_queue.remove(self.player_id)
+        await Matchmaker.handle_player_unready(self.player_id)
         await Matchmaker.unregister_client(self.player_id)
 
     async def receive(self, text_data):
@@ -49,6 +50,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await Matchmaker.join_tournament(self.player_id, tournament_id)
         if event == 'player_ready':
             await Matchmaker.handle_player_ready(self.player_id, data.get('match_id'))
+        if event == 'player_unready':
+            await Matchmaker.handle_player_unready(self.player_id)
         # Handle other events similarly...
 
     # This method sends a message to the WebSocket client
