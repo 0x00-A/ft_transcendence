@@ -171,6 +171,30 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
 
+            try:
+                match = await sync_to_async(Match.objects.get)(
+                    (Q(player1_id=player_id) | Q(
+                        player2_id=player_id)) & ~Q(status='ended')
+                )
+                if match.player1_id == player_id and match.player2_ready:
+                    # match.player1_ready = False
+                    message = {
+                        'event': 'opponent_ready',
+                        "message": "Your oponent is ready!",
+                    }
+                    await cls.send_message_to_client(match.player1_id, message)
+                elif match.player2_id == player_id and match.player1_ready:
+                    match.player2_ready = False
+                    message = {
+                        'event': 'opponent_ready',
+                        "message": "Your oponent is ready!",
+                    }
+                    await cls.send_message_to_client(match.player2_id, message)
+
+                await sync_to_async(match.save)()
+            except Match.DoesNotExist:
+                return None
+
     @classmethod
     async def find_two_players(cls):
         if len(cls.games_queue) >= 2:
@@ -249,6 +273,33 @@ class Matchmaker:
         players = await sync_to_async(list)(tournament.players.all())
         for player in players:
             await cls.send_message_to_client(player.id, message)
+
+    @classmethod
+    async def handle_player_unready(cls, player_id):
+
+        try:
+            match = await sync_to_async(Match.objects.get)(
+                (Q(player1_id=player_id) | Q(
+                    player2_id=player_id)) & ~Q(status='ended')
+            )
+            if match.player1_id == player_id:
+                match.player1_ready = False
+                message = {
+                    'event': 'opponent_unready',
+                    "message": "Your oponent is not ready!",
+                }
+                await cls.send_message_to_client(match.player2_id, message)
+            elif match.player2_id == player_id:
+                match.player2_ready = False
+                message = {
+                    'event': 'opponent_unready',
+                    "message": "Your oponent is not ready!",
+                }
+                await cls.send_message_to_client(match.player1_id, message)
+
+            await sync_to_async(match.save)()
+        except Match.DoesNotExist:
+            return None
 
     @classmethod
     async def handle_player_ready(cls, player_id, match_id):

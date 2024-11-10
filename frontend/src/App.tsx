@@ -37,12 +37,28 @@ import { getToken } from './utils/getToken';
 import getWebSocketUrl from './utils/getWebSocketUrl';
 import Game from './pages/Game/Game';
 // import Signup from './pages/Auth/Signup';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import GameHub from './pages/Game/GameHub/GameHub';
 
 function App() {
   return (
     <Router>
       <LoadingBarProvider>
         <AuthProvider>
+            <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              hideProgressBar={true}
+              newestOnTop={true}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              // theme="colored"
+              toastClassName='toastStyle'
+          />
           <AppContent />
         </AuthProvider>
       </LoadingBarProvider>
@@ -57,6 +73,8 @@ function AppContent() {
     '/',
     '/game',
     '/game/',
+    '/gamehub',
+    '/gamehub/',
     '/game/tournament',
     '/game/tournament/',
     '/game/local',
@@ -122,9 +140,10 @@ function AppContent() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/game" element={<Game />} />
+            <Route path="/gamehub" element={<GameHub />} />
             <Route path="/test" element={<Test />} />
             <Route path="/game/local" element={<LocalGame />} />
-            <Route path="/game/tournament" element={<Tournament />} />
+            {/* <Route path="/game/tournament" element={<Tournament />} /> */}
             <Route path="/game/chat" element={<GameChat />} />
             <Route path="/game/chat/:room" element={<Room />} />
             <Route path="/chat" element={<Chat />} />

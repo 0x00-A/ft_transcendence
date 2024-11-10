@@ -26,8 +26,8 @@ const Menus = [
   },
   {
     id: 2,
-    path: '/game',
-    title: 'Game',
+    path: '/gamehub',
+    title: 'GameHub',
     icon: (
       <IoGameControllerOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
     ),

@@ -84,7 +84,9 @@ class Tournament(models.Model):
                     'p1_score': match.p1_score,
                     'p2_score': match.p2_score,
                     'status': match.status,
-                    'winner': match.winner.username if match.winner else None
+                    'winner': match.winner.username if match.winner else None,
+                    'player1_ready': match.player1_ready,
+                    'player2_ready': match.player2_ready,
                 })
             else:
                 rounds["2"].append({
@@ -94,7 +96,9 @@ class Tournament(models.Model):
                     'p1_score': match.p1_score,
                     'p2_score': match.p2_score,
                     'status': match.status,
-                    'winner': match.winner.username if match.winner else None
+                    'winner': match.winner.username if match.winner else None,
+                    'player1_ready': match.player1_ready,
+                    'player2_ready': match.player2_ready,
                 })
 
         tournament_state = {

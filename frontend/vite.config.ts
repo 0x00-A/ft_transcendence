@@ -10,6 +10,9 @@
 // })
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path"
+
+
 
 export default defineConfig({
  base: "/",
@@ -24,7 +27,13 @@ export default defineConfig({
   host: true,
   origin: "http://0.0.0.0:3000",
  },
+    resolve: {
+    alias: {
+        "@": path.resolve(__dirname, "./src"),
+    },
+    },
 });
+
 
 // base: Base public path when served in development or production.
 // plugins: Array of plugins to use.
