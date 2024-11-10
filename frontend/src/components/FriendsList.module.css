@@ -1,0 +1,104 @@
+.friendsContainer {
+    height: 50%;
+    background-color: #1E2533;
+    border-radius: 30px;
+    padding: 30px;
+    color: #F8F3E3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .header h3 {
+    font-size: 2rem;
+  }
+  
+  .viewMore {
+    font-size: 1.5rem;
+    color: #B0B9D0;
+    text-decoration: none;
+  }
+  
+  .friendList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px
+  }
+  
+  .friendItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+  
+  .friendInfo {
+    flex-grow: 1;
+  }
+  
+  .name {
+    display: block;
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+  
+  .level {
+    display: block;
+    font-size: 1rem;
+    color: #B0B9D0;
+  }
+  
+  .status {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #F8F3E3;
+    background-color: #283245;
+  }
+  
+  .status span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: transparent;
+  }
+
+  .status.online  span {
+    background-color: #17A98C;
+  }
+  
+  .status.offline span {
+    background-color: #D0D8E7;
+  }
+  
+  .inviteButton {
+    background-color: #2E3A5A;
+    color: #F8F3E3;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .inviteButton:hover {
+    background-color: #374863;
+  }
+  

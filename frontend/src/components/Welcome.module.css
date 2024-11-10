@@ -2,7 +2,7 @@
   height: 30%;
   background-color: #1E2533;
   padding-right: 2.5rem;
-  border-radius: 50px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -45,11 +45,12 @@
 
 .description {
   font-size: 1.5rem;
+  font-weight: 100;
 }
 .description span{
   color: #FF2047;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.7rem;
 }
 
 .playButton {
