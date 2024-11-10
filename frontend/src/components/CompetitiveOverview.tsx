@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './CompetitiveOverview.module.css';
 import WinRateDoughnut from './WinRateDoughnut';
 
+// Simple SVG icons as components
 const IconCrown = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
@@ -25,12 +26,18 @@ const IconAward = () => (
 const CompetitiveOverview = () => {
   const [activeGameMode, setActiveGameMode] = useState('single');
   
-  // const personalBests = [
-  //   { label: 'Highest Score', value: '835', Icon: IconCrown },
-  //   { label: 'Longest Streak', value: '18', Icon: IconTrending },
-  //   // { label: 'Best Rank', value: '#4', Icon: IconAward },
-  // ];
+  const personalBests = [
+    { label: 'Highest Score', value: '835', Icon: IconCrown },
+    { label: 'Longest Streak', value: '12', Icon: IconTrending },
+    { label: 'Best Rank', value: '#4', Icon: IconAward },
+  ];
 
+  const rankHistory = [
+    { rank: 8, date: 'Jan' },
+    { rank: 7, date: 'Feb' },
+    { rank: 5, date: 'Mar' },
+    { rank: 4, date: 'Apr' },
+  ];
 
   return (
     <div className={styles.container}>
@@ -51,8 +58,6 @@ const CompetitiveOverview = () => {
         </button>
       </div>
 
-
-
       <div className={styles.scores}>
         <div className={styles.totalGamesBox}>
           <span className={styles.totalGames}>
@@ -65,46 +70,34 @@ const CompetitiveOverview = () => {
           </span>
         </div>
       </div>
-      <div className={styles.bestCard}>
-            <div className={styles.bestIcon}> <IconAward /> </div>
-            <div className={styles.bestInfo}>
-              <span className={styles.bestLabel}>Rank</span>
-              <span className={styles.bestValue}>#5</span>
+
+      <div className={styles.personalBests}>
+        {personalBests.map((best, index) => (
+          <div key={index} className={styles.bestCard}>
+            <div className={styles.bestIcon}>
+              <best.Icon />
             </div>
+            <div className={styles.bestInfo}>
+              <span className={styles.bestLabel}>{best.label}</span>
+              <span className={styles.bestValue}>{best.value}</span>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* <div className={styles.winsLosses}>
+      <div className={styles.stats}>
+        <div className={styles.winRate}>
+          <WinRateDoughnut />
+        </div>
+        <div className={styles.winsLosses}>
           <div className={styles.statBoxWin}>
             <span className={styles.wins}>555 WINS</span>
           </div>
           <div className={styles.statBoxLose}>
             <span className={styles.losses}>555 LOSE</span>
           </div>
-        </div> */}
-
-
-      <div className={styles.stats}>
-        <div className={styles.winRate}>
-          <WinRateDoughnut />
         </div>
-        <div className={styles.personalBests}>
-          <div className={styles.bestCard}>
-            <div className={styles.bestIcon}> <IconCrown /> </div>
-            <div className={styles.bestInfo}>
-              <span className={styles.bestLabel}>Highest Score</span>
-              <span className={styles.bestValue}>835</span>
-            </div>
-          </div>
-          <div className={styles.bestCard}>
-            <div className={styles.bestIcon}> <IconTrending /> </div>
-            <div className={styles.bestInfo}>
-              <span className={styles.bestLabel}>Longest Streak</span>
-              <span className={styles.bestValue}>5</span>
-            </div>
-          </div>
       </div>
-      </div>
-
     </div>
   );
 };

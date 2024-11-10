@@ -11,9 +11,7 @@ const WinRateDoughnut = () => {
       {
         data: [76, 24],
         backgroundColor: ['#F8C25C', 'rgba(217, 217, 217, 0.2)'],
-        borderWidth: 0,
-        borderRadius: 5,
-        hoverOffset: 4,
+        hoverOffset: 2,
       },
     ],
   };
