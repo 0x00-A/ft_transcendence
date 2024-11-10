@@ -17,6 +17,7 @@ from .friendRequest import UserFriendsView
 from .friendRequest import SentFriendRequestsView
 from .friendRequest import CancelFriendRequestView
 from .friendRequest import OnlineFriendsView
+from .friendRequest import SuggestedConnectionsView
 from .profile import AllUsersView
 from .BlockRelationship import BlockUserView
 from .BlockRelationship import BlockedUsersView

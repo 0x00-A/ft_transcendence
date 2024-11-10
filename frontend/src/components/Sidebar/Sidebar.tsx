@@ -46,7 +46,7 @@ export default function Sidebar() {
       setOpen(false);
     }
     if (window.innerWidth > SIDEBAR_RESIZE_WIDTH) {
-      setOpen(true);
+      setOpen(false);
     }
   };
 

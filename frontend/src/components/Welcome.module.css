@@ -1,0 +1,73 @@
+.welcome {
+  height: 30%;
+  background-color: #1E2533;
+  padding-right: 2.5rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.playerImage {
+  height: 100%;
+  width: 40%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.playerImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+.playerImage img:hover {
+  filter: drop-shadow(
+    0px 0px 4px red
+  );
+}
+
+.content {
+  height: 100%;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0 40px 40px;
+}
+
+.title {
+  color: #F8F3E3;
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 1.5rem;
+  font-weight: 100;
+}
+.description span{
+  color: #FF2047;
+  font-weight: bold;
+  font-size: 1.7rem;
+}
+
+.playButton {
+  margin: 0 auto;
+  width: 130px;
+  background-color: #384B6C;
+  color: #F8F3E3;
+  border: none;
+  padding: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+
+.playButton:hover {
+  background-color: #2a2a3f;
+}

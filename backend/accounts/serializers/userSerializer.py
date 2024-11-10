@@ -67,22 +67,27 @@ class UserLoginSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password']
 
-    # def validate(self, attrs):
-    #     try:
-    #         User.objects.get(username=attrs['username'])
-    #     except User.DoesNotExist:
-    #         raise serializers.ValidationError('username not exists!')
-    #     return attrs
+    def validate(self, attrs):
+        try:
+            user = User.objects.get(username=attrs['username'])
+            if (not user.check_password(attrs['password'])):
+                raise serializers.ValidationError(
+                    {'password': 'password not valid'})
+        except User.DoesNotExist:
+            raise serializers.ValidationError(
+                {'username': 'username not exist'})
+        return attrs
 
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
     games = serializers.SerializerMethodField()
+    friend_request_status = serializers.CharField(required=False)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'is_oauth_user',
-                  'first_name', 'last_name', 'profile', 'games']
+                  'first_name', 'last_name', 'profile', 'games', 'friend_request_status']
 
     def get_games(self, obj):
         games_as_player1 = obj.games_as_player1.all()

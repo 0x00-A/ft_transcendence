@@ -11,7 +11,6 @@ from django.contrib.auth import get_user_model
 
 # from .global_vars import GlobalData
 
-
 class Matchmaker:
 
     connected_clients = {}

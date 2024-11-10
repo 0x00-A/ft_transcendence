@@ -1,7 +1,22 @@
 /* Example for AllFriends.module.css */
 .allFriends {
   padding: 20px;
+  height: 100%;
   color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #394056;
+}
+
+.friendList {
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .userInfo {
@@ -12,6 +27,7 @@
   font-size: 32px;
   margin-bottom: 20px;
   font-weight: 500;
+  color: #d0d8e7;
 }
 
 .searchContainer {
@@ -44,17 +60,18 @@
   background-color: #d0d8e7;
 }
 
-.friendList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
 .friendCard {
   display: flex;
   align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  background-color: #394056;
+  border-radius: 10px;
+  padding: 10px;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.friendCard:hover {
+  transform: scale(1.01);
 }
 
 .avatar {
@@ -114,12 +131,11 @@
 
 .actionButton {
   padding: 8px 16px;
-  background-color: #d0d8e7;
-  color: #1e2533;
+  background-color: #1e2533;
+  color: #f8f3e3;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 10px;
   font-weight: 600;
   transition: background-color 0.2s;
 }
@@ -128,3 +144,4 @@
   background-color: #7892b8;
   color: var(--text-color);
 }
+
