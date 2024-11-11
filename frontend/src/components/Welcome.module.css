@@ -14,7 +14,7 @@
   font-weight: bold;
 }
 
-.description {
+/* .description {
   font-size: 1.5rem;
   font-weight: 100;
 }
@@ -22,7 +22,21 @@
   color: #FF2047;
   font-weight: bold;
   font-size: 1.7rem;
+} */
+
+.description {
+  font-size: 1.8rem;
+  font-weight: 400;
 }
+
+.description span {
+  color: #FF2047;
+  font-weight: bold;
+  font-size: 2rem;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+
 
 .playButton {
   margin: 0 auto;
