@@ -131,20 +131,20 @@ const RemoteTournament = ({
     setWinnerOfMatch1(tournamentStat.rounds[1][0]?.winner);
     setWinnerOfMatch2(tournamentStat.rounds[1][1]?.winner);
     if (tournamentStat.winner) setShowWinner(true);
-    // for (const round in tournamentStat.rounds) {
-    //   for (const match of tournamentStat.rounds[round]) {
-    //     if (match.player1 === user || match.player2 === user) {
-    //       if (match.player1 === user) {
-    //         setIsReady(match.player1_ready)
-    //         setOpponentReady(match.player2_ready)
-    //       }
-    //       if (match.player2 === user) {
-    //         setIsReady(match.player2_ready)
-    //         setOpponentReady(match.player1_ready)
-    //       }
-    //     }
-    //   }
-    // }
+    for (const round in tournamentStat.rounds) {
+      for (const match of tournamentStat.rounds[round]) {
+        if (match.player1 === user || match.player2 === user) {
+          if (match.player1 === user) {
+            // setIsReady(match.player1_ready)
+            setOpponentReady(match.player2_ready)
+          }
+          if (match.player2 === user) {
+            // setIsReady(match.player2_ready)
+            setOpponentReady(match.player1_ready)
+          }
+        }
+      }
+    }
   }, [tournamentStat]);
 
 

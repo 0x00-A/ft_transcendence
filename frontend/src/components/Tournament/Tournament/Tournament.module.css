@@ -143,6 +143,11 @@
   border: none;
  padding: 4px;
   border-radius:  0 8px   8px 0;
+  width: 30px;
+  font-size: 12px;
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
 }
 
 .playButton:hover {
@@ -157,7 +162,8 @@
   border: var(--color-brand--1);
 }
 
-
+.verticalText {
+}
 
 .tournamentBody {
   display: flex;
@@ -178,7 +184,7 @@
     background-color: var(--tournament-form-bg);
     touch-action: manipulation;
     /* cursor: none; */
-    border: 2px solid var(--text-color);
+    border: 6px solid var(--text-color);
 }
 
 .canvasDiv {
@@ -357,8 +363,9 @@ box-sizing: border-box;
     position: absolute;
     padding: 10px;
     /* left: 50%; */
-    top: 105%;
+    bottom: -60px;
     border-radius: 10px;
+    background-color: var(--text-color);
 }
 
 

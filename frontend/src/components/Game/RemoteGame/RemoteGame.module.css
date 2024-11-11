@@ -33,7 +33,7 @@
     user-select: none;
     touch-action: manipulation;
     margin: 0 auto;
-    border: 1px solid var(--text-color);
+    border: 6px solid var(--text-color);
 }
 
 #gameCanvas {
@@ -43,7 +43,7 @@
 
     touch-action: manipulation;
     cursor: none;
-    border: 3   px solid lightgray;
+    /* border: 3px solid lightgray; */
 
 }
 

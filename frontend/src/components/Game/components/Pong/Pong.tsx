@@ -370,7 +370,7 @@ const Pong: React.FC<GameProps> = ({
       </div>
       <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
       {paused && <div className={css.pauseDiv}>Paused</div>}
-      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay /> : <FaPause />}</button>
+      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay color='black' /> : <FaPause  color='black' />}</button>
     </div>
   );
 };
