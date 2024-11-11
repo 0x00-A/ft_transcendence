@@ -3,7 +3,8 @@
   /* width: 100vw; */
   display: flex;
   flex-direction: column;
-  background-color: var(--color-game-screen-bg);
+  /* background-color: var(--color-game-screen-bg); */
+  background-color: #1E2533;
   border-radius: 10px;
   /* min-height: 600px; */
   box-shadow:
