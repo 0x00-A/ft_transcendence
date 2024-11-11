@@ -127,12 +127,12 @@ textarea {
   border-radius: 5px;
   background-color: var(--color-light--3);
   transition: all 0.2s;
-} */
+}
 
 input:focus {
   outline: none;
   background-color: #fff;
-}
+} */
 
 ::-webkit-scrollbar {
     width: 14px;

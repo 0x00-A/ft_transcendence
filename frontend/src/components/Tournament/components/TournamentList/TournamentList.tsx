@@ -6,6 +6,7 @@ import { useGetData } from '../../../../api/apiHooks';
 import ArcadeLoader from '../../../Game/components/ArcadeLoader/ArcadeLoader';
 import ErrorMessage from '../../../Game/components/ErrorMessage/ErrorMessage';
 import { Tournament } from '../../../../types/apiTypes';
+import NoTournamentIcon from '@/pages/Game/NoTournament/NoTournamnet';
 
 const TournamentList = ({
   handleJoin,
@@ -86,6 +87,7 @@ const TournamentList = ({
           ))}
         {!error && !isLoading && !tournaments?.length && (
           <div className={css.noTournaments}>
+            <NoTournamentIcon size={58} />
             <p>No tournaments available at the moment.</p>
           </div>
         )}

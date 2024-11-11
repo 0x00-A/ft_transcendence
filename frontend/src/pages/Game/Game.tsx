@@ -1,51 +1,41 @@
+import styles from './Game.module.css';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Shield, Users, Trophy, Globe, ArrowRight, Gamepad2, Key } from 'lucide-react';
+
+
 import { useEffect, useRef, useState } from 'react';
 // import GameMode from './components/GameMode/GameMode';
-import css from './Game.module.css';
-import GameMode from '../../components/Game/components/GameMode/GameMode';
-import { Navigate, useNavigate } from 'react-router-dom';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
-import useWebSocket from '../../hooks/useWebSocket';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
-import { getToken } from '../../utils/getToken';
-import useToken from '../../hooks/useToken';
 import TournamentList from '../../components/Tournament/components/TournamentList/TournamentList';
-import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
 import { useGetData } from '../../api/apiHooks';
 import { Tournament as TournmentType } from '../../types/apiTypes';
-import TournamentCard from '../../components/Tournament/components/TournamentCard/TournamentCard';
 import RemoteTournament from '../../components/Tournament/RemoteTournament/RemoteTournament';
 import CreateTournamentModal from '../../components/Tournament/components/CreateTournamentModal/CreateTournamentModal';
-// import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LocalGame from '../../components/Game/LocalGame/LocalGame';
 import ArcadeLoader from '../../components/Game/components/ArcadeLoader/ArcadeLoader';
 import Tournament from '../../components/Tournament/Tournament/Tournament';
 import { toast } from 'react-toastify';
+import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage';
+import NoTournamentIcon from './NoTournament/NoTournamnet';
 
-
-const Modes = [
-  {
-    id: 0,
-    title: 'local play',
-    description: 'Play locally with a firend or computer',
-  },
-  { id: 1, title: 'remote play', description: 'Compete against other players' },
-  { id: 2, title: 'tournament', description: 'View or create a tournament' },
-  {
-    id: 3,
-    title: 'Local Tournament',
-    description: 'Host a tournament locally',
-  },
-];
-
-type User = [
-  {
-    username: string;
-    id: number;
-  },
-];
+  const Modes = [
+    { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
+    { id: 1, title: 'Remote Game', icon: Globe, description: 'Challenge online' },
+    { id: 2, title: 'Remote Tournament', icon: Trophy, description: 'Create Online tournament' },
+    { id: 3, title: 'Local Tournament', icon: Users, description: 'Local tournament' },
+  ];
 
 const Game = () => {
+      const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [state, setState] = useState('');
   const [gameAdrress, setGameAdrress] = useState(null);
@@ -78,21 +68,22 @@ const Game = () => {
           })
         );
       }
-    refetch();
   };
 
-  const navigate = useNavigate();
+  const refetchData = () => {
+    refetchUserTournaments()
+    refetchTournaments()
+  }
 
-  const token = useToken();
 
-  const { data: tournament, refetch: refetchUserTournament } =
-    useGetData<TournmentType>('matchmaker/tournaments/user-tournament');
+  const { data: userTournaments, isLoading: userTournamentsIsLoading, error: userTournamentsError, refetch: refetchUserTournaments } =
+    useGetData<TournmentType[]>('matchmaker/tournaments/user-tournaments');
 
   const {
     data: tournaments,
     isLoading,
     error,
-    refetch,
+    refetch: refetchTournaments,
   } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
   useEffect(() => {
@@ -107,6 +98,7 @@ const Game = () => {
       };
 
       socket.onmessage = (e) => {
+        refetchData();
         const data = JSON.parse(e.data);
         console.log(data);
 
@@ -199,11 +191,11 @@ const Game = () => {
   };
 
   const requestTournament = () => {
-    if (isInTournament) {
-      console.log('showing tournament view');
-      setShowTournamentView(true);
-      return;
-    }
+    // if (isInTournament) {
+    //   console.log('showing tournament view');
+    //   setShowTournamentView(true);
+    //   return;
+    // }
     setIsModalOpen(true);
     console.log('request tournament');
   };
@@ -216,7 +208,6 @@ const Game = () => {
         tournament_id: tournamentId,
       })
     );
-    refetch();
   };
   const handleView = () => {
     if (isInTournament) {
@@ -226,10 +217,6 @@ const Game = () => {
     }
   };
 
-  const showToast = () => {
-    // toast('This is a top-center notification!', {});
-    toast('This is a top-center notification!', {});
-  };
 
   const handleReturn = () => {
     setState('');
@@ -256,8 +243,8 @@ const Game = () => {
 
   if (state === 'inqueue') {
     return (
-      <div className={css.matchmakingLoaderWrapper}>
-        <ArcadeLoader className={css.matchmakingLoader} />
+      <div className={styles.matchmakingLoaderWrapper}>
+        <ArcadeLoader className={styles.matchmakingLoader} />
       </div>
     );
   }
@@ -283,39 +270,94 @@ const Game = () => {
     );
 
   return (
-    <div className={css.container}>
-      <div className={css.modeSelectDiv}>
-        <div className={css.title}>
-          <p className={css.cornerBorder}>mode</p>
-        </div>
-        <ul className={css.modes}>
-          {Modes.map((m, i) => (
-            <GameMode
-              key={i}
-              onSelect={() => setSelectedMode(m.id)}
-              title={m.title}
-              desc={m.description}
+    <div className={styles.container}>
+      <div className={styles.topContainer}>
+        <div className={styles.left}>
+            {Modes.map((option) => (
+            <Card
+                key={option.id}
+                className={`${styles.item} ${styles.cardMode} ${hoveredOption === option.id ? styles.cardHoveredMode : ''}`}
+                onMouseEnter={() => setHoveredOption(option.id)}
+                onMouseLeave={() => setHoveredOption(null)}
+                onClick={() => setSelectedMode(option.id)}
+
+            >
+                <CardContent className={styles.cardContentMode}>
+                <option.icon className={styles.iconMode} />
+                <CardTitle className={styles.titleMode}>{option.title}</CardTitle>
+                <p className={styles.descriptionMode}>{option.description}</p>
+                <ArrowRight
+                    className={`${styles.arrowIconMode} ${hoveredOption === option.id ? styles.arrowIconHoveredMode : ''}`}
+                />
+                </CardContent>
+            </Card>
+            ))}
+            <CreateTournamentModal
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                onSubmit={handleTournamentSubmit}
             />
-          ))}
-        </ul>
-        <CreateTournamentModal
-          isOpen={isModalOpen}
-          onClose={handleModalClose}
-          onSubmit={handleTournamentSubmit}
-        />
+        </div>
+
+        <div className={styles.right}>
+         <Card className={styles.card}>
+            <CardHeader>
+                <CardTitle className={styles.title}>Joined Tournaments</CardTitle>
+            </CardHeader>
+            <CardContent className={styles.content}>
+                {userTournaments?.map((tournament) => (
+                    <div key={tournament.id} className={styles.tournamentItem} onClick={() => {
+                        setTournamentStat(tournament.state);
+                        setTournamentStatus(tournament.status);
+                        setShowTournamentView(true);
+                    }}>
+                        <div>
+                          <h3 className={styles.tournamentName}>{tournament.name}</h3>
+                          <p className={styles.tournamentPlayerCount}>Players: {tournament.players}</p>
+                        </div>
+                        <div className={styles.rightAligned}>
+                          <p className={styles.tournamentStatus}>Status: {tournament.status}</p>
+                          <p className={styles.tournamentDate}>Started: {tournament.created_at}</p>
+                        </div>
+                    </div>
+                ))}
+                    {!userTournamentsError && !userTournamentsIsLoading && !userTournaments?.length && (
+                    <div className={styles.noTournaments}>
+                        <NoTournamentIcon size={58} />
+                        <p>You havn't joined any tournaments yet!.</p>
+                    </div>
+                    )}
+                    {userTournamentsError && (
+                    <div className={styles.errorWrapper}>
+                        <ErrorMessage />
+                    </div>
+                    )}
+                    {!userTournamentsError && userTournamentsIsLoading && (
+                    <div className={styles.loaderWrapper}>
+                        <ArcadeLoader />
+                    </div>
+                    )}
+            </CardContent>
+        </Card>
+        </div>
       </div>
-      {/* <div className={css.title}>
-        <p className={css.cornerBorder}>Tournaments</p>
+
+      <div className={styles.bottomContainer}>
+         <Card className={styles.bottomCard}>
+            <CardHeader>
+                <CardTitle className={styles.title}>Open Tournaments</CardTitle>
+            </CardHeader>
+            <CardContent className={styles.bottomCardContent}>
+                <TournamentList
+                    handleJoin={handleJoin}
+                    handleView={handleView}
+                    tournaments={tournaments}
+                    error={error}
+                    isLoading={isLoading}
+                ></TournamentList>
+            </CardContent>
+        </Card>
       </div>
-      <div className={css.tournamentsDiv}>
-        <TournamentList
-          handleJoin={handleJoin}
-          handleView={handleView}
-          tournaments={tournaments}
-          error={error}
-          isLoading={isLoading}
-        ></TournamentList>
-      </div> */}
     </div>
   );
 };

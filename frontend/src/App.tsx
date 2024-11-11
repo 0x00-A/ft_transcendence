@@ -23,24 +23,17 @@ import Settings from './pages/Settings/Settings';
 import Sidebar from './components/Sidebar/Sidebar';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
-// import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
 import usePreLoader from './hooks/usePreLoader';
-import LocalGame from './components/Game/LocalGame/LocalGame';
 import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
-import Tournament from './components/Tournament/Tournament/Tournament';
-import Test from './components/Tournament/Tournament/Test';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useEffect, useRef } from 'react';
-import { getToken } from './utils/getToken';
 import getWebSocketUrl from './utils/getWebSocketUrl';
 import Game from './pages/Game/Game';
 import Oauth2Callback from './pages/Auth/Oauth2Callback';
-// import Signup from './pages/Auth/Signup';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import GameHub from './pages/Game/GameHub/GameHub';
 
 
 function App() {
@@ -74,14 +67,14 @@ function AppContent() {
 
   const showSidebarRoutes = [
     '/',
-    '/game',
-    '/game/',
-    '/gamehub',
-    '/gamehub/',
-    '/game/tournament',
-    '/game/tournament/',
-    '/game/local',
-    '/game/local/',
+    '/play',
+    '/play/',
+    // '/gamehub',
+    // '/gamehub/',
+    // '/game/tournament',
+    // '/game/tournament/',
+    // '/game/local',
+    // '/game/local/',
     '/chat',
     '/chat/',
     '/friends',
@@ -141,11 +134,7 @@ function AppContent() {
           <Route path="*" element={<PageNotFound />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/game" element={<Game />} />
-            <Route path="/gamehub" element={<GameHub />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="/game/local" element={<LocalGame />} />
-            {/* <Route path="/game/tournament" element={<Tournament />} /> */}
+            <Route path="/play" element={<Game />} />
             <Route path="/game/chat" element={<GameChat />} />
             <Route path="/game/chat/:room" element={<Room />} />
             <Route path="/chat" element={<Chat />} />

@@ -31,7 +31,7 @@ const CreateTournamentModal = ({
   return (
     <div className={css.modalOverlay}>
       <div className={css.modalContent}>
-        <h2>Create Tournament</h2>
+        <label className={css.label}>Create Tournament</label>
         <input
           type="text"
           placeholder="Enter tournament name"
@@ -39,7 +39,7 @@ const CreateTournamentModal = ({
           onChange={handleInputChange}
           maxLength={15}
         />
-        <button onClick={handleSubmit}>Submit</button>
+        <button className={css.submitButton} onClick={handleSubmit}>Submit</button>
         <button onClick={onClose}>Cancel</button>
       </div>
     </div>
