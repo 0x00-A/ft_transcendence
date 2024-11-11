@@ -6,7 +6,6 @@ interface ProtectedRouteProps {
   redirectPath?: string;
 }
 
-// Redirects to the specified path if not authenticated
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectPath = '/auth',
 }) => {

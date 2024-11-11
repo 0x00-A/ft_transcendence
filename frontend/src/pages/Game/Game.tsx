@@ -96,13 +96,8 @@ const Game = () => {
   } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
   useEffect(() => {
-    const timeout = setTimeout(async () => {
-      const token = await getToken();
-      if (!token) {
-        console.log(`No valid token: ${token}`);
-        return;
-      }
-      const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
+    const timeout = setTimeout(() => {
+      const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
       const socket = new WebSocket(wsUrl);
       ws.current = socket;
 

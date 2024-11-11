@@ -1,12 +1,21 @@
 from django.contrib.auth import authenticate
-from django.shortcuts import redirect
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from accounts.authenticate import CookieJWTAuthentication
 import requests
 from ..serializers import Oauth2UserSerializer
 from ..views.login import get_token_for_user
+
+
+class ConfirmOauth2Login(APIView):
+    authentication_classes = [CookieJWTAuthentication] # This ensures that JWT tokens from cookies are used for authentication.
+    permission_classes = [IsAuthenticated] # This permission class restricts access to authenticated users only. If the token is invalid or missing, DRF will automatically return 401 Unauthorized.
+
+    def get(self, request):
+        return Response({"message": "User is authenticated"}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   createContext,
   useState,
@@ -7,6 +8,8 @@ import {
   Dispatch,
   useEffect,
 } from 'react';
+import apiClient from '../api/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isLoggedIn: boolean | null;
@@ -16,14 +19,47 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const savedStat = localStorage.getItem('isLoggedIn');
-    return savedStat ? JSON.parse(savedStat) : false;
-  });
+  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  //   const savedStat = localStorage.getItem('isLoggedIn');
+  //   return savedStat ? JSON.parse(savedStat) : false;
+  // });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  const logout = async () => {
+      console.log('----logout-----');
+      const response = await apiClient.post('/auth/logout/', {});
+      console.log('----response from interceptors.response-error-------', response);
+      setIsLoggedIn(false);
+      navigate('/auth')
+  }
 
   useEffect(() => {
-    localStorage.setItem('isLoggedIn', isLoggedIn);
-  }, [isLoggedIn]);
+    apiClient.get('auth/confirm_login/')
+    .then((response) => {
+      console.log('----response from interceptors.response-error-------', response);
+      setIsLoggedIn(true);
+    })
+    .catch((error) => {
+      console.log('----error from interceptors.response-error-------', error);
+    });
+
+  }, [isLoggedIn, setIsLoggedIn]);
+
+
+  useEffect(() => {
+    const interceptor = apiClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (isLoggedIn && error.response && error.response.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => axios.interceptors.response.eject(interceptor);
+  }, [logout, isLoggedIn]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>

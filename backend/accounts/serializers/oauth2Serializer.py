@@ -6,10 +6,6 @@ from ..models import Profile
 
 class Oauth2UserSerializer(serializers.ModelSerializer):
 
-    # provider_id = serializers.IntegerField()
-    # provider_name = serializers.CharField()
-    # username = serializers.CharField()
-    # email = serializers.EmailField()
     avatar_link = serializers.CharField()
 
     class Meta:

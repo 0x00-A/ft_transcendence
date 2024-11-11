@@ -1,15 +1,71 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import { getApiUrl } from '../utils/getApiUrl';
-// import jwt_decode from 'jwt-decode';
+// import { API_BASE_URL } from '../config/constants';
 
-export const axiosInstance = axios.create({
-  baseURL: getApiUrl(''),
-  headers: { Authorization: `bearer ${localStorage.getItem('access_token')}` },
-  // headers: {
-  //   'Content-Type': 'application/json',
-  // },
+
+const apiClient = axios.create({
+  baseURL: "http://localhost:8000/api",
+  withCredentials: true,
 });
+
+
+export const getData = async <T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> => {
+  const response: AxiosResponse<T> = await apiClient.get(endpoint, config);
+  return response.data;
+}
+
+export const postData = async <T, D>(endpoint: string, data: D, config?: AxiosRequestConfig): Promise<T> => {
+  const response: AxiosResponse<T> = await apiClient.post(endpoint, data, config);
+  return response.data;
+}
+
+// apiClient.interceptors.request.use(async (config) => {
+//   const access_token = localStorage.getItem('access_token');
+//   if (access_token && isTokenExpired(access_token)) {
+//     const new_token = await refreshAccessToken();
+//     localStorage.setItem('access_token', new_token);
+//     config.headers['Authorization'] = `Bearer ${new_token}`;
+//   }
+//   return config;
+// });
+
+// here handle if a response fron api is 401_UNAUTHORIZED that means the token in note in httpOnly cookies or is expired
+// so you should request api to logout (clear the cookies) and nivaigate to auth page , set user as not logged in
+// const navigate = useNavigate();
+// const {setIsLoggedIn} = useAuth();
+
+// apiClient.interceptors.response.use(
+//   response => {
+//     return response;
+//   },
+//   async error => {
+//     if (error.response && error.response.status === 401) {
+//       console.log('----interceptors-----');
+
+//       confirmLogout()
+//       // const response = await apiClient.post('http://localhost:8000/api/auth/logout/', {}, {withCredentials: true});
+//       // console.log('----response from interceptors.response-error-------', response);
+//       // setIsLoggedIn(false);
+//       // navigate('/auth')
+//     }
+//     return Promise.reject(error)
+//   }
+// )
+
+
+// const refreshAccessToken = async () => {
+//   const navigate = useNavigate()
+//   try {
+//     const response = await axios.post('http://localhost:8000/api/auth/refresh_token/', null, {withCredentials: true})
+//     const newAccessToken = response.data.access_token;
+//     return newAccessToken;
+//   }
+//   catch (error) {
+//     console.error('Refresh token failed: ', error);
+//     navigate('/auth')
+//   }
+// }
+
+export default apiClient;
 
 // interface ApiResponse<T> {
 //   data: T;
@@ -56,51 +112,37 @@ export const axiosInstance = axios.create({
 // };
 
 // Adding a request interceptor
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const token = localStorage.getItem('access_token');
 
-    // if(istokenexpired(token)) {
-    //   refreshAccessToken(localStorage.getItem('refresh_token'))
-    // }
 
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// class APIClient {
+//   static async get<T>(
+//     endpoint: string,
+//     config?: AxiosRequestConfig
+//   ): Promise<T> {
+//     const response: AxiosResponse<T> = await axiosInstance.get(
+//       endpoint,
+//       config
+//     );
+//     return response.data;
+//   }
 
-class APIClient {
-  static async get<T>(
-    endpoint: string,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    const response: AxiosResponse<T> = await axiosInstance.get(
-      endpoint,
-      config
-    );
-    return response.data;
-  }
-
-  static async post<T, D>(
-    endpoint: string,
-    data: D,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    const response: AxiosResponse<T> = await axiosInstance.post(
-      endpoint,
-      data,
-      config
-    );
-    return response.data;
-  }
+//   static async post<T, D>(
+//     endpoint: string,
+//     data: D,
+//     config?: AxiosRequestConfig
+//   ): Promise<T> {
+//     const response: AxiosResponse<T> = await axiosInstance.post(
+//       endpoint,
+//       data,
+//       config
+//     );
+//     return response.data;
+//   }
 
   // You can add more methods (put, delete, patch) if needed, similarly typed.
-}
+// }
 
-export default APIClient;
+// export default APIClient;
 
 // const useAxios = () => {
 //   const { authToken, setUser, setTokens } = useContext(AuthContext);

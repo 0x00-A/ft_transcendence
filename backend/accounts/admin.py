@@ -8,3 +8,4 @@ from .models import FriendRequest
 admin.site.register(User)
 admin.site.register(Profile)
 admin.site.register(FriendRequest)
+# admin.site.register(Game)

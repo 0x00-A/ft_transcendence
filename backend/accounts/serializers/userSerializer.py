@@ -27,10 +27,16 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(str(exc))
         return value
 
-    def validate(self, attrs):
-        if len(attrs['username']) < 4:
+    def validate_username(self, value):
+        if any(ch.isupper() for ch in value):
             raise serializers.ValidationError(
-                {'username': 'Username must be at least 4 characters!'})
+                {'Username must be lowercase!'})
+        if len(value) < 4:
+            raise serializers.ValidationError(
+                {'Username must be at least 4 characters!'})
+        return value
+
+    def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
@@ -81,18 +87,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
-    games = serializers.SerializerMethodField()
     friend_request_status = serializers.CharField(required=False)
+    # games = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_oauth_user',
-                  'first_name', 'last_name', 'profile', 'games', 'friend_request_status']
+        fields = ['id', 'username',  'profile', 'friend_request_status']
 
-    def get_games(self, obj):
-        games_as_player1 = obj.games_as_player1.all()
-        games_as_player2 = obj.games_as_player2.all()
+    # def get_games(self, obj):
+    #     games_as_player1 = obj.games_as_player1.all()
+    #     games_as_player2 = obj.games_as_player2.all()
 
-        all_games = games_as_player1 | games_as_player2
+    #     all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
+    #     last_5_games = all_games[:5]
 
-        return GameSerializer(all_games, many=True).data
+    #     return GameSerializer(last_5_games, many=True).data

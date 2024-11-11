@@ -80,9 +80,8 @@ const GameHub = () => {
 
   const navigate = useNavigate();
 
-  const token = useToken();
 
-  const { data: userTournaments, userTournamentsIsLoading, userTournamentsError, refetch: refetchUserTournaments } =
+  const { data: userTournaments, isLoading: userTournamentsIsLoading, error: userTournamentsError, refetch: refetchUserTournaments } =
     useGetData<TournmentType[]>('matchmaker/tournaments/user-tournaments');
 
   const {
@@ -93,13 +92,8 @@ const GameHub = () => {
   } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
   useEffect(() => {
-    const timeout = setTimeout(async () => {
-      const token = await getToken();
-      if (!token) {
-        console.log(`No valid token: ${token}`);
-        return;
-      }
-      const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
+    const timeout = setTimeout(() => {
+      const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
       const socket = new WebSocket(wsUrl);
       ws.current = socket;
 

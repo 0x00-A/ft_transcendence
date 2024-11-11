@@ -42,6 +42,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GameHub from './pages/Game/GameHub/GameHub';
 
+
 function App() {
   return (
     <Router>
@@ -68,6 +69,7 @@ function App() {
 }
 
 function AppContent() {
+
   const onlineSocketRef = useRef<WebSocket | null>(null);
 
   const showSidebarRoutes = [
@@ -104,16 +106,13 @@ function AppContent() {
   // }
 
   useEffect(() => {
-    (async () => {
-      const token = await getToken();
-      if (!token) {
-        console.log(`No valid token: ${token}`);
-        return;
-      }
-      const wsUrl = `${getWebSocketUrl('online-status/')}?token=${token}`;
+      const wsUrl = `${getWebSocketUrl('online-status/')}`;
       const socket = new WebSocket(wsUrl);
       onlineSocketRef.current = socket;
-    })();
+
+      socket!.onmessage = (() => {console.log('Socket online');
+      })
+
 
     return () => {
       if (onlineSocketRef.current) {
