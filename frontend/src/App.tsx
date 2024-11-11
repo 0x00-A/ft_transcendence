@@ -92,16 +92,13 @@ function AppContent() {
   // }
 
   useEffect(() => {
-    (async () => {
-        // const token = await getToken();
-        // if (!token) {
-        //   console.log(`No valid token: ${token}`);
-        //   return;
-        // }
-        const wsUrl = `${getWebSocketUrl('online-status/')}`;
-        const socket = new WebSocket(wsUrl);
-        onlineSocketRef.current = socket;
-    })()
+      const wsUrl = `${getWebSocketUrl('online-status/')}`;
+      const socket = new WebSocket(wsUrl);
+      onlineSocketRef.current = socket;
+
+      socket!.onmessage = (() => {console.log('Socket online');
+      })
+
 
     return () => {
         if (onlineSocketRef.current) {

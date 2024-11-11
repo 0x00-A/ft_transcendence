@@ -8,7 +8,7 @@ import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import useWebSocket from '../../hooks/useWebSocket';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import { getToken } from '../../utils/getToken';
-import useToken from '../../hooks/useToken';
+// import useToken from '../../hooks/useToken';
 import TournamentList from './TournamentList';
 import FlexContainer from '../../components/Layout/FlexContainer/FlexContainer';
 import { useGetData } from '../../api/apiHooks';
@@ -107,7 +107,7 @@ const ModeSelection = () => {
     if (modeId === 1) navigate(`/game/remote/${gameId}`); // Navigate to the game URL with mode and ID
   };
 
-  const token = useToken();
+  // const token = useToken();
 
   const {
     data: tournaments,
@@ -117,13 +117,8 @@ const ModeSelection = () => {
   } = useGetData<Tournament[]>('matchmaker/tournaments');
 
   useEffect(() => {
-    const timeout = setTimeout(async () => {
-      const token = await getToken();
-      if (!token) {
-        console.log(`No valid token: ${token}`);
-        return;
-      }
-      const wsUrl = `${getWebSocketUrl('matchmaking/')}?token=${token}`;
+    const timeout = setTimeout( () => {
+      const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
       const socket = new WebSocket(wsUrl);
       ws.current = socket;
 
