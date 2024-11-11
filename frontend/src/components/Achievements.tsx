@@ -26,23 +26,25 @@ const Achievements = () => {
   return (
       <>
         <h3>Achievements</h3>
-        <div className={css.achievementsCarousel}>
-          <FaArrowLeft onClick={handlePrev} className={css.arrow} />
+        <div className={css.achievementsContainr}>
+          <div className={css.achievementsCarousel}>
+            <FaArrowLeft onClick={handlePrev} className={css.arrow} />
 
-          <div className={css.achievementCard}>
-            <h4 className={css.achievementTitle}>{achievementsData[currentIndex].title}</h4>
-            <img src={achievementsData[currentIndex].image} alt={achievementsData[currentIndex].title} className={css.achievementImage} />
+            <div className={css.achievementCard}>
+              <h4 className={css.achievementTitle}>{achievementsData[currentIndex].title}</h4>
+              <img src={achievementsData[currentIndex].image} alt={achievementsData[currentIndex].title} className={css.achievementImage} />
 
-            <div className={css.progressBar}>
-              <div className={css.progressFill} style={{ width: `${achievementsData[currentIndex].progress}%` }}></div>
-              <span className={css.progressText}>
-                {currentIndex + 1}/{achievementsData.length}
-              </span>
+              <div className={css.progressBar}>
+                <div className={css.progressFill} style={{ width: `${achievementsData[currentIndex].progress}%` }}></div>
+                <span className={css.progressText}>
+                  {currentIndex + 1}/{achievementsData.length}
+                </span>
+              </div>
             </div>
+            <FaArrowRight onClick={handleNext} className={css.arrow} />
           </div>
-
-          <FaArrowRight onClick={handleNext} className={css.arrow} />
         </div>
+        
       </>
   );
 };
