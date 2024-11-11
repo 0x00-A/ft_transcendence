@@ -78,15 +78,10 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   }, [sound]);
 
   useEffect(() => {
-    const timeout = setTimeout(async () => {
+    const timeout = setTimeout(() => {
       setGameState(null);
-      const token = await getToken();
-      if (!token) {
-        console.log(`No valid token: ${token}`);
-        return;
-      }
       let gameSocket: WebSocket | null = null;
-      const wsUrl = `${getWebSocketUrl(`${game_address}/`)}?token=${token}`;
+      const wsUrl = `${getWebSocketUrl(`${game_address}/`)}`;
       if (!ws.current) gameSocket = new WebSocket(wsUrl);
       if (!gameSocket) return;
       ws.current = gameSocket;

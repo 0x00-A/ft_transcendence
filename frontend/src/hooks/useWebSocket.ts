@@ -55,7 +55,7 @@ const useWebSocket = (endpoint: string) => {
             //     }
             // })();
             // Create the WebSocket connection
-            socket.current = new WebSocket(`${baseUrl}${endpoint}?token=${token}`);
+            socket.current = new WebSocket(`${baseUrl}${endpoint}`);
 
             // Clean up on component unmount
             // return () => {

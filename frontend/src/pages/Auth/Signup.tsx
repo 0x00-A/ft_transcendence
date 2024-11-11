@@ -1,21 +1,13 @@
-import css from './AuthForm.module.css';
-
-// Components
-import AuthHeader from "./components/AuthHeader";
-import ExternAuth from './components/ExternAuth';
-import UserIcon from "./assets/userIcon.svg";
-import EmailIcon from "./assets/emailIcon.svg";
-import PassIcon from "./assets/passIcon.svg";
-// import { FieldValues, set, useForm } from "react-hook-form";
-// import { Mutation, UseMutationResult, isError, useMutation, useQuery } from '@tanstack/react-query';
-// import axios from 'axios';
-// import { FormEvent, useEffect, useRef, useState } from 'react';
-// import { error, log } from 'console';
-// import ProfilePopup from '../Profile/components/ProfilePopup';
-// import AuthPopup from './components/AuthPopup';
-
-import useSignup from './hooks/useSignup';
+// React
 import { useEffect } from 'react';
+// Hooks
+import useSignup from '../../hooks/auth/useSignup';
+// Styles
+import css from './AuthForm.module.css';
+import UserIcon from "../../assets/userIcon.svg";
+import EmailIcon from "../../assets/emailIcon.svg";
+import PassIcon from "../../assets/passIcon.svg";
+
 
 
 interface SignupFormData {
@@ -45,6 +37,7 @@ const Signup = ({setIslogin, onSetAuthStat}) => {
    useEffect(() => {
      if (mutation.isError) {
         const err = mutation.error?.response.data as SignupFormData;
+        console.log(err?.username);
         err?.username && setError("username", {type: '', message: err?.username}, {shouldFocus:true})
         err?.email && setError("email", {type: '', message: err?.email}, {shouldFocus:true})
         err?.password && setError("password", {type: '', message: err?.password}, {shouldFocus:true})
@@ -57,8 +50,6 @@ const Signup = ({setIslogin, onSetAuthStat}) => {
    };
 
   return (
-    <>
-      <AuthHeader title="Welcome" description="Create you account and enjoy the game"/>
       <form noValidate={true} className={css.entryArea} onSubmit={ handleSubmit(handleSignup) }>
         <div className={css.inputContainer}>
           <img src={UserIcon} alt="X" />
@@ -84,8 +75,6 @@ const Signup = ({setIslogin, onSetAuthStat}) => {
           Sign up
         </button>
       </form>
-      <ExternAuth />
-    </>
   );
 };
 

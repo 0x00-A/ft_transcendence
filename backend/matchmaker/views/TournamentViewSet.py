@@ -38,7 +38,7 @@ class TournamentViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = self.get_serializer(tournaments, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response({"detail": "No tournaments found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response([], status=status.HTTP_200_OK)
 
     # def perform_create(self, serializer):
     #     # Automatically set the creator as the user making the request

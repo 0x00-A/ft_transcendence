@@ -4,6 +4,61 @@
   * @author jh3y - jheytompkins.com
 */
 
+.authPongBox {
+    background-color: var(--main-surface-tertiary);
+    width: 500px;
+    height: 700px;
+    margin: 5px;
+    /* border-right: 1px solid aliceblue; */
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    perspective: 700px;
+    transition: 1s;
+}
+
+.switchPongBox {
+    transition: 2s;
+    transform-style: preserve-3d;
+    transform-origin: right center;
+    /* perspective: 100px; */
+    transform: translateX(102%);
+    /* margin: 5px; */
+    /* margin-right: 0; */
+    /* border: none;
+    border-left: 1px solid aliceblue; */
+    /* margin: 0; */
+    /* margin-right: 5px; */
+    /* transform: rotate3d(0, 1, 0, 180deg);  */
+}
+
+.authFooter {
+    /* border: 1px solid white; */
+    margin-top: 300px;
+    display: flex;
+    /* flex-direction: row; */
+    justify-content: space-evenly;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.authFooter p {
+    font-size: small;
+    color: aliceblue;
+}
+
+.authFooter button {
+    border: none;
+    background: none;
+    color: rgb(0, 132, 247);
+    cursor: pointer;
+    margin-left: 10px;
+    text-decoration: underline;
+}
+
 .pong {
   /* border: 1px solid aliceblue; */
     --primary: var(--text-color);
@@ -52,7 +107,7 @@
         -webkit-animation-name: moveTwo;
                 animation-name: moveTwo;
         right: 0; }
-  
+
   @-webkit-keyframes play {
     0% {
       -webkit-transform: translate(-50%, -50%) translate(-850%, 741%);
@@ -87,7 +142,7 @@
     100% {
       -webkit-transform: translate(-50%, -50%) translate(-850%, 741%);
               transform: translate(-50%, -50%) translate(-850%, 741%); } }
-  
+
   @keyframes play {
     0% {
       -webkit-transform: translate(-50%, -50%) translate(-850%, 741%);
@@ -122,7 +177,7 @@
     100% {
       -webkit-transform: translate(-50%, -50%) translate(-850%, 741%);
               transform: translate(-50%, -50%) translate(-850%, 741%); } }
-  
+
   @-webkit-keyframes moveOne {
     0% {
       -webkit-transform: translate(0%, -50%) translate(0%, 247%);
@@ -142,7 +197,7 @@
     100% {
       -webkit-transform: translate(0%, -50%) translate(0%, 247%);
               transform: translate(0%, -50%) translate(0%, 247%); } }
-  
+
   @keyframes moveOne {
     0% {
       -webkit-transform: translate(0%, -50%) translate(0%, 247%);
@@ -162,7 +217,7 @@
     100% {
       -webkit-transform: translate(0%, -50%) translate(0%, 247%);
               transform: translate(0%, -50%) translate(0%, 247%); } }
-  
+
   @-webkit-keyframes moveTwo {
     0% {
       content: 850 812;
@@ -183,7 +238,7 @@
     100%, 90% {
       -webkit-transform: translate(0%, -50%) translate(0%, 187.33333%);
               transform: translate(0%, -50%) translate(0%, 187.33333%); } }
-  
+
   @keyframes moveTwo {
     0% {
       content: 850 812;

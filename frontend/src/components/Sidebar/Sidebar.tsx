@@ -12,6 +12,7 @@ import {
   MENU_ICON_SIZE,
   SIDEBAR_RESIZE_WIDTH,
 } from '../../config/constants';
+import apiClient from '../../api/apiClient';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -28,10 +29,12 @@ export default function Sidebar() {
   const confirmLogout = () => {
     // setIsLoggingOut(true); // start logout process
     loadingBarRef.current?.continuousStart();
-    setTimeout(() => {
+    setTimeout(async () => {
       // setIsLoggingOut(false)
       loadingBarRef.current?.complete();
       setIsLoggedIn(false);
+      const response = await apiClient.post('/auth/logout/');
+      console.log('---from logout---', response);
       setShowConfirm(false);
       localStorage.clear();
     }, 1000);

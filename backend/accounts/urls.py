@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
+from .views import LogoutView
 from .views import discord_authorize
 from .views import oauth2_discord
 from .views import intra_authorize
@@ -22,16 +23,20 @@ from .views import BlockedUsersView
 from .views import BlockUserView
 from .views import UnblockUserView
 from .views import SuggestedConnectionsView
-# from .views import ProfileApiView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from .views import ConfirmOauth2Login
+from .views import ProfileApiView
 
 
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
-    path('auth/login/refresh/', TokenRefreshView.as_view()),
+    path('auth/logout/', LogoutView.as_view()),
+    path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
+
+    # path('auth/refresh_token/', RefreshToken.as_view()),
+    path('oauth2/verify_login', ConfirmOauth2Login.as_view()),
     path('oauth2/set_username/', oauth2_set_username),
     path('oauth2/discord/authorize/', discord_authorize),
     path('oauth2/discord/', oauth2_discord),
@@ -41,6 +46,7 @@ urlpatterns = [
     path('oauth2/google/', oauth2_google),
 
     path('users/', AllUsersView.as_view(), name='all_users'),
+    path('profile/', ProfileApiView.as_view(), name='profile'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),

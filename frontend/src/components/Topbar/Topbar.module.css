@@ -22,7 +22,7 @@
 }
 
 .iconButton:hover {
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
 }
 
 .counter {
@@ -58,10 +58,20 @@
   /* transform: scale(1.1); */
 }
 .userIcon:hover {
-  /* transform: scale(1.1); */
+  transform: scale(1.1);
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); */
 }
 .userIcon {
   width: 40px;
   border-radius: 50%;
+}
+
+.notifications {
+  border: 1px solid black;
+  background-color: black;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 60px;
+  z-index: 99;
 }

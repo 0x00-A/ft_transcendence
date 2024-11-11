@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getApiUrl } from "../../../utils/getApiUrl";
+import apiClient from "../../api/apiClient";
+
 
 interface LoginData {
   username: string;
@@ -24,10 +25,11 @@ const schema = yup.object().shape({
 });
 
 const loginUser = async (user: LoginData) => {
+  return apiClient.post('/auth/login/', user);
   const response = await axios.post(
-    // 'http://localhost:8000/api/auth/login/',
-    getApiUrl('auth/login/'),
-    user
+    'http://localhost:8000/api/auth/login/',
+    user,
+    {withCredentials: true},
   );
   return response.data;
 };
@@ -46,17 +48,14 @@ const useLogin = () => {
   });
   const mutation = useMutation({
     mutationFn: loginUser,
-    onSuccess(data) {
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-    },
     onError(error) {
       const errs = error?.response.data as LoginData;
       errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
       errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-      error?.response.data?.message && setError("root", {type: '', message: error.response.data.message});
+      error?.response.data?.message && setError("root", {type: '', message: error.response.data.error});
     }
   });
+
   return {
     register,
     handleSubmit,
