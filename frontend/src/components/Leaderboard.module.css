@@ -1,13 +1,4 @@
-.leaderboard {
-    width: 100%;
-    height: 50%;
-    background-color: #1E2533;
-    padding: 30px;
-    border-radius: 30px;
-    color: #ffffff;
-  }
-  
-  .header {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;

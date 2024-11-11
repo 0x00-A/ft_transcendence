@@ -1,15 +1,15 @@
 
 .container {
   display: flex;
-  /* flex-wrap: wrap; */
   gap: 1rem;
   padding: 2rem;
-  /* background-color: #1e1e2f; */
   color: #ffffff;
   width: 100%;
   min-width: 1440px;
   height: calc(100vh - 116px);
   min-height: 900px;
+  /* overflow: scroll; */
+  /* flex-wrap: wrap; */
 }
 
 .heroSection {
@@ -19,12 +19,34 @@
   gap: 1rem;
 }
 
+.welcome {
+  height: 30%;
+  padding-right: 2.5rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  background-image: url('../../components/rachid.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* filter: blur(1px); */
+  gap: 1.5rem;
+}
 
 .other {
   height: 20%;
   background-color: #1E2533;
   padding: 30px;
   border-radius: 30px;
+}
+
+.leaderboard {
+  width: 100%;
+  height: 50%;
+  background-color: #1E2533;
+  padding: 30px;
+  border-radius: 30px;
+  color: #ffffff;
 }
 
 .mainContent {
@@ -39,6 +61,13 @@
   background-color: #1E2533;
   padding: 30px;
   border-radius: 30px;
+  
+  background-color: #1E2533;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .achievements {
@@ -54,15 +83,51 @@
   flex-direction: column;
   gap: 1rem;
 }
-/* .friends {
+
+.lastMatchContainer {
   height: 50%;
   background-color: #1E2533;
-  padding: 30px;
   border-radius: 30px;
-} */
-.lastMatch {
-  height: 50%;
-  background-color: #1E2533;
   padding: 30px;
-  border-radius: 30px;
+  color: #F8F3E3;
+  display: flex;
+  flex-direction: column;
 }
+
+.friendsContainer {
+  height: 50%;
+  background-color: #1E2533;
+  border-radius: 30px;
+  padding: 30px;
+  color: #F8F3E3;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* @media (max-width: 1024px) {
+  .heroSection, .mainContent, .lastSection {
+    width: 100%;
+  }
+
+  .container {
+    padding: 1rem;
+    height: auto;
+  }
+
+  .achievements, .other, .lastMatch {
+    height: auto;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; 
+    align-items: center;
+  }
+
+  .heroSection, .mainContent, .lastSection {
+    width: 90%;
+  }
+} */

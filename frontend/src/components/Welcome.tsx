@@ -2,7 +2,6 @@ import styles from './Welcome.module.css';
 
 const Welcome = () => {
   return (
-    <div className={styles.welcome}>
       <div className={styles.content}>
         <div>
           <h2 className={styles.title}>FT-PONG</h2>
@@ -12,10 +11,6 @@ const Welcome = () => {
         </div>
         <button className={styles.playButton}>Play now</button>
       </div>
-      <div className={styles.playerImage}>
-        <img src="/public/rr.png" alt="Player playing ping-pong" />
-      </div>
-    </div>
   );
 };
 
