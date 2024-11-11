@@ -1,13 +1,4 @@
-.friendsContainer {
-    height: 50%;
-    background-color: #1E2533;
-    border-radius: 30px;
-    padding: 30px;
-    color: #F8F3E3;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+
   
   .header {
     display: flex;
