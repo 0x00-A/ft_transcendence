@@ -174,19 +174,17 @@
   color: #FFFFFF;
 }
 
-/* Friend list container */
 .friendList {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Friend item styles */
 .friendItem {
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 5px;
+  padding: 10px;
   border-radius: 10px;
   background-color: #1E2A3C;
   transition: background-color 0.3s;
@@ -196,7 +194,6 @@
   background-color: #283245;
 }
 
-/* Avatar styles */
 .avatar {
   width: 45px;
   height: 45px;
@@ -204,7 +201,6 @@
   border: 2px solid #B0B9D0;
 }
 
-/* Friend info styles */
 .friendInfo {
   flex-grow: 1;
 }
@@ -222,7 +218,6 @@
   color: #B0B9D0;
 }
 
-/* Status styles */
 .status {
   display: flex;
   align-items: center;
@@ -247,7 +242,6 @@
   background-color: #D0D8E7;
 }
 
-/* Invite button styles */
 .inviteButton {
   display: block;
   width: 100%;
@@ -269,7 +263,6 @@
   transform: scale(1.03);
 }
 
-/* Responsive adjustments */
 @media (max-width: 767px) {
   .title {
     font-size: 1.8rem;
@@ -309,5 +302,10 @@
 @media (max-height: 1060px) {
   .friendList {
     gap: 5px;
+  }
+}
+@media (max-height: 1170px) {
+  .friendItem {
+    padding: 5px;
   }
 }
