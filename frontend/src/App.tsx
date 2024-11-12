@@ -34,6 +34,7 @@ import Game from './pages/Game/Game';
 import Oauth2Callback from './pages/Auth/Oauth2Callback';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { WebSocketProvider } from './contexts/WebSocketContext';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
     <Router>
       <LoadingBarProvider>
         <AuthProvider>
+          <WebSocketProvider>
             <ToastContainer
               position="top-center"
               autoClose={2000}
@@ -53,8 +55,9 @@ function App() {
               pauseOnHover
               // theme="colored"
               toastClassName='toastStyle'
-          />
-          <AppContent />
+            />
+            <AppContent />
+          </WebSocketProvider>
         </AuthProvider>
       </LoadingBarProvider>
     </Router>

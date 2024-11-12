@@ -26,6 +26,7 @@ import Tournament from '../../components/Tournament/Tournament/Tournament';
 import { toast } from 'react-toastify';
 import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage';
 import NoTournamentIcon from './NoTournament/NoTournamnet';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -35,10 +36,10 @@ import NoTournamentIcon from './NoTournament/NoTournamnet';
   ];
 
 const Game = () => {
-      const [hoveredOption, setHoveredOption] = useState<number | null>(null);
+  const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [state, setState] = useState('');
-  const [gameAdrress, setGameAdrress] = useState(null);
+  const [gameAdrress, setGameAdrress] = useState<string | null>(null);
   const [matchAdrress, setMatchAdrress] = useState(null);
   const ws = useRef<WebSocket | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,22 +53,28 @@ const Game = () => {
 
   // const { data: user } = useGetData<User>('matchmaker/current-user');
 
+  const {matchmakerMessage, sendMatchmakerMessage, setMatchmakerMessage} = useWebSocket()
+
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
 
   const handleTournamentSubmit = (name: string) => {
-      if (
-        ws.current &&
-        ws.current.readyState === WebSocket.OPEN
-      ) {
-        ws.current?.send(
-          JSON.stringify({
+      // if (
+      //   se &&
+      //   se.readyState === WebSocket.OPEN
+      // ) {
+      //   se?.send(
+      //     JSON.stringify({
+      //       event: 'request_tournament',
+      //       tournament_name: name,
+      //     })
+      //   );
+      // }
+      sendMatchmakerMessage({
             event: 'request_tournament',
             tournament_name: name,
           })
-        );
-      }
   };
 
   const refetchData = () => {
@@ -86,108 +93,196 @@ const Game = () => {
     refetch: refetchTournaments,
   } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
+  //     const socket = new WebSocket(wsUrl);
+  //     se = socket;
+
+  //     socket.onopen = () => {
+  //       console.log('Socket connected');
+  //       setState('connected');
+  //     };
+
+  //     socket.onmessage = (e) => {
+  //       refetchData();
+  //       const data = JSON.parse(e.data);
+  //       console.log(data);
+
+  //       if (data.event === 'authenticated') {
+  //         setUser(data.username);
+  //       }
+  //       if (data.event === 'error') {
+  //         toast(data.message);
+  //       }
+  //       if (data.event === 'match_start') {
+  //         setMatchAdrress(data.match_address);
+  //         setTournamentStatus('match_started');
+  //       }
+  //       if (data.event === 'in_queue') {
+  //         setState('inqueue');
+  //       }
+
+  //       if (data.event === 'already_inqueue') {
+  //         console.log('already in queue');
+  //       }
+  //       if (data.event === 'already_ingame') {
+  //         console.log('already in a game');
+  //       }
+  //       if (data.event === 'game_address') {
+  //         console.log(data.message);
+  //         setGameAdrress(data.game_address);
+  //         setState('game_start');
+  //       }
+  //       if (data.event === 'tournament_created') {
+  //         console.log(data.message);
+  //         setIsInTournament(true);
+  //         setTournamentStat(data.tournament_stat);
+  //         // toast(data.message);
+  //         toast(data.message);
+  //       }
+  //       if (data.event === 'already_in_tournament') {
+  //         console.log(data.message);
+
+  //         setIsInTournament(true);
+  //         setTournamentStatus(data.tournament_status);
+  //         tournamentIdRef.current = data.tournament_id;
+  //         setTournamentStat(data.tournament_stat);
+  //       }
+  //       if (data.event === 'tournament_joined') {
+  //         console.log(data.message);
+
+  //         setIsInTournament(true);
+  //         setTournamentStatus(data.tournament_status);
+  //         tournamentIdRef.current = data.tournament_id;
+  //         setTournamentStat(data.tournament_stat);
+  //         toast(data.message);
+  //       }
+  //       if (data.event === 'tournament_update') {
+  //         console.log(data);
+
+  //         setIsInTournament(true);
+  //         // setTournamentStatus(data.tournament_status);
+  //         tournamentIdRef.current = data.tournament_id;
+  //         setTournamentStat(data.tournament_stat);
+  //       }
+  //       if (data.event === 'opponent_ready') {
+  //           setOpponentReady(true);
+  //       }
+  //       if (data.event === 'opponent_unready') {
+  //           setOpponentReady(false);
+  //       }
+  //     };
+  //     socket.onclose = () => {
+  //       console.log('Matchmaker Socket disconnected');
+  //       setState('disconnected');
+  //     };
+  //   }, 500);
+
+  //   return () => {
+  //     if (se) {
+  //       console.log('Closing matchmaker websocket ....');
+  //       se.close();
+  //     }
+  //     clearTimeout(timeout);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
-      const socket = new WebSocket(wsUrl);
-      ws.current = socket;
+    if (matchmakerMessage) {
+      // refetchData();
+      console.log('Matchmaker WebSocket Message:', matchmakerMessage);
+      const data = matchmakerMessage;
+      if (data.event === 'authenticated') {
+        setUser(data.username);
+      }
+      if (data.event === 'match_start') {
+        setMatchAdrress(data.match_address);
+        setTournamentStatus('match_started');
+      }
+      if (data.event === 'in_queue') {
+        setState('inqueue');
+      }
+      if (data.event === 'error') {
+        toast(data.message);
+      }
 
-      socket.onopen = () => {
-        console.log('Socket connected');
-        setState('connected');
-      };
+      if (data.event === 'already_inqueue') {
+        console.log('already in queue');
+        toast(data.message)
+      }
+      if (data.event === 'already_ingame') {
+        console.log('already in a game');
+      }
+      if (data.event === 'game_address') {
+        console.log(data.message);
+        setGameAdrress(data.game_address);
+        setState('game_start');
+      }
+      if (data.event === 'tournament_created') {
+        console.log(data.message);
+        setIsInTournament(true);
+        setTournamentStat(data.tournament_stat);
+        // toast(data.message);
+        toast(data.message);
+      }
+      if (data.event === 'already_in_tournament') {
+        console.log(data.message);
 
-      socket.onmessage = (e) => {
-        refetchData();
-        const data = JSON.parse(e.data);
+        setIsInTournament(true);
+        setTournamentStatus(data.tournament_status);
+        tournamentIdRef.current = data.tournament_id;
+        setTournamentStat(data.tournament_stat);
+      }
+      if (data.event === 'tournament_joined') {
+        console.log(data.message);
+
+        setIsInTournament(true);
+        setTournamentStatus(data.tournament_status);
+        tournamentIdRef.current = data.tournament_id;
+        setTournamentStat(data.tournament_stat);
+        toast(data.message);
+      }
+      if (data.event === 'tournament_update') {
         console.log(data);
 
-        if (data.event === 'authenticated') {
-          setUser(data.username);
-        }
-        if (data.event === 'error') {
-          toast(data.message);
-        }
-        if (data.event === 'match_start') {
-          setMatchAdrress(data.match_address);
-          setTournamentStatus('match_started');
-        }
-        if (data.event === 'in_queue') {
-          setState('inqueue');
-        }
+        setIsInTournament(true);
+        // setTournamentStatus(data.tournament_status);
+        tournamentIdRef.current = data.tournament_id;
+        setTournamentStat(data.tournament_stat);
+      }
+      if (data.event === 'opponent_ready') {
+          setOpponentReady(true);
+      }
+      if (data.event === 'opponent_unready') {
+          setOpponentReady(false);
+      }
+    }
 
-        if (data.event === 'already_inqueue') {
-          console.log('already in queue');
-        }
-        if (data.event === 'already_ingame') {
-          console.log('already in a game');
-        }
-        if (data.event === 'game_address') {
-          console.log(data.message);
-          setGameAdrress(data.game_address);
-          setState('game_start');
-        }
-        if (data.event === 'tournament_created') {
-          console.log(data.message);
-          setIsInTournament(true);
-          setTournamentStat(data.tournament_stat);
-          // toast(data.message);
-          toast(data.message);
-        }
-        if (data.event === 'already_in_tournament') {
-          console.log(data.message);
+  }, [matchmakerMessage]);
 
-          setIsInTournament(true);
-          setTournamentStatus(data.tournament_status);
-          tournamentIdRef.current = data.tournament_id;
-          setTournamentStat(data.tournament_stat);
-        }
-        if (data.event === 'tournament_joined') {
-          console.log(data.message);
-
-          setIsInTournament(true);
-          setTournamentStatus(data.tournament_status);
-          tournamentIdRef.current = data.tournament_id;
-          setTournamentStat(data.tournament_stat);
-          toast(data.message);
-        }
-        if (data.event === 'tournament_update') {
-          console.log(data);
-
-          setIsInTournament(true);
-          // setTournamentStatus(data.tournament_status);
-          tournamentIdRef.current = data.tournament_id;
-          setTournamentStat(data.tournament_stat);
-        }
-        if (data.event === 'opponent_ready') {
-            setOpponentReady(true);
-        }
-        if (data.event === 'opponent_unready') {
-            setOpponentReady(false);
-        }
-      };
-      socket.onclose = () => {
-        console.log('Matchmaker Socket disconnected');
-        setState('disconnected');
-      };
-    }, 500);
+  useEffect(() => {
 
     return () => {
-      if (ws.current) {
-        console.log('Closing matchmaker websocket ....');
-        ws.current.close();
-      }
-      clearTimeout(timeout);
-    };
-  }, []);
+      sendMatchmakerMessage({
+        event: 'remove_from_queue',
+      });
+      setMatchmakerMessage({});
+    }
+  }, [])
+
 
   const requestRemoteGame = () => {
     console.log('request remote game');
-    ws.current?.send(
-      JSON.stringify({
+    // se?.send(
+    //   JSON.stringify({
+    //     event: 'request_remote_game',
+    //   })
+    // );
+    sendMatchmakerMessage({
         event: 'request_remote_game',
       })
-    );
+
   };
 
   const requestTournament = () => {
@@ -202,12 +297,16 @@ const Game = () => {
 
   const handleJoin = (tournamentId: number) => {
     console.log('join tournament');
-    ws.current?.send(
-      JSON.stringify({
+    // se?.send(
+    //   JSON.stringify({
+    //     event: 'join_tournament',
+    //     tournament_id: tournamentId,
+    //   })
+    // );
+    sendMatchmakerMessage({
         event: 'join_tournament',
         tournament_id: tournamentId,
       })
-    );
   };
   const handleView = () => {
     if (isInTournament) {
@@ -245,6 +344,12 @@ const Game = () => {
     return (
       <div className={styles.matchmakingLoaderWrapper}>
         <ArcadeLoader className={styles.matchmakingLoader} />
+        <button onClick={() => {
+          sendMatchmakerMessage({
+            event: 'remove_from_queue',
+          });
+          setState('');
+        }} >Cancel</button>
       </div>
     );
   }
@@ -262,7 +367,7 @@ const Game = () => {
         setTournamentStatus={setTournamentStatus}
         tournamentStat={tournamentStat}
         user={user}
-        ws={ws.current}
+        ws={sendMatchmakerMessage}
         onReturn={handleReturn}
         opponentReady={opponentReady}
         setOpponentReady={setOpponentReady}

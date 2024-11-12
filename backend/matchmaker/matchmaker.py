@@ -46,6 +46,19 @@ class Matchmaker:
         players = await cls.find_two_players()
         if players:
             await cls.create_remote_game(*players)
+        print(f"########## Queue: {cls.games_queue}")
+
+    @classmethod
+    async def remove_from_queue(cls, player_id):
+        # Handle remote game matchmaking here
+        # if await cls.is_client_already_playing(player_id):
+        #     return
+        # Add player to the queue, etc.
+        # After finding a match:
+        if player_id in cls.games_queue:
+            print(f"######## removed from Queue: {player_id}")
+            cls.games_queue.remove(player_id)
+        print(f"########## Queue: {cls.games_queue}")
 
     @classmethod
     async def create_remote_game(cls, player1_id, player2_id):
@@ -143,7 +156,8 @@ class Matchmaker:
     async def is_client_already_playing(cls, player_id):
         if player_id in cls.games_queue:
             message = {
-                'event': 'already_inqueue'
+                'event': 'already_inqueue',
+                'message': 'Already in queue!'
             }
             await cls.send_message_to_client(player_id, message)
             return True
