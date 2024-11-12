@@ -1,4 +1,3 @@
-// FriendsList.js
 import React from 'react';
 import css from './FriendsList.module.css';
 
@@ -14,8 +13,8 @@ const FriendsList = () => {
   return (
       <>
         <div className={css.header}>
-          <h3>YOUR FRIENDS</h3>
-          <a href="/friends" className={css.viewMore}>view more</a>
+          <h3 className={css.title}>YOUR FRIENDS</h3>
+          <a href="/friends" className={css.viewMore}>View more</a>
         </div>
 
         <div className={css.friendList}>
@@ -27,7 +26,7 @@ const FriendsList = () => {
                 <span className={css.level}>Level: {friend.level}</span>
               </div>
               <div className={`${css.status} ${css[friend.status]}`}>
-                  <span></span>
+                  <span className={css.statusIndicator}></span>
                 {friend.status}
               </div>
             </div>
