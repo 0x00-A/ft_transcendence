@@ -15,7 +15,7 @@
   
   .statsContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
@@ -71,11 +71,7 @@
   }
   
   @media (min-width: 768px) {
-    .statsContainer {
-      flex-direction: row;
-    }
-  
     .chartContainer {
-      height: 20rem;
+      height: 24rem;
     }
   }
