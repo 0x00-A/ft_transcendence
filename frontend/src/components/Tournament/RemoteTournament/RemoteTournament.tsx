@@ -7,6 +7,7 @@ import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
+import { MessageData } from '@/contexts/WebSocketContext';
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
   return (
@@ -111,7 +112,7 @@ const RemoteTournament = ({
   tournamentStatus: string;
   matchAddress: string | null;
   setTournamentStatus: React.Dispatch<React.SetStateAction<string>>;
-  ws: WebSocket | null;
+  ws: (message: MessageData) => void;
   onReturn: ()=>void;
   opponentReady: boolean;
   setOpponentReady: React.Dispatch<React.SetStateAction<boolean>>;
@@ -150,42 +151,49 @@ const RemoteTournament = ({
 
   useEffect(() => {
     return () => {
-      console.log('INNNNNN');
 
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        console.log('>>>>>>>> Setting player unready');
-        ws?.send(
-            JSON.stringify({
-              event: 'player_unready',
-            })
-            );
-        }
-      }
+      // if (ws && ws.readyState === WebSocket.OPEN) {
+      //   console.log('>>>>>>>> Setting player unready');
+      //   ws?.send(
+      //       JSON.stringify({
+      //         event: 'player_unready',
+      //       })
+      //       );
+      //   }
+      ws({event: 'player_unready',})
+    }
   }, [])
 
   console.log(tournamentStat);
 
   const playerReady = (match_id: number) => {
     // setIsReady(true);
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws?.send(
-      JSON.stringify({
-          event: 'player_ready',
-          match_id: match_id,
-        })
-      );
-    }
+  // if (ws && ws.readyState === WebSocket.OPEN) {
+  //   ws?.send(
+  //     JSON.stringify({
+  //         event: 'player_ready',
+  //         match_id: match_id,
+  //       })
+  //     );
+  //   }
+  ws({ event: 'player_ready',
+          match_id: match_id,})
   };
+
   const playerUnready = (match_id: number) => {
     // setIsReady(true);
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws?.send(
-      JSON.stringify({
+  // if (ws && ws.readyState === WebSocket.OPEN) {
+  //   ws?.send(
+  //     JSON.stringify({
+  //         event: 'player_unready',
+  //         match_id: match_id,
+  //       })
+  //     );
+  //   }
+  ws({
           event: 'player_unready',
           match_id: match_id,
-        })
-      );
-    }
+    })
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -288,12 +296,16 @@ const RemoteTournament = ({
       )}
       <ReturnBack onClick={() => {
           setIsReady(false);
-          ws?.send(
-          JSON.stringify({
+        //   ws?.send(
+        //   JSON.stringify({
+        //     event: 'player_unready',
+        //     // match_id: match_id,
+        //   })
+        // );
+        ws({
             event: 'player_unready',
             // match_id: match_id,
           })
-        );
         onReturn()}} />
     </div>
   );

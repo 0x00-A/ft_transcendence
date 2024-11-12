@@ -8,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 
 from .matchmaker import Matchmaker
 
+
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
@@ -46,10 +47,12 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         elif event == 'join_tournament':
             tournament_id = data.get('tournament_id')
             await Matchmaker.join_tournament(self.player_id, tournament_id)
-        if event == 'player_ready':
+        elif event == 'player_ready':
             await Matchmaker.handle_player_ready(self.player_id, data.get('match_id'))
-        if event == 'player_unready':
+        elif event == 'player_unready':
             await Matchmaker.handle_player_unready(self.player_id)
+        elif event == 'remove_from_queue':
+            await Matchmaker.remove_from_queue(self.player_id)
         # Handle other events similarly...
 
     # This method sends a message to the WebSocket client
