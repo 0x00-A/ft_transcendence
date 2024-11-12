@@ -18,30 +18,33 @@ const Leaderboard = () => {
           <a href="/leaderboard" className={css.viewAll}>view all leaderboard</a>
         </div>
 
-        <div className={css.table}>
-          <div className={css.tableHeader}>
-            <span>rank</span>
-            <span>name</span>
-            <span>games</span>
-            <span>Win rate</span>
-            <span>lose rate</span>
-            <span>Score</span>
-          </div>
+        <div className={css.tables}>
+          <div className={css.table}>
+            <div className={css.tableHeader}>
+              <span>rank</span>
+              <span>name</span>
+              <span>games</span>
+              <span>Win rate</span>
+              <span>lose rate</span>
+              <span>Score</span>
+            </div>
 
-          {leaderboardData.map((player, index) => (
-            <div className={css.tableRow} key={index}>
-              <span>{player.rank}</span>
-              <span className={css.player}>
-                <img src={player.avatar} alt={player.name} className={css.avatar} />
-                {player.name}
-              </span>
-              <span>{player.games}</span>
-              <span>{player.winRate}</span>
-              <span>{player.loseRate}</span>
-              <span className={css.score}>{player.score}</span>
-          </div>
-        ))}
-      </div>
+            {leaderboardData.map((player, index) => (
+              <div className={css.tableRow} key={index}>
+                <span>{player.rank}</span>
+                <span className={css.player}>
+                  <img src={player.avatar} alt={player.name} className={css.avatar} />
+                  {player.name}
+                </span>
+                <span>{player.games}</span>
+                <span>{player.winRate}</span>
+                <span>{player.loseRate}</span>
+                <span className={css.score}>{player.score}</span>
+              </div>
+              ))}
+            </div>
+        </div>
+        
       </>
   );
 };
