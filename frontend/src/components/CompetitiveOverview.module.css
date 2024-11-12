@@ -37,7 +37,7 @@
 }
 
 .buttonActive {
-  background-color: #3b82f6;
+  background-color: #5774a1;
   color: #ffffff;
 }
 
@@ -52,7 +52,7 @@
   /* background: linear-gradient(135deg, #2a2b36 0%, #1a1b26 100%); */
   padding: 1.5rem;
   border-radius: 16px;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #517abc;
   transition: transform 0.2s ease;
 }
 
@@ -192,6 +192,10 @@
   border-left: 4px solid #f59e0b;
 }
 
+.winCard:hover {
+  transform: translateY(-2px);
+}
+
 .loseCard {
   background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(42, 43, 54, 0.5) 100%);
   padding: 1rem;
@@ -199,6 +203,9 @@
   border-left: 4px solid #ef4444;
 }
 
+.loseCard:hover {
+  transform: translateY(-2px);
+}
 .resultText {
   color: #ffffff;
   font-size: 1.125rem;

@@ -25,7 +25,7 @@ const Achievements = () => {
 
   return (
       <>
-        <h3>Achievements</h3>
+        <h3 className={css.title}>Achievements</h3>
         <div className={css.achievementsContainr}>
           <div className={css.achievementsCarousel}>
             <FaArrowLeft onClick={handlePrev} className={css.arrow} />

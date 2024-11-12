@@ -32,7 +32,7 @@
   }
   
   .header h3 {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
   
   .viewMore {
@@ -113,9 +113,17 @@
   
   .score {
     flex-grow: 1;
-    font-size: 2rem;
+    font-size: 2.3rem;
     font-weight: bold;
     color: #F8F3E3;
+    text-shadow: 1px 1px 5px rgb(0, 0, 0);
+  }
+  
+  .YourGoals {
+    color: #e6a700;
+  }
+  .opponentGoals {
+    color: #ec3b59;
   }
   
   .pointsContainer {
@@ -126,7 +134,7 @@
     padding: 5px 10px;
     border-radius: 5px;
     margin-right: 5px;
-    font-size: 0.9rem;
+    font-size: 1.5rem;
   }
   
   .points {
@@ -134,7 +142,7 @@
   }
   
   .pointsContainer img {
-    width: 10px;
-    height: 10px;
+    width: 15px;
+    height: 15px;
   }
   
