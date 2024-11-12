@@ -6,6 +6,7 @@ import Achievements from '../../components/Achievements';
 import Leaderboard from '../../components/Leaderboard';
 import FriendsList from '../../components/FriendsList';
 import LastMatch from '../../components/LastMatch';
+import LineChartComponent from '@/components/LineChartComponent';
 
 const Dashboard = () => {
   return (
@@ -17,7 +18,8 @@ const Dashboard = () => {
       </div>
       <div className={css.mainContent}>
         <div className={css.competitiveOverview}><CompetitiveOverview /></div>
-        <div className={css.achievements}><Achievements /></div>
+        {/* <div className={css.achievements}><Achievements /></div> */}
+        <div className={css.LineChart}> <LineChartComponent /> </div>
       </div>
       <div className={css.lastSection}>
         <div className={css.lastMatchContainer}><LastMatch /></div>
