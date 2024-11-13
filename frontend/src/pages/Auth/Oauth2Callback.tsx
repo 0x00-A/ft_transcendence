@@ -10,6 +10,7 @@ import useOauth2Username from '../../hooks/auth/useOauth2Username';
 import authCss from './Auth.module.css';
 import css from './Oauth2Callback.module.css';
 import UserIcon from "../../assets/userIcon.svg";
+import apiClient from '@/api/apiClient';
 
 
 interface UsernameFormData {
@@ -31,7 +32,7 @@ const Oauth2Callback = () => {
         const status = params.get('status')
         if (status === 'success') {
           // confirm login
-          axios.get('http://localhost:8000/api/oauth2/verify_login', { withCredentials: true })
+          apiClient.get('/oauth2/verify_login')
           .then(response => {
             if (response.status === 200) {
               navigate('/');

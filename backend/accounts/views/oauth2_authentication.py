@@ -11,25 +11,29 @@ from urllib.parse import quote
 
 REDIRECT_URI = "http://localhost:8000/api/oauth2/intra/"
 
-def intra_authorize(request):
+def oauth2_authorize(request, choice):
+    print('2----------->>>>>>', choice, '<<<<<<------------')
     if request.method == 'GET':
-        return redirect(settings.INTRA_AUTHORIZATION_URL)
+        if choice == 'intra':
+            return redirect(settings.INTRA_AUTHORIZATION_URL)
+        if choice == 'discord':
+            return redirect(settings.DISCORD_AUTHORIZATION_URL)
+        if choice == 'google':
+            return redirect(settings.GOOGLE_AUTHORIZATION_URL)
 
 
 @api_view()
 @permission_classes([AllowAny])
-def oauth2_intra(request):
-    # if request.session.get('callback_uri') is None:
-    #     request.session['callback_uri'] = request.GET.get('redirect_uri')
-    #     if request.session.get('callback_uri') is None:
-    #         return Response(data={'message': 'Bad request, a callback uri is missing'}, status=status.HTTP_400_BAD_REQUEST)
+def oauth2_authentication(request, choice):
+    print('1----------->>>>>>', choice, '<<<<<<------------')
     code = request.GET.get('code')
     if code is None:
-        return redirect(intra_authorize)
+        return redirect(oauth2_authorize, choice)
+
     token = exchange_code(code, {'redirect_uri': REDIRECT_URI,
-                                              'token_url': settings.INTRA_TOKEN_URL,
-                                              'client_id': settings.INTRA_CLIENT_ID,
-                                              'client_secret': settings.INTRA_CLIENT_SECRET})
+                                    'token_url': settings.INTRA_TOKEN_URL,
+                                    'client_id': settings.INTRA_CLIENT_ID,
+                                    'client_secret': settings.INTRA_CLIENT_SECRET})
     if token is None:
         return redirect(f"{settings.API_CLIENT_OAUTH2_REDIRECT_URI}?status=failed&error={quote('Failed to get the token from intra!')}")
     intra_user = get_oauth2_user(token, settings.INTRA_USER_URL)

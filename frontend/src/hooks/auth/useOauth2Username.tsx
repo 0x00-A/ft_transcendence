@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import axios, { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import apiClient from '@/api/apiClient';
 
 interface UsernameFormData {
   username: string;
@@ -19,10 +20,9 @@ const schema = yup.object().shape({
 
 const submitUsername = async (data: UsernameFormData) => {
   // try {
-    const response = await axios.post(
-      'http://localhost:8000/api/oauth2/set_username/',
+    const response = await apiClient.post(
+      '/oauth2/set_username/',
       data,
-      { withCredentials: true }
     );
     return response.data
 }

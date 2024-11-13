@@ -1,7 +1,9 @@
 from django.urls import path
+from django.urls import re_path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
+from .views import oauth2_authentication
 from .views import LogoutView
 from .views import discord_authorize
 from .views import oauth2_discord
@@ -33,6 +35,7 @@ urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
+    re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$', oauth2_authentication),
     path('auth/logout/', LogoutView.as_view()),
     path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
 
