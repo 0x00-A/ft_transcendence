@@ -8,7 +8,7 @@ import css from './ProfileHeader.module.css'
 import { useQuery } from '@tanstack/react-query'
 import apiClient from '@/api/apiClient'
 import LevelStat from './levelStat'
-import ProfilePopup from '@/pages/Profile/components/ProfilePopup'
+import ProfilePopup from '@/components/Profile/ProfilePopup'
 
 const getProfile = async () => {
   // try {

@@ -20,7 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class EditProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(required=False)
+    # username = serializers.CharField(required=False)
     avatar = serializers.ImageField(required=False)
 
     class Meta:
@@ -41,12 +41,14 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def update(self, instance, validated_data):
+        print('-------->', validated_data, '<--------')
+        print('-------->', instance, '<--------')
         if 'username' in validated_data:
             instance.username = validated_data.get('username')
         if 'first_name' in validated_data:
-            instance.username = validated_data.get('first_name')
+            instance.first_name = validated_data.get('first_name')
         if 'last_name' in validated_data:
-            instance.username = validated_data.get('last_name')
+            instance.last_name = validated_data.get('last_name')
         if 'avatar' in validated_data:
             print('-------->>', validated_data.get('avatar'), '<<--------')
             instance.profile.avatar = validated_data.get('avatar')
