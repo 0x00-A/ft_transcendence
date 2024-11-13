@@ -3,6 +3,7 @@
 import ProfileHeader from '../../components/Profile/ProfileHeader'
 // Styles
 import css from './Profile.module.css'
+import Avatar from '@mui/material/Avatar';
 
 
 
@@ -11,9 +12,12 @@ const Profile = () => {
   return (
     <div className={css.profileContainer}>
       {/* {isFormPopup && <ProfilePopup setFormpopup={setFormPopup} />} */}
-      {/* <div className={css.profileHeader}>
-        <ProfileHeader />
-      </div> */}
+      <div className={css.profileHeaderContainer}>
+        <div className={css.profileAvatarUsername}>
+          <img src="https://picsum.photos/200" alt="" className={css.profileAvatar}/>
+          <p>Lmahdi</p>
+        </div>
+      </div>
       {/* <div className={css.gameHistoryContainer}>
         <LastMatch />
       </div>

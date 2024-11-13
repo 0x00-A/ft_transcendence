@@ -8,6 +8,7 @@ from accounts.authenticate import CookieJWTAuthentication
 import requests
 from ..serializers import Oauth2UserSerializer
 from ..views.login import get_token_for_user
+from django.conf import settings
 
 
 class ConfirmOauth2Login(APIView):
@@ -39,6 +40,43 @@ def oauth2_set_username(request):
     if user is None:
         return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     return Response(data=get_token_for_user(user=user), status=status.HTTP_200_OK)
+
+
+def exchange_code(code:str, choice:str):
+    data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': settings.OAUTH2_REDIRECT_URI + choice + '/',
+    }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    token_url = {
+        'intra': settings.INTRA_TOKEN_URL,
+        'discord': settings.DISCORD_TOKEN_URL,
+        'google': settings.GOOGLE_TOKEN_URL,
+    }.get(choice)
+    client_id = {
+        'intra': settings.INTRA_CLIENT_ID,
+        'discord': settings.DISCORD_CLIENT_ID,
+        'google': settings.GOOGLE_CLIENT_ID,
+    }
+    client_secret = {
+        'intra': settings.INTRA_CLIENT_SECRET,
+        'discord': settings.DISCORD_CLIENT_SECRET,
+        'google': settings.GOOGLE_CLIENT_SECRET,
+    }
+    try:
+        res = requests.post(url=token_url, data=data, headers=headers,
+                            auth=(client_id, client_secret))
+        res.raise_for_status()
+        return res.json()
+    except requests.exceptions.HTTPError as err:
+        print('-->', err)
+        return None
+    except Exception as err:
+        print('-->', err)
+        return None
 
 def exchange_code(code:str, params):
     data = {

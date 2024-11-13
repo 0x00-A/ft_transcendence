@@ -13,3 +13,7 @@
 ## ✅ Completed
 
 - [x] Set up project environment
+
+MAHDI:
+ - [ ] continue implementing of oauth2_authentication view
+ - [ ] 2 factor authentication
