@@ -75,7 +75,7 @@
   }
   
   .green {
-    background: linear-gradient(90deg, #1E2533 0%, #2B374D 37%, #384B6C 100%);
+    background: linear-gradient(90deg, rgba(42, 43, 54, 0.5) 0%, rgba(239, 68, 68, 0.1) 100%);
   }
   
   .yellow {
