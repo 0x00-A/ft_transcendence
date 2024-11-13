@@ -1,10 +1,17 @@
 import css from './ProfilePopup.module.css'
 import Avatar from '../assets/avatar.svg'
-import CloseIcon from '../assets/closeIcon.svg'
+import CloseIcon from '@/assets/closeIcon.svg'
 import apiClient from '@/api/apiClient'
 import { execPath } from 'process'
 import { useEffect, useState } from 'react'
 import useEditProfile from '@/hooks/profile/useEditProfile'
+
+interface EditProfileFormData {
+    username: string;
+    avatar: File;
+    first_name: string;
+    last_name: string;
+}
 
 const ProfilePopup = ({setFormpopup, profileData}) => {
 
@@ -19,12 +26,14 @@ const ProfilePopup = ({setFormpopup, profileData}) => {
      }
    }, [mutation.isSuccess]);
 
-  const handleEditProfile = (data) => {
+  const handleEditProfile = (data: EditProfileFormData) => {
+    console.log('---', data, '---');
+
     const formData = new FormData();
-    if (data.avatar) formData.append('avatar', data.avatar[0]);
-    formData.append('username', data.username);
-    formData.append('first_name', data.first_name);
-    formData.append('last_name', data.last_name);
+    if (data.avatar && data.avatar.length > 0) formData.append('avatar', data.avatar[0]);
+    if (data.username) formData.append('username', data.username);
+    if (data.first_name) formData.append('first_name', data.first_name);
+    if (data.last_name) formData.append('last_name', data.last_name);
     // event.preventDefault();
      mutation.mutate(formData);
   }
