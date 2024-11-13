@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from ..models import Profile, FriendRequest
 from ..serializers import UserSerializer
+from ..serializers import EditProfileSerializer
+
 
 User = get_user_model()
 
@@ -90,3 +92,46 @@ class AllUsersView(APIView):
                 {'error': f'Internal server error: {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class EditProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        print('REQUEST:', request.data)
+        serializer = EditProfileSerializer(user, data=request.data, partial=True)
+        if request.FILES:
+            print('FILES:', request.FILES)
+            serializer.files = request.FILES
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message: changes apply to your profile successfuly'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class UploadAvatarView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request):
+#         try:
+#             file = request.FILES.get('avatar')
+#             if not file:
+#                 return Response(
+#                     {'error': 'Please provide an image file'},
+#                     status=status.HTTP_400_BAD_REQUEST
+#                 )
+#             profile = Profile.objects.get(user=request.user)
+#             profile.avatar = file
+#             profile.save()
+#             return Response({'message': 'Avatar uploaded successfully'}, status=status.HTTP_200_OK)
+
+#         except Profile.DoesNotExist:
+#             return Response(
+#                 {'error': 'Profile not found'},
+#                 status=status.HTTP_404_NOT_FOUND
+#             )
+#         except Exception as e:
+#             return Response(
+#                 {'error': f'Internal server error: {str(e)}'},
+#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

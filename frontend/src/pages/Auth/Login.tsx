@@ -1,5 +1,5 @@
 // React
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // Hooks
 import useLogin from '../../hooks/auth/useLogin';
