@@ -1,12 +1,11 @@
 import axios from 'axios';
+import apiClient from './apiClient';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
 export const  apiSendFriendRequest = async (username: string) => {
     try {
-    const response = await axios.post(`${API_BASE_URL}/friend-request/send/${username}/`, null, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-    });
+    const response = await apiClient.post(`/friend-request/send/${username}/`);
     return response.data.message || 'Friend request sent';
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
@@ -37,13 +36,7 @@ export const apiRejectFriendRequest = async (username: string) => {
 
 export const apiAcceptFriendRequest = async (username: string) => {
     try {
-        const response = await axios.post(
-            `${API_BASE_URL}/friend-request/accept/${username}/`,
-            null,
-            {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-            }
-        );
+        const response = await apiClient.post(`/friend-request/accept/${username}/`);
         return response.data.message || 'Friend request accepted';
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
