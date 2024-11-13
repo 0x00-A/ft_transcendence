@@ -195,7 +195,7 @@
 
 .doughnutContainer {
   position: relative;
-  width: 100%;
+  width: 150px;
   height: 150px;
 }
 
@@ -224,5 +224,5 @@
   display: block;
   color: #F8F3E3;
   font-size: 1.4rem;
-  font-weight: 
+  font-weight:
 }

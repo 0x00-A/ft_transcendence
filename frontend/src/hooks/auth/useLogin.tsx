@@ -48,6 +48,9 @@ const useLogin = () => {
   });
   const mutation = useMutation({
     mutationFn: loginUser,
+    // onSuccess(data) {
+    //   console.log(data);
+    // }
     onError(error) {
       const errs = error?.response.data as LoginData;
       errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
