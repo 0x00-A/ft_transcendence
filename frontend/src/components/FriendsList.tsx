@@ -2,8 +2,8 @@ import React from 'react';
 import css from './FriendsList.module.css';
 
 const friendsData = [
+  { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
   { name: 'rel-isma', level: 11.5, status: 'online', avatar: 'https://picsum.photos/203' },
-  { name: 'essam', level: 9.5, status: 'offline', avatar: 'https://picsum.photos/201' },
   { name: 'aigounad', level: 8.5, status: 'offline', avatar: 'https://picsum.photos/204' },
   { name: 'l9ra3', level: 8.2, status: 'online', avatar: 'https://picsum.photos/202' },
   { name: 'aka', level: 5.5, status: 'offline', avatar: 'https://picsum.photos/206' },
