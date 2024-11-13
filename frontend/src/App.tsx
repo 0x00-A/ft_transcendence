@@ -35,6 +35,7 @@ import Oauth2Callback from './pages/Auth/Oauth2Callback';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
+import { UserProvider } from './contexts/UserContext';
 
 
 function App() {
@@ -42,22 +43,24 @@ function App() {
     <Router>
       <LoadingBarProvider>
         <AuthProvider>
-          <WebSocketProvider>
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              hideProgressBar={true}
-              newestOnTop={true}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              // theme="colored"
-              toastClassName='toastStyle'
-            />
-            <AppContent />
-          </WebSocketProvider>
+          <UserProvider>
+            <WebSocketProvider>
+              <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={true}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                // theme="colored"
+                toastClassName='toastStyle'
+              />
+              <AppContent />
+            </WebSocketProvider>
+          </UserProvider>
         </AuthProvider>
       </LoadingBarProvider>
     </Router>

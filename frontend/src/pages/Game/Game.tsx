@@ -19,7 +19,7 @@ import { useGetData } from '../../api/apiHooks';
 import { Tournament as TournmentType } from '../../types/apiTypes';
 import RemoteTournament from '../../components/Tournament/RemoteTournament/RemoteTournament';
 import CreateTournamentModal from '../../components/Tournament/components/CreateTournamentModal/CreateTournamentModal';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
 import LocalGame from '../../components/Game/LocalGame/LocalGame';
 import ArcadeLoader from '../../components/Game/components/ArcadeLoader/ArcadeLoader';
 import Tournament from '../../components/Tournament/Tournament/Tournament';
@@ -27,6 +27,8 @@ import { toast } from 'react-toastify';
 import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage';
 import NoTournamentIcon from './NoTournament/NoTournamnet';
 import { useWebSocket } from '@/contexts/WebSocketContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@/contexts/UserContext';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -48,10 +50,15 @@ const Game = () => {
   const [tournamentStatus, setTournamentStatus] = useState('');
   const [tournamentStat, setTournamentStat] = useState(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
-  const [user, setUser] = useState('');
+  // const [user, setUser] = useState('');
   const [opponentReady, setOpponentReady] = useState(false);
 
-  // const { data: user } = useGetData<User>('matchmaker/current-user');
+  const { user } = useUser()
+
+  // const {user: authUser} = useAuth();
+
+  // console.log('>>>>>>>>>', currentUser?.username);
+
 
   const {matchmakerMessage, sendMatchmakerMessage, setMatchmakerMessage} = useWebSocket()
 
@@ -193,9 +200,9 @@ const Game = () => {
       // refetchData();
       console.log('Matchmaker WebSocket Message:', matchmakerMessage);
       const data = matchmakerMessage;
-      if (data.event === 'authenticated') {
-        setUser(data.username);
-      }
+      // if (data.event === 'authenticated') {
+      //   setUser(data.username);
+      // }
       if (data.event === 'match_start') {
         setMatchAdrress(data.match_address);
         setTournamentStatus('match_started');
@@ -204,7 +211,7 @@ const Game = () => {
         setState('inqueue');
       }
       if (data.event === 'error') {
-        toast(data.message);
+        toast.error(data.message);
       }
 
       if (data.event === 'already_inqueue') {
@@ -366,7 +373,7 @@ const Game = () => {
         tournamentStatus={tournamentStatus}
         setTournamentStatus={setTournamentStatus}
         tournamentStat={tournamentStat}
-        user={user}
+        user={user!.username}
         ws={sendMatchmakerMessage}
         onReturn={handleReturn}
         opponentReady={opponentReady}

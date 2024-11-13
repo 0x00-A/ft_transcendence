@@ -4,9 +4,9 @@ import {getData} from './apiClient';
 
 const useGetData = <T>(endpoint: string) => {
   return useQuery({
-    queryKey: [endpoint],          // You can use endpoint as a unique key for this query
-    queryFn: () => getData<T>(`${endpoint}/`),  // Specify the function to fetch data // Specify the function to fetch data
-    staleTime: 5000,      // Optional: Configure additional options like staleTime
+    queryKey: [endpoint],
+    queryFn: () => getData<T>(`${endpoint}/`),
+    staleTime: 5000,
     refetchOnWindowFocus: true,
     // refetchInterval: 5000,
   });

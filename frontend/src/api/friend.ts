@@ -16,7 +16,7 @@ export interface FriendRequest {
   timestamp: string;
 }
 
-const API_BASE_URL = '/api';  // Adjust based on your configuration
+const API_BASE_URL = '/api';
 
 export const friendApi = {
   // Get all users

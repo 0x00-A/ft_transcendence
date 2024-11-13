@@ -18,12 +18,12 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.accept()
             self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self)
-            await self.send(text_data=json.dumps(
-                {'event': 'authenticated',
-                 'username': user.username,
-                 'id': user.id,
-                 }
-            ))
+            # await self.send(text_data=json.dumps(
+            #     {'event': 'authenticated',
+            #      'username': user.username,
+            #      'id': user.id,
+            #      }
+            # ))
 
         else:
             print(f"##################### User not found ##########################")
