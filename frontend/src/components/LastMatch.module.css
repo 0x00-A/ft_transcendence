@@ -33,6 +33,7 @@
   
   .header h3 {
     font-size: 2.2rem;
+    font-weight: bold;
   }
   
   .viewMore {
@@ -74,11 +75,11 @@
   }
   
   .green {
-    background: linear-gradient(90deg, #1E2533 1%, rgba(76, 64, 79, 0.78) 47.5%, rgba(137, 99, 115, 0.50) 75%, rgba(218, 107, 117, 0.50) 98%);
+    background: linear-gradient(90deg, #1E2533 0%, #2B374D 37%, #384B6C 100%);
   }
   
   .yellow {
-    background: linear-gradient(90deg, #1E2533 0%, rgba(69, 78, 79, 0.82) 39.5%, rgba(107, 119, 108, 0.64) 59.5%, rgba(177, 156, 100, 0.82) 95.5%);
+    background: linear-gradient(90deg, #1E2533 0%, #2B374D 37%, #384B6C 100%);
   }
 
   .green::after {
@@ -130,7 +131,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    background-color: #33425E;
+    background-color: #1e2533;
     padding: 5px 10px;
     border-radius: 5px;
     margin-right: 5px;
