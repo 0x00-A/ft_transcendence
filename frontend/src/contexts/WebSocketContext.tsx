@@ -50,7 +50,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     // notification WebSocket
     notificationSocket.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
     notificationSocket.current.onopen = () => console.log('Notification WebSocket connected');
-    notificationSocket.current.onmessage = (event) => setNotificationMessage(JSON.parse(event.data));
+    notificationSocket.current.onmessage = (event) => {
+      setNotificationMessage(JSON.parse(event.data))
+      const data = JSON.parse(event.data);
+
+      if (data.type === 'game_invite') {
+        sendInvite({ from: data.from, gameId: data.gameId }); // Set invite in state
+      }
+
+      if (data.type === 'invite_accepted') {
+        acceptInvite(data.gameUrl); // Accept invite and navigate
+      }
+    };
     notificationSocket.current.onclose = () => console.log('Notification WebSocket disconnected');
 
     return () => {
