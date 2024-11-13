@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import Loading from './Loading';
 import NoFriendRequests from './NoFriendRequests';
+import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 
 interface Profile {
   id: number;
@@ -33,49 +34,53 @@ const FriendRequests: React.FC = () => {
     refetch 
   } = useGetData<FriendRequest[]>('friend-requests/pending');
 
-  const handleAccept = async (username: string) => {
+  // const handleAccept = async (username: string) => {
+  //   try {
+  //     await axios.post(
+  //       `http://localhost:8000/api/friend-request/accept/${username}/`,
+  //       null,
+  //       {
+  //         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
+  //       }
+  //     );
+  //     setNotification('Friend request accepted');
+  //     refetch();
+  //     setTimeout(() => {
+  //       setNotification(null);
+  //     }, 3000);
+  //   } catch (error) {
+  //     console.error('Error accepting friend request:', error);
+  //     setNotification('Failed to accept friend request');
+  //     setTimeout(() => {
+  //       setNotification(null);
+  //     }, 3000);
+  //   }
+  // };
+
+  const acceptFriendRequest = async (username: string) => {
     try {
-      await axios.post(
-        `http://localhost:8000/api/friend-request/accept/${username}/`,
-        null,
-        {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-      );
-      setNotification('Friend request accepted');
+      const message = await apiAcceptFriendRequest(username);
+      setNotification(message);
       refetch();
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    } catch (error) {
-      console.error('Error accepting friend request:', error);
-      setNotification('Failed to accept friend request');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error: any) {
+      setNotification(error.message || 'Failed to accept friend request');
+    } finally {
+      setTimeout(() => setNotification(null), 3000);
     }
   };
 
+
   const rejectFriendRequest = async (username: string) => {
     try {
-      await axios.post(
-        `http://localhost:8000/api/friend-request/reject/${username}/`,
-        null,
-        {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-      );
-      refetch()
-      setNotification('Friend request rejected');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    } catch (error) {
-      console.error('Error rejecting friend request:', error);
-      setNotification('Failed to reject friend request');
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      const message = await apiRejectFriendRequest(username);
+      setNotification(message);
+      refetch();
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error: any) {
+      setNotification(error.message || 'Failed to reject friend request');
+    } finally {
+      setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -106,7 +111,7 @@ const FriendRequests: React.FC = () => {
             {friendPending.map((request) => (
               <div key={request.id} className={css.requestCard}>
                 <img
-                  src={"http://localhost:8000" + request.sender.profile.avatar}
+                  src={request.sender.profile.avatar}
                   alt={request.sender.username}
                   className={css.avatar}
                 />
@@ -117,7 +122,7 @@ const FriendRequests: React.FC = () => {
                 <div className={css.actions}>
                   <button
                     className={css.acceptButton}
-                    onClick={() => handleAccept(request.sender.username)}
+                    onClick={() => acceptFriendRequest(request.sender.username)}
                   >
                     Accept
                   </button>

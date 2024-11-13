@@ -63,7 +63,7 @@ const SearchMessages: React.FC<SearchMessagesProps> = ({
         />
         <input
           type="text"
-          placeholder="Search Messages"
+          placeholder="Search Friends"
           value={query}
           onChange={handleInputChange}
           onClick={handleInputClick}

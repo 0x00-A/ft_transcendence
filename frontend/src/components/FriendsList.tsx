@@ -1,4 +1,3 @@
-// FriendsList.js
 import React from 'react';
 import css from './FriendsList.module.css';
 
@@ -12,30 +11,30 @@ const friendsData = [
 
 const FriendsList = () => {
   return (
-    <div className={css.friendsContainer}>
-      <div className={css.header}>
-        <h3>YOUR FRIENDS</h3>
-        <a href="/friends" className={css.viewMore}>view more</a>
-      </div>
+      <>
+        <div className={css.header}>
+          <h3 className={css.title}>YOUR FRIENDS</h3>
+          <a href="/friends" className={css.viewMore}>View more</a>
+        </div>
 
-      <div className={css.friendList}>
-        {friendsData.map((friend, index) => (
-          <div className={css.friendItem} key={index}>
-            <img src={friend.avatar} alt={friend.name} className={css.avatar} />
-            <div className={css.friendInfo}>
-              <span className={css.name}>{friend.name}</span>
-              <span className={css.level}>Level: {friend.level}</span>
+        <div className={css.friendList}>
+          {friendsData.map((friend, index) => (
+            <div className={css.friendItem} key={index}>
+              <img src={friend.avatar} alt={friend.name} className={css.avatar} />
+              <div className={css.friendInfo}>
+                <span className={css.name}>{friend.name}</span>
+                <span className={css.level}>Level: {friend.level}</span>
+              </div>
+              <div className={`${css.status} ${css[friend.status]}`}>
+                  <span className={css.statusIndicator}></span>
+                {friend.status}
+              </div>
             </div>
-            <div className={`${css.status} ${css[friend.status]}`}>
-                <span></span>
-              {friend.status}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <button className={css.inviteButton}>Invite your friends ➤</button>
-    </div>
+        <button className={css.inviteButton}>Invite your friends ➤</button>
+      </>
   );
 };
 
