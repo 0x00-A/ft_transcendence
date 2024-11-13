@@ -1,0 +1,107 @@
+.cardContainer {
+  width: 20rem;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 1s;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.visible {
+  opacity: 1;
+}
+
+.cardHeader {
+  text-align: center;
+  padding-bottom: 0.5rem;
+}
+
+.iconContainer {
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #4A4A4A;
+}
+
+.timerContainer {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  border-radius: 9999px;
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+.timerRed {
+  background-color: #ffe6e6;
+  color: #ff4d4d;
+}
+
+.timerGray {
+  background-color: #f0f0f0;
+  color: #666666;
+}
+
+.cardContent {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+.playerName {
+  color: #666666;
+  margin-bottom: 0.5rem;
+}
+
+.gameName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #6b46c1;
+  margin-bottom: 0.25rem;
+}
+
+.gameMode {
+  font-size: 0.875rem;
+  color: #999999;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+}
+
+.acceptButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  background-color: #38a169;
+  color: white;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.acceptButton:hover {
+  background-color: #2f855a;
+}
+
+.declineButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  background-color: #e53e3e;
+  color: white;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.declineButton:hover {
+  background-color: #c53030;
+}
