@@ -64,7 +64,7 @@ const LineChartComponent = () => {
             />
             <Tooltip
               contentStyle={{ 
-                backgroundColor: '#1e293b', 
+                backgroundColor: '#283245', 
                 border: 'none',
                 borderRadius: '0.375rem',
                 padding: '0.75rem'

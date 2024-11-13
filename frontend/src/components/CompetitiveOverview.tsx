@@ -11,7 +11,7 @@ const CompetitiveOverview = () => {
     { label: 'Best Rank', value: '#4', Icon: Award },
   ];
 
-  const calculateWinRateOffset = (percentage) => {
+  const calculateWinRateOffset = (percentage: any) => {
     const circumference = 2 * Math.PI * 40;
     return circumference - (percentage / 100) * circumference;
   };

@@ -35,7 +35,7 @@ const OnlineFriends: React.FC = () => {
           onlineFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
-                src={"http://localhost:8000" + friend.profile.avatar}
+                src={friend.profile.avatar}
                 alt={friend.username}
                 className={css.avatar}
               />

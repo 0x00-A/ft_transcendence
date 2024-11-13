@@ -13,11 +13,13 @@ import {
   SIDEBAR_RESIZE_WIDTH,
 } from '../../config/constants';
 import apiClient from '../../api/apiClient';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const loadingBarRef = useLoadingBar();
   const { setIsLoggedIn } = useAuth();
+  const navigate =useNavigate();
 
   const [showConfirm, setShowConfirm] = useState(false);
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -36,7 +38,7 @@ export default function Sidebar() {
       const response = await apiClient.post('/auth/logout/');
       console.log('---from logout---', response);
       setShowConfirm(false);
-      localStorage.clear();
+      navigate('/auth');
     }, 1000);
   };
 
