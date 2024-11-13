@@ -25,7 +25,7 @@ const IconAward = () => (
 
 const CompetitiveOverview = () => {
   const [activeGameMode, setActiveGameMode] = useState('single');
-  
+
   const personalBests = [
     { label: 'Highest Score', value: '835', Icon: IconCrown },
     { label: 'Longest Streak', value: '12', Icon: IconTrending },
@@ -42,15 +42,15 @@ const CompetitiveOverview = () => {
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>COMPETITIVE OVERVIEW</h3>
-      
+
       <div className={styles.buttons}>
-        <button 
+        <button
           className={`${styles.button} ${activeGameMode === 'single' ? styles.singleGame : styles.tournamentsGame}`}
           onClick={() => setActiveGameMode('single')}
         >
           SINGLE GAME
         </button>
-        <button 
+        <button
           className={`${styles.button} ${activeGameMode === 'tournaments' ? styles.singleGame : styles.tournamentsGame}`}
           onClick={() => setActiveGameMode('tournaments')}
         >
@@ -94,7 +94,7 @@ const CompetitiveOverview = () => {
             <span className={styles.wins}>555 WINS</span>
           </div>
           <div className={styles.statBoxLose}>
-            <span className={styles.losses}>555 LOSE</span>
+            <span className={styles.losses}>555 LOSES</span>
           </div>
         </div>
       </div>

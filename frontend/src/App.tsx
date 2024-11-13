@@ -41,6 +41,8 @@ import Oauth2Callback from './pages/Auth/Oauth2Callback';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GameHub from './pages/Game/GameHub/GameHub';
+import React from 'react';
+import OtpAuth from './pages/Auth/OtpAuth';
 
 
 function App() {
@@ -95,7 +97,7 @@ function AppContent() {
     '/settings',
     '/settings/',
     '/profile',
-    '/profile/',
+    '/auth/2factor',
   ];
   const location = useLocation();
   const { isLoggedIn } = useAuth();
@@ -132,30 +134,27 @@ function AppContent() {
           <Topbar />
         )}
         <Routes>
-          <Route
-            path="/auth"
-            element={!isLoggedIn ? <Auth /> : <Navigate to={'/'} />}
-          />
-          <Route path="/auth" element={ !isLoggedIn ? <Auth /> : <Navigate to={'/'} />} />
-          <Route path="/oauth2/callback" element={<Oauth2Callback />} />
-          <Route path="*" element={<PageNotFound />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/game" element={<Game />} />
-            <Route path="/gamehub" element={<GameHub />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="/game/local" element={<LocalGame />} />
-            {/* <Route path="/game/tournament" element={<Tournament />} /> */}
-            <Route path="/game/chat" element={<GameChat />} />
-            <Route path="/game/chat/:room" element={<Room />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/friends" element={<Friends />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/auth" element={<Auth />}/>
+            <Route path="/oauth2/callback" element={<Oauth2Callback />} />
+            <Route path='/auth/2factor' element={<OtpAuth/>} />
             <Route path="*" element={<PageNotFound />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/game" element={<Game />} />
+              <Route path="/gamehub" element={<GameHub />} />
+              <Route path="/test" element={<Test />} />
+              <Route path="/game/local" element={<LocalGame />} />
+              {/* <Route path="/game/tournament" element={<Tournament />} /> */}
+              <Route path="/game/chat" element={<GameChat />} />
+              <Route path="/game/chat/:room" element={<Room />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/friends" element={<Friends />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/store" element={<Store />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
       </div>

@@ -47,8 +47,8 @@ services:
       test: ["CMD", "python", "manage.py", "check"]
       interval: 10s
       timeout: 10s
-      retries: 3
-      start_period: 5s
+      retries: 5
+      start_period: 10s
 
   frontend:
     build:
