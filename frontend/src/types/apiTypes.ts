@@ -31,6 +31,33 @@ export interface User {
   friend_request_status?: "accepted" | "pending" | "Add Friend" | "cancel";
 }
 
+interface Match {
+    match_id: number;
+    player1: string | null;
+    player2: string | null;
+    p1_score: number;
+    p2_score: number;
+    status: string;
+    winner: string | null;
+    player1_ready: boolean;
+    player2_ready: boolean;
+}
+
+interface Rounds {
+    "1": Match[];
+    "2": Match[];
+    "3"?: Match[];
+}
+
+export interface TournamentState {
+    tournament_id: number;
+    name: string;
+    status: string;
+    created_at: string; // formatted date string
+    players: string[];
+    winner: string | null;
+    rounds: Rounds;
+}
 export interface Tournament {
   id: number;
   name: string;
@@ -42,5 +69,5 @@ export interface Tournament {
   players: number[];
   status: string;
   winner: User;
-  // state: {};
+  state: TournamentState;
 }

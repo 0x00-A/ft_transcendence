@@ -61,6 +61,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
   const sendMatchmakerMessage = (message: MessageData) => {
     if (matchmakerSocket.current?.readyState === WebSocket.OPEN) {
+      console.log(`sending message: ${message}`);
+
       matchmakerSocket.current.send(JSON.stringify(message));
     }
   };

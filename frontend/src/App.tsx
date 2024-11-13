@@ -4,6 +4,7 @@ import {
   Routes,
   useLocation,
   Navigate,
+  useNavigate,
 } from 'react-router-dom';
 import PageNotFound from './pages/PageNotFound';
 
@@ -36,6 +37,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { UserProvider } from './contexts/UserContext';
+import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
 
 
 function App() {
@@ -45,20 +47,22 @@ function App() {
         <AuthProvider>
           <UserProvider>
             <WebSocketProvider>
-              <ToastContainer
-                position="top-center"
-                autoClose={2000}
-                hideProgressBar={true}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                // theme="colored"
-                toastClassName='toastStyle'
-              />
-              <AppContent />
+              <GameInviteProvider>
+                <ToastContainer
+                  position="top-center"
+                  autoClose={2000}
+                  hideProgressBar={true}
+                  newestOnTop={true}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  // theme="colored"
+                  toastClassName='toastStyle'
+                  />
+                <AppContent />
+              </ GameInviteProvider>
             </WebSocketProvider>
           </UserProvider>
         </AuthProvider>
@@ -75,12 +79,6 @@ function AppContent() {
     '/',
     '/play',
     '/play/',
-    // '/gamehub',
-    // '/gamehub/',
-    // '/game/tournament',
-    // '/game/tournament/',
-    // '/game/local',
-    // '/game/local/',
     '/chat',
     '/chat/',
     '/friends',
@@ -91,8 +89,6 @@ function AppContent() {
     '/store/',
     '/leaderboard',
     '/leaderboard/',
-    '/settings',
-    '/settings/',
     '/profile',
     '/profile/',
   ];
@@ -103,6 +99,14 @@ function AppContent() {
   // if (loading) {
   //   return <PreLoader />;
   // }
+  const { gameAccepted, gameInvite } = useGameInvite();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (gameAccepted && gameInvite?.gameUrl) {
+      navigate(gameInvite.gameUrl);
+    }
+  }, [gameAccepted, gameInvite, navigate]);
 
   useEffect(() => {
       const wsUrl = `${getWebSocketUrl('online-status/')}`;
