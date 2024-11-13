@@ -9,10 +9,11 @@ import {
   useEffect,
 } from 'react';
 import apiClient from '../api/apiClient';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, replace, useLocation, useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isLoggedIn: boolean | null;
+  isLoading: boolean | null;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -24,12 +25,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   //   return savedStat ? JSON.parse(savedStat) : false;
   // });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
   const logout = async () => {
       console.log('----logout-----');
-      const response = await apiClient.post('/auth/logout/', {});
+      const response = await apiClient.post('/auth/logout/', {})
       console.log('----response from interceptors.response-error-------', response);
       setIsLoggedIn(false);
       navigate('/auth')
@@ -43,10 +45,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     })
     .catch((error) => {
       console.log('----error from interceptors.response-error-------', error);
+    })
+    .finally(() => {
+      setIsLoading(false);
     });
-
-  }, [isLoggedIn, setIsLoggedIn]);
-
+  }, []);
 
   useEffect(() => {
     const interceptor = apiClient.interceptors.response.use(
@@ -59,10 +62,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       }
     );
     return () => axios.interceptors.response.eject(interceptor);
-  }, [logout, isLoggedIn]);
+  }, [isLoggedIn, setIsLoggedIn]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

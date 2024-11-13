@@ -61,6 +61,7 @@
   border-radius: 10px;
   padding: 10px;
   transition: transform 0.2s ease, background-color 0.3s;
+  margin-right: 10px;
 }
 
 .requestCard:hover {

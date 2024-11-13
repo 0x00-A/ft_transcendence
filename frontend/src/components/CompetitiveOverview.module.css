@@ -81,7 +81,6 @@
 }
 
 .bestCard {
-  background: linear-gradient(135deg, #2a2b36 0%, #1a1b26 100%);
   background: linear-gradient(90deg, #384B6C 0%, #2B374D 63%, #1E2533 100%);
   padding: 1rem;
   border-radius: 16px;
@@ -212,4 +211,28 @@
   color: #ffffff;
   font-size: 1.125rem;
   font-weight: 600;
+}
+
+@media (max-height: 1060px) {
+  .friendList {
+    gap: 5px;
+  }
+}
+@media (max-height: 1170px) {
+  .statCard {
+    padding: 5px;
+    padding-left: 10px;
+  }
+  .bestCard {
+    padding: 8px;
+    padding-left: 10px;
+  }
+
+  .bestContent {
+    gap: 0.2rem;
+  }
+  .bestLabel {
+    font-size: 0.8rem;
+  }
+  
 }

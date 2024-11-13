@@ -25,6 +25,7 @@ from .views import UnblockUserView
 from .views import SuggestedConnectionsView
 from .views import ConfirmOauth2Login
 from .views import ProfileApiView
+from .views import EditProfileView
 
 
 
@@ -47,6 +48,8 @@ urlpatterns = [
 
     path('users/', AllUsersView.as_view(), name='all_users'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
+    path('profile/edit/', EditProfileView.as_view()),
+
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),

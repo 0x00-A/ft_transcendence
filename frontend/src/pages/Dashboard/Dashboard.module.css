@@ -186,7 +186,7 @@
 
   .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
     height: auto;
-    padding: 20px;
+    padding: 30px;
   }
 }
 
@@ -202,7 +202,7 @@
   }
 
   .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
-    padding: 15px;
+    padding: 30px;
     height: auto;
   }
 }
