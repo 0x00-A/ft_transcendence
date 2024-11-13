@@ -10,13 +10,13 @@ import NoTournamentIcon from '@/pages/Game/NoTournament/NoTournamnet';
 
 const TournamentList = ({
   handleJoin,
-  handleView,
+  // handleView,
   tournaments,
   error,
   isLoading,
 }: {
   handleJoin: (tournamentId: number) => void;
-  handleView: () => void;
+  // handleView: () => void;
   tournaments: Tournament[] | undefined;
   error: Error | null;
   isLoading: boolean;
@@ -75,13 +75,13 @@ const TournamentList = ({
                 {tournament.participants_count}/{tournament.number_of_players}
               </div>
               <div className={`${css.col} ${css.action}`}>
-                {!isInTournament(tournament.players, tournament.user_id) ? (
                   <button onClick={() => handleJoin(tournament.id)}>
                     Join
                   </button>
+                {/* {!isInTournament(tournament.players, tournament.user_id) ? (
                 ) : (
                   <button onClick={handleView}>View</button>
-                )}
+                )} */}
               </div>
             </div>
           ))}
