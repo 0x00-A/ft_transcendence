@@ -10,36 +10,36 @@ const matchesData = [
 
 const LastMatch = () => {
     return (
-    <div className={css.lastMatchContainer}>
-        <div className={css.header}>
-            <h3>LAST MATCH</h3>
-            <a href="/view-more" className={css.viewMore}>view more</a>
-        </div>
+        <>
+            <div className={css.header}>
+                <h3>LAST MATCH</h3>
+                <a href="/view-more" className={css.viewMore}>view more</a>
+            </div>
 
-        
-        <div className={css.containerBody}>
-            <div className={css.line}></div>
-            <div className={css.containerList}>
-                <div className={css.weekLabel}>TO WEEK</div>
-                <div className={css.matchList}>
-                {matchesData.map((match, index) => (
-                    <div className={`${css.matchItem} ${css[match.color]}`} key={index}>
-                    <img src={match.avatar} alt={match.name} className={css.avatar} />
-                    <div className={css.matchInfo}>
-                        <span className={css.name}>{match.name}</span>
-                        <span className={css.date}>{match.date}</span>
+
+            <div className={css.containerBody}>
+                <div className={css.line}></div>
+                <div className={css.containerList}>
+                    <div className={css.weekLabel}>TO WEEK</div>
+                    <div className={css.matchList}>
+                    {matchesData.map((match, index) => (
+                        <div className={`${css.matchItem} ${css[match.color]}`} key={index}>
+                        <img src={match.avatar} alt={match.name} className={css.avatar} />
+                        <div className={css.matchInfo}>
+                            <span className={css.name}>{match.name}</span>
+                            <span className={css.date}>{match.date}</span>
+                        </div>
+                        <div className={css.score}> <span className={css.YourGoals}>11</span> : <span className={css.opponentGoals}>23</span></div> 
+                        <div className={css.pointsContainer}>
+                            <span className={css.points}>{match.points}</span>
+                            <img src="/icons/score.svg" alt="score" />
+                        </div>
+                        </div>
+                    ))}
                     </div>
-                    <span className={css.score}>{match.score}</span>
-                    <div className={css.pointsContainer}>
-                        <span className={css.points}>{match.points}</span>
-                        <img src="/icons/score.svg" alt="score" />
-                    </div>
-                    </div>
-                ))}
                 </div>
             </div>
-        </div>
-    </div>
+        </>
     );
 };
 

@@ -85,7 +85,11 @@
 
 
 
-
+  --chart-1: 200, 100%, 50%;
+  --chart-2: 40, 80%, 60%;
+  --color-desktop: #4CAF50; 
+  --color-mobile: #2196F3; 
+  
   /* --text-color: #858585; */
 
 
