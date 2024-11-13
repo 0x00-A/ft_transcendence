@@ -3,9 +3,8 @@ import css from './BlockedList.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
-
-import axios from 'axios';
 import moment from 'moment';
+import { apiUnBlockRequest } from '@/api/friendApi';
 
 interface BlockedUser {
   blocker: {
@@ -30,20 +29,18 @@ const BlockedList: React.FC = () => {
 
   const { data: blockedUsers = [], isLoading, error, refetch } = useGetData<BlockedUser[]>('blocked');
 
-  const handleUnblock = async (username: string) => {
+  const unBlockRequest = async (username: string) => {
     try {
-      await axios.post(
-        `http://localhost:8000/api/unblock/${username}/`,
-        null,
-        {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-      );
-      console.log(`Unblocked user: ${username}`);
-      // Optionally refetch blocked users after unblocking
+      const message = await apiUnBlockRequest(username);
+      // setNotification(message);
       refetch();
-    } catch (error) {
-      console.error('Error unblocking user:', error);
+      // setTimeout(() => setNotification(null), 3000);
+      console.log(message);
+    } catch (error: any) {
+      console.log(error.message);
+      // setNotification(error.message || 'Failed to accept friend request');
+    } finally {
+      // setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -111,7 +108,7 @@ const BlockedList: React.FC = () => {
           filteredUsers.map((user) => (
             <div key={user.blocked.id} className={css.userCard}>
               <img
-                src={"http://localhost:8000" + user.blocked.profile.avatar}
+                src={user.blocked.profile.avatar}
                 alt={user.blocked.username}
                 className={css.avatar}
               />
@@ -121,7 +118,7 @@ const BlockedList: React.FC = () => {
               </div>
               <button
                 className={css.unblockButton}
-                onClick={() => handleUnblock(user.blocked.username)}
+                onClick={() => unBlockRequest(user.blocked.username)}
               >
                 Unblock
               </button>

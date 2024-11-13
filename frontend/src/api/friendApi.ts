@@ -1,7 +1,5 @@
-import axios from 'axios';
 import apiClient from './apiClient';
 
-const API_BASE_URL = 'http://localhost:8000/api';
 
 export const  apiSendFriendRequest = async (username: string) => {
     try {
@@ -12,24 +10,6 @@ export const  apiSendFriendRequest = async (username: string) => {
             throw new Error(error.response.data.error);
         } else {
             throw new Error('Failed to send friend request');
-        }
-    }
-};
-
-export const apiRejectFriendRequest = async (username: string) => {
-    try {
-        const response = await axios.post(`${API_BASE_URL}/friend-request/reject/${username}/`,
-        null,
-        {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-        );
-        return response.data.message || 'Friend request rejected';
-    } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.error) {
-            throw new Error(error.response.data.error);
-        } else {
-            throw new Error('Error rejecting friend request');
         }
     }
 };
@@ -47,19 +27,55 @@ export const apiAcceptFriendRequest = async (username: string) => {
         }
     };
 
+export const apiRejectFriendRequest = async (username: string) => {
+    try {
+        const response = await apiClient.post(`/friend-request/reject/${username}/`);
+        return response.data.message || 'Friend request rejected';
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.error) {
+            throw new Error(error.response.data.error);
+        } else {
+            throw new Error('Error rejecting friend request');
+        }
+    }
+};
+
+
 export const apiCancelFriendRequest = async (username: string) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/friend-request/cancel/${username}/`, {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-        });
+        const response = await apiClient.delete(`/friend-request/cancel/${username}/`);
         return response.data.message || 'Friend request cancel';
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
         } else {
             throw new Error('Failed to cancel friend request');
+            }
+        }
+    };
+
+export const apiBlockRequest = async (username : string) => {
+    try {
+        const response = await apiClient.post(`/block/${username}/`);
+        return response.data.message || 'blocking user';
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.error) {
+            throw new Error(error.response.data.error);
+        } else {
+            throw new Error('Failed to blocking user');
+            }
+        }
+    };
+
+export const apiUnBlockRequest = async (username : string) => {
+    try {
+        const response = await apiClient.post(`/unblock/${username}/`);
+        return response.data.message || 'Unblocked user';
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.error) {
+            throw new Error(error.response.data.error);
+        } else {
+            throw new Error('Failed to unblocking user');
             }
         }
     };

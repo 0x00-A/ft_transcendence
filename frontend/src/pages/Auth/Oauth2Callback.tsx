@@ -19,7 +19,7 @@ interface UsernameFormData {
 const Oauth2Callback = () => {
 
     const navigate = useNavigate()
-    const { setIsLoggedIn } = useAuth()
+    // const { setIsLoggedIn } = useAuth()
     const [isUsernameForm, setUsernameForm] = useState(false);
     const [formStatus, setFormStatus] = useState<string>('')
 
@@ -35,7 +35,7 @@ const Oauth2Callback = () => {
           .then(response => {
             if (response.status === 200) {
               navigate('/');
-              setIsLoggedIn(true);
+              // setIsLoggedIn(true);
             }
           })
           .catch(() => navigate('/auth'));
