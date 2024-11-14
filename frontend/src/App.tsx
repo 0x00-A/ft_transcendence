@@ -100,7 +100,7 @@ function AppContent() {
     '/auth/2factor',
   ];
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
   // const loading = usePreLoader();
 
   // if (loading) {
@@ -108,6 +108,9 @@ function AppContent() {
   // }
 
   useEffect(() => {
+    // if (!isLoggedIn) {
+    //   return;
+    // }
       const wsUrl = `${getWebSocketUrl('online-status/')}`;
       const socket = new WebSocket(wsUrl);
       onlineSocketRef.current = socket;

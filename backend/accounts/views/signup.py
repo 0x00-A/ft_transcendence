@@ -15,6 +15,7 @@ class SignupView(CreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         message = 'Your account has been created, you can login now.';
+        print('api ==> signup: User account created')
         return Response(data={'message': message}, status=status.HTTP_201_CREATED, headers=headers)
 
 

@@ -6,29 +6,26 @@ from django.contrib.auth import get_user_model
 from accounts.models import Profile
 from django.contrib.auth.models import AnonymousUser
 
-#  2BDPCE98Z4H8WZ9ZJPAB6EJ9
 
 User = get_user_model()
 
-
 class OnlineStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.user = self.scope['user']
+        user = self.scope['user']
 
-        if self.user and not isinstance(self.scope['user'], AnonymousUser):
+        if user.is_authenticated:
+            print('api socket ==> OnlineStatusConsumer: User is connected')
             await self.accept()
-
             await self.set_online_status(True)
             await self.send(text_data=f"Hello {self.user.username}, you are authenticated!")
         else:
-            # Reject the connection if user is not authenticated
-            print(f"##################### User not found ##########################")
+            print('api socket ==> OnlineStatusConsumer: User is not authenticated connection rejected')
             await self.close()
 
     async def disconnect(self, close_code):
-        # Mark the user as offline when they disconnect
-        if self.user and not self.user.is_anonymous:
+            print('api socket ==> OnlineStatusConsumer: User disconnected')
             await self.set_online_status(False)
+            return await super().disconnect(close_code)
 
     @database_sync_to_async
     def set_online_status(self, is_online):
