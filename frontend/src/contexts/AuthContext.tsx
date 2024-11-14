@@ -1,4 +1,4 @@
-import axios from 'axios';
+// React
 import {
   createContext,
   useState,
@@ -8,8 +8,12 @@ import {
   Dispatch,
   useEffect,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
+// API
 import apiClient from '../api/apiClient';
-import { Navigate, replace, useLocation, useNavigate } from 'react-router-dom';
+import { API_LOGOUT_URL, API_CONFIRM_LOGIN_URL } from '@/api/apiConfig';
+import axios from 'axios';
+
 
 interface AuthContextType {
   isLoggedIn: boolean | null;
@@ -20,31 +24,37 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
-  //   const savedStat = localStorage.getItem('isLoggedIn');
-  //   return savedStat ? JSON.parse(savedStat) : false;
-  // });
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
   const navigate = useNavigate();
 
   const logout = async () => {
-      console.log('----logout-----');
-      const response = await apiClient.post('/auth/logout/', {})
-      console.log('----response from interceptors.response-error-------', response);
+    if (!isLoggedIn) {
+      return;
+    }
+    try {
+      const response = await apiClient.post(API_LOGOUT_URL);
+      console.log('Logout response ==> ', response.data.message);
       setIsLoggedIn(false);
       navigate('/auth')
+    }
+    catch (error) {
+      console.log('Logout error ==> ', error.response.data.error);
+    }
   }
 
   useEffect(() => {
-    apiClient.get('auth/confirm_login/')
+    // if (!isLoggedIn) {
+    //   return;
+    // }
+    apiClient.get(API_CONFIRM_LOGIN_URL)
     .then((response) => {
-      console.log('----response from interceptors.response-error-------', response);
+      console.log('apiClient ==> Confirm Login response: ', response.data.message);
       setIsLoggedIn(true);
     })
-    .catch((error) => {
-      console.log('----error from interceptors.response-error-------', error);
+    .catch(() => {
+      logout();
     })
     .finally(() => {
       setIsLoading(false);

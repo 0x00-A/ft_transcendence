@@ -7,7 +7,7 @@ import {
 } from 'react-icons/io5';
 import { AiOutlineAppstore } from 'react-icons/ai';
 import { MdOutlineLeaderboard } from 'react-icons/md';
-import { RiSettings3Line } from 'react-icons/ri';
+import { FaRegUser } from "react-icons/fa";
 import {
   MENU_ACTIVE_ICON_COLOR,
   MENU_ICON_COLOR,
@@ -98,11 +98,11 @@ const Menus = [
   },
   {
     id: 7,
-    path: '/settings',
-    title: 'Settings',
-    icon: <RiSettings3Line size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    path: '/profile',
+    title: 'Profile',
+    icon: <FaRegUser size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
     activeIcon: (
-      <RiSettings3Line size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+      <FaRegUser size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
     ),
   },
 ];

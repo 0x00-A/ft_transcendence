@@ -19,7 +19,7 @@ const schema = yup.object().shape({
     // .max(15, 'username must not exceed 15 characters!'),
 });
 
-const EditProfileApi = async (data: EditProfileFormData) => {
+const EditProfileApi = async (data) => {
   // try {
     const response = await apiClient.put(
         '/profile/edit/',
@@ -52,7 +52,7 @@ const useEditProfile = () => {
     reset,
     // watch,
     // setError,
-  } = useForm<FormData>({
+  } = useForm<EditProfileFormData>({
     resolver: yupResolver(schema),
     reValidateMode:'onChange',
     mode: 'onChange',

@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import css from './Profile.module.css'
-import ProfileHeader from '../../components/Profile/ProfileHeader'
-import GameHistory from './components/GameHistory'
-import ProfilePopup from './components/ProfilePopup'
 
-import Avatar1 from './assets/avatar1.svg'
-import Avatar2 from './assets/avatar2.svg'
-import Avatar3 from './assets/avatar3.svg'
-import Avatar4 from './assets/avatar4.svg'
-import { useQuery } from '@tanstack/react-query';
-import apiClient from '../../api/apiClient'
-import LastMatch from '../../components/LastMatch';
-import Achievements from '../../components/Achievements';
-import FriendsList from '../../components/FriendsList';
+// Components
+import ProfileHeader from '../../components/Profile/ProfileHeader'
+// Styles
+import css from './Profile.module.css'
+import Avatar from '@mui/material/Avatar';
+
 
 
 const Profile = () => {
@@ -20,10 +12,13 @@ const Profile = () => {
   return (
     <div className={css.profileContainer}>
       {/* {isFormPopup && <ProfilePopup setFormpopup={setFormPopup} />} */}
-      <div className={css.profileHeader}>
-        <ProfileHeader />
+      <div className={css.profileHeaderContainer}>
+        <div className={css.profileAvatarUsername}>
+          <img src="https://picsum.photos/200" alt="" className={css.profileAvatar}/>
+          <p>Lmahdi</p>
+        </div>
       </div>
-      <div className={css.gameHistoryContainer}>
+      {/* <div className={css.gameHistoryContainer}>
         <LastMatch />
       </div>
       <div className={css.achievementsContainer}>
@@ -31,7 +26,7 @@ const Profile = () => {
       </div>
       <div className={css.friendsContainer}>
         <FriendsList />
-      </div>
+      </div> */}
     </div>
         // {/* <div className={css.bodyContainer}> */}
           // {/* <GameHistory /> */}

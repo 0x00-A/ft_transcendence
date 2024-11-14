@@ -8,7 +8,7 @@ import css from './ProfileHeader.module.css'
 import { useQuery } from '@tanstack/react-query'
 import apiClient from '@/api/apiClient'
 import LevelStat from './levelStat'
-import ProfilePopup from '@/pages/Profile/components/ProfilePopup'
+import ProfilePopup from '@/components/Profile/ProfilePopup'
 
 const getProfile = async () => {
   // try {
@@ -35,8 +35,8 @@ const profileHeader = ({}) => {
     <div className={css.profileHeaderContainer}>
       {isFormPopup && <ProfilePopup setFormpopup={setFormPopup} profileData={data} />}
       <div className={css.profileAvatar}>
-        <img src={data.profile.avatar} alt="" />
-        <p>{data.username}</p>
+        <img src="https://picsum.photos/200" alt="" />
+        {/* <p>{data.username}</p> */}
       </div>
       <div className={css.profileStats}>
         <WinRateDoughnut />
@@ -57,6 +57,7 @@ const profileHeader = ({}) => {
         <LevelStat level={2} currentXP={200} xpForNextLevel={500}/>
       </div>
       <button className={css.editProfileBtn} onClick={() => setFormPopup(true)}>Edit profile</button>
+      </div>
         {/* <WinRateDoughnut/>
         <div className={css.stats}>
           <span className={css.totalGames}>Total games</span>

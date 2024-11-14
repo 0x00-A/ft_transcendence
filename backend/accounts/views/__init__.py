@@ -2,6 +2,8 @@ from .login import LoginView
 from .login import RefreshToken
 from .logout import LogoutView
 from .signup import SignupView
+from .oauth2_authentication import oauth2_authentication
+from .oauth2_authentication import oauth2_authorize
 
 from .oauth2_discord import discord_authorize
 from .oauth2_discord import oauth2_discord

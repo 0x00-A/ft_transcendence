@@ -12,7 +12,7 @@ import PreLoader from './components/PreLoader/PreLoader';
 // import Login from './pages/Login';
 // import Login from './pages/Auth/Login';
 import Auth from './pages/Auth/Auth';
-// import Profile from './pages/Profile/Profile';
+import Profile from './pages/Profile/Profile';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Chat from './pages/Chat/Chat';
 import Friends from './pages/Friends/Friends';
@@ -100,7 +100,7 @@ function AppContent() {
     '/auth/2factor',
   ];
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
   // const loading = usePreLoader();
 
   // if (loading) {
@@ -108,6 +108,9 @@ function AppContent() {
   // }
 
   useEffect(() => {
+    // if (!isLoggedIn) {
+    //   return;
+    // }
       const wsUrl = `${getWebSocketUrl('online-status/')}`;
       const socket = new WebSocket(wsUrl);
       onlineSocketRef.current = socket;
@@ -153,7 +156,7 @@ function AppContent() {
               <Route path="/store" element={<Store />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/settings" element={<Settings />} />
-              {/* <Route path="/profile" element={<Profile />} /> */}
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
