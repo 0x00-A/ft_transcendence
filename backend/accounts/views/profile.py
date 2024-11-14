@@ -36,28 +36,15 @@ class ProfileApiView(APIView):
         try:
             user = request.user
             serializer = UserSerializer(user)
-            # response = Response(serializer.data, status=status.HTTP_200_OK)
-            # if hasattr(request, 'new_access_token'):
-            #     response.set_cookie(
-            #         key = 'access_token',
-            #         value = request.new_access_token,
-            #         httponly = True,
-            #         secure = True,
-            #         samesite = 'Strict'
-            #     )
-            # return response
+            print('api ==> get profile: User profile found')
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
+            print('api ==> get profile: User profile not found')
             return Response(
                 {'error': 'User profile not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        # except Profile.DoesNotExist:
-        #     return Response(
-        #         {'error': 'Profile not found'},
-        #         status=status.HTTP_404_NOT_FOUND
-        #     )
         except Exception as e:
             return Response(
                 {'error': f'Internal server error: {str(e)}'},
@@ -106,7 +93,9 @@ class EditProfileView(APIView):
             serializer.files = request.FILES
         if serializer.is_valid():
             serializer.save()
+            print('api ==> edit profile: Changes apply to your profile successfuly')
             return Response({'message: changes apply to your profile successfuly'}, status=status.HTTP_200_OK)
+        print('api ==> edit profile: Failed to apply Changes to your profile')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

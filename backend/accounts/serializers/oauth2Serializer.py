@@ -34,10 +34,8 @@ class Oauth2UserSerializer(serializers.ModelSerializer):
             is_oauth_user = True
         )
         user.set_unusable_password()
-        # profile = Profile.objects.create(user=user)
         avatarContent = self.get_avatar_content(validated_data['avatar_link'])
         if avatarContent is not None:
             user.profile.avatar.save(name=f"{user.username}_avatar.png", content=ContentFile(avatarContent), save=True)
         user.save()
-        # profile.save()
         return user

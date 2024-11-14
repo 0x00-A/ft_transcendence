@@ -30,6 +30,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 #############################
 
 API_CLIENT_OAUTH2_REDIRECT_URI = os.environ.get('API_CLIENT_OAUTH2_REDIRECT_URI')
+OAUTH2_REDIRECT_URI = os.environ.get('OAUTH2_REDIRECT_URI')
 
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
