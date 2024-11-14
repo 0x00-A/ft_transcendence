@@ -71,9 +71,10 @@ const Chat = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
+  // const handleSearch = (query: string) => {
+  //   console.log("query: ", query);
+  //   setSearchQuery(query);
+  // };
 
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
@@ -122,7 +123,7 @@ const Chat = () => {
         <div className={css.sidebarLeft} ref={sidebarLeftRef}>
           <OptionsButton />
           <SearchMessages
-            onSearch={handleSearch}
+            // onSearch={handleSearch}
             onSelectedSearch={setSelectedSearch}
             query={searchQuery}
             setQuery={setSearchQuery}
