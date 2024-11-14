@@ -1,5 +1,5 @@
 // React
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // Hooks
 import useLogin from '../../hooks/auth/useLogin';
@@ -27,10 +27,10 @@ const Login = ({onSetAuthStat}) => {
   useEffect(() => {
     if (mutation.isSuccess) {
       reset();
-      console.log(mutation.data.message);
+      console.log('apiClient ==> Login response: ', mutation.data.data.message);
       setIsLoggedIn(true);
       navigate('/');
-      onSetAuthStat(mutation.data.message);
+      onSetAuthStat(mutation.data.data.message);
       setTimeout(() => onSetAuthStat(null), 5000)
     }
   }, [mutation.isSuccess])

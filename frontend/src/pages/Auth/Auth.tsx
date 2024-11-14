@@ -8,17 +8,15 @@ import Login from './Login';
 import Signup from './Signup';
 import Oauth2 from '../../components/Auth/Oauth2';
 import { useAuth } from '@/contexts/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
-// import ExternAuth from '../../components/Auth/ExternAuth';
+import { Navigate } from 'react-router-dom';
+
 
 
 const Auth = () => {
     const [isLogin, setIslogin] = useState(true);
     const [authStat, setAuthStat] = useState<string | null>(null);
     const {isLoggedIn, isLoading} = useAuth();
-    // const navigate = useNavigate()
 
-    // console.log(isLoggedIn);
     if (isLoading) {
       return <p>Loadding...</p>;
     }

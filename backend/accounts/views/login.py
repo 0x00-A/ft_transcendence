@@ -17,8 +17,6 @@ from rest_framework.views import APIView
 
 def generate_otp():
     return random.randint(100000, 999999)
-# SID="AC1a34e8c3847f7b08d2d46387fdc24be7"
-# AUTH_TOKEN="73a9452c14cc90dcd4faf851f4a6e6c1"
 
 
 def send_otp_email(user):
@@ -41,6 +39,7 @@ def send_otp_email(user):
 
 class LoginView(CreateAPIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     serializer_class = UserLoginSerializer
 
     def post(self, request):
@@ -60,6 +59,7 @@ class LoginView(CreateAPIView):
                     "2FA_required": True,
                     "message": "n otp message sent to your email to verify your account"
                 }
+                print('apiBackend ==> login status: user enabled 2FAC')
                 return Response(data=data, status=status.HTTP_202_ACCEPTED)
             token = get_token_for_user(user)
             if token:
@@ -78,11 +78,13 @@ class LoginView(CreateAPIView):
                     secure = False,
                     samesite = 'Strict'
                 )
+                print('apiBackend ==> login status: login success')
                 return response
             else:
+                print('apiBackend ==> login status: Getting tokens for user failed')
                 return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-        else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        print('apiBackend ==> login status: Invalid credentials')
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 

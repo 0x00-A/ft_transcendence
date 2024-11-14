@@ -13,7 +13,9 @@ import {
   SIDEBAR_RESIZE_WIDTH,
 } from '../../config/constants';
 import apiClient from '../../api/apiClient';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { API_LOGOUT_URL } from '@/api/apiConfig';
+import { useNavigate } from 'react-router-dom';
+import { config } from 'process';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -32,11 +34,10 @@ export default function Sidebar() {
     // setIsLoggingOut(true); // start logout process
     loadingBarRef.current?.continuousStart();
     setTimeout(async () => {
-      // setIsLoggingOut(false)
       loadingBarRef.current?.complete();
       setIsLoggedIn(false);
-      const response = await apiClient.post('/auth/logout/');
-      console.log('---from logout---', response);
+      const response = await apiClient.post(API_LOGOUT_URL);
+      console.log('apiClient ==> Logout response: ', response.data.message);
       setShowConfirm(false);
       navigate('/auth');
     }, 1000);
