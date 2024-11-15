@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import styles from './GameInviteCard.module.css';
 
 interface GameInviteCardProps {
-  playerName?: string;
+  from?: string;
 //   gameName?: string;
 //   gameMode?: string;
   duration?: number;
@@ -13,15 +13,15 @@ interface GameInviteCardProps {
 }
 
 const GameInviteCard: React.FC<GameInviteCardProps> = ({
-  playerName = 'Player123',
+  from = 'Player123',
 //   gameName = 'Rocket League',
 //   gameMode = 'Competitive 2v2',
-  duration = 30,
+  duration = 10,
   onAccept,
   onReject
 }) => {
   const [seconds, setSeconds] = useState(duration);
-  const [visible, setVisible] = useState(true);
+  // const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,7 +29,7 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
         if (prevSeconds <= 1) {
           clearInterval(timer);
           setTimeout(() => {
-            setVisible(false);
+            // setVisible(false);
             onReject(); // Auto-reject when timer expires
           }, 1000);
           return 0;
@@ -42,38 +42,36 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
   }, [onReject]);
 
   const handleAccept = () => {
-    setVisible(false);
+    // setVisible(false);
     onAccept();
   };
 
   const handleReject = () => {
-    setVisible(false);
+    // setVisible(false);
     onReject();
   };
 
-  if (!visible) {
-    return null;
-  }
+  // if (!visible) {
+  //   return null;
+  // }
 
   return (
-    <div className={`${styles.cardContainer} ${seconds === 0 ? styles.hidden : styles.visible}`}>
-      <Card>
+    <div className={`${styles.cardContainer}`}>
+      <Card className='bg-transparent border-none p-0 m-0'>
         <CardHeader className={styles.cardHeader}>
           <div className={styles.iconContainer}>
-            <GamepadIcon className="w-12 h-12 text-purple-600" />
+            <GamepadIcon className="w-12 h-12 text-white" />
           </div>
           <CardTitle className={styles.cardTitle}>Game Invitation</CardTitle>
         </CardHeader>
 
         <CardContent className={styles.cardContent}>
           <div className="mb-4">
-            <span className={`${styles.timerContainer} ${seconds <= 10 ? styles.timerRed : styles.timerGray}`}>
-              {seconds} seconds
+            <span className={`${styles.timerContainer} ${seconds <= 5 ? styles.timerRed : styles.timerGray}`}>
+              {seconds}
             </span>
           </div>
-          <p className={styles.playerName}>{playerName} invited you to a game</p>
-          {/* <h3 className={styles.gameName}>{gameName}</h3>
-          <p className={styles.gameMode}>{gameMode}</p> */}
+          <p className={styles.playerName}>{from} invited you to a game</p>
         </CardContent>
 
         <CardFooter className={styles.cardFooter}>
@@ -81,16 +79,16 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
             className={styles.acceptButton}
             onClick={handleAccept}
           >
-            <Check className="w-5 h-5" />
-            Accept
+            <Check className="w-10 h-10" />
+            {/* Accept */}
           </button>
 
           <button
             className={styles.declineButton}
             onClick={handleReject}
           >
-            <X className="w-5 h-5" />
-            Decline
+            <X className="w-10 h-10" />
+            {/* Decline */}
           </button>
         </CardFooter>
       </Card>

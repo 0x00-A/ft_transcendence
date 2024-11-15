@@ -1,8 +1,10 @@
 .cardContainer {
-  width: 20rem;
-  background-color: white;
+  /* width: 20rem; */
+  width: 100% !important;
+  height: 100% !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: opacity 1s;
+  background-color: transparent !important;
 }
 
 .hidden {
@@ -26,7 +28,7 @@
 .cardTitle {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #4A4A4A;
+  color: #ccc1c1;
 }
 
 .timerContainer {
@@ -34,26 +36,31 @@
   padding: 0.25rem 1rem;
   border-radius: 9999px;
   font-family: monospace;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  border: 1px solid #ccc1c1;
 }
 
 .timerRed {
-  background-color: #ffe6e6;
+  background-color: transparent;
   color: #ff4d4d;
 }
 
 .timerGray {
-  background-color: #f0f0f0;
-  color: #666666;
+  background-color: transparent;
+  color: #ccc1c1;
 }
 
 .cardContent {
   text-align: center;
   padding-bottom: 1rem;
+  background-color: transparent !important;
+    padding: 0 !important;
+  margin: 0 !important;
+  padding-bottom: 1rem !important;
 }
 
 .playerName {
-  color: #666666;
+  color: #ccc1c1;
   margin-bottom: 0.5rem;
 }
 
@@ -73,35 +80,42 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  padding-bottom: 1.5rem;
+  padding: 0 !important;
+  margin: 0 !important;
+  padding-bottom: 1rem !important;
+
 }
 
 .acceptButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1.5rem;
-  background-color: #38a169;
-  color: white;
+  padding: 1rem;
+  color: #38a169;
   border-radius: 9999px;
   transition: background-color 0.2s;
+  border-radius: 50%;
+  border: 1px solid white;
 }
 
 .acceptButton:hover {
-  background-color: #2f855a;
+  border: 1px solid #2f855a;
 }
 
 .declineButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1.5rem;
-  background-color: #e53e3e;
-  color: white;
+  padding: 1rem;
+  color: #e53e3e;
   border-radius: 9999px;
   transition: background-color 0.2s;
+  border-radius: 50%;
+  border: 1px solid white;
+
+
 }
 
 .declineButton:hover {
-  background-color: #c53030;
+  border: 1px solid #e53e3e;
 }

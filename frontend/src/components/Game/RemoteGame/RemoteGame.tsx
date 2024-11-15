@@ -5,6 +5,7 @@ import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
+import { useGameInvite } from '@/contexts/GameInviteContext';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -26,6 +27,8 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
+
+  const {setGameAccepted} = useGameInvite();
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -64,6 +67,10 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
     hitWallSound.current.load(); // Preload the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
     paddleHitSound.current.load();
+
+    return () => {
+      setGameAccepted(false);
+    }
   }, [sound]);
 
   useEffect(() => {

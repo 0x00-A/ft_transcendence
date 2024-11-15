@@ -2,36 +2,37 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-type GameInvite = {
-  from: string;
-  gameId: string;
-  gameUrl?: string;
-};
+// type GameInvite = {
+//   from: string;
+//   gameId: string;
+//   gameUrl?: string;
+// };
 
 type GameInviteContextType = {
-  gameInvite: GameInvite | null;
+  gameInvite: string | null;
   gameAccepted: boolean;
-  sendInvite: (inviteDetails: GameInvite) => void;
+  // sendInvite: (inviteDetails: GameInvite) => void;
   acceptInvite: (gameUrl: string) => void;
+  setGameAccepted: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const GameInviteContext = createContext<GameInviteContextType | undefined>(undefined);
 
 export const GameInviteProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [gameInvite, setGameInvite] = useState<GameInvite | null>(null);
+  const [gameInvite, setGameInvite] = useState<string | null>(null);
   const [gameAccepted, setGameAccepted] = useState<boolean>(false);
 
-  const sendInvite = (inviteDetails: GameInvite) => {
-    setGameInvite(inviteDetails);
-  };
+  // const sendInvite = (inviteDetails: GameInvite) => {
+  //   setGameInvite(inviteDetails);
+  // };
 
   const acceptInvite = (gameUrl: string) => {
     setGameAccepted(true);
-    setGameInvite((prev) => (prev ? { ...prev, gameUrl } : null));
+    setGameInvite(gameUrl);
   };
 
   return (
-    <GameInviteContext.Provider value={{ gameInvite, gameAccepted, sendInvite, acceptInvite }}>
+    <GameInviteContext.Provider value={{ gameInvite, gameAccepted, setGameAccepted, acceptInvite }}>
       {children}
     </GameInviteContext.Provider>
   );

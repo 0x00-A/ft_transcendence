@@ -7,8 +7,6 @@ from asgiref.sync import sync_to_async
 from django.contrib.auth.models import AnonymousUser
 
 from .matchmaker import Matchmaker
-
-
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']

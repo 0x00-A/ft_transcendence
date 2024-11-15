@@ -29,7 +29,7 @@ import usePreLoader from './hooks/usePreLoader';
 import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from './utils/getWebSocketUrl';
 import Game from './pages/Game/Game';
 import Oauth2Callback from './pages/Auth/Oauth2Callback';
@@ -38,6 +38,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { UserProvider } from './contexts/UserContext';
 import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
+import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 
 
 function App() {
@@ -46,24 +47,24 @@ function App() {
       <LoadingBarProvider>
         <AuthProvider>
           <UserProvider>
-            <WebSocketProvider>
-              <GameInviteProvider>
+            <GameInviteProvider>
+              <WebSocketProvider>
                 <ToastContainer
                   position="top-center"
                   autoClose={2000}
                   hideProgressBar={true}
-                  newestOnTop={true}
+                  // newestOnTop={true}
                   closeOnClick
                   rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
+                  // pauseOnFocusLoss
+                  // draggable
+                  // pauseOnHover
                   // theme="colored"
                   toastClassName='toastStyle'
                   />
                 <AppContent />
-              </ GameInviteProvider>
-            </WebSocketProvider>
+              </WebSocketProvider>
+            </ GameInviteProvider>
           </UserProvider>
         </AuthProvider>
       </LoadingBarProvider>
@@ -74,6 +75,7 @@ function App() {
 function AppContent() {
 
   const onlineSocketRef = useRef<WebSocket | null>(null);
+  const [showGame, setShowGame] = useState(false)
 
   const showSidebarRoutes = [
     '/',
@@ -103,8 +105,8 @@ function AppContent() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (gameAccepted && gameInvite?.gameUrl) {
-      navigate(gameInvite.gameUrl);
+    if (gameAccepted && gameInvite) {
+      navigate(`/play`);
     }
   }, [gameAccepted, gameInvite, navigate]);
 
@@ -123,6 +125,9 @@ function AppContent() {
       }
     };
   }, []);
+
+  // if (showGame)
+  //   return <RemoteGame onReturn={() => setShowGame(false)} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
 
   return (
     <div className="app-container ">
