@@ -3,7 +3,6 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import css from './Topbar.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { refreshToken } from '../../utils/getToken';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 
 const Topbar = () => {
@@ -31,26 +30,26 @@ const Topbar = () => {
   //   };
   // }, [])
 
-  useEffect(() => {
-    const wsUrl = `${getWebSocketUrl('notifications/')}`;
-    const ws = new WebSocket(wsUrl);
-    ws.onopen = () => {
-      console.log('connected to websocket');
-    };
+  // useEffect(() => {
+  //   const wsUrl = `${getWebSocketUrl('notifications/')}`;
+  //   const ws = new WebSocket(wsUrl);
+  //   ws.onopen = () => {
+  //     console.log('connected to websocket');
+  //   };
 
-    ws.onmessage = (event) => {
-      console.log('message received', event.data);
-      ws.send(JSON.stringify({'message': 'hello message recieved!' }));
-    };
+  //   ws.onmessage = (event) => {
+  //     console.log('message received', event.data);
+  //     ws.send(JSON.stringify({'message': 'hello message recieved!' }));
+  //   };
 
-    ws.onclose = () => {
-      console.log('websocket closed');
-    };
+  //   ws.onclose = () => {
+  //     console.log('websocket closed');
+  //   };
 
-    return () => {
-      ws.close();
-    };
-  }, []);
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
 
   const handleClick = () => {
     setOpenNotification(!isOpenNotification);

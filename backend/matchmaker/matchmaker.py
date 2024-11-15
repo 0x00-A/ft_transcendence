@@ -15,8 +15,8 @@ from django.contrib.auth import get_user_model
 class Matchmaker:
 
     connected_clients = {}
-    tournaments = []
-    games = []
+    # tournaments = []
+    # games = []
     games_queue = []
 
     @classmethod

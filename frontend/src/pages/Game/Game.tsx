@@ -27,6 +27,7 @@ import { toast } from 'react-toastify';
 import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage';
 import NoTournamentIcon from './NoTournament/NoTournamnet';
 import { useUser } from '@/contexts/UserContext';
+import { useGameInvite } from '@/contexts/GameInviteContext';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -45,9 +46,12 @@ const Game = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const tournamentIdRef = useRef<number | null>(null);
   const [matchStarted, setMatchStarted] = useState(false);
-  const [tournamentStat, setTournamentStat] = useState<TournamentState>(null);
+  const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
+
+  const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
+
 
 
   const {user} = useUser();
@@ -134,6 +138,7 @@ const Game = () => {
         ws.current.close();
       }
       clearTimeout(timeout);
+      setGameAccepted(false);
     };
   }, []);
 
@@ -187,7 +192,7 @@ const Game = () => {
     return <Tournament onReturn={handleReturn} />;
   }
 
-  if (gameState === 'inqueue') {
+  if (gameState === 'inqueue' && !(gameAccepted && gameInvite)) {
     return (
       <div className={styles.matchmakingLoaderWrapper}>
         <ArcadeLoader className={styles.matchmakingLoader} />
@@ -199,6 +204,19 @@ const Game = () => {
         }} >Cancel</button>
       </div>
     );
+  }
+
+  if (gameAccepted && gameInvite) {
+        return <RemoteGame
+          onReturn={() => {
+            setGameAccepted(false);
+            handleReturn()
+          }}
+          requestRemoteGame={() => {
+            setGameAccepted(false);
+            requestRemoteGame();
+          }}
+          game_address={gameInvite} />;
   }
 
   if (gameState === 'started') {

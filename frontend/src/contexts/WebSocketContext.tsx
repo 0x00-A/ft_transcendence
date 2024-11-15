@@ -1,4 +1,6 @@
 // WebSocketContext.tsx
+import GameInviteCard from '@/components/Game/components/GameInviteCard/GameInviteCard';
+import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import React, {
   createContext,
   useContext,
@@ -6,10 +8,12 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { toast } from 'react-toastify';
+import { useGameInvite } from './GameInviteContext';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
-export type MessageType = 'invite' | 'friend_request' | 'status_update';
+export type MessageType = 'game_invite' | 'error' | 'friend_request' | 'status_update';
 
 export interface Notification {
   type: MessageType;
@@ -33,35 +37,92 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const ws = useRef<WebSocket | null>(null);
 
-  useEffect(() => {
-    // Initialize WebSocket connection
-    ws.current = new WebSocket('wss://your-websocket-server-url');
+  const {acceptInvite} = useGameInvite()
 
-    ws.current.onopen = () => {
-      console.log('WebSocket connected');
-      // Send authentication or setup message if needed
-    };
-
-    ws.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      if (
-        data.type === 'invite' ||
-        data.type === 'friend_request' ||
-        data.type === 'status_update'
-      ) {
-        handleIncomingNotification(data);
+  const showGameInviteToast = (from: string) => {
+    toast(
+      <GameInviteCard
+        from={from}
+        onAccept={() => handleAcceptInvite(from)}
+        onReject={() => handleRejectInvite(from)}
+      />,
+      {
+        toastId: from,
+        autoClose: 10000,
+        closeOnClick: false,
+        closeButton: false,
+        style: {
+          padding: '0',
+          margin: '0',
+        }
       }
-    };
+    );
+  };
 
-    ws.current.onclose = () => {
-      console.log('WebSocket disconnected');
-      // Optional: Reconnect logic if needed
-    };
+  const handleAcceptInvite = (from: string) => {
+    console.log(`Accepted invite from ${from}`);
+    sendMessage({
+      'event': 'invite_accept',
+      'from': from,
+    })
+    toast.dismiss();
+  };
 
-    return () => {
-      ws.current?.close();
-    };
+  const handleRejectInvite = (from: string) => {
+    console.log(`Rejected invite from ${from}`);
+    sendMessage({
+      'event': 'invite_reject',
+      'from': from,
+    })
+    toast.dismiss(from);
+  };
+
+  useEffect(() => {
+
+    setTimeout(() => {
+
+      ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
+
+      ws.current.onopen = () => {
+        console.log('Notification WebSocket connected');
+      };
+
+      ws.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+
+        if (
+          data.event === 'friend_request' ||
+          data.event === 'status_update'
+        ) {
+          handleIncomingNotification(data);
+        }
+
+        if (data.event === 'game_invite') {
+          // toast.info(data.message)
+          showGameInviteToast(data.from);
+        }
+        if (data.event === 'error') {
+          toast.error(data.message);
+        }
+        if (data.event === 'invite_reject') {
+          toast.info(data.message);
+        }
+        if (data.event === 'game_address') {
+          toast.info(data.message);
+          acceptInvite(data.game_address);
+        }
+      };
+
+      ws.current.onclose = () => {
+        console.log('Notification WebSocket disconnected');
+        // Reconnect logic
+      };
+
+      return () => {
+        ws.current?.close();
+      };
+    }, 500);
   }, []);
 
   const handleIncomingNotification = (data: Record<string, any>) => {
