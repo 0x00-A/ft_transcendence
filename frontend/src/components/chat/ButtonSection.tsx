@@ -7,12 +7,15 @@ import { toast } from 'react-toastify';
 
 // import { Button } from '@/components/ui/button';
 
-
 const CooldownButton = ({
   onClick,
   cooldownTime = 10000,
-  className = ''
-}: {onClick: () => void; className?: string; cooldownTime?: number}) => {
+  className = '',
+}: {
+  onClick: () => void;
+  className?: string;
+  cooldownTime?: number;
+}) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
 
@@ -43,12 +46,14 @@ const CooldownButton = ({
   }, [isDisabled, timeLeft]);
 
   return (
-    <button
-      disabled={isDisabled}
-      className={`relative ${className}`}
-    >
-      <img onClick={handleClick}  className={`${isDisabled? css.iconDisabled : css.icon}`} src="/icons/chat/Invite.svg" alt="I" />
-      <p className='cursor-text'>Invite</p>
+    <button disabled={isDisabled} className={`relative ${className}`}>
+      <img
+        onClick={handleClick}
+        className={`${isDisabled ? css.iconDisabled : css.icon}`}
+        src="/icons/chat/Invite.svg"
+        alt="I"
+      />
+      <p className="cursor-text">Invite</p>
       {isDisabled && (
         <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm text-gray-500">
           {timeLeft}s
@@ -59,16 +64,14 @@ const CooldownButton = ({
 };
 
 const ButtonSection: React.FC = () => {
-
-    const {user} = useUser();
-    const { sendMessage } = useWebSocket();
+  const { user } = useUser();
+  const { sendMessage } = useWebSocket();
 
   const handleSendInvite = () => {
     sendMessage({
       event: 'game_invite',
       from: user?.username,
       to: 'user2',
-      content: 'Game invite sent!',
     });
   };
   return (
