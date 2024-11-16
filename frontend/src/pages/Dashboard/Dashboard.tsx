@@ -1,12 +1,12 @@
 import React from 'react';
 import css from './Dashboard.module.css';
-import Welcome from '../../components/Welcome';
-import CompetitiveOverview from '../../components/CompetitiveOverview';
-import Achievements from '../../components/Achievements';
-import Leaderboard from '../../components/Leaderboard';
-import FriendsList from '../../components/FriendsList';
-import LastMatch from '../../components/LastMatch';
-import LineChartComponent from '@/components/LineChartComponent';
+import Welcome from '../../components/Dashboard/Welcome';
+import CompetitiveOverview from '../../components/Dashboard/CompetitiveOverview';
+// import Achievements from '../../components/Achievements';
+import Leaderboard from '../../components/Dashboard/Leaderboard';
+import FriendsList from '../../components/Dashboard/FriendsList';
+import LastMatch from '../../components/Dashboard/LastMatch';
+import LineChartComponent from '@/components/Dashboard/LineChartComponent';
 
 const Dashboard = () => {
   return (

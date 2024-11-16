@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import Badge from '../assets/badge.svg'
 
-import WinRateDoughnut from '../WinRateDoughnut'
+import WinRateDoughnut from '../Dashboard/WinRateDoughnut'
 // Styles
 import css from './ProfileHeader.module.css'
 import { useQuery } from '@tanstack/react-query'
