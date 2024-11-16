@@ -14,7 +14,11 @@ import apiClient from '@/api/apiClient';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
-export type MessageType = 'game_invite' | 'error' | 'friend_request' | 'status_update';
+export type MessageType =
+  | 'game_invite'
+  | 'error'
+  | 'friend_request'
+  | 'status_update';
 
 export interface Notification {
   id: number;
@@ -99,7 +103,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         style: {
           padding: '0',
           margin: '0',
-        }
+        },
       }
     );
   };
@@ -107,25 +111,23 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleAcceptInvite = (from: string) => {
     console.log(`Accepted invite from ${from}`);
     sendMessage({
-      'event': 'invite_accept',
-      'from': from,
-    })
+      event: 'invite_accept',
+      from: from,
+    });
     toast.dismiss();
   };
 
   const handleRejectInvite = (from: string) => {
     console.log(`Rejected invite from ${from}`);
     sendMessage({
-      'event': 'invite_reject',
-      'from': from,
-    })
+      event: 'invite_reject',
+      from: from,
+    });
     toast.dismiss(from);
   };
 
   useEffect(() => {
-
     setTimeout(() => {
-
       ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
 
       ws.current.onopen = () => {
