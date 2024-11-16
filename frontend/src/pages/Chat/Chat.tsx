@@ -71,10 +71,6 @@ const Chat = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // const handleSearch = (query: string) => {
-  //   console.log("query: ", query);
-  //   setSearchQuery(query);
-  // };
 
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
@@ -122,18 +118,9 @@ const Chat = () => {
       <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
         <div className={css.sidebarLeft} ref={sidebarLeftRef}>
           <OptionsButton />
-          <SearchMessages
-            // onSearch={handleSearch}
-            onSelectedSearch={setSelectedSearch}
-            query={searchQuery}
-            setQuery={setSearchQuery}
-          />
           <MessageList
-            messages={selectedSearch ? filteredMessages : messages}
+            messages={messages}
             onSelectMessage={setSelectedMessage}
-            isSearchActive={selectedSearch}
-            onSelectedSearch={setSelectedSearch}
-            setQuery={setSearchQuery}
             onBlockUser={handleBlockUser}
           />
         </div>
