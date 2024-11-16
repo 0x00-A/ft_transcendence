@@ -35,6 +35,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 from accounts.models import User
+from accounts.models import Notification
 from matchmaker.models.game import Game
 from matchmaker.matchmaker import Matchmaker
 from django.db.models import Q
@@ -53,6 +54,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.accept()
             self.username = user.username
             self.id = user.id
+
             connected_users[self.username] = self.channel_name
         else:
             await self.close()
@@ -77,7 +79,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             message = {
                 'event': 'error',
                 'message': f"{sender} is currently playing!"
-
             }
             await self.send_message(recipient, message)
             return
@@ -167,15 +168,42 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         else:
             print("NotificationsConsumer: User is not connected.")
 
+    @classmethod
+    def send_notification_to_user(cls, user_id, notification):
+        username = cls.get_username(user_id)
+        if username in connected_users:
+            channel_layer = get_channel_layer()
+            channel_name = connected_users[username]
+
+            if isinstance(notification, Notification):
+                notification_data = notification.to_dict()
+            else:
+                notification_data = notification
+            async_to_sync(channel_layer.send)(
+                channel_name,
+                {
+                    "type": "user.notification",  # Method in the consumer
+                    "message": notification_data,
+                }
+            )
+
     async def user_message(self, event):
         message = event["message"]
 
-        # Send the message to the WebSocket
         await self.send(text_data=json.dumps(message))
 
-    async def get_user_id(self, username):
+    async def user_notification(self, event):
+        message = event["message"]
+        print(f"Sending Notifiaction: {event["message"]}")
+        await self.send(text_data=json.dumps({
+            'event': 'notification',
+            'data': message
+        }))
+
+    @classmethod
+    def get_username(cls, user_id):
         try:
-            user = await User.objects.aget(username=username)
-            return user.id
+            user = User.objects.get(id=user_id)
+            return user.username
         except User.DoesNotExist:
             return None

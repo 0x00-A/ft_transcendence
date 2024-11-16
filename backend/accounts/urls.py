@@ -25,7 +25,11 @@ from .views import UnblockUserView
 from .views import SuggestedConnectionsView
 from .views import ConfirmOauth2Login
 from .views import ProfileApiView
+from rest_framework.routers import DefaultRouter
+from accounts.views import NotificationViewSet
 
+router = DefaultRouter()
+router.register(r'notifications', NotificationViewSet, basename='notification')
 
 
 urlpatterns = [
@@ -48,16 +52,24 @@ urlpatterns = [
     path('users/', AllUsersView.as_view(), name='all_users'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
-    path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
+    path('suggested-connections/', SuggestedConnectionsView.as_view(),
+         name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),
-    path('friend-request/send/<str:username>/', SendFriendRequestView.as_view(), name='send-friend-request'),
-    path('friend-request/accept/<str:username>/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
-    path('friend-request/reject/<str:username>/', RejectFriendRequestView.as_view(), name='reject-friend-request'),
-    path('friend-requests/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),
-    path('friend-requests/sent/', SentFriendRequestsView.as_view(), name='friend-request-list'),
-    path('friend-request/cancel/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
+    path('friend-request/send/<str:username>/',
+         SendFriendRequestView.as_view(), name='send-friend-request'),
+    path('friend-request/accept/<str:username>/',
+         AcceptFriendRequestView.as_view(), name='accept-friend-request'),
+    path('friend-request/reject/<str:username>/',
+         RejectFriendRequestView.as_view(), name='reject-friend-request'),
+    path('friend-requests/pending/', PendingFriendRequestsView.as_view(),
+         name='pending-friend-requests'),
+    path('friend-requests/sent/', SentFriendRequestsView.as_view(),
+         name='friend-request-list'),
+    path('friend-request/cancel/<str:username>/',
+         CancelFriendRequestView.as_view(), name='cancel-friend-request'),
 
     path('block/<str:username>/', BlockUserView.as_view(), name='block_user'),
     path('unblock/<str:username>/', UnblockUserView.as_view(), name='unblock_user'),
     path('blocked/', BlockedUsersView.as_view(), name='blocked_users'),
+    *router.urls,
 ]

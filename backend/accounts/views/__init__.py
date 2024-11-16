@@ -33,3 +33,5 @@ from .BlockRelationship import UnblockUserView
 
 # from .profile import ProfileModelViewSet
 from .profile import ProfileApiView
+
+from .NotificationViewSet import NotificationViewSet

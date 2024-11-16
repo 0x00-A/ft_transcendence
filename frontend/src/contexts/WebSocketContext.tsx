@@ -10,21 +10,28 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import { useGameInvite } from './GameInviteContext';
+import apiClient from '@/api/apiClient';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
 export type MessageType = 'game_invite' | 'error' | 'friend_request' | 'status_update';
 
 export interface Notification {
-  type: MessageType;
-  from: string; // username or ID of sender
-  content: string; // additional message content
-  timestamp: Date;
+  id: number;
+  title: string;
+  message: string;
+  is_read: boolean;
+  created_at: Date;
+  user: string;
 }
 
 export interface WebSocketContextType {
   notifications: Notification[];
   sendMessage: (message: Record<string, any>) => void;
+  fetchNotifications: () => Promise<void>;
+  markAsRead: (notificationId: number) => Promise<void>;
+  markAllAsRead: () => Promise<void>;
+  unreadCount: number;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
@@ -35,7 +42,45 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const ws = useRef<WebSocket | null>(null);
+
+  // Fetch notifications from the API
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await apiClient.get("notifications/");
+      setNotifications(data);
+      setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  // Mark a notification as read
+  const markAsRead = async (notificationId: number) => {
+    try {
+      await apiClient.patch(`notifications/${notificationId}/mark-read/`);
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
+      );
+      setUnreadCount((prev) => prev - 1);
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
+  // Mark all notifications as read
+  const markAllAsRead = async () => {
+    try {
+      await apiClient.patch("notifications/mark-all-read/");
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, is_read: true }))
+      );
+      setUnreadCount(0);
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
 
   const {acceptInvite} = useGameInvite()
 
@@ -91,11 +136,16 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = JSON.parse(event.data);
         console.log(data);
 
+        // if (
+        //   data.event === 'friend_request' ||
+        //   data.event === 'status_update'
+        // ) {
+        //   handleIncomingNotification(data);
+        // }
         if (
-          data.event === 'friend_request' ||
-          data.event === 'status_update'
+          data.event === 'notification'
         ) {
-          handleIncomingNotification(data);
+          handleIncomingNotification(data.data);
         }
 
         if (data.event === 'game_invite') {
@@ -125,14 +175,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     }, 500);
   }, []);
 
-  const handleIncomingNotification = (data: Record<string, any>) => {
-    const newNotification: Notification = {
-      type: data.type,
-      from: data.from,
-      content: data.content || '',
-      timestamp: new Date(),
-    };
-    setNotifications((prev) => [...prev, newNotification]);
+  const handleIncomingNotification = (data: Notification) => {
+    // const newNotification: Notification = {
+    //   type: data.type,
+    //   from: data.from,
+    //   content: data.content || '',
+    //   timestamp: new Date(),
+    // };
+    setNotifications((prev) => [...prev, data]);
+    setUnreadCount((prev) => prev + 1);
   };
 
   const sendMessage = (message: Record<string, any>) => {
@@ -144,7 +195,14 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <WebSocketContext.Provider value={{ notifications, sendMessage }}>
+    <WebSocketContext.Provider value={{
+      notifications,
+      sendMessage,
+      fetchNotifications,
+      markAllAsRead,
+      markAsRead,
+      unreadCount,
+      }}>
       {children}
     </WebSocketContext.Provider>
   );
