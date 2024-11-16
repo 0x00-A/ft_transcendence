@@ -178,6 +178,22 @@ const MessageList: React.FC<MessageListProps> = ({
     };
   }, []);
 
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      searchContainerRef.current &&
+      !searchContainerRef.current.contains(e.target as Node)
+    ) {
+      setIsSearchActive(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className={css.container}>
       <div ref={searchContainerRef} className={css.searchContainer}>
