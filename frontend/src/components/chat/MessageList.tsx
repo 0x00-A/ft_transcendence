@@ -15,6 +15,8 @@ import {
   FaThumbtack,
   FaTimes,
 } from 'react-icons/fa';
+import messages from '@/pages/Chat/messages';
+import { useGetData } from '@/api/apiHooks';
 
 interface Message {
   avatar: string;
@@ -28,13 +30,21 @@ interface Message {
 }
 
 interface MessageListProps {
-  messages: Message[];
   onSelectMessage: (message: Message | null) => void;
   onBlockUser: (userName: string) => void;
 }
 
+interface FriendProfile {
+  avatar: string;
+}
+
+interface Friend {
+  id: string;
+  username: string;
+  profile: FriendProfile;
+}
+
 const MessageList: React.FC<MessageListProps> = ({
-  messages,
   onSelectMessage,
   onBlockUser,
 }) => {
@@ -56,10 +66,15 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
 
-  const filteredMessages = messages.filter((message) =>
-    message.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+
+
+  console.log("friendsData: ", friendsData);
+  const filteredFriends = friendsData?.filter((friend) =>
+    friend.username.toLowerCase().includes(searchQuery.toLowerCase())
+) || [];
+console.log("filteredFriends: ", filteredFriends);
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
@@ -194,6 +209,15 @@ const MessageList: React.FC<MessageListProps> = ({
     };
   }, []);
 
+
+  if (isLoading) {
+    return <div className={css.loading}>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className={css.error}>Error loading friends</div>;
+  }
+  
   return (
     <div className={css.container}>
       <div ref={searchContainerRef} className={css.searchContainer}>
@@ -216,15 +240,34 @@ const MessageList: React.FC<MessageListProps> = ({
       </div>
 
       <div ref={messageListRef} className={css.messageList}>
-        {(isSearchActive ? filteredMessages : messages).map((message, index) =>
-          isSearchActive ? (
-            <SearchResultItem
-              key={index}
-              avatar={message.avatar}
-              name={message.name}
-              onClick={() => handleClick(index, message)}
-            />
-          ) : (
+      {isLoading ? (
+          <div className={css.statusMessage}>
+            <div className={css.spinner}></div>
+            <span>Loading friends...</span>
+          </div>
+        ) : error ? (
+          <div className={css.statusMessage}>
+            <span className={css.error}>Failed to load friends. Please try again.</span>
+          </div>
+        ) : isSearchActive ? (
+          <>
+            {searchQuery && filteredFriends.length === 0 ? (
+              <div className={css.statusMessage}>
+                <span>No users found matching "{searchQuery}"</span>
+              </div>
+            ) : (
+              filteredFriends.map((friend) => (
+                <SearchResultItem
+                  key={friend.id}
+                  avatar={friend.profile.avatar}
+                  name={friend.username}
+                  // onClick={() => handleFriendClick(friend)}
+                />
+              ))
+            )}
+          </>
+        ) : (
+          messages.map((message, index) => (
             <MessageItem
               key={index}
               {...message}
@@ -235,7 +278,7 @@ const MessageList: React.FC<MessageListProps> = ({
               isActive={menuState.activeIndex === index}
               ref={(el) => (buttonRefs.current[index] = el)}
             />
-          )
+          ))
         )}
 
         {menuState.isOpen && menuState.position && (
