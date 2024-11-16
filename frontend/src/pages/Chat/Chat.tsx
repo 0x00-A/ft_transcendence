@@ -76,9 +76,6 @@ const Chat = () => {
     return <Navigate to="/signup" />;
   }
 
-  const filteredMessages = messages.filter((message) =>
-    message.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleSendMessage = (
     newMessage: string,
@@ -119,7 +116,6 @@ const Chat = () => {
         <div className={css.sidebarLeft} ref={sidebarLeftRef}>
           <OptionsButton />
           <MessageList
-            messages={messages}
             onSelectMessage={setSelectedMessage}
             onBlockUser={handleBlockUser}
           />
