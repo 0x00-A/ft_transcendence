@@ -23,30 +23,35 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   //   const savedStat = localStorage.getItem('isLoggedIn');
   //   return savedStat ? JSON.parse(savedStat) : false;
   // });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const navigate = useNavigate();
 
   const logout = async () => {
-      console.log('----logout-----');
-      const response = await apiClient.post('/auth/logout/', {});
-      console.log('----response from interceptors.response-error-------', response);
-      setIsLoggedIn(false);
-      navigate('/auth')
-  }
+    console.log('----logout-----');
+    const response = await apiClient.post('/auth/logout/', {});
+    console.log(
+      '----response from interceptors.response-error-------',
+      response
+    );
+    setIsLoggedIn(false);
+    navigate('/auth');
+  };
 
   useEffect(() => {
-    apiClient.get('auth/confirm_login/')
-    .then((response) => {
-      console.log('----response from interceptors.response-error-------', response);
-      setIsLoggedIn(true);
-    })
-    .catch((error) => {
-      console.log('----error from interceptors.response-error-------', error);
-    });
-
+    apiClient
+      .get('auth/confirm_login/')
+      .then((response) => {
+        console.log(
+          '----response from interceptors.response-error-------',
+          response
+        );
+        setIsLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log('----error from interceptors.response-error-------', error);
+      });
   }, [isLoggedIn, setIsLoggedIn]);
-
 
   useEffect(() => {
     const interceptor = apiClient.interceptors.response.use(
