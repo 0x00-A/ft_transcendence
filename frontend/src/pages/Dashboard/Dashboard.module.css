@@ -12,15 +12,12 @@
   margin: 0 auto;
 }
 
-
 .LineChart {
   height: 50%;
   background-color: #1E2533;
   padding: 30px;
   border-radius: 5rem;
 }
-
-
 
 .heroSection {
   width: 50%;
@@ -35,7 +32,7 @@
   border-radius: 5rem;
   display: flex;
   align-items: center;
-  background-image: url('../../components/rachid.png');
+  background-image: url('/public/rachid.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -206,5 +203,3 @@
     height: auto;
   }
 }
-
-

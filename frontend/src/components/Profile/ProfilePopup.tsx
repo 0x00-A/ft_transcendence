@@ -13,9 +13,7 @@ interface EditProfileFormData {
     last_name: string;
 }
 
-const ProfilePopup = ({setFormpopup, profileData}) => {
-
-  // const [newAvatar, setNewAvatar] = useState();
+const ProfilePopup = ({setFormpopup}) => {
 
   const { register, handleSubmit, mutation, reset, errors}  = useEditProfile()
 
@@ -27,7 +25,6 @@ const ProfilePopup = ({setFormpopup, profileData}) => {
    }, [mutation.isSuccess]);
 
   const handleEditProfile = (data: EditProfileFormData) => {
-    console.log('---', data, '---');
 
     const formData = new FormData();
     if (data.avatar && data.avatar.length > 0) formData.append('avatar', data.avatar[0]);
@@ -38,14 +35,26 @@ const ProfilePopup = ({setFormpopup, profileData}) => {
      mutation.mutate(formData);
   }
 
+  const closePopup = (e) => {
+    // Prevent closing the popup when clicking inside the form
+    if (e.target.classList.contains("css.bluredBg")) {
+      setFormpopup(false);
+    }
+  };
+
   return (
-    <div className={css.popupContainer}>
-      <button id={css.closeBtn} onClick={() => setFormpopup(false)}>
-        <img src={CloseIcon}/>
-      </button>
-        {/* <div className={css.formsContainer}> */}
-      <form className={css.formProfile} onSubmit={ handleSubmit(handleEditProfile) }>
-          <div className={css.avatar}>
+    <div className={css.bluredBg} onClick={closePopup}>
+      <div className={css.popupContainer}>
+        <button id={css.closeBtn} onClick={() => setFormpopup(false)}>
+          <img src={CloseIcon}/>
+        </button>
+      </div>
+      {/*
+
+
+        <div className={css.formsContainer}>
+        <form className={css.formProfile} onSubmit={ handleSubmit(handleEditProfile) }>
+        <div className={css.avatar}>
             <img src={profileData.profile.avatar} alt=""/>
             <p>{profileData.username}</p>
             <input required={false} type="file" accept='image/*' {...register('avatar')}/>
@@ -64,8 +73,8 @@ const ProfilePopup = ({setFormpopup, profileData}) => {
         New password <input type="password" />
         Password confirmation <input type="password" />
         <button>Update Password</button>
-      </form>
-        {/* </div> */}
+        </form>
+      </div> */}
     </div>
   )
 }
