@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     'channels',
     'game',
     'matchmaker',
+    'chat',
 ]
 
 MIDDLEWARE = [
