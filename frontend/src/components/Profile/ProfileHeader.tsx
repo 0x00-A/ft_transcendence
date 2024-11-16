@@ -1,28 +1,39 @@
+// React
 import { useState } from 'react'
-
-import Badge from '../assets/badge.svg'
-
-import WinRateDoughnut from '../WinRateDoughnut'
-// Styles
-import css from './ProfileHeader.module.css'
 import { useQuery } from '@tanstack/react-query'
+// API
 import apiClient from '@/api/apiClient'
-import LevelStat from './levelStat'
-import ProfilePopup from '@/components/Profile/ProfilePopup'
+import { API_GET_PROFILE_URL } from '@/api/apiConfig'
+// Styles
+import css from '@/pages/Profile/Profile.module.css'
+import { GiRank3 } from "react-icons/gi";
+import { IoMdMore } from 'react-icons/io';
+import { IoIosMore } from "react-icons/io";
+import { MdBlock } from "react-icons/md";
+
+interface ProfileData {
+  username: string;
+  first_name: string;
+  last_name: string;
+  profile: {
+    avatar: string;
+  }
+}
 
 const getProfile = async () => {
-  // try {
+
     const response = await apiClient.get(
-      '/profile'
+      API_GET_PROFILE_URL
     );
-    console.log(response.data);
+    console.log(response)
+    console.log('apiClient ==> getProfile response: ', response.status, response.data);
     return response.data
 }
 
-const profileHeader = ({}) => {
+const profileHeader = ({isFormPopup, setFormPopup}) => {
 
-  const [isFormPopup, setFormPopup] = useState(false);
-  const {data, isLoading, isError, isSuccess, error} = useQuery({
+  const [isMore, setMore] = useState(false)
+  const {data: user, isLoading, isError, isSuccess, error} = useQuery({
     queryKey: ["myquerykey1"],
     queryFn: getProfile
   });
@@ -33,62 +44,72 @@ const profileHeader = ({}) => {
 
   return (
     <div className={css.profileHeaderContainer}>
-      {isFormPopup && <ProfilePopup setFormpopup={setFormPopup} profileData={data} />}
-      <div className={css.profileAvatar}>
-        <img src="https://picsum.photos/200" alt="" />
-        {/* <p>{data.username}</p> */}
+      <div className={css.profileBackground}>
+        <div className={css.othersProfile}>
+          <button className={css.friendStatBtn}>
+            <img src="/icons/friend/addFriend.svg" alt="" />
+            <span>Add Friend</span>
+          </button>
+          <div>
+            <IoIosMore className={css.moreIcon} onClick={() => setMore(!isMore)}/>
+            {isMore &&
+              <div className={css.showMore}>
+                <button className={css.blockBtn}>
+                  <MdBlock className={css.blockIcon}/>
+                  <span>Block</span>
+                </button>
+              </div>}
+          </div>
+        </div>
+        {/* <button className={css.editProfileBtn} onClick={() => setFormPopup(!isFormPopup)}>
+          <MdEdit fontSize='2.5rem'/>
+          <span>Edit Profile</span>
+        </button> */}
+      </div>
+      <div className={css.profileCard}>
+        <div className={css.avatarContainer}>
+          <img src={user.profile.avatar} alt="" className={css.profileAvatar}/>
+          <span className={css.profileLevel}>3</span>
+        </div>
+        <h2>{user.username}</h2>
       </div>
       <div className={css.profileStats}>
-        <WinRateDoughnut />
-        <div className={css.stats}>
-          <div className={css.statBoxTotal}>
-            <span className={css.total}>Total Games</span>
-            <span>1000</span>
+        <div className={css.leftStats}>
+          <div className={css.totalGames}>
+            <span className={css.statValue}>100</span>
+            <span className={css.statLabel}>GAMES</span>
           </div>
-          <div className={css.statBoxWin}>
-            <span className={css.wins}>555 WINS</span>
+          <div className={css.wins}>
+            <span className={css.statValue}>50</span>
+            <span className={css.statLabel}>WINS</span>
           </div>
-          <div className={css.statBoxLose}>
-            <span className={css.losses}>555 LOSES</span>
-          </div>
-        </div>
-      </div>
-      <div className={css.profileEdit}>
-        <LevelStat level={2} currentXP={200} xpForNextLevel={500}/>
-      </div>
-      <button className={css.editProfileBtn} onClick={() => setFormPopup(true)}>Edit profile</button>
-      </div>
-        {/* <WinRateDoughnut/>
-        <div className={css.stats}>
-          <span className={css.totalGames}>Total games</span>
-          <span className={css.winsGames}>Wins</span>
-          <span className={css.losesGames}>Loses</span>
-        </div>
-      </div> */}
-        {/* <div className={css.avatar}>
-          <img src={Avatar} alt="" />
-          <p>username</p>
-        </div>
-        <div className={css.playerStats}>
-          <img src={Badge} alt="" />
-          <div className={css.levelStats}>
-            <h3>level 3.75%</h3>
-            <div className={css.levelBar}>
-              <div className={css.levelFull}></div>
-              <div className={css.levelEmpty}></div>
-            </div>
-            <div className={css.gameStats}>
-              <div><h4>Total games</h4><p>5</p></div>
-              <div><h4>Wins</h4><p>50%</p></div>
-              <div><h4>Loss</h4><p>50%</p></div>
-            </div>
+          <div className={css.loses}>
+            <span className={css.statValue}>50</span>
+            <span className={css.statLabel}>LOSES</span>
           </div>
         </div>
-        <div className={css.coins}>
-          <button onClick={() => setFormpopup(true)}>Edit profile</button>
-          <p>99999$</p>
-        </div> */}
+        <div className={css.leftStats}>
+          <div className={css.rank}>
+            <GiRank3 className={css.badge}/>
+            <span className={css.statLabel}>Badge</span>
+          </div>
+          <div className={css.score}>
+            <span className={css.statValue}>666</span>
+            <span className={css.statLabel}>SCORE</span>
+          </div>
+          <div className={css.rank}>
+            <span className={css.statValue}>50</span>
+            <span className={css.statLabel}>RANK</span>
+          </div>
+          {/* <div className={css.more} onClick={() => setMore(!isMore)}>
+            <IoMdMore className={css.moreIcon}/>
+            {isMore &&
+            <div className={css.showMore}>
+            </div>} */}
+          {/* </div> */}
+        </div>
       </div>
+    </div>
   )
 }
 
