@@ -2,10 +2,11 @@
   background-color: #1f2533;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 10px;
-  padding-top: 0;
+  justify-content: space-between;
+  padding: 12px 16px;
   border-radius: 0 0 20px 0;
+  gap: 12px;
+  position: relative;
 }
 
 .messageBlock {
@@ -13,98 +14,94 @@
   background-color: var(--selected-color);
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 16px;
   border-radius: 0 0 20px 0;
   align-items: center;
-}
-.messageBlock h2 {
-  font-size: 1em;
-}
-.messageBlock h2 span {
-  font-size: 1em;
-}
-.messageBlock p {
-  color: var(--text-color);
-  font-size: 0.6em;
-  margin-bottom: 10px;
+  gap: 12px;
 }
 
-.messageBlock .buttonUnblock {
+.messageBlock h2 {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.messageBlock p {
+  color: var(--text-color);
+  font-size: 0.9em;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.buttonUnblock {
   border: none;
   background-color: #ff4c4b;
   color: var(--text-color);
-  font-weight: 900;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   width: 80%;
   height: 40px;
-  border-radius: 30px;
+  border-radius: 20px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
+
+.buttonUnblock:hover {
+  background-color: #ff3333;
+}
+
 .messageInputContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 10px 15px;
+  padding: 8px 16px;
   background-color: #d0d8e7;
-  border-radius: 22px;
-  width: 90%;
+  border-radius: 24px;
+  flex: 1;
+  gap: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.messageInputContainer:focus-within {
+  box-shadow: 0 0 0 2px rgba(208, 216, 231, 0.3);
 }
 
 .input {
-  flex-grow: 1;
+  flex: 1;
   background-color: transparent;
   color: #1e2533;
   border: none;
   outline: none;
-  font-size: 14px;
-  margin: 0 10px;
+  font-size: 15px;
+  min-width: 0;
 }
 
 .input::placeholder {
   color: #1e2533;
+  opacity: 0.6;
 }
 
 .input:focus {
   background-color: transparent;
 }
 
-@keyframes smileBounce {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.3);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 .buttonEmoji,
 .buttonClip {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
   color: #1e2533;
-  padding: 0 5px;
-  transition: transform 0.2s ease-in-out;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
-@keyframes flyAway {
-  0% {
-    transform: translate(0, 0) scale(0.5);
-    opacity: 1;
-  }
-  50% {
-    transform: translate(10px, -20px) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(50px, -100px) scale(0.5);
-    opacity: 0;
-  }
+.buttonEmoji:hover,
+.buttonClip:hover {
+  background-color: rgba(30, 37, 51, 0.1);
+  transform: scale(1.1);
 }
 
 .sendButton {
@@ -118,90 +115,69 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.sendEmoji {
-  display: flex;
-  background-color: transparent;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
+.sendButton:hover:not(.disabled) {
+  background-color: #c1cce0;
+  transform: scale(1.05);
 }
 
-.sendEmoji span {
-  font-size: 35px;
+.sendButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
-.sendEmoji span:hover {
-  transform: scale(1.2);
-}
+
 .sendButton.animateIcon {
-  animation: flyAway 0.5s ease forwards;
+  animation: sendAnimation 0.3s ease forwards;
 }
 
 .emojiPicker {
   position: absolute;
-  bottom: 30px;
-  right: 87px;
-  transform: scale(0.8);
+  bottom: calc(100% + 8px);
+  right: 80px;
+  transform: scale(0.9);
+  transform-origin: bottom right;
+  z-index: 10;
 }
 
-.emojiPicker::after {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  right: 0;
-  width: 0;
-  height: 0;
-  border: 20px solid #fff;
-  border-radius: 5px;
-  border-color: transparent white transparent transparent;
+
+.stickerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s ease;
 }
 
-.emojiPicker button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
+.stickerContainer:hover {
+  transform: scale(1.1);
 }
 
-.buttonEmoji:hover {
-  animation: zoomIn 0.3s ease forwards;
-}
-
-.buttonClip:hover {
-  animation: zoomIn 0.3s ease forwards;
-}
-
-@keyframes zoomIn {
+@keyframes sendAnimation {
   0% {
     transform: scale(1);
   }
+  50% {
+    transform: scale(0.8);
+  }
   100% {
-    transform: scale(1.2);
+    transform: scale(1);
   }
 }
 
-.sendSticker {
-  display: flex;
-  background-color: transparent;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.sendSticker span:hover {
-  transform: scale(1.1);
-}
-.sendSticker img {
-  width: 40px;
-  height: 40px;
+@media (max-width: 480px) {
+  .messageInputWrapper {
+    padding: 8px 12px;
+  }
+  
+  .messageInputContainer {
+    padding: 6px 12px;
+  }
+  
+  .input {
+    font-size: 14px;
+  }
 }
