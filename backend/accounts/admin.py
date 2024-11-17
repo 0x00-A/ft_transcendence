@@ -5,6 +5,7 @@ from django.conf import settings
 from .models import User
 from .models import Profile
 from .models import FriendRequest
+from .models import Badge
 
 # Register your models here.
 admin.site.register(User)
@@ -12,6 +13,7 @@ admin.site.register(Profile)
 admin.site.register(FriendRequest)
 admin.site.register(UserAchievement)
 admin.site.register(Notification)
+admin.site.register(Badge)
 # admin.site.register(Game)
 
 

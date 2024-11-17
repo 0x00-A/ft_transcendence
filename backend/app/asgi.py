@@ -18,7 +18,6 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from .middlewares import JwtAuthMiddleware
 
-import app.routing
 import matchmaker.routing
 import game.routing
 import accounts.routing
