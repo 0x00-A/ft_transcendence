@@ -1,10 +1,11 @@
+// React
 import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError } from "axios";
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { error } from 'console';
-import { getApiUrl } from '../../utils/getApiUrl';
+// API
+import apiClient from '@/api/apiClient';
+import {API_REGISTER_URL} from '@/api/apiConfig';
 
 interface SignupFormData {
   username: string;
@@ -33,33 +34,14 @@ const schema = yup.object().shape({
     .required('password confirmation is required!'),
 });
 
-const signupApi = async (data: SignupFormData) => {
-  // try {
-    const response = await axios.post(
-      // 'http://localhost:8000/api/auth/signup/',
-      getApiUrl('auth/signup/'),
-      data
-    );
-    return response.data
-  // }
-  // catch (error) {
-  //   // if (axios.isAxiosError(error)) {
-  //   //   if (error.response) {
-  //   //     console.error('Server responded with an error:', error.response.data);
-  //   //     console.error('Status code:', error.response.status);
-  //   //   } else if (error.request) {
-  //   //     console.error('No response from server:', error.request);
-  //   //   } else {
-  //   //     console.error('Error setting up request:', error.message);
-  //   //   }
-  //   // } else {
-  //   //   console.error('Unexpected error:', error);
-  //   // }
-  // }
-}
+// const signupApi = async (data: SignupFormData) => {
+//   // try {
+//     const response = await apiClient.post(API_REGISTER_URL, data);
+//     return response.data
+// }
 
 const useSignup = () => {
-  // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
+
   const {
     register,
     handleSubmit,
@@ -71,11 +53,10 @@ const useSignup = () => {
     resolver: yupResolver(schema),
     reValidateMode:'onChange',
     mode: 'onChange',
-    //  delayError: 1000,
   });
   const mutation = useMutation({
-    mutationFn: signupApi,
-    onError: (error: AxiosError) => {
+    mutationFn: async (data: SignupFormData) => {return await apiClient.post(API_REGISTER_URL, data);},
+    onError: (error) => {
       if (error.response) {
           console.error('Error message:', error.response.data);
         } else {

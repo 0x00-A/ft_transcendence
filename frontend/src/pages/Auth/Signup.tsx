@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import useSignup from '../../hooks/auth/useSignup';
 // Styles
 import css from './AuthForm.module.css';
+// Icons
 import UserIcon from "../../assets/userIcon.svg";
 import EmailIcon from "../../assets/emailIcon.svg";
 import PassIcon from "../../assets/passIcon.svg";

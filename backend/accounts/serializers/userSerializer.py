@@ -48,11 +48,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user, created = User.objects.get_or_create(**validated_data)
         if not created:
             raise serializers.ValidationError('User already exist!')
-        # user = User.objects.create(**validated_data)
         user.set_password(password)
         user.save()
-        # profile = Profile.objects.create(user=user)
-        # profile.save()
         return user
 
 
@@ -92,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username',  'profile', 'friend_request_status']
+        fields = ['id', 'username', 'first_name', 'last_name', 'profile', 'friend_request_status']
 
     # def get_games(self, obj):
     #     games_as_player1 = obj.games_as_player1.all()

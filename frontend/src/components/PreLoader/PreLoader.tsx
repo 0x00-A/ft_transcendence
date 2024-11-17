@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import css from './pong.module.css';
+import { useAuth } from '@/contexts/AuthContext';
 
 const PreLoader = () => {
   const [hidden, setHidden] = useState(false);
+  const {isLoggedIn ,isLoading} = useAuth()
 
+  // if (!isLoggedIn)
+  //   return
   // useEffect(() => {
   //   setTimeout(() => {
   //     setHidden(true);
@@ -23,15 +27,15 @@ const PreLoader = () => {
 
   return (
     <>
-      {!hidden && (
+      {!hidden ||  isLoading && (
         <div
           className={css.preloader}
-          style={{ display: hidden ? 'flex' : 'flex' }}
+          // style={{ display: hidden ? 'flex' : 'flex' }}
         >
           <div className={css.pong}>
-            <div></div>
-            <div></div>
-            <div></div>
+            <div className="bg-white"></div>
+            <div className="bg-white"></div>
+            <div className="bg-white"></div>
           </div>
         </div>
       )}

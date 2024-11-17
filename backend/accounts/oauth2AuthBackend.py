@@ -1,7 +1,6 @@
 from typing import Any
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import get_user_model
-from django.contrib.auth.base_user import AbstractBaseUser
 from django.http import HttpRequest
 
 class Oauth2AuthBackend(BaseBackend):

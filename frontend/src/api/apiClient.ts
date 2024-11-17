@@ -34,23 +34,20 @@ export const postData = async <T, D>(endpoint: string, data: D, config?: AxiosRe
 // const navigate = useNavigate();
 // const {setIsLoggedIn} = useAuth();
 
-// apiClient.interceptors.response.use(
-//   response => {
-//     return response;
-//   },
-//   async error => {
-//     if (error.response && error.response.status === 401) {
-//       console.log('----interceptors-----');
-
-//       confirmLogout()
-//       // const response = await apiClient.post('http://localhost:8000/api/auth/logout/', {}, {withCredentials: true});
-//       // console.log('----response from interceptors.response-error-------', response);
-//       // setIsLoggedIn(false);
-//       // navigate('/auth')
-//     }
-//     return Promise.reject(error)
-//   }
-// )
+apiClient.interceptors.response.use(
+  response => {
+    return response;
+  },
+  async error => {
+    if (error.response) {
+      // console.log(error);
+      console.error(`apiClient ==> Error message: ${error.message},
+          Response Error: ${error.response.data?.error},
+          Response Data: ${JSON.stringify(error.response.data)}`);
+    }
+    return Promise.reject(error)
+  }
+)
 
 
 // const refreshAccessToken = async () => {

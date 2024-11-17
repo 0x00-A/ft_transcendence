@@ -1,0 +1,151 @@
+.profileHeaderContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.profileAvatar,
+.profileStats,
+.profileEdit {
+    /* border: 2px solid black; */
+    border-radius: 20px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+@media (max-width: 700px) {
+    .profileHeaderContainer {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        height: auto; /* Adjust height as necessary */
+    }
+
+    .profileAvatar,
+    .profileStats,
+    .profileEdit {
+        height: 100px;
+    }
+}
+
+.profileAvatar{
+    /* border: 1px solid black; */
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+}
+
+.profileAvatar p {
+    margin-left: 20px;
+    font-weight: bold;
+    color: #F8F3E3;
+    font-size: 2rem;
+}
+
+.profileAvatar img {
+    /* border: 1px solid black; */
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+}
+
+.profileStats {
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats {
+    /* border: 1px solid black; */
+    height: 100%;
+    width: 50%;
+    display: flex;
+    margin-left: 10px;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    gap: 3.8rem;
+}
+
+/* .stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3.8rem;
+} */
+
+.statBoxWin, .statBoxLose, .statBoxTotal {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: #F8F3E3;
+  font-size: 2rem;
+  position: relative;
+}
+
+.statBoxTotal {
+    flex-direction: column;
+    background: linear-gradient(90deg, rgba(40, 40, 40, 0.89) 2.5%, rgba(136, 135, 135, 0.82) 27%, rgba(255, 255, 254, 0.72) 73.5%, rgba(30, 37, 51, 0.44) 100%);
+}
+
+.statBoxWin {
+  background: linear-gradient(90deg, rgba(190, 158, 93, 0.89) 2.5%, rgba(155, 136, 94, 0.82) 27%, rgba(102, 103, 95, 0.72) 73.5%, rgba(30, 37, 51, 0.44) 100%);
+}
+
+.statBoxLose {
+  background: linear-gradient(90deg, rgba(218, 107, 117, 0.50) 2%, rgba(101, 95, 115, 0.50) 60%, rgba(30, 37, 51, 0.50) 100%);
+}
+
+.statBoxTotal:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #868686;
+}
+
+.statBoxWin:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #F1C324;
+}
+
+.statBoxLose:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #FF2047;
+}
+
+.wins, .losses {
+  color: #F8F3E3;
+}
+
+.profileEdit {
+    display: flex;
+    align-items: center;
+}
+
+.editProfileBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}

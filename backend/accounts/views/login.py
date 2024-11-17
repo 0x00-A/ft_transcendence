@@ -6,10 +6,40 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from ..models import User
 from ..serializers import UserLoginSerializer
+import random
+from django.utils import timezone
+from datetime import timedelta
+from django.core.mail import send_mail
+from rest_framework.views import APIView
+# import pyotp
 
+
+
+def generate_otp():
+    return random.randint(100000, 999999)
+
+
+def send_otp_email(user):
+    send_mail(
+        'Your 2FA Code',
+        f'Your one-time code is: {user.otp_secret}',
+        'mahdimardi18@gmail.com',
+        [user.email],
+        fail_silently=False,
+    )
+
+# class VerifyOTPView(APIView):
+#     permission_classes = [AllowAny]
+
+#     def post(self, request):
+#         user = request.user
+#         if user:
+
+#         pass
 
 class LoginView(CreateAPIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     serializer_class = UserLoginSerializer
 
     def post(self, request):
@@ -20,6 +50,17 @@ class LoginView(CreateAPIView):
             password = serializer.validated_data['password']
             )
         if user is not None:
+            if user.is2fa_active:
+                user.otp_secret = generate_otp()
+                user.otp_expires = timezone.now() + timedelta(minutes=5)
+                user.save()
+                send_otp_email(user)
+                data = {
+                    "2FA_required": True,
+                    "message": "n otp message sent to your email to verify your account"
+                }
+                print('apiBackend ==> login status: user enabled 2FAC')
+                return Response(data=data, status=status.HTTP_202_ACCEPTED)
             token = get_token_for_user(user)
             if token:
                 response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)
@@ -37,11 +78,13 @@ class LoginView(CreateAPIView):
                     secure = False,
                     samesite = 'Strict'
                 )
+                print('apiBackend ==> login status: login success')
                 return response
             else:
+                print('apiBackend ==> login status: Getting tokens for user failed')
                 return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-        else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        print('apiBackend ==> login status: Invalid credentials')
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 

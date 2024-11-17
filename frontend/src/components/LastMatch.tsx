@@ -29,7 +29,7 @@ const LastMatch = () => {
                             <span className={css.name}>{match.name}</span>
                             <span className={css.date}>{match.date}</span>
                         </div>
-                        <span className={css.score}>{match.score}</span>
+                        <div className={css.score}> <span className={css.YourGoals}>11</span> : <span className={css.opponentGoals}>23</span></div> 
                         <div className={css.pointsContainer}>
                             <span className={css.points}>{match.points}</span>
                             <img src="/icons/score.svg" alt="score" />

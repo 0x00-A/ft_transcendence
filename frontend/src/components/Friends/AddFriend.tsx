@@ -143,7 +143,7 @@ const AddFriend: React.FC = () => {
             <div className={css.results}>
               {suggestedConnections.map(({ user, status }) => (
                 <div key={user.username} className={css.userCard}>
-                  <img src={`http://localhost:8000${user.profile.avatar}`} alt={user.username} className={css.avatar} />
+                  <img src={user.profile.avatar} alt={user.username} className={css.avatar} />
                   <div className={css.userInfo}>
                     <span className={css.username}>{user.username}</span>
                   </div>
@@ -173,7 +173,7 @@ const AddFriend: React.FC = () => {
             searchResults.map((user) => (
               <div key={user.username} className={css.userCard}>
                 <img 
-                  src={`http://localhost:8000${user.profile.avatar}`} 
+                  src={`${user.profile.avatar}`} 
                   alt={user.username} 
                   className={css.avatar} 
                 />

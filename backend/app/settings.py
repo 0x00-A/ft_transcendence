@@ -13,46 +13,60 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
-import environ
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+# env = environ.Env(
+#     DEBUG=(bool, False)
+# )
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+#############################
+# AUTHENTICATION PARAMETERS #
+#############################
+
+API_CLIENT_OAUTH2_REDIRECT_URI = os.environ.get('API_CLIENT_OAUTH2_REDIRECT_URI')
+OAUTH2_REDIRECT_URI = os.environ.get('OAUTH2_REDIRECT_URI')
+
+# EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mahdimardi18@gmail.com'
+EMAIL_HOST_PASSWORD = 'pyaj yhzg gzog yslf'
+DEFAULT_FROM_EMAIL = 'mahdimardi18@gmail.com'
 
 ###############
 # DISCORD ENV #
 ###############
-DISCORD_AUTHORIZATION_URL = env('DISCORD_AUTHORIZATION_URL')
-DISCORD_TOKEN_URL = env('DISCORD_TOKEN_URL')
-DISCORD_CLIENT_ID = env('DISCORD_CLIENT_ID')
-DISCORD_CLIENT_SECRET = env('DISCORD_CLIENT_SECRET')
-DISCORD_USER_URL = env('DISCORD_USER_URL')
+DISCORD_AUTHORIZATION_URL = os.environ.get('DISCORD_AUTHORIZATION_URL')
+DISCORD_TOKEN_URL = os.environ.get('DISCORD_TOKEN_URL')
+DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID')
+DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET')
+DISCORD_USER_URL = os.environ.get('DISCORD_USER_URL')
 
 ###############
 #  INTRA ENV  #
 ###############
-INTRA_CLIENT_ID = env('INTRA_CLIENT_ID')
-INTRA_CLIENT_SECRET = env('INTRA_CLIENT_SECRET')
-INTRA_AUTHORIZATION_URL = env('INTRA_AUTHORIZATION_URL')
-INTRA_TOKEN_URL = env('INTRA_TOKEN_URL')
-INTRA_USER_URL = env('INTRA_USER_URL')
+INTRA_CLIENT_ID = os.environ.get('INTRA_CLIENT_ID')
+INTRA_CLIENT_SECRET = os.environ.get('INTRA_CLIENT_SECRET')
+INTRA_AUTHORIZATION_URL = os.environ.get('INTRA_AUTHORIZATION_URL')
+INTRA_TOKEN_URL = os.environ.get('INTRA_TOKEN_URL')
+INTRA_USER_URL = os.environ.get('INTRA_USER_URL')
 
 ################
 #  GOOGLE ENV  #
 ################
-GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
-GOOGLE_AUTHORIZATION_URL = env('GOOGLE_AUTHORIZATION_URL')
-GOOGLE_TOKEN_URL = env('GOOGLE_TOKEN_URL')
-GOOGLE_USER_URL = env('GOOGLE_USER_URL')
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+GOOGLE_AUTHORIZATION_URL = os.environ.get('GOOGLE_AUTHORIZATION_URL')
+GOOGLE_TOKEN_URL = os.environ.get('GOOGLE_TOKEN_URL')
+GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -147,16 +161,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': "django.db.backends.postgresql",
-#         'NAME': 'developement',
-#         'USER': 'postgres',
-#         'PASSWORD': 'mahdi',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 
 # Password validation
@@ -236,6 +240,8 @@ AUTH_PASSWORD_VALIDATORS = [
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(seconds=5),
+    # 'REFRESH_TOKEN_LIFETIME': timedelta(seconds=20),
     # 'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     # 'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     # 'ROTATE_REFRESH_TOKENS': True,

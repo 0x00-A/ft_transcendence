@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TrendingUp, Crown, Award } from 'lucide-react';
+import { TrendingUp, Crown, Award, Target } from 'lucide-react';
 import styles from './CompetitiveOverview.module.css';
 
 const CompetitiveOverview = () => {
@@ -11,7 +11,7 @@ const CompetitiveOverview = () => {
     { label: 'Best Rank', value: '#4', Icon: Award },
   ];
 
-  const calculateWinRateOffset = (percentage) => {
+  const calculateWinRateOffset = (percentage: any) => {
     const circumference = 2 * Math.PI * 40;
     return circumference - (percentage / 100) * circumference;
   };
@@ -57,11 +57,11 @@ const CompetitiveOverview = () => {
         {personalBests.map(({ label, value, Icon }, index) => (
           <div key={index} className={styles.bestCard}>
             <div className={styles.bestContent}>
-              <Icon className={styles.bestIcon} />
               <div className={styles.bestInfo}>
+                <Icon className={styles.bestIcon} />
                 <span className={styles.bestLabel}>{label}</span>
-                <span className={styles.bestValue}>{value}</span>
               </div>
+                <span className={styles.bestValue}>{value}</span>
             </div>
           </div>
         ))}

@@ -7,12 +7,22 @@ import AuthPongBox from '../../components/Auth/AuthPongBox';
 import Login from './Login';
 import Signup from './Signup';
 import Oauth2 from '../../components/Auth/Oauth2';
-// import ExternAuth from '../../components/Auth/ExternAuth';
+import { useAuth } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
+
 
 
 const Auth = () => {
     const [isLogin, setIslogin] = useState(true);
     const [authStat, setAuthStat] = useState<string | null>(null);
+    const {isLoggedIn, isLoading} = useAuth();
+
+    // if (isLoading) {
+    //   return <p>Loadding...</p>;
+    // }
+    if (isLoggedIn) {
+      return <Navigate to={'/'}/>
+    }
 
     return (
       <div className={css.authContainer}>

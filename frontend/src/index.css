@@ -31,7 +31,6 @@
   --b4: #3b4042;
 
   --brand-purple: #ab68ff;
-
   --color-brand--1: #ff2047;
   --color-brand--2: #f8c25c;
 
@@ -88,6 +87,10 @@
 
 
 
+  --chart-1: 200, 100%, 50%;
+  --chart-2: 40, 80%, 60%;
+  --color-desktop: #4CAF50;
+  --color-mobile: #2196F3;
 
   /* --text-color: #858585; */
 
