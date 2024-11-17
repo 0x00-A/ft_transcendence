@@ -44,6 +44,17 @@ interface Friend {
   profile: FriendProfile;
 }
 
+interface Conversation {
+  id: number; 
+  user1: string; 
+  user2: string; 
+  lastMessage: string;
+  unreadMessages: number; 
+  createdAt: string; 
+  updatedAt: string; 
+}
+
+
 const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
   onBlockUser,
@@ -66,10 +77,11 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
+  const { data: friendsData, isLoading, error} = useGetData<Friend[]>('friends');
+  const { data: ConversationList} = useGetData<Conversation[]>('chat/conversations');
 
 
-
+  console.log("ConversationList: ", ConversationList);
   console.log("friendsData: ", friendsData);
   const filteredFriends = friendsData?.filter((friend) =>
     friend.username.toLowerCase().includes(searchQuery.toLowerCase())
