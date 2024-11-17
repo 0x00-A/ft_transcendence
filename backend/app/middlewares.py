@@ -46,4 +46,4 @@ class JwtAuthMiddleware(BaseMiddleware):
         else:
             print('api ==> JwtAuthMiddleware: No token found in the request')
             scope['user'] = AnonymousUser()
-        # return await super().__call__(scope, receive, send)
+        return await super().__call__(scope, receive, send)

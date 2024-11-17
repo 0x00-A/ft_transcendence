@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import css from './AuthForm.module.css';
 import UserIcon from "../../assets/userIcon.svg";
 import PassIcon from "../../assets/passIcon.svg";
+import { useLoadingBar } from '../../contexts/LoadingBarContext';
 
 
 
@@ -23,6 +24,8 @@ const Login = ({onSetAuthStat}) => {
   const {register, handleSubmit, errors, mutation, reset} = useLogin();
   const navigate = useNavigate()
   const {setIsLoggedIn} = useAuth()
+  const loadingBarRef = useLoadingBar();
+
 
   useEffect(() => {
     if (mutation.isSuccess) {
@@ -35,8 +38,15 @@ const Login = ({onSetAuthStat}) => {
     }
   }, [mutation.isSuccess])
 
+  useEffect(() => {
+    return () => {
+      loadingBarRef.current?.complete();
+    }
+  }, [])
+
 
   const handleLogin = (data: LoginFormData) => {
+    loadingBarRef.current?.continuousStart();
     mutation.mutate(data);
   };
 

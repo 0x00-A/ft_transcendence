@@ -17,9 +17,9 @@ const Auth = () => {
     const [authStat, setAuthStat] = useState<string | null>(null);
     const {isLoggedIn, isLoading} = useAuth();
 
-    if (isLoading) {
-      return <p>Loadding...</p>;
-    }
+    // if (isLoading) {
+    //   return <p>Loadding...</p>;
+    // }
     if (isLoggedIn) {
       return <Navigate to={'/'}/>
     }

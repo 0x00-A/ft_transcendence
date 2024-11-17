@@ -28,7 +28,9 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
     '<img src="/icons/chat/nolike.svg" alt="love" />',
     '<img src="/icons/chat/stickers1.svg" alt="love" />',
     '<img src="/icons/chat/stickers2.svg" alt="love" />',
-    '<img src="/icons/chat/b1.png" alt="love" />',
+    '<img src="/icons/chat/me.png" alt="mehdi" />',
+    '<img src="/icons/chat/rel.png" alt="mehdi" />',
+    '<img src="/icons/chat/abdo.png" alt="mehdi" />',
   ];
 
   const handleStickerSelect = (sticker: string) => {

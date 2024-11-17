@@ -4,6 +4,7 @@ import {
   Routes,
   useLocation,
   Navigate,
+  useNavigate,
 } from 'react-router-dom';
 import PageNotFound from './pages/PageNotFound';
 
@@ -23,24 +24,19 @@ import Settings from './pages/Settings/Settings';
 import Sidebar from './components/Sidebar/Sidebar';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
-// import Signup from './pages/Signup';
 import Topbar from './components/Topbar/Topbar';
-import usePreLoader from './hooks/usePreLoader';
-import LocalGame from './components/Game/LocalGame/LocalGame';
 import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
-import Tournament from './components/Tournament/Tournament/Tournament';
-import Test from './components/Tournament/Tournament/Test';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useEffect, useRef } from 'react';
-import { getToken } from './utils/getToken';
+import { useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from './utils/getWebSocketUrl';
 import Game from './pages/Game/Game';
 import Oauth2Callback from './pages/Auth/Oauth2Callback';
-// import Signup from './pages/Auth/Signup';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import GameHub from './pages/Game/GameHub/GameHub';
+import { WebSocketProvider } from './contexts/WebSocketContext';
+import { UserProvider } from './contexts/UserContext';
+import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
 import React from 'react';
 import OtpAuth from './pages/Auth/OtpAuth';
 
@@ -50,20 +46,26 @@ function App() {
     <Router>
       <LoadingBarProvider>
         <AuthProvider>
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              hideProgressBar={true}
-              newestOnTop={true}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              // theme="colored"
-              toastClassName='toastStyle'
-          />
-          <AppContent />
+          <UserProvider>
+            <GameInviteProvider>
+              <WebSocketProvider>
+                <ToastContainer
+                  position="top-center"
+                  autoClose={2000}
+                  hideProgressBar={true}
+                  // newestOnTop={true}
+                  closeOnClick
+                  rtl={false}
+                  // pauseOnFocusLoss
+                  // draggable
+                  // pauseOnHover
+                  // theme="colored"
+                  toastClassName='toastStyle'
+                  />
+                <AppContent />
+              </WebSocketProvider>
+            </ GameInviteProvider>
+          </UserProvider>
         </AuthProvider>
       </LoadingBarProvider>
     </Router>
@@ -72,18 +74,11 @@ function App() {
 
 function AppContent() {
 
-  const onlineSocketRef = useRef<WebSocket | null>(null);
 
   const showSidebarRoutes = [
     '/',
-    '/game',
-    '/game/',
-    '/gamehub',
-    '/gamehub/',
-    '/game/tournament',
-    '/game/tournament/',
-    '/game/local',
-    '/game/local/',
+    '/play',
+    '/play/',
     '/chat',
     '/chat/',
     '/friends',
@@ -94,37 +89,24 @@ function AppContent() {
     '/store/',
     '/leaderboard',
     '/leaderboard/',
-    '/settings',
-    '/settings/',
     '/profile',
     '/auth/2factor',
   ];
   const location = useLocation();
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn } = useAuth();
   // const loading = usePreLoader();
 
   // if (loading) {
   //   return <PreLoader />;
   // }
+  const { gameAccepted, gameInvite } = useGameInvite();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // if (!isLoggedIn) {
-    //   return;
-    // }
-      const wsUrl = `${getWebSocketUrl('online-status/')}`;
-      const socket = new WebSocket(wsUrl);
-      onlineSocketRef.current = socket;
-
-      socket!.onmessage = (() => {console.log('Socket online');
-      })
-
-
-    return () => {
-      if (onlineSocketRef.current) {
-        onlineSocketRef.current.close();
-      }
-    };
-  }, []);
+    if (gameAccepted && gameInvite) {
+      navigate(`/play`);
+    }
+  }, [gameAccepted, gameInvite, navigate]);
 
   return (
     <div className="app-container ">
@@ -143,11 +125,7 @@ function AppContent() {
             <Route path="*" element={<PageNotFound />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/game" element={<Game />} />
-              <Route path="/gamehub" element={<GameHub />} />
-              <Route path="/test" element={<Test />} />
-              <Route path="/game/local" element={<LocalGame />} />
-              {/* <Route path="/game/tournament" element={<Tournament />} /> */}
+              <Route path="/play" element={<Game />} />
               <Route path="/game/chat" element={<GameChat />} />
               <Route path="/game/chat/:room" element={<Room />} />
               <Route path="/chat" element={<Chat />} />

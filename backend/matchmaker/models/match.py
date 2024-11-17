@@ -26,10 +26,8 @@ class Match(models.Model):
     p2_score = models.IntegerField(default=0)
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
-
-    start_time = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
-
     player1_ready = models.BooleanField(default=False)
     player2_ready = models.BooleanField(default=False)
 
@@ -45,9 +43,6 @@ class Match(models.Model):
             super().save(*args, **kwargs)
 
     def end_match(self, winner, p1_score, p2_score):
-        """
-        End the match, store the winner, and update win stats.
-        """
         print(f"--------------- Match: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2

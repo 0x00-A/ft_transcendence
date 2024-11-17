@@ -23,7 +23,6 @@ class Tournament(models.Model):
 
     creator = models.ForeignKey(
         User, related_name='created_tournaments', on_delete=models.CASCADE)
-    # creator = models.CharField(max_length=100)
 
     name = models.CharField(max_length=100)
     number_of_players = models.IntegerField(default=4)
@@ -174,7 +173,6 @@ class Tournament(models.Model):
             self.finalize_tournament()
 
     def finalize_tournament(self):
-        # Get the final match
         final_match = Match.objects.filter(
             tournament=self, status='ended').order_by('-end_time').first()
 

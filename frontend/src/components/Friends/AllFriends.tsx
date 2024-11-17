@@ -5,8 +5,9 @@ import { FaSearch } from 'react-icons/fa';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import NoFound from './NoFound';
-import axios from 'axios';
 import { apiBlockRequest } from '@/api/friendApi';
+import { toast } from 'react-toastify';
+
 
 
 interface FriendProfile {
@@ -41,13 +42,10 @@ const AllFriends: React.FC = () => {
   const blockRequest = async (username: string) => {
     try {
       const message = await apiBlockRequest(username);
-      // setNotification(message);
+      toast.success(message);
       refetch();
-      // setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      // setNotification(error.message || 'Failed to accept friend request');
-    } finally {
-      // setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to accept friend request')
     }
   };
 

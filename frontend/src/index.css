@@ -31,7 +31,6 @@
   --b4: #3b4042;
 
   --brand-purple: #ab68ff;
-
   --color-brand--1: #ff2047;
   --color-brand--2: #f8c25c;
 
@@ -55,7 +54,9 @@
   --game-screen-text-color: lightgray;
   --tournament-form-bg: #1e2533;
   --tournament-input-bg: #2b4450;
+  --scrollbar-track-color: #3D4A68;
   --scrollbar-thumb-color: #191a2d;
+
 
   --tournament-header: rgb(55 65 81);
   --tournament-row: rgb(31 41 55);
@@ -77,7 +78,8 @@
   --color-game-screen-bg: var(--gray-900);
   --tournament-form-bg: #323232;
   --tournament-input-bg: #626262;
-  --scrollbar-thumb-color: var(--b0);
+  --scrollbar-track-color: #676767;
+  --scrollbar-thumb-color: #171717;
 
   --tournament-header: #1a1a1a;
   --tournament-row: #333333;
@@ -87,9 +89,9 @@
 
   --chart-1: 200, 100%, 50%;
   --chart-2: 40, 80%, 60%;
-  --color-desktop: #4CAF50; 
-  --color-mobile: #2196F3; 
-  
+  --color-desktop: #4CAF50;
+  --color-mobile: #2196F3;
+
   /* --text-color: #858585; */
 
 
@@ -131,12 +133,12 @@ textarea {
   border-radius: 5px;
   background-color: var(--color-light--3);
   transition: all 0.2s;
-} */
+}
 
 input:focus {
   outline: none;
   background-color: #fff;
-}
+} */
 
 ::-webkit-scrollbar {
     width: 14px;
@@ -148,7 +150,7 @@ input:focus {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--tournament-form-bg);
+  background-color: var(--scrollbar-track-color);
 }
 
 ::-webkit-scrollbar-thumb {

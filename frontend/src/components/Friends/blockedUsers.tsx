@@ -5,6 +5,8 @@ import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import moment from 'moment';
 import { apiUnBlockRequest } from '@/api/friendApi';
+import { toast } from 'react-toastify';
+
 
 interface BlockedUser {
   blocker: {
@@ -32,15 +34,11 @@ const BlockedList: React.FC = () => {
   const unBlockRequest = async (username: string) => {
     try {
       const message = await apiUnBlockRequest(username);
-      // setNotification(message);
+      toast.success(message)
       refetch();
-      // setTimeout(() => setNotification(null), 3000);
       console.log(message);
     } catch (error: any) {
-      console.log(error.message);
-      // setNotification(error.message || 'Failed to accept friend request');
-    } finally {
-      // setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to accept friend request')
     }
   };
 

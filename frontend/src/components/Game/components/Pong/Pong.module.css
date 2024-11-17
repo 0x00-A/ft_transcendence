@@ -3,7 +3,7 @@
     height: 100%;
     background-color: var(--main-surface-tertiary);
     touch-action: manipulation;
-    border: 2px solid var(--text-color);
+    /* border: 2px solid var(--text-color); */
     /* cursor: none; */
 }
 
@@ -105,8 +105,9 @@
     position: absolute;
     padding: 10px;
     /* left: 50%; */
-    top: 105%;
+    bottom: -70px;
     border-radius: 10px;
+    background-color: var(--text-color)
 }
 
 
