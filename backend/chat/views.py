@@ -10,6 +10,62 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class CreateConversationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user1 = request.user
+        user2_id = request.data.get("user2_id")
+
+        if not user2_id:
+            return Response({"error": "user2_id is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user2 = User.objects.get(id=user2_id)
+            conversation, created = Conversation.objects.get_or_create(
+                user1=min(user1, user2, key=lambda u: u.id),
+                user2=max(user1, user2, key=lambda u: u.id)
+            )
+
+            serializer = ConversationSerializer(conversation)
+            return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CreateMessageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        conversation_id = request.data.get("conversation_id")
+        content = request.data.get("content")
+
+        if not conversation_id or not content:
+            return Response({"error": "conversation_id and content are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            conversation = Conversation.objects.get(id=conversation_id)
+            sender = request.user
+            receiver = conversation.user2 if conversation.user1 == sender else conversation.user1
+
+            message = Message.objects.create(
+                conversation=conversation,
+                sender=sender,
+                receiver=receiver,
+                content=content
+            )
+
+            conversation.last_message = content
+            conversation.unread_messages += 1
+            conversation.save()
+
+            serializer = MessageSerializer(message)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Conversation.DoesNotExist:
+            return Response({"error": "Conversation not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": "Internal server error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 class GetConversationsView(APIView):
     permission_classes = [AllowAny]
 

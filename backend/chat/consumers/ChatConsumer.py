@@ -1,8 +1,7 @@
-# consumers.py
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
-from .models import User, Message, Conversation  # Make sure to import your models
+from ..models import User, Message, Conversation
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
