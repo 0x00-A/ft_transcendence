@@ -11,12 +11,23 @@ export interface NewPostData {
   userId: number;
 }
 
+interface PerformanceDataEntry {
+  [day: string]: number; // Each day (e.g., "Mon") maps to a duration
+}
+
+export interface Stats {
+  games_played: number;
+  wins: number;
+  losses: number;
+  performanceData: PerformanceDataEntry[];
+}
+
 export interface Profile {
   user: number;
   avatar: string;
   age: number | null;
   level: number | null;
-  stats: Record<string, unknown>;
+  stats: Stats;
   is_online: boolean;
 }
 
