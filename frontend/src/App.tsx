@@ -38,7 +38,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { UserProvider } from './contexts/UserContext';
 import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
-import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import React from 'react';
 import OtpAuth from './pages/Auth/OtpAuth';
 
@@ -76,7 +75,6 @@ function App() {
 
 function AppContent() {
 
-  const onlineSocketRef = useRef<WebSocket | null>(null);
 
   const showSidebarRoutes = [
     '/',
@@ -96,36 +94,43 @@ function AppContent() {
     '/auth/2factor',
   ];
   const location = useLocation();
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn } = useAuth();
   // const loading = usePreLoader();
 
-  // if (isLoading) {
+  // if (loading) {
   //   return <PreLoader />;
   // }
+  const { gameAccepted, gameInvite } = useGameInvite();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // if (!isLoggedIn) {
-    //   return;
-    // }
-      const wsUrl = `${getWebSocketUrl('online-status/')}`;
-      const socket = new WebSocket(wsUrl);
-      onlineSocketRef.current = socket;
+    if (gameAccepted && gameInvite) {
+      navigate(`/play`);
+    }
+  }, [gameAccepted, gameInvite, navigate]);
 
-      socket!.onmessage = (() => {console.log('Socket online');
-      })
+  // useEffect(() => {
+  //   // if (!isLoggedIn) {
+  //   //   return;
+  //   // }
+  //     const wsUrl = `${getWebSocketUrl('online-status/')}`;
+  //     const socket = new WebSocket(wsUrl);
+  //     onlineSocketRef.current = socket;
+
+  //     socket!.onmessage = (() => {console.log('Socket online');
+  //     })
 
 
-    return () => {
-      if (onlineSocketRef.current) {
-        onlineSocketRef.current.close();
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (onlineSocketRef.current) {
+  //       onlineSocketRef.current.close();
+  //     }
+  //   };
+  // }, []);
 
   // if (showGame)
   //   return <RemoteGame onReturn={() => setShowGame(false)} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
 
-  // return <PreLoader />;
   return (
     <div className="app-container ">
       <PreLoader />

@@ -37,6 +37,7 @@ from accounts.models import Notification
 from matchmaker.models.game import Game
 from matchmaker.matchmaker import Matchmaker
 from django.db.models import Q
+from accounts.models import Profile
 
 
 connected_users = {}
@@ -52,10 +53,17 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.accept()
             self.username = user.username
             self.id = user.id
+            await self.set_online_status(True)
 
             connected_users[self.username] = self.channel_name
         else:
             await self.close()
+
+    async def set_online_status(self, is_online):
+        if self.username:
+            profile = await Profile.objects.aget(user__username=self.username)
+            profile.is_online = is_online
+            await profile.asave()
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -71,6 +79,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         if self.username in connected_users:
             del connected_users[self.username]
+        await self.set_online_status(False)
+        return await super().disconnect(close_code)
 
     async def handle_accept(self, sender, recipient):
         if await self.is_already_playing(sender):
@@ -107,6 +117,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def is_already_playing(self, sender):
         user_id = await self.get_user_id(sender)
+        print(f'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {user_id}')
         if user_id:
             if user_id in Matchmaker.games_queue:
                 Matchmaker.games_queue.remove(user_id)
@@ -197,6 +208,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'event': 'notification',
             'data': message
         }))
+
+    async def get_user_id(self, username):
+        try:
+            user = await User.objects.aget(username=username)
+            return user.id
+        except User.DoesNotExist:
+            return None
 
     @classmethod
     def get_username(cls, user_id):

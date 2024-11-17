@@ -179,7 +179,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       return () => {
         ws.current?.close();
       };
-  }, []);
+  }, [isLoggedIn]);
 
   const handleIncomingNotification = (data: Notification) => {
     // const newNotification: Notification = {
