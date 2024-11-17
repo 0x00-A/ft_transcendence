@@ -23,6 +23,12 @@ export default function Sidebar() {
   const { setIsLoggedIn } = useAuth();
   const navigate =useNavigate();
 
+  useEffect(() => {
+    return () => {
+      loadingBarRef.current?.complete();
+    }
+  }, [])
+
   const [showConfirm, setShowConfirm] = useState(false);
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -33,14 +39,14 @@ export default function Sidebar() {
   const confirmLogout = () => {
     // setIsLoggingOut(true); // start logout process
     loadingBarRef.current?.continuousStart();
-    setTimeout(async () => {
+    (async () => {
       loadingBarRef.current?.complete();
       setIsLoggedIn(false);
       const response = await apiClient.post(API_LOGOUT_URL);
       console.log('apiClient ==> Logout response: ', response.data.message);
       setShowConfirm(false);
       navigate('/auth');
-    }, 1000);
+    })();
   };
 
   const cancelLogout = () => {

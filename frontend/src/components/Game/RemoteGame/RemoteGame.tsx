@@ -1,32 +1,24 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { Controller, GameScreens, GameState } from '../../../types/types';
+import React, { useEffect, useRef, useState } from 'react';
+import { GameScreens, GameState } from '../../../types/types';
 import css from './RemoteGame.module.css';
-import MultiPlayerPong from '../components/MultiPlayerPong/MultiPlayerPong';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
-import { boolean } from 'yup';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
-import { getToken } from '../../../utils/getToken';
-import { useParams } from 'react-router-dom';
 import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
+import { useGameInvite } from '@/contexts/GameInviteContext';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
-const FRAME_RATE = 60;
-const interval = 1000 / FRAME_RATE; // 60 FPS
 const pW = 20;
 const pH = 80;
-const paddleSpeed = 2;
 
 interface GameProps { game_address: string;
                      requestRemoteGame?:() => void;
-                    // setState: React.Dispatch<React.SetStateAction<string>>;
                     onReturn: (()=>void);
                     isMatchTournament?: boolean;
                   }
 
 const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}, onReturn, isMatchTournament = false }) => {
-  // const { game_address } = useParams();
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
   const [restart, setRestart] = useState(false);
@@ -34,9 +26,9 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('game');
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
-  // const [paddleSpeed, SetPaddleSpeed] = useState(10);
   const [sound, SwitchSound] = useState(true);
-  const [winningScore, setWinningScore] = useState(7);
+
+  const {setGameAccepted} = useGameInvite();
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -72,9 +64,13 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   useEffect(() => {
     hitWallSound.current.preload = 'auto';
-    hitWallSound.current.load(); // Preloads the audio into the browser's memory
+    hitWallSound.current.load(); // Preload the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
     paddleHitSound.current.load();
+
+    return () => {
+      setGameAccepted(false);
+    }
   }, [sound]);
 
   useEffect(() => {
@@ -103,9 +99,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
         const data = JSON.parse(e.data);
         // console.log(data);
         if (data.type === 'game_started') {
-          // setTimeout(() => {
-          //   // init_game_state(data);
-          // }, 100);
+
           paddle1Ref.current.x = data.state[`player1_paddle_x`];
           paddle2Ref.current.x = data.state[`player2_paddle_x`];
           setGameState('started');
@@ -136,9 +130,10 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
         }
       };
 
-      gameSocket.onclose = (e) => {
+      gameSocket.onclose = () => {
         console.log('Game WebSocket Disconnected');
         // setGameState('ended');
+        setCurrentScreen('end');
       };
     }, 500);
 
@@ -154,6 +149,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   useEffect(() => {
     if (isGameOver || gameState != 'started') return;
     const canvas = canvasRef.current!;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
 
     const drawDashedLine = () => {
@@ -189,9 +185,6 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
         keysPressed[0] = false;
         keysPressed[1] = false;
       }
-      // if (event.key === 'w' || event.key === 's') {
-      //   ws.current?.send(JSON.stringify({ type: 'keyup' }));
-      // }
     };
 
     const draw = (ctx: CanvasRenderingContext2D) => {
@@ -231,7 +224,6 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
         ws.current.send(JSON.stringify({ type: 'keydown', direction: 'down' }));
     };
 
-    let animationFrameId: number;
     const animate = () => {
       if (isGameOver) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -240,7 +232,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
       draw(ctx);
 
-      animationFrameId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     };
 
     window.addEventListener('keydown', (e) => handleKeyDown(e));
@@ -262,11 +254,9 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   };
   const handleMainMenu = () => {
     onReturn();
-    // setCurrentScreen('mode');
-    // setIsGameOver(false);
   };
 
-  if (!gameState || gameState != 'started') {
+  if (!gameState) {
     return (
       <div className={css.matchmakingLoaderWrapper}>
         <ArcadeLoader className={css.matchmakingLoader} />
@@ -276,14 +266,6 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   return (
     <div className={css.container}>
-      {/* {!gameState && <h1>Remote Play - connecting to websocket!</h1>} */}
-      {/* {gameState === 'disconnected' && (
-        <div>
-          <h1>Remote Play - disconnected!</h1>
-          <button onClick={() => setRestart((s) => !s)}>Play Again</button>
-        </div>
-      )}
-      {gameState === 'waiting' && <h1>Remote Play - waiting!</h1>} */}
       {gameState === 'started' && (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (

@@ -1,11 +1,11 @@
 import React from 'react';
 import css from './SentRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
-import axios from 'axios';
 import moment from 'moment';
 import Loading from './Loading';
 import NoSentRequests from './NoSentRequests';
 import { apiCancelFriendRequest } from '@/api/friendApi';
+import { toast } from 'react-toastify';
 
 interface Profile {
   id: number;
@@ -29,13 +29,10 @@ const SentRequests: React.FC = () => {
   const handleCancel = async (username: string) => {
     try {
       const message = await apiCancelFriendRequest(username);
-      // setNotification(message);
+      toast.success(message);
       refetch();
-      // setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      // setNotification(error.message || 'Failed to cancel friend request');
-    } finally {
-      // setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to cancel friend request');
     }
   };
 

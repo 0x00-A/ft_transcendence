@@ -38,4 +38,5 @@ urlpatterns = [
     # path('api/', include('rest_framework.urls')),
     path('api/matchmaker/', include('matchmaker.urls')),
     path('api/', include('accounts.urls')),
+    path('api/chat/', include('chat.urls')),
 ] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

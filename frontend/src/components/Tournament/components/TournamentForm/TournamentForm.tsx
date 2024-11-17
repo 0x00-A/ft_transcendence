@@ -41,7 +41,7 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>Tournament Registration</h2>
+      <h2 className={`${styles.heading} ${styles.label}`}>Tournament Registration</h2>
 
       <input
         type="text"

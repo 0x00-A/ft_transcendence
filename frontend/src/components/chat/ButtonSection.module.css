@@ -23,6 +23,12 @@
   margin-bottom: 10px;
   cursor: pointer;
 }
+.iconDisabled {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  cursor:not-allowed;
+}
 
 p {
   color: var(--text-color);

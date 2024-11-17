@@ -28,7 +28,6 @@ const WinnerOverlay = ({
 }) => {
   const handleOverlayClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).classList.contains(css.overlay)) {
-      console.log('sasasa');
       setShowWinner(false);
     }
   };

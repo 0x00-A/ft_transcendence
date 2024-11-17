@@ -18,7 +18,7 @@
 
 .tournamentList {
     height: 90%;
-    overflow: auto;
+    /* overflow: auto; */
     border-radius: 0 0 10px 10px;
     padding: 0;
 }
@@ -35,10 +35,12 @@
 .noTournaments {
     height: 100%;
     display: flex;
+    flex-direction: column;
+    gap: 20px;
     align-items: center;
     justify-content: center;
     height: 100%;
-    color: #666;
+    color: #999999;
     font-size: 1.2em;
     font-weight: bold;
     text-align: center;
@@ -110,23 +112,23 @@
 
 .action button {
     padding: 8px 32px;
-    background-color: #ffc107; /* Yellow background */
-    color: #000000; /* Black text */
+    background-color: #ffc107;
+    color: #000000;
     font-weight: bold;
     border: 1px solid #ffc107;
-    border-radius: 1px;
+    border-radius: 3px;
     cursor: pointer;
     transition: transform 0.1s ease-in-out, background-color 0.2s ease;
 }
 
 .action button:hover {
-    background-color: #ffca2c; /* Lighter yellow on hover */
-    transform: scale(1.05); /* Slightly larger on hover */
+    background-color: #ffca2c;
+    transform: scale(1.05);
 }
 
 .action button:active {
-    background-color: #ffb300; /* Darker yellow on click */
-    transform: scale(0.95); /* Slightly smaller when clicked */
+    background-color: #ffb300;
+    transform: scale(0.95);
     border-radius: 0;
     border: 1px solid #ffb300;
 
@@ -134,5 +136,5 @@
 
 .action button:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5); /* Add a focus ring for accessibility */
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5);
 }

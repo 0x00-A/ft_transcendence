@@ -16,8 +16,8 @@ import axios from 'axios';
 
 
 interface AuthContextType {
-  isLoggedIn: boolean | null;
-  isLoading: boolean | null;
+  isLoggedIn: boolean;
+  isLoading: boolean;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 

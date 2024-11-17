@@ -1,11 +1,17 @@
 // React
 import { useState } from 'react'
+
+import Badge from '../assets/badge.svg'
+
+import WinRateDoughnut from '../Dashboard/WinRateDoughnut'
+// Styles
+import css from './ProfileHeader.module.css'
 import { useQuery } from '@tanstack/react-query'
 // API
 import apiClient from '@/api/apiClient'
 import { API_GET_PROFILE_URL } from '@/api/apiConfig'
 // Styles
-import css from '@/pages/Profile/Profile.module.css'
+// import css from '@/pages/Profile/Profile.module.css'
 import { GiRank3 } from "react-icons/gi";
 import { IoMdMore } from 'react-icons/io';
 import { IoIosMore } from "react-icons/io";
@@ -40,7 +46,7 @@ const profileHeader = ({isFormPopup, setFormPopup}) => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <p>Loading...</p>;
   }
 
   return (

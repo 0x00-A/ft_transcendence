@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import css from './FriendRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
-import axios from 'axios';
 import moment from 'moment';
 import Loading from './Loading';
 import NoFriendRequests from './NoFriendRequests';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
+import { toast } from 'react-toastify';
+
 
 interface Profile {
   id: number;
@@ -25,7 +26,6 @@ interface FriendRequest {
 }
 
 const FriendRequests: React.FC = () => {
-  const [notification, setNotification] = useState<string | null>(null);
 
   const { 
     data: friendPending, 
@@ -34,39 +34,14 @@ const FriendRequests: React.FC = () => {
     refetch 
   } = useGetData<FriendRequest[]>('friend-requests/pending');
 
-  // const handleAccept = async (username: string) => {
-  //   try {
-  //     await axios.post(
-  //       `http://localhost:8000/api/friend-request/accept/${username}/`,
-  //       null,
-  //       {
-  //         headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-  //       }
-  //     );
-  //     setNotification('Friend request accepted');
-  //     refetch();
-  //     setTimeout(() => {
-  //       setNotification(null);
-  //     }, 3000);
-  //   } catch (error) {
-  //     console.error('Error accepting friend request:', error);
-  //     setNotification('Failed to accept friend request');
-  //     setTimeout(() => {
-  //       setNotification(null);
-  //     }, 3000);
-  //   }
-  // };
 
   const acceptFriendRequest = async (username: string) => {
     try {
       const message = await apiAcceptFriendRequest(username);
-      setNotification(message);
+      toast.success(message);
       refetch();
-      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      setNotification(error.message || 'Failed to accept friend request');
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to accept friend request');
     }
   };
 
@@ -74,13 +49,10 @@ const FriendRequests: React.FC = () => {
   const rejectFriendRequest = async (username: string) => {
     try {
       const message = await apiRejectFriendRequest(username);
-      setNotification(message);
+      toast.success(message);
       refetch();
-      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      setNotification(error.message || 'Failed to reject friend request');
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to reject friend request');
     }
   };
 
@@ -92,11 +64,6 @@ const FriendRequests: React.FC = () => {
     <div className={css.friendRequests}>
       <div className={css.header}>
         <h1 className={css.title}>Friend Requests</h1>
-        {notification && (
-          <div className={css.notification}>
-            {notification}
-          </div>
-        )}
       </div>
 
       <div className={css.listContainer}>

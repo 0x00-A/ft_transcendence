@@ -21,7 +21,7 @@ const pH = 80;
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
   return (
     <button onClick={onClick} className={`${css.playButton}`}>
-      Go
+      Start
     </button>
   );
 }
@@ -365,7 +365,7 @@ const Pong: React.FC<GameProps> = ({
         <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
       </div>
       {gameStarted && (
-      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay /> : <FaPause />}</button>
+      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay color='black' /> : <FaPause color='black' />}</button>
       )}
       {gameStarted && paused && <div className={css.pauseDiv}>Paused</div>}
     </div>

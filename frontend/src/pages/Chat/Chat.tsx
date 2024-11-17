@@ -71,17 +71,11 @@ const Chat = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
 
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }
 
-  const filteredMessages = messages.filter((message) =>
-    message.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleSendMessage = (
     newMessage: string,
@@ -121,18 +115,8 @@ const Chat = () => {
       <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
         <div className={css.sidebarLeft} ref={sidebarLeftRef}>
           <OptionsButton />
-          <SearchMessages
-            onSearch={handleSearch}
-            onSelectedSearch={setSelectedSearch}
-            query={searchQuery}
-            setQuery={setSearchQuery}
-          />
           <MessageList
-            messages={selectedSearch ? filteredMessages : messages}
             onSelectMessage={setSelectedMessage}
-            isSearchActive={selectedSearch}
-            onSelectedSearch={setSelectedSearch}
-            setQuery={setSearchQuery}
             onBlockUser={handleBlockUser}
           />
         </div>

@@ -1,9 +1,10 @@
+import { getApiUrl } from '@/utils/getApiUrl';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 // import { API_BASE_URL } from '../config/constants';
 
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: getApiUrl(''),
   withCredentials: true,
 });
 
