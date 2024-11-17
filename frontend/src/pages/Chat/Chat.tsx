@@ -37,29 +37,11 @@ const Chat = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] =
     useState<SelectedMessageProps | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [customSticker, setCustomSticker] = useState(
     '<img src="/icons/chat/like.svg" alt="love" />'
   );
-
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      sidebarLeftRef.current &&
-      !sidebarLeftRef.current.contains(e.target as Node)
-    ) {
-      setSelectedSearch(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     if (selectedMessage) {
