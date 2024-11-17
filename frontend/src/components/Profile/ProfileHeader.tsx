@@ -10,6 +10,7 @@ import { GiRank3 } from "react-icons/gi";
 import { IoMdMore } from 'react-icons/io';
 import { IoIosMore } from "react-icons/io";
 import { MdBlock } from "react-icons/md";
+import { MdOutlineMessage } from "react-icons/md";
 
 interface ProfileData {
   username: string;
@@ -54,6 +55,10 @@ const profileHeader = ({isFormPopup, setFormPopup}) => {
             <IoIosMore className={css.moreIcon} onClick={() => setMore(!isMore)}/>
             {isMore &&
               <div className={css.showMore}>
+                <button className={css.messageBtn}>
+                  <MdOutlineMessage className={css.messageIcon}/>
+                  <span>Message</span>
+                </button>
                 <button className={css.blockBtn}>
                   <MdBlock className={css.blockIcon}/>
                   <span>Block</span>
