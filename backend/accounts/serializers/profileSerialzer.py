@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ..models.profile import Profile, User
+from ..serializers.badgeSerializer import BadgeSerializer
 
 
 
@@ -7,10 +8,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
+    badge = BadgeSerializer()
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'avatar', 'level', 'stats', 'is_online']
+        fields = ['id', 'username', 'avatar', 'level', 'score', 'rank', 'badge', 'stats', 'is_online']
 
     def get_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.avatar}"

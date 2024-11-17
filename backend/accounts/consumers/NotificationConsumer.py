@@ -61,9 +61,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def set_online_status(self, is_online):
         if self.username:
-            profile = await Profile.objects.aget(user__username=self.username)
-            profile.is_online = is_online
-            await profile.asave()
+            try:
+                profile = await Profile.objects.aget(user__username=self.username)
+                profile.is_online = is_online
+                await profile.asave()
+            except Profile.DoesNotExist:
+                return
 
     async def receive(self, text_data):
         data = json.loads(text_data)

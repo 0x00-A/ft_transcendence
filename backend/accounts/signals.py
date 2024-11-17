@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
 from matchmaker.models import Game
 from .models import Profile
+from .models import Badge
 
 from accounts.consumers import NotificationConsumer
 
@@ -11,7 +12,8 @@ from accounts.consumers import NotificationConsumer
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+       Profile.objects.create(user=instance,
+                              rank=Profile.objects.count() + 1, badge=Badge.objects.get(name='Bronze'))
 
 
 @receiver(post_save, sender=User)
@@ -23,6 +25,13 @@ def save_user_profile(sender, instance, **kwargs):
 def delete_user_with_profile(sender, instance, **kwargs):
     if instance.user:
         instance.user.delete()
+
+# @receiver(post_save, sender=User)
+# def create_profile_badge(sender, instance, created, **kwargs):
+#     if created:
+#         badge = Badge.objects.get(name='Bronze')
+#         instance.profile.badge = badge
+#         instance.profile.save()
 
 
 # @receiver(post_save, sender=Game)
