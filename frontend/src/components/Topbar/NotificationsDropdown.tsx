@@ -20,7 +20,8 @@ const NotificationsDropdown = () => {
   }, []);
 
   const handleClick = () => {
-    markAllAsRead();
+    if (unreadCount)
+      markAllAsRead();
   };
 
   // Sample notifications data
@@ -81,7 +82,7 @@ const NotificationsDropdown = () => {
   };
 
   return (
-    <DropdownMenu onOpenChange={handleClick}>
+    <DropdownMenu onOpenChange={handleClick}  >
       <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 rounded-full  focus:outline-none">
         <IoMdNotificationsOutline
           size={32}
@@ -94,7 +95,7 @@ const NotificationsDropdown = () => {
           </span>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80 w-85  text-white bg-[#1e2738] border-gray-600">
+      <DropdownMenuContent className="w-[25rem] text-white bg-[#1e2738] border-gray-600">
         <div className="px-4 py-3 border-b border-gray-600">
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
@@ -105,14 +106,14 @@ const NotificationsDropdown = () => {
               className="px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0"
             >
               <div className="flex justify-between items-start">
-                <h3 className="text-base font-medium text-white">
+                <h3 className="text-lg font-bold text-white">
                   {notification.title}
                 </h3>
-                <span className="text-sm text-gray-100">
+                <span className="text-[10px] text-gray-100">
                   {formatDate(notification.created_at)}
                 </span>
               </div>
-              <p className="text-base font-sans text-gray-100 mt-1">
+              <p className="text-[13px] font-sans text-gray-100 mt-1">
                 {notification.message}
               </p>
             </div>

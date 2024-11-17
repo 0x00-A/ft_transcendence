@@ -25,7 +25,6 @@ import Sidebar from './components/Sidebar/Sidebar';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 import Topbar from './components/Topbar/Topbar';
-import usePreLoader from './hooks/usePreLoader';
 import GameChat from './components/Game/RemoteGame/GameChat';
 import Room from './components/Game/RemoteGame/Room';
 import ProtectedRoute from './components/ProtectedRoute';
