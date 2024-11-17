@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import css from './Dashboard.module.css';
 import Welcome from '../../components/Welcome';
 import CompetitiveOverview from '../../components/CompetitiveOverview';
@@ -7,8 +7,15 @@ import Leaderboard from '../../components/Leaderboard';
 import FriendsList from '../../components/FriendsList';
 import LastMatch from '../../components/LastMatch';
 import LineChartComponent from '@/components/LineChartComponent';
+import { useLoadingBar } from '@/contexts/LoadingBarContext';
 
 const Dashboard = () => {
+  const loadingBarRef = useLoadingBar();
+
+  // useEffect(() => {
+  //   loadingBarRef.current?.complete();
+  // }, [])
+
   return (
     <main className={css.container}>
       <div className={css.heroSection}>
