@@ -7,9 +7,6 @@ User = get_user_model()
 
 class GameManager(models.Manager):
     def create_game(self, player1, player2):
-        """
-        Custom method to create a new game instance.
-        """
         game = self.create(
             player1=player1,
             player2=player2,
@@ -17,15 +14,9 @@ class GameManager(models.Manager):
         return game
 
     def get_active_games(self):
-        """
-        Return all active games that have started but not yet ended.
-        """
         return self.filter(game_status='started')
 
     def get_completed_games(self):
-        """
-        Return all games that have ended.
-        """
         return self.filter(game_status='ended')
 
 
@@ -40,9 +31,6 @@ class Game(models.Model):
         User, related_name='games_as_player1', on_delete=models.CASCADE)
     player2 = models.ForeignKey(
         User, related_name='games_as_player2', on_delete=models.CASCADE)
-
-    # tournament = models.ForeignKey(
-    #     'Tournament', on_delete=models.CASCADE, related_name='matches', null=True)
     winner = models.ForeignKey(
         User, related_name='games_as_winner', on_delete=models.CASCADE, null=True)
     p1_score = models.IntegerField(default=0)
@@ -50,9 +38,8 @@ class Game(models.Model):
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='started')
 
-    start_time = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
-    # game_address = models.URLField(max_length=200)
 
     objects = GameManager()
 
@@ -65,16 +52,10 @@ class Game(models.Model):
             super().save(*args, **kwargs)
 
     def start_game(self):
-        """
-        Set the game status to 'started'.
-        """
         self.game_status = 'started'
         self.save()
 
     def end_game(self, winner, p1_score, p2_score):
-        """
-        End the game, store the winner, and update win stats.
-        """
         print(f"--------------- Game: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2
@@ -85,8 +66,9 @@ class Game(models.Model):
         self.save()
 
     def update_stats(self):
+
         for player in [self.player1, self.player2]:
-            # Initialize stats if needed
+            # Initialize stats
             if 'wins' not in player.profile.stats:
                 player.profile.stats['wins'] = 0
             if 'losses' not in player.profile.stats:
@@ -105,6 +87,27 @@ class Game(models.Model):
             self.player2.profile.stats['wins'] += 1
             self.player1.profile.stats['losses'] += 1
 
-        # Save the updated stats
+        current_day = self.end_time.strftime('%a')
+        duration = (self.end_time -
+                    self.start_time).total_seconds() / 3600.0
+        print(
+            f'start: {self.start_time} - end: {self.end_time} - DURATION: {duration}')
+
+        for player in [self.player1, self.player2]:
+            stats = player.profile.stats.get('performanceData', [])
+            day_found = False
+
+            for entry in stats:
+                if current_day in entry:
+                    entry[current_day] += duration
+                    day_found = True
+                    break
+
+            if not day_found:
+                stats.append({current_day: duration})
+
+            player.profile.stats["performanceData"] = stats
+            # player.profile.save()
+
         self.player1.save()
         self.player2.save()

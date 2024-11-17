@@ -7,6 +7,7 @@ import ArcadeLoader from '../../../Game/components/ArcadeLoader/ArcadeLoader';
 import ErrorMessage from '../../../Game/components/ErrorMessage/ErrorMessage';
 import { Tournament } from '../../../../types/apiTypes';
 import NoTournamentIcon from '@/pages/Game/NoTournament/NoTournamnet';
+import { formatDate } from '@/utils/helpers';
 
 const TournamentList = ({
   handleJoin,
@@ -69,7 +70,7 @@ const TournamentList = ({
                 {tournament.creator.username}
               </div>
               <div className={`${css.col} ${css.date}`}>
-                {tournament.created_at}
+                {formatDate(tournament.created_at)}
               </div>
               <div className={`${css.col} ${css.players}`}>
                 {tournament.participants_count}/{tournament.number_of_players}

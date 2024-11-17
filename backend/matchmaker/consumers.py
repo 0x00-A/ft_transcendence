@@ -7,6 +7,8 @@ from asgiref.sync import sync_to_async
 from django.contrib.auth.models import AnonymousUser
 
 from .matchmaker import Matchmaker
+
+
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
@@ -15,7 +17,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         if user and not isinstance(user, AnonymousUser):
             await self.accept()
             self.player_id = user.id
-            await Matchmaker.register_client(self.player_id, self)
+            await Matchmaker.register_client(self.player_id, self.channel_name)
             # await self.send(text_data=json.dumps(
             #     {'event': 'authenticated',
             #      'username': user.username,
@@ -33,6 +35,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         # Matchmaker.games_queue.remove(self.player_id)
         await Matchmaker.handle_player_unready(self.player_id)
         await Matchmaker.unregister_client(self.player_id)
+        return await super().disconnect(close_code)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -52,8 +55,11 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await Matchmaker.handle_player_unready(self.player_id)
         elif event == 'remove_from_queue':
             await Matchmaker.remove_from_queue(self.player_id)
-        # Handle other events similarly...
 
-    # This method sends a message to the WebSocket client
-    async def send_message(self, message):
+    # async def send_message(self, message):
+    #     await self.send(text_data=json.dumps(message))
+
+    async def user_message(self, event):
+        message = event["message"]
+
         await self.send(text_data=json.dumps(message))

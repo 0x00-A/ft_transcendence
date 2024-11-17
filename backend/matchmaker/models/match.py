@@ -43,9 +43,6 @@ class Match(models.Model):
             super().save(*args, **kwargs)
 
     def end_match(self, winner, p1_score, p2_score):
-        """
-        End the match, store the winner, and update win stats.
-        """
         print(f"--------------- Match: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2

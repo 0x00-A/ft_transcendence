@@ -29,6 +29,7 @@ import NoTournamentIcon from './NoTournament/NoTournamnet';
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { formatDate } from '@/utils/helpers';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -292,7 +293,7 @@ const Game = () => {
                         </div>
                         <div className={styles.rightAligned}>
                           <p className={styles.tournamentStatus}>Status: {tournament.status}</p>
-                          <p className={styles.tournamentDate}>Started: {tournament.created_at}</p>
+                          <p className={styles.tournamentDate}>Started: {formatDate(tournament.created_at)}</p>
                         </div>
                     </div>
                 ))}
