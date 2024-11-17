@@ -22,7 +22,7 @@ const LineChartComponent = () => {
   const get_duration = (stats: Stats | undefined, day: string) => {
     if (!stats) return 0;
     const duration = stats?.performanceData?.find((entry) => entry[day] !== undefined)?.[day] || 0;
-    return duration;
+    return duration.toFixed(2);
   }
 
   const totalPlayTime = user?.profile?.stats?.performanceData?.reduce((total, entry) => {

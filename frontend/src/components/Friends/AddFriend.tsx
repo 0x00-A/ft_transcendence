@@ -3,6 +3,7 @@ import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
+import { toast } from 'react-toastify';
 import { apiAcceptFriendRequest, apiCancelFriendRequest, apiRejectFriendRequest, apiSendFriendRequest } from '../../api/friendApi';
 
 interface Profile {
@@ -36,7 +37,6 @@ const AddFriend: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const { data: suggestedConnections, isLoading: loadingSuggested, error: suggestedError } = useGetData<SuggestedUser[]>('suggested-connections');
   const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
-  const [notification, setNotification] = useState<string | null>(null);
 
   if (suggestedError) return <p>Error loading suggested connections: {suggestedError.message}</p>;
   if (usersError) return <p>Error loading users: {usersError.message}</p>;
@@ -64,64 +64,45 @@ const AddFriend: React.FC = () => {
   const sendFriendRequest = async (username: string) => {
     try {
       const message = await apiSendFriendRequest(username);
-      setNotification(message);
+      toast.success(message);
       refetch();
-      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      setNotification(error.message || 'Failed to send friend request');
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to send friend request' );
     }
   };
   
   const rejectFriendRequest = async (username: string) => {
     try {
       const message = await apiRejectFriendRequest(username);
-      setNotification(message);
+      toast.success(message);
       refetch();
-      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      setNotification(error.message || 'Failed to reject friend request');
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to reject friend request' );
     }
   };
   
   const acceptFriendRequest = async (username: string) => {
     try {
       const message = await apiAcceptFriendRequest(username);
-      setNotification(message);
+      toast.success(message);
       refetch();
-      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      setNotification(error.message || 'Failed to accept friend request');
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to accept friend request' );
     }
   };
-
+  
   const handleCancel = async (username: string) => {
     try {
       const message = await apiCancelFriendRequest(username);
-      setNotification(message);
+      toast.success(message);
       refetch();
-      setTimeout(() => setNotification(null), 3000);
     } catch (error: any) {
-      setNotification(error.message || 'Failed to cancel friend request');
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      toast.error(error.message || 'Failed to cancel friend request' );
     }
   };
 
-  console.log("suggestedConnections: ", suggestedConnections)
   return (
     <div className={css.addFriend}>
-      {notification && (
-        <div className={css.notification}>
-          {notification}
-        </div>
-      )}
-
       <h1 className={css.title}>Search & Add Friends</h1>
       <div className={css.searchContainer}>
         <FaSearch className={css.searchIcon} />

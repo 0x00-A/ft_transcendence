@@ -53,8 +53,8 @@ const Game = () => {
   const [opponentReady, setOpponentReady] = useState(false);
   const { isLoggedIn } = useAuth();
 
-  if (!isLoggedIn)
-    return;
+  // if (!isLoggedIn)
+  //   return;
 
   const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
 
