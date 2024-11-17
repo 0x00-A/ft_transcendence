@@ -53,7 +53,7 @@ class Matchmaker:
         p1 = await User.objects.aget(id=player1_id)
         p2 = await User.objects.aget(id=player2_id)
         game = await Game.objects.acreate(
-            player1=p1, player2=p2, start_time=now()
+            player1=p1, player2=p2
         )
         game_address = f"game/game_{game.id}"
         message = {

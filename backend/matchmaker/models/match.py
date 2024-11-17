@@ -26,7 +26,7 @@ class Match(models.Model):
     p2_score = models.IntegerField(default=0)
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
-    start_time = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
     player1_ready = models.BooleanField(default=False)
     player2_ready = models.BooleanField(default=False)

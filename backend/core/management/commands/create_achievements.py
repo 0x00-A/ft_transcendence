@@ -17,8 +17,8 @@ class Command(BaseCommand):
                 "image": "/icons/silver_smash.png", "threshold": 10, "condition": {"games_won": 10}},
             {"name": "Gold Ace", "description": "Win 20 matches.",
                 "image": "/icons/gold_ace.png", "threshold": 20, "condition": {"games_won": 20}},
-            {"name": "Marathon Match", "description": "Play a match lasting more than 15 minutes.",
-                "image": "/icons/marathon_match.png", "threshold": 15, "condition": {"play_time": 15}},
+            {"name": "Marathon Match", "description": "Play a match lasting more than 5 minutes.",
+                "image": "/icons/marathon_match.png", "threshold": 300, "condition": {"play_time": 300}},
             {"name": "FT-PONG Legend", "description": "Win 50 matches",
                 "image": "/icons/legend.png", "threshold": 100, "condition": {"games_won": 50}}
         ]

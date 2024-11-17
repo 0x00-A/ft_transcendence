@@ -38,7 +38,7 @@ class Game(models.Model):
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='started')
 
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
 
     objects = GameManager()
