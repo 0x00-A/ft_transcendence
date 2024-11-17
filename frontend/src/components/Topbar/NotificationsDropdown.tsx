@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useWebSocket } from '@/contexts/WebSocketContext';
+import { formatDate } from '@/utils/helpers';
 
 const NotificationsDropdown = () => {
   const { unreadCount, fetchNotifications, markAllAsRead, notifications } =
@@ -70,16 +71,7 @@ const NotificationsDropdown = () => {
   //   },
   // ];
 
-  const formatDate = (dateString: Date) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
-  };
+
 
   return (
     <DropdownMenu onOpenChange={handleClick}  >
