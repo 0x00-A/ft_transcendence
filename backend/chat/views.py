@@ -1,22 +1,24 @@
+# views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from django.db.models import Q
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
-class ConversationListView(APIView):
-    """
-    API View to get all conversations for the authenticated user.
-    """
-    permission_classes = [IsAuthenticated]
+class GetConversationsView(APIView):
+    permission_classes = [AllowAny]
 
     def get(self, request):
         try:
             user = request.user
-            conversations = Conversation.objects.filter(Q(user1=user) | Q(user2=user))
+            conversations = Conversation.objects.filter(
+                Q(user1=user) | Q(user2=user)
+            ).order_by('-updated_at')
             serializer = ConversationSerializer(conversations, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
@@ -24,13 +26,9 @@ class ConversationListView(APIView):
                 {'error': 'Internal server error', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
-class MessageListView(APIView):
-    """
-    API View to get all messages in a specific conversation.
-    """
-    permission_classes = [IsAuthenticated]
+        
+class GetMessagesView(APIView):
+    permission_classes = [AllowAny]
 
     def get(self, request, conversation_id):
         try:
@@ -39,7 +37,7 @@ class MessageListView(APIView):
                 Q(id=conversation_id),
                 Q(user1=user) | Q(user2=user)
             )
-            messages = conversation.messages.all()
+            messages = conversation.messages.all().order_by('timestamp')
             serializer = MessageSerializer(messages, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Conversation.DoesNotExist:
