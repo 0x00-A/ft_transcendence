@@ -9,8 +9,8 @@
 
 .title {
   font-size: 2.2rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: bold;
+  color: #F8F3E3;
 }
 
 .buttonGroup {
@@ -37,7 +37,7 @@
 }
 
 .buttonActive {
-  background-color: #3b82f6;
+  background-color: #5774a1;
   color: #ffffff;
 }
 
@@ -52,7 +52,7 @@
   /* background: linear-gradient(135deg, #2a2b36 0%, #1a1b26 100%); */
   padding: 1.5rem;
   border-radius: 16px;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #517abc;
   transition: transform 0.2s ease;
 }
 
@@ -81,7 +81,6 @@
 }
 
 .bestCard {
-  background: linear-gradient(135deg, #2a2b36 0%, #1a1b26 100%);
   background: linear-gradient(90deg, #384B6C 0%, #2B374D 63%, #1E2533 100%);
   padding: 1rem;
   border-radius: 16px;
@@ -95,32 +94,34 @@
 
 .bestContent {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.75rem;
 }
 
 .bestIcon {
   
   color: #f59e0b;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .bestInfo {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .bestLabel {
-  color: #9699b0;
-  font-size: 0.75rem;
+  color: rgb(209, 213, 219);
+  font-size: 1.125rem;
   margin-bottom: 0.25rem;
 }
 
 .bestValue {
-  color: #ffffff;
-  font-size: 1.25rem;
-  font-weight: 600;
+  color: (241, 245, 249);
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .bottomGrid {
@@ -192,6 +193,10 @@
   border-left: 4px solid #f59e0b;
 }
 
+.winCard:hover {
+  transform: translateY(-2px);
+}
+
 .loseCard {
   background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(42, 43, 54, 0.5) 100%);
   padding: 1rem;
@@ -199,8 +204,35 @@
   border-left: 4px solid #ef4444;
 }
 
+.loseCard:hover {
+  transform: translateY(-2px);
+}
 .resultText {
   color: #ffffff;
   font-size: 1.125rem;
   font-weight: 600;
+}
+
+@media (max-height: 1060px) {
+  .friendList {
+    gap: 5px;
+  }
+}
+@media (max-height: 1170px) {
+  .statCard {
+    padding: 5px;
+    padding-left: 10px;
+  }
+  .bestCard {
+    padding: 8px;
+    padding-left: 10px;
+  }
+
+  .bestContent {
+    gap: 0.2rem;
+  }
+  .bestLabel {
+    font-size: 0.8rem;
+  }
+  
 }

@@ -1,7 +1,9 @@
 from django.urls import path
+from django.urls import re_path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
+from .views import oauth2_authentication
 from .views import LogoutView
 from .views import discord_authorize
 from .views import oauth2_discord
@@ -27,6 +29,8 @@ from .views import ConfirmOauth2Login
 from .views import ProfileApiView
 from rest_framework.routers import DefaultRouter
 from accounts.views import NotificationViewSet
+from .views import EditProfileView
+from .views import oauth2_authorize
 
 router = DefaultRouter()
 router.register(r'notifications', NotificationViewSet, basename='notification')
@@ -36,21 +40,26 @@ urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
-    path('auth/logout/', LogoutView.as_view()),
+    re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$', oauth2_authentication, name='oauth2_authentication'),
+    re_path(r'^auth/oauth2/authorize/(?P<choice>intra|discord|google)/$', oauth2_authorize, name='oauth2_authorize'),
     path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
+    path('oauth2/verify_login/', ConfirmOauth2Login.as_view()),
+    path('auth/logout/', LogoutView.as_view()),
+
+    path('auth/new_username/', oauth2_set_username),
+    # path('oauth2/discord/authorize/', discord_authorize),
 
     # path('auth/refresh_token/', RefreshToken.as_view()),
-    path('oauth2/verify_login', ConfirmOauth2Login.as_view()),
-    path('oauth2/set_username/', oauth2_set_username),
-    path('oauth2/discord/authorize/', discord_authorize),
-    path('oauth2/discord/', oauth2_discord),
-    path('oauth2/intra/authorize/', intra_authorize),
-    path('oauth2/intra/', oauth2_intra),
-    path('oauth2/google/authorize/', google_authorize),
-    path('oauth2/google/', oauth2_google),
+    # path('oauth2/discord/', oauth2_discord),
+    # path('oauth2/intra/authorize/', intra_authorize),
+    # path('oauth2/intra/', oauth2_intra),
+    # path('oauth2/google/authorize/', google_authorize),
+    # path('oauth2/google/', oauth2_google),
 
     path('users/', AllUsersView.as_view(), name='all_users'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
+    path('profile/edit/', EditProfileView.as_view()),
+
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(),
          name='suggested-connections'),

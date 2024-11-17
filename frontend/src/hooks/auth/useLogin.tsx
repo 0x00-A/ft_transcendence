@@ -1,11 +1,11 @@
-import axios from "axios";
+// REACT
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from "../../contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+// API
 import apiClient from "../../api/apiClient";
-
+import { API_LOGIN_URL } from '@/api/apiConfig';
 
 interface LoginData {
   username: string;
@@ -24,15 +24,9 @@ const schema = yup.object().shape({
     .required('password is required!'),
 });
 
-const loginUser = async (user: LoginData) => {
-  return apiClient.post('/auth/login/', user);
-  const response = await axios.post(
-    'http://localhost:8000/api/auth/login/',
-    user,
-    {withCredentials: true},
-  );
-  return response.data;
-};
+// const loginUser = async (user: LoginData) => {
+//   return apiClient.post(API_LOGIN_URL, user);
+// };
 
 const useLogin = () => {
   const {
@@ -47,7 +41,7 @@ const useLogin = () => {
     mode: 'onChange'
   });
   const mutation = useMutation({
-    mutationFn: loginUser,
+    mutationFn: async (data: LoginData) =>  {return await apiClient.post(API_LOGIN_URL, data)},
     onError(error) {
       const errs = error?.response.data as LoginData;
       errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})

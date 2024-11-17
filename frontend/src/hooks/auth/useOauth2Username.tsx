@@ -1,9 +1,11 @@
-import React from 'react'
+// React
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios, { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+// API
+import apiClient from '@/api/apiClient';
+import { API_NEW_USERNAME_URL } from '@/api/apiConfig';
 
 interface UsernameFormData {
   username: string;
@@ -17,15 +19,14 @@ const schema = yup.object().shape({
     .max(15, 'username must not exceed 15 characters!'),
 });
 
-const submitUsername = async (data: UsernameFormData) => {
-  // try {
-    const response = await axios.post(
-      'http://localhost:8000/api/oauth2/set_username/',
-      data,
-      { withCredentials: true }
-    );
-    return response.data
-}
+// const submitUsername = async (data: UsernameFormData) => {
+//   // try {
+//     const response = await apiClient.post(
+//       '/oauth2/set_username/',
+//       data,
+//     );
+//     return response.data
+// }
 
 
 const useOauth2Username = () => {
@@ -42,16 +43,11 @@ const useOauth2Username = () => {
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: submitUsername,
-    onError: (error: AxiosError) => {
+    mutationFn: async (data: UsernameFormData) => { return await apiClient.post(API_NEW_USERNAME_URL, data) },
+    onError: (error) => {
       const errs = error?.response.data as UsernameFormData;
       errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
       error?.response.data?.message && setError("root", {type: '', message: error.response.data.message});
-      // if (error.response) {
-      //     console.error('Error message:', error.response.data);
-      //   } else {
-      //     console.error('Unexpected error:', error.message);
-      //   }
     }
   });
   return {

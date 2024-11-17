@@ -39,6 +39,8 @@ import { WebSocketProvider } from './contexts/WebSocketContext';
 import { UserProvider } from './contexts/UserContext';
 import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
+import React from 'react';
+import OtpAuth from './pages/Auth/OtpAuth';
 
 
 function App() {
@@ -75,7 +77,6 @@ function App() {
 function AppContent() {
 
   const onlineSocketRef = useRef<WebSocket | null>(null);
-  const [showGame, setShowGame] = useState(false)
 
   const showSidebarRoutes = [
     '/',
@@ -92,25 +93,20 @@ function AppContent() {
     '/leaderboard',
     '/leaderboard/',
     '/profile',
-    '/profile/',
+    '/auth/2factor',
   ];
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
   // const loading = usePreLoader();
 
-  // if (loading) {
+  // if (isLoading) {
   //   return <PreLoader />;
   // }
-  const { gameAccepted, gameInvite } = useGameInvite();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (gameAccepted && gameInvite) {
-      navigate(`/play`);
-    }
-  }, [gameAccepted, gameInvite, navigate]);
-
-  useEffect(() => {
+    // if (!isLoggedIn) {
+    //   return;
+    // }
       const wsUrl = `${getWebSocketUrl('online-status/')}`;
       const socket = new WebSocket(wsUrl);
       onlineSocketRef.current = socket;
@@ -129,6 +125,7 @@ function AppContent() {
   // if (showGame)
   //   return <RemoteGame onReturn={() => setShowGame(false)} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
 
+  // return <PreLoader />;
   return (
     <div className="app-container ">
       <PreLoader />
@@ -140,26 +137,23 @@ function AppContent() {
           <Topbar />
         )}
         <Routes>
-          <Route
-            path="/auth"
-            element={!isLoggedIn ? <Auth /> : <Navigate to={'/'} />}
-          />
-          <Route path="/auth" element={ !isLoggedIn ? <Auth /> : <Navigate to={'/'} />} />
-          <Route path="/oauth2/callback" element={<Oauth2Callback />} />
-          <Route path="*" element={<PageNotFound />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/play" element={<Game />} />
-            <Route path="/game/chat" element={<GameChat />} />
-            <Route path="/game/chat/:room" element={<Room />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/friends" element={<Friends />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/auth" element={<Auth />}/>
+            <Route path="/oauth2/callback" element={<Oauth2Callback />} />
+            <Route path='/auth/2factor' element={<OtpAuth/>} />
             <Route path="*" element={<PageNotFound />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/play" element={<Game />} />
+              <Route path="/game/chat" element={<GameChat />} />
+              <Route path="/game/chat/:room" element={<Room />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/friends" element={<Friends />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/store" element={<Store />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
       </div>

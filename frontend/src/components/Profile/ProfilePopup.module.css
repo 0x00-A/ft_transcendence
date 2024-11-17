@@ -1,0 +1,59 @@
+.popupContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E2533;
+    border-radius: 10px;
+    width: 600px;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bluredBg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.avatar {
+    /* border: 1px solid white; */
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+}
+
+.formsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* border: 1px solid aqua; */
+    width: 100%;
+
+}
+
+.formProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.formSecurity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

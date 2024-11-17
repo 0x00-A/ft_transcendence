@@ -11,6 +11,7 @@ import React, {
 import { toast } from 'react-toastify';
 import { useGameInvite } from './GameInviteContext';
 import apiClient from '@/api/apiClient';
+import { useAuth } from './AuthContext';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
@@ -48,6 +49,9 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const ws = useRef<WebSocket | null>(null);
+
+  const { isLoggedIn } = useAuth();
+
 
   // Fetch notifications from the API
   const fetchNotifications = async () => {
@@ -127,7 +131,8 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    setTimeout(() => {
+      if (!isLoggedIn)
+        return;
       ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
 
       ws.current.onopen = () => {
@@ -174,7 +179,6 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       return () => {
         ws.current?.close();
       };
-    }, 500);
   }, []);
 
   const handleIncomingNotification = (data: Notification) => {

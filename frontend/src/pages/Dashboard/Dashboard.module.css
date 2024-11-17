@@ -7,9 +7,16 @@
   max-width: 2000px;
   height: calc(100vh - 116px);
   min-height: 900px;
-  /* background-color: black; */
-  overflow-y: scroll;
+  min-width: 650px;
+  overflow-y: auto;
   margin: 0 auto;
+}
+
+.LineChart {
+  height: 50%;
+  background-color: #1E2533;
+  padding: 30px;
+  border-radius: 5rem;
 }
 
 .heroSection {
@@ -22,10 +29,10 @@
 .welcome {
   height: 50%;
   padding-right: 2.5rem;
-  border-radius: 30px;
+  border-radius: 5rem;
   display: flex;
   align-items: center;
-  background-image: url('../../components/rachid.png');
+  background-image: url('/public/rachid.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -44,7 +51,7 @@
   height: 50%;
   background-color: #1E2533;
   padding: 30px;
-  border-radius: 30px;
+  border-radius: 5rem;
   color: #ffffff;
 }
 
@@ -59,7 +66,7 @@
   height: 50%;
   background-color: #1E2533;
   padding: 30px;
-  border-radius: 30px;
+  border-radius: 5rem;
   background-color: #1E2533;
   display: flex;
   flex-direction: column;
@@ -69,12 +76,12 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.achievements {
+/* .achievements {
   height: 50%;
   background-color: #1E2533;
   padding: 30px;
   border-radius: 30px;
-}
+} */
 
 .lastSection {
   width: 30%;
@@ -86,7 +93,7 @@
 .lastMatchContainer {
   height: 50%;
   background-color: #1E2533;
-  border-radius: 30px;
+  border-radius: 5rem;
   padding: 30px;
   color: #F8F3E3;
   display: flex;
@@ -96,7 +103,7 @@
 .friendsContainer {
   height: 50%;
   background-color: #1E2533;
-  border-radius: 30px;
+  border-radius: 5rem;
   padding: 30px;
   color: #F8F3E3;
   display: flex;
@@ -139,10 +146,10 @@
     gap: 1rem;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .achievements, .lastMatchContainer, .friendsContainer {
+  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
     height: auto;
     width: 100%;
-    padding: 20px;
+    padding: 30px;
   }
 }
 
@@ -157,7 +164,7 @@
     width: 100%;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .achievements, .lastMatchContainer, .friendsContainer {
+  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
     padding: 15px;
     height: auto;
   }
@@ -174,9 +181,9 @@
     gap: 1rem;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .achievements, .lastMatchContainer, .friendsContainer {
+  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
     height: auto;
-    padding: 20px;
+    padding: 30px;
   }
 }
 
@@ -191,10 +198,8 @@
     width: 100%;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .achievements, .lastMatchContainer, .friendsContainer {
-    padding: 15px;
+  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
+    padding: 30px;
     height: auto;
   }
 }
-
-

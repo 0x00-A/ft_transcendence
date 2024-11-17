@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import Loading from './Loading';
 import NoSentRequests from './NoSentRequests';
+import { apiCancelFriendRequest } from '@/api/friendApi';
 
 interface Profile {
   id: number;
@@ -27,14 +28,14 @@ const SentRequests: React.FC = () => {
 
   const handleCancel = async (username: string) => {
     try {
-      await axios.delete(`http://localhost:8000/api/friend-request/cancel/${username}/`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
+      const message = await apiCancelFriendRequest(username);
+      // setNotification(message);
       refetch();
-    } catch (err) {
-      console.error('Error canceling friend request:', err);
+      // setTimeout(() => setNotification(null), 3000);
+    } catch (error: any) {
+      // setNotification(error.message || 'Failed to cancel friend request');
+    } finally {
+      // setTimeout(() => setNotification(null), 3000);
     }
   };
 
@@ -57,7 +58,7 @@ const SentRequests: React.FC = () => {
           ) : sentRequests?.map((request) => (
             <div key={request.id} className={css.requestCard}>
               <img
-                src={"http://localhost:8000" + request.receiver.profile.avatar}
+                src={request.receiver.profile.avatar}
                 alt={request.receiver.username}
                 className={css.avatar}
               />

@@ -6,6 +6,7 @@ import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import NoFound from './NoFound';
 import axios from 'axios';
+import { apiBlockRequest } from '@/api/friendApi';
 
 
 interface FriendProfile {
@@ -37,23 +38,18 @@ const AllFriends: React.FC = () => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
 
-  const handleBlock = async (username : string) => {
+  const blockRequest = async (username: string) => {
     try {
-      await axios.post(
-        `http://localhost:8000/api/block/${username}/`,
-        null,
-        {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` },
-        }
-      );
-      console.log(`Blocked user: ${username}`);
-      // Optionally refetch friends list or update state to remove blocked friend from UI
-      refetch(); // Fetch updated friends list after blocking
-    } catch (error) {
-      console.error('Error blocking user:', error);
+      const message = await apiBlockRequest(username);
+      // setNotification(message);
+      refetch();
+      // setTimeout(() => setNotification(null), 3000);
+    } catch (error: any) {
+      // setNotification(error.message || 'Failed to accept friend request');
+    } finally {
+      // setTimeout(() => setNotification(null), 3000);
     }
   };
-
 
   return (
     <div className={css.allFriends}>
@@ -80,7 +76,7 @@ const AllFriends: React.FC = () => {
           filteredFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
-                src={"http://localhost:8000" + friend.profile.avatar}
+                src={friend.profile.avatar}
                 alt={friend.username}
                 className={css.avatar}
               />
@@ -103,7 +99,7 @@ const AllFriends: React.FC = () => {
                 <button className={css.actionButton}>View Profile</button>
                 <button
                   className={css.actionButton}
-                  onClick={() => handleBlock(friend.username)}
+                  onClick={() => blockRequest(friend.username)}
                 >
                   Block</button>
               </div>

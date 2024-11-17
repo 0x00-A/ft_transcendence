@@ -1,14 +1,17 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryKey, UseQueryOptions, useQuery } from '@tanstack/react-query';
 import {getData} from './apiClient';
 
 
-const useGetData = <T>(endpoint: string) => {
+const useGetData = <T>(endpoint: string,
+  options?: Omit<UseQueryOptions<T, Error, T, QueryKey>, 'queryKey'>
+) => {
   return useQuery({
     queryKey: [endpoint],
     queryFn: () => getData<T>(`${endpoint}/`),
     staleTime: 5000,
     refetchOnWindowFocus: true,
     // refetchInterval: 5000,
+    ...options, // Spread additional options like `enabled`
   });
 };
 

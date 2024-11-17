@@ -5,8 +5,14 @@
     margin-bottom: 10px;
   }
   
+  .tables {
+    display: flex;
+    align-items: center;
+    height: calc(100% - 34px);
+  }
   .header h3 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    font-weight: bold;
     color: #F8F3E3;
   }
   
@@ -62,7 +68,7 @@
   }
   
   .score {
-    color: #F8C25C;
+    color: #ffb902;
     font-weight: bold;
   }
   

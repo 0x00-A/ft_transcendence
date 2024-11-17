@@ -28,6 +28,7 @@ import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage
 import NoTournamentIcon from './NoTournament/NoTournamnet';
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
+import { useAuth } from '@/contexts/AuthContext';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -49,6 +50,10 @@ const Game = () => {
   const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
+  const { isLoggedIn } = useAuth();
+
+  if (!isLoggedIn)
+    return;
 
   const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
 

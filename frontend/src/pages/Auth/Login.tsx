@@ -27,10 +27,10 @@ const Login = ({onSetAuthStat}) => {
   useEffect(() => {
     if (mutation.isSuccess) {
       reset();
-      console.log(mutation.data.message);
+      console.log('apiClient ==> Login response: ', mutation.data.data.message);
       setIsLoggedIn(true);
       navigate('/');
-      onSetAuthStat(mutation.data.message);
+      onSetAuthStat(mutation.data.data.message);
       setTimeout(() => onSetAuthStat(null), 5000)
     }
   }, [mutation.isSuccess])
