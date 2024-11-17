@@ -147,7 +147,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         //   data.event === 'friend_request' ||
         //   data.event === 'status_update'
         // ) {
-        //   handleIncomingNotification(data);
+        //
         // }
         if (
           data.event === 'notification'

@@ -108,28 +108,6 @@ function AppContent() {
     }
   }, [gameAccepted, gameInvite, navigate]);
 
-  // useEffect(() => {
-  //   // if (!isLoggedIn) {
-  //   //   return;
-  //   // }
-  //     const wsUrl = `${getWebSocketUrl('online-status/')}`;
-  //     const socket = new WebSocket(wsUrl);
-  //     onlineSocketRef.current = socket;
-
-  //     socket!.onmessage = (() => {console.log('Socket online');
-  //     })
-
-
-  //   return () => {
-  //     if (onlineSocketRef.current) {
-  //       onlineSocketRef.current.close();
-  //     }
-  //   };
-  // }, []);
-
-  // if (showGame)
-  //   return <RemoteGame onReturn={() => setShowGame(false)} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
-
   return (
     <div className="app-container ">
       <PreLoader />
