@@ -18,7 +18,6 @@ interface conversationProps {
   time: string;
   unreadCount?: number;
   status: boolean;
-  lastSeen?: string;
   blocked: boolean;
 }
 

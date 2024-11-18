@@ -10,7 +10,6 @@ interface ChatHeaderProps {
     name: string;
     time: string;
     status: boolean;
-    lastSeen?: string;
   } | null;
 }
 
@@ -27,7 +26,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {onSelectedConversation.lastSeen}
+            Last seen at {onSelectedConversation.time}
           </p>
         );
     }

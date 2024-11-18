@@ -16,6 +16,17 @@ interface MessageProps {
 }
 
 
+interface MessagePropsUser {
+    id: number;
+    conversation: number;
+    sender: number;
+    receiver: number;
+    content: string;
+    timestamp: string;
+    seen: boolean;
+  }
+
+
 interface ChatContentProps {
   customSticker: string;
   isBlocked: boolean;
@@ -25,8 +36,6 @@ interface ChatContentProps {
     avatar: string;
     name: string;
     time: string;
-    status: boolean;
-    lastSeen?: string;
   } | null;
 }
 
@@ -40,7 +49,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
 
 
-    const { data: ConversationUser, isLoading, error } = useGetData<any>(
+    const { data: ConversationUser, isLoading, error } = useGetData<MessagePropsUser>(
         `chat/conversations/${onSelectedConversation?.id}/messages`
     );
 
