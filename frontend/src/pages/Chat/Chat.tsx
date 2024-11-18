@@ -8,10 +8,8 @@ import MessageList from '../../components/chat/MessageList';
 import OptionsButton from '../../components/chat/OptionsButton';
 import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
-import MessageInput from '../../components/chat/MessageInput';
-import MessageArea from '../../components/chat/MessageArea';
-import chatData from './chatdata';
 import messages from './messages';
+import ChatContent from '@/components/chat/ChatContent';
 
 interface conversationProps {
   avatar: string;
@@ -25,30 +23,15 @@ interface conversationProps {
 }
 
 
-interface ChatMessage {
-  name: string;
-  content: string;
-  sender: boolean;
-  avatar: string;
-  time: string;
-}
-
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedConversation, setSelectedConversation] =
     useState<conversationProps | null>(null);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [customSticker, setCustomSticker] = useState(
     '<img src="/icons/chat/like.svg" alt="love" />'
   );
-
-  useEffect(() => {
-    if (selectedConversation) {
-      setChatMessages(chatData[selectedConversation.name] || []);
-    }
-  }, [selectedConversation]);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -60,26 +43,27 @@ const Chat = () => {
   }
 
 
-  const handleSendMessage = (
-    newMessage: string,
-    isSticker: boolean = false
-  ) => {
-    if (selectedConversation) {
-      const message = {
-        name: 'You',
-        content: newMessage,
-        sender: true,
-        avatar: 'https://picsum.photos/200',
-        time: moment().format('HH:mm A'),
-      };
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>");
+  // const handleSendMessage = (
+  //   newMessage: string,
+  //   isSticker: boolean = false
+  // ) => {
+  //   if (selectedConversation) {
+  //     const message = {
+  //       name: 'You',
+  //       content: newMessage,
+  //       sender: true,
+  //       avatar: 'https://picsum.photos/200',
+  //       time: moment().format('HH:mm A'),
+  //     };
 
-      if (isSticker) {
-        message.content = newMessage;
-      }
+  //     if (isSticker) {
+  //       message.content = newMessage;
+  //     }
 
-      setChatMessages((prevMessages) => [...prevMessages, message]);
-    }
-  };
+  //     setChatMessages((prevMessages) => [...prevMessages, message]);
+  //   }
+  // };
 
   const handleStickerChange = (newSticker: string) => {
     setCustomSticker(newSticker);
@@ -109,12 +93,9 @@ const Chat = () => {
               <ChatHeader
                 toggleSidebar={toggleSidebar}
                 onSelectedConversation={selectedConversation}
-              />
-              <div className={css.messageArea}>
-                <MessageArea messages={chatMessages} />
-              </div>
-              <MessageInput
-                onSendMessage={handleSendMessage}
+                />
+              <ChatContent
+                onSelectedConversation={selectedConversation}
                 customSticker={customSticker}
                 isBlocked={selectedConversation.blocked}
                 onUnblock={() => handleBlockUser(selectedConversation.name)}

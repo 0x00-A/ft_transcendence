@@ -49,7 +49,7 @@
   flex-direction: column;
 }
 
-.messageArea {
+/* .messageArea {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -61,4 +61,4 @@
 
 .messageArea::-webkit-scrollbar {
   display: none;
-}
+} */
