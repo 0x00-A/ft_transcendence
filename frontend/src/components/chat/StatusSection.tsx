@@ -3,7 +3,7 @@ import css from './StatusSection.module.css';
 
 interface Info {
   status: boolean;
-  lastSeen?: string;
+  time?: string;
 }
 
 interface StatusSectionProps {
@@ -20,7 +20,7 @@ const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
       case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {status.lastSeen}
+            Last seen at {status.time}
           </p>
         );
       default:

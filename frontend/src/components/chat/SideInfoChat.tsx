@@ -10,7 +10,7 @@ interface Info {
   avatar: string;
   name: string;
   status: boolean;
-  lastSeen?: string;
+  time: string;
   blocked: boolean;
 }
 
