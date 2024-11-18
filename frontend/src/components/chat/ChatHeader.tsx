@@ -2,32 +2,32 @@ import React from 'react';
 import css from './ChatHeader.module.css';
 import { FaCircleInfo } from 'react-icons/fa6';
 
+
 interface ChatHeaderProps {
   toggleSidebar: () => void;
-  selectedMessage: {
+  onSelectedConversation: {
     avatar: string;
     name: string;
-    status: 'online' | 'offline' | 'typing';
+    time: string;
+    status: boolean;
     lastSeen?: string;
   } | null;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
   toggleSidebar,
-  selectedMessage,
+  onSelectedConversation,
 }) => {
   const renderUserStatus = () => {
-    if (!selectedMessage) return null;
+    if (!onSelectedConversation) return null;
 
-    switch (selectedMessage.status) {
-      case 'online':
+    switch (onSelectedConversation.status) {
+      case true:
         return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
-      case 'typing':
-        return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
-      case 'offline':
+      case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {selectedMessage.lastSeen}
+            Last seen at {onSelectedConversation.lastSeen}
           </p>
         );
     }
@@ -35,16 +35,16 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   return (
     <header className={css.chatHeader}>
-      {selectedMessage ? (
+      {onSelectedConversation ? (
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
             <img
-              src={selectedMessage.avatar}
+              src={onSelectedConversation.avatar}
               alt="User"
               className={css.userAvatar}
             />
             <div className={css.userDetails}>
-              <h2 className={css.userName}>{selectedMessage.name}</h2>
+              <h2 className={css.userName}>{onSelectedConversation.name}</h2>
               {renderUserStatus()}
             </div>
           </div>

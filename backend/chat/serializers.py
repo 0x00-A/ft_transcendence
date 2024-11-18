@@ -1,10 +1,36 @@
 from rest_framework import serializers
+from accounts.serializers.userSerializer import UserSerializer
 from .models import Conversation, Message
 
 class ConversationSerializer(serializers.ModelSerializer):
+    user1_username = serializers.CharField(source='user1.username', read_only=True)
+    user2_username = serializers.CharField(source='user2.username', read_only=True)
+    user1_id = serializers.IntegerField(source='user1.id', read_only=True)
+    user1_avatar = serializers.SerializerMethodField()
+    user2_avatar = serializers.SerializerMethodField()
+    is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
+
     class Meta:
         model = Conversation
-        fields = ['id', 'user1', 'user2', 'last_message', 'unread_messages', 'created_at', 'updated_at']
+        fields = [
+            'id',
+            'user1_id',
+            'user1_username', 
+            'user1_avatar', 
+            'user2_username', 
+            'user2_avatar', 
+            'last_message', 
+            'unread_messages',
+            'is_online',
+            'created_at', 
+            'updated_at'
+        ]
+    
+    def get_user1_avatar(self, obj):
+        return f"http://localhost:8000/media/{obj.user1.profile.avatar}"
+
+    def get_user2_avatar(self, obj):
+        return f"http://localhost:8000/media/{obj.user2.profile.avatar}"
 
 
 class MessageSerializer(serializers.ModelSerializer):

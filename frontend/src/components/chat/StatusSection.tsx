@@ -2,7 +2,7 @@ import React from 'react';
 import css from './StatusSection.module.css';
 
 interface Info {
-  status: 'online' | 'offline' | 'typing';
+  status: boolean;
   lastSeen?: string;
 }
 
@@ -15,11 +15,9 @@ const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
     if (!status) return null;
 
     switch (status.status) {
-      case 'online':
+      case true:
         return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
-      case 'typing':
-        return <p className={`${css.userStatus} ${css.typing}`}>Online</p>;
-      case 'offline':
+      case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
             Last seen at {status.lastSeen}

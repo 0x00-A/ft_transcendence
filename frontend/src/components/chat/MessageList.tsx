@@ -15,22 +15,23 @@ import {
   FaThumbtack,
   FaTimes,
 } from 'react-icons/fa';
-import messages from '@/pages/Chat/messages';
 import { useGetData } from '@/api/apiHooks';
+import moment from 'moment';
+import { useUser } from '@/contexts/UserContext';
 
-interface Message {
+interface conversationProps {
   avatar: string;
   name: string;
   lastMessage: string;
   time: string;
   unreadCount?: number;
-  status: 'online' | 'offline' | 'typing';
+  status: boolean;
   lastSeen?: string;
   blocked: boolean;
 }
 
 interface MessageListProps {
-  onSelectMessage: (message: Message | null) => void;
+  onSelectMessage: (message: conversationProps | null) => void;
   onBlockUser: (userName: string) => void;
 }
 
@@ -44,15 +45,23 @@ interface Friend {
   profile: FriendProfile;
 }
 
-interface Conversation {
+interface Conversations {
   id: number; 
   user1: string; 
-  user2: string; 
+  user2: string;
+  user1_id: number;
+  user1_username: string;
+  user2_username: string;
+  user1_avatar: string;
+  user2_avatar: string;
   lastMessage: string;
-  unreadMessages: number; 
+  unreadMessages: number;
+  is_online: boolean;
   createdAt: string; 
   updatedAt: string; 
 }
+
+
 
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -71,32 +80,66 @@ const MessageList: React.FC<MessageListProps> = ({
     position: { top: 0, left: 0 },
     activeIndex: null,
   });
-
+    const {user} = useUser()
   const menuRef = useRef(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { data: friendsData, isLoading, error} = useGetData<Friend[]>('friends');
-  const { data: ConversationList} = useGetData<Conversation[]>('chat/conversations');
+  const { data: ConversationList} = useGetData<Conversations[]>('chat/conversations');
+  
+  
+  const formatConversationTime = (timestamp: string) => {
+    const now = moment();
+    const messageTime = moment(timestamp);
+    if (messageTime.isSame(now, 'day')) {
+      return messageTime.format('HH:mm');
+    }
+    if (messageTime.isSame(now, 'week')) {
+      return messageTime.format('ddd');
+    }
+    if (messageTime.isSame(now, 'year')) {
+      return messageTime.format('MMM D');
+    }
+    return messageTime.format('MM/DD/YY');
+  };
+  
+  const transformedMessages: conversationProps[] = ConversationList?.map(conversation => {
 
+      const isCurrentUserUser1 = user?.id === conversation.user1_id;
+      const otherUserUsername = isCurrentUserUser1 ? conversation.user2_username : conversation.user1_username;
+      const otherUserAvatar = isCurrentUserUser1 ? conversation.user2_avatar : conversation.user1_avatar;
+    
+      return {
+          avatar: otherUserAvatar,
+          name: otherUserUsername,
+          lastMessage: conversation.lastMessage || 'send first message',
+          time: formatConversationTime(conversation.createdAt),
+          unreadCount: conversation.unreadMessages,
+          status: conversation.is_online, 
+          blocked: false,
+          conversationId: conversation.id,
+        };
+      }) || [];
 
   console.log("ConversationList: ", ConversationList);
   console.log("friendsData: ", friendsData);
   const filteredFriends = friendsData?.filter((friend) =>
-    friend.username.toLowerCase().includes(searchQuery.toLowerCase())
-) || [];
-console.log("filteredFriends: ", filteredFriends);
+    friend.username.toLowerCase().includes(searchQuery.toLowerCase()) ) || [];
+  console.log("filteredFriends: ", filteredFriends);
+  console.log("user: ", user?.id);
+
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
     if (selectedFriend) {
-      const messageIndex = messages.findIndex(
-        (message) => message.name === selectedFriend.username
+      const messageIndex = transformedMessages.findIndex(
+        (transformedMessages) => transformedMessages.name === selectedFriend.username
       );
 
       if (messageIndex !== -1) {
-        const foundMessage = messages[messageIndex];
+        const foundMessage = transformedMessages[messageIndex];
         onSelectMessage(foundMessage);
         setSelectedMessageIndex(messageIndex);
         setIsSearchActive(false);
@@ -110,9 +153,10 @@ console.log("filteredFriends: ", filteredFriends);
     }
   }, [location.state]);
 
-  const handleClick = (index: number, message: Message) => {
+  const handleClick = (index: number, conversation: conversationProps) => {
+    // console.log("conversation: ", conversation);
+    onSelectMessage(conversation);
     setSelectedMessageIndex(index);
-    onSelectMessage(message);
     setIsSearchActive(false);
     setSearchQuery('');
     setMenuState((prevState) => ({
@@ -120,6 +164,7 @@ console.log("filteredFriends: ", filteredFriends);
       isOpen: false,
       activeIndex: null,
     }));
+
   };
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
@@ -273,18 +318,18 @@ console.log("filteredFriends: ", filteredFriends);
                   key={friend.id}
                   avatar={friend.profile.avatar}
                   name={friend.username}
-                  // onClick={() => handleFriendClick(friend)}
+                  // i wnat here after click here create conversation this friends withe friends friend.id and set onSelectMessage(conversation);
                 />
               ))
             )}
           </>
         ) : (
-          messages.map((message, index) => (
+          transformedMessages.map((conversation, index) => (
             <MessageItem
               key={index}
-              {...message}
+              {...conversation}
               isSelected={selectedMessageIndex === index}
-              onClick={() => handleClick(index, message)}
+              onClick={() => handleClick(index, conversation)}
               onMoreClick={(e) => handleMoreClick(e, index)}
               showMoreIcon={true}
               isActive={menuState.activeIndex === index}
@@ -317,11 +362,11 @@ console.log("filteredFriends: ", filteredFriends);
             <hr />
             <div
               className={css.menuItem}
-              onClick={() => handleBlock(messages[menuState.activeIndex!].name)}
+              onClick={() => handleBlock(transformedMessages[menuState.activeIndex!].name)}
             >
               <FaBan />
               <span>
-                {messages[selectedMessageIndex!]?.blocked ? 'Unblock' : 'Block'}
+                {transformedMessages[selectedMessageIndex!]?.blocked ? 'Unblock' : 'Block'}
               </span>
             </div>
             <div className={css.menuItem}>

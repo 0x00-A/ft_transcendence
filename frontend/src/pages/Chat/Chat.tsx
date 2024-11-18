@@ -5,7 +5,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState, useRef, useEffect } from 'react';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
-import SearchMessages from '../../components/chat/SearchMessages';
 import OptionsButton from '../../components/chat/OptionsButton';
 import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
@@ -14,16 +13,18 @@ import MessageArea from '../../components/chat/MessageArea';
 import chatData from './chatdata';
 import messages from './messages';
 
-interface SelectedMessageProps {
+interface conversationProps {
   avatar: string;
   name: string;
   lastMessage: string;
   time: string;
   unreadCount?: number;
-  status: 'online' | 'offline' | 'typing';
+  status: boolean;
   lastSeen?: string;
   blocked: boolean;
 }
+
+
 interface ChatMessage {
   name: string;
   content: string;
@@ -35,8 +36,8 @@ interface ChatMessage {
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [selectedMessage, setSelectedMessage] =
-    useState<SelectedMessageProps | null>(null);
+  const [selectedConversation, setSelectedConversation] =
+    useState<conversationProps | null>(null);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [customSticker, setCustomSticker] = useState(
@@ -44,10 +45,10 @@ const Chat = () => {
   );
 
   useEffect(() => {
-    if (selectedMessage) {
-      setChatMessages(chatData[selectedMessage.name] || []);
+    if (selectedConversation) {
+      setChatMessages(chatData[selectedConversation.name] || []);
     }
-  }, [selectedMessage]);
+  }, [selectedConversation]);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -63,7 +64,7 @@ const Chat = () => {
     newMessage: string,
     isSticker: boolean = false
   ) => {
-    if (selectedMessage) {
+    if (selectedConversation) {
       const message = {
         name: 'You',
         content: newMessage,
@@ -98,16 +99,16 @@ const Chat = () => {
         <div className={css.sidebarLeft} ref={sidebarLeftRef}>
           <OptionsButton />
           <MessageList
-            onSelectMessage={setSelectedMessage}
+            onSelectMessage={setSelectedConversation}
             onBlockUser={handleBlockUser}
           />
         </div>
         <div className={css.chatBody}>
-          {selectedMessage ? (
+          {selectedConversation ? (
             <>
               <ChatHeader
                 toggleSidebar={toggleSidebar}
-                selectedMessage={selectedMessage}
+                onSelectedConversation={selectedConversation}
               />
               <div className={css.messageArea}>
                 <MessageArea messages={chatMessages} />
@@ -115,18 +116,18 @@ const Chat = () => {
               <MessageInput
                 onSendMessage={handleSendMessage}
                 customSticker={customSticker}
-                isBlocked={selectedMessage.blocked}
-                onUnblock={() => handleBlockUser(selectedMessage.name)}
+                isBlocked={selectedConversation.blocked}
+                onUnblock={() => handleBlockUser(selectedConversation.name)}
               />
             </>
           ) : (
             <NoChatSelected />
           )}
         </div>
-        {selectedMessage && !isExpanded && (
+        {selectedConversation && !isExpanded && (
           <div className={css.sidebarRight}>
             <SideInfoChat
-              selectedMessage={selectedMessage}
+              onSelectedConversation={selectedConversation}
               onEmojiChange={handleStickerChange}
             />
           </div>
