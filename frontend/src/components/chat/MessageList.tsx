@@ -20,6 +20,7 @@ import moment from 'moment';
 import { useUser } from '@/contexts/UserContext';
 
 interface conversationProps {
+  id: number;
   avatar: string;
   name: string;
   lastMessage: string;
@@ -112,6 +113,7 @@ const MessageList: React.FC<MessageListProps> = ({
       const otherUserAvatar = isCurrentUserUser1 ? conversation.user2_avatar : conversation.user1_avatar;
     
       return {
+          id: conversation.id,
           avatar: otherUserAvatar,
           name: otherUserUsername,
           lastMessage: conversation.lastMessage || 'send first message',
