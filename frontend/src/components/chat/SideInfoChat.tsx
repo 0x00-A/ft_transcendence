@@ -9,27 +9,27 @@ import SettingsSection from './SettingsSection';
 interface Info {
   avatar: string;
   name: string;
-  status: 'online' | 'offline' | 'typing';
+  status: boolean;
   lastSeen?: string;
   blocked: boolean;
 }
 
 interface SideInfoChatProps {
-  selectedMessage: Info;
+  onSelectedConversation: Info;
   onEmojiChange: (newSticker: string) => void;
 }
 
 const SideInfoChat: React.FC<SideInfoChatProps> = ({
-  selectedMessage,
+  onSelectedConversation,
   onEmojiChange,
 }) => {
   return (
     <div className={css.sideInfoChat}>
       <ProfileSection
-        avatarUrl={selectedMessage.avatar}
-        name={selectedMessage.name}
+        avatarUrl={onSelectedConversation.avatar}
+        name={onSelectedConversation.name}
       />
-      <StatusSection status={selectedMessage} />
+      <StatusSection status={onSelectedConversation} />
       <ButtonSection />
       <SettingsSection onEmojiChange={onEmojiChange} />
     </div>
