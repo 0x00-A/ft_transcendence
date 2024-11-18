@@ -1,8 +1,7 @@
 import css from './Chat.module.css';
-import moment from 'moment';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
 import OptionsButton from '../../components/chat/OptionsButton';
@@ -43,27 +42,7 @@ const Chat = () => {
   }
 
 
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>");
-  // const handleSendMessage = (
-  //   newMessage: string,
-  //   isSticker: boolean = false
-  // ) => {
-  //   if (selectedConversation) {
-  //     const message = {
-  //       name: 'You',
-  //       content: newMessage,
-  //       sender: true,
-  //       avatar: 'https://picsum.photos/200',
-  //       time: moment().format('HH:mm A'),
-  //     };
-
-  //     if (isSticker) {
-  //       message.content = newMessage;
-  //     }
-
-  //     setChatMessages((prevMessages) => [...prevMessages, message]);
-  //   }
-  // };
+  console.log("rander chat >>>>>>>>>>>>>>>>>>>>>>>>>")
 
   const handleStickerChange = (newSticker: string) => {
     setCustomSticker(newSticker);
