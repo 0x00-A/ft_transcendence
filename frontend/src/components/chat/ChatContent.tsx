@@ -4,6 +4,7 @@ import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
 import chatData from '../../pages/Chat/chatdata';
 import moment from 'moment';
+import { useGetData } from '@/api/apiHooks';
 
 
 interface MessageProps {
@@ -13,6 +14,7 @@ interface MessageProps {
   avatar: string;
   time: string;
 }
+
 
 interface ChatContentProps {
   customSticker: string;
@@ -27,14 +29,6 @@ interface ChatContentProps {
   } | null;
 }
 
-interface ChatMessage {
-    name: string;
-    content: string;
-    sender: boolean;
-    avatar: string;
-    time: string;
-  }
-
 const ChatContent: React.FC<ChatContentProps> = ({
     onSelectedConversation,
     customSticker,
@@ -42,7 +36,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
     onUnblock,
 }) => {
 
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
+//   const { data: ConversationUser, isLoading, error} = useGetData<"create interface">('chat/conversations/<int:conversation_id>/messages');
 
 
   const handleSendMessage = (
