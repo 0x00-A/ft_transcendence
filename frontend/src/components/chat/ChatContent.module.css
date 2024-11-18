@@ -1,0 +1,11 @@
+.messageArea {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px;
+    padding-bottom: 0;
+    overflow-y: auto;
+}
+.messageArea::-webkit-scrollbar {
+    display: none;
+}

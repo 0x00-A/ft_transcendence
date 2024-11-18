@@ -37,7 +37,6 @@ const Message: React.FC<MessageProps> = ({
             </div>
           )}
         </div>
-        {/* <div className={css.messageBubble}> */}
         {isSticker ? (
           <div
             className={css.stickerContainer}
@@ -48,7 +47,6 @@ const Message: React.FC<MessageProps> = ({
             <p>{content}</p>
           </div>
         )}
-        {/* </div> */}
       </div>
     </div>
   );
