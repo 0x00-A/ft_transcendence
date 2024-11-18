@@ -21,6 +21,7 @@ interface ChatContentProps {
   isBlocked: boolean;
   onUnblock: () => void;
   onSelectedConversation: {
+    id: number;
     avatar: string;
     name: string;
     time: string;
@@ -37,9 +38,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
 }) => {
 
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-//   const { data: ConversationUser, isLoading, error} = useGetData<"create interface">('chat/conversations/<int:conversation_id>/messages');
 
 
+    const { data: ConversationUser, isLoading, error } = useGetData<any>(
+        `chat/conversations/${onSelectedConversation?.id}/messages`
+    );
+
+    console.log("ConversationUser: ", ConversationUser)
   const handleSendMessage = (
     newMessage: string,
     isSticker: boolean = false

@@ -6,7 +6,7 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
 interface MessageInputProps {
-  onSendMessage: (message: string, isSticker?: boolean) => void;
+  onSendMessage: (message: string) => void;
   customSticker: string;
   isBlocked: boolean;
   onUnblock: () => void;
@@ -31,10 +31,10 @@ const MessageInput = ({
     if (!message.trim() && !customSticker) return;
     
     if (message.trim()) {
-      onSendMessage(message, false);
+      onSendMessage(message);
       setMessage('');
     } else if (customSticker) {
-      onSendMessage(customSticker, true);
+      onSendMessage(customSticker);
     }
 
     setIsFlying(true);
