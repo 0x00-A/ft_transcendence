@@ -14,17 +14,23 @@ interface MessageProps {
   seen: boolean;
 }
 
+interface ConversationProps {
+  user1_id: number;
+  id: number;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  status: boolean;
+  blocked: boolean;
+}
+
 interface ChatContentProps {
   customSticker: string;
   isBlocked: boolean;
   onUnblock: () => void;
-  onSelectedConversation: {
-    id: number;
-    avatar: string;
-    name: string;
-    time: string;
-    user1_id: number;
-  } | null;
+  onSelectedConversation: ConversationProps;
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -39,22 +45,19 @@ const ChatContent: React.FC<ChatContentProps> = ({
   );
 
 
+  console.log("rander ChatContent >>>>>>>>>>>>>>>>>>>>>>>>>")
+
   useEffect(() => {
     if (onSelectedConversation && Array.isArray(ConversationUser)) {
       setChatMessages(ConversationUser);
     }
   }, [onSelectedConversation, ConversationUser]);
-  console.log("avatar: ", onSelectedConversation?.avatar);
-  console.log("onSelectedConversation: ", onSelectedConversation);
-  console.log("ConversationUser: ", ConversationUser);
-  console.log("chatMessages: ", chatMessages);
 
   return (
     <>
       <div className={css.messageArea}>
         <MessageArea
           messages={chatMessages}
-          currentUserId={onSelectedConversation?.user1_id ?? 0}
           conversationData={onSelectedConversation}
         />
       </div>
