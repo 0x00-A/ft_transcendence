@@ -20,6 +20,7 @@ import moment from 'moment';
 import { useUser } from '@/contexts/UserContext';
 
 interface conversationProps {
+  user1_id: number;
   id: number;
   avatar: string;
   name: string;
@@ -122,6 +123,7 @@ const MessageList: React.FC<MessageListProps> = ({
           status: conversation.is_online, 
           blocked: false,
           conversationId: conversation.id,
+          user1_id: conversation.user1_id,
         };
       }) || [];
 

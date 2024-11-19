@@ -2,21 +2,9 @@ import React, { useEffect, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
-import chatData from '../../pages/Chat/chatdata';
-import moment from 'moment';
 import { useGetData } from '@/api/apiHooks';
 
-
 interface MessageProps {
-  name: string;
-  content: string;
-  sender: boolean;
-  avatar: string;
-  time: string;
-}
-
-
-interface MessagePropsUser {
     id: number;
     conversation: number;
     sender: number;
@@ -25,7 +13,6 @@ interface MessagePropsUser {
     timestamp: string;
     seen: boolean;
   }
-
 
 interface ChatContentProps {
   customSticker: string;
@@ -36,6 +23,7 @@ interface ChatContentProps {
     avatar: string;
     name: string;
     time: string;
+    user1_id: number;
   } | null;
 }
 
@@ -47,47 +35,27 @@ const ChatContent: React.FC<ChatContentProps> = ({
 }) => {
 
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-
-
-    const { data: ConversationUser, isLoading, error } = useGetData<MessagePropsUser>(
+    const { data: ConversationUser} = useGetData<MessageProps>(
         `chat/conversations/${onSelectedConversation?.id}/messages`
     );
 
-    console.log("ConversationUser: ", ConversationUser)
-  const handleSendMessage = (
-    newMessage: string,
-    isSticker: boolean = false
-  ) => {
-    if (onSelectedConversation) {
-      const message = {
-        name: 'You',
-        content: newMessage,
-        sender: true,
-        avatar: 'https://picsum.photos/200',
-        time: moment().format('HH:mm A'),
-      };
+console.log("ConversationUser: ", ConversationUser)
+console.log("chatMessages: ", chatMessages)
+console.log("currentUserId: ", onSelectedConversation?.user1_id)
 
-      if (isSticker) {
-        message.content = newMessage;
-      }
-
-      setChatMessages((prevMessages) => [...prevMessages, message]);
-    }
-  };
-
-    useEffect(() => {
-        if (onSelectedConversation) {
-          setChatMessages(chatData[onSelectedConversation.name] || []);
-        }
-      }, [onSelectedConversation]);
+useEffect(() => {
+  if (onSelectedConversation && Array.isArray(ConversationUser)) {
+    setChatMessages(ConversationUser);
+  }
+}, [onSelectedConversation, ConversationUser]);
 
   return (
     <>
       <div className={css.messageArea}>
-        <MessageArea messages={chatMessages} />
+        <MessageArea messages={chatMessages || {}} currentUserId={onSelectedConversation?.user1_id ?? 0} />
       </div>
       <MessageInput
-        onSendMessage={handleSendMessage}
+        // onSendMessage={handleSendMessage}
         customSticker={customSticker}
         isBlocked={isBlocked}
         onUnblock={onUnblock}

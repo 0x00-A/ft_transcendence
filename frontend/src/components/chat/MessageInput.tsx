@@ -6,14 +6,14 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 
 interface MessageInputProps {
-  onSendMessage: (message: string) => void;
+  // onSendMessage: (message: string) => void;
   customSticker: string;
   isBlocked: boolean;
   onUnblock: () => void;
 }
 
 const MessageInput = ({
-  onSendMessage,
+  // onSendMessage,
   customSticker,
   isBlocked,
   onUnblock,
@@ -27,24 +27,24 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
 
-  const handleSend = () => {
-    if (!message.trim() && !customSticker) return;
+  // const handleSend = () => {
+  //   if (!message.trim() && !customSticker) return;
     
-    if (message.trim()) {
-      onSendMessage(message);
-      setMessage('');
-    } else if (customSticker) {
-      onSendMessage(customSticker);
-    }
+  //   if (message.trim()) {
+  //     onSendMessage(message);
+  //     setMessage('');
+  //   } else if (customSticker) {
+  //     onSendMessage(customSticker);
+  //   }
 
-    setIsFlying(true);
-    setInputFocused(false);
-    setTimeout(() => {
-      setIsFlying(false);
-    }, 300);
+  //   setIsFlying(true);
+  //   setInputFocused(false);
+  //   setTimeout(() => {
+  //     setIsFlying(false);
+  //   }, 300);
     
-    inputRef.current?.focus();
-  };
+  //   inputRef.current?.focus();
+  // };
 
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
@@ -58,7 +58,7 @@ const MessageInput = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      // handleSend();
     }
   };
 
@@ -146,7 +146,7 @@ const MessageInput = ({
       </div>
 
       <button
-        onClick={handleSend}
+        // onClick={handleSend}
         className={`${css.sendButton} ${
           isFlying ? css.animateIcon : ''
         } ${!message.trim() && !customSticker ? css.disabled : ''}`}

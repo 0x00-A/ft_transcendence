@@ -3,17 +3,21 @@ import css from './MessageArea.module.css';
 import Message from './Message';
 
 interface MessageProps {
-  name: string;
+  id: number;
+  conversation: number;
+  sender: number;
+  receiver: number;
   content: string;
-  sender: boolean;
-  avatar: string;
-  time: string;
-}
-interface MessageAreaProps {
-  messages: MessageProps[];
+  timestamp: string;
+  seen: boolean;
 }
 
-const MessageArea = ({ messages }: MessageAreaProps) => {
+interface MessageAreaProps {
+  messages: MessageProps[];
+  currentUserId: number;
+}
+
+const MessageArea = ({ messages, currentUserId }: MessageAreaProps) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -24,8 +28,12 @@ const MessageArea = ({ messages }: MessageAreaProps) => {
 
   return (
     <div className={css.messageArea}>
-      {messages.map((message, index) => (
-        <Message key={index} {...message} />
+      {messages.map((message) => (
+        <Message
+          key={message.id}
+          message={message}
+          isSender={message.sender === currentUserId}
+        />
       ))}
       <div className={css.scrollMessages} ref={messageEndRef} />
     </div>
