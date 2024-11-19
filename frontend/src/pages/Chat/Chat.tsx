@@ -11,6 +11,7 @@ import messages from './messages';
 import ChatContent from '@/components/chat/ChatContent';
 
 interface conversationProps {
+  user1_id: number;
   id: number;
   avatar: string;
   name: string;

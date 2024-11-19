@@ -2,38 +2,46 @@ import React from 'react';
 import css from './MessageArea.module.css';
 
 interface MessageProps {
-  name: string;
+  id: number;
+  conversation: number;
+  sender: number;
+  receiver: number;
   content: string;
-  sender: boolean;
-  avatar: string;
-  time: string;
+  timestamp: string;
+  seen: boolean;
 }
 
-const Message: React.FC<MessageProps> = ({
-  content,
-  sender,
-  avatar,
-  time,
-  name,
-}) => {
-  const isSticker = content.includes('<img');
+interface MessageComponentProps {
+  message: MessageProps;
+  isSender: boolean;
+}
 
-  console.log('content:', content);
+const Message: React.FC<MessageComponentProps> = ({ message, isSender }) => {
+  const { content, timestamp } = message;
+
+  const isSticker = content.includes('<img');
 
   return (
     <div
-      className={`${css.messageWrapper} ${sender ? css.sender : css.receiver}`}
+      className={`${css.messageWrapper} ${isSender ? css.sender : css.receiver}`}
     >
-      {!sender && <img src={avatar} alt="avatar" className={css.avatar} />}
+      {!isSender && (
+        <img
+          src="path/to/avatar.jpg"
+          alt="avatar"
+          className={css.avatar}
+        />
+      )}
       <div className={css.sideMessage}>
         <div className={css.nameAndTime}>
-          {!sender ? (
-            <div className={css.receiverInfo}>
-              <p>{name}</p> • <span>{time}</span>
+          {isSender ? (
+            <div className={css.senderInfo}>
+              <span>{new Date(timestamp).toLocaleTimeString()}</span> • <p>YOU</p>
             </div>
           ) : (
-            <div className={css.senderInfo}>
-              <span>{time}</span> • <p>YOU</p>
+            <div className={css.receiverInfo}>
+              <p>Sender Name</p>
+              • <span>{new Date(timestamp).toLocaleTimeString()}</span>
             </div>
           )}
         </div>
