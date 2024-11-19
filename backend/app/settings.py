@@ -29,7 +29,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # AUTHENTICATION PARAMETERS #
 #############################
 
-API_CLIENT_OAUTH2_REDIRECT_URI = os.environ.get('API_CLIENT_OAUTH2_REDIRECT_URI')
+API_CLIENT_OAUTH2_REDIRECT_URI = os.environ.get(
+    'API_CLIENT_OAUTH2_REDIRECT_URI')
 OAUTH2_REDIRECT_URI = os.environ.get('OAUTH2_REDIRECT_URI')
 
 # EMAIL SETTINGS
@@ -102,7 +103,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'channels',
     'game',
-    'matchmaker',
+    # 'matchmaker',
+    'matchmaker.apps.MatchmakerConfig',
     'chat',
 ]
 
@@ -161,7 +163,6 @@ DATABASES = {
         # 'PORT': '5432',
     }
 }
-
 
 
 # Password validation
@@ -269,7 +270,7 @@ CHANNEL_LAYERS = {
             # Use environment variables for Redis host and port
             'hosts': [
                 (os.environ.get('REDIS_HOST', 'redis'),
-                int(os.environ.get('REDIS_PORT', 6379)))
+                 int(os.environ.get('REDIS_PORT', 6379)))
             ],
         },
     },

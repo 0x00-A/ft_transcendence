@@ -78,6 +78,7 @@ function AppContent() {
   const showSidebarRoutes = [
     '/',
     '/play',
+    '/play/invite',
     '/play/',
     '/chat',
     '/chat/',
@@ -99,14 +100,21 @@ function AppContent() {
   // if (loading) {
   //   return <PreLoader />;
   // }
-  const { gameAccepted, gameInvite } = useGameInvite();
+  const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (gameAccepted && gameInvite) {
       navigate(`/play`);
     }
-  }, [gameAccepted, gameInvite, navigate]);
+  }, [gameAccepted, gameInvite]);
+
+  // useEffect(() => {
+  //   setGameAccepted(false)
+  //   return () => {
+  //   }
+  // }, [navigate])
+
 
   return (
     <div className="app-container ">

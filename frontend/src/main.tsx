@@ -8,7 +8,7 @@ import "./index.css";
 
 const queryClient = new QueryClient();
   // defaultOptions: {
-  //   queries: {
+  //   queries: {c
   //     retry: false,           // Avoid retrying automatically if you want manual control over retries
   //     useErrorBoundary: false, // Don't use error boundary for queries (optional)
   //     refetchOnWindowFocus: false,
