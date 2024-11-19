@@ -5,14 +5,14 @@ import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
 
 interface MessageProps {
-    id: number;
-    conversation: number;
-    sender: number;
-    receiver: number;
-    content: string;
-    timestamp: string;
-    seen: boolean;
-  }
+  id: number;
+  conversation: number;
+  sender: number;
+  receiver: number;
+  content: string;
+  timestamp: string;
+  seen: boolean;
+}
 
 interface ChatContentProps {
   customSticker: string;
@@ -28,34 +28,37 @@ interface ChatContentProps {
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
-    onSelectedConversation,
-    customSticker,
-    isBlocked,
-    onUnblock,
+  onSelectedConversation,
+  customSticker,
+  isBlocked,
+  onUnblock,
 }) => {
-
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-    const { data: ConversationUser} = useGetData<MessageProps>(
-        `chat/conversations/${onSelectedConversation?.id}/messages`
-    );
+  const { data: ConversationUser } = useGetData<MessageProps[]>(
+    `chat/conversations/${onSelectedConversation?.id}/messages`
+  );
 
-console.log("ConversationUser: ", ConversationUser)
-console.log("chatMessages: ", chatMessages)
-console.log("currentUserId: ", onSelectedConversation?.user1_id)
 
-useEffect(() => {
-  if (onSelectedConversation && Array.isArray(ConversationUser)) {
-    setChatMessages(ConversationUser);
-  }
-}, [onSelectedConversation, ConversationUser]);
+  useEffect(() => {
+    if (onSelectedConversation && Array.isArray(ConversationUser)) {
+      setChatMessages(ConversationUser);
+    }
+  }, [onSelectedConversation, ConversationUser]);
+  console.log("avatar: ", onSelectedConversation?.avatar);
+  console.log("onSelectedConversation: ", onSelectedConversation);
+  console.log("ConversationUser: ", ConversationUser);
+  console.log("chatMessages: ", chatMessages);
 
   return (
     <>
       <div className={css.messageArea}>
-        <MessageArea messages={chatMessages || {}} currentUserId={onSelectedConversation?.user1_id ?? 0} />
+        <MessageArea
+          messages={chatMessages}
+          currentUserId={onSelectedConversation?.user1_id ?? 0}
+          conversationData={onSelectedConversation}
+        />
       </div>
       <MessageInput
-        // onSendMessage={handleSendMessage}
         customSticker={customSticker}
         isBlocked={isBlocked}
         onUnblock={onUnblock}

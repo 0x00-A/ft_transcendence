@@ -129,8 +129,12 @@ const MessageList: React.FC<MessageListProps> = ({
 
   console.log("ConversationList: ", ConversationList);
   console.log("friendsData: ", friendsData);
+
+  
   const filteredFriends = friendsData?.filter((friend) =>
     friend.username.toLowerCase().includes(searchQuery.toLowerCase()) ) || [];
+
+
   console.log("filteredFriends: ", filteredFriends);
   console.log("user: ", user?.id);
 

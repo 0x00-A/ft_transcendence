@@ -10,13 +10,26 @@ interface MessageProps {
   timestamp: string;
   seen: boolean;
 }
+interface ConversationProps {
+  user1_id: number;
+  id: number;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  status: boolean;
+  blocked: boolean;
+}
 
 interface MessageComponentProps {
   message: MessageProps;
   isSender: boolean;
+  conversationData: ConversationProps | null;
 }
 
-const Message: React.FC<MessageComponentProps> = ({ message, isSender }) => {
+
+const Message: React.FC<MessageComponentProps> = ({ message, isSender, conversationData }) => {
   const { content, timestamp } = message;
 
   const isSticker = content.includes('<img');
@@ -27,7 +40,7 @@ const Message: React.FC<MessageComponentProps> = ({ message, isSender }) => {
     >
       {!isSender && (
         <img
-          src="path/to/avatar.jpg"
+          src={conversationData?.avatar}
           alt="avatar"
           className={css.avatar}
         />
@@ -40,7 +53,7 @@ const Message: React.FC<MessageComponentProps> = ({ message, isSender }) => {
             </div>
           ) : (
             <div className={css.receiverInfo}>
-              <p>Sender Name</p>
+              <p>{conversationData?.name}</p>
               • <span>{new Date(timestamp).toLocaleTimeString()}</span>
             </div>
           )}
