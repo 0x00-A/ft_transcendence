@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 
@@ -12,12 +12,25 @@ interface MessageProps {
   seen: boolean;
 }
 
+interface ConversationProps {
+  user1_id: number;
+  id: number;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  status: boolean;
+  blocked: boolean;
+}
+
 interface MessageAreaProps {
   messages: MessageProps[];
   currentUserId: number;
+  conversationData: ConversationProps | null;
 }
 
-const MessageArea = ({ messages, currentUserId }: MessageAreaProps) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages, currentUserId, conversationData}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -33,6 +46,7 @@ const MessageArea = ({ messages, currentUserId }: MessageAreaProps) => {
           key={message.id}
           message={message}
           isSender={message.sender === currentUserId}
+          conversationData={conversationData}
         />
       ))}
       <div className={css.scrollMessages} ref={messageEndRef} />
