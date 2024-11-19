@@ -26,12 +26,13 @@ interface ConversationProps {
 
 interface MessageAreaProps {
   messages: MessageProps[];
-  currentUserId: number;
   conversationData: ConversationProps | null;
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ messages, currentUserId, conversationData}) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
+
+  console.log("rander MessageArea >>>>>>>>>>>>>>>>>>>>>>>>>")
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -45,7 +46,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, currentUserId, conv
         <Message
           key={message.id}
           message={message}
-          isSender={message.sender === currentUserId}
           conversationData={conversationData}
         />
       ))}

@@ -56,11 +56,11 @@ interface Conversations {
   user2_username: string;
   user1_avatar: string;
   user2_avatar: string;
-  lastMessage: string;
-  unreadMessages: number;
+  last_message: string;
+  unread_messages: number;
   is_online: boolean;
-  createdAt: string; 
-  updatedAt: string; 
+  created_at: string; 
+  updated_at: string; 
 }
 
 
@@ -89,37 +89,49 @@ const MessageList: React.FC<MessageListProps> = ({
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { data: friendsData, isLoading, error} = useGetData<Friend[]>('friends');
-  const { data: ConversationList} = useGetData<Conversations[]>('chat/conversations');
+  const { data: ConversationList, refetch} = useGetData<Conversations[]>('chat/conversations');
   
   
+  console.log("rander MessageList >>>>>>>>>>>>>>>>>>>>>>>>>")
+
   const formatConversationTime = (timestamp: string) => {
     const now = moment();
     const messageTime = moment(timestamp);
-    if (messageTime.isSame(now, 'day')) {
-      return messageTime.format('HH:mm');
+    if (messageTime.isSame(now, 'minute')) {
+      return 'Just now';
     }
-    if (messageTime.isSame(now, 'week')) {
-      return messageTime.format('ddd');
+    if (now.diff(messageTime, 'minutes') < 60) {
+      return `${now.diff(messageTime, 'minutes')} minutes ago`;
     }
-    if (messageTime.isSame(now, 'year')) {
-      return messageTime.format('MMM D');
+    if (now.diff(messageTime, 'hours') < 24) {
+      return `${now.diff(messageTime, 'hours')} hour${now.diff(messageTime, 'hours') === 1 ? '' : 's'} ago`;
     }
-    return messageTime.format('MM/DD/YY');
+    if (now.diff(messageTime, 'days') < 7) {
+      return `${now.diff(messageTime, 'days')} day${now.diff(messageTime, 'days') === 1 ? '' : 's'} ago`;
+    }
+    if (now.diff(messageTime, 'weeks') < 52) {
+      return `${now.diff(messageTime, 'weeks')} week${now.diff(messageTime, 'weeks') === 1 ? '' : 's'} ago`;
+    }
+    return `${now.diff(messageTime, 'years')} year${now.diff(messageTime, 'years') === 1 ? '' : 's'} ago`;
   };
+  
   
   const transformedMessages: conversationProps[] = ConversationList?.map(conversation => {
 
       const isCurrentUserUser1 = user?.id === conversation.user1_id;
       const otherUserUsername = isCurrentUserUser1 ? conversation.user2_username : conversation.user1_username;
       const otherUserAvatar = isCurrentUserUser1 ? conversation.user2_avatar : conversation.user1_avatar;
-    
+      let lastMessage = conversation.last_message || 'send first message';
+      if (lastMessage.length > 30) {
+        lastMessage = lastMessage.slice(0, 10) + "...";
+      }
       return {
           id: conversation.id,
           avatar: otherUserAvatar,
           name: otherUserUsername,
-          lastMessage: conversation.lastMessage || 'send first message',
-          time: formatConversationTime(conversation.createdAt),
-          unreadCount: conversation.unreadMessages,
+          lastMessage: lastMessage,
+          time: formatConversationTime(conversation.updated_at),
+          unreadCount: conversation.unread_messages || undefined,
           status: conversation.is_online, 
           blocked: false,
           conversationId: conversation.id,
@@ -127,17 +139,8 @@ const MessageList: React.FC<MessageListProps> = ({
         };
       }) || [];
 
-  console.log("ConversationList: ", ConversationList);
-  console.log("friendsData: ", friendsData);
-
-  
   const filteredFriends = friendsData?.filter((friend) =>
     friend.username.toLowerCase().includes(searchQuery.toLowerCase()) ) || [];
-
-
-  console.log("filteredFriends: ", filteredFriends);
-  console.log("user: ", user?.id);
-
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
@@ -162,7 +165,7 @@ const MessageList: React.FC<MessageListProps> = ({
   }, [location.state]);
 
   const handleClick = (index: number, conversation: conversationProps) => {
-    // console.log("conversation: ", conversation);
+    refetch();
     onSelectMessage(conversation);
     setSelectedMessageIndex(index);
     setIsSearchActive(false);
@@ -326,7 +329,6 @@ const MessageList: React.FC<MessageListProps> = ({
                   key={friend.id}
                   avatar={friend.profile.avatar}
                   name={friend.username}
-                  // i wnat here after click here create conversation this friends withe friends friend.id and set onSelectMessage(conversation);
                 />
               ))
             )}

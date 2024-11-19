@@ -24,15 +24,17 @@ interface ConversationProps {
 
 interface MessageComponentProps {
   message: MessageProps;
-  isSender: boolean;
   conversationData: ConversationProps | null;
 }
 
 
-const Message: React.FC<MessageComponentProps> = ({ message, isSender, conversationData }) => {
+const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }) => {
   const { content, timestamp } = message;
 
+  console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
+
   const isSticker = content.includes('<img');
+  const isSender = message.sender === conversationData?.user1_id
 
   return (
     <div
