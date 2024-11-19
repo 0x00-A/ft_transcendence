@@ -30,6 +30,8 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   const {setGameAccepted} = useGameInvite();
 
+  console.log('RemoteGame component rerendered', `screen: ${game_address}`);
+
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [score1, setScore1] = useState(0);
@@ -69,9 +71,12 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
     paddleHitSound.current.load();
 
     return () => {
-      setGameAccepted(false);
+      // setGameAccepted(false);
     }
   }, [sound]);
+
+
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -83,7 +88,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
-        console.log('WebSocket connected');
+        console.log('Game WebSocket connected');
         setGameState('waiting');
 
         // Send the canvas dimensions
@@ -126,6 +131,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
             setCurrentScreen('end');
             gameSocket.close();
             ws.current = null;
+            // setGameAccepted(false)
           }
         }
       };
@@ -133,7 +139,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       gameSocket.onclose = () => {
         console.log('Game WebSocket Disconnected');
         // setGameState('ended');
-        setCurrentScreen('end');
+        // setCurrentScreen('end');
       };
     }, 500);
 

@@ -274,10 +274,17 @@ class GameConsumer(AsyncWebsocketConsumer):
             else:
                 await self.set_player_id_name()
                 await self.broadcast_initial_state()
+                await self.set_game_started()
                 # Start the game loop
                 asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
+
+    async def set_game_started(self):
+        if await Game.objects.filter(game_id=self.game_id).aexists():
+            await Game.objects.filter(game_id=self.game_id).aupdate(status='started')
+        elif await Match.objects.filter(match_id=self.game_id).aexists():
+            await Match.objects.filter(match_id=self.game_id).aupdate(status='started')
 
     async def set_player_id_name(self):
         user = self.scope['user']

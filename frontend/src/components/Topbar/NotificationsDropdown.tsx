@@ -9,7 +9,7 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
 
 const NotificationsDropdown = () => {
-  const { unreadCount, fetchNotifications, markAllAsRead, notifications } =
+  const { unreadCount, fetchNotifications, markAllAsRead, notifications: not } =
     useWebSocket();
 
   useEffect(() => {
@@ -26,50 +26,50 @@ const NotificationsDropdown = () => {
   };
 
   // Sample notifications data
-  // const notifications = [
-  //   {
-  //     id: 1,
-  //     title: 'Achievement unlocked',
-  //     message: 'You just unlocked a new achievement: FT-PONG LENGEND',
-  //     created_at: '2024-11-16T10:30:00',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Meeting Reminder',
-  //     message: 'Team meeting starts in 15 minutes',
-  //     created_at: '2024-11-16T09:45:00',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Task Update',
-  //     message: 'Project X deadline has been extended',
-  //     created_at: '2024-11-15T16:20:00',
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'System Alert',
-  //     message: 'Successfully deployed latest changes',
-  //     created_at: '2024-11-15T14:15:00',
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'New Comment',
-  //     message: 'Sarah commented on your post',
-  //     created_at: '2024-11-15T11:30:00',
-  //   },
-  //   {
-  //     id: 6,
-  //     title: 'New Comment',
-  //     message: 'Sarah commented on your post',
-  //     created_at: '2024-11-15T11:30:00',
-  //   },
-  //   {
-  //     id: 7,
-  //     title: 'New Comment',
-  //     message: 'Sarah commented on your post',
-  //     created_at: '2024-11-15T11:30:00',
-  //   },
-  // ];
+  const notifications = [
+    {
+      id: 1,
+      title: 'Achievement unlocked',
+      message: 'You just unlocked a new achievement: FT-PONG LENGEND',
+      created_at: '2024-11-16T10:30:00',
+    },
+    {
+      id: 2,
+      title: 'Meeting Reminder',
+      message: 'Team meeting starts in 15 minutes',
+      created_at: '2024-11-16T09:45:00',
+    },
+    {
+      id: 3,
+      title: 'Task Update',
+      message: 'Project X deadline has been extended',
+      created_at: '2024-11-15T16:20:00',
+    },
+    {
+      id: 4,
+      title: 'System Alert',
+      message: 'Successfully deployed latest changes',
+      created_at: '2024-11-15T14:15:00',
+    },
+    {
+      id: 5,
+      title: 'New Comment',
+      message: 'Sarah commented on your post',
+      created_at: '2024-11-15T11:30:00',
+    },
+    {
+      id: 6,
+      title: 'New Comment',
+      message: 'Sarah commented on your post',
+      created_at: '2024-11-15T11:30:00',
+    },
+    {
+      id: 7,
+      title: 'New Comment',
+      message: 'Sarah commented on your post',
+      created_at: '2024-11-15T11:30:00',
+    },
+  ];
 
 
 
@@ -87,29 +87,31 @@ const NotificationsDropdown = () => {
           </span>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[25rem] text-white bg-[#1e2738] border-gray-600">
+      <DropdownMenuContent className="w-[27rem] text-white bg-[#1e2738] border-gray-600">
         <div className="px-4 py-3 border-b border-gray-600">
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
-          {notifications.map((notification) => (
-            <div
-              key={notification.id}
-              className="px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0"
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold text-white">
-                  {notification.title}
-                </h3>
-                <span className="text-[10px] text-gray-100">
-                  {formatDate(notification.created_at)}
-                </span>
+          <ul>
+            {notifications.map((notification) => (
+              <div
+                key={notification.id}
+                className="px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0"
+              >
+                <div className="flex justify-between items-start">
+                  <h3 className="text-lg font-bold text-white">
+                    {notification.title}
+                  </h3>
+                  <span className="text-[10px] text-gray-100">
+                    {formatDate(notification.created_at)}
+                  </span>
+                </div>
+                <p className="text-[13px] font-sans text-gray-100 mt-1">
+                  {notification.message}
+                </p>
               </div>
-              <p className="text-[13px] font-sans text-gray-100 mt-1">
-                {notification.message}
-              </p>
-            </div>
           ))}
+          </ul>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
