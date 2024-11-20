@@ -1,5 +1,7 @@
 import React from 'react';
 import css from './FriendsList.module.css';
+import { useGetData } from '@/api/apiHooks';
+import Loading from '../Friends/Loading';
 
 const friendsData = [
   { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
@@ -9,7 +11,21 @@ const friendsData = [
   { name: 'aka', level: 5.5, status: 'offline', avatar: 'https://picsum.photos/206' },
 ];
 
+interface FriendProfile {
+    avatar: string;
+    is_online: boolean;
+    level: number;
+}
+
+interface Friend {
+  id: string;
+  username: string;
+  profile: FriendProfile;
+}
+
 const FriendsList = () => {
+  const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
+
   return (
       <>
         <div className={css.header}>
@@ -18,16 +34,18 @@ const FriendsList = () => {
         </div>
 
         <div className={css.friendList}>
-          {friendsData.map((friend, index) => (
+          { isLoading && <Loading/> }
+          { error && <p>{error.message}</p> }
+          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend, index) => (
             <div className={css.friendItem} key={index}>
-              <img src={friend.avatar} alt={friend.name} className={css.avatar} />
+              <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
               <div className={css.friendInfo}>
-                <span className={css.name}>{friend.name}</span>
-                <span className={css.level}>Level: {friend.level}</span>
+                <span className={css.name}>{friend.username}</span>
+                <span className={css.level}>Level: {friend.profile.level}</span>
               </div>
-              <div className={`${css.status} ${css[friend.status]}`}>
+              <div className={`${css.status} ${friend.profile.is_online ? css.online : css.offline}`}>
                   <span className={css.statusIndicator}></span>
-                {friend.status}
+                {friend.profile.is_online ? 'Online' : 'Offline'}
               </div>
             </div>
           ))}

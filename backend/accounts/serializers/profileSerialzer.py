@@ -27,7 +27,7 @@ class EditProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'avatar']
+        fields = ['username', 'first_name', 'last_name', 'avatar', 'password']
 
     def validate_username(self, value):
         if any(ch.isupper() for ch in value):
@@ -39,7 +39,14 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        print('-------->', attrs, '<--------')
+        print('----attr---->', attrs, '<--------')
+        password = attrs.get('password')
+        if password is None:
+            raise serializers.ValidationError({'password': 'Password is required to update your informations!'})
+        print('-----context--->>', self.context['request'].user, '<--------')
+        user = self.context['request'].user
+        if not user.check_password(password):
+            raise serializers.ValidationError({'password': 'Incorrect password!'})
         return super().validate(attrs)
 
     def update(self, instance, validated_data):

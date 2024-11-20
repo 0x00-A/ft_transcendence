@@ -4,7 +4,7 @@
     align-items: center;
     margin-bottom: 10px;
   }
-  
+
   .tables {
     display: flex;
     align-items: center;
@@ -15,17 +15,17 @@
     font-weight: bold;
     color: #F8F3E3;
   }
-  
+
   .viewAll {
     font-size: 1.5rem;
     color: #B0B9D0;
     text-decoration: none;
   }
-  
+
   .table {
     width: 100%;
   }
-  
+
   .tableHeader,
   .tableRow {
     display: grid;
@@ -34,41 +34,40 @@
     padding: 10px;
     font-size: 1.3rem;
   }
-  
+
   .tableHeader {
     background-color: #3D4A68;
     font-weight: bold;
     border-radius: 10px 10px 0 0;
   }
-  
+
   .tableRow {
     background-color: #283245;
     /* margin: 5px 0; */
     margin-bottom: 5px;
   }
-  
+
   .tableRow:hover {
     background-color: #33425E;
   }
-  
+
   .tableRow span {
     display: flex;
   }
-  
+
   .player {
     display: flex;
     align-items: center;
   }
-  
+
   .avatar {
     width: 30px;
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
   }
-  
+
   .score {
     color: #ffb902;
     font-weight: bold;
   }
-  

@@ -1,0 +1,154 @@
+.gameHistoryContainer {
+    height: 60%;
+    width: 100%;
+    background-color: #1e2533;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameHistoryHeader {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 4px solid #283245;
+}
+
+.gameHistTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    width: 40%;
+    height: 100%;
+    font-size: 2.2rem;
+    color: #F8F3E3;
+    font-weight: bold;
+}
+
+.gameHistIcon {
+    font-size: 3rem;
+    color: #F8C25C;
+}
+
+.dateFilterBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.7rem;
+    color: #F8F3E3;
+    background-color: var(--selected-color); ;
+    border-radius: 12px;
+    padding: 5px 10px;
+    border: 2px solid #F8C25C;
+}
+
+.gamesList {
+    height: calc(80% - 1rem);
+    width: 100%;
+    padding: 15px ;
+}
+
+.tableHeader,
+.tableRow {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 10px;
+    font-size: 1.3rem;
+}
+
+.tableHeader {
+  background-color: #3D4A68;
+  font-weight: bold;
+  border-radius: 10px 10px 0 0;
+}
+
+.tableRow {
+  background-color: #283245;
+  /* margin: 5px 0; */
+  margin-bottom: 5px;
+}
+
+.tableRow:hover {
+  background-color: #33425E;
+}
+
+.tableRow span {
+  display: flex;
+}
+
+/* .headerField {
+    padding: 5px 10px;
+    font-size: 1.5rem;
+    color: #F8F3E3;
+} */
+
+.noGames {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 20px;
+    height: 100px;
+    padding: 5px 15px;
+    color: #F8F3E3;
+    background-color: #1E2A3C;
+}
+
+.playBtn {
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    width: 120px;
+    justify-content: space-between;
+    border: none;
+    background-color: var(--selected-color); ;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.3rem;
+}
+
+.playIcon {
+    font-size: 2.2rem;
+    color: #F8C25C;
+}
+
+.player {
+    display: flex;
+    align-items: center;
+}
+
+.win {
+    color: #F8C25C;
+}
+
+.lose {
+    color: #F76C6C;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.inviteBtn {
+    padding: 6px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--selected-color); ;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.inviteBtn:hover {
+    background-color: #F8C25C;
+}

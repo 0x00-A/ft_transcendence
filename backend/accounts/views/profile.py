@@ -86,8 +86,9 @@ class EditProfileView(APIView):
 
     def put(self, request):
         user = request.user
-        print('REQUEST:', request.data)
-        serializer = EditProfileSerializer(user, data=request.data, partial=True)
+        print('--->>REQUEST DATA ==>: ', request.data, '<<---')
+
+        serializer = EditProfileSerializer(user, context={'request': request}, data=request.data, partial=True)
         if request.FILES:
             print('FILES:', request.FILES)
             serializer.files = request.FILES

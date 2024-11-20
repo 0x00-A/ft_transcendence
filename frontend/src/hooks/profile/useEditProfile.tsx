@@ -2,27 +2,59 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+// API
 import apiClient from '@/api/apiClient';
+import { API_EDIT_PROFILE_URL } from '@/api/apiConfig';
+import { AxiosError } from 'axios';
 
 
 interface EditProfileFormData {
     username: string;
-    avatar: File;
+    avatar: FileList;
     first_name: string;
     last_name: string;
+    email: string;
+    password: string;
 }
 
 const schema = yup.object().shape({
   username: yup
     .string()
-    // .min(4, 'username must be at least 4 characters!')
-    // .max(15, 'username must not exceed 15 characters!'),
+    .max(30, 'Username must not exceed 15 characters!'),
+  first_name: yup
+    .string()
+    .max(30, 'First name must not exceed 15 characters!'),
+  last_name: yup
+    .string()
+    .max(30, 'Last name must not exceed 15 characters!'),
+  email: yup
+    .string()
+    .email('Invalid email format!'),
+  password: yup
+    .string()
+    .min(8, 'password must be at least 8 characters!')
+    .required('password is required!'),
+  // avatar: yup
+  //   .mixed()
+  //   .test('fileSize', 'The fil ise too large!', (value) => {
+  //     if (!value) return true;
+  //     return value[0].size <= 2000000;
+  //   })
+  //   .test('fileType', 'The file is not supported!', (value) => {
+  //     if (!value) return true;
+  //     return (
+  //       value[0].type === 'image/png' ||
+  //       value[0].type === 'image/jpg' ||
+  //       value[0].type === 'image/jpeg'
+  //     );
+  //   }),
 });
 
 const EditProfileApi = async (data) => {
   // try {
     const response = await apiClient.put(
-        '/profile/edit/',
+        API_EDIT_PROFILE_URL,
         data,
     );
     return response.data
@@ -51,7 +83,8 @@ const useEditProfile = () => {
     formState: { errors },
     reset,
     // watch,
-    // setError,
+    setError,
+    setValue,
   } = useForm<EditProfileFormData>({
     resolver: yupResolver(schema),
     reValidateMode:'onChange',
@@ -73,8 +106,9 @@ const useEditProfile = () => {
     errors,
     mutation,
     reset,
+    setValue,
     // watch,
-    // setError,
+    setError,
   };
 };
 
