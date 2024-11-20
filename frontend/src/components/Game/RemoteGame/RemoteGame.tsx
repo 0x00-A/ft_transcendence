@@ -35,7 +35,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   const {setGameAccepted} = useGameInvite();
 
-  console.log('RemoteGame component rerendered', `screen: ${game_address}`);
+  console.log('RemoteGame component rerendered', `stat: ${gameState}`);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -107,7 +107,6 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
       gameSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        // console.log(data);
         if (data.type === 'game_started') {
 
           paddle1Ref.current.x = data.state[`player1_paddle_x`];
@@ -133,6 +132,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
           if (data.state.game_over) {
             setIsWinner(data.state.is_winner);
             setIsGameOver(true);
+            setGameState('ended');
             setCurrentScreen('end');
             gameSocket.close();
             ws.current = null;
@@ -293,36 +293,15 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   return (
     <div className={css.container}>
-      <p>{count}</p>
-      {/* <div className="relative flex flex-col items-center">
-          <div
-            className="text-9xl font-bold mb-8 transition-all duration-500"
-            style={{
-              opacity: count === 0 ? 0 : 1,
-              transform: `scale(${count === 0 ? 1.5 : 1})`
-            }}
-          >
-            {count}
-          </div>
-          {count === 0 && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-6xl font-bold animate-bounce text-yellow-400">
-                GO!
-              </div>
-            </div>
-          )}
-      </div> */}
-      {!gameState &&
-          <div className='fixed t-0 l-0 r-0 b-0 backdrop-blur-sm flex justify-center items-center z-10'>
-              {/* <MatchmakingScreen /> */}
-                          <RadarIcon
-              className="text-red-500 animate-ping absolute inset-0 opacity-50"
+
+      {/* {!gameState &&
+            <RadarIcon
+              className="text-red-500 animate-ping absolute m-auto  flex justify-center items-center inset-0 opacity-50"
               size={120}
             />
-          </div>
-        }
+        } */}
       <PlayerMatchupBanner />
-      {gameState === 'started' && (
+      {gameState === 'started' || gameState === 'ended' ? (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (
             <div id="gameScreen" className={css.gameScreenDiv}>
@@ -347,7 +326,36 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
             />
           )}
         </div>
-      )}
+      ) :
+
+      (
+        <div className={css.gameArea}>
+          <div className="relative flex flex-col items-center">
+              <div
+                className="text-9xl font-bold mb-8 transition-all duration-500"
+                style={{
+                  opacity: count === 1 ? 0 : 1,
+                  transform: `scale(${count === 1 ? 1.5 : 1})`
+                }}
+              >
+                {count || <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-6xl font-bold animate-pulse text-yellow-400">
+                    GO!
+                  </div>
+                </div>}
+              </div>
+              {/* {count === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-6xl font-bold animate-bounce text-yellow-400">
+                    GO!
+                  </div>
+                </div>
+              )} */}
+          </div>
+        </div>
+
+      )
+      }
       <ReturnBack onClick={onReturn} />
     </div>
   );

@@ -168,7 +168,7 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        return False  # Stub implementation
+        return False
 
     # @classmethod
     # async def check_is_player_in_any_tournament(cls, player_id):

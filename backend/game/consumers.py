@@ -273,9 +273,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.set_player_id_name()
             else:
                 await self.set_player_id_name()
-                await self.broadcast_initial_state()
-                await self.set_game_started()
                 await self.send_countdown_to_clients()
+                await self.broadcast_initial_state()
+                # await self.set_game_started()
                 # Start the game loop
                 asyncio.create_task(self.start_game(self.game_id))
         else:
