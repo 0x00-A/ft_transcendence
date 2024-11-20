@@ -121,6 +121,7 @@ const Game = () => {
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
+          if (gameState === 'started') return
           setGameState('inqueue');
         }
         if (data.event === 'game_address') {
@@ -148,7 +149,7 @@ const Game = () => {
         ws.current.close();
       }
       clearTimeout(timeout);
-      // setGameAccepted(false);
+      setGameAccepted(false);
     };
   }, []);
 

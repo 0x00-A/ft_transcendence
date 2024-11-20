@@ -36,7 +36,6 @@ const MatchmakingScreen = ({onClick} : {onClick: () => void;}) => {
 
 
   const {data} = useGetData<{'online_players': number}>('users/online');
-  console.log(data);
 
 
   return (
