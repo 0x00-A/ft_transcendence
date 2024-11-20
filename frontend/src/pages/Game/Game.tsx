@@ -152,14 +152,14 @@ const Game = () => {
     };
   }, []);
 
-    useEffect(() => {
-    return () => {
-      // if (isUnmounting.current) {
-        console.log("Component unmounted, resetting global state.");
-        setGameAccepted(false); // Update global state only on unmount
-      // }
-    };
-  }, [setGameAccepted]);
+  //   useEffect(() => {
+  //   return () => {
+  //     // if (isUnmounting.current) {
+  //       console.log("Component unmounted, resetting global state.");
+  //       setGameAccepted(false); // Update global state only on unmount
+  //     // }
+  //   };
+  // }, [setGameAccepted]);
 
   useEffect(() => {
     isUnmounting.current = true; // Flag component as ready to unmount
@@ -262,7 +262,7 @@ const Game = () => {
                 setGameState(null);
               }} />
           </div>
-        }
+      }
       <div className={styles.topContainer}>
         <div className={styles.left}>
             {Modes.map((option) => (

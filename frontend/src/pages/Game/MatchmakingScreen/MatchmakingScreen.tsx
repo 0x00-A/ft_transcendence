@@ -3,7 +3,7 @@ import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
 import { useGetData } from '@/api/apiHooks';
 
 
-const MatchmakingScreen = ({onClick} : {onClick?: () => void;}) => {
+const MatchmakingScreen = ({onClick} : {onClick: () => void;}) => {
   const [matchmakingProgress, setMatchmakingProgress] = useState(0);
   const [connectionQuality, setConnectionQuality] = useState(4);
 
@@ -90,7 +90,6 @@ const MatchmakingScreen = ({onClick} : {onClick?: () => void;}) => {
         </div>
 
         <button
-          disabled={onClick}
           onClick={onClick}
           className="w-full py-3 bg-red-600 hover:bg-red-700 rounded-lg
                      transition-colors text-white flex items-center justify-center space-x-2"

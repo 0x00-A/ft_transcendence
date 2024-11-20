@@ -263,7 +263,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         self.game_id = None
 
-        if user and not isinstance(user, AnonymousUser):
+        if user.is_authenticated:
             await self.accept()
             self.game_id = self.scope['url_route']['kwargs']['game_id']
             await self.channel_layer.group_add(self.game_id, self.channel_name)
@@ -275,10 +275,30 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.set_player_id_name()
                 await self.broadcast_initial_state()
                 await self.set_game_started()
+                await self.send_countdown_to_clients()
                 # Start the game loop
                 asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
+
+    async def send_countdown_to_clients(self):
+        for count in range(3, -1, -1):
+            # await self.channel_layer.group_send(
+            #     self.game_id,
+            #     {
+            #         "type": "game.countdown",
+            #         "count": count,
+            #     },
+            # )
+            await asyncio.sleep(1)
+
+    # async def game_countdown(self, event):
+    #     await self.send(text_data=json.dumps(
+    #         {
+    #             'type': 'game_countdown',
+    #             'count': event['count']
+    #         }
+    #     ))
 
     async def set_game_started(self):
         if await Game.objects.filter(game_id=self.game_id).aexists():
@@ -346,6 +366,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             game.winner = 1 if self.player_id == 'player2' else 2
             game.is_over = True
             await self.broadcast_score_state()
+        return await super().disconnect(close_code)
 
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
