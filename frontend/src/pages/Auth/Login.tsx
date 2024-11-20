@@ -42,7 +42,7 @@ const Login = ({onSetAuthStat}) => {
     return () => {
       loadingBarRef.current?.complete();
     }
-  }, [])
+  }, [mutation.isError])
 
 
   const handleLogin = (data: LoginFormData) => {

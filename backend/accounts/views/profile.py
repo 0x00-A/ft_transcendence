@@ -12,10 +12,12 @@ from ..serializers import EditProfileSerializer
 
 User = get_user_model()
 
+
 def get_friend_status(current_user, other_user):
     """Helper function to determine the friend request status between two users."""
     friend_request = FriendRequest.objects.filter(
-        Q(sender=current_user, receiver=other_user) | Q(sender=other_user, receiver=current_user)
+        Q(sender=current_user, receiver=other_user) | Q(
+            sender=other_user, receiver=current_user)
     ).first()
 
     if friend_request:
@@ -51,6 +53,7 @@ class ProfileApiView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class AllUsersView(APIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
@@ -58,13 +61,15 @@ class AllUsersView(APIView):
     def get(self, request):
         try:
             users = User.objects.exclude(
-                Q(blocked_users__blocked=request.user) | Q(blockers__blocker=request.user)
+                Q(blocked_users__blocked=request.user) | Q(
+                    blockers__blocker=request.user)
             ).exclude(username=request.user.username)
 
             user_data_with_status = []
             for user in users:
                 user_data = UserSerializer(user).data
-                user_data['friend_request_status'] = get_friend_status(request.user, user)
+                user_data['friend_request_status'] = get_friend_status(
+                    request.user, user)
                 user_data_with_status.append(user_data)
 
             return Response(user_data_with_status, status=status.HTTP_200_OK)
@@ -81,13 +86,31 @@ class AllUsersView(APIView):
             )
 
 
+class OnlineUsersView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            online_count = User.objects.filter(profile__is_online=True).count()
+            return Response(
+                {'online_players': online_count},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Internal server error: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 class EditProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
         user = request.user
         print('REQUEST:', request.data)
-        serializer = EditProfileSerializer(user, data=request.data, partial=True)
+        serializer = EditProfileSerializer(
+            user, data=request.data, partial=True)
         if request.FILES:
             print('FILES:', request.FILES)
             serializer.files = request.FILES

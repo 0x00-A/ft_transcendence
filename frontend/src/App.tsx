@@ -6,7 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
-import PageNotFound from './pages/PageNotFound';
+import PageNotFound from './pages/PageNotFound/PageNotFound';
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
@@ -39,6 +39,9 @@ import { UserProvider } from './contexts/UserContext';
 import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
 import React from 'react';
 import OtpAuth from './pages/Auth/OtpAuth';
+import RemoteGame from './components/Game/RemoteGame/RemoteGame';
+import ConnectionStatus from './components/ConnectionStatus';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -49,6 +52,7 @@ function App() {
           <UserProvider>
             <GameInviteProvider>
               <WebSocketProvider>
+                <ConnectionStatus />
                 <ToastContainer
                   position="top-center"
                   autoClose={2000}
@@ -78,7 +82,6 @@ function AppContent() {
   const showSidebarRoutes = [
     '/',
     '/play',
-    '/play/invite',
     '/play/',
     '/chat',
     '/chat/',
@@ -108,12 +111,6 @@ function AppContent() {
       navigate(`/play`);
     }
   }, [gameAccepted, gameInvite]);
-
-  // useEffect(() => {
-  //   setGameAccepted(false)
-  //   return () => {
-  //   }
-  // }, [navigate])
 
 
   return (
@@ -146,6 +143,7 @@ function AppContent() {
               <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
+        <Footer />
       </div>
     </div>
   );

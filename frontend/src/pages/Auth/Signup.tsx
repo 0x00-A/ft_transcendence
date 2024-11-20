@@ -8,6 +8,8 @@ import css from './AuthForm.module.css';
 import UserIcon from "../../assets/userIcon.svg";
 import EmailIcon from "../../assets/emailIcon.svg";
 import PassIcon from "../../assets/passIcon.svg";
+import { useLoadingBar } from '../../contexts/LoadingBarContext';
+
 
 
 
@@ -21,6 +23,7 @@ interface SignupFormData {
 const Signup = ({setIslogin, onSetAuthStat}) => {
 
   const { register, handleSubmit, errors, mutation, reset, setError} = useSignup();
+  const loadingBarRef = useLoadingBar();
 
    useEffect(() => {
      if (mutation.isSuccess) {
@@ -45,8 +48,16 @@ const Signup = ({setIslogin, onSetAuthStat}) => {
      }
    }, [mutation.isError, mutation.error])
 
+    useEffect(() => {
+    return () => {
+      loadingBarRef.current?.complete();
+    }
+  }, [mutation.isError])
+
+
    const handleSignup = (data: SignupFormData, event: any) => {
      event.preventDefault();
+    loadingBarRef.current?.continuousStart();
      mutation.mutate(data);
    };
 
