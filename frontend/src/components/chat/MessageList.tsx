@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
@@ -18,6 +18,7 @@ import {
 import { useGetData } from '@/api/apiHooks';
 import moment from 'moment';
 import { useUser } from '@/contexts/UserContext';
+import { apiCreateConversation } from '@/api/chatApi';
 
 interface conversationProps {
   user1_id: number;
@@ -116,28 +117,30 @@ const MessageList: React.FC<MessageListProps> = ({
   };
   
   
-  const transformedMessages: conversationProps[] = ConversationList?.map(conversation => {
-
+  const transformedMessages = useMemo(() => {
+    return ConversationList?.map(conversation => {
       const isCurrentUserUser1 = user?.id === conversation.user1_id;
       const otherUserUsername = isCurrentUserUser1 ? conversation.user2_username : conversation.user1_username;
       const otherUserAvatar = isCurrentUserUser1 ? conversation.user2_avatar : conversation.user1_avatar;
       let lastMessage = conversation.last_message || 'send first message';
-      if (lastMessage.length > 30) {
+      if (lastMessage.length > 10) {
         lastMessage = lastMessage.slice(0, 10) + "...";
       }
       return {
-          id: conversation.id,
-          avatar: otherUserAvatar,
-          name: otherUserUsername,
-          lastMessage: lastMessage,
-          time: formatConversationTime(conversation.updated_at),
-          unreadCount: conversation.unread_messages || undefined,
-          status: conversation.is_online, 
-          blocked: false,
-          conversationId: conversation.id,
-          user1_id: conversation.user1_id,
-        };
-      }) || [];
+        id: conversation.id,
+        avatar: otherUserAvatar,
+        name: otherUserUsername,
+        lastMessage: lastMessage,
+        time: formatConversationTime(conversation.updated_at),
+        unreadCount: conversation.unread_messages || undefined,
+        status: conversation.is_online,
+        blocked: false,
+        conversationId: conversation.id,
+        user1_id: conversation.user1_id,
+      };
+    }) || [];
+  }, [ConversationList, user, formatConversationTime]);
+  
 
   const filteredFriends = friendsData?.filter((friend) =>
     friend.username.toLowerCase().includes(searchQuery.toLowerCase()) ) || [];
@@ -261,16 +264,20 @@ const MessageList: React.FC<MessageListProps> = ({
     };
   }, []);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      searchContainerRef.current &&
-      !searchContainerRef.current.contains(e.target as Node)
-    ) {
-      setIsSearchActive(false);
-    }
-  };
-
+  
+  
   useEffect(() => {
+    
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+    
+      const isOutsideSearch = searchContainerRef.current && !searchContainerRef.current.contains(target);
+      const isOutsideMainContainer = messageListRef.current && !messageListRef.current.contains(target);
+    
+      if (isOutsideSearch && isOutsideMainContainer) {
+        setIsSearchActive(false);
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -285,7 +292,42 @@ const MessageList: React.FC<MessageListProps> = ({
   if (error) {
     return <div className={css.error}>Error loading friends</div>;
   }
+
   
+  const handleSearchItemClick = async (friend: Friend, index: number) => {
+    try {
+      console.log("newConversation>>>> friend id: ", friend.id);
+
+      const newConversation: Conversations = await apiCreateConversation(friend.id);
+      console.log("newConversation>>>>: ", newConversation);
+      
+      const transformedConversation: conversationProps = {
+        id: newConversation.id,
+        user1_id: newConversation.user1_id,
+        avatar: user?.id === newConversation.user1_id ? newConversation.user2_avatar : newConversation.user1_avatar,
+        name: user?.id === newConversation.user1_id ? newConversation.user2_username : newConversation.user1_username,
+        lastMessage: newConversation.last_message || 'Send first message',
+        time: formatConversationTime(newConversation.created_at),
+        status: newConversation.is_online,
+        blocked: false,
+      };
+
+      refetch();
+      setSelectedMessageIndex(index);
+      onSelectMessage(transformedConversation);
+      setIsSearchActive(false);
+      setSearchQuery('');
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+
+    } catch (error) {
+      console.error('Failed to create conversation:', error);
+    }
+  };
+
   return (
     <div className={css.container}>
       <div ref={searchContainerRef} className={css.searchContainer}>
@@ -324,11 +366,12 @@ const MessageList: React.FC<MessageListProps> = ({
                 <span>No users found matching "{searchQuery}"</span>
               </div>
             ) : (
-              filteredFriends.map((friend) => (
+              filteredFriends.map((friend, index) => (
                 <SearchResultItem
-                  key={friend.id}
+                  key={index}
                   avatar={friend.profile.avatar}
                   name={friend.username}
+                  onClick={() => handleSearchItemClick(friend, index)}
                 />
               ))
             )}

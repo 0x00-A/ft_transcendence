@@ -25,7 +25,7 @@ interface conversationProps {
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [selectedConversation, setSelectedConversation] =
     useState<conversationProps | null>(null);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);

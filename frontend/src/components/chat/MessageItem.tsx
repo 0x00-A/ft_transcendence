@@ -32,6 +32,7 @@ const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
     ref
   ) => {
 
+    console.log(">>>>>>>message item>>>>>>>>>>");
     return (
       <div
         ref={ref}
