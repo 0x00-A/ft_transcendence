@@ -26,25 +26,47 @@
   width: 100%;
 }
 
-
-/*******************/
-/* PROFILE FRIENDS */
-/*******************/
-
-.profileFriendsContainer {
-    background-color: #1e2533;
-    width: 40%;
+.profileBodyConatiner {
+    width: 100%;
     height: 60%;
+    gap: 1rem;
+    display: flex
+}
+
+/************************/
+/* PROFILE ACHIEVEMNETS */
+/************************/
+
+.rightBodyContainer {
+    height: 100%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profileAchievContainer {
+    height: 40%;
+    width: 100%;
+    background-color: #1e2533;
     border-radius: 40px;
 }
 
-.friendsHeader {
-    height: 13%;
+.achievHeader {
+    height: 25%;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 20px;
     border-bottom: 4px solid #283245;
+    font-size: 2.2rem;
+    color: #F8F3E3;
+    font-weight: bold;
+}
+
+.achievIcon {
+    width: 40px;
+    height: 40px;
 }
 
 .friendsTitle {
@@ -58,342 +80,3 @@
     color: #F8F3E3;
 }
 
-.friendsIcon {
-    font-size: 3rem;
-    color: #F8C25C;
-}
-
-.friendsTitle h3 {
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: #F8F3E3;
-}
-
-.viewMore {
-    font-size: 1.5rem;
-    color: #B0B9D0;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.friendsList {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 10px;
-    height: 85%;
-}
-
-.buttonsGrp {
-    width: 90%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #2a2b36;
-    padding: 5px 15px;
-    border-radius: 12px;
-}
-
-.button {
-  padding: 0.8rem 1.2rem;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: #9699b0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 1.3rem;
-}
-
-.button:hover {
-  color: #ffffff;
-}
-
-.buttonActive {
-    height: 30px;
-    background-color: #5774a1;
-    color: #ffffff;
-}
-
-.friendList {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px 15px;
-    overflow-y: auto;
-}
-
-.friendItem {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #1E2A3C;
-  transition: background-color 0.3s;
-}
-
-.friendItem:hover {
-  background-color: #283245;
-}
-
-.avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: 2px solid #B0B9D0;
-}
-
-.friendInfo {
-  flex-grow: 1;
-}
-
-.name {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #F8F3E3;
-}
-
-.level {
-  display: block;
-  font-size: 1rem;
-  color: #B0B9D0;
-}
-
-.status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 1.2rem;
-  color: #F8F3E3;
-}
-
-.statusIndicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.online .statusIndicator {
-  background-color: #17A98C;
-}
-
-.offline .statusIndicator {
-  background-color: #D0D8E7;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.gameHistoryContainer,
-.achievementsContainer,
-.friendsContainer {
-    background-color: #1e2533;
-    border-radius: 20px;
-    border: 2px solid white;
-    height: 100%;
-    width: 100%;
-}
-
-.gameHistoryContainer {
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
-}
-
-.achievementsContainer {
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-}
-
-.friendsContainer {
-  grid-column: 3 / 4;
-  grid-row: 2 / 3;
-}
-
-.container {
-    border: 1px solid rgb(214, 255, 8);
-    height: 92%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.containerBlur {
-    filter: blur(2px);
-    z-index: 0;
-}
-
-.avatar img {
-    width: 40%;
-}
-
-.playerStats {
-    border: 1px solid blue;
-    width: 60%;
-    height: 100%;
-    /* padding-left: 10px; */
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-.playerStats img {
-    width: 60px;
-}
-
-.levelStats {
-    padding-top: 25px;
-    /* border: 1px solid white; */
-    height: 100%;
-    width: 90%;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* justify-content: center; */
-}
-
-.levelBar {
-    border: 1px solid blue;
-    border-radius: 5px;
-    height: 20px;
-    width: 65%;
-}
-
-.levelFull {
-    border-radius: 5px;
-    background-color: #5774a0;
-    height: 100%;
-    width: 60%;
-}
-
-.gameStats {
-    /* border: 1px solid black; */
-    width: 100%;
-    height: 60%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-.gameStats p {
-    text-align: center;
-}
-
-.coins {
-    border: 1px solid azure;
-    width: 20%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.bodyContainer {
-    display: flex;
-}
-
-/****************/
-/* GAME HISTORY */
-/****************/
-
-.gamesHistoryContainer {
-    /* border: 1px solid black; */
-    width: 30%;
-    height: 700px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.gameContainer {
-    /* border: 1px solid blueviolet; */
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.gamesDate {
-    /* border: 1px solid aquamarine; */
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    align-items: center;
-}
-
-.gamesDate div {
-    border-bottom: 1px solid white;
-    width: 50%;
-    margin-right: 20px;
-}
-
-.gameDetail {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.gameDetail div {
-    /* border: 1px solid wheat; */
-    display: flex;
-    /* flex-direction: column; */
-    align-items: center;
-}
-
-.gameDetail img {
-    width: 50px;
-}
-
-.gameWin {
-    color: green;
-}
-
-.gameLose {
-    color: red;
-}
-
-/****************/
-/* ACHIEVEMENTS */
-/****************/
-
-
-
-/***********/
-/* FRIENDS */
-/***********/
-
-.friendDetail {
-    /* border: 1px solid blueviolet; */
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-    justify-content: space-between;
-}
-
-.friendDetail img {
-    width: 60px;
-}

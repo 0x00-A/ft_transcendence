@@ -19,7 +19,7 @@ import { useUser } from '@/contexts/UserContext'
 //     return response.data
 // }
 
-const profileHeader = ({isFormPopup, setFormPopup}) => {
+const profileHeader = ({isEditProfile, setEditProfile}) => {
 
   // const [isMore, setMore] = useState(false)
   const { user: currentUser } = useUser()
@@ -61,7 +61,7 @@ const profileHeader = ({isFormPopup, setFormPopup}) => {
               </div>}
           </div>
         </div> */}
-        <button className={css.editProfileBtn} onClick={() => setFormPopup(!isFormPopup)}>
+        <button className={css.editProfileBtn} onClick={() => setEditProfile(!isEditProfile)}>
           <MdEdit fontSize='2.5rem'/>
           <span>Edit Profile</span>
         </button>
