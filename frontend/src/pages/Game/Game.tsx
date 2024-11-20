@@ -30,6 +30,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatDate } from '@/utils/helpers';
+import MatchmakingScreen from './MatchmakingScreen/MatchmakingScreen';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -217,20 +218,6 @@ const Game = () => {
     return <Tournament onReturn={handleReturn} />;
   }
 
-  if (gameState === 'inqueue' && !(gameAccepted && gameInvite)) {
-    return (
-      <div className={styles.matchmakingLoaderWrapper}>
-        <ArcadeLoader className={styles.matchmakingLoader} />
-        <button onClick={() => {
-          sendMessage({
-            event: 'remove_from_queue',
-          });
-          setGameState(null);
-        }} >Cancel</button>
-      </div>
-    );
-  }
-
   if (gameAccepted && gameInvite) {
       return <RemoteGame key={gameInvite}
         onReturn={() => {
@@ -266,6 +253,16 @@ const Game = () => {
 
   return (
     <div className={styles.container}>
+      {(gameState === 'inqueue' && !(gameAccepted && gameInvite)) &&
+          <div className={styles.modalOverlay}>
+              <MatchmakingScreen onClick={() => {
+                sendMessage({
+                  event: 'remove_from_queue',
+                });
+                setGameState(null);
+              }} />
+          </div>
+        }
       <div className={styles.topContainer}>
         <div className={styles.left}>
             {Modes.map((option) => (

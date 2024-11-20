@@ -9,6 +9,7 @@
 
 .main-content {
   padding: 1.75rem;
+  padding-bottom: 0;
   font-size: 1.5rem;
   font-weight: 600;
   height: 100vh;
@@ -21,12 +22,16 @@
   min-height: 100vh;
   height: auto;
   /* z-index: -2; */
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  flex-direction: column;
 }
 
 .page-content {
   /* background-color: red; */
   width: 100%;
-  height: calc(100vh - 116px);
+  height: calc(100vh - 116px - 64px);
   margin: 0 auto;
   padding: 15px;
   box-sizing: border-box;
@@ -38,7 +43,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 116px);
+  height: calc(100vh - 116px - 64px);
 } */
 
 /* .main-content {

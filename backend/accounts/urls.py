@@ -1,5 +1,6 @@
 from django.urls import path
 from django.urls import re_path
+from .views import OnlineUsersView
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
@@ -40,8 +41,10 @@ urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
-    re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$', oauth2_authentication, name='oauth2_authentication'),
-    re_path(r'^auth/oauth2/authorize/(?P<choice>intra|discord|google)/$', oauth2_authorize, name='oauth2_authorize'),
+    re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$',
+            oauth2_authentication, name='oauth2_authentication'),
+    re_path(r'^auth/oauth2/authorize/(?P<choice>intra|discord|google)/$',
+            oauth2_authorize, name='oauth2_authorize'),
     path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
     path('oauth2/verify_login/', ConfirmOauth2Login.as_view()),
     path('auth/logout/', LogoutView.as_view()),
@@ -57,6 +60,7 @@ urlpatterns = [
     # path('oauth2/google/', oauth2_google),
 
     path('users/', AllUsersView.as_view(), name='all_users'),
+    path('users/online/', OnlineUsersView.as_view(), name='online-users'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
     path('profile/edit/', EditProfileView.as_view()),
 

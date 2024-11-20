@@ -1,5 +1,7 @@
 from django.db.models.signals import post_save
 from django.db.models.signals import post_delete
+from django.contrib.auth.signals import user_logged_in
+
 from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
 from matchmaker.models import Game
@@ -69,3 +71,36 @@ def unlock_achievements_on_game(sender, instance, **kwargs):
                 NotificationConsumer.send_notification_to_user(
                     user.id, notification)
             user_achievement.save()
+
+
+@receiver(user_logged_in)
+def track_login_streak(sender, request, user, **kwargs):
+    notification = Notification.objects.create(
+        user=user, title='Welcome', message=f"Hello, {user.username}! Welcome back.")
+    notification.save()
+    NotificationConsumer.send_notification_to_user(
+        user.id, notification)
+    # profile, created = UserProfile.objects.get_or_create(user=user)
+
+    # today = now().date()
+    # if profile.last_login_date == today:  # User already logged in today
+    #     return
+
+    # # Consecutive day login
+    # if profile.last_login_date == today - timedelta(days=1):
+    #     profile.login_streak += 1
+    # else:  # Break in streak
+    #     profile.login_streak = 1
+
+    # profile.last_login_date = today
+    # profile.save()
+
+    # # Check if the user qualifies for the achievement
+    # if profile.login_streak == 7:
+    #     # Award the achievement if not already awarded
+    #     if not Achievement.objects.filter(user=user, name="Persistent Player").exists():
+    #         Achievement.objects.create(
+    #             user=user,
+    #             name="Persistent Player",
+    #             description="Log in 7 days in a row!"
+    #         )

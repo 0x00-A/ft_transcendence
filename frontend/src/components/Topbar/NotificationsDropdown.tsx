@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { IoMdNotificationsOutline } from 'react-icons/io';
@@ -9,7 +10,7 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
 
 const NotificationsDropdown = () => {
-  const { unreadCount, fetchNotifications, markAllAsRead, notifications: not } =
+  const { unreadCount, fetchNotifications, markAllAsRead, notifications, deleteAllNotifications } =
     useWebSocket();
 
   useEffect(() => {
@@ -25,51 +26,55 @@ const NotificationsDropdown = () => {
       markAllAsRead();
   };
 
-  // Sample notifications data
-  const notifications = [
-    {
-      id: 1,
-      title: 'Achievement unlocked',
-      message: 'You just unlocked a new achievement: FT-PONG LENGEND',
-      created_at: '2024-11-16T10:30:00',
-    },
-    {
-      id: 2,
-      title: 'Meeting Reminder',
-      message: 'Team meeting starts in 15 minutes',
-      created_at: '2024-11-16T09:45:00',
-    },
-    {
-      id: 3,
-      title: 'Task Update',
-      message: 'Project X deadline has been extended',
-      created_at: '2024-11-15T16:20:00',
-    },
-    {
-      id: 4,
-      title: 'System Alert',
-      message: 'Successfully deployed latest changes',
-      created_at: '2024-11-15T14:15:00',
-    },
-    {
-      id: 5,
-      title: 'New Comment',
-      message: 'Sarah commented on your post',
-      created_at: '2024-11-15T11:30:00',
-    },
-    {
-      id: 6,
-      title: 'New Comment',
-      message: 'Sarah commented on your post',
-      created_at: '2024-11-15T11:30:00',
-    },
-    {
-      id: 7,
-      title: 'New Comment',
-      message: 'Sarah commented on your post',
-      created_at: '2024-11-15T11:30:00',
-    },
-  ];
+  const handleClearAll = () => {
+    deleteAllNotifications();
+  }
+
+  // // Sample notifications data
+  // const notifications = [
+  //   {
+  //     id: 1,
+  //     title: 'Achievement unlocked',
+  //     message: 'You just unlocked a new achievement: FT-PONG LENGEND',
+  //     created_at: '2024-11-16T10:30:00',
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Meeting Reminder',
+  //     message: 'Team meeting starts in 15 minutes',
+  //     created_at: '2024-11-16T09:45:00',
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Task Update',
+  //     message: 'Project X deadline has been extended',
+  //     created_at: '2024-11-15T16:20:00',
+  //   },
+  //   {
+  //     id: 4,
+  //     title: 'System Alert',
+  //     message: 'Successfully deployed latest changes',
+  //     created_at: '2024-11-15T14:15:00',
+  //   },
+  //   {
+  //     id: 5,
+  //     title: 'New Comment',
+  //     message: 'Sarah commented on your post',
+  //     created_at: '2024-11-15T11:30:00',
+  //   },
+  //   {
+  //     id: 6,
+  //     title: 'New Comment',
+  //     message: 'Sarah commented on your post',
+  //     created_at: '2024-11-15T11:30:00',
+  //   },
+  //   {
+  //     id: 7,
+  //     title: 'New Comment',
+  //     message: 'Sarah commented on your post',
+  //     created_at: '2024-11-15T11:30:00',
+  //   },
+  // ];
 
 
 
@@ -113,6 +118,9 @@ const NotificationsDropdown = () => {
           ))}
           </ul>
         </div>
+        {notifications.length != 0 && <DropdownMenuItem onClick={handleClearAll}  className='flex justify-center border-t border-gray-600'>
+          <span>Clear All</span>
+        </DropdownMenuItem>}
       </DropdownMenuContent>
     </DropdownMenu>
   );

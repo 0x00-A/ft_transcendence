@@ -6,6 +6,7 @@ import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
 import { useGameInvite } from '@/contexts/GameInviteContext';
+import PlayerMatchupBanner from './PlayerMatchupBanner';
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -272,6 +273,12 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   return (
     <div className={css.container}>
+      {!gameState &&
+          <div className={styles.modalOverlay}>
+              <MatchmakingScreen />
+          </div>
+        }
+      <PlayerMatchupBanner />
       {gameState === 'started' && (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (
@@ -286,7 +293,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
                 id={css.gameCanvas}
                 ref={canvasRef}
               />
-            </div>
+          </div>
           )}
           {currentScreen === 'end' && (
             <EndGameScreen

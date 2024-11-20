@@ -26,3 +26,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
         notification.is_read = True
         notification.save()
         return Response({"message": f"Notification {pk} marked as read"}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['delete'], url_path='delete-all')
+    def delete_all_notifications(self, request, pk=None):
+        self.get_queryset().delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
