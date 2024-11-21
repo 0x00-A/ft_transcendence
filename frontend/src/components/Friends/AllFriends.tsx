@@ -32,9 +32,9 @@ const AllFriends: React.FC = () => {
         friend.username.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : [];
-  
+
   console.log("friendsData: ", friendsData);
-  
+
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
@@ -64,10 +64,10 @@ const AllFriends: React.FC = () => {
         />
       </div>
 
-      
+
       <div className={css.friendList}>
         {isLoading ? (
-          <Loading /> 
+          <Loading />
         ) : error ? (
           <p>Error loading friends</p>
         ) : filteredFriends.length > 0 ? (
@@ -102,7 +102,7 @@ const AllFriends: React.FC = () => {
                   Block</button>
               </div>
             </div>
-            
+
           ))
         ) : (
           <NoFound />

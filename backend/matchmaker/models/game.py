@@ -1,8 +1,8 @@
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 from django.db import models
+from accounts.models import User
 
-User = get_user_model()
+# User = get_user_model()
 
 
 class GameManager(models.Manager):
@@ -22,6 +22,7 @@ class GameManager(models.Manager):
 
 class Game(models.Model):
     GAME_STATUS_CHOICES = [
+        ('waiting', 'Game waiting'),
         ('started', 'Game started'),
         ('ended', 'Game ended'),
     ]
@@ -36,7 +37,7 @@ class Game(models.Model):
     p1_score = models.IntegerField(default=0)
     p2_score = models.IntegerField(default=0)
     status = models.CharField(
-        max_length=20, choices=GAME_STATUS_CHOICES, default='started')
+        max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
 
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
@@ -59,6 +60,12 @@ class Game(models.Model):
         print(f"--------------- Game: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2
+        # if winner == 1:
+        #     self.player1.profile.update_score(p1_score - p2_score)
+        #     self.player2.profile.update_score(p2_score)
+        # else:
+        #     self.player2.profile.update_score(p2_score - p1_score)
+        #     self.player1.profile.update_score(p1_score)
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.status = 'ended'
@@ -108,6 +115,7 @@ class Game(models.Model):
 
             player.profile.stats["performanceData"] = stats
             # player.profile.save()
+
 
         self.player1.save()
         self.player2.save()
