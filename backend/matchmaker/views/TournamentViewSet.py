@@ -32,7 +32,8 @@ class TournamentViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='user-tournaments')
     def get_user_tournaments(self, request):
-        tournaments = Tournament.objects.filter(players=request.user)
+        tournaments = Tournament.objects.filter(
+            players=request.user).exclude(status='aborted').order_by('-status')
 
         if tournaments.exists():
             serializer = self.get_serializer(tournaments, many=True)

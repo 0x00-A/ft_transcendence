@@ -306,7 +306,7 @@ const Game = () => {
                     }}>
                         <div>
                           <h3 className={styles.tournamentName}>{tournament.name}</h3>
-                          <p className={styles.tournamentPlayerCount}>Players: {tournament.players}</p>
+                          <p className={styles.tournamentPlayerCount}>Players: {tournament.players.length}</p>
                         </div>
                         <div className={styles.rightAligned}>
                           <p className={styles.tournamentStatus}>Status: {tournament.status}</p>
