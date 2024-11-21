@@ -6,9 +6,6 @@ from accounts.serializers import NotificationSerializer
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
-    """
-    A ViewSet for managing notifications.
-    """
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -19,19 +16,18 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['patch'], url_path='mark-all-read')
     def mark_all_read(self, request):
-        """
-        Mark all notifications for the authenticated user as read.
-        """
         notifications = self.get_queryset().filter(is_read=False)
         notifications.update(is_read=True)
         return Response({"message": "All notifications marked as read"}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['patch'], url_path='mark-read')
     def mark_as_read(self, request, pk=None):
-        """
-        Mark a specific notification as read.
-        """
         notification = self.get_object()
         notification.is_read = True
         notification.save()
         return Response({"message": f"Notification {pk} marked as read"}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['delete'], url_path='delete-all')
+    def delete_all_notifications(self, request, pk=None):
+        self.get_queryset().delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

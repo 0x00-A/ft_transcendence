@@ -86,6 +86,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         return await super().disconnect(close_code)
 
     async def handle_accept(self, sender, recipient):
+        if sender not in connected_users:
+            print(f'sender not found ... {sender}')
+            await self.send_message(recipient, {
+                "event": "error",
+                "message": f"{sender} is currently offline.",
+            })
+            return
         if await self.is_already_playing(sender):
             message = {
                 'event': 'error',

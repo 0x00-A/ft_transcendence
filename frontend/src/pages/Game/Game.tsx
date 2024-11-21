@@ -30,6 +30,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatDate } from '@/utils/helpers';
+import MatchmakingScreen from './MatchmakingScreen/MatchmakingScreen';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
@@ -39,10 +40,10 @@ import { formatDate } from '@/utils/helpers';
   ];
 
 const Game = () => {
-      const [hoveredOption, setHoveredOption] = useState<number | null>(null);
+  const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [gameState, setGameState] = useState<'started' | 'inqueue' | null>(null);
-  const [gameAdrress, setGameAdrress] = useState(null);
+  const [gameAdrress, setGameAdrress] = useState<string | null>(null);
   const [matchAdrress, setMatchAdrress] = useState(null);
   const ws = useRef<WebSocket | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,10 +52,13 @@ const Game = () => {
   const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
+  const isUnmounting = useRef(false);
+
   const { isLoggedIn } = useAuth();
 
   // if (!isLoggedIn)
   //   return;
+  console.log('Game component rerendered');
 
   const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
 
@@ -144,7 +148,23 @@ const Game = () => {
         ws.current.close();
       }
       clearTimeout(timeout);
-      setGameAccepted(false);
+      // setGameAccepted(false);
+    };
+  }, []);
+
+  //   useEffect(() => {
+  //   return () => {
+  //     // if (isUnmounting.current) {
+  //       console.log("Component unmounted, resetting global state.");
+  //       setGameAccepted(false); // Update global state only on unmount
+  //     // }
+  //   };
+  // }, [setGameAccepted]);
+
+  useEffect(() => {
+    isUnmounting.current = true; // Flag component as ready to unmount
+    return () => {
+      isUnmounting.current = false; // Reset flag for dependency changes
     };
   }, []);
 
@@ -198,35 +218,21 @@ const Game = () => {
     return <Tournament onReturn={handleReturn} />;
   }
 
-  if (gameState === 'inqueue' && !(gameAccepted && gameInvite)) {
-    return (
-      <div className={styles.matchmakingLoaderWrapper}>
-        <ArcadeLoader className={styles.matchmakingLoader} />
-        <button onClick={() => {
-          sendMessage({
-            event: 'remove_from_queue',
-          });
-          setGameState(null);
-        }} >Cancel</button>
-      </div>
-    );
-  }
-
   if (gameAccepted && gameInvite) {
-        return <RemoteGame
-          onReturn={() => {
-            setGameAccepted(false);
-            handleReturn()
-          }}
-          requestRemoteGame={() => {
-            setGameAccepted(false);
-            requestRemoteGame();
-          }}
-          game_address={gameInvite} />;
+      return <RemoteGame key={gameInvite}
+        onReturn={() => {
+          setGameAccepted(false);
+          handleReturn()
+        }}
+        requestRemoteGame={() => {
+          setGameAccepted(false);
+          requestRemoteGame();
+        }}
+        game_address={gameInvite} />;
   }
 
   if (gameState === 'started') {
-    if (gameAdrress) return <RemoteGame onReturn={handleReturn} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
+    if (gameAdrress) return <RemoteGame key={gameAdrress} onReturn={handleReturn} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
   }
 
   if (showTournamentView)
@@ -247,6 +253,16 @@ const Game = () => {
 
   return (
     <div className={styles.container}>
+      {(gameState === 'inqueue' && !(gameAccepted && gameInvite)) &&
+          <div className={styles.modalOverlay}>
+              <MatchmakingScreen onClick={() => {
+                sendMessage({
+                  event: 'remove_from_queue',
+                });
+                setGameState(null);
+              }} />
+          </div>
+      }
       <div className={styles.topContainer}>
         <div className={styles.left}>
             {Modes.map((option) => (

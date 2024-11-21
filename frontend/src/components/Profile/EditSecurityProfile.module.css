@@ -1,0 +1,173 @@
+.securityContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    height: 100%;
+}
+
+.changePassForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 60%;
+    border-radius: 25px;
+    background-color: #1E2533;
+    padding: 3.5rem;
+    gap: 1.5rem;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.containerFiled {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.label {
+    font-size: 1.5rem;
+    color: #D1D3D4;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+    background-color: #0E1725;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    padding-right: 50px;
+    font-size: 1.4rem;
+    color: #D1D3D4;
+}
+
+.showPassIcon {
+    position: absolute;
+    top: 50%;
+    left: calc(100% - 40px);
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+
+.ConfirmButtons {
+    width: 80%;
+    display: flex;
+    justify-content: end;
+    gap: 4rem;
+}
+
+.confirmBtn, .closeBtn {
+    background-color: #0E1725;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 40px;
+    padding: 10px 15px;
+    font-size: 1.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #D1D3D4;
+}
+
+.confirmBtn:hover, .closeBtn:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}
+
+.confirmBtn {
+    border: 1px solid #F8C25C;
+}
+
+.closeBtn {
+    border: 1px solid #AA2926;
+}
+
+.twoFacForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 40%;
+    border-radius: 25px;
+    background-color: #1E2533;
+    padding: 2.5rem;
+}
+
+.twoFacContainer {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.inputContainer {
+    width: 70%;
+    gap: 1.5rem;
+}
+
+.labelIcon {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.labelIcon label {
+    font-size: 1.2rem;
+    color: #D1D3D4;
+}
+
+.mobileMsgIcon {
+    font-size: 6rem;
+    color: #D1D3D4;
+}
+
+.inputContainer p {
+    margin-bottom: 1rem;
+}
+
+.inputBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap : 1rem;
+}
+
+.verifCode {
+    background-color: #0E1725;
+    border: none;
+    width: 160px;
+    height: 40px;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 1.2em;
+    color: #D1D3D4;
+}
+
+.enableBtn {
+    border: 1px solid #F8C25C;
+    padding: 8px;
+    background-color: #0E1725;
+    border-radius: 8px;
+}
+
+.enableBtn:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}
+
+.qrCodeContainer {
+    width: 50%;
+}
+
+.fieldError {
+    color: #AA2926;
+    font-size: 1.2rem;
+    font-weight: 800;
+}

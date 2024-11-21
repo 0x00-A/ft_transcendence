@@ -36,6 +36,7 @@ export interface WebSocketContextType {
   fetchNotifications: () => Promise<void>;
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
+  deleteAllNotifications: () => Promise<void>;
   unreadCount: number;
 }
 
@@ -89,6 +90,16 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Error marking all notifications as read:", error);
     }
   };
+
+  const deleteAllNotifications = async () => {
+    try {
+      await apiClient.delete('notifications/delete-all/');
+      setNotifications([]);
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Error deleting all notifications:', error)
+    }
+  }
 
   const {acceptInvite} = useGameInvite()
 
@@ -207,6 +218,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       fetchNotifications,
       markAllAsRead,
       markAsRead,
+      deleteAllNotifications,
       unreadCount,
       }}>
       {children}
