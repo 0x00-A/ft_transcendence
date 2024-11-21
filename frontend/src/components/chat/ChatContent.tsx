@@ -35,6 +35,7 @@ const useWebSocket = (userId: number, otherUserId: number) => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const socketRef = useRef<WebSocket | null>(null);
 
+  console.log("Connecting to WebSocket with otherUserId:", otherUserId);
   const connect = useCallback(() => {
     const wsUrl = `${getWebSocketUrl(`chat/${otherUserId}/`)}`;
     const newSocket = new WebSocket(wsUrl);
@@ -46,20 +47,22 @@ const useWebSocket = (userId: number, otherUserId: number) => {
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+    
       const newMessage: MessageProps = {
         id: Date.now(),
         conversation: 0,
-        sender: data.sender_id,
-        receiver: userId,
+        sender: data.sender_id === userId ? userId : data.sender_id,
+        receiver: data.sender_id === userId ? otherUserId : userId,
         content: data.message,
         timestamp: new Date().toISOString(),
       };
+    
       setMessages((prev) => [...prev, newMessage]);
     };
+    
 
     newSocket.onclose = () => {
       console.log('WebSocket closed, reconnecting...');
-      setTimeout(connect, 1000);
     };
 
     newSocket.onerror = (error) => {
@@ -107,16 +110,16 @@ const ChatContent: React.FC<ChatContentProps> = ({
   console.log(" otherUserId: ", onSelectedConversation.user2_id)
   const { messages: websocketMessages, sendMessage } = useWebSocket(
     user?.id ?? 0,
-    otherUserId,
+    otherUserId ?? 0,
   );
 
-  console.log("websocketMessages: ", websocketMessages)
   useEffect(() => {
     setChatMessages(() => [
       ...(fetchedMessages || []),
       ...websocketMessages,
     ]);
   }, [fetchedMessages, websocketMessages]);
+  console.log("chatMessages: ", chatMessages)
 
   const handleSendMessage = useCallback(
     (message: string) => {

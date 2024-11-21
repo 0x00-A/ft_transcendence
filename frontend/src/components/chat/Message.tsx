@@ -30,7 +30,7 @@ const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }
   console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
   const {user} = useUser()
   const isSticker = content.includes('<img');
-  const isSender = user?.id === conversationData?.user1_id
+  const isSender = user?.id === message.sender;
   return (
     <div
       className={`${css.messageWrapper} ${isSender ? css.sender : css.receiver}`}
