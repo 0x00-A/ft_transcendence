@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
@@ -16,9 +16,9 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 import { useGetData } from '@/api/apiHooks';
-import moment from 'moment';
 import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation } from '@/api/chatApi';
+import { formatConversationTime } from '@/utils/formatConversationTime';
 
 interface conversationProps {
   user1_id: number;
@@ -71,7 +71,7 @@ const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
   onBlockUser,
 }) => {
-  const [selectedMessageIndex, setSelectedMessageIndex] = useState<number | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<conversationProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
   const [menuState, setMenuState] = useState<{
@@ -83,40 +83,30 @@ const MessageList: React.FC<MessageListProps> = ({
     position: { top: 0, left: 0 },
     activeIndex: null,
   });
-    const {user} = useUser()
+
+  const {user} = useUser()
   const menuRef = useRef(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { data: friendsData, isLoading, error} = useGetData<Friend[]>('friends');
-  const { data: ConversationList, refetch} = useGetData<Conversations[]>('chat/conversations');
+
+  const { 
+    data: friendsData, 
+    isLoading: friendsLoading, 
+    error: friendsError 
+  } = useGetData<Friend[]>('friends');
+  
+  const { 
+    data: ConversationList, 
+    refetch,
+    isLoading: conversationsLoading,
+    error: conversationsError 
+  } = useGetData<Conversations[]>('chat/conversations');
   
   
   console.log("rander MessageList >>>>>>>>>>>>>>>>>>>>>>>>>")
 
-  const formatConversationTime = (timestamp: string) => {
-    const now = moment();
-    const messageTime = moment(timestamp);
-    if (messageTime.isSame(now, 'minute')) {
-      return 'Just now';
-    }
-    if (now.diff(messageTime, 'minutes') < 60) {
-      return `${now.diff(messageTime, 'minutes')} minutes ago`;
-    }
-    if (now.diff(messageTime, 'hours') < 24) {
-      return `${now.diff(messageTime, 'hours')} hour${now.diff(messageTime, 'hours') === 1 ? '' : 's'} ago`;
-    }
-    if (now.diff(messageTime, 'days') < 7) {
-      return `${now.diff(messageTime, 'days')} day${now.diff(messageTime, 'days') === 1 ? '' : 's'} ago`;
-    }
-    if (now.diff(messageTime, 'weeks') < 52) {
-      return `${now.diff(messageTime, 'weeks')} week${now.diff(messageTime, 'weeks') === 1 ? '' : 's'} ago`;
-    }
-    return `${now.diff(messageTime, 'years')} year${now.diff(messageTime, 'years') === 1 ? '' : 's'} ago`;
-  };
-  
-  
   const transformedMessages = useMemo(() => {
     return ConversationList?.map(conversation => {
       const isCurrentUserUser1 = user?.id === conversation.user1_id;
@@ -142,20 +132,29 @@ const MessageList: React.FC<MessageListProps> = ({
   }, [ConversationList, user, formatConversationTime]);
   
 
-  const filteredFriends = friendsData?.filter((friend) =>
-    friend.username.toLowerCase().includes(searchQuery.toLowerCase()) ) || [];
+  const filteredFriends = useMemo(() => {
+    return friendsData?.filter((friend) =>
+      friend.username.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
+  }, [friendsData, searchQuery]);
+
+  const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
+    setSelectedConversation(conversation);
+    onSelectMessage(conversation);
+  }, [onSelectMessage]);
+
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
+    
     if (selectedFriend) {
-      const messageIndex = transformedMessages.findIndex(
-        (transformedMessages) => transformedMessages.name === selectedFriend.username
+      const matchedConversation = transformedMessages.find(
+        conversation => conversation.name === selectedFriend.username
       );
-
-      if (messageIndex !== -1) {
-        const foundMessage = transformedMessages[messageIndex];
-        onSelectMessage(foundMessage);
-        setSelectedMessageIndex(messageIndex);
+  
+      if (matchedConversation) {
+        handleConversationSelect(matchedConversation);
+        
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState((prevState) => ({
@@ -163,23 +162,32 @@ const MessageList: React.FC<MessageListProps> = ({
           isOpen: false,
           activeIndex: null,
         }));
+      } else {
+        const friendToStart = friendsData?.find(
+          friend => friend.username === selectedFriend.username
+        );
+  
+        if (friendToStart) {
+          handleSearchItemClick(friendToStart);
+        }
       }
     }
-  }, [location.state]);
+  }, [
+    location.state,
+  ]);
 
-  const handleClick = (index: number, conversation: conversationProps) => {
+  const handleConversationClick = useCallback((conversation: conversationProps) => {
     refetch();
-    onSelectMessage(conversation);
-    setSelectedMessageIndex(index);
+    handleConversationSelect(conversation);
     setIsSearchActive(false);
     setSearchQuery('');
-    setMenuState((prevState) => ({
-      ...prevState,
+    setMenuState(prev => ({
+      ...prev,
       isOpen: false,
       activeIndex: null,
     }));
+  }, [transformedMessages, handleConversationSelect]);
 
-  };
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
@@ -220,9 +228,8 @@ const MessageList: React.FC<MessageListProps> = ({
   };
 
   const handleClose = () => {
-    if (selectedMessageIndex !== null) {
-      onSelectMessage(null);
-      setSelectedMessageIndex(null);
+    if (selectedConversation !== null) {
+      handleConversationSelect(null);
     }
     setMenuState((prevState) => ({
       ...prevState,
@@ -283,42 +290,31 @@ const MessageList: React.FC<MessageListProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-
-  if (isLoading) {
-    return <div className={css.loading}>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className={css.error}>Error loading friends</div>;
-  }
-
   
-  const handleSearchItemClick = async (friend: Friend, index: number) => {
+  const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
-      console.log("newConversation>>>> friend id: ", friend.id);
-
-      const newConversation: Conversations = await apiCreateConversation(friend.id);
-      console.log("newConversation>>>>: ", newConversation);
+      const newConversation = await apiCreateConversation(friend.id);
       
       const transformedConversation: conversationProps = {
         id: newConversation.id,
         user1_id: newConversation.user1_id,
-        avatar: user?.id === newConversation.user1_id ? newConversation.user2_avatar : newConversation.user1_avatar,
-        name: user?.id === newConversation.user1_id ? newConversation.user2_username : newConversation.user1_username,
+        avatar: user?.id === newConversation.user1_id 
+          ? newConversation.user2_avatar 
+          : newConversation.user1_avatar,
+        name: user?.id === newConversation.user1_id 
+          ? newConversation.user2_username 
+          : newConversation.user1_username,
         lastMessage: newConversation.last_message || 'Send first message',
         time: formatConversationTime(newConversation.created_at),
         status: newConversation.is_online,
         blocked: false,
       };
-
-      refetch();
-      setSelectedMessageIndex(index);
-      onSelectMessage(transformedConversation);
+      await refetch();
+      handleConversationSelect(transformedConversation);
       setIsSearchActive(false);
       setSearchQuery('');
-      setMenuState((prevState) => ({
-        ...prevState,
+      setMenuState(prev => ({
+        ...prev,
         isOpen: false,
         activeIndex: null,
       }));
@@ -326,7 +322,7 @@ const MessageList: React.FC<MessageListProps> = ({
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
-  };
+  }, [user, refetch, handleConversationSelect]);
 
   return (
     <div className={css.container}>
@@ -350,14 +346,23 @@ const MessageList: React.FC<MessageListProps> = ({
       </div>
 
       <div ref={messageListRef} className={css.messageList}>
-      {isLoading ? (
+      {(friendsLoading || conversationsLoading) ? (
           <div className={css.statusMessage}>
             <div className={css.spinner}></div>
-            <span>Loading friends...</span>
+            <span >
+              {friendsLoading 
+                ? "Loading friends..." 
+                : "Loading conversations..."}
+            </span>
           </div>
-        ) : error ? (
+        ) : friendsError || conversationsError ? (
           <div className={css.statusMessage}>
-            <span className={css.error}>Failed to load friends. Please try again.</span>
+            <span className={css.error}>
+              {friendsError 
+                ? "Failed to load friends. " 
+                : "Failed to load conversations. "}
+              Please try again.
+            </span>
           </div>
         ) : isSearchActive ? (
           <>
@@ -371,7 +376,7 @@ const MessageList: React.FC<MessageListProps> = ({
                   key={index}
                   avatar={friend.profile.avatar}
                   name={friend.username}
-                  onClick={() => handleSearchItemClick(friend, index)}
+                  onClick={() => handleSearchItemClick(friend)}
                 />
               ))
             )}
@@ -381,8 +386,8 @@ const MessageList: React.FC<MessageListProps> = ({
             <MessageItem
               key={index}
               {...conversation}
-              isSelected={selectedMessageIndex === index}
-              onClick={() => handleClick(index, conversation)}
+              isSelected={selectedConversation?.id === conversation.id}
+              onClick={() => handleConversationClick(conversation)}
               onMoreClick={(e) => handleMoreClick(e, index)}
               showMoreIcon={true}
               isActive={menuState.activeIndex === index}
@@ -419,7 +424,7 @@ const MessageList: React.FC<MessageListProps> = ({
             >
               <FaBan />
               <span>
-                {transformedMessages[selectedMessageIndex!]?.blocked ? 'Unblock' : 'Block'}
+                block
               </span>
             </div>
             <div className={css.menuItem}>

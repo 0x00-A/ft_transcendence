@@ -19,11 +19,6 @@ interface ConversationProps {
   id: number;
   avatar: string;
   name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: boolean;
-  blocked: boolean;
 }
 
 interface ChatContentProps {
@@ -40,10 +35,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   onUnblock,
 }) => {
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-  const { data: ConversationUser } = useGetData<MessageProps[]>(
+  const { data: ConversationUser, isLoading, error } = useGetData<MessageProps[]>(
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
-
 
   console.log("rander ChatContent >>>>>>>>>>>>>>>>>>>>>>>>>")
 
@@ -56,10 +50,23 @@ const ChatContent: React.FC<ChatContentProps> = ({
   return (
     <>
       <div className={css.messageArea}>
-        <MessageArea
-          messages={chatMessages}
-          conversationData={onSelectedConversation}
-        />
+        {isLoading ? (
+          <div className={css.loadingContainer}>
+            <div className={css.spinner}></div>
+            <span>Loading messages...</span>
+          </div>
+        ) : error ? (
+          <div className={css.errorContainer}>
+            <span className={css.errorText}>
+              Failed to load messages. Please try again.
+            </span>
+          </div>
+        ) : (
+          <MessageArea
+            messages={chatMessages}
+            conversationData={onSelectedConversation}
+          />
+        )}
       </div>
       <MessageInput
         customSticker={customSticker}
