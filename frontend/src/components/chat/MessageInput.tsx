@@ -89,16 +89,20 @@ const MessageInput = ({
   }
 
   const handleSendMessage = () => {
-    if (message.trim() || customSticker) {
+    if (message.trim()) {
       onSendMessage(message);
-      setMessage('');
-      setIsFlying(true);
-      
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
-      setTimeout(() => setIsFlying(false), 500);
     }
+    else if (customSticker) {
+      onSendMessage(customSticker);
+    }
+    setMessage('');
+    setIsFlying(true);
+    setInputFocused(false);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current?.focus();
+    }
+    setTimeout(() => setIsFlying(false), 500);
   };
 
   return (
@@ -139,11 +143,11 @@ const MessageInput = ({
       </div>
 
       <button
+        onClick={handleSendMessage}
         className={`${css.sendButton} ${
           isFlying ? css.animateIcon : ''
         } ${!message.trim() && !customSticker ? css.disabled : ''}`}
         disabled={!message.trim() && !customSticker}
-        onClick={handleSendMessage}
         aria-label="Send message"
         
       >
