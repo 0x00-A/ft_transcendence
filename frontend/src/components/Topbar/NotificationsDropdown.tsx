@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { IoMdNotificationsOutline } from 'react-icons/io';
@@ -9,7 +10,7 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
 
 const NotificationsDropdown = () => {
-  const { unreadCount, fetchNotifications, markAllAsRead, notifications } =
+  const { unreadCount, fetchNotifications, markAllAsRead, notifications, deleteAllNotifications } =
     useWebSocket();
 
   useEffect(() => {
@@ -25,7 +26,11 @@ const NotificationsDropdown = () => {
       markAllAsRead();
   };
 
-  // Sample notifications data
+  const handleClearAll = () => {
+    deleteAllNotifications();
+  }
+
+  // // Sample notifications data
   // const notifications = [
   //   {
   //     id: 1,
@@ -87,30 +92,35 @@ const NotificationsDropdown = () => {
           </span>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[25rem] text-white bg-[#1e2738] border-gray-600">
+      <DropdownMenuContent className="w-[27rem] text-white bg-[#1e2738] border-gray-600">
         <div className="px-4 py-3 border-b border-gray-600">
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
-          {notifications.map((notification) => (
-            <div
-              key={notification.id}
-              className="px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0"
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold text-white">
-                  {notification.title}
-                </h3>
-                <span className="text-[10px] text-gray-100">
-                  {formatDate(notification.created_at)}
-                </span>
+          <ul>
+            {notifications.map((notification) => (
+              <div
+                key={notification.id}
+                className="px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0"
+              >
+                <div className="flex justify-between items-start">
+                  <h3 className="text-lg font-bold text-white">
+                    {notification.title}
+                  </h3>
+                  <span className="text-[10px] text-gray-100">
+                    {formatDate(notification.created_at)}
+                  </span>
+                </div>
+                <p className="text-[13px] font-sans text-gray-100 mt-1">
+                  {notification.message}
+                </p>
               </div>
-              <p className="text-[13px] font-sans text-gray-100 mt-1">
-                {notification.message}
-              </p>
-            </div>
           ))}
+          </ul>
         </div>
+        {notifications.length != 0 && <DropdownMenuItem onClick={handleClearAll}  className='flex justify-center border-t border-gray-600'>
+          <span>Clear All</span>
+        </DropdownMenuItem>}
       </DropdownMenuContent>
     </DropdownMenu>
   );

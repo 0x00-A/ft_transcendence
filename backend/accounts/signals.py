@@ -1,9 +1,12 @@
 from django.db.models.signals import post_save
 from django.db.models.signals import post_delete
+from django.contrib.auth.signals import user_logged_in
+
 from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
 from matchmaker.models import Game
 from .models import Profile
+from .models import Badge
 
 from accounts.consumers import NotificationConsumer
 
@@ -11,7 +14,8 @@ from accounts.consumers import NotificationConsumer
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+       Profile.objects.create(user=instance,
+                              rank=Profile.objects.count() + 1, badge=Badge.objects.get(name='Bronze'))
 
 
 @receiver(post_save, sender=User)
@@ -23,6 +27,13 @@ def save_user_profile(sender, instance, **kwargs):
 def delete_user_with_profile(sender, instance, **kwargs):
     if instance.user:
         instance.user.delete()
+
+# @receiver(post_save, sender=User)
+# def create_profile_badge(sender, instance, created, **kwargs):
+#     if created:
+#         badge = Badge.objects.get(name='Bronze')
+#         instance.profile.badge = badge
+#         instance.profile.save()
 
 
 # @receiver(post_save, sender=Game)
@@ -69,3 +80,36 @@ def unlock_achievements_on_game(sender, instance, **kwargs):
                 NotificationConsumer.send_notification_to_user(
                     user.id, notification)
             user_achievement.save()
+
+
+@receiver(user_logged_in)
+def track_login_streak(sender, request, user, **kwargs):
+    notification = Notification.objects.create(
+        user=user, title='Welcome', message=f"Hello, {user.username}! Welcome back.")
+    notification.save()
+    NotificationConsumer.send_notification_to_user(
+        user.id, notification)
+    # profile, created = UserProfile.objects.get_or_create(user=user)
+
+    # today = now().date()
+    # if profile.last_login_date == today:  # User already logged in today
+    #     return
+
+    # # Consecutive day login
+    # if profile.last_login_date == today - timedelta(days=1):
+    #     profile.login_streak += 1
+    # else:  # Break in streak
+    #     profile.login_streak = 1
+
+    # profile.last_login_date = today
+    # profile.save()
+
+    # # Check if the user qualifies for the achievement
+    # if profile.login_streak == 7:
+    #     # Award the achievement if not already awarded
+    #     if not Achievement.objects.filter(user=user, name="Persistent Player").exists():
+    #         Achievement.objects.create(
+    #             user=user,
+    #             name="Persistent Player",
+    #             description="Log in 7 days in a row!"
+    #         )

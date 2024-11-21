@@ -6,6 +6,10 @@ import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
 import { useGameInvite } from '@/contexts/GameInviteContext';
+import PlayerMatchupBanner from './PlayerMatchupBanner';
+import MatchmakingScreen from '@/pages/Game/MatchmakingScreen/MatchmakingScreen';
+import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
+
 
 const canvasWidth = 650;
 const canvasHeight = 480;
@@ -27,8 +31,11 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
+  const [count, setCount] = useState(3);
 
   const {setGameAccepted} = useGameInvite();
+
+  console.log('RemoteGame component rerendered', `screen: ${game_address}`);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -69,9 +76,12 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
     paddleHitSound.current.load();
 
     return () => {
-      setGameAccepted(false);
+      // setGameAccepted(false);
     }
   }, [sound]);
+
+
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -83,7 +93,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       ws.current = gameSocket;
 
       gameSocket.onopen = (e) => {
-        console.log('WebSocket connected');
+        console.log('Game WebSocket connected');
         setGameState('waiting');
 
         // Send the canvas dimensions
@@ -126,14 +136,19 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
             setCurrentScreen('end');
             gameSocket.close();
             ws.current = null;
+            // setGameAccepted(false)
           }
         }
+        // if (data.type === 'game_countdown') {
+        //   console.log(data);
+        //   setCount(data.count)
+        // }
       };
 
       gameSocket.onclose = () => {
         console.log('Game WebSocket Disconnected');
         // setGameState('ended');
-        setCurrentScreen('end');
+        // setCurrentScreen('end');
       };
     }, 500);
 
@@ -256,16 +271,57 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
     onReturn();
   };
 
-  if (!gameState) {
-    return (
-      <div className={css.matchmakingLoaderWrapper}>
-        <ArcadeLoader className={css.matchmakingLoader} />
-      </div>
-    );
-  }
+  // if (!gameState) {
+  //   return (
+  //     <div className={css.matchmakingLoaderWrapper}>
+  //       <ArcadeLoader className={css.matchmakingLoader} />
+  //     </div>
+  //   );
+  // }
+
+  useEffect(() => {
+    if (gameState === 'started') return;
+
+    if (count > 0) {
+      const timer = setTimeout(() => {
+        setCount((c) => c - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [count]);
+
 
   return (
     <div className={css.container}>
+      <p>{count}</p>
+      {/* <div className="relative flex flex-col items-center">
+          <div
+            className="text-9xl font-bold mb-8 transition-all duration-500"
+            style={{
+              opacity: count === 0 ? 0 : 1,
+              transform: `scale(${count === 0 ? 1.5 : 1})`
+            }}
+          >
+            {count}
+          </div>
+          {count === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-6xl font-bold animate-bounce text-yellow-400">
+                GO!
+              </div>
+            </div>
+          )}
+      </div> */}
+      {!gameState &&
+          <div className='fixed t-0 l-0 r-0 b-0 backdrop-blur-sm flex justify-center items-center z-10'>
+              {/* <MatchmakingScreen /> */}
+                          <RadarIcon
+              className="text-red-500 animate-ping absolute inset-0 opacity-50"
+              size={120}
+            />
+          </div>
+        }
+      <PlayerMatchupBanner />
       {gameState === 'started' && (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (
@@ -280,7 +336,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
                 id={css.gameCanvas}
                 ref={canvasRef}
               />
-            </div>
+          </div>
           )}
           {currentScreen === 'end' && (
             <EndGameScreen

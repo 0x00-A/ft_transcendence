@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from ..models.profile import Profile, User
+from ..serializers.badgeSerializer import BadgeSerializer
 
 
 
@@ -7,10 +8,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
+    badge = BadgeSerializer()
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'avatar', 'level', 'stats', 'is_online']
+        fields = ['id', 'username', 'avatar', 'level', 'score', 'rank', 'badge', 'stats', 'is_online']
 
     def get_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.avatar}"
@@ -22,10 +24,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 class EditProfileSerializer(serializers.ModelSerializer):
     # username = serializers.CharField(required=False)
     avatar = serializers.ImageField(required=False)
+    removeAvatar = serializers.CharField(required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'avatar']
+        fields = ['username', 'first_name', 'last_name', 'avatar', 'removeAvatar', 'password']
 
     def validate_username(self, value):
         if any(ch.isupper() for ch in value):
@@ -37,7 +40,14 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        print('-------->', attrs, '<--------')
+        print('----attr---->', attrs, '<--------')
+        password = attrs.get('password')
+        if password is None:
+            raise serializers.ValidationError({'password': 'Password is required to update your informations!'})
+        print('-----context--->>', self.context['request'].user, '<--------')
+        user = self.context['request'].user
+        if not user.check_password(password):
+            raise serializers.ValidationError({'password': 'Incorrect password!'})
         return super().validate(attrs)
 
     def update(self, instance, validated_data):
@@ -52,5 +62,9 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if 'avatar' in validated_data:
             print('-------->>', validated_data.get('avatar'), '<<--------')
             instance.profile.avatar = validated_data.get('avatar')
+        if 'removeAvatar' in validated_data:
+            print('-------->>', validated_data.get('removeAvatar'), '<<--------')
+            if validated_data.get('removeAvatar') == 'true':
+                instance.profile.avatar = 'avatars/avatar.jpeg'
         instance.save()
         return instance

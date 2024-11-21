@@ -47,7 +47,7 @@ const OptionsButton = () => {
       </div>
       {showMenu && (
         <div ref={menuRef} className={css.menu}>
-          <div className={css.menuItem}>
+          <div className={css.menuItem} onClick={() => navigate('/profile')}>
             <FaUser /> See your profile
           </div>
           <div className={css.menuItem}>

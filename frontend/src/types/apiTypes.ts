@@ -22,11 +22,21 @@ export interface Stats {
   performanceData: PerformanceDataEntry[];
 }
 
+export interface Badges {
+  name: string;
+  icon: string;
+  level_required: number;
+  xp_reward: number;
+}
+
 export interface Profile {
   user: number;
   avatar: string;
   age: number | null;
   level: number | null;
+  score: number | null;
+  rank: number | null;
+  badge: Badges;
   stats: Stats;
   is_online: boolean;
 }
