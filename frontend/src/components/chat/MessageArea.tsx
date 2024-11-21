@@ -40,7 +40,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
     <div className={css.messageArea}>
       {messages.map((message, index) => (
         <Message
-          // key={message.id || message.timestamp}
           key={index}
           message={message}
           conversationData={conversationData}
