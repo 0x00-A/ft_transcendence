@@ -17,3 +17,5 @@ export const API_NEW_USERNAME_URL = "/auth/new_username/";
 export const API_GET_PROFILE_URL = "/profile/";
 
 export const API_EDIT_PROFILE_URL = "/profile/edit/";
+
+export const API_CHANGE_PASSWORD_URL = "/profile/change_password/";

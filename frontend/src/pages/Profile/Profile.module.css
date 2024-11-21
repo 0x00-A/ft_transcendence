@@ -6,11 +6,93 @@
     color: #ffffff;
     width: 100%;
     max-width: 3000px;
-    height: calc(100vh - 116px);
+    height: calc(100vh - 116px - 64px);
     min-height: 1000px;
     min-width: 650px;
     overflow-y: auto;
     margin: 0 auto;
+}
+
+.bluredBg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.editProfileContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #0E1725;
+    border-radius: 25px;
+    width: 600px;
+    height: 1000px;
+    display: flex;
+    flex-direction: column;
+}
+
+.exitBtn {
+    align-self: self-end;
+    padding: 20px;
+    border: none;
+    font-size: 4rem;
+    cursor: pointer;
+}
+
+.closeBtn:hover {
+    color: #F8C25C;
+}
+
+.editProfileForm {
+    align-self: center;
+    width: 90%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+}
+
+.buttonsGrp {
+    width: 80%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #384B6C;
+    padding: 5px 15px;
+    border-radius: 12px;
+}
+
+.button {
+  padding: 20px;
+  width: 40%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #9699b0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.3rem;
+}
+
+.button:hover {
+  color: #ffffff;
+}
+
+.buttonActive {
+    height: 30px;
+    background-color: #1E2533;
+    color: #ffffff;
 }
 
 .loader {
@@ -79,4 +161,3 @@
     font-size: 2.2rem;
     color: #F8F3E3;
 }
-

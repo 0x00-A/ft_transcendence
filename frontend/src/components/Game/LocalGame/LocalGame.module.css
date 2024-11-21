@@ -4,7 +4,7 @@
   justify-content: space-evenly;
   align-items: flex-start;
   background-color: var(--color-game-screen-bg);
-  height: calc(100vh - 116px);
+  height: calc(100vh - 116px - 64px);
   border-radius: 10px;
   min-height: 600px;
   box-shadow:

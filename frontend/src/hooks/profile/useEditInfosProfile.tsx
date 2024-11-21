@@ -1,3 +1,4 @@
+// React
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -75,14 +76,14 @@ const EditProfileApi = async (data) => {
   // }
 }
 
-const useEditProfile = () => {
+const useEditInfosProfile = () => {
   // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     reset,
-    // watch,
+    watch,
     setError,
     setValue,
   } = useForm<EditProfileFormData>({
@@ -92,24 +93,30 @@ const useEditProfile = () => {
   });
   const mutation = useMutation({
     mutationFn: EditProfileApi,
+    onSuccess: (data) => {
+      console.log('apiClient ==> EditProfile response: ', data);
+    },
     onError: (error: AxiosError) => {
-      if (error.response) {
-          console.error('Error message:', error.response.data);
-        } else {
-          console.error('Unexpected error:', error.message);
-        }
+      const errs = error?.response.data as EditProfileFormData;
+      errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
+      errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
+      errs?.first_name && setError("first_name", {type: '', message: errs?.first_name}, {shouldFocus:true})
+      errs?.last_name && setError("last_name", {type: '', message: errs?.last_name}, {shouldFocus:true})
+      errs?.email && setError("email", {type: '', message: errs?.email}, {shouldFocus:true})
+      error?.response.data?.error && setError("root", {type: '', message: error.response.data.error});
     }
   });
   return {
     register,
     handleSubmit,
     errors,
+    isValid,
     mutation,
     reset,
     setValue,
-    // watch,
+    watch,
     setError,
   };
 };
 
-export default useEditProfile
+export default useEditInfosProfile

@@ -27,7 +27,6 @@ const ProfileFriends = () => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
-    if (isLoading) return <Loading />;
     const navigate = useNavigate();
     const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);

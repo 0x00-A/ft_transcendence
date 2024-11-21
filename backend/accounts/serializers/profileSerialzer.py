@@ -24,10 +24,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 class EditProfileSerializer(serializers.ModelSerializer):
     # username = serializers.CharField(required=False)
     avatar = serializers.ImageField(required=False)
+    removeAvatar = serializers.CharField(required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'avatar', 'password']
+        fields = ['username', 'first_name', 'last_name', 'avatar', 'removeAvatar', 'password']
 
     def validate_username(self, value):
         if any(ch.isupper() for ch in value):
@@ -61,5 +62,9 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if 'avatar' in validated_data:
             print('-------->>', validated_data.get('avatar'), '<<--------')
             instance.profile.avatar = validated_data.get('avatar')
+        if 'removeAvatar' in validated_data:
+            print('-------->>', validated_data.get('removeAvatar'), '<<--------')
+            if validated_data.get('removeAvatar') == 'true':
+                instance.profile.avatar = 'avatars/avatar.jpeg'
         instance.save()
         return instance
