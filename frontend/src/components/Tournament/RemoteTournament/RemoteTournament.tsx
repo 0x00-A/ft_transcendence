@@ -8,6 +8,7 @@ import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
 import { MessageData } from '@/contexts/WebSocketContext';
+import LeaveTournamentButton from './LeaveTournamentButton';
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
   return (
@@ -238,6 +239,15 @@ const RemoteTournament = ({
           </section>
         </div>
       </div>
+      {tournamentStat.status != 'ended' && <LeaveTournamentButton
+          onLeaveTournament={
+            ()=> {
+                sendMessage({
+                  event: 'player_left',
+                })
+            }
+          }
+      />}
 
       <ul className={css.infoList}>
         <li className={css.item}>

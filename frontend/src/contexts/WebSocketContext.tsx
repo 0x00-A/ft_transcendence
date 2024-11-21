@@ -199,7 +199,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     //   content: data.content || '',
     //   timestamp: new Date(),
     // };
-    setNotifications((prev) => [...prev, data]);
+    setNotifications((prev) => [data, ...prev]);
     setUnreadCount((prev) => prev + 1);
   };
 
