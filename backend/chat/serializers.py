@@ -6,6 +6,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     user1_username = serializers.CharField(source='user1.username', read_only=True)
     user2_username = serializers.CharField(source='user2.username', read_only=True)
     user1_id = serializers.IntegerField(source='user1.id', read_only=True)
+    user2_id = serializers.IntegerField(source='user2.id', read_only=True)
     user1_avatar = serializers.SerializerMethodField()
     user2_avatar = serializers.SerializerMethodField()
     is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
@@ -15,6 +16,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user1_id',
+            'user2_id',
             'user1_username', 
             'user1_avatar', 
             'user2_username', 

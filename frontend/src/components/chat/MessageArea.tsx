@@ -9,11 +9,12 @@ interface MessageProps {
   receiver: number;
   content: string;
   timestamp: string;
-  seen: boolean;
+  seen?: boolean;
 }
 
 interface ConversationProps {
   user1_id: number;
+  user2_id: number;
   id: number;
   avatar: string;
   name: string;
@@ -37,9 +38,10 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
 
   return (
     <div className={css.messageArea}>
-      {messages.map((message) => (
+      {messages.map((message, index) => (
         <Message
-          key={message.id}
+          // key={message.id || message.timestamp}
+          key={index}
           message={message}
           conversationData={conversationData}
         />

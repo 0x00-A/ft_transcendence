@@ -22,6 +22,7 @@ import { formatConversationTime } from '@/utils/formatConversationTime';
 
 interface conversationProps {
   user1_id: number;
+  user2_id: number;
   id: number;
   avatar: string;
   name: string;
@@ -53,6 +54,7 @@ interface Conversations {
   user1: string; 
   user2: string;
   user1_id: number;
+  user2_id: number;
   user1_username: string;
   user2_username: string;
   user1_avatar: string;
@@ -127,6 +129,7 @@ const MessageList: React.FC<MessageListProps> = ({
         blocked: false,
         conversationId: conversation.id,
         user1_id: conversation.user1_id,
+        user2_id: conversation.user2_id,
       };
     }) || [];
   }, [ConversationList, user, formatConversationTime]);

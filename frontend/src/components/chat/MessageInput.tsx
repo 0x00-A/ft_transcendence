@@ -8,12 +8,14 @@ interface MessageInputProps {
   customSticker: string;
   isBlocked: boolean;
   onUnblock: () => void;
+  onSendMessage: (message: string) => void;
 }
 
 const MessageInput = ({
   customSticker,
   isBlocked,
   onUnblock,
+  onSendMessage,
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -62,7 +64,6 @@ const MessageInput = ({
     setMessage(e.target.value);
     setInputFocused(true);
     
-    // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
@@ -86,6 +87,19 @@ const MessageInput = ({
       </div>
     );
   }
+
+  const handleSendMessage = () => {
+    if (message.trim() || customSticker) {
+      onSendMessage(message);
+      setMessage('');
+      setIsFlying(true);
+      
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+      setTimeout(() => setIsFlying(false), 500);
+    }
+  };
 
   return (
     <div className={css.messageInputWrapper}>
@@ -129,7 +143,9 @@ const MessageInput = ({
           isFlying ? css.animateIcon : ''
         } ${!message.trim() && !customSticker ? css.disabled : ''}`}
         disabled={!message.trim() && !customSticker}
+        onClick={handleSendMessage}
         aria-label="Send message"
+        
       >
         {inputFocused || message.trim() ? (
           <FaPaperPlane size={22} />

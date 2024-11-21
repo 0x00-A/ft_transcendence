@@ -7,8 +7,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         self.other_user_id = self.scope["url_route"]["kwargs"]["user_id"]
+        user_id = int(self.user.id)
+        other_user_id = int(self.other_user_id)
 
-        self.room_name = f"chat_{min(self.user.id, self.other_user_id)}_{max(self.user.id, self.other_user_id)}"
+        print(f"self.user.id type: {(user_id)}, self.other_user_id type: {(other_user_id)}")
+
+        self.room_name = f"chat_{min(user_id, other_user_id)}_{max(user_id, other_user_id)}"
         self.room_group_name = f"chat_{self.room_name}"
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -21,6 +25,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message = data["message"]
         sender_id = self.user.id
+
+        print(f"message: {message}, sender_id: {sender_id}")
 
         await self.save_message(sender_id, self.other_user_id, message)
 
