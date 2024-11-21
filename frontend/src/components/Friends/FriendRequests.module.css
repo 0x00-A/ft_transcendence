@@ -55,6 +55,7 @@
 }
 
 .requestCard {
+  width: 98%;
   display: flex;
   align-items: center;
   background-color: #394056;
