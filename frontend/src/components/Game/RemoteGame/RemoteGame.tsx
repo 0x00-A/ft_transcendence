@@ -20,9 +20,11 @@ interface GameProps { game_address: string;
                      requestRemoteGame?:() => void;
                     onReturn: (()=>void);
                     isMatchTournament?: boolean;
+                    p1_id: number;
+                    p2_id: number;
                   }
 
-const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}, onReturn, isMatchTournament = false }) => {
+const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}, onReturn, isMatchTournament = false, p1_id, p2_id }) => {
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>(null);
   const [restart, setRestart] = useState(false);
@@ -300,7 +302,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
               size={120}
             />
         } */}
-      <PlayerMatchupBanner />
+      <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} />
       {gameState === 'started' || gameState === 'ended' ? (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (

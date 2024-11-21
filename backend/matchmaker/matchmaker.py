@@ -61,6 +61,8 @@ class Matchmaker:
             'event': 'game_address',
             'message': 'Game successfully created',
             'game_address': game_address,
+            'player1_id': game.player1.id,
+            'player2_id': game.player2.id,
         }
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)
@@ -329,7 +331,7 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_ready(cls, player_id, match_id):
-        match = await sync_to_async(Match.objects.get)(match_id=match_id)
+        match = await Match.objects.aget(match_id=match_id)
 
         if match.player1_id == player_id:
             match.player1_ready = True
@@ -351,13 +353,15 @@ class Matchmaker:
         if match.ready():
             match.status = 'started'
             match.start_time = timezone.now()
-            await sync_to_async(match.save)()
+            await match.asave()
             match_address = f"game/match_{match.id}"
 
             message = {
                 'event': 'match_start',
                 'match_address': match_address,
                 "message": "Match started!",
+                'player1_id': match.player1_id,
+                'player2_id': match.player2_id,
             }
             await cls.send_message_to_client(match.player1_id, message)
             await cls.send_message_to_client(match.player2_id, message)
