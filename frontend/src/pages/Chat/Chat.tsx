@@ -12,6 +12,7 @@ import ChatContent from '@/components/chat/ChatContent';
 
 interface conversationProps {
   user1_id: number;
+  user2_id: number;
   id: number;
   avatar: string;
   name: string;

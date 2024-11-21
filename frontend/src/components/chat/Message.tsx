@@ -9,7 +9,7 @@ interface MessageProps {
   receiver: number;
   content: string;
   timestamp: string;
-  seen: boolean;
+  seen?: boolean;
 }
 interface ConversationProps {
   user1_id: number;

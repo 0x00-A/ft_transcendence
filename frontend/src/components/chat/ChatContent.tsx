@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
+import { useUser } from '@/contexts/UserContext';
+import getWebSocketUrl from '@/utils/getWebSocketUrl';
 
 interface MessageProps {
   id: number;
@@ -11,11 +13,12 @@ interface MessageProps {
   receiver: number;
   content: string;
   timestamp: string;
-  seen: boolean;
+  seen?: boolean;
 }
 
 interface ConversationProps {
   user1_id: number;
+  user2_id: number;
   id: number;
   avatar: string;
   name: string;
@@ -28,39 +31,109 @@ interface ChatContentProps {
   onSelectedConversation: ConversationProps;
 }
 
+const useWebSocket = (userId: number, otherUserId: number) => {
+  const [messages, setMessages] = useState<MessageProps[]>([]);
+  const socketRef = useRef<WebSocket | null>(null);
+
+  const connect = useCallback(() => {
+    const wsUrl = `${getWebSocketUrl(`chat/${otherUserId}/`)}`;
+    const newSocket = new WebSocket(wsUrl);
+
+    newSocket.onopen = () => {
+      console.log('WebSocket connected for chat');
+      socketRef.current = newSocket;
+    };
+
+    newSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const newMessage: MessageProps = {
+        id: Date.now(),
+        conversation: 0,
+        sender: data.sender_id,
+        receiver: userId,
+        content: data.message,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, newMessage]);
+    };
+
+    newSocket.onclose = () => {
+      console.log('WebSocket closed, reconnecting...');
+      setTimeout(connect, 1000);
+    };
+
+    newSocket.onerror = (error) => {
+      console.error('WebSocket error on chat:', error);
+    };
+
+    return newSocket;
+  }, [userId, otherUserId]);
+
+  useEffect(() => {
+    const socket = connect();
+    return () => socket.close();
+  }, [connect]);
+
+  const sendMessage = useCallback(
+    (message: string) => {
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({ message }));
+      }
+    },
+    []
+  );
+
+  return { messages, sendMessage };
+};
+
+
 const ChatContent: React.FC<ChatContentProps> = ({
   onSelectedConversation,
   customSticker,
   isBlocked,
   onUnblock,
 }) => {
+  const { user } = useUser();
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-  const { data: ConversationUser, isLoading, error } = useGetData<MessageProps[]>(
+  const { data: fetchedMessages, isLoading, error } = useGetData<MessageProps[]>(
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  console.log("rander ChatContent >>>>>>>>>>>>>>>>>>>>>>>>>")
 
+
+  const isCurrentUserUser1 = user?.id === onSelectedConversation.user1_id;
+  const otherUserId = isCurrentUserUser1 ? onSelectedConversation.user2_id : onSelectedConversation.user1_id;
+
+  console.log(" otherUserId: ", onSelectedConversation.user2_id)
+  const { messages: websocketMessages, sendMessage } = useWebSocket(
+    user?.id ?? 0,
+    otherUserId,
+  );
+
+  console.log("websocketMessages: ", websocketMessages)
   useEffect(() => {
-    if (onSelectedConversation && Array.isArray(ConversationUser)) {
-      setChatMessages(ConversationUser);
-    }
-  }, [onSelectedConversation, ConversationUser]);
+    setChatMessages(() => [
+      ...(fetchedMessages || []),
+      ...websocketMessages,
+    ]);
+  }, [fetchedMessages, websocketMessages]);
+
+  const handleSendMessage = useCallback(
+    (message: string) => {
+      if (message.trim()) {
+        sendMessage(message);
+      }
+    },
+    [sendMessage, user?.id, onSelectedConversation.id]
+  );
 
   return (
     <>
       <div className={css.messageArea}>
         {isLoading ? (
-          <div className={css.loadingContainer}>
-            <div className={css.spinner}></div>
-            <span>Loading messages...</span>
-          </div>
+          <div>Loading messages...</div>
         ) : error ? (
-          <div className={css.errorContainer}>
-            <span className={css.errorText}>
-              Failed to load messages. Please try again.
-            </span>
-          </div>
+          <div>Error loading messages</div>
         ) : (
           <MessageArea
             messages={chatMessages}
@@ -72,9 +145,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
         customSticker={customSticker}
         isBlocked={isBlocked}
         onUnblock={onUnblock}
+        onSendMessage={handleSendMessage}
       />
     </>
   );
 };
 
 export default ChatContent;
+
