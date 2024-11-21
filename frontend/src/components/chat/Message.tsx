@@ -1,5 +1,6 @@
 import React from 'react';
 import css from './MessageArea.module.css';
+import { useUser } from '@/contexts/UserContext';
 
 interface MessageProps {
   id: number;
@@ -15,11 +16,6 @@ interface ConversationProps {
   id: number;
   avatar: string;
   name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: boolean;
-  blocked: boolean;
 }
 
 interface MessageComponentProps {
@@ -32,10 +28,9 @@ const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }
   const { content, timestamp } = message;
 
   console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
-
+  const {user} = useUser()
   const isSticker = content.includes('<img');
-  const isSender = message.sender === conversationData?.user1_id
-
+  const isSender = user?.id === conversationData?.user1_id
   return (
     <div
       className={`${css.messageWrapper} ${isSender ? css.sender : css.receiver}`}

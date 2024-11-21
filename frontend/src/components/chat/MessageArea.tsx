@@ -17,11 +17,6 @@ interface ConversationProps {
   id: number;
   avatar: string;
   name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: boolean;
-  blocked: boolean;
 }
 
 interface MessageAreaProps {

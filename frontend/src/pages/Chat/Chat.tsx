@@ -42,7 +42,6 @@ const Chat = () => {
     return <Navigate to="/signup" />;
   }
 
-
   console.log("rander chat >>>>>>>>>>>>>>>>>>>>>>>>>")
 
   const handleStickerChange = (newSticker: string) => {
