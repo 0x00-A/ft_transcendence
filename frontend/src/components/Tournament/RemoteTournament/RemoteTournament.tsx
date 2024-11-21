@@ -111,6 +111,8 @@ const RemoteTournament = ({
   onReturn,
   opponentReady,
   setOpponentReady,
+  p1_id,
+  p2_id,
 }: {
   tournamentStat: any;
   user: string;
@@ -121,6 +123,8 @@ const RemoteTournament = ({
   onReturn: ()=>void;
   opponentReady: boolean;
   setOpponentReady: React.Dispatch<React.SetStateAction<boolean>>;
+  p1_id: number;
+  p2_id: number;
 }) => {
   const [rounds, setRounds] = useState<Rounds>(tournamentStat.rounds);
   const [winnerOfMatch1, setWinnerOfMatch1] = useState<string | null>(
@@ -184,7 +188,13 @@ const RemoteTournament = ({
     if (matchAddress)
       return (
         <>
-          <RemoteGame isMatchTournament={true} onReturn={handleReturn} game_address={matchAddress} />
+          <RemoteGame
+            isMatchTournament={true}
+            onReturn={handleReturn}
+            game_address={matchAddress}
+            p1_id={p1_id!}
+            p2_id={p2_id!}
+            />
         </>
       );
   }

@@ -44,6 +44,8 @@ const Game = () => {
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [gameState, setGameState] = useState<'started' | 'inqueue' | null>(null);
   const [gameAdrress, setGameAdrress] = useState<string | null>(null);
+  const [player1_id, setPlayer1_id] = useState<number | null>(null);
+  const [player2_id, setPlayer2_id] = useState<number | null>(null);
   const [matchAdrress, setMatchAdrress] = useState(null);
   const ws = useRef<WebSocket | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -118,6 +120,8 @@ const Game = () => {
         }
         if (data.event === 'match_start') {
           setMatchAdrress(data.match_address);
+          setPlayer1_id(data.player1_id);
+          setPlayer2_id(data.player2_id);
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
@@ -126,6 +130,8 @@ const Game = () => {
         }
         if (data.event === 'game_address') {
           setGameAdrress(data.game_address);
+          setPlayer1_id(data.player1_id);
+          setPlayer2_id(data.player2_id);
           setGameState('started');
         }
         if (data.event === 'tournament_update') {
@@ -229,11 +235,21 @@ const Game = () => {
           setGameAccepted(false);
           requestRemoteGame();
         }}
-        game_address={gameInvite} />;
+        game_address={gameInvite}
+        p1_id={player1_id!}
+        p2_id={player2_id!}
+        />;
   }
 
   if (gameState === 'started') {
-    if (gameAdrress) return <RemoteGame key={gameAdrress} onReturn={handleReturn} requestRemoteGame={requestRemoteGame} game_address={gameAdrress} />;
+    if (gameAdrress) return <RemoteGame
+        key={gameAdrress}
+        onReturn={handleReturn}
+        requestRemoteGame={requestRemoteGame}
+        game_address={gameAdrress}
+        p1_id={player1_id!}
+        p2_id={player2_id!}
+        />;
   }
 
   if (showTournamentView)
@@ -249,6 +265,8 @@ const Game = () => {
         onReturn={handleReturn}
         opponentReady={opponentReady}
         setOpponentReady={setOpponentReady}
+        p1_id={player1_id!}
+        p2_id={player2_id!}
       />
     );
 
