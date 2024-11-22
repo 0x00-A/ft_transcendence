@@ -9,6 +9,7 @@ interface MessageInputProps {
   isBlocked: boolean;
   onUnblock: () => void;
   onSendMessage: (message: string) => void;
+  onTyping: (isTyping: boolean) => void;
 }
 
 const MessageInput = ({
@@ -16,6 +17,8 @@ const MessageInput = ({
   isBlocked,
   onUnblock,
   onSendMessage,
+  onTyping,
+  
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -63,7 +66,9 @@ const MessageInput = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setInputFocused(true);
-    
+    setTimeout(() => {
+      onTyping(!!e.target.value.trim());
+    }, 1000);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
@@ -98,6 +103,7 @@ const MessageInput = ({
     setMessage('');
     setIsFlying(true);
     setInputFocused(false);
+    onTyping(false);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current?.focus();

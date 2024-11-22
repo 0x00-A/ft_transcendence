@@ -33,9 +33,9 @@ interface ChatContentProps {
 
 const useWebSocket = (userId: number, otherUserId: number) => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
+  const [typing, setTyping] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
 
-  console.log("Connecting to WebSocket with otherUserId:", otherUserId);
   const connect = useCallback(() => {
     const wsUrl = `${getWebSocketUrl(`chat/${otherUserId}/`)}`;
     const newSocket = new WebSocket(wsUrl);
@@ -46,20 +46,31 @@ const useWebSocket = (userId: number, otherUserId: number) => {
     };
 
     newSocket.onmessage = (event) => {
+      console.log('WebSocket message received:', event.data);
       const data = JSON.parse(event.data);
-    
-      const newMessage: MessageProps = {
-        id: Date.now(),
-        conversation: 0,
-        sender: data.sender_id === userId ? userId : data.sender_id,
-        receiver: data.sender_id === userId ? otherUserId : userId,
-        content: data.message,
-        timestamp: new Date().toISOString(),
-      };
-    
-      setMessages((prev) => [...prev, newMessage]);
+      if (data.type === 'chat_message') {
+        console.log('data message:', data.message);
+        const newMessage: MessageProps = {
+          id: Date.now(),
+          conversation: 0,
+          sender: data.sender_id,
+          receiver: userId,
+          content: data.message,
+          timestamp: new Date().toISOString(),
+          seen: false,
+        };
+        setMessages((prev) => [...prev, newMessage]);
+      } else if (data.type === 'typing_status') {
+        console.log('typing_status:', data.typing);
+        setTyping(data.typing);
+      } else if (data.type === 'seen') {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.sender === otherUserId ? { ...msg, seen: true } : msg
+          )
+        );
+      }
     };
-    
 
     newSocket.onclose = () => {
       console.log('WebSocket closed');
@@ -79,16 +90,25 @@ const useWebSocket = (userId: number, otherUserId: number) => {
 
   const sendMessage = useCallback(
     (message: string) => {
+      console.log(">>>>>>>>>>>>>: ", message);
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify({ message }));
+        socketRef.current.send(JSON.stringify({ action: 'send_message', message }));
       }
     },
     []
   );
 
-  return { messages, sendMessage };
-};
+  const sendTypingStatus = useCallback(
+    (typing: boolean) => {
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({ action: 'typing', typing }));
+      }
+    },
+    []
+  );
 
+  return { messages, sendMessage, typing, sendTypingStatus };
+};
 
 const ChatContent: React.FC<ChatContentProps> = ({
   onSelectedConversation,
@@ -102,13 +122,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-
-
   const isCurrentUserUser1 = user?.id === onSelectedConversation.user1_id;
-  const otherUserId = isCurrentUserUser1 ? onSelectedConversation.user2_id : onSelectedConversation.user1_id;
+  const otherUserId = isCurrentUserUser1
+    ? onSelectedConversation.user2_id
+    : onSelectedConversation.user1_id;
 
-  console.log(" otherUserId: ", onSelectedConversation.user2_id)
-  const { messages: websocketMessages, sendMessage } = useWebSocket(
+  const { messages: websocketMessages, sendMessage, typing, sendTypingStatus } = useWebSocket(
     user?.id ?? 0,
     otherUserId ?? 0,
   );
@@ -119,7 +138,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
       ...websocketMessages,
     ]);
   }, [fetchedMessages, websocketMessages]);
-  console.log("chatMessages: ", chatMessages)
 
   const handleSendMessage = useCallback(
     (message: string) => {
@@ -127,7 +145,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
         sendMessage(message);
       }
     },
-    [sendMessage, user?.id, onSelectedConversation.id]
+    [sendMessage]
+  );
+
+  const handleTyping = useCallback(
+    (isTyping: boolean) => {
+      sendTypingStatus(isTyping);
+    },
+    [sendTypingStatus]
   );
 
   return (
@@ -141,6 +166,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           <MessageArea
             messages={chatMessages}
             conversationData={onSelectedConversation}
+            typing={typing}
           />
         )}
       </div>
@@ -149,10 +175,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
         isBlocked={isBlocked}
         onUnblock={onUnblock}
         onSendMessage={handleSendMessage}
+        onTyping={handleTyping}
       />
     </>
   );
 };
 
 export default ChatContent;
-
