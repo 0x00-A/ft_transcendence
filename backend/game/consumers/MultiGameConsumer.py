@@ -1,5 +1,5 @@
 from matchmaker.matchmaker import Matchmaker
-from matchmaker.models import Game, Match
+from matchmaker.models import MultiGame
 from asgiref.sync import sync_to_async
 import math
 import json
@@ -24,7 +24,7 @@ canvas_height: int = 600
 winning_score: int = 3
 
 ball_raduis: int = 8
-initial_ball_speed = 4
+initial_ball_speed = 10
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 games = {}
@@ -60,6 +60,7 @@ class GameInstance:
         self.player2_score = 0
         self.player3_score = 0
         self.player4_score = 0
+        self.connected_players = 1
         self.is_over = False
         self.winner = 0
         self.paddle_speed = 4
@@ -82,7 +83,7 @@ class GameInstance:
             "player3_paddle_h": self.paddle_height,
 
             "player4_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player4_paddle_y": canvas_height / - 10 - self.paddle_width,
+            "player4_paddle_y": canvas_height - 10 - self.paddle_width,
             "player4_paddle_w": self.paddle_height,
             "player4_paddle_h": self.paddle_width,
             # "player1_score": 0,
@@ -258,12 +259,15 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 create_game(self.game_id)
                 await self.set_player_id_name()
             else:
+                game: GameInstance = get_game(self.game_id)
+                game.connected_players += 1
                 await self.set_player_id_name()
                 await self.send_countdown_to_clients()
                 await self.broadcast_initial_state()
                 # await self.set_game_started()
                 # Start the game loop
-                asyncio.create_task(self.start_game(self.game_id))
+                if game.connected_players == 4:
+                    asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
 
@@ -286,25 +290,30 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
     #         }
     #     ))
 
-    async def set_game_started(self):
-        if await Game.objects.filter(game_id=self.game_id).aexists():
-            await Game.objects.filter(game_id=self.game_id).aupdate(status='started')
-        elif await Match.objects.filter(match_id=self.game_id).aexists():
-            await Match.objects.filter(match_id=self.game_id).aupdate(status='started')
+    # async def set_game_started(self):
+    #     if await Game.objects.filter(game_id=self.game_id).aexists():
+    #         await Game.objects.filter(game_id=self.game_id).aupdate(status='started')
+    #     elif await Match.objects.filter(match_id=self.game_id).aexists():
+    #         await Match.objects.filter(match_id=self.game_id).aupdate(status='started')
 
     async def set_player_id_name(self):
         user = self.scope['user']
-        if await Game.objects.filter(game_id=self.game_id).aexists():
-            if await user.games_as_player1.filter(game_id=self.game_id).aexists():
+        if await MultiGame.objects.filter(game_id=self.game_id).aexists():
+            if await user.multi_games_as_player1.filter(game_id=self.game_id).aexists():
                 self.player_id = 'player1'
-            else:
+            elif await user.multi_games_as_player2.filter(game_id=self.game_id).aexists():
                 self.player_id = 'player2'
-        elif await Match.objects.filter(match_id=self.game_id).aexists():
-            if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
-                self.player_id = 'player1'
-            else:
-                self.player_id = 'player2'
+            elif await user.multi_games_as_player3.filter(game_id=self.game_id).aexists():
+                self.player_id = 'player3'
+            elif await user.multi_games_as_player4.filter(game_id=self.game_id).aexists():
+                self.player_id = 'player4'
+        # elif await Match.objects.filter(match_id=self.game_id).aexists():
+        #     if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
+        #         self.player_id = 'player1'
+        #     else:
+        #         self.player_id = 'player2'
         else:
+            print(f"MultiGame NOT FOUND !!!!!!!!!!!!!!!!!!!!")
             await self.close()
             return
         await self.send(text_data=json.dumps(
@@ -330,15 +339,15 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 },
                 'player2_state': {
                     'player1_paddle_x': game.state["player2_paddle_y"],
-                    'player2_paddle_y': canvas_size - game.state["player3_paddle_x"] - game.paddle_height,
+                    'player2_paddle_y': canvas_size - game.state["player3_paddle_x"] - game.paddle_width,
                     'player3_paddle_x': game.state["player4_paddle_y"],
                     'player4_paddle_y': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
                 },
                 'player3_state': {
                     'player1_paddle_x': canvas_size - game.state["player3_paddle_x"] - game.paddle_width,
-                    'player2_paddle_y': game.state["player4_paddle_y"] - game.paddle_height,
+                    'player2_paddle_y': canvas_size - game.state["player4_paddle_y"] - game.paddle_width,
                     'player3_paddle_x': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
-                    'player4_paddle_y': game.state["player2_paddle_y"] - game.paddle_height,
+                    'player4_paddle_y': canvas_size - game.state["player2_paddle_y"] - game.paddle_width,
                 },
                 'player4_state': {
                     'player1_paddle_x': canvas_size - game.state["player4_paddle_y"] - game.paddle_width,
@@ -358,7 +367,15 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
     async def handle_keydown(self, direction):
         game: GameInstance = get_game(self.game_id)
-        if self.player_id == ('player1' or 'player3'):
+        if self.player_id == 'player3':
+            if direction == 'down':
+                new_position = max(
+                    0, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+            elif direction == 'up':
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"],
+                                   game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
+            game.state[f"{self.player_id}_paddle_y"] = new_position
+        if self.player_id == 'player1':
             if direction == 'up':
                 new_position = max(
                     0, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
@@ -367,12 +384,12 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                                    game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
             game.state[f"{self.player_id}_paddle_y"] = new_position
         else:
-            if direction == 'up':
+            if direction == 'down':
                 new_position = max(
                     0, game.state[f"{self.player_id}_paddle_x"] -
                     game.paddle_speed
                 )
-            elif direction == 'down':
+            elif direction == 'up':
                 new_position = min(
                     canvas_width - game.state[f"{self.player_id}_paddle_w"],
                     game.state[f"{self.player_id}_paddle_x"] +
@@ -398,7 +415,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         while True:
             await self.broadcast_game_state(game_id)
 
-            # game.update()
+            game.update()
 
             await self.check_collision(game)
 
@@ -409,25 +426,28 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             await asyncio.sleep(1 / 60)  # Run at 60 FPS
 
     async def check_collision(self, game: GameInstance):
-        if game.is_colliding_with_paddle("player1_paddle"):
-            await self.play_paddle_sound(game)
-            game.handle_paddle_collision("player1_paddle")
-        elif game.is_colliding_with_paddle("player2_paddle"):
-            await self.play_paddle_sound(game)
-            game.handle_paddle_collision("player2_paddle")
+        # if game.is_colliding_with_paddle("player1_paddle"):
+        #     await self.play_paddle_sound(game)
+        #     game.handle_paddle_collision("player1_paddle")
+        # elif game.is_colliding_with_paddle("player3_paddle"):
+        #     await self.play_paddle_sound(game)
+        #     game.handle_paddle_collision("player3_paddle")
 
         if game.is_colliding_with_top_buttom_walls():
-            await self.play_wall_sound(game)
+            # await self.play_wall_sound(game)
             game.reverse_vertical_direction()
 
         if game.is_colliding_with_left_wall():
-            game.increment_score(2)
-            await self.broadcast_score_state()
-            game.reset_ball()
+            # game.increment_score(2)
+            # await self.broadcast_score_state()
+            # game.reset_ball()
+            game.ball.dx = -game.ball.dx
+
         if game.is_colliding_with_right_wall():
-            game.increment_score(1)
-            await self.broadcast_score_state()
-            game.reset_ball()
+            # game.increment_score(1)
+            # await self.broadcast_score_state()
+            # game.reset_ball()
+            game.ball.dx = -game.ball.dx
 
     async def play_paddle_sound(self, game):
         await self.channel_layer.group_send(
@@ -486,34 +506,44 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 },
                 'player2_state': {
                     'player1_paddle_y': canvas_size - game.state["player2_paddle_x"] - game.paddle_height,
-                    'player2_paddle_x': canvas_size - game.state["player3_paddle_y"],
+                    'player2_paddle_x': game.state["player3_paddle_y"],
                     'player3_paddle_y': canvas_size - game.state["player4_paddle_x"] - game.paddle_height,
-                    'player4_paddle_x': canvas_size - game.state["player1_paddle_y"],
+                    'player4_paddle_x': game.state["player1_paddle_y"],
                     'ball': {
                         'x': game.ball.y,
                         'y': canvas_size - game.ball.x,
                     },
                 },
                 'player3_state': {
-                    'player1_paddle_y': game.state["player3_paddle_y"] - game.paddle_height,
-                    'player2_paddle_x': canvas_size - game.state["player4_paddle_x"] - game.paddle_width,
-                    'player3_paddle_y': game.state["player1_paddle_y"] - game.paddle_height,
-                    'player4_paddle_x': canvas_size - game.state["player2_paddle_x"] - game.paddle_width,
+                    'player1_paddle_y': canvas_size - game.state["player3_paddle_y"] - game.paddle_height,
+                    'player2_paddle_x': canvas_size - game.state["player4_paddle_x"] - game.paddle_height,
+                    'player3_paddle_y': canvas_size - game.state["player1_paddle_y"] - game.paddle_height,
+                    'player4_paddle_x': canvas_size - game.state["player2_paddle_x"] - game.paddle_height,
                     'ball': {
                         'x': canvas_size - game.ball.x,
                         'y': canvas_size - game.ball.y,
                     },
                 },
                 'player4_state': {
-                    'player1_paddle_y': game.state["player4_paddle_x"],
-                    'player2_paddle_x': canvas_size - game.state["player1_paddle_y"] - game.paddle_width,
-                    'player3_paddle_y': game.state["player2_paddle_x"],
-                    'player4_paddle_x': canvas_size - game.state["player3_paddle_y"] - game.paddle_width,
+                    'player1_paddle_y': canvas_size - game.state["player4_paddle_x"] - game.paddle_height,
+                    'player2_paddle_x': game.state["player1_paddle_y"],
+                    'player3_paddle_y': canvas_size - game.state["player2_paddle_x"] - game.paddle_height,
+                    'player4_paddle_x': game.state["player3_paddle_y"],
                     'ball': {
                         'x': canvas_size - game.ball.y,
                         'y': game.ball.x,
                     },
                 },
+                # 'player4_state': {
+                #     'player1_paddle_y': game.state["player4_paddle_x"],
+                #     'player2_paddle_x': canvas_size - game.state["player1_paddle_y"] - game.paddle_width,
+                #     'player3_paddle_y': game.state["player2_paddle_x"],
+                #     'player4_paddle_x': canvas_size - game.state["player3_paddle_y"] - game.paddle_width,
+                #     'ball': {
+                #         'x': canvas_size - game.ball.y,
+                #         'y': game.ball.x,
+                #     },
+                # },
             }
         )
 

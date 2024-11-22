@@ -1,6 +1,6 @@
 from accounts.models import User, Notification
 from accounts.models import Profile, User
-from .models import Game, Tournament, Match
+from .models import Game, Tournament, Match, MultiGame
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from datetime import datetime
@@ -17,6 +17,7 @@ class Matchmaker:
 
     connected_clients = {}
     games_queue = []
+    multi_games_queue = []
 
     @classmethod
     async def register_client(cls, player_id, channel_name):
@@ -44,9 +45,25 @@ class Matchmaker:
         print(f"########## Queue: {cls.games_queue}")
 
     @classmethod
+    async def request_multi_game(cls, player_id):
+        if await cls.is_client_already_playing(player_id):
+            return
+        cls.multi_games_queue.append(player_id)
+        message = {
+            'event': 'in_queue'
+        }
+        await cls.send_message_to_client(player_id, message)
+        players = await cls.find_four_players()
+        if players:
+            await cls.create_multi_game(*players)
+        print(f"########## Queue: {cls.games_queue}")
+
+    @classmethod
     async def remove_from_queue(cls, player_id):
         if player_id in cls.games_queue:
             cls.games_queue.remove(player_id)
+        if player_id in cls.multi_games_queue:
+            cls.multi_games_queue.remove(player_id)
 
     @classmethod
     async def create_remote_game(cls, player1_id, player2_id):
@@ -56,7 +73,7 @@ class Matchmaker:
         game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
-        game_address = f"multigame/game_{game.id}"
+        game_address = f"game/game_{game.id}"
         message = {
             'event': 'game_address',
             'message': 'Game successfully created',
@@ -66,6 +83,30 @@ class Matchmaker:
         }
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)
+
+    @classmethod
+    async def create_multi_game(cls, player1_id, player2_id, player3_id, player4_id):
+        print(
+            f"creating game... p1: {player1_id} | p2: {player2_id} | p3: {player3_id} | p4: {player4_id}")
+        p1 = await User.objects.aget(id=player1_id)
+        p2 = await User.objects.aget(id=player2_id)
+        p3 = await User.objects.aget(id=player3_id)
+        p4 = await User.objects.aget(id=player4_id)
+        game = await MultiGame.objects.acreate(
+            player1=p1, player2=p2, player3=p3, player4=p4
+        )
+        game_address = f"multigame/multi_game_{game.id}"
+        message = {
+            'event': 'multigame_address',
+            'message': 'Game successfully created',
+            'game_address': game_address,
+            'player1_id': game.player1.id,
+            'player2_id': game.player2.id,
+        }
+        await cls.send_message_to_client(player1_id, message)
+        await cls.send_message_to_client(player2_id, message)
+        await cls.send_message_to_client(player3_id, message)
+        await cls.send_message_to_client(player4_id, message)
 
     @classmethod
     async def create_tournament(cls, creator_id, tournament_name):
@@ -195,15 +236,19 @@ class Matchmaker:
 
     @classmethod
     async def is_client_already_playing(cls, player_id):
-        if player_id in cls.games_queue:
+        if player_id in cls.games_queue or player_id in cls.multi_games_queue:
             message = {
                 'event': 'error',
                 'message': 'Already in queue!'
             }
             await cls.send_message_to_client(player_id, message)
             return True
+
         if await Game.objects.filter(
             (Q(player1=player_id) | Q(player2=player_id)) & Q(
+                status="started")
+        ).aexists() or await MultiGame.objects.filter(
+            (Q(player1=player_id) | Q(player2=player_id) | Q(player3=player_id) | Q(player4=player_id)) & Q(
                 status="started")
         ).aexists():
             message = {
@@ -258,6 +303,16 @@ class Matchmaker:
             player1 = cls.games_queue.pop(0)
             player2 = cls.games_queue.pop(0)
             return (player1, player2)
+        return None
+
+    @classmethod
+    async def find_four_players(cls):
+        if len(cls.multi_games_queue) >= 4:
+            player1 = cls.multi_games_queue.pop(0)
+            player2 = cls.multi_games_queue.pop(0)
+            player3 = cls.multi_games_queue.pop(0)
+            player4 = cls.multi_games_queue.pop(0)
+            return (player1, player2, player3, player4)
         return None
 
     @classmethod
