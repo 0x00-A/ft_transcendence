@@ -73,3 +73,26 @@ class GetMessagesView(APIView):
                 {'error': 'Internal server error', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class DeleteConversationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, conversation_id):
+        try:
+            user = request.user
+            conversation = Conversation.objects.get(
+                Q(id=conversation_id),
+                Q(user1=user) | Q(user2=user)
+            )
+            conversation.delete()
+            return Response({"message": "Conversation deleted successfully."}, status=status.HTTP_200_OK)
+        except Conversation.DoesNotExist:
+            return Response(
+                {"error": "Conversation not found or access denied."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": "Internal server error", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

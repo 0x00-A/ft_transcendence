@@ -33,13 +33,16 @@
 }
 
 .userName {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--text-color);
+  
 }
 
 .userStatus {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: var(--online-typing);
+  /* font-weight: bold;
+  letter-spacing: 2px; */
 }
 
 .chatActions {
@@ -78,9 +81,11 @@
   color: green;
 }
 
-.typing {
-  color: green;
+.userStatus.typing {
+  color: #f0a500;
+  font-style: italic;
 }
+
 
 .offline {
   color: #f8f3e3b0;
