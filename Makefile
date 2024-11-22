@@ -1,12 +1,15 @@
 all: up
 
 clean:
-	docker compose -f docker-compose.yml down
+	docker compose -f docker-compose.yml down -v
 
 fclean:
 	docker compose -f docker-compose.yml down --rmi all -v
 
 up:
+	docker compose -f docker-compose.yml --env-file .env up
+
+build:
 	docker compose -f docker-compose.yml --env-file .env up --build
 
 down:

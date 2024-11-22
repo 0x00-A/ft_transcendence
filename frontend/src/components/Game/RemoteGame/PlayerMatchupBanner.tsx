@@ -35,7 +35,7 @@ const PlayerMatchupBannerSkeleton = () => {
   );
 };
 
-const PlayerMatchupBanner = ({p1_id, p2_id}: {p1_id:number, p2_id:number}) => {
+const PlayerMatchupBanner = ({p1_id, p2_id, player}: {p1_id:number, p2_id:number, player:string}) => {
   const players = {
     player1: {
       username: "CyberPaddler87",
@@ -63,17 +63,17 @@ const PlayerMatchupBanner = ({p1_id, p2_id}: {p1_id:number, p2_id:number}) => {
       <div className="flex items-center gap-3 space-x-3">
         <div className="w-16 h-16 rounded-full border-2 border-green-500 overflow-hidden">
           <img
-            src={player1?.profile.avatar}
-            alt={player1?.username}
+            src={player === 'player1' ? player1?.profile.avatar : player2?.profile.avatar}
+            alt={player === 'player1' ? player1?.username : player2?.username}
             className="w-full h-full object-cover"
           />
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-lg">{player1?.username}</span>
+          <span className="font-semibold text-lg">{player === 'player1' ? player1?.username : player2?.username}</span>
           <div className="flex items-center space-x-1 mt-0.5">
             {/* <Trophy className="text-yellow-400" size={14} /> */}
             <Shield size={16} className="text-green-500" />
-            <span className="text-base text-gray-400">{players.player1.rank}</span>
+            <span className="text-base text-gray-400">{player === 'player1' ? players.player1.rank : players.player2.rank}</span>
           </div>
         </div>
       </div>
@@ -90,15 +90,15 @@ const PlayerMatchupBanner = ({p1_id, p2_id}: {p1_id:number, p2_id:number}) => {
       <div className="flex items-center gap-3 space-x-3 flex-row-reverse text-right">
         <div className="w-16 h-16 rounded-full border-2 border-red-500 overflow-hidden">
           <img
-            src={player2?.profile.avatar}
-            alt={player2?.username}
+            src={player === 'player2' ? player1?.profile.avatar : player2?.profile.avatar}
+            alt={player === 'player2' ? player1?.username : player2?.username}
             className="w-full h-full object-cover"
           />
         </div>
         <div className="flex flex-col items-end">
-          <span className="font-semibold text-lg">{player2?.username}</span>
+          <span className="font-semibold text-lg">{player === 'player2' ? player1?.username : player2?.username}</span>
           <div className="flex items-center space-x-1 mt-0.5">
-            <span className="text-base text-gray-400">{players.player2.rank}</span>
+            <span className="text-base text-gray-400">{player === 'player2' ? players.player1.rank : players.player2.rank}</span>
             {/* <Trophy className="text-yellow-400" size={14} /> */}
             <Shield size={16} className="text-red-500" />
           </div>

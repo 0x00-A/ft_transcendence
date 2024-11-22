@@ -56,7 +56,7 @@ class Matchmaker:
         game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
-        game_address = f"game/game_{game.id}"
+        game_address = f"multigame/game_{game.id}"
         message = {
             'event': 'game_address',
             'message': 'Game successfully created',
