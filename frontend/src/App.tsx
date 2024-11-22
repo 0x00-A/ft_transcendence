@@ -42,6 +42,7 @@ import OtpAuth from './pages/Auth/OtpAuth';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
+import MultipleGame from './components/Game/MultipleGame/MultipleGame';
 
 
 function App() {
@@ -81,6 +82,7 @@ function AppContent() {
 
   const showSidebarRoutes = [
     '/',
+    '/test',
     '/play',
     '/play/',
     '/chat',
@@ -131,6 +133,7 @@ function AppContent() {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/play" element={<Game />} />
+              <Route path="/test" element={<MultipleGame game_address='game' p1_id={1} p2_id={2} onReturn={() => {}}/>} />
               <Route path="/game/chat" element={<GameChat />} />
               <Route path="/game/chat/:room" element={<Room />} />
               <Route path="/chat" element={<Chat />} />

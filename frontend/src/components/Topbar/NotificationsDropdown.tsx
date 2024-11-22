@@ -97,7 +97,6 @@ const NotificationsDropdown = () => {
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
-          <ul>
             {notifications.map((notification) => (
               <div
                 key={notification.id}
@@ -116,7 +115,6 @@ const NotificationsDropdown = () => {
                 </p>
               </div>
           ))}
-          </ul>
         </div>
         {notifications.length != 0 && <DropdownMenuItem onClick={handleClearAll}  className='flex justify-center border-t border-gray-600'>
           <span>Clear All</span>

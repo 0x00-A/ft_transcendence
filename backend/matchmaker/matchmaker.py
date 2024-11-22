@@ -1,3 +1,4 @@
+from accounts.models import User, Notification
 from accounts.models import Profile, User
 from .models import Game, Tournament, Match
 from asgiref.sync import sync_to_async
@@ -60,6 +61,8 @@ class Matchmaker:
             'event': 'game_address',
             'message': 'Game successfully created',
             'game_address': game_address,
+            'player1_id': game.player1.id,
+            'player2_id': game.player2.id,
         }
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)
@@ -72,7 +75,7 @@ class Matchmaker:
         #                'message': 'Maximum tournaments reached'}
         #     await cls.send_message_to_client(creator_id, message)
         #     return
-        if await Tournament.objects.filter(players__id=creator_id).exclude(status='ended').aexists():
+        if await Tournament.objects.filter(players__id=creator_id).exclude(status='ended').exclude(status='aborted').aexists():
             message = {'event': 'error',
                        'message': 'You can\'t create a new tournament until your current tournament ends.'}
             await cls.send_message_to_client(creator_id, message)
@@ -95,7 +98,7 @@ class Matchmaker:
 
     @classmethod
     async def join_tournament(cls, player_id, tournament_id):
-        if await Tournament.objects.filter(players__id=player_id).exclude(status='ended').aexists():
+        if await Tournament.objects.filter(players__id=player_id).exclude(status='ended').exclude(status='aborted').aexists():
             if await Tournament.objects.filter(id=tournament_id, players__id=player_id).exclude(status='ended').aexists():
                 message = {'event': 'error',
                            'message': 'Already in tournament'}
@@ -133,6 +136,48 @@ class Matchmaker:
             await cls.send_message_to_client(player_id, {'error': 'Tournament does not exist'})
 
     @classmethod
+    async def leave_tournament(cls, player_id):
+        from accounts.consumers import NotificationConsumer
+
+        if await Tournament.objects.filter(players__id=player_id).exclude(status='ended').exclude(status='aborted').aexists():
+            try:
+                tournament = await Tournament.objects.aget(Q(status='waiting') | Q(status='ongoing'), players__id=player_id, )
+                if tournament.status == 'waiting' \
+                    or (tournament.status == 'ongoing'
+                        and (not await Match.objects.filter(Q(player1__id=player_id) | Q(player2__id=player_id), status='waiting').aexists()
+                             and not await Match.objects.filter(winner__id=player_id, tournament=tournament).aexists())):
+                    await tournament.players.aremove(player_id)
+                    await tournament.asave()
+                    message = {'event': 'tournament_update',
+                               'tournament_id': tournament.id,
+                               'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                               }
+                    await cls.send_message_to_client(player_id, message)
+                    players = await sync_to_async(list)(tournament.players.all())
+                    for p in players:
+                        await cls.send_message_to_client(p.id, message)
+                elif tournament.status == 'ongoing':
+                    await sync_to_async(tournament.abort_tournament)()
+                    await Match.objects.filter(tournament=tournament).adelete()
+                    message = {'event': 'tournament_update',
+                               'tournament_id': tournament.id,
+                               'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                               }
+
+                    players = await sync_to_async(list)(tournament.players.all())
+                    for p in players:
+                        await cls.send_message_to_client(p.id, message)
+                        notification = await Notification.objects.acreate(
+                            user=p, title='Tournament Aborted', message=f"Tournament {tournament.name} aborted because a player left!")
+                        await notification.asave()
+                        await sync_to_async(NotificationConsumer.send_notification_to_user)(
+                            p.id, notification)
+            except Tournament.DoesNotExist:
+                await cls.send_message_to_client(player_id, {'event': 'error', 'message': 'Tournament does not exist'})
+        else:
+            await cls.send_message_to_client(player_id, {'event': 'error', 'message': 'You are not in tournament'})
+
+    @classmethod
     async def send_message_to_client(cls, player_id, message):
         channel_layer = get_channel_layer()
         channel_name = cls.connected_clients.get(player_id)
@@ -168,7 +213,7 @@ class Matchmaker:
             }
             await cls.send_message_to_client(player_id, message)
             return True
-        return False  # Stub implementation
+        return False
 
     # @classmethod
     # async def check_is_player_in_any_tournament(cls, player_id):
@@ -286,7 +331,7 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_ready(cls, player_id, match_id):
-        match = await sync_to_async(Match.objects.get)(match_id=match_id)
+        match = await Match.objects.aget(match_id=match_id)
 
         if match.player1_id == player_id:
             match.player1_ready = True
@@ -308,13 +353,15 @@ class Matchmaker:
         if match.ready():
             match.status = 'started'
             match.start_time = timezone.now()
-            await sync_to_async(match.save)()
+            await match.asave()
             match_address = f"game/match_{match.id}"
 
             message = {
                 'event': 'match_start',
                 'match_address': match_address,
                 "message": "Match started!",
+                'player1_id': match.player1_id,
+                'player2_id': match.player2_id,
             }
             await cls.send_message_to_client(match.player1_id, message)
             await cls.send_message_to_client(match.player2_id, message)

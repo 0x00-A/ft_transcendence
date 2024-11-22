@@ -28,6 +28,7 @@ from .friendRequest import OnlineFriendsView
 from .friendRequest import SuggestedConnectionsView
 
 from .profile import AllUsersView
+from .profile import UserDetailView
 from .profile import OnlineUsersView
 from .profile import EditProfileView
 from .profile import ChangePasswordView

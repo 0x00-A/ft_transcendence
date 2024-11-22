@@ -86,6 +86,34 @@ class AllUsersView(APIView):
             )
 
 
+class UserDetailView(APIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+
+            user_data = UserSerializer(user).data
+
+            # # Optionally, add friend request status
+            # user_data['friend_request_status'] = get_friend_status(
+            #     request.user, user)
+
+            return Response(user_data, status=status.HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Internal server error: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 class OnlineUsersView(APIView):
     permission_classes = [AllowAny]
 
