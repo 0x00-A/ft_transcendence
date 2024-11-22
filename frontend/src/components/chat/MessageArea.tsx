@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 import { useUser } from '@/contexts/UserContext';
@@ -21,26 +21,33 @@ interface ConversationProps {
   name: string;
 }
 
+interface TypingProps {
+  typing: boolean;
+  senderId: number | null;
+}
 interface MessageAreaProps {
   messages: MessageProps[];
   conversationData: ConversationProps | null;
-  typing: boolean;
+  typing: TypingProps;
 }
 
 const MessageArea: React.FC<MessageAreaProps> = ({ messages, typing, conversationData}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const { user } = useUser(); 
+
 
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, typing.senderId]);
 
-  const { user } = useUser();
-  const isSender = user?.id === conversationData?.user2_id;
+  const isSender = user?.id === typing.senderId; 
 
-  const showTypingIndicator = typing && !isSender;
-
+  console.log("_________________________________________");
+  console.log("isSender: ", isSender);
+  console.log("typing.senderId: ", typing.senderId);
+  console.log("_________________________________________");
   return (
     <div className={css.messageArea}>
       {messages.map((message, index) => (
@@ -48,10 +55,9 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, typing, conversatio
           key={index}
           message={message}
           conversationData={conversationData}
-          
         />
       ))}
-      {showTypingIndicator && (
+      {typing.typing && !isSender && (
         <div className={css.typingIndicator}>
           <span className={css.typingDot}></span>
           <span className={css.typingDot}></span>

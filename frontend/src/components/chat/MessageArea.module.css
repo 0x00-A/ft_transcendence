@@ -24,6 +24,7 @@
   word-break: break-all;
 }
 
+
 .sender .messageBubble {
   background-color: #5774a0;
   border-radius: 15px 0 15px 15px;
@@ -112,11 +113,17 @@
 }
 
 .typingIndicator {
+  width: 80px;
+  height: 40px;
+  background-color: #31405b;
+
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  /* margin-top: 5px;
   margin-bottom: 10px;
-  padding-left: 50px;
+  padding-left: 50px; */
 }
 
 .typingDot {

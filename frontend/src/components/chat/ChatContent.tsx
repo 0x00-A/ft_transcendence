@@ -33,7 +33,7 @@ interface ChatContentProps {
 
 const useWebSocket = (userId: number, otherUserId: number) => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
-  const [typing, setTyping] = useState(false);
+  const [typing, setTyping] = useState<{ typing: boolean; senderId: number | null }>({ typing: false, senderId: null });
   const socketRef = useRef<WebSocket | null>(null);
 
   const connect = useCallback(() => {
@@ -61,8 +61,8 @@ const useWebSocket = (userId: number, otherUserId: number) => {
         };
         setMessages((prev) => [...prev, newMessage]);
       } else if (data.type === 'typing_status') {
-        console.log('typing_status:', data.typing);
-        setTyping(data.typing);
+        console.log('typing_status:', data);
+        setTyping({ typing: data.typing, senderId: data.sender_id });
       } else if (data.type === 'seen') {
         setMessages((prev) =>
           prev.map((msg) =>

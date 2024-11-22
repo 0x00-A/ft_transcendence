@@ -27,7 +27,7 @@ interface MessageComponentProps {
 const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }) => {
   const { content, timestamp } = message;
 
-  console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
+  // console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
   const {user} = useUser()
   const isSticker = content.includes('<img');
   const isSender = user?.id === message.sender;
