@@ -7,10 +7,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         self.other_user_id = self.scope["url_route"]["kwargs"]["user_id"]
-        user_id = int(self.user.id)
+        user_id = self.user.id
         other_user_id = int(self.other_user_id)
 
-        print(f"self.user.id type: {(user_id)}, self.other_user_id type: {(other_user_id)}")
+        print(f"self.user.id type: {type(user_id)}, self.other_user_id type: {type(other_user_id)}")
 
         self.room_name = f"chat_{min(user_id, other_user_id)}_{max(user_id, other_user_id)}"
         self.room_group_name = f"chat_{self.room_name}"
