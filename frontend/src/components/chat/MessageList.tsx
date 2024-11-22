@@ -301,6 +301,7 @@ const MessageList: React.FC<MessageListProps> = ({
       const transformedConversation: conversationProps = {
         id: newConversation.id,
         user1_id: newConversation.user1_id,
+        user2_id: newConversation.user2_id,
         avatar: user?.id === newConversation.user1_id 
           ? newConversation.user2_avatar 
           : newConversation.user1_avatar,
