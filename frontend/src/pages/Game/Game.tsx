@@ -31,18 +31,20 @@ import { useGameInvite } from '@/contexts/GameInviteContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from './MatchmakingScreen/MatchmakingScreen';
+import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
     { id: 1, title: 'Remote Game', icon: Globe, description: 'Challenge online' },
     { id: 2, title: 'Remote Tournament', icon: Trophy, description: 'Create Online tournament' },
     { id: 3, title: 'Local Tournament', icon: Users, description: 'Local tournament' },
+    { id: 4, title: 'Multiple Game', icon: Users, description: '4 players on same board' },
   ];
 
 const Game = () => {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
-  const [gameState, setGameState] = useState<'started' | 'inqueue' | null>(null);
+  const [gameState, setGameState] = useState<'startGame' | 'inqueue' | 'startMultiGame' | null>(null);
   const [gameAdrress, setGameAdrress] = useState<string | null>(null);
   const [player1_id, setPlayer1_id] = useState<number | null>(null);
   const [player2_id, setPlayer2_id] = useState<number | null>(null);
@@ -125,14 +127,20 @@ const Game = () => {
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
-          if (gameState === 'started') return
+          if (gameState === 'startGame') return
           setGameState('inqueue');
         }
         if (data.event === 'game_address') {
           setGameAdrress(data.game_address);
           setPlayer1_id(data.player1_id);
           setPlayer2_id(data.player2_id);
-          setGameState('started');
+          setGameState('startGame');
+        }
+        if (data.event === 'multigame_address') {
+          setGameAdrress(data.game_address);
+          // setPlayer1_id(data.player1_id);
+          // setPlayer2_id(data.player2_id);
+          setGameState('startMultiGame');
         }
         if (data.event === 'tournament_update') {
           setTournamentStat(data.tournament_stat);
@@ -190,6 +198,13 @@ const Game = () => {
     })
   };
 
+  const requestMultipleGame = () => {
+    console.log('request multi game');
+    sendMessage({
+        event: 'request_multiple_game',
+    })
+  };
+
   const requestTournament = () => {
     setIsModalOpen(true);
     console.log('request tournament');
@@ -225,6 +240,11 @@ const Game = () => {
     return <Tournament onReturn={handleReturn} />;
   }
 
+  if (selectedMode === 4) {
+    requestMultipleGame();
+    setSelectedMode(null);
+  }
+
   if (gameAccepted && gameInvite) {
       return <RemoteGame key={gameInvite}
         onReturn={() => {
@@ -241,8 +261,12 @@ const Game = () => {
         />;
   }
 
-  if (gameState === 'started') {
-    if (gameAdrress) return <RemoteGame
+  if (gameState === 'startMultiGame' && gameAdrress) {
+      return <MultipleGame game_address={gameAdrress} onReturn={()=> {}} p1_id={1} p2_id={2} />
+  }
+
+  if (gameState === 'startGame' && gameAdrress) {
+    return <RemoteGame
         key={gameAdrress}
         onReturn={handleReturn}
         requestRemoteGame={requestRemoteGame}

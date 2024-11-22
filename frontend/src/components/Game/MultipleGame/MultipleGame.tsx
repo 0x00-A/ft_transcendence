@@ -16,14 +16,14 @@ const pW = 20;
 const pH = 80;
 
 interface GameProps { game_address: string;
-                     requestRemoteGame?:() => void;
+                     requestMultipleGame?:() => void;
                     onReturn: (()=>void);
                     isMatchTournament?: boolean;
                     p1_id: number;
                     p2_id: number;
                   }
 
-const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}, onReturn, isMatchTournament = false, p1_id, p2_id }) => {
+const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()=>{}, onReturn, isMatchTournament = false, p1_id, p2_id }) => {
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>('started');
   const [restart, setRestart] = useState(false);
@@ -35,7 +35,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [sound, SwitchSound] = useState(true);
   const [count, setCount] = useState(3);
 
-  console.log('RemoteGame component rerendered', `stat: ${gameState}`);
+  console.log('MultipleGame component rerendered', `stat: ${gameState}`);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -123,20 +123,27 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
       gameSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
+        // console.log(data);
+
         if (data.type === 'game_started') {
 
           paddle1Ref.current.x = data.state[`player1_paddle_x`];
-          paddle2Ref.current.x = data.state[`player2_paddle_x`];
+          paddle2Ref.current.y = data.state[`player2_paddle_y`];
+          paddle3Ref.current.x = data.state[`player3_paddle_x`];
+          paddle4Ref.current.y = data.state[`player4_paddle_y`];
           setGameState('started');
         }
         if (data.type === 'player_id') {
+          console.log(data);
           setPlayer(data.player)
         }
         if (data.type === 'game_update') {
           ballRef.current.x = data.state.ball.x;
           ballRef.current.y = data.state.ball.y;
           paddle1Ref.current.y = data.state[`player1_paddle_y`];
-          paddle2Ref.current.y = data.state[`player2_paddle_y`];
+          paddle2Ref.current.x = data.state[`player2_paddle_x`];
+          paddle3Ref.current.y = data.state[`player3_paddle_y`];
+          paddle4Ref.current.x = data.state[`player4_paddle_x`];
         }
         if (data.type === 'play_sound') {
           if (data.collision === 'wall') {
@@ -230,12 +237,16 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       const paddle4 = paddle4Ref.current;
       // Draw Bal
       ctx.fillStyle = '#f8f3e3';
-      ctx.fillRect(
-        ball.x - ball.radius,
-        ball.y - ball.radius,
-        ball.radius * 2,
-        ball.radius * 2
+      ctx.beginPath();
+      ctx.arc(
+        ball.x,
+        ball.y,
+        ball.radius,
+        0,
+        2 * Math.PI,
       );
+      ctx.fill()
+      ctx.closePath()
       // Paddle 1
       ctx.fillStyle = 'white';
       ctx.fillRect(paddle1.x, paddle1.y, paddle1.w, paddle1.h);
@@ -288,7 +299,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
 
   const handleRetry = () => {
-    requestRemoteGame()
+    requestMultipleGame()
     setGameState(null);
     setIsGameOver(false);
     setRestart((s) => !s);
@@ -326,6 +337,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
   return (
     <div className={css.container}>
+      <p className='text-white '>{player}</p>
       <div className="relative w-[750px]"> {/* Container with extra width for side scores */}
         {/* Top Score */}
         <div className="absolute top-[-40px] left-1/2 transform -translate-x-1/2">
@@ -453,4 +465,4 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   );
 };
 
-export default RemoteGame;
+export default MultipleGame;
