@@ -1,6 +1,8 @@
 from django.urls import path
 from django.urls import re_path
 from .views import OnlineUsersView
+from .views import UserDetailView
+from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
 from .views import oauth2_authentication
@@ -60,6 +62,7 @@ urlpatterns = [
     # path('oauth2/google/', oauth2_google),
 
     path('users/', AllUsersView.as_view(), name='all_users'),
+    path('users/<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
     path('users/online/', OnlineUsersView.as_view(), name='online-users'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
     path('profile/edit/', EditProfileView.as_view()),

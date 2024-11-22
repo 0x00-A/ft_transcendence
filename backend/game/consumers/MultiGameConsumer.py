@@ -18,8 +18,9 @@ import asyncio
 
 channel_layer = get_channel_layer()
 
-canvas_width: int = 650
-canvas_height: int = 480
+canvas_size: int = 600
+canvas_width: int = 600
+canvas_height: int = 600
 winning_score: int = 3
 
 ball_raduis: int = 8
@@ -57,6 +58,8 @@ class GameInstance:
                          radius=ball_raduis, angle=initial_ball_angle)
         self.player1_score = 0
         self.player2_score = 0
+        self.player3_score = 0
+        self.player4_score = 0
         self.is_over = False
         self.winner = 0
         self.paddle_speed = 4
@@ -65,8 +68,23 @@ class GameInstance:
         self.state = {
             "player1_paddle_x": 10,
             "player1_paddle_y": canvas_height / 2 - self.paddle_height / 2,
-            "player2_paddle_x": canvas_width - 10 - self.paddle_width,
-            "player2_paddle_y": canvas_height / 2 - self.paddle_height / 2,
+            "player1_paddle_w": self.paddle_width,
+            "player1_paddle_h": self.paddle_height,
+
+            "player2_paddle_x": canvas_width / 2 - self.paddle_height / 2,
+            "player2_paddle_y": 10,
+            "player2_paddle_w": self.paddle_height,
+            "player2_paddle_h": self.paddle_width,
+
+            "player3_paddle_x": canvas_width - 10 - self.paddle_width,
+            "player3_paddle_y": canvas_height / 2 - self.paddle_height / 2,
+            "player3_paddle_w": self.paddle_width,
+            "player3_paddle_h": self.paddle_height,
+
+            "player4_paddle_x": canvas_width / 2 - self.paddle_height / 2,
+            "player4_paddle_y": canvas_height / - 10 - self.paddle_width,
+            "player4_paddle_w": self.paddle_height,
+            "player4_paddle_h": self.paddle_width,
             # "player1_score": 0,
             # "player2_score": 0,
         }
@@ -225,39 +243,7 @@ def remove_game(game_id):
         del games[game_id]
 
 
-class ChatConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = "chat_%s" % self.room_name
-
-        # Join room group
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        # Leave room group
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-
-    # Receive message from WebSocket
-    async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat_message", "message": message}
-        )
-
-    # Receive message from room group
-    async def chat_message(self, event):
-        message = event["message"]
-
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message}))
-
-
-class GameConsumer(AsyncWebsocketConsumer):
+class MultiGameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         user = self.scope['user']
@@ -338,11 +324,27 @@ class GameConsumer(AsyncWebsocketConsumer):
                 # "message": 'game_started'
                 'player1_state': {
                     'player1_paddle_x': game.state["player1_paddle_x"],
-                    'player2_paddle_x': game.state["player2_paddle_x"],
+                    'player2_paddle_y': game.state["player2_paddle_y"],
+                    'player3_paddle_x': game.state["player3_paddle_x"],
+                    'player4_paddle_y': game.state["player4_paddle_y"],
                 },
                 'player2_state': {
-                    'player1_paddle_x': canvas_width - game.state["player2_paddle_x"] - game.paddle_width,
-                    'player2_paddle_x': canvas_width - game.state["player1_paddle_x"] - game.paddle_width,
+                    'player1_paddle_x': game.state["player2_paddle_y"],
+                    'player2_paddle_y': canvas_size - game.state["player3_paddle_x"] - game.paddle_height,
+                    'player3_paddle_x': game.state["player4_paddle_y"],
+                    'player4_paddle_y': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
+                },
+                'player3_state': {
+                    'player1_paddle_x': canvas_size - game.state["player3_paddle_x"] - game.paddle_width,
+                    'player2_paddle_y': game.state["player4_paddle_y"] - game.paddle_height,
+                    'player3_paddle_x': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
+                    'player4_paddle_y': game.state["player2_paddle_y"] - game.paddle_height,
+                },
+                'player4_state': {
+                    'player1_paddle_x': canvas_size - game.state["player4_paddle_y"] - game.paddle_width,
+                    'player2_paddle_y': game.state["player1_paddle_x"],
+                    'player3_paddle_x': canvas_size - game.state["player2_paddle_y"] - game.paddle_width,
+                    'player4_paddle_y': game.state["player3_paddle_x"],
                 },
             }
         )
@@ -356,13 +358,27 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def handle_keydown(self, direction):
         game: GameInstance = get_game(self.game_id)
-        if direction == 'up':
-            new_position = max(
-                0, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
-        elif direction == 'down':
-            new_position = min(canvas_height - game.paddle_height,
-                               game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
-        game.state[f"{self.player_id}_paddle_y"] = new_position
+        if self.player_id == ('player1' or 'player3'):
+            if direction == 'up':
+                new_position = max(
+                    0, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+            elif direction == 'down':
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"],
+                                   game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
+            game.state[f"{self.player_id}_paddle_y"] = new_position
+        else:
+            if direction == 'up':
+                new_position = max(
+                    0, game.state[f"{self.player_id}_paddle_x"] -
+                    game.paddle_speed
+                )
+            elif direction == 'down':
+                new_position = min(
+                    canvas_width - game.state[f"{self.player_id}_paddle_w"],
+                    game.state[f"{self.player_id}_paddle_x"] +
+                    game.paddle_speed
+                )
+            game.state[f"{self.player_id}_paddle_x"] = new_position
 
     async def disconnect(self, close_code):
         game_id = self.game_id
@@ -382,7 +398,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         while True:
             await self.broadcast_game_state(game_id)
 
-            game.update()
+            # game.update()
 
             await self.check_collision(game)
 
@@ -460,18 +476,42 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'type': 'game.state.update',
                 'player1_state': {
                     'player1_paddle_y': game.state["player1_paddle_y"],
-                    'player2_paddle_y': game.state["player2_paddle_y"],
+                    'player2_paddle_x': game.state["player2_paddle_x"],
+                    'player3_paddle_y': game.state["player3_paddle_y"],
+                    'player4_paddle_x': game.state["player4_paddle_x"],
                     'ball': {
                         'x': game.ball.x,
                         'y': game.ball.y,
                     },
                 },
                 'player2_state': {
-                    'player1_paddle_y': game.state["player2_paddle_y"],
-                    'player2_paddle_y': game.state["player1_paddle_y"],
+                    'player1_paddle_y': canvas_size - game.state["player2_paddle_x"] - game.paddle_height,
+                    'player2_paddle_x': canvas_size - game.state["player3_paddle_y"],
+                    'player3_paddle_y': canvas_size - game.state["player4_paddle_x"] - game.paddle_height,
+                    'player4_paddle_x': canvas_size - game.state["player1_paddle_y"],
                     'ball': {
-                        'x': canvas_width - game.ball.x,
-                        'y': game.ball.y,
+                        'x': game.ball.y,
+                        'y': canvas_size - game.ball.x,
+                    },
+                },
+                'player3_state': {
+                    'player1_paddle_y': game.state["player3_paddle_y"] - game.paddle_height,
+                    'player2_paddle_x': canvas_size - game.state["player4_paddle_x"] - game.paddle_width,
+                    'player3_paddle_y': game.state["player1_paddle_y"] - game.paddle_height,
+                    'player4_paddle_x': canvas_size - game.state["player2_paddle_x"] - game.paddle_width,
+                    'ball': {
+                        'x': canvas_size - game.ball.x,
+                        'y': canvas_size - game.ball.y,
+                    },
+                },
+                'player4_state': {
+                    'player1_paddle_y': game.state["player4_paddle_x"],
+                    'player2_paddle_x': canvas_size - game.state["player1_paddle_y"] - game.paddle_width,
+                    'player3_paddle_y': game.state["player2_paddle_x"],
+                    'player4_paddle_x': canvas_size - game.state["player3_paddle_y"] - game.paddle_width,
+                    'ball': {
+                        'x': canvas_size - game.ball.y,
+                        'y': game.ball.x,
                     },
                 },
             }

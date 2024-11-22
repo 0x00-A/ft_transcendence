@@ -92,3 +92,14 @@ export interface Tournament {
   winner: User;
   state: TournamentState;
 }
+
+/////////////////////
+// AUTH INTERFACES //
+/////////////////////
+
+export interface SignupFormData {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
+}

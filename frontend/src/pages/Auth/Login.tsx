@@ -10,6 +10,7 @@ import css from './AuthForm.module.css';
 import UserIcon from "../../assets/userIcon.svg";
 import PassIcon from "../../assets/passIcon.svg";
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
+import { toast } from 'react-toastify';
 
 
 
@@ -19,7 +20,7 @@ interface LoginFormData {
 }
 
 
-const Login = ({onSetAuthStat}) => {
+const Login = () => {
 
   const {register, handleSubmit, errors, mutation, reset} = useLogin();
   const navigate = useNavigate()
@@ -29,6 +30,7 @@ const Login = ({onSetAuthStat}) => {
 
   useEffect(() => {
     if (mutation.isSuccess) {
+      toast.success(mutation.data.data.message);
       reset();
       console.log('apiClient ==> Login response: ', mutation.data.data.message);
       setIsLoggedIn(true);

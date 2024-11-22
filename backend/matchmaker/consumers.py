@@ -55,6 +55,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await Matchmaker.handle_player_unready(self.player_id)
         elif event == 'remove_from_queue':
             await Matchmaker.remove_from_queue(self.player_id)
+        elif event == 'player_left':
+            await Matchmaker.leave_tournament(self.player_id)
 
     # async def send_message(self, message):
     #     await self.send(text_data=json.dumps(message))
