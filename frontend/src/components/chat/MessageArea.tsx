@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
+import { useUser } from '@/contexts/UserContext';
 
 interface MessageProps {
   id: number;
@@ -23,18 +24,22 @@ interface ConversationProps {
 interface MessageAreaProps {
   messages: MessageProps[];
   conversationData: ConversationProps | null;
+  typing: boolean;
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages, typing, conversationData}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-
-  console.log("rander MessageArea >>>>>>>>>>>>>>>>>>>>>>>>>")
 
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  const { user } = useUser();
+  const isSender = user?.id === conversationData?.user2_id;
+
+  const showTypingIndicator = typing && !isSender;
 
   return (
     <div className={css.messageArea}>
@@ -43,8 +48,16 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
           key={index}
           message={message}
           conversationData={conversationData}
+          
         />
       ))}
+      {showTypingIndicator && (
+        <div className={css.typingIndicator}>
+          <span className={css.typingDot}></span>
+          <span className={css.typingDot}></span>
+          <span className={css.typingDot}></span>
+      </div>
+      )}
       <div className={css.scrollMessages} ref={messageEndRef} />
     </div>
   );

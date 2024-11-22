@@ -33,39 +33,6 @@ class CreateConversationView(APIView):
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-class CreateMessageView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        conversation_id = request.data.get("conversation_id")
-        content = request.data.get("content")
-
-        if not conversation_id or not content:
-            return Response({"error": "conversation_id and content are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            conversation = Conversation.objects.get(id=conversation_id)
-            sender = request.user
-            receiver = conversation.user2 if conversation.user1 == sender else conversation.user1
-
-            message = Message.objects.create(
-                conversation=conversation,
-                sender=sender,
-                receiver=receiver,
-                content=content
-            )
-
-            conversation.last_message = content
-            conversation.unread_messages += 1
-            conversation.save()
-
-            serializer = MessageSerializer(message)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Conversation.DoesNotExist:
-            return Response({"error": "Conversation not found."}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": "Internal server error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
 class GetConversationsView(APIView):
     permission_classes = [AllowAny]
 
