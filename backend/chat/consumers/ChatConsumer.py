@@ -6,18 +6,34 @@ from ..models import User, Message, Conversation
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
-        self.other_user_id = self.scope["url_route"]["kwargs"]["user_id"]
-        user_id = self.user.id
-        other_user_id = int(self.other_user_id)
+        if self.user.is_authenticated:
 
-        self.room_name = f"chat_{min(user_id, other_user_id)}_{max(user_id, other_user_id)}"
-        self.room_group_name = f"chat_{self.room_name}"
+            self.other_user_id = self.scope["url_route"]["kwargs"]["user_id"]
+            if not self.other_user_id:
+                print("Invalid other_user_id: None")
+                await self.close()
+                return
+            user_id = self.user.id
+            other_user_id = int(self.other_user_id)
+            if not user_id:
+                print("Invalid user_id: None")
+                await self.close()
+                return
 
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+            print("other_user_id from URL:", self.scope["url_route"]["kwargs"].get("user_id"))
+
+            self.room_name = f"chat_{min(user_id, other_user_id)}_{max(user_id, other_user_id)}"
+            self.room_group_name = f"chat_{self.room_name}"
+
+            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+            await self.accept()
+
+        else:
+            await self.close()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        return await super().disconnect(close_code)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -28,6 +44,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.handle_send_message(data)
         elif action == "typing":
             await self.handle_typing_status(data)
+        elif action == "mark_seen":
+            await self.handle_mark_seen(data)
 
     async def handle_send_message(self, data):
         message = data.get("message")
@@ -58,6 +76,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "sender_id": sender_id,
             }
         )
+
+    async def handle_mark_seen(self, data):
+        receiver_id = self.user.id
+        sender_id = int(self.other_user_id)
+        await self.mark_messages_as_seen(sender_id, receiver_id)
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "messages_seen",
+                "receiver_id": receiver_id
+            }
+        )
+
+    async def messages_seen(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "messages_seen",
+            "receiver_id": event["receiver_id"]
+        }))
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({

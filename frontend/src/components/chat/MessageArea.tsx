@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 import { useUser } from '@/contexts/UserContext';
+import { useTyping } from '@/contexts/TypingContext';
 
 interface MessageProps {
   id: number;
@@ -21,33 +22,26 @@ interface ConversationProps {
   name: string;
 }
 
-interface TypingProps {
-  typing: boolean;
-  senderId: number | null;
-}
+
 interface MessageAreaProps {
   messages: MessageProps[];
   conversationData: ConversationProps | null;
-  typing: TypingProps;
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ messages, typing, conversationData}) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const { user } = useUser(); 
+  const { typing } = useTyping();
+  const isSender = user?.id === typing.senderId; 
 
 
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, typing.senderId]);
+  }, [messages, typing.typing]);
 
-  const isSender = user?.id === typing.senderId; 
 
-  console.log("_________________________________________");
-  console.log("isSender: ", isSender);
-  console.log("typing.senderId: ", typing.senderId);
-  console.log("_________________________________________");
   return (
     <div className={css.messageArea}>
       {messages.map((message, index) => (

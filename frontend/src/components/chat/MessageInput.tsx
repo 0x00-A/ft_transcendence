@@ -24,6 +24,7 @@ const MessageInput = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
@@ -66,9 +67,24 @@ const MessageInput = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setInputFocused(true);
-    setTimeout(() => {
-      onTyping(!!e.target.value.trim());
-    }, 1000);
+    // setTimeout(() => {
+    //   onTyping(!!e.target.value.trim());
+    // }, 1000);
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Set a new timeout that will trigger onTyping(false) after 5 seconds
+    const newTimeout = setTimeout(() => {
+      onTyping(false); // Set typing to false after 5 seconds
+    }, 5000); // 5000ms = 5 seconds
+
+    setTypingTimeout(newTimeout);
+
+    // Indicate that the user is typing
+    onTyping(true);
+
+
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;

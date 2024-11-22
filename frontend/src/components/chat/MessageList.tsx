@@ -17,8 +17,9 @@ import {
 } from 'react-icons/fa';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
-import { apiCreateConversation } from '@/api/chatApi';
+import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
 import { formatConversationTime } from '@/utils/formatConversationTime';
+import { toast } from 'react-toastify';
 
 interface conversationProps {
   user1_id: number;
@@ -194,6 +195,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
+    console.log("eeeeeeeeeeeeeee: ", e);
     const messageListRect = messageListRef.current?.getBoundingClientRect();
     const buttonRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
@@ -222,12 +224,30 @@ const MessageList: React.FC<MessageListProps> = ({
   };
 
   const handleBlock = (userName: string) => {
+    console.log("userName: ", userName);
     onBlockUser(userName);
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
       activeIndex: null,
     }));
+  };
+
+
+  const handleDelete = async (id: Number) => {
+    try {
+      const response = await apiDeleteConversation(id);
+      
+      toast.success(response.message);
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   const handleClose = () => {
@@ -434,7 +454,10 @@ const MessageList: React.FC<MessageListProps> = ({
             <div className={css.menuItem}>
               <FaArchive /> <span>Archive chat</span>
             </div>
-            <div className={css.menuItem}>
+            <div 
+              className={css.menuItem}
+              onClick={() => handleDelete(transformedMessages[menuState.activeIndex!].id)}
+              >
               <FaTrash />
               <span>Delete chat</span>
             </div>

@@ -5,6 +5,7 @@ import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
+import { useTyping } from '@/contexts/TypingContext';
 
 interface MessageProps {
   id: number;
@@ -33,10 +34,15 @@ interface ChatContentProps {
 
 const useWebSocket = (userId: number, otherUserId: number) => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
-  const [typing, setTyping] = useState<{ typing: boolean; senderId: number | null }>({ typing: false, senderId: null });
+  const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
 
   const connect = useCallback(() => {
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      console.log('WebSocket already connected.');
+      return socketRef.current;
+    }
     const wsUrl = `${getWebSocketUrl(`chat/${otherUserId}/`)}`;
     const newSocket = new WebSocket(wsUrl);
 
@@ -63,7 +69,7 @@ const useWebSocket = (userId: number, otherUserId: number) => {
       } else if (data.type === 'typing_status') {
         console.log('typing_status:', data);
         setTyping({ typing: data.typing, senderId: data.sender_id });
-      } else if (data.type === 'seen') {
+      } else if (data.type === 'mark_seen') {
         setMessages((prev) =>
           prev.map((msg) =>
             msg.sender === otherUserId ? { ...msg, seen: true } : msg
@@ -81,12 +87,27 @@ const useWebSocket = (userId: number, otherUserId: number) => {
     };
 
     return newSocket;
-  }, [userId, otherUserId]);
+  }, [otherUserId]);
 
-  useEffect(() => {
-    const socket = connect();
-    return () => socket.close();
-  }, [connect]);
+useEffect(() => {
+  // setTimeout(() => {
+  //   const socket = connect();
+  //   return () => {
+  //     if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+  //       console.log('Closing WebSocket...');
+  //       socket.close();
+  //     }
+  //   };
+  // }, 10);
+  const socket = connect();
+  return () => {
+    if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+      console.log('Closing WebSocket...');
+      socket.close();
+    }
+  };
+}, [connect]);
+
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -107,7 +128,7 @@ const useWebSocket = (userId: number, otherUserId: number) => {
     []
   );
 
-  return { messages, sendMessage, typing, sendTypingStatus };
+  return { messages, sendMessage, sendTypingStatus };
 };
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -127,7 +148,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     ? onSelectedConversation.user2_id
     : onSelectedConversation.user1_id;
 
-  const { messages: websocketMessages, sendMessage, typing, sendTypingStatus } = useWebSocket(
+  const { messages: websocketMessages, sendMessage, sendTypingStatus } = useWebSocket(
     user?.id ?? 0,
     otherUserId ?? 0,
   );
@@ -166,7 +187,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
           <MessageArea
             messages={chatMessages}
             conversationData={onSelectedConversation}
-            typing={typing}
           />
         )}
       </div>

@@ -9,6 +9,7 @@ import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
 import messages from './messages';
 import ChatContent from '@/components/chat/ChatContent';
+import { TypingProvider } from '@/contexts/TypingContext';
 
 interface conversationProps {
   user1_id: number;
@@ -58,43 +59,47 @@ const Chat = () => {
   };
 
   return (
-    <main className={css.CenterContainer}>
-      <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
-        <div className={css.sidebarLeft} ref={sidebarLeftRef}>
-          <OptionsButton />
-          <MessageList
-            onSelectMessage={setSelectedConversation}
-            onBlockUser={handleBlockUser}
-          />
-        </div>
-        <div className={css.chatBody}>
-          {selectedConversation ? (
-            <>
-              <ChatHeader
-                toggleSidebar={toggleSidebar}
-                onSelectedConversation={selectedConversation}
-                />
-              <ChatContent
-                onSelectedConversation={selectedConversation}
-                customSticker={customSticker}
-                isBlocked={selectedConversation.blocked}
-                onUnblock={() => handleBlockUser(selectedConversation.name)}
-              />
-            </>
-          ) : (
-            <NoChatSelected />
-          )}
-        </div>
-        {selectedConversation && !isExpanded && (
-          <div className={css.sidebarRight}>
-            <SideInfoChat
-              onSelectedConversation={selectedConversation}
-              onEmojiChange={handleStickerChange}
+    <TypingProvider>
+      <main className={css.CenterContainer}>
+        <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
+          <div className={css.sidebarLeft} ref={sidebarLeftRef}>
+            <OptionsButton />
+            <MessageList
+              onSelectMessage={setSelectedConversation}
+              onBlockUser={handleBlockUser}
             />
           </div>
-        )}
-      </div>
-    </main>
+          <div className={css.chatBody}>
+            {selectedConversation ? (
+              <>
+                <ChatHeader
+                  toggleSidebar={toggleSidebar}
+                  onSelectedConversation={selectedConversation}
+                  />
+                <ChatContent
+                key={selectedConversation.id}
+                  onSelectedConversation={selectedConversation}
+                  customSticker={customSticker}
+                  isBlocked={selectedConversation.blocked}
+                  onUnblock={() => handleBlockUser(selectedConversation.name)}
+                />
+              </>
+            ) : (
+              <NoChatSelected />
+            )}
+          </div>
+          {selectedConversation && !isExpanded && (
+            <div className={css.sidebarRight}>
+              <SideInfoChat
+                onSelectedConversation={selectedConversation}
+                onEmojiChange={handleStickerChange}
+              />
+            </div>
+          )}
+        </div>
+      </main>
+    </TypingProvider>
+
   );
 };
 

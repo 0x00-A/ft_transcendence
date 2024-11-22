@@ -1,6 +1,8 @@
 import React from 'react';
 import css from './ChatHeader.module.css';
 import { FaCircleInfo } from 'react-icons/fa6';
+import { useTyping } from '@/contexts/TypingContext';
+import { useUser } from '@/contexts/UserContext';
 
 
 interface ChatHeaderProps {
@@ -17,8 +19,17 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   toggleSidebar,
   onSelectedConversation,
 }) => {
-  const renderUserStatus = () => {
+
+  const { typing } = useTyping();
+  const { user } = useUser(); 
+  const isSender = user?.id === typing.senderId; 
+
+const renderUserStatus = () => {
     if (!onSelectedConversation) return null;
+
+    if (typing.typing && !isSender ) {
+      return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
+    }
 
     switch (onSelectedConversation.status) {
       case true:
