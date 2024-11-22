@@ -62,7 +62,7 @@ const useWebSocket = (userId: number, otherUserId: number) => {
     
 
     newSocket.onclose = () => {
-      console.log('WebSocket closed, reconnecting...');
+      console.log('WebSocket closed');
     };
 
     newSocket.onerror = (error) => {
