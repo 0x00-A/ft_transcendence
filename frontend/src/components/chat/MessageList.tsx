@@ -61,7 +61,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage } = useWebSocket();
+  const { lastMessage, connectToSocket} = useWebSocket();
 
   const { 
     data: friendsData, 
@@ -111,6 +111,17 @@ const MessageList: React.FC<MessageListProps> = ({
     }) || [];
   }, [ConversationList, user, formatConversationTime]);
   
+  useEffect(() => {
+    if (transformedMessages.length > 0) {
+      transformedMessages.forEach((conversation) => {
+        const otherUserId = conversation.user1_id === user?.id
+          ? conversation.user2_id
+          : conversation.user1_id;
+        connectToSocket(otherUserId);
+      });
+    }
+  }, [transformedMessages, connectToSocket, user?.id]);
+
 
   const filteredFriends = useMemo(() => {
     return friendsData?.filter((friend) =>
