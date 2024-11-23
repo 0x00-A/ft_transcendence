@@ -37,7 +37,6 @@ interface conversationProps {
 
 interface MessageListProps {
   onSelectMessage: (message: conversationProps | null) => void;
-  onBlockUser: (userName: string) => void;
 }
 
 interface FriendProfile {
@@ -72,7 +71,6 @@ interface Conversations {
 
 const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
-  onBlockUser,
 }) => {
   const [selectedConversation, setSelectedConversation] = useState<conversationProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -221,16 +219,6 @@ const MessageList: React.FC<MessageListProps> = ({
           prevState.activeIndex !== index || !prevState.isOpen ? index : null,
       }));
     }
-  };
-
-  const handleBlock = (userName: string) => {
-    console.log("userName: ", userName);
-    onBlockUser(userName);
-    setMenuState((prevState) => ({
-      ...prevState,
-      isOpen: false,
-      activeIndex: null,
-    }));
   };
 
 
@@ -444,7 +432,6 @@ const MessageList: React.FC<MessageListProps> = ({
             <hr />
             <div
               className={css.menuItem}
-              onClick={() => handleBlock(transformedMessages[menuState.activeIndex!].name)}
             >
               <FaBan />
               <span>

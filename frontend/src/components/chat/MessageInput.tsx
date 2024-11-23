@@ -6,16 +6,12 @@ import Picker from '@emoji-mart/react';
 
 interface MessageInputProps {
   customSticker: string;
-  isBlocked: boolean;
-  onUnblock: () => void;
   onSendMessage: (message: string) => void;
   onTyping: (isTyping: boolean) => void;
 }
 
 const MessageInput = ({
   customSticker,
-  isBlocked,
-  onUnblock,
   onSendMessage,
   onTyping,
   
@@ -74,14 +70,11 @@ const MessageInput = ({
       clearTimeout(typingTimeout);
     }
 
-    // Set a new timeout that will trigger onTyping(false) after 5 seconds
     const newTimeout = setTimeout(() => {
-      onTyping(false); // Set typing to false after 5 seconds
-    }, 5000); // 5000ms = 5 seconds
+      onTyping(false);
+    }, 4000);
 
     setTypingTimeout(newTimeout);
-
-    // Indicate that the user is typing
     onTyping(true);
 
 
@@ -97,17 +90,17 @@ const MessageInput = ({
     }
   };
 
-  if (isBlocked) {
-    return (
-      <div className={css.messageBlock}>
-        <h2>User is blocked</h2>
-        <p>You can't message them in this chat, and you won't receive their messages.</p>
-        <button className={css.buttonUnblock} onClick={onUnblock}>
-          Unblock
-        </button>
-      </div>
-    );
-  }
+  // if (isBlocked) {
+  //   return (
+  //     <div className={css.messageBlock}>
+  //       <h2>User is blocked</h2>
+  //       <p>You can't message them in this chat, and you won't receive their messages.</p>
+  //       <button className={css.buttonUnblock} onClick={onUnblock}>
+  //         Unblock
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   const handleSendMessage = () => {
     if (message.trim()) {

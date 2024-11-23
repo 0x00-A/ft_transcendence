@@ -10,6 +10,9 @@ import SideInfoChat from '../../components/chat/SideInfoChat';
 import messages from './messages';
 import ChatContent from '@/components/chat/ChatContent';
 import { TypingProvider } from '@/contexts/TypingContext';
+import { WebSocketProvider } from '@/contexts/WebSocketContext';
+import { useUser } from '@/contexts/UserContext';
+import { WebSocketChatProvider } from '@/contexts/WebSocketChatProvider';
 
 interface conversationProps {
   user1_id: number;
@@ -34,6 +37,8 @@ const Chat = () => {
   const [customSticker, setCustomSticker] = useState(
     '<img src="/icons/chat/like.svg" alt="love" />'
   );
+  const { user } = useUser();
+
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -50,15 +55,9 @@ const Chat = () => {
     setCustomSticker(newSticker);
   };
 
-  const handleBlockUser = (userName: string) => {
-    console.log('nameblock: ', userName);
-    const updatedMessages = messages.map((msg) =>
-      msg.name === userName ? { ...msg, blocked: !msg.blocked } : msg
-    );
-    console.log(updatedMessages);
-  };
 
   return (
+    <WebSocketChatProvider userId={user?.id || 0}>
     <TypingProvider>
       <main className={css.CenterContainer}>
         <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
@@ -66,7 +65,6 @@ const Chat = () => {
             <OptionsButton />
             <MessageList
               onSelectMessage={setSelectedConversation}
-              onBlockUser={handleBlockUser}
             />
           </div>
           <div className={css.chatBody}>
@@ -77,11 +75,9 @@ const Chat = () => {
                   onSelectedConversation={selectedConversation}
                   />
                 <ChatContent
-                key={selectedConversation.id}
+                  key={selectedConversation.id}
                   onSelectedConversation={selectedConversation}
                   customSticker={customSticker}
-                  isBlocked={selectedConversation.blocked}
-                  onUnblock={() => handleBlockUser(selectedConversation.name)}
                 />
               </>
             ) : (
@@ -99,6 +95,7 @@ const Chat = () => {
         </div>
       </main>
     </TypingProvider>
+    </WebSocketChatProvider>
 
   );
 };
