@@ -32,6 +32,7 @@ from .profile import UserDetailView
 from .profile import OnlineUsersView
 from .profile import EditProfileView
 from .profile import ChangePasswordView
+from .profile import UserProfileView
 
 from .BlockRelationship import BlockUserView
 from .BlockRelationship import BlockedUsersView

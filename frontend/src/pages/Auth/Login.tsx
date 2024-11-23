@@ -1,14 +1,16 @@
 // React
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // Hooks
 import useLogin from '../../hooks/auth/useLogin';
 // Contexts
 import { useAuth } from '../../contexts/AuthContext';
 // Styles
 import css from './AuthForm.module.css';
-import UserIcon from "../../assets/userIcon.svg";
-import PassIcon from "../../assets/passIcon.svg";
+import { FaRegUser } from "react-icons/fa";
+import { MdLockOutline } from "react-icons/md";
+import { BiHide } from "react-icons/bi";
+import { BiShow } from "react-icons/bi";
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
 import { toast } from 'react-toastify';
 
@@ -26,6 +28,7 @@ const Login = () => {
   const navigate = useNavigate()
   const {setIsLoggedIn} = useAuth()
   const loadingBarRef = useLoadingBar();
+  const [showPassword, setShowPassword] = useState(false);
 
 
   useEffect(() => {
@@ -35,12 +38,13 @@ const Login = () => {
       console.log('apiClient ==> Login response: ', mutation.data.data.message);
       setIsLoggedIn(true);
       navigate('/');
-      onSetAuthStat(mutation.data.data.message);
-      setTimeout(() => onSetAuthStat(null), 5000)
     }
   }, [mutation.isSuccess])
 
   useEffect(() => {
+    if (errors.root) {
+      toast.error(errors.root.message);
+    }
     return () => {
       loadingBarRef.current?.complete();
     }
@@ -55,16 +59,18 @@ const Login = () => {
   return (
       <form className={css.entryArea} onSubmit={ handleSubmit(handleLogin) }>
         <div className={css.inputContainer}>
-          <img src={UserIcon} alt="X" />
+          <FaRegUser className={css.inputIcon}/>
           <input type="text" required placeholder="username" {...register('username')}/>
           {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
         </div>
         <div className={css.inputContainer}>
-          <img src={PassIcon} alt="X" />
-          <input type="password" required placeholder="password" {...register('password')}/>
+          <MdLockOutline className={css.inputIcon} />
+          <input type={showPassword ? "text" : "password"} required placeholder="password" {...register('password')}/>
+          { showPassword ?  <BiShow className={css.showPassIcon} onClick={() => setShowPassword(!showPassword)}/> :
+            <BiHide className={css.showPassIcon} onClick={() => setShowPassword(!showPassword)}/>}
           {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
         </div>
-        {errors.root && <span className={css.loginError}>{errors.root.message}</span>}
+        {/* {errors.root && <span className={css.loginError}>{errors.root.message}</span>} */}
         <p>Forgot password?</p>
         <button type="submit" className={css.authBtn}>
           Sign in
