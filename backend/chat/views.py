@@ -41,7 +41,10 @@ class GetConversationsView(APIView):
             user = request.user
             conversations = Conversation.objects.filter(
                 Q(user1=user) | Q(user2=user)
-            ).order_by('-updated_at')
+            ).select_related('user1', 'user2').order_by('-updated_at')
+            # conversations = Conversation.objects.filter(
+            #     Q(user1=user) | Q(user2=user)
+            # ).order_by('-updated_at')
             serializer = ConversationSerializer(conversations, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:

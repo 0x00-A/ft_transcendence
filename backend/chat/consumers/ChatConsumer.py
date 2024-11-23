@@ -128,8 +128,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         conversation.last_message = message
-        if not created:  
-            conversation.unread_messages += 1  
+        if sender_id != receiver_id:
+            conversation.unread_messages += 1
         conversation.save()
 
         return conversation
