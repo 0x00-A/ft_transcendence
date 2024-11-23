@@ -34,7 +34,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
   const { typing } = useTyping();
   const isSender = user?.id === typing.senderId; 
 
-
+  console.log("typing: ", typing);
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });

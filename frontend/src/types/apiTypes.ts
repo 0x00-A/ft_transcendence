@@ -92,3 +92,34 @@ export interface Tournament {
   winner: User;
   state: TournamentState;
 }
+
+export interface Conversations {
+  id: number; 
+  user1: string; 
+  user2: string;
+  user1_id: number;
+  user2_id: number;
+  user1_username: string;
+  user2_username: string;
+  user1_avatar: string;
+  user2_avatar: string;
+  last_message: string;
+  unread_messages: number;
+  is_online: boolean;
+  created_at: string; 
+  updated_at: string; 
+}
+
+export interface conversationProps {
+  user1_id: number;
+  user2_id: number;
+  id: number;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  status: boolean;
+  lastSeen?: string;
+  blocked: boolean;
+}

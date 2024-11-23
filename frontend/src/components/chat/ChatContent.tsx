@@ -39,28 +39,35 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, connectToSocket } = useWebSocket();
 
+  
   const isCurrentUserUser1 = user?.id === onSelectedConversation.user1_id;
   const otherUserId = isCurrentUserUser1
-    ? onSelectedConversation.user2_id
-    : onSelectedConversation.user1_id;
-
-    useEffect(() => {
-      setChatMessages(() => [
-        ...(fetchedMessages || []),
-        ...websocketMessages,
-      ]);
-    }, [fetchedMessages, websocketMessages]);
+  ? onSelectedConversation.user2_id
+  : onSelectedConversation.user1_id;
   
-    const handleSendMessage = useCallback(
-      (message: string) => {
-        if (message.trim()) {
-          sendMessage(otherUserId, message); 
-        }
-      },
-      [sendMessage, otherUserId]
-    );
+  useEffect(() => {
+    setChatMessages(() => [
+      ...(fetchedMessages || []),
+      ...websocketMessages,
+    ]);
+  }, [fetchedMessages, websocketMessages]);
+  
+  useEffect(() => {
+    if (otherUserId) {
+      connectToSocket(otherUserId);
+    }
+  }, [connectToSocket, otherUserId]);
+  
+  const handleSendMessage = useCallback(
+    (message: string) => {
+      if (message.trim()) {
+        sendMessage(otherUserId, message); 
+      }
+    },
+    [sendMessage, otherUserId]
+  );
   
     const handleTyping = useCallback(
       (isTyping: boolean) => {

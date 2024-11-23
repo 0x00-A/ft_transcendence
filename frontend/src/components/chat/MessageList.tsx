@@ -20,20 +20,10 @@ import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
 import { formatConversationTime } from '@/utils/formatConversationTime';
 import { toast } from 'react-toastify';
+import { Conversations, conversationProps } from '@/types/apiTypes';
+import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 
-interface conversationProps {
-  user1_id: number;
-  user2_id: number;
-  id: number;
-  avatar: string;
-  name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: boolean;
-  lastSeen?: string;
-  blocked: boolean;
-}
+
 
 interface MessageListProps {
   onSelectMessage: (message: conversationProps | null) => void;
@@ -48,26 +38,6 @@ interface Friend {
   username: string;
   profile: FriendProfile;
 }
-
-interface Conversations {
-  id: number; 
-  user1: string; 
-  user2: string;
-  user1_id: number;
-  user2_id: number;
-  user1_username: string;
-  user2_username: string;
-  user1_avatar: string;
-  user2_avatar: string;
-  last_message: string;
-  unread_messages: number;
-  is_online: boolean;
-  created_at: string; 
-  updated_at: string; 
-}
-
-
-
 
 const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
@@ -91,6 +61,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { lastMessage } = useWebSocket();
 
   const { 
     data: friendsData, 
@@ -107,6 +78,13 @@ const MessageList: React.FC<MessageListProps> = ({
   
   
   console.log("rander MessageList >>>>>>>>>>>>>>>>>>>>>>>>>")
+
+
+  useEffect(() => {
+    if (lastMessage) {
+      refetch();
+    }
+  }, [lastMessage]);
 
   const transformedMessages = useMemo(() => {
     return ConversationList?.map(conversation => {
