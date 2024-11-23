@@ -24,8 +24,9 @@ canvas_height: int = 600
 winning_score: int = 3
 
 ball_raduis: int = 8
-initial_ball_speed = 10
+initial_ball_speed = 5
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
+
 
 games = {}
 
@@ -41,6 +42,7 @@ class Ball:
             initial_ball_speed * math.cos(self.angle)
         self.dy = initial_ball_speed * math.sin(self.angle)
         self.speed = initial_ball_speed
+        self.color = 'white'
 
     def move(self):
         self.x += self.dx
@@ -66,26 +68,32 @@ class GameInstance:
         self.paddle_speed = 4
         self.paddle_width: int = 20
         self.paddle_height: int = 80
+        self.corner_size = 80
         self.state = {
-            "player1_paddle_x": 10,
+            "player1_paddle_x": 0,
             "player1_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player1_paddle_w": self.paddle_width,
             "player1_paddle_h": self.paddle_height,
+            "player1_paddle_color": 'red',
 
             "player2_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player2_paddle_y": 10,
+            "player2_paddle_y": 0,
             "player2_paddle_w": self.paddle_height,
             "player2_paddle_h": self.paddle_width,
+            "player2_paddle_color": 'blue',
 
-            "player3_paddle_x": canvas_width - 10 - self.paddle_width,
+            "player3_paddle_x": canvas_width - self.paddle_width,
             "player3_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player3_paddle_w": self.paddle_width,
             "player3_paddle_h": self.paddle_height,
+            "player3_paddle_color": 'orange',
 
             "player4_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player4_paddle_y": canvas_height - 10 - self.paddle_width,
+            "player4_paddle_y": canvas_height - self.paddle_width,
             "player4_paddle_w": self.paddle_height,
             "player4_paddle_h": self.paddle_width,
+            "player4_paddle_color": 'green',
+
             # "player1_score": 0,
             # "player2_score": 0,
         }
@@ -93,15 +101,35 @@ class GameInstance:
     def update(self):
         self.ball.move()
 
+    # def reset_ball(self):
+    #     self.ball.x = 3 * canvas_width / 4 if self.ball.dx > 0 else canvas_width / 4
+    #     self.ball.y = canvas_height / 2
+    #     self.ball.angle = (random.random() * math.pi) / 2 - math.pi / 4
+    #     self.ball.speed = initial_ball_speed
+    #     serve_sirection = -1 if self.ball.dx > 0 else 1
+    #     self.ball.dx = serve_sirection * initial_ball_speed * \
+    #         math.cos(self.ball.angle)
+    #     self.ball.dy = initial_ball_speed * math.sin(self.ball.angle)
+
     def reset_ball(self):
-        self.ball.x = 3 * canvas_width / 4 if self.ball.dx > 0 else canvas_width / 4
+        # Reset ball position to the center of the canvas
+        self.ball.x = canvas_width / 2
         self.ball.y = canvas_height / 2
-        self.ball.angle = (random.random() * math.pi) / 2 - math.pi / 4
+
+        # Generate a random angle for 360-degree movement
+        # Avoid angles near vertical (straight up or down)
+        while True:
+            angle = random.uniform(0, 2 * math.pi)
+            if not (math.pi / 2 - 0.1 <= angle <= math.pi / 2 + 0.1 or
+                    3 * math.pi / 2 - 0.1 <= angle <= 3 * math.pi / 2 + 0.1):
+                break
+
+        # Set ball direction based on the angle
+        self.ball.dx = initial_ball_speed * math.cos(angle)
+        self.ball.dy = initial_ball_speed * math.sin(angle)
+
+        # Set ball speed
         self.ball.speed = initial_ball_speed
-        serve_sirection = -1 if self.ball.dx > 0 else 1
-        self.ball.dx = serve_sirection * initial_ball_speed * \
-            math.cos(self.ball.angle)
-        self.ball.dy = initial_ball_speed * math.sin(self.ball.angle)
 
     def increment_score(self, player):
         if player == 1:
@@ -153,9 +181,11 @@ class GameInstance:
 
         # Paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
-        paddle_right = self.state[f"{paddle}_x"] + self.paddle_width
+        paddle_right = self.state[f"{paddle}_x"] + \
+            self.state[f"{paddle}_w"]
         paddle_top = self.state[f"{paddle}_y"]
-        paddle_bottom = self.state[f"{paddle}_y"] + self.paddle_height
+        paddle_bottom = self.state[f"{paddle}_y"] + \
+            self.state[f"{paddle}_h"]
 
         # Check for intersection with paddle's vertical sides (left and right)
         intersects_left = self.do_line_segments_intersect(
@@ -185,14 +215,15 @@ class GameInstance:
         return check
 
     def handle_paddle_collision(self, paddle):
+        self.ball.color = self.state[f"{paddle}_color"]
         # Check if the ball is hitting the top/bottom or the sides
         ball_from_left = self.ball.x < self.state[f"{paddle}_x"]
         ball_from_right = self.ball.x > self.state[f"{paddle}_x"] + \
-            self.paddle_width
+            self.state[f"{paddle}_w"]
 
         ball_from_top = self.ball.y < self.state[f"{paddle}_y"]
         ball_from_bottom = self.ball.y > self.state[f"{paddle}_y"] + \
-            self.paddle_height
+            self.state[f"{paddle}_h"]
 
         # Handle side collision
         if ball_from_left or ball_from_right:
@@ -201,22 +232,7 @@ class GameInstance:
                 self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
             elif ball_from_right:
                 self.ball.x = self.state[f"{paddle}_x"] + \
-                    self.paddle_width + self.ball.radius
-
-            relative_impact = (
-                self.ball.y - (self.state[f"{paddle}_y"] + self.paddle_height / 2)) / (self.paddle_height / 2)
-            max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
-
-            # Calculate new angle based on relative impact
-            new_angle = relative_impact * max_bounce_angle
-
-            # Update ball's velocity (dx, dy) based on the new angle
-            direction = 1 if self.ball.dx > 0 else -1
-            self.ball.speed += 0.1
-            self.ball.dx = direction * self.ball.speed * \
-                math.cos(new_angle)  # Horizontal velocity
-            self.ball.dy = self.ball.speed * \
-                math.sin(new_angle)  # Vertical velocity
+                    self.state[f"{paddle}_w"] + self.ball.radius
 
         # Handle top/bottom collision
         if ball_from_top or ball_from_bottom:
@@ -225,7 +241,77 @@ class GameInstance:
                 self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
             elif ball_from_bottom:
                 self.ball.y = self.state[f"{paddle}_y"] + \
-                    self.paddle_height + self.ball.radius
+                    self.state[f"{paddle}_h"] + self.ball.radius
+
+        relative_impact = (
+            self.ball.y - (self.state[f"{paddle}_y"] + self.state[f"{paddle}_h"] / 2)) / (self.state[f"{paddle}_h"] / 2)
+        max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+
+        # Calculate new angle based on relative impact
+        new_angle = relative_impact * max_bounce_angle
+
+        # Update ball's velocity (dx, dy) based on the new angle
+        direction = 1 if self.ball.dx > 0 else -1
+        # self.ball.speed += 0.1
+        self.ball.dx = direction * self.ball.speed * \
+            math.cos(new_angle)  # Horizontal velocity
+        self.ball.dy = self.ball.speed * \
+            math.sin(new_angle)  # Vertical velocity
+
+    def check_corner_collision(self, next_x, next_y):
+        # Define the corners with their line segments
+        corners = [
+            # Top-left: (0,corner_size) to (corner_size,0)
+            {
+                'x1': 0, 'y1': self.corner_size,
+                'x2': self.corner_size, 'y2': 0
+            },
+            # Top-right: (width-corner_size,0) to (width,corner_size)
+            {
+                'x1': canvas_size - self.corner_size, 'y1': 0,
+                'x2': canvas_size, 'y2': self.corner_size
+            },
+            # Bottom-left: (0,height-corner_size) to (corner_size,height)
+            {
+                'x1': 0, 'y1': canvas_size - self.corner_size,
+                'x2': self.corner_size, 'y2': canvas_size
+            },
+            # Bottom-right: (width-corner_size,height) to (width,height-corner_size)
+            {
+                'x1': canvas_size - self.corner_size, 'y1': canvas_size,
+                'x2': canvas_size, 'y2': canvas_size - self.corner_size
+            }
+        ]
+
+        for corner in corners:
+            if self.do_line_segments_intersect(
+                self.ball.x, self.ball.y, next_x, next_y,
+                corner['x1'], corner['y1'], corner['x2'], corner['y2']
+            ):
+                # # Calculate reflection vector based on the corner's diagonal
+                # dx = corner['x2'] - corner['x1']
+                # dy = corner['y2'] - corner['y1']
+                # length = (dx * dx + dy * dy) ** 0.5
+
+                # # Calculate normal vector of the diagonal
+                # normal_x = -dy / length
+                # normal_y = dx / length
+
+                # # Calculate reflection
+                # dot = self.ball.dx * normal_x + self.ball.dy * normal_y
+                # self.ball.dx = self.ball.dx - 2 * dot * normal_x
+                # self.ball.dy = self.ball.dy - 2 * dot * normal_y
+
+                # # Normalize speed
+                # current_speed = (self.ball.dx * self.ball.dx +
+                #                  self.ball.dy * self.ball.dy) ** 0.5
+                # self.ball.dx = (self.ball.dx / current_speed) * self.ball.speed
+                # self.ball.dy = (self.ball.dy / current_speed) * self.ball.speed
+                self.reverse_vertical_direction()
+
+                return True
+
+        return False
 
 
 def create_game(game_id):
@@ -336,24 +422,41 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'player2_paddle_y': game.state["player2_paddle_y"],
                     'player3_paddle_x': game.state["player3_paddle_x"],
                     'player4_paddle_y': game.state["player4_paddle_y"],
+                    'player1_color': game.state["player1_paddle_color"],
+                    'player2_color': game.state["player2_paddle_color"],
+                    'player3_color': game.state["player3_paddle_color"],
+                    'player4_color': game.state["player4_paddle_color"],
                 },
                 'player2_state': {
                     'player1_paddle_x': game.state["player2_paddle_y"],
                     'player2_paddle_y': canvas_size - game.state["player3_paddle_x"] - game.paddle_width,
                     'player3_paddle_x': game.state["player4_paddle_y"],
                     'player4_paddle_y': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
+
+                    'player1_color': game.state["player2_paddle_color"],
+                    'player2_color': game.state["player3_paddle_color"],
+                    'player3_color': game.state["player4_paddle_color"],
+                    'player4_color': game.state["player1_paddle_color"],
                 },
                 'player3_state': {
                     'player1_paddle_x': canvas_size - game.state["player3_paddle_x"] - game.paddle_width,
                     'player2_paddle_y': canvas_size - game.state["player4_paddle_y"] - game.paddle_width,
                     'player3_paddle_x': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
                     'player4_paddle_y': canvas_size - game.state["player2_paddle_y"] - game.paddle_width,
+                    'player1_color': game.state["player3_paddle_color"],
+                    'player2_color': game.state["player4_paddle_color"],
+                    'player3_color': game.state["player1_paddle_color"],
+                    'player4_color': game.state["player2_paddle_color"],
                 },
                 'player4_state': {
                     'player1_paddle_x': canvas_size - game.state["player4_paddle_y"] - game.paddle_width,
                     'player2_paddle_y': game.state["player1_paddle_x"],
                     'player3_paddle_x': canvas_size - game.state["player2_paddle_y"] - game.paddle_width,
                     'player4_paddle_y': game.state["player3_paddle_x"],
+                    'player1_color': game.state["player4_paddle_color"],
+                    'player2_color': game.state["player1_paddle_color"],
+                    'player3_color': game.state["player2_paddle_color"],
+                    'player4_color': game.state["player3_paddle_color"],
                 },
             }
         )
@@ -370,28 +473,45 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         if self.player_id == 'player3':
             if direction == 'down':
                 new_position = max(
-                    0, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+                    game.corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
             elif direction == 'up':
-                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"],
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - game.corner_size,
                                    game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
             game.state[f"{self.player_id}_paddle_y"] = new_position
-        if self.player_id == 'player1':
+        elif self.player_id == 'player1':
             if direction == 'up':
                 new_position = max(
-                    0, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+                    game.corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
             elif direction == 'down':
-                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"],
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - game.corner_size,
                                    game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
             game.state[f"{self.player_id}_paddle_y"] = new_position
+        elif self.player_id == 'player4':
+            if direction == 'up':
+                new_position = max(
+                    game.corner_size, game.state[f"{self.player_id}_paddle_x"] -
+                    game.paddle_speed
+                )
+            elif direction == 'down':
+                new_position = min(
+                    canvas_width -
+                    game.state[f"{self.player_id}_paddle_w"] -
+                    game.corner_size,
+                    game.state[f"{self.player_id}_paddle_x"] +
+                    game.paddle_speed
+                )
+            game.state[f"{self.player_id}_paddle_x"] = new_position
         else:
             if direction == 'down':
                 new_position = max(
-                    0, game.state[f"{self.player_id}_paddle_x"] -
+                    game.corner_size, game.state[f"{self.player_id}_paddle_x"] -
                     game.paddle_speed
                 )
             elif direction == 'up':
                 new_position = min(
-                    canvas_width - game.state[f"{self.player_id}_paddle_w"],
+                    canvas_width -
+                    game.state[f"{self.player_id}_paddle_w"] -
+                    game.corner_size,
                     game.state[f"{self.player_id}_paddle_x"] +
                     game.paddle_speed
                 )
@@ -426,16 +546,29 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             await asyncio.sleep(1 / 60)  # Run at 60 FPS
 
     async def check_collision(self, game: GameInstance):
-        # if game.is_colliding_with_paddle("player1_paddle"):
-        #     await self.play_paddle_sound(game)
-        #     game.handle_paddle_collision("player1_paddle")
-        # elif game.is_colliding_with_paddle("player3_paddle"):
-        #     await self.play_paddle_sound(game)
-        #     game.handle_paddle_collision("player3_paddle")
+        next_x = game.ball.x + game.ball.dx
+        next_y = game.ball.y + game.ball.dy
+
+        if game.check_corner_collision(next_x, next_y):
+            return
+
+        if game.is_colliding_with_paddle("player1_paddle"):
+            # await self.play_paddle_sound(game)
+            game.handle_paddle_collision("player1_paddle")
+        elif game.is_colliding_with_paddle("player3_paddle"):
+            # await self.play_paddle_sound(game)
+            game.handle_paddle_collision("player3_paddle")
+        elif game.is_colliding_with_paddle("player2_paddle"):
+            # await self.play_paddle_sound(game)
+            game.handle_paddle_collision("player2_paddle")
+        elif game.is_colliding_with_paddle("player4_paddle"):
+            # await self.play_paddle_sound(game)
+            game.handle_paddle_collision("player4_paddle")
 
         if game.is_colliding_with_top_buttom_walls():
             # await self.play_wall_sound(game)
             game.reverse_vertical_direction()
+            # game.reset_ball()
 
         if game.is_colliding_with_left_wall():
             # game.increment_score(2)
@@ -502,6 +635,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'ball': {
                         'x': game.ball.x,
                         'y': game.ball.y,
+                        'color': game.ball.color,
                     },
                 },
                 'player2_state': {
@@ -512,6 +646,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'ball': {
                         'x': game.ball.y,
                         'y': canvas_size - game.ball.x,
+                        'color': game.ball.color,
                     },
                 },
                 'player3_state': {
@@ -522,28 +657,20 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'ball': {
                         'x': canvas_size - game.ball.x,
                         'y': canvas_size - game.ball.y,
+                        'color': game.ball.color,
                     },
                 },
                 'player4_state': {
-                    'player1_paddle_y': canvas_size - game.state["player4_paddle_x"] - game.paddle_height,
-                    'player2_paddle_x': game.state["player1_paddle_y"],
-                    'player3_paddle_y': canvas_size - game.state["player2_paddle_x"] - game.paddle_height,
-                    'player4_paddle_x': game.state["player3_paddle_y"],
+                    'player1_paddle_y': game.state["player4_paddle_x"],
+                    'player2_paddle_x': canvas_size - game.state["player1_paddle_y"] - game.paddle_height,
+                    'player3_paddle_y': game.state["player2_paddle_x"],
+                    'player4_paddle_x': canvas_size - game.state["player3_paddle_y"] - game.paddle_height,
                     'ball': {
                         'x': canvas_size - game.ball.y,
                         'y': game.ball.x,
+                        'color': game.ball.color,
                     },
                 },
-                # 'player4_state': {
-                #     'player1_paddle_y': game.state["player4_paddle_x"],
-                #     'player2_paddle_x': canvas_size - game.state["player1_paddle_y"] - game.paddle_width,
-                #     'player3_paddle_y': game.state["player2_paddle_x"],
-                #     'player4_paddle_x': canvas_size - game.state["player3_paddle_y"] - game.paddle_width,
-                #     'ball': {
-                #         'x': canvas_size - game.ball.y,
-                #         'y': game.ball.x,
-                #     },
-                # },
             }
         )
 

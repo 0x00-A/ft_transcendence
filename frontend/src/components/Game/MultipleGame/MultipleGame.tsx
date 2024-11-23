@@ -44,6 +44,8 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [score3, setScore3] = useState(0);
   const [score4, setScore4] = useState(0);
 
+  const colors = useRef(Array(4).fill('white'))
+
   const hitWallSound = useRef(
     new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
   );
@@ -54,10 +56,11 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const ballRef = useRef({
     x: canvasWidth / 2,
     y: canvasHeight / 2,
+    color: 'white',
     radius: 8,
   });
   const paddle1Ref = useRef({
-    x: 10,
+    x: 0,
     y: canvasHeight / 2 - pH / 2,
     w: pW,
     h: pH,
@@ -65,13 +68,13 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
   const paddle2Ref = useRef({
     x: canvasWidth / 2 - pH / 2,
-    y: 10,
+    y: 0,
     w: pH,
     h: pW,
     dy: 0,
   });
   const paddle3Ref = useRef({
-    x: canvasWidth - 10 - pW,
+    x: canvasWidth - pW,
     y: canvasHeight / 2 - pH / 2,
     w: pW,
     h: pH,
@@ -79,7 +82,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
   const paddle4Ref = useRef({
     x: canvasWidth / 2 - pH / 2,
-    y: canvasHeight - 10 - pW,
+    y: canvasHeight - pW,
     w: pH,
     h: pW,
     dy: 0,
@@ -131,6 +134,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           paddle2Ref.current.y = data.state[`player2_paddle_y`];
           paddle3Ref.current.x = data.state[`player3_paddle_x`];
           paddle4Ref.current.y = data.state[`player4_paddle_y`];
+          colors.current[0] = data.state[`player1_color`]
+          colors.current[1] = data.state[`player2_color`]
+          colors.current[2] = data.state[`player3_color`]
+          colors.current[3] = data.state[`player4_color`]
           setGameState('started');
         }
         if (data.type === 'player_id') {
@@ -144,6 +151,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           paddle2Ref.current.x = data.state[`player2_paddle_x`];
           paddle3Ref.current.y = data.state[`player3_paddle_y`];
           paddle4Ref.current.x = data.state[`player4_paddle_x`];
+          ballRef.current.color = data.state.ball.color;
         }
         if (data.type === 'play_sound') {
           if (data.collision === 'wall') {
@@ -227,7 +235,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
         keysPressed[1] = false;
       }
     };
-
+const cornerSize = 80;
     const draw = (ctx: CanvasRenderingContext2D) => {
       // drawDashedLine();
       const ball = ballRef.current;
@@ -235,8 +243,39 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       const paddle2 = paddle2Ref.current;
       const paddle3 = paddle3Ref.current;
       const paddle4 = paddle4Ref.current;
+
+      // Draw corners
+      ctx.fillStyle = '#333';
+
+      // Top-left corner
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(cornerSize, 0);
+      ctx.lineTo(0, cornerSize);
+      ctx.fill();
+
+      // Top-right corner
+      ctx.beginPath();
+      ctx.moveTo(canvas.width, 0);
+      ctx.lineTo(canvas.width - cornerSize, 0);
+      ctx.lineTo(canvas.width, cornerSize);
+      ctx.fill();
+
+      // Bottom-left corner
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height);
+      ctx.lineTo(cornerSize, canvas.height);
+      ctx.lineTo(0, canvas.height - cornerSize);
+      ctx.fill();
+
+      // Bottom-right corner
+      ctx.beginPath();
+      ctx.moveTo(canvas.width, canvas.height);
+      ctx.lineTo(canvas.width - cornerSize, canvas.height);
+      ctx.lineTo(canvas.width, canvas.height - cornerSize);
+      ctx.fill();
       // Draw Bal
-      ctx.fillStyle = '#f8f3e3';
+      ctx.fillStyle = ball.color;
       ctx.beginPath();
       ctx.arc(
         ball.x,
@@ -248,16 +287,16 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       ctx.fill()
       ctx.closePath()
       // Paddle 1
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = colors.current[0];
       ctx.fillRect(paddle1.x, paddle1.y, paddle1.w, paddle1.h);
       // Paddle 2
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = colors.current[1];
       ctx.fillRect(paddle2.x, paddle2.y, paddle2.w, paddle2.h);
       // Paddle 3
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = colors.current[2];
       ctx.fillRect(paddle3.x, paddle3.y, paddle3.w, paddle3.h);
       // Paddle 4
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = colors.current[3];
       ctx.fillRect(paddle4.x, paddle4.y, paddle4.w, paddle4.h);
     };
 
