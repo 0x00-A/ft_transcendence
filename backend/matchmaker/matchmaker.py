@@ -46,8 +46,8 @@ class Matchmaker:
 
     @classmethod
     async def request_multi_game(cls, player_id):
-        if await cls.is_client_already_playing(player_id):
-            return
+        # if await cls.is_client_already_playing(player_id):
+        #     return
         cls.multi_games_queue.append(player_id)
         message = {
             'event': 'in_queue'

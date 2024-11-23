@@ -25,12 +25,12 @@ import ArcadeLoader from '../../components/Game/components/ArcadeLoader/ArcadeLo
 import Tournament from '../../components/Tournament/Tournament/Tournament';
 import { toast } from 'react-toastify';
 import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage';
-import NoTournamentIcon from './NoTournament/NoTournamnet';
+import NoTournamentIcon from '../../components/Tournament/components/NoTournament/NoTournamnet';
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatDate } from '@/utils/helpers';
-import MatchmakingScreen from './MatchmakingScreen/MatchmakingScreen';
+import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 
   const Modes = [
@@ -56,9 +56,9 @@ const Game = () => {
   const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
-  const isUnmounting = useRef(false);
+  // const isUnmounting = useRef(false);
 
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
 
   // if (!isLoggedIn)
   //   return;
@@ -176,12 +176,12 @@ const Game = () => {
   //   };
   // }, [setGameAccepted]);
 
-  useEffect(() => {
-    isUnmounting.current = true; // Flag component as ready to unmount
-    return () => {
-      isUnmounting.current = false; // Reset flag for dependency changes
-    };
-  }, []);
+  // useEffect(() => {
+  //   isUnmounting.current = true; // Flag component as ready to unmount
+  //   return () => {
+  //     isUnmounting.current = false; // Reset flag for dependency changes
+  //   };
+  // }, []);
 
   const sendMessage = (message: Record<string, any>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
