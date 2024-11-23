@@ -47,16 +47,15 @@
     border-radius: 5px;
     padding: 5px;
     background-color: #fffbe1;
-    z-index: 999;
-    top: 60px;
-    left: 40px;
+    z-index: 5;
+    top: calc(100% + 1rem);
 }
 
 .fieldError::after {
     content: '';
     position: absolute;
-    top: -19px;
-    left: 11%;
+    top: -20px;
+    left: 50%;
     transform: translateX(-50%);
     border: 10px solid transparent;
     border-bottom-color: #fffbe1;

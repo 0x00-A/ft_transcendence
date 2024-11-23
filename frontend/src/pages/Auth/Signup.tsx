@@ -11,10 +11,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { MdLockOutline } from "react-icons/md";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
-
-import UserIcon from "../../assets/userIcon.svg";
-import EmailIcon from "../../assets/emailIcon.svg";
-import PassIcon from "../../assets/passIcon.svg";
+// Contexts
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
 // Types
 import { SignupFormData } from '@/types/apiTypes';
@@ -93,15 +90,15 @@ const Signup = ({setIslogin}) => {
         </div>
         <div className={css.inputContainer}>
           <MdLockOutline className={css.inputIcon} />
-          <input type={showPassword ? "text" : "password"} required placeholder="password" {...register('password')}/>
-          { showPassword ?  <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("password")}/> :
+          <input type={showPassword.password ? "text" : "password"} required placeholder="password" {...register('password')}/>
+          { showPassword.password ?  <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("password")}/> :
             <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("password")}/>}
           {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
         </div>
         <div className={css.inputContainer}>
           <MdLockOutline className={css.inputIcon} />
-          <input type="password" required placeholder="password confirmation" {...register('password2')}/>
-          { showPassword ?  <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
+          <input type={showPassword.confirm_pass ? "text" : "password"} required placeholder="password confirmation" {...register('password2')}/>
+          { showPassword.confirm_pass ?  <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
             <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/>}
           {errors.password2 && <span className={css.fieldError}>{errors.password2.message}</span>}
         </div>

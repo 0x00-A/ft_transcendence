@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework_simplejwt.tokens import Token
 from ..models.user import User
 from ..models.profile import Profile
+from ..models.friends import FriendRequest
+from ..models.BlockRelationship import BlockRelationship
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.files.base import ContentFile
@@ -84,13 +86,53 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
     friend_request_status = serializers.CharField(required=False)
+    friend_status = serializers.SerializerMethodField()
     # games = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'profile', 'friend_request_status']
+                  'last_name', 'profile', 'friend_status', 'friend_request_status']
 
+    def get_friend_status(self, obj):
+        if 'request' not in self.context or self.context['request'].user == obj:
+            return 'self'
+        try:
+            BlockRelationship.objects.get(blocker=self.context['request'].user, blocked=obj)
+            print('-->>>-you are the blocker-<<--------')
+            return 'Blocker'
+        except BlockRelationship.DoesNotExist:
+            try:
+                BlockRelationship.objects.get(blocker=obj, blocked=self.context['request'].user)
+                print('-->>>-you are the blocked-<<--------')
+                return 'Blocked'
+            except BlockRelationship.DoesNotExist:
+                pass
+        try:
+            as_sender = FriendRequest.objects.get(sender=self.context['request'].user, receiver=obj)
+            print('---as sender-->>', as_sender.status, '<<--------')
+            if as_sender.status == 'accepted':
+                return 'Friends'
+            if as_sender.status == 'pending':
+                return 'Cancel'
+            if as_sender.status == 'rejected':
+                return 'Add'
+            return as_sender.status
+        except FriendRequest.DoesNotExist:
+            try:
+                as_reciever = FriendRequest.objects.get(sender=obj, receiver=self.context['request'].user)
+                print('---as reciever-->>', as_reciever.status, '<<--------')
+                if as_reciever.status == 'accepted':
+                    return 'Friends'
+                if as_reciever.status == 'pending':
+                    return 'Accept'
+                if as_reciever.status == 'rejected':
+                    return 'Add'
+                return as_reciever.status
+            except FriendRequest.DoesNotExist:
+                return 'Add'
+            # print('---as reciever-->>', as_reciever.status, '<<--------')
+        return None
     # def get_games(self, obj):
     #     games_as_player1 = obj.games_as_player1.all()
     #     games_as_player2 = obj.games_as_player2.all()

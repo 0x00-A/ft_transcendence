@@ -7,7 +7,6 @@ import { FaUserFriends } from "react-icons/fa";
 import { useGetData } from "@/api/apiHooks";
 // Components
 import Loading from "@/components/Friends/Loading";
-import { c } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
 import { Navigate, replace, useNavigate } from 'react-router-dom';
 
 interface FriendProfile {
@@ -23,15 +22,18 @@ interface Friend {
 }
 
 
-const ProfileFriends = () => {
+const UserProfileFriends = ({username}) => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
-    const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>(`/friends`);
+    const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>(`/friends/${username}`);
     const navigate = useNavigate();
     const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
     if (isLoading) return <Loading />;
+
+    console.log('==> User profile Friends data == ', friendsData);
+
 
   return (
     <div className={css.profileFriendsContainer}>
@@ -40,7 +42,7 @@ const ProfileFriends = () => {
                 <FaUserFriends className={css.friendsIcon}/>
                 <h3>Friends</h3>
             </div>
-            <button className={css.viewMore} onClick={() => navigate('/friends')}>View more</button>
+            {/* <button className={css.viewMore} onClick={() => navigate('/friends')}>View more</button> */}
         </div>
         <div className={css.friendsList}>
             <div className={css.buttonsGrp}>
@@ -54,7 +56,7 @@ const ProfileFriends = () => {
                 </button>
             </div>
             <div className={css.friendList}>
-                { isLoading && <Loading/> }
+                { isLoading && <Loading /> }
                 { error && <p>{error.message}</p> }
                 { friendsData?.length == 0 && <div className={css.noFriends}>
                     <span>You are lonely</span>
@@ -97,7 +99,7 @@ const ProfileFriends = () => {
   )
 }
 
-export default ProfileFriends
+export default UserProfileFriends
 
 
 

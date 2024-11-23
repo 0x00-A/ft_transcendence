@@ -17,7 +17,7 @@ class SuggestedConnectionsView(APIView):
         user = request.user
 
         mutual_friend_ids = User.objects.filter(friends__in=user.friends.all()).exclude(id=user.id).distinct()
-        
+
         suggested_users = []
         for suggested_user in mutual_friend_ids:
             if suggested_user in user.friends.all():
@@ -26,7 +26,7 @@ class SuggestedConnectionsView(APIView):
                 status = "Pending"
             else:
                 status = "Add Friend"
-            
+
             suggested_users.append({
                 "user": UserSerializer(suggested_user).data,
                 "status": status
@@ -38,7 +38,23 @@ class UserFriendsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
-    def get(self, request):
+    def get(self, request, username=None):
+        if username:
+            try:
+                user = User.objects.get(username=username)
+                friends = user.friends.all()
+                serializer = self.serializer_class(friends, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response(
+                    {'error': 'User does not exist'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            except Exception as e:
+                return Response(
+                    {'error': 'Internal server error'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
         try:
             user = request.user
             friends = user.friends.all()
@@ -46,12 +62,12 @@ class UserFriendsView(APIView):
             return Response(serializer.data)
         except Profile.DoesNotExist:
             return Response(
-                {'error': 'User profile not found'}, 
+                {'error': 'User profile not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
             return Response(
-                {'error': 'Internal server error'}, 
+                {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -92,13 +108,13 @@ class SendFriendRequestView(APIView):
                 blocker=receiver, blocked=sender_user
             ).exists():
                 return Response(
-                    {'error': 'Cannot send friend request as one of the users has blocked the other'}, 
+                    {'error': 'Cannot send friend request as one of the users has blocked the other'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            
+
             if sender_user == receiver:
                 return Response(
-                    {'error': 'Cannot send friend request to yourself'}, 
+                    {'error': 'Cannot send friend request to yourself'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             if receiver in sender_user.friends.all():
@@ -116,7 +132,7 @@ class SendFriendRequestView(APIView):
             if not created:
                 if friend_request.status == 'pending':
                     return Response(
-                        {'error': 'Friend request already sent'}, 
+                        {'error': 'Friend request already sent'},
                         status=status.HTTP_400_BAD_REQUEST
                     )
                 elif friend_request.status == 'rejected':
@@ -132,14 +148,14 @@ class SendFriendRequestView(APIView):
 
         except User.DoesNotExist:
             return Response(
-                {'error': 'User with this username does not exist'}, 
+                {'error': 'User with this username does not exist'},
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
             # Log the exception
             logger.error(f"Internal server error: {e}")
             return Response(
-                {'error': 'Internal server error'}, 
+                {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -151,7 +167,7 @@ class AcceptFriendRequestView(APIView):
         try:
             sender_user = User.objects.get(username=username)
             receiver = request.user
-            
+
             friend_request = FriendRequest.objects.get(sender=sender_user, receiver=receiver, status='pending')
             # Update request status
             friend_request.status = 'accepted'
@@ -165,7 +181,7 @@ class AcceptFriendRequestView(APIView):
 
         except User.DoesNotExist:
             return Response(
-                {'error': 'User does not exist'}, 
+                {'error': 'User does not exist'},
                 status=status.HTTP_404_NOT_FOUND
             )
         except FriendRequest.DoesNotExist:
@@ -175,19 +191,19 @@ class AcceptFriendRequestView(APIView):
             )
         except Exception:
             return Response(
-                {'error': 'Internal server error'}, 
+                {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
 class RejectFriendRequestView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FriendRequestSerializer
-    
+
     def post(self, request, username):
         try:
             sender_user = User.objects.get(username=username)
             receiver_user = request.user
-            
+
             # Fetch pending friend request
             friend_request = FriendRequest.objects.get(
                 sender=sender_user,

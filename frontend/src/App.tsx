@@ -43,6 +43,7 @@ import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
 import MultipleGame from './components/Game/MultipleGame/MultipleGame';
+import UsersProfile from './pages/Profile/UsersProfile';
 
 
 function App() {
@@ -96,6 +97,7 @@ function AppContent() {
     '/leaderboard',
     '/leaderboard/',
     '/profile',
+    '/profile/:username',
     '/auth/2factor',
   ];
   const location = useLocation();
@@ -142,8 +144,8 @@ function AppContent() {
               <Route path="/store" element={<Store />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/profile/" element={<Profile />} />
-              <Route path="/profile/:username" element={<Profile />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:username" element={<UsersProfile />} />
               <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
