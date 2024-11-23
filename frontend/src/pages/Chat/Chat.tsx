@@ -57,8 +57,8 @@ const Chat = () => {
 
 
   return (
-    <WebSocketChatProvider userId={user?.id || 0}>
     <TypingProvider>
+    <WebSocketChatProvider userId={user?.id || 0}>
       <main className={css.CenterContainer}>
         <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
           <div className={css.sidebarLeft} ref={sidebarLeftRef}>
@@ -94,8 +94,8 @@ const Chat = () => {
           )}
         </div>
       </main>
-    </TypingProvider>
     </WebSocketChatProvider>
+    </TypingProvider>
 
   );
 };

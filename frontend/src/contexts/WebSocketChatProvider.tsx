@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
+import { useTyping } from './TypingContext';
 
-// Define types for the message and typing status
 interface MessageProps {
   id: number;
   conversation: number;
@@ -12,16 +12,17 @@ interface MessageProps {
   seen: boolean;
 }
 
-interface TypingStatus {
-  typing: boolean;
-  senderId: number;
-}
 
 interface WebSocketContextType {
   sendMessage: (userId: number, message: string) => void;
   sendTypingStatus: (userId: number, typing: boolean) => void;
+  connectToSocket: (otherUserId: number) => void;
   messages: MessageProps[];
-  typing: TypingStatus | null;
+  lastMessage: {
+    conversationId: number;
+    content: string;
+    timestamp: string;
+  } | null;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
@@ -41,28 +42,29 @@ interface WebSocketProviderProps {
 
 export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ children, userId }) => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
-  const [typing, setTyping] = useState<TypingStatus | null>(null);
+  const [lastMessage, setLastMessage] = useState<{
+    conversationId: number;
+    content: string;
+    timestamp: string;
+  } | null>(null);
+  const { setTyping } = useTyping();
   const socketsRef = useRef<{ [key: number]: WebSocket }>({});
 
-  // Function to get or create WebSocket connection
   const getOrCreateSocket = (otherUserId: number) => {
     if (!socketsRef.current[otherUserId]) {
       const wsUrl = `${getWebSocketUrl(`chat/${otherUserId}/`)}`;
       const socket = new WebSocket(wsUrl);
 
-      // WebSocket message handler
       socket.onmessage = (event) => {
         console.log('WebSocket message received:', event.data);
         const data = JSON.parse(event.data);
 
-        // Handle different message types
         if (data.type === 'chat_message') {
           console.log('New message:', data.message);
 
-          // Create a new message and update the state
           const newMessage: MessageProps = {
             id: Date.now(),
-            conversation: 0, // Assuming no active conversation, set appropriately
+            conversation: 0,
             sender: data.sender_id,
             receiver: userId,
             content: data.message,
@@ -70,16 +72,19 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
             seen: false,
           };
 
-          // Add the new message to the existing messages
           setMessages((prev) => [...prev, newMessage]);
+
+          setLastMessage({
+            conversationId: data.conversation_id,
+            content: data.message,
+            timestamp: new Date().toISOString(),
+          });
 
         } else if (data.type === 'typing_status') {
           console.log('Typing status:', data);
-          // Update the typing status
           setTyping({ typing: data.typing, senderId: data.sender_id });
 
         } else if (data.type === 'mark_seen') {
-          // Mark messages as seen
           setMessages((prev) =>
             prev.map((msg) =>
               msg.sender === data.sender_id ? { ...msg, seen: true } : msg
@@ -88,7 +93,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         }
       };
 
-      // Handle WebSocket closure
       socket.onclose = () => {
         delete socketsRef.current[otherUserId];
       };
@@ -99,7 +103,10 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     return socketsRef.current[otherUserId];
   };
 
-  // Function to send a message
+  const connectToSocket = (otherUserId: number) => {
+    getOrCreateSocket(otherUserId);
+  };
+  
   const sendMessage = (otherUserId: number, message: string) => {
     const socket = getOrCreateSocket(otherUserId);
     if (socket.readyState === WebSocket.OPEN) {
@@ -107,7 +114,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
 
-  // Function to send typing status
   const sendTypingStatus = (otherUserId: number, typing: boolean) => {
     const socket = getOrCreateSocket(otherUserId);
     if (socket.readyState === WebSocket.OPEN) {
@@ -115,7 +121,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
 
-  // Cleanup WebSocket connections on unmount
   useEffect(() => {
     return () => {
       Object.values(socketsRef.current).forEach((socket) => {
@@ -127,7 +132,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   }, []);
 
   return (
-    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, messages, typing }}>
+    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, messages, connectToSocket, lastMessage }}>
       {children}
     </WebSocketContext.Provider>
   );
