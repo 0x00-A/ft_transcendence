@@ -7,33 +7,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         if self.user.is_authenticated:
-
-            self.other_user_id = self.scope["url_route"]["kwargs"]["user_id"]
-            if not self.other_user_id:
-                print("Invalid other_user_id: None")
-                await self.close()
-                return
-            user_id = self.user.id
-            other_user_id = int(self.other_user_id)
-            if not user_id:
-                print("Invalid user_id: None")
-                await self.close()
-                return
-
-            print("other_user_id from URL:", self.scope["url_route"]["kwargs"].get("user_id"))
-
-            self.room_name = f"chat_{min(user_id, other_user_id)}_{max(user_id, other_user_id)}"
-            self.room_group_name = f"chat_{self.room_name}"
-
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+            self.user_group_name = f"user_{self.user.id}"
+            
+            await self.channel_layer.group_add(self.user_group_name, self.channel_name)
             await self.accept()
-
         else:
             await self.close()
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        return await super().disconnect(close_code)
+        if self.user.is_authenticated:
+            await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -49,57 +32,75 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def handle_send_message(self, data):
         message = data.get("message")
+        receiver_id = data.get("receiver_id") 
         sender_id = self.user.id
-        receiver_id = int(self.other_user_id)
+
+        if not receiver_id or not message:
+            return  
 
         conversation = await self.save_message(sender_id, receiver_id, message)
 
         await self.channel_layer.group_send(
-            self.room_group_name,
+            f"user_{sender_id}",
             {
                 "type": "chat_message",
                 "message": message,
                 "sender_id": sender_id,
+                "receiver_id": receiver_id,
+                "conversation_id": conversation.id,
+            }
+        )
+
+        await self.channel_layer.group_send(
+            f"user_{receiver_id}",
+            {
+                "type": "chat_message",
+                "message": message,
+                "sender_id": sender_id,
+                "receiver_id": receiver_id,
                 "conversation_id": conversation.id,
             }
         )
 
     async def handle_typing_status(self, data):
         typing = data.get("typing", False)
-        sender_id = self.user.id
+        receiver_id = data.get("receiver_id")
+        print("_________________________", receiver_id , "______________")
+
+        if not receiver_id:
+            return 
 
         await self.channel_layer.group_send(
-            self.room_group_name,
+            f"user_{receiver_id}",
             {
                 "type": "typing_status",
                 "typing": typing,
-                "sender_id": sender_id,
+                "receiver_id": receiver_id,
             }
         )
 
     async def handle_mark_seen(self, data):
+        sender_id = data.get("sender_id")
         receiver_id = self.user.id
-        sender_id = int(self.other_user_id)
+
+        if not sender_id:
+            return  
+
         await self.mark_messages_as_seen(sender_id, receiver_id)
         await self.channel_layer.group_send(
-            self.room_group_name,
+            f"user_{sender_id}",
             {
                 "type": "messages_seen",
                 "receiver_id": receiver_id
             }
         )
 
-    async def messages_seen(self, event):
-        await self.send(text_data=json.dumps({
-            "type": "messages_seen",
-            "receiver_id": event["receiver_id"]
-        }))
-
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({
             "type": "chat_message",
             "message": event["message"],
             "sender_id": event["sender_id"],
+            "receiver_id": event["receiver_id"],
             "conversation_id": event["conversation_id"],
         }))
 
@@ -107,7 +108,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "typing_status",
             "typing": event["typing"],
-            "sender_id": event["sender_id"],
+            "receiver_id": event["receiver_id"],
+        }))
+
+    async def messages_seen(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "messages_seen",
+            "receiver_id": event["receiver_id"]
         }))
 
     @sync_to_async

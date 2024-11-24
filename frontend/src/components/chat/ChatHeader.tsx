@@ -22,12 +22,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   const { typing } = useTyping();
   const { user } = useUser(); 
-  const isSender = user?.id === typing.senderId; 
+  const isReceiver = user?.id === typing.receiverId; 
 
 const renderUserStatus = () => {
     if (!onSelectedConversation) return null;
 
-    if (typing.typing && !isSender ) {
+    if (typing.typing && isReceiver ) {
       return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
     }
 
