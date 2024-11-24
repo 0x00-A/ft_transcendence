@@ -21,10 +21,10 @@ channel_layer = get_channel_layer()
 canvas_size: int = 600
 canvas_width: int = 600
 canvas_height: int = 600
-winning_score: int = 3
+losing_score: int = 3
 
 ball_raduis: int = 8
-initial_ball_speed = 5
+initial_ball_speed = 3
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -68,31 +68,36 @@ class GameInstance:
         self.paddle_speed = 4
         self.paddle_width: int = 20
         self.paddle_height: int = 80
-        self.corner_size = 80
+        self.corner_size = 20
         self.state = {
-            "player1_paddle_x": 0,
+            "player1_paddle_x": 20,
             "player1_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player1_paddle_w": self.paddle_width,
             "player1_paddle_h": self.paddle_height,
             "player1_paddle_color": 'red',
+            "player1_lost": False,
 
             "player2_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player2_paddle_y": 0,
+            "player2_paddle_y": 20,
             "player2_paddle_w": self.paddle_height,
             "player2_paddle_h": self.paddle_width,
             "player2_paddle_color": 'blue',
+            "player2_lost": False,
 
-            "player3_paddle_x": canvas_width - self.paddle_width,
+            "player3_paddle_x": canvas_width - self.paddle_width - 20,
             "player3_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player3_paddle_w": self.paddle_width,
             "player3_paddle_h": self.paddle_height,
             "player3_paddle_color": 'orange',
+            "player3_lost": False,
+
 
             "player4_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player4_paddle_y": canvas_height - self.paddle_width,
+            "player4_paddle_y": canvas_height - self.paddle_width - 20,
             "player4_paddle_w": self.paddle_height,
             "player4_paddle_h": self.paddle_width,
             "player4_paddle_color": 'green',
+            "player4_lost": False,
 
             # "player1_score": 0,
             # "player2_score": 0,
@@ -118,11 +123,11 @@ class GameInstance:
 
         # Generate a random angle for 360-degree movement
         # Avoid angles near vertical (straight up or down)
-        while True:
-            angle = random.uniform(0, 2 * math.pi)
-            if not (math.pi / 2 - 0.1 <= angle <= math.pi / 2 + 0.1 or
-                    3 * math.pi / 2 - 0.1 <= angle <= 3 * math.pi / 2 + 0.1):
-                break
+        # while True:
+        angle = random.uniform(0, 2 * math.pi)
+        # if not (math.pi / 2 - 0.1 <= angle <= math.pi / 2 + 0.1 or
+        #         3 * math.pi / 2 - 0.1 <= angle <= 3 * math.pi / 2 + 0.1):
+        #     break
 
         # Set ball direction based on the angle
         self.ball.dx = initial_ball_speed * math.cos(angle)
@@ -134,14 +139,39 @@ class GameInstance:
     def increment_score(self, player):
         if player == 1:
             self.player1_score += 1
-        else:
+        elif player == 2:
             self.player2_score += 1
-        if self.player1_score >= winning_score:
-            self.winner = 1
+        elif player == 3:
+            self.player3_score += 1
+        elif player == 4:
+            self.player4_score += 1
+
+        # if self.player1_score >= losing_score:
+        #     self.state['player1_lost'] = True
+        # if self.player2_score >= losing_score:
+        #     self.state['player2_lost'] = True
+        # if self.player3_score >= losing_score:
+        #     self.state['player3_lost'] = True
+        # if self.player4_score >= losing_score:
+        #     self.state['player4_lost'] = True
+
+        if self.lost_players_count() >= 3:
+            self.winner = self.get_winner()
             self.is_over = True
-        elif self.player2_score >= winning_score:
-            self.winner = 2
-            self.is_over = True
+
+    def lost_players_count(self):
+        count = 0
+        players = ['player1', 'player2', 'player3', 'player4']
+        for p in players:
+            if self.state[f'{p}_lost']:
+                count += 1
+        return count
+
+    def get_winner(self):
+        players = [1, 2, 3, 4]
+        for p in players:
+            if not self.state[f'player{p}_lost']:
+                return p
 
     def reverse_vertical_direction(self):
         self.ball.dy = -self.ball.dy
@@ -151,14 +181,25 @@ class GameInstance:
         else:
             self.ball.y = canvas_height - self.ball.radius
 
+    def reverse_horizontal_direction(self):
+        self.ball.dx = -self.ball.dx
+        # Correct the ball position to stay within bounds
+        if self.ball.x - self.ball.radius <= 0:
+            self.ball.x = self.ball.radius
+        else:
+            self.ball.x = canvas_size - self.ball.radius
+
     def is_colliding_with_left_wall(self):
         return self.ball.x - self.ball.radius <= 0
 
     def is_colliding_with_right_wall(self):
         return self.ball.x + self.ball.radius >= canvas_width
 
-    def is_colliding_with_top_buttom_walls(self):
-        return self.ball.y - self.ball.radius <= 0 or self.ball.y + self.ball.radius >= canvas_height
+    def is_colliding_with_top_wall(self):
+        return self.ball.y - self.ball.radius <= 0
+
+    def is_colliding_with_buttom_wall(self):
+        return self.ball.y + self.ball.radius >= canvas_height
 
     def do_line_segments_intersect(self, x1, y1, x2, y2, x3, y3, x4, y4):
         denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
@@ -252,13 +293,15 @@ class GameInstance:
 
         # Update ball's velocity (dx, dy) based on the new angle
         direction = 1 if self.ball.dx > 0 else -1
-        # self.ball.speed += 0.1
+        self.ball.speed += 0.1
         self.ball.dx = direction * self.ball.speed * \
             math.cos(new_angle)  # Horizontal velocity
         self.ball.dy = self.ball.speed * \
             math.sin(new_angle)  # Vertical velocity
 
-    def check_corner_collision(self, next_x, next_y):
+    def check_corner_collision(self):
+        next_x = self.ball.x + self.ball.dx
+        next_y = self.ball.y + self.ball.dy
         # Define the corners with their line segments
         corners = [
             # Top-left: (0,corner_size) to (corner_size,0)
@@ -307,7 +350,41 @@ class GameInstance:
                 #                  self.ball.dy * self.ball.dy) ** 0.5
                 # self.ball.dx = (self.ball.dx / current_speed) * self.ball.speed
                 # self.ball.dy = (self.ball.dy / current_speed) * self.ball.speed
-                self.reverse_vertical_direction()
+                # self.reverse_vertical_direction()
+
+                # First reverse the direction
+                self.ball.dx = -self.ball.dx
+                self.ball.dy = -self.ball.dy
+
+                # Add random angle variation (between -30 and 30 degrees)
+                angle = random.uniform(-30, 30) * math.pi / \
+                    180  # Convert to radians
+
+                # Calculate new direction while maintaining speed
+                speed = math.sqrt(self.ball.dx * self.ball.dx +
+                                  self.ball.dy * self.ball.dy)
+                current_angle = math.atan2(self.ball.dy, self.ball.dx)
+                new_angle = current_angle + angle
+
+                # Update velocity components
+                self.ball.dx = speed * math.cos(new_angle)
+                self.ball.dy = speed * math.sin(new_angle)
+
+                # relative_impact = (
+                #     self.ball.y - (corner['x1'] + self.corner_size / 2)) / (self.corner_size / 2)
+                # max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+
+                # # Calculate new angle based on relative impact
+                # new_angle = relative_impact * max_bounce_angle
+
+                # # Update ball's velocity (dx, dy) based on the new angle
+                # direction_x = 1 if self.ball.dx > 0 else -1
+                # direction_y = 1 if self.ball.dy > 0 else -1
+                # # self.ball.speed += 0.1
+                # self.ball.dx = direction_x * self.ball.speed * \
+                #     math.cos(new_angle)  # Horizontal velocity
+                # self.ball.dy = direction_y * self.ball.speed * \
+                #     math.sin(new_angle)  # Vertical velocity
 
                 return True
 
@@ -470,33 +547,34 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
     async def handle_keydown(self, direction):
         game: GameInstance = get_game(self.game_id)
+        corner_size = 0
         if self.player_id == 'player3':
             if direction == 'down':
                 new_position = max(
-                    game.corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+                    corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
             elif direction == 'up':
-                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - game.corner_size,
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - corner_size,
                                    game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
             game.state[f"{self.player_id}_paddle_y"] = new_position
         elif self.player_id == 'player1':
             if direction == 'up':
                 new_position = max(
-                    game.corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+                    corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
             elif direction == 'down':
-                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - game.corner_size,
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - corner_size,
                                    game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
             game.state[f"{self.player_id}_paddle_y"] = new_position
         elif self.player_id == 'player4':
             if direction == 'up':
                 new_position = max(
-                    game.corner_size, game.state[f"{self.player_id}_paddle_x"] -
+                    corner_size, game.state[f"{self.player_id}_paddle_x"] -
                     game.paddle_speed
                 )
             elif direction == 'down':
                 new_position = min(
                     canvas_width -
                     game.state[f"{self.player_id}_paddle_w"] -
-                    game.corner_size,
+                    corner_size,
                     game.state[f"{self.player_id}_paddle_x"] +
                     game.paddle_speed
                 )
@@ -504,14 +582,14 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         else:
             if direction == 'down':
                 new_position = max(
-                    game.corner_size, game.state[f"{self.player_id}_paddle_x"] -
+                    corner_size, game.state[f"{self.player_id}_paddle_x"] -
                     game.paddle_speed
                 )
             elif direction == 'up':
                 new_position = min(
                     canvas_width -
                     game.state[f"{self.player_id}_paddle_w"] -
-                    game.corner_size,
+                    corner_size,
                     game.state[f"{self.player_id}_paddle_x"] +
                     game.paddle_speed
                 )
@@ -523,9 +601,13 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             f"------------ player {self.scope['user'].username} disconnected ------------")
         if game_id:
             game: GameInstance = get_game(game_id)
-            game.winner = 1 if self.player_id == 'player2' else 2
-            game.is_over = True
-            await self.broadcast_score_state()
+            # game.winner = 1 if self.player_id == 'player2' else 2
+            # game.is_over = True
+            # await self.broadcast_score_state()
+            await self.channel_layer.group_discard(self.game_id, self.channel_name)
+
+            game.state[f"{self.player_id}_lost"] = True
+            await self.broadcast_player_lost_state()
         return await super().disconnect(close_code)
 
     async def start_game(self, game_id):
@@ -540,47 +622,79 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             await self.check_collision(game)
 
             if game.winner:
-                await Matchmaker.process_result(game_id, game.winner, game.player1_score, game.player2_score)
+                # await Matchmaker.process_multi_game_result(game_id, game.winner, game.player1_score, game.player2_score)
                 break
 
-            await asyncio.sleep(1 / 60)  # Run at 60 FPS
+            await asyncio.sleep(2 / 60)  # Run at 60 FPS
 
     async def check_collision(self, game: GameInstance):
-        next_x = game.ball.x + game.ball.dx
-        next_y = game.ball.y + game.ball.dy
-
-        if game.check_corner_collision(next_x, next_y):
+        if game.check_corner_collision():
             return
 
-        if game.is_colliding_with_paddle("player1_paddle"):
+        if not game.state['player1_lost'] and game.is_colliding_with_paddle("player1_paddle"):
             # await self.play_paddle_sound(game)
             game.handle_paddle_collision("player1_paddle")
-        elif game.is_colliding_with_paddle("player3_paddle"):
+            return
+        if not game.state['player3_lost'] and game.is_colliding_with_paddle("player3_paddle"):
             # await self.play_paddle_sound(game)
             game.handle_paddle_collision("player3_paddle")
-        elif game.is_colliding_with_paddle("player2_paddle"):
+            return
+        if not game.state['player2_lost'] and game.is_colliding_with_paddle("player2_paddle"):
             # await self.play_paddle_sound(game)
             game.handle_paddle_collision("player2_paddle")
-        elif game.is_colliding_with_paddle("player4_paddle"):
+            return
+        if not game.state['player4_lost'] and game.is_colliding_with_paddle("player4_paddle"):
             # await self.play_paddle_sound(game)
             game.handle_paddle_collision("player4_paddle")
+            return
 
-        if game.is_colliding_with_top_buttom_walls():
+        if game.is_colliding_with_top_wall():
+            game.increment_score(2)
+            # await self.broadcast_score_state()
             # await self.play_wall_sound(game)
-            game.reverse_vertical_direction()
-            # game.reset_ball()
-
-        if game.is_colliding_with_left_wall():
-            # game.increment_score(2)
+            if game.state['player2_lost']:
+                game.reverse_vertical_direction()
+            else:
+                game.reset_ball()
+        elif game.is_colliding_with_buttom_wall():
+            game.increment_score(4)
+            # await self.play_wall_sound(game)
             # await self.broadcast_score_state()
-            # game.reset_ball()
-            game.ball.dx = -game.ball.dx
+            if game.state['player4_lost']:
+                game.reverse_vertical_direction()
+            else:
+                game.reset_ball()
 
-        if game.is_colliding_with_right_wall():
-            # game.increment_score(1)
+        elif game.is_colliding_with_left_wall():
+            game.increment_score(1)
+            if game.state['player1_lost']:
+                game.reverse_horizontal_direction()
+            else:
+                game.reset_ball()
             # await self.broadcast_score_state()
-            # game.reset_ball()
-            game.ball.dx = -game.ball.dx
+            # game.ball.dx = -game.ball.dx
+
+        elif game.is_colliding_with_right_wall():
+            game.increment_score(3)
+            if game.state['player3_lost']:
+                game.reverse_horizontal_direction()
+            else:
+                game.reset_ball()
+            # await self.broadcast_score_state()
+            # game.ball.dx = -game.ball.dx
+
+        if not game.state['player1_lost'] and game.player1_score >= losing_score:
+            game.state['player1_lost'] = True
+            await self.broadcast_player_lost_state()
+        if not game.state['player2_lost'] and game.player2_score >= losing_score:
+            game.state['player2_lost'] = True
+            await self.broadcast_player_lost_state()
+        if not game.state['player3_lost'] and game.player3_score >= losing_score:
+            game.state['player3_lost'] = True
+            await self.broadcast_player_lost_state()
+        if not game.state['player4_lost'] and game.player4_score >= losing_score:
+            game.state['player4_lost'] = True
+            await self.broadcast_player_lost_state()
 
     async def play_paddle_sound(self, game):
         await self.channel_layer.group_send(
@@ -609,14 +723,67 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 'player1_state': {
                     'player1_score': game.player1_score,
                     'player2_score': game.player2_score,
+                    'player3_score': game.player3_score,
+                    'player4_score': game.player4_score,
                     "is_winner": True if game.winner == 1 else False,
                     "game_over": True if game.winner else False,
                 },
                 'player2_state': {
                     'player1_score': game.player2_score,
-                    'player2_score': game.player1_score,
+                    'player2_score': game.player3_score,
+                    'player3_score': game.player4_score,
+                    'player4_score': game.player1_score,
                     "is_winner": True if game.winner == 2 else False,
                     "game_over": True if game.winner else False,
+                },
+                'player3_state': {
+                    'player1_score': game.player3_score,
+                    'player2_score': game.player4_score,
+                    'player3_score': game.player1_score,
+                    'player4_score': game.player2_score,
+                    "is_winner": True if game.winner == 3 else False,
+                    "game_over": True if game.winner else False,
+                },
+                'player4_state': {
+                    'player1_score': game.player4_score,
+                    'player2_score': game.player1_score,
+                    'player3_score': game.player2_score,
+                    'player4_score': game.player3_score,
+                    "is_winner": True if game.winner == 4 else False,
+                    "game_over": True if game.winner else False,
+                },
+            }
+        )
+
+    async def broadcast_player_lost_state(self):
+        game: GameInstance = games[self.game_id]
+        await self.channel_layer.group_send(
+            game.game_id,
+            {
+                'type': 'player.lost',
+                'player1_state': {
+                    'player1_lost': game.state["player1_lost"],
+                    'player2_lost': game.state["player2_lost"],
+                    'player3_lost': game.state["player3_lost"],
+                    'player4_lost': game.state["player4_lost"],
+                },
+                'player2_state': {
+                    'player1_lost': game.state["player2_lost"],
+                    'player2_lost': game.state["player3_lost"],
+                    'player3_lost': game.state["player4_lost"],
+                    'player4_lost': game.state["player1_lost"],
+                },
+                'player3_state': {
+                    'player1_lost': game.state["player3_lost"],
+                    'player2_lost': game.state["player4_lost"],
+                    'player3_lost': game.state["player1_lost"],
+                    'player4_lost': game.state["player2_lost"],
+                },
+                'player4_state': {
+                    'player1_lost': game.state["player4_lost"],
+                    'player2_lost': game.state["player1_lost"],
+                    'player3_lost': game.state["player2_lost"],
+                    'player4_lost': game.state["player3_lost"],
                 },
             }
         )
@@ -678,6 +845,14 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(
             {
                 'type': 'score_update',
+                'state': event[f"{self.player_id}_state"]
+            }
+        ))
+
+    async def player_lost(self, event):
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'player_lost',
                 'state': event[f"{self.player_id}_state"]
             }
         ))
