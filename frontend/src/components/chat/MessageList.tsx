@@ -18,9 +18,8 @@ import {
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
-import { formatConversationTime } from '@/utils/formatConversationTime';
 import { toast } from 'react-toastify';
-import { Conversations, conversationProps } from '@/types/apiTypes';
+import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 
 
@@ -74,7 +73,7 @@ const MessageList: React.FC<MessageListProps> = ({
     refetch,
     isLoading: conversationsLoading,
     error: conversationsError 
-  } = useGetData<Conversations[]>('chat/conversations');
+  } = useGetData<conversationProps[]>('chat/conversations');
   
   
   console.log("rander MessageList >>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -86,30 +85,6 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   }, [lastMessage]);
 
-  const transformedMessages = useMemo(() => {
-    return ConversationList?.map(conversation => {
-      const isCurrentUserUser1 = user?.id === conversation.user1_id;
-      const otherUserUsername = isCurrentUserUser1 ? conversation.user2_username : conversation.user1_username;
-      const otherUserAvatar = isCurrentUserUser1 ? conversation.user2_avatar : conversation.user1_avatar;
-      let lastMessage = conversation.last_message || 'send first message';
-      if (lastMessage.length > 10) {
-        lastMessage = lastMessage.slice(0, 10) + "...";
-      }
-      return {
-        id: conversation.id,
-        avatar: otherUserAvatar,
-        name: otherUserUsername,
-        lastMessage: lastMessage,
-        time: formatConversationTime(conversation.updated_at),
-        unreadCount: conversation.unread_messages || undefined,
-        status: conversation.is_online,
-        blocked: false,
-        conversationId: conversation.id,
-        user1_id: conversation.user1_id,
-        user2_id: conversation.user2_id,
-      };
-    }) || [];
-  }, [ConversationList, user, formatConversationTime]);
 
   const filteredFriends = useMemo(() => {
     return friendsData?.filter((friend) =>
@@ -127,7 +102,7 @@ const MessageList: React.FC<MessageListProps> = ({
     const selectedFriend = location.state?.selectedFriend;
     
     if (selectedFriend) {
-      const matchedConversation = transformedMessages.find(
+      const matchedConversation = ConversationList?.find(
         conversation => conversation.name === selectedFriend.username
       );
   
@@ -165,7 +140,7 @@ const MessageList: React.FC<MessageListProps> = ({
       isOpen: false,
       activeIndex: null,
     }));
-  }, [transformedMessages, handleConversationSelect]);
+  }, [ConversationList, handleConversationSelect]);
 
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
@@ -282,24 +257,9 @@ const MessageList: React.FC<MessageListProps> = ({
   const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
-      
-      const transformedConversation: conversationProps = {
-        id: newConversation.id,
-        user1_id: newConversation.user1_id,
-        user2_id: newConversation.user2_id,
-        avatar: user?.id === newConversation.user1_id 
-          ? newConversation.user2_avatar 
-          : newConversation.user1_avatar,
-        name: user?.id === newConversation.user1_id 
-          ? newConversation.user2_username 
-          : newConversation.user1_username,
-        lastMessage: newConversation.last_message || 'Send first message',
-        time: formatConversationTime(newConversation.created_at),
-        status: newConversation.is_online,
-        blocked: false,
-      };
+    
       await refetch();
-      handleConversationSelect(transformedConversation);
+      handleConversationSelect(newConversation);
       setIsSearchActive(false);
       setSearchQuery('');
       setMenuState(prev => ({
@@ -371,7 +331,7 @@ const MessageList: React.FC<MessageListProps> = ({
             )}
           </>
         ) : (
-          transformedMessages.map((conversation, index) => (
+          ConversationList?.map((conversation, index) => (
             <MessageItem
               key={index}
               {...conversation}
@@ -420,7 +380,7 @@ const MessageList: React.FC<MessageListProps> = ({
             </div>
             <div 
               className={css.menuItem}
-              onClick={() => handleDelete(transformedMessages[menuState.activeIndex!].id)}
+              onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
               >
               <FaTrash />
               <span>Delete chat</span>

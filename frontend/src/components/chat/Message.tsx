@@ -1,6 +1,7 @@
 import React from 'react';
 import css from './MessageArea.module.css';
 import { useUser } from '@/contexts/UserContext';
+import { conversationProps } from '@/types/apiTypes';
 
 interface MessageProps {
   id: number;
@@ -11,16 +12,10 @@ interface MessageProps {
   timestamp: string;
   seen?: boolean;
 }
-interface ConversationProps {
-  user1_id: number;
-  id: number;
-  avatar: string;
-  name: string;
-}
 
 interface MessageComponentProps {
   message: MessageProps;
-  conversationData: ConversationProps | null;
+  conversationData: conversationProps | null;
 }
 
 

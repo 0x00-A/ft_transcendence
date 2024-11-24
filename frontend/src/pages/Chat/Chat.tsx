@@ -11,19 +11,7 @@ import ChatContent from '@/components/chat/ChatContent';
 import { TypingProvider } from '@/contexts/TypingContext';
 import { useUser } from '@/contexts/UserContext';
 import { WebSocketChatProvider } from '@/contexts/WebSocketChatProvider';
-
-interface conversationProps {
-  user1_id: number;
-  user2_id: number;
-  id: number;
-  avatar: string;
-  name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: boolean;
-  blocked: boolean;
-}
+import { conversationProps } from '@/types/apiTypes';
 
 
 const Chat = () => {
