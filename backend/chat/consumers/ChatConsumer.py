@@ -65,6 +65,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def handle_typing_status(self, data):
         typing = data.get("typing", False)
         receiver_id = data.get("receiver_id")
+        sender_id = self.user.id
         print("_________________________", receiver_id , "______________")
 
         if not receiver_id:
@@ -75,7 +76,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 "type": "typing_status",
                 "typing": typing,
-                "receiver_id": receiver_id,
+                "sender_id": sender_id,
             }
         )
 
@@ -108,7 +109,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "typing_status",
             "typing": event["typing"],
-            "receiver_id": event["receiver_id"],
+            "sender_id": event["sender_id"],
         }))
 
     async def messages_seen(self, event):
