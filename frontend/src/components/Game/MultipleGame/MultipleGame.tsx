@@ -14,6 +14,7 @@ const canvasWidth = 600;
 const canvasHeight = 600;
 const pW = 20;
 const pH = 80;
+const cornerSize = 20;
 
 interface GameProps { game_address: string;
                      requestMultipleGame?:() => void;
@@ -45,6 +46,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [score4, setScore4] = useState(0);
 
   const colors = useRef(Array(4).fill('white'))
+  const lost = useRef(Array(4).fill(false))
 
   const hitWallSound = useRef(
     new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
@@ -60,7 +62,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     radius: 8,
   });
   const paddle1Ref = useRef({
-    x: 0,
+    x: 20,
     y: canvasHeight / 2 - pH / 2,
     w: pW,
     h: pH,
@@ -68,13 +70,13 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
   const paddle2Ref = useRef({
     x: canvasWidth / 2 - pH / 2,
-    y: 0,
+    y: 20,
     w: pH,
     h: pW,
     dy: 0,
   });
   const paddle3Ref = useRef({
-    x: canvasWidth - pW,
+    x: canvasWidth - 20 - pW,
     y: canvasHeight / 2 - pH / 2,
     w: pW,
     h: pH,
@@ -82,7 +84,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
   const paddle4Ref = useRef({
     x: canvasWidth / 2 - pH / 2,
-    y: canvasHeight - pW,
+    y: canvasHeight - 20 - pW,
     w: pH,
     h: pW,
     dy: 0,
@@ -140,6 +142,13 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           colors.current[3] = data.state[`player4_color`]
           setGameState('started');
         }
+        if (data.type === 'player_lost') {
+          console.log(data);
+          lost.current[0] = data.state[`player1_lost`]
+          lost.current[1] = data.state[`player2_lost`]
+          lost.current[2] = data.state[`player3_lost`]
+          lost.current[3] = data.state[`player4_lost`]
+        }
         if (data.type === 'player_id') {
           console.log(data);
           setPlayer(data.player)
@@ -161,8 +170,11 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           }
         }
         if (data.type === 'score_update') {
+          console.log(data);
           setScore1(data.state[`player1_score`]);
           setScore2(data.state[`player2_score`]);
+          setScore3(data.state[`player3_score`]);
+          setScore4(data.state[`player4_score`]);
           if (data.state.game_over) {
             setIsWinner(data.state.is_winner);
             setIsGameOver(true);
@@ -235,7 +247,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
         keysPressed[1] = false;
       }
     };
-const cornerSize = 80;
     const draw = (ctx: CanvasRenderingContext2D) => {
       // drawDashedLine();
       const ball = ballRef.current;
@@ -245,7 +256,7 @@ const cornerSize = 80;
       const paddle4 = paddle4Ref.current;
 
       // Draw corners
-      ctx.fillStyle = '#333';
+      ctx.fillStyle = '#ffffff';
 
       // Top-left corner
       ctx.beginPath();
@@ -287,17 +298,25 @@ const cornerSize = 80;
       ctx.fill()
       ctx.closePath()
       // Paddle 1
-      ctx.fillStyle = colors.current[0];
-      ctx.fillRect(paddle1.x, paddle1.y, paddle1.w, paddle1.h);
+      if (!lost.current[0]) {
+        ctx.fillStyle = colors.current[0];
+        ctx.fillRect(paddle1.x, paddle1.y, paddle1.w, paddle1.h);
+      }
       // Paddle 2
-      ctx.fillStyle = colors.current[1];
-      ctx.fillRect(paddle2.x, paddle2.y, paddle2.w, paddle2.h);
+      if (!lost.current[1]) {
+        ctx.fillStyle = colors.current[1];
+        ctx.fillRect(paddle2.x, paddle2.y, paddle2.w, paddle2.h);
+      }
       // Paddle 3
-      ctx.fillStyle = colors.current[2];
-      ctx.fillRect(paddle3.x, paddle3.y, paddle3.w, paddle3.h);
+      if (!lost.current[2]) {
+        ctx.fillStyle = colors.current[2];
+        ctx.fillRect(paddle3.x, paddle3.y, paddle3.w, paddle3.h);
+      }
       // Paddle 4
-      ctx.fillStyle = colors.current[3];
-      ctx.fillRect(paddle4.x, paddle4.y, paddle4.w, paddle4.h);
+      if (!lost.current[3]) {
+        ctx.fillStyle = colors.current[3];
+        ctx.fillRect(paddle4.x, paddle4.y, paddle4.w, paddle4.h);
+      }
     };
 
     const update = () => {
@@ -376,19 +395,18 @@ const cornerSize = 80;
 
   return (
     <div className={css.container}>
-      <p className='text-white '>{player}</p>
       <div className="relative w-[750px]"> {/* Container with extra width for side scores */}
         {/* Top Score */}
         <div className="absolute top-[-40px] left-1/2 transform -translate-x-1/2">
           <div className={`${players[1].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {players[1].name} - {players[1].score}
+            {'score against'} - {score2}
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-4">
           {/* Left Score */}
           <div className={`${players[0].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {players[0].name} - {players[0].score}
+            {'score against'} - {score1}
           </div>
 
           {/* Game Area */}
@@ -426,14 +444,14 @@ const cornerSize = 80;
 
           {/* Right Score */}
           <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {players[2].name} - {players[2].score}
+            {'score against'} - {score3}
           </div>
         </div>
 
         {/* Bottom Score */}
         <div className="absolute bottom-[-40px] left-1/2 transform -translate-x-1/2">
           <div className={`${players[3].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {players[3].name} - {players[3].score}
+            {'score against'} - {score4}
           </div>
         </div>
       </div>
