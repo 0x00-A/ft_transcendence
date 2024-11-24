@@ -39,7 +39,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, connectToSocket } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus } = useWebSocket();
 
   
   const isCurrentUserUser1 = user?.id === onSelectedConversation.user1_id;
@@ -53,12 +53,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       ...websocketMessages,
     ]);
   }, [fetchedMessages, websocketMessages]);
-  
-  useEffect(() => {
-    if (otherUserId) {
-      connectToSocket(otherUserId);
-    }
-  }, [connectToSocket, otherUserId]);
+
   
   const handleSendMessage = useCallback(
     (message: string) => {

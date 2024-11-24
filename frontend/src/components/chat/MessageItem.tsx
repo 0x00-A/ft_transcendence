@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react';
 import css from './MessageItem.module.css';
 import { CgMoreO } from 'react-icons/cg';
+import { useTyping } from '@/contexts/TypingContext';
+import { useUser } from '@/contexts/UserContext';
 
 interface MessageItemProps {
   avatar: string;
@@ -31,8 +33,14 @@ const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
     },
     ref
   ) => {
+    const { user } = useUser();
+    const { typing } = useTyping();
+    
+    const isReceiver = typing.receiverId == user?.id;
+    const typingIndicator = typing.typing && isReceiver
+      ? 'Typing...'
+      : lastMessage;
 
-    console.log(">>>>>>>message item>>>>>>>>>>");
     return (
       <div
         ref={ref}
@@ -47,7 +55,9 @@ const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
               <span className={css.time}>{time}</span>
             </div>
             <div className={css.messageBody}>
-              <span className={css.lastMessage}>{lastMessage}</span>
+              <span className={`${css.lastMessage} ${typing.typing && isReceiver ? css.typing : ''}`}>
+                {typingIndicator}
+              </span>
               {unreadCount && unreadCount > 0 && (
                 <span className={css.unreadCount}>{unreadCount}</span>
               )}
