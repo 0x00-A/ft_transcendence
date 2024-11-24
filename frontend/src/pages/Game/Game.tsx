@@ -262,7 +262,7 @@ const Game = () => {
   }
 
   if (gameState === 'startMultiGame' && gameAdrress) {
-      return <MultipleGame game_address={gameAdrress} onReturn={()=> {}} p1_id={1} p2_id={2} />
+      return <MultipleGame requestMultipleGame={requestMultipleGame} game_address={gameAdrress} onReturn={()=> {}} p1_id={1} p2_id={2} />
   }
 
   if (gameState === 'startGame' && gameAdrress) {

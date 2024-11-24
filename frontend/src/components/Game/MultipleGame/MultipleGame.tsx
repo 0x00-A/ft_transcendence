@@ -375,7 +375,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   // }
 
   useEffect(() => {
-    if (gameState === 'started') return;
+    // if (gameState === 'started') return;
 
     if (count > 0) {
       const timer = setTimeout(() => {
@@ -387,10 +387,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
 
   const players = [
-    { id: 1, name: "Player 1", score: 5, color: "bg-blue-500" },
-    { id: 2, name: "Player 2", score: 3, color: "bg-red-500" },
-    { id: 3, name: "Player 3", score: 7, color: "bg-green-500" },
-    { id: 4, name: "Player 4", score: 4, color: "bg-yellow-500" }
+    { id: 1, name: "Player 1", score: 5, color: "" },
+    { id: 2, name: "Player 2", score: 3, color: "" },
+    { id: 3, name: "Player 3", score: 7, color: "" },
+    { id: 4, name: "Player 4", score: 4, color: "" }
   ];
 
   return (
@@ -410,37 +410,69 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           </div>
 
           {/* Game Area */}
-          <div
-            className="min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
-            style={{
-              boxSizing: 'content-box',
-              userSelect: 'none',
-              touchAction: 'manipulation'
-            }}
-          >
-            {currentScreen === 'game' && (
-              <div id="gameScreen" className={css.gameScreenDiv}>
-                {/* <div className={css.scoreWrapper}>
-                  <div className={css.player1Score}>{score1}</div>
-                  <div className={css.player2Score}>{score2}</div>
-                </div> */}
-                <canvas
-                  width={canvasWidth}
-                  height={canvasHeight}
-                  id={css.gameCanvas}
-                  ref={canvasRef}
-                />
+          {gameState === 'started' || gameState === 'ended' ? (
+              <div
+                className="min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+                style={{
+                  boxSizing: 'content-box',
+                  userSelect: 'none',
+                  touchAction: 'manipulation'
+                }}
+              >
+                {currentScreen === 'game' && (
+                <div id="gameScreen" className={css.gameScreenDiv}>
+                    {/* <div className={css.scoreWrapper}>
+                      <div className={css.player1Score}>{score1}</div>
+                      <div className={css.player2Score}>{score2}</div>
+                    </div> */}
+                    <canvas
+                      width={canvasWidth}
+                      height={canvasHeight}
+                      id={css.gameCanvas}
+                      ref={canvasRef}
+                    />
+                </div>
+
+                )}
+                {currentScreen === 'end' && (
+                  <EndGameScreen
+                    isWinner={isWinner}
+                    handleRetry={handleRetry}
+                    handleMainMenu={handleMainMenu}
+                    isMatchTournament={isMatchTournament}
+                  />
+                )}
+              </div>
+          ) :
+
+          (
+              <div
+                className="relative flex items-center justify-center min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+                style={{
+                  boxSizing: 'content-box',
+                  userSelect: 'none',
+                  touchAction: 'manipulation'
+                }}
+              >
+              {/* <div className="relative flex items-center justify-center"> */}
+                  <div
+                    className="text-9xl font-bold mb-8 transition-all duration-500"
+                    style={{
+                      opacity: count === 1 ? 0 : 1,
+                      transform: `scale(${count === 1 ? 1.5 : 1})`
+                    }}
+                  >
+                    {count || <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-6xl font-bold animate-pulse text-yellow-400">
+                        GO!
+                      </div>
+                    </div>}
+                  </div>
+              {/* </div> */}
             </div>
-            )}
-            {currentScreen === 'end' && (
-              <EndGameScreen
-                isWinner={isWinner}
-                handleRetry={handleRetry}
-                handleMainMenu={handleMainMenu}
-                isMatchTournament={isMatchTournament}
-              />
-            )}
-          </div>
+
+          )
+          }
 
           {/* Right Score */}
           <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
@@ -493,7 +525,41 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
             />
           )}
         </div>
-      {/* {gameState === 'started' || gameState === 'ended' ? (
+
+
+      {gameState === 'started' || gameState === 'ended' ? (
+                  <div
+            className="min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+            style={{
+              boxSizing: 'content-box',
+              userSelect: 'none',
+              touchAction: 'manipulation'
+            }}
+          >
+            {currentScreen === 'game' && (
+              <div id="gameScreen" className={css.gameScreenDiv}>
+                {/* <div className={css.scoreWrapper}>
+                  <div className={css.player1Score}>{score1}</div>
+                  <div className={css.player2Score}>{score2}</div>
+                </div> */}
+                <canvas
+                  width={canvasWidth}
+                  height={canvasHeight}
+                  id={css.gameCanvas}
+                  ref={canvasRef}
+                />
+            </div>
+
+            )}
+            {currentScreen === 'end' && (
+              <EndGameScreen
+                isWinner={isWinner}
+                handleRetry={handleRetry}
+                handleMainMenu={handleMainMenu}
+                isMatchTournament={isMatchTournament}
+              />
+            )}
+          </div>
       ) :
 
       (
@@ -516,7 +582,9 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
         </div>
 
       )
-      } */}
+      }
+
+
       <ReturnBack onClick={onReturn} />
     </div>
   );

@@ -21,10 +21,10 @@ channel_layer = get_channel_layer()
 canvas_size: int = 600
 canvas_width: int = 600
 canvas_height: int = 600
-losing_score: int = 3
+losing_score: int = 7
 
 ball_raduis: int = 8
-initial_ball_speed = 3
+initial_ball_speed = 8
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -118,6 +118,7 @@ class GameInstance:
 
     def reset_ball(self):
         # Reset ball position to the center of the canvas
+        self.ball.color = 'white'
         self.ball.x = canvas_width / 2
         self.ball.y = canvas_height / 2
 
@@ -134,7 +135,7 @@ class GameInstance:
         self.ball.dy = initial_ball_speed * math.sin(angle)
 
         # Set ball speed
-        self.ball.speed = initial_ball_speed
+        # self.ball.speed = initial_ball_speed
 
     def increment_score(self, player):
         if player == 1:
@@ -155,9 +156,9 @@ class GameInstance:
         # if self.player4_score >= losing_score:
         #     self.state['player4_lost'] = True
 
-        if self.lost_players_count() >= 3:
-            self.winner = self.get_winner()
-            self.is_over = True
+        # if self.lost_players_count() >= 3:
+        #     self.winner = self.get_winner()
+        #     self.is_over = True
 
     def lost_players_count(self):
         count = 0
@@ -293,7 +294,7 @@ class GameInstance:
 
         # Update ball's velocity (dx, dy) based on the new angle
         direction = 1 if self.ball.dx > 0 else -1
-        self.ball.speed += 0.1
+        self.ball.speed += 0.2
         self.ball.dx = direction * self.ball.speed * \
             math.cos(new_angle)  # Horizontal velocity
         self.ball.dy = self.ball.speed * \
@@ -425,11 +426,11 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 game: GameInstance = get_game(self.game_id)
                 game.connected_players += 1
                 await self.set_player_id_name()
-                await self.send_countdown_to_clients()
-                await self.broadcast_initial_state()
                 # await self.set_game_started()
                 # Start the game loop
                 if game.connected_players == 4:
+                    await self.send_countdown_to_clients()
+                    await self.broadcast_initial_state()
                     asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
@@ -629,59 +630,58 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
     async def check_collision(self, game: GameInstance):
         if game.check_corner_collision():
+            await self.play_wall_sound(game)
             return
 
         if not game.state['player1_lost'] and game.is_colliding_with_paddle("player1_paddle"):
-            # await self.play_paddle_sound(game)
+            await self.play_paddle_sound(game)
             game.handle_paddle_collision("player1_paddle")
             return
         if not game.state['player3_lost'] and game.is_colliding_with_paddle("player3_paddle"):
-            # await self.play_paddle_sound(game)
+            await self.play_paddle_sound(game)
             game.handle_paddle_collision("player3_paddle")
             return
         if not game.state['player2_lost'] and game.is_colliding_with_paddle("player2_paddle"):
-            # await self.play_paddle_sound(game)
+            await self.play_paddle_sound(game)
             game.handle_paddle_collision("player2_paddle")
             return
         if not game.state['player4_lost'] and game.is_colliding_with_paddle("player4_paddle"):
-            # await self.play_paddle_sound(game)
+            await self.play_paddle_sound(game)
             game.handle_paddle_collision("player4_paddle")
             return
 
         if game.is_colliding_with_top_wall():
-            game.increment_score(2)
-            # await self.broadcast_score_state()
-            # await self.play_wall_sound(game)
             if game.state['player2_lost']:
+                await self.play_wall_sound(game)
                 game.reverse_vertical_direction()
             else:
+                game.increment_score(2)
+                await self.broadcast_score_state()
                 game.reset_ball()
         elif game.is_colliding_with_buttom_wall():
-            game.increment_score(4)
-            # await self.play_wall_sound(game)
-            # await self.broadcast_score_state()
             if game.state['player4_lost']:
+                await self.play_wall_sound(game)
                 game.reverse_vertical_direction()
             else:
+                game.increment_score(4)
                 game.reset_ball()
-
+                await self.broadcast_score_state()
         elif game.is_colliding_with_left_wall():
-            game.increment_score(1)
             if game.state['player1_lost']:
+                await self.play_wall_sound(game)
                 game.reverse_horizontal_direction()
             else:
+                game.increment_score(1)
                 game.reset_ball()
-            # await self.broadcast_score_state()
-            # game.ball.dx = -game.ball.dx
-
+                await self.broadcast_score_state()
         elif game.is_colliding_with_right_wall():
-            game.increment_score(3)
             if game.state['player3_lost']:
+                await self.play_wall_sound(game)
                 game.reverse_horizontal_direction()
             else:
+                game.increment_score(3)
                 game.reset_ball()
-            # await self.broadcast_score_state()
-            # game.ball.dx = -game.ball.dx
+                await self.broadcast_score_state()
 
         if not game.state['player1_lost'] and game.player1_score >= losing_score:
             game.state['player1_lost'] = True
@@ -695,6 +695,11 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         if not game.state['player4_lost'] and game.player4_score >= losing_score:
             game.state['player4_lost'] = True
             await self.broadcast_player_lost_state()
+
+        if game.lost_players_count() >= 3:
+            game.winner = game.get_winner()
+            game.is_over = True
+            await self.broadcast_score_state()
 
     async def play_paddle_sound(self, game):
         await self.channel_layer.group_send(
