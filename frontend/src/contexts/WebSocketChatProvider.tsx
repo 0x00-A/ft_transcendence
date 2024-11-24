@@ -80,7 +80,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         });
 
       } else if (data.type === 'typing_status') {
-        setTyping({ typing: data.typing, receiverId: data.receiver_id });
+        setTyping({ typing: data.typing, senderId: data.sender_id });
 
       } else if (data.type === 'messages_seen') {
         setMessages((prev) =>

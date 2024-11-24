@@ -5,6 +5,8 @@ import { useTyping } from '@/contexts/TypingContext';
 import { useUser } from '@/contexts/UserContext';
 
 interface MessageItemProps {
+  user_id: number;
+
   avatar: string;
   name: string;
   lastMessage: string;
@@ -20,6 +22,7 @@ interface MessageItemProps {
 const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
   (
     {
+      user_id,
       avatar,
       name,
       lastMessage,
@@ -33,10 +36,9 @@ const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
     },
     ref
   ) => {
-    const { user } = useUser();
     const { typing } = useTyping();
     
-    const isReceiver = typing.receiverId == user?.id;
+    const isReceiver = typing.senderId == user_id;
     const typingIndicator = typing.typing && isReceiver
       ? 'Typing...'
       : lastMessage;

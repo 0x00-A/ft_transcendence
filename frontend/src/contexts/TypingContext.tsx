@@ -1,8 +1,8 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface TypingContextType {
-  typing: { typing: boolean; receiverId: number | null };
-  setTyping: React.Dispatch<React.SetStateAction<{ typing: boolean; receiverId: number | null }>>;
+  typing: { typing: boolean; senderId: number | null };
+  setTyping: React.Dispatch<React.SetStateAction<{ typing: boolean; senderId: number | null }>>;
 }
 
 const TypingContext = createContext<TypingContextType | undefined>(undefined);
@@ -12,7 +12,7 @@ interface TypingProviderProps {
 }
 
 export const TypingProvider: React.FC<TypingProviderProps> = ({ children }) => {
-  const [typing, setTyping] = useState<{ typing: boolean; receiverId: number | null }>({ typing: false, receiverId: null });
+  const [typing, setTyping] = useState<{ typing: boolean; senderId: number | null }>({ typing: false, senderId: null });
 
   return (
     <TypingContext.Provider value={{ typing, setTyping }}>
