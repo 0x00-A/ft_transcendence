@@ -7,10 +7,8 @@ import MessageList from '../../components/chat/MessageList';
 import OptionsButton from '../../components/chat/OptionsButton';
 import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
-import messages from './messages';
 import ChatContent from '@/components/chat/ChatContent';
 import { TypingProvider } from '@/contexts/TypingContext';
-import { WebSocketProvider } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { WebSocketChatProvider } from '@/contexts/WebSocketChatProvider';
 
