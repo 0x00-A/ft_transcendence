@@ -3,8 +3,8 @@ import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
-import { useUser } from '@/contexts/UserContext';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { conversationProps } from '@/types/apiTypes';
 
 interface MessageProps {
   id: number;
@@ -16,24 +16,16 @@ interface MessageProps {
   seen?: boolean;
 }
 
-interface ConversationProps {
-  user1_id: number;
-  user2_id: number;
-  id: number;
-  avatar: string;
-  name: string;
-}
 
 interface ChatContentProps {
   customSticker: string;
-  onSelectedConversation: ConversationProps;
+  onSelectedConversation: conversationProps;
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
   onSelectedConversation,
   customSticker,
 }) => {
-  const { user } = useUser();
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
   const { data: fetchedMessages, isLoading, error } = useGetData<MessageProps[]>(
     `chat/conversations/${onSelectedConversation?.id}/messages`
@@ -41,11 +33,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   const { messages: websocketMessages, sendMessage, sendTypingStatus } = useWebSocket();
 
-  
-  const isCurrentUserUser1 = user?.id === onSelectedConversation.user1_id;
-  const otherUserId = isCurrentUserUser1
-  ? onSelectedConversation.user2_id
-  : onSelectedConversation.user1_id;
+
   
   useEffect(() => {
     setChatMessages(() => [
@@ -58,17 +46,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
-        sendMessage(otherUserId, message); 
+        sendMessage(onSelectedConversation.user_id, message); 
       }
     },
-    [sendMessage, otherUserId]
+    [sendMessage, onSelectedConversation.user_id]
   );
   
     const handleTyping = useCallback(
       (isTyping: boolean) => {
-        sendTypingStatus(otherUserId, isTyping); 
+        sendTypingStatus(onSelectedConversation.user_id, isTyping); 
       },
-      [sendTypingStatus, otherUserId]
+      [sendTypingStatus, onSelectedConversation.user_id]
     );
 
   return (

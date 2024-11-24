@@ -3,6 +3,7 @@ import css from './MessageArea.module.css';
 import Message from './Message';
 import { useUser } from '@/contexts/UserContext';
 import { useTyping } from '@/contexts/TypingContext';
+import { conversationProps } from '@/types/apiTypes';
 
 interface MessageProps {
   id: number;
@@ -14,18 +15,11 @@ interface MessageProps {
   seen?: boolean;
 }
 
-interface ConversationProps {
-  user1_id: number;
-  user2_id: number;
-  id: number;
-  avatar: string;
-  name: string;
-}
 
 
 interface MessageAreaProps {
   messages: MessageProps[];
-  conversationData: ConversationProps | null;
+  conversationData: conversationProps | null;
 }
 
 const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) => {

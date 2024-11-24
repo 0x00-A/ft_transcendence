@@ -26,6 +26,7 @@ class ConversationSerializer(serializers.ModelSerializer):
             'is_online',
             'created_at', 
             'updated_at'
+            
         ]
     
     def get_user1_avatar(self, obj):

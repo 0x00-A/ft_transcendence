@@ -42,16 +42,40 @@ class GetConversationsView(APIView):
             conversations = Conversation.objects.filter(
                 Q(user1=user) | Q(user2=user)
             ).select_related('user1', 'user2').order_by('-updated_at')
-            # conversations = Conversation.objects.filter(
-            #     Q(user1=user) | Q(user2=user)
-            # ).order_by('-updated_at')
+            
             serializer = ConversationSerializer(conversations, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            conversations_data = []
+
+            for conversation in serializer.data:
+                if user.id == conversation['user1_id']:
+                    other_user_id = conversation['user2_id']
+                    other_user_username = conversation['user2_username']
+                    other_user_avatar = conversation['user2_avatar']
+                else:
+                    other_user_id = conversation['user1_id']
+                    other_user_username = conversation['user1_username']
+                    other_user_avatar = conversation['user1_avatar']
+
+                conversation_data = {
+                    'id': conversation['id'],
+                    'user_id': other_user_id,  
+                    'avatar': other_user_avatar, 
+                    'name': other_user_username, 
+                    'lastMessage': conversation['last_message'][:10] + '...' if len(conversation['last_message']) > 10 else conversation['last_message'],
+                    'time': conversation['updated_at'],
+                    'unreadCount': conversation['unread_messages'] or 0,
+                    'status': conversation['is_online'],
+                    'blocked': False,  
+                }
+                conversations_data.append(conversation_data)
+
+            return Response(conversations_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
                 {'error': 'Internal server error', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
         
 class GetMessagesView(APIView):
     permission_classes = [AllowAny]
