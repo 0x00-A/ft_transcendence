@@ -46,8 +46,8 @@ class Matchmaker:
 
     @classmethod
     async def request_multi_game(cls, player_id):
-        # if await cls.is_client_already_playing(player_id):
-        #     return
+        if await cls.is_client_already_playing(player_id):
+            return
         cls.multi_games_queue.append(player_id)
         message = {
             'event': 'in_queue'
@@ -332,6 +332,14 @@ class Matchmaker:
         game = await Game.objects.aget(game_id=game_id)
 
         await sync_to_async(game.end_game)(winner, p1_score, p2_score)
+        await sync_to_async(game.update_stats)()
+
+    @classmethod
+    async def process_multi_game_result(cls, game_id, winner, p1_score, p2_score, p3_score, p4_score):
+        """Process a single game result and update the database"""
+        game = await MultiGame.objects.aget(game_id=game_id)
+
+        await sync_to_async(game.end_game)(winner, p1_score, p2_score, p3_score, p4_score)
         await sync_to_async(game.update_stats)()
 
     @classmethod

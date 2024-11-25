@@ -8,13 +8,14 @@ import ReturnBack from '../components/ReturnBack/ReturnBack';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import MatchmakingScreen from '@/pages/Game/MatchmakingScreen/MatchmakingScreen';
 import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
+import PlayerCard from './PlayerCard';
 
 
-const canvasWidth = 600;
-const canvasHeight = 600;
-const pW = 20;
+const canvasWidth = 480;
+const canvasHeight = 480;
+const pW = 15;
 const pH = 80;
-const cornerSize = 20;
+const cornerSize = 10;
 
 interface GameProps { game_address: string;
                      requestMultipleGame?:() => void;
@@ -40,10 +41,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [score1, setScore1] = useState(0);
-  const [score2, setScore2] = useState(0);
-  const [score3, setScore3] = useState(0);
-  const [score4, setScore4] = useState(0);
+  const [score1, setScore1] = useState([0, 0]);
+  const [score2, setScore2] = useState([0, 0]);
+  const [score3, setScore3] = useState([0, 0]);
+  const [score4, setScore4] = useState([0, 0]);
 
   const colors = useRef(Array(4).fill('white'))
   const lost = useRef(Array(4).fill(false))
@@ -62,7 +63,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     radius: 8,
   });
   const paddle1Ref = useRef({
-    x: 20,
+    x: 10,
     y: canvasHeight / 2 - pH / 2,
     w: pW,
     h: pH,
@@ -70,13 +71,13 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
   const paddle2Ref = useRef({
     x: canvasWidth / 2 - pH / 2,
-    y: 20,
+    y: 10,
     w: pH,
     h: pW,
     dy: 0,
   });
   const paddle3Ref = useRef({
-    x: canvasWidth - 20 - pW,
+    x: canvasWidth - pW - 10,
     y: canvasHeight / 2 - pH / 2,
     w: pW,
     h: pH,
@@ -84,7 +85,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
   const paddle4Ref = useRef({
     x: canvasWidth / 2 - pH / 2,
-    y: canvasHeight - 20 - pW,
+    y: canvasHeight - pW - 10,
     w: pH,
     h: pW,
     dy: 0,
@@ -143,14 +144,14 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           setGameState('started');
         }
         if (data.type === 'player_lost') {
-          console.log(data);
+          // console.log(data);
           lost.current[0] = data.state[`player1_lost`]
           lost.current[1] = data.state[`player2_lost`]
           lost.current[2] = data.state[`player3_lost`]
           lost.current[3] = data.state[`player4_lost`]
         }
         if (data.type === 'player_id') {
-          console.log(data);
+          // console.log(data);
           setPlayer(data.player)
         }
         if (data.type === 'game_update') {
@@ -170,11 +171,11 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           }
         }
         if (data.type === 'score_update') {
-          console.log(data);
-          setScore1(data.state[`player1_score`]);
-          setScore2(data.state[`player2_score`]);
-          setScore3(data.state[`player3_score`]);
-          setScore4(data.state[`player4_score`]);
+          // console.log(data);
+          setScore1([data.state[`player1_score`][0], data.state[`player1_score`][1]]);
+          setScore2([data.state[`player2_score`][0], data.state[`player2_score`][1]]);
+          setScore3([data.state[`player3_score`][0], data.state[`player3_score`][1]]);
+          setScore4([data.state[`player4_score`][0], data.state[`player4_score`][1]]);
           if (data.state.game_over) {
             setIsWinner(data.state.is_winner);
             setIsGameOver(true);
@@ -395,66 +396,75 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
   return (
     <div className={css.container}>
-      <div className="relative w-[750px]"> {/* Container with extra width for side scores */}
+      {/* <div className="relative w-[750px]"> */}
         {/* Top Score */}
-        <div className="absolute top-[-40px] left-1/2 transform -translate-x-1/2">
+        {/* <div className="flex items-center flex-col">
           <div className={`${players[1].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {'score against'} - {score2}
+            {'score'} - {score2[0]}
           </div>
-        </div>
+          <div className={`${players[1].color} px-4 py-1 rounded-lg text-white font-bold`}>
+            {'score against'} - {score2[1]}
+          </div>
+        </div> */}
+        <PlayerCard layout='horizontal' score={score2[0]} against={score2[1]}/>
 
         <div className="flex items-center justify-center gap-4">
           {/* Left Score */}
-          <div className={`${players[0].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {'score against'} - {score1}
+          {/* <div className={`${players[0].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
+            {'score'} - {score1[0]}
           </div>
+          <div className={`${players[0].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
+            {'score against'} - {score1[1]}
+          </div> */}
+          <PlayerCard score={score1[0]} against={score1[1]}/>
+
 
           {/* Game Area */}
-          {gameState === 'started' || gameState === 'ended' ? (
-              <div
-                className="min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
-                style={{
-                  boxSizing: 'content-box',
-                  userSelect: 'none',
-                  touchAction: 'manipulation'
-                }}
-              >
-                {currentScreen === 'game' && (
-                <div id="gameScreen" className={css.gameScreenDiv}>
-                    {/* <div className={css.scoreWrapper}>
-                      <div className={css.player1Score}>{score1}</div>
-                      <div className={css.player2Score}>{score2}</div>
-                    </div> */}
-                    <canvas
-                      width={canvasWidth}
-                      height={canvasHeight}
-                      id={css.gameCanvas}
-                      ref={canvasRef}
-                    />
-                </div>
+          <div
+            className="relative min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+            style={{
+              boxSizing: 'content-box',
+              userSelect: 'none',
+              touchAction: 'manipulation'
+            }}
+          >
+            {currentScreen === 'game' && (
+            <div id="gameScreen" className={css.gameScreenDiv}>
+                {/* <div className={css.scoreWrapper}>
+                  <div className={css.player1Score}>{score1}</div>
+                  <div className={css.player2Score}>{score2}</div>
+                </div> */}
+                <canvas
+                  width={canvasWidth}
+                  height={canvasHeight}
+                  id={css.gameCanvas}
+                  ref={canvasRef}
+                />
+            </div>
 
-                )}
-                {currentScreen === 'end' && (
-                  <EndGameScreen
-                    isWinner={isWinner}
-                    handleRetry={handleRetry}
-                    handleMainMenu={handleMainMenu}
-                    isMatchTournament={isMatchTournament}
-                  />
-                )}
-              </div>
+            )}
+            {currentScreen === 'end' && (
+              <EndGameScreen
+                isWinner={isWinner}
+                handleRetry={handleRetry}
+                handleMainMenu={handleMainMenu}
+                isMatchTournament={isMatchTournament}
+              />
+            )}
+          </div>
+          {/* {gameState === 'started' || gameState === 'ended' ? (
           ) :
 
           (
               <div
-                className="relative flex items-center justify-center min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+                className="relative flex items-center justify-center min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
                 style={{
                   boxSizing: 'content-box',
                   userSelect: 'none',
                   touchAction: 'manipulation'
                 }}
               >
-              {/* <div className="relative flex items-center justify-center"> */}
+              <div className="relative flex items-center justify-center">
                   <div
                     className="text-9xl font-bold mb-8 transition-all duration-500"
                     style={{
@@ -468,26 +478,33 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
                       </div>
                     </div>}
                   </div>
-              {/* </div> */}
+              </div>
             </div>
 
-          )
-          }
+          )} */}
 
           {/* Right Score */}
-          <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {'score against'} - {score3}
+          {/* <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
+            {'score'} - {score3[0]}
           </div>
+          <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
+            {'score against'} - {score3[1]}
+          </div> */}
+          <PlayerCard score={score3[0]} against={score3[1]}/>
         </div>
 
         {/* Bottom Score */}
-        <div className="absolute bottom-[-40px] left-1/2 transform -translate-x-1/2">
+        {/* <div className="">
           <div className={`${players[3].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {'score against'} - {score4}
+            {'score'} - {score4[0]}
           </div>
-        </div>
+          <div className={`${players[3].color} px-4 py-1 rounded-lg text-white font-bold`}>
+            {'score against'} - {score4[1]}
+          </div>
+        </div> */}
+        <PlayerCard layout='horizontal' score={score4[0]} against={score4[1]}/>
       </div>
-    </div>
+    // </div>
   );
 
 

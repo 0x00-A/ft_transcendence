@@ -18,13 +18,13 @@ import asyncio
 
 channel_layer = get_channel_layer()
 
-canvas_size: int = 600
-canvas_width: int = 600
-canvas_height: int = 600
+canvas_size: int = 480
+canvas_width: int = 480
+canvas_height: int = 480
 losing_score: int = 7
 
 ball_raduis: int = 8
-initial_ball_speed = 8
+initial_ball_speed = 4
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -62,15 +62,20 @@ class GameInstance:
         self.player2_score = 0
         self.player3_score = 0
         self.player4_score = 0
+        self.player1_score_against = 0
+        self.player2_score_against = 0
+        self.player3_score_against = 0
+        self.player4_score_against = 0
         self.connected_players = 1
         self.is_over = False
         self.winner = 0
         self.paddle_speed = 4
-        self.paddle_width: int = 20
+        self.paddle_width: int = 15
         self.paddle_height: int = 80
-        self.corner_size = 20
+        self.corner_size = 10
+        self.scorer = None
         self.state = {
-            "player1_paddle_x": 20,
+            "player1_paddle_x": 10,
             "player1_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player1_paddle_w": self.paddle_width,
             "player1_paddle_h": self.paddle_height,
@@ -78,13 +83,13 @@ class GameInstance:
             "player1_lost": False,
 
             "player2_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player2_paddle_y": 20,
+            "player2_paddle_y": 10,
             "player2_paddle_w": self.paddle_height,
             "player2_paddle_h": self.paddle_width,
             "player2_paddle_color": 'blue',
             "player2_lost": False,
 
-            "player3_paddle_x": canvas_width - self.paddle_width - 20,
+            "player3_paddle_x": canvas_width - self.paddle_width - 10,
             "player3_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player3_paddle_w": self.paddle_width,
             "player3_paddle_h": self.paddle_height,
@@ -93,7 +98,7 @@ class GameInstance:
 
 
             "player4_paddle_x": canvas_width / 2 - self.paddle_height / 2,
-            "player4_paddle_y": canvas_height - self.paddle_width - 20,
+            "player4_paddle_y": canvas_height - self.paddle_width - 10,
             "player4_paddle_w": self.paddle_height,
             "player4_paddle_h": self.paddle_width,
             "player4_paddle_color": 'green',
@@ -135,17 +140,27 @@ class GameInstance:
         self.ball.dy = initial_ball_speed * math.sin(angle)
 
         # Set ball speed
-        # self.ball.speed = initial_ball_speed
+        self.ball.speed = initial_ball_speed
 
     def increment_score(self, player):
         if player == 1:
-            self.player1_score += 1
+            self.player1_score_against += 1
         elif player == 2:
-            self.player2_score += 1
+            self.player2_score_against += 1
         elif player == 3:
-            self.player3_score += 1
+            self.player3_score_against += 1
         elif player == 4:
+            self.player4_score_against += 1
+
+        if self.scorer == 'player1':
+            self.player1_score += 1
+        elif self.scorer == 'player2':
+            self.player2_score += 1
+        elif self.scorer == 'player3':
+            self.player3_score += 1
+        elif self.scorer == 'player4':
             self.player4_score += 1
+        self.scorer = None
 
         # if self.player1_score >= losing_score:
         #     self.state['player1_lost'] = True
@@ -175,6 +190,7 @@ class GameInstance:
                 return p
 
     def reverse_vertical_direction(self):
+        self.increase_ball_speed()
         self.ball.dy = -self.ball.dy
         # Correct the ball position to stay within bounds
         if self.ball.y - self.ball.radius <= 0:
@@ -183,6 +199,7 @@ class GameInstance:
             self.ball.y = canvas_height - self.ball.radius
 
     def reverse_horizontal_direction(self):
+        self.increase_ball_speed()
         self.ball.dx = -self.ball.dx
         # Correct the ball position to stay within bounds
         if self.ball.x - self.ball.radius <= 0:
@@ -258,6 +275,7 @@ class GameInstance:
 
     def handle_paddle_collision(self, paddle):
         self.ball.color = self.state[f"{paddle}_color"]
+        self.scorer = paddle.split('_')[0]
         # Check if the ball is hitting the top/bottom or the sides
         ball_from_left = self.ball.x < self.state[f"{paddle}_x"]
         ball_from_right = self.ball.x > self.state[f"{paddle}_x"] + \
@@ -285,20 +303,38 @@ class GameInstance:
                 self.ball.y = self.state[f"{paddle}_y"] + \
                     self.state[f"{paddle}_h"] + self.ball.radius
 
-        relative_impact = (
-            self.ball.y - (self.state[f"{paddle}_y"] + self.state[f"{paddle}_h"] / 2)) / (self.state[f"{paddle}_h"] / 2)
-        max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+        if paddle == 'player1_paddle' or paddle == 'player3_paddle':
+            relative_impact = (
+                self.ball.y - (self.state[f"{paddle}_y"] + self.state[f"{paddle}_h"] / 2)) / (self.state[f"{paddle}_h"] / 2)
+            max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
 
-        # Calculate new angle based on relative impact
-        new_angle = relative_impact * max_bounce_angle
+            # Calculate new angle based on relative impact
+            new_angle = relative_impact * max_bounce_angle
 
-        # Update ball's velocity (dx, dy) based on the new angle
-        direction = 1 if self.ball.dx > 0 else -1
-        self.ball.speed += 0.2
-        self.ball.dx = direction * self.ball.speed * \
-            math.cos(new_angle)  # Horizontal velocity
-        self.ball.dy = self.ball.speed * \
-            math.sin(new_angle)  # Vertical velocity
+            # Update ball's velocity (dx, dy) based on the new angle
+            direction = 1 if self.ball.dx > 0 else -1
+            self.increase_ball_speed()
+            self.ball.dx = direction * self.ball.speed * \
+                math.cos(new_angle)  # Horizontal velocity
+            self.ball.dy = self.ball.speed * \
+                math.sin(new_angle)  # Vertical velocity
+
+        else:
+            # For horizontal paddle - calculate relative impact based on x position
+            relative_impact = (
+                self.ball.x - (self.state[f"{paddle}_x"] + self.state[f"{paddle}_w"] / 2)) / (self.state[f"{paddle}_w"] / 2)
+            max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+
+            # Calculate new angle based on relative impact
+            new_angle = relative_impact * max_bounce_angle
+
+            # Update ball's velocity (dx, dy) based on the new angle
+            direction = 1 if self.ball.dy > 0 else -1  # Now using dy for direction
+            self.increase_ball_speed()
+            self.ball.dx = self.ball.speed * \
+                math.sin(new_angle)  # Horizontal velocity
+            self.ball.dy = direction * self.ball.speed * \
+                math.cos(new_angle)  # Vertical velocity
 
     def check_corner_collision(self):
         next_x = self.ball.x + self.ball.dx
@@ -332,6 +368,7 @@ class GameInstance:
                 self.ball.x, self.ball.y, next_x, next_y,
                 corner['x1'], corner['y1'], corner['x2'], corner['y2']
             ):
+                self.increase_ball_speed()
                 # # Calculate reflection vector based on the corner's diagonal
                 # dx = corner['x2'] - corner['x1']
                 # dy = corner['y2'] - corner['y1']
@@ -381,7 +418,7 @@ class GameInstance:
                 # # Update ball's velocity (dx, dy) based on the new angle
                 # direction_x = 1 if self.ball.dx > 0 else -1
                 # direction_y = 1 if self.ball.dy > 0 else -1
-                # # self.ball.speed += 0.1
+                # # self.increase_ball_speed()
                 # self.ball.dx = direction_x * self.ball.speed * \
                 #     math.cos(new_angle)  # Horizontal velocity
                 # self.ball.dy = direction_y * self.ball.speed * \
@@ -390,6 +427,10 @@ class GameInstance:
                 return True
 
         return False
+
+    def increase_ball_speed(self):
+        if self.ball.speed < 8:
+            self.ball.speed += 0.1
 
 
 def create_game(game_id):
@@ -405,6 +446,7 @@ def get_game(game_id):
 
 def remove_game(game_id):
     if game_id in games:
+        print(f'Removing Game {game_id}')
         del games[game_id]
 
 
@@ -608,7 +650,11 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_discard(self.game_id, self.channel_name)
 
             game.state[f"{self.player_id}_lost"] = True
+            game.connected_players -= 1
             await self.broadcast_player_lost_state()
+            if game.connected_players <= 0:
+                game.is_over = True
+                remove_game(game_id)
         return await super().disconnect(close_code)
 
     async def start_game(self, game_id):
@@ -616,6 +662,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
         # Game loop
         while True:
+            # print(f'Ball Speeeeeeed: {game.ball.speed}')
             await self.broadcast_game_state(game_id)
 
             game.update()
@@ -623,10 +670,10 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             await self.check_collision(game)
 
             if game.winner:
-                # await Matchmaker.process_multi_game_result(game_id, game.winner, game.player1_score, game.player2_score)
+                await Matchmaker.process_multi_game_result(game_id, game.winner, game.player1_score, game.player2_score, game.player3_score, game.player4_score)
                 break
 
-            await asyncio.sleep(2 / 60)  # Run at 60 FPS
+            await asyncio.sleep(1 / 60)  # Run at 60 FPS
 
     async def check_collision(self, game: GameInstance):
         if game.check_corner_collision():
@@ -683,16 +730,16 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 game.reset_ball()
                 await self.broadcast_score_state()
 
-        if not game.state['player1_lost'] and game.player1_score >= losing_score:
+        if not game.state['player1_lost'] and game.player1_score_against >= losing_score:
             game.state['player1_lost'] = True
             await self.broadcast_player_lost_state()
-        if not game.state['player2_lost'] and game.player2_score >= losing_score:
+        if not game.state['player2_lost'] and game.player2_score_against >= losing_score:
             game.state['player2_lost'] = True
             await self.broadcast_player_lost_state()
-        if not game.state['player3_lost'] and game.player3_score >= losing_score:
+        if not game.state['player3_lost'] and game.player3_score_against >= losing_score:
             game.state['player3_lost'] = True
             await self.broadcast_player_lost_state()
-        if not game.state['player4_lost'] and game.player4_score >= losing_score:
+        if not game.state['player4_lost'] and game.player4_score_against >= losing_score:
             game.state['player4_lost'] = True
             await self.broadcast_player_lost_state()
 
@@ -726,34 +773,34 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'score.update',
                 'player1_state': {
-                    'player1_score': game.player1_score,
-                    'player2_score': game.player2_score,
-                    'player3_score': game.player3_score,
-                    'player4_score': game.player4_score,
+                    'player1_score': [game.player1_score, game.player1_score_against],
+                    'player2_score': [game.player2_score, game.player2_score_against],
+                    'player3_score': [game.player3_score, game.player3_score_against],
+                    'player4_score': [game.player4_score, game.player4_score_against],
                     "is_winner": True if game.winner == 1 else False,
                     "game_over": True if game.winner else False,
                 },
                 'player2_state': {
-                    'player1_score': game.player2_score,
-                    'player2_score': game.player3_score,
-                    'player3_score': game.player4_score,
-                    'player4_score': game.player1_score,
+                    'player1_score': [game.player2_score, game.player2_score_against],
+                    'player2_score': [game.player3_score, game.player3_score_against],
+                    'player3_score': [game.player4_score, game.player4_score_against],
+                    'player4_score': [game.player1_score, game.player1_score_against],
                     "is_winner": True if game.winner == 2 else False,
                     "game_over": True if game.winner else False,
                 },
                 'player3_state': {
-                    'player1_score': game.player3_score,
-                    'player2_score': game.player4_score,
-                    'player3_score': game.player1_score,
-                    'player4_score': game.player2_score,
+                    'player1_score': [game.player3_score, game.player3_score_against],
+                    'player2_score': [game.player4_score, game.player4_score_against],
+                    'player3_score': [game.player1_score, game.player1_score_against],
+                    'player4_score': [game.player2_score, game.player2_score_against],
                     "is_winner": True if game.winner == 3 else False,
                     "game_over": True if game.winner else False,
                 },
                 'player4_state': {
-                    'player1_score': game.player4_score,
-                    'player2_score': game.player1_score,
-                    'player3_score': game.player2_score,
-                    'player4_score': game.player3_score,
+                    'player1_score': [game.player4_score, game.player4_score_against],
+                    'player2_score': [game.player1_score, game.player1_score_against],
+                    'player3_score': [game.player2_score, game.player2_score_against],
+                    'player4_score': [game.player3_score, game.player3_score_against],
                     "is_winner": True if game.winner == 4 else False,
                     "game_over": True if game.winner else False,
                 },
