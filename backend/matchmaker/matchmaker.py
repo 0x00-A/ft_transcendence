@@ -100,8 +100,6 @@ class Matchmaker:
             'event': 'multigame_address',
             'message': 'Game successfully created',
             'game_address': game_address,
-            'player1_id': game.player1.id,
-            'player2_id': game.player2.id,
         }
         await cls.send_message_to_client(player1_id, message)
         await cls.send_message_to_client(player2_id, message)

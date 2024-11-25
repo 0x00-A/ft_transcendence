@@ -1,32 +1,49 @@
+import { useGetData } from '@/api/apiHooks';
+import { User } from '@/types/apiTypes';
 import React from 'react';
+import PlayerCardSkeleton from './PlayerCardSkeleton';
 
-// Adding layout prop with default to column
-const PlayerCard = ({ layout = 'vertical', score, against } : {layout?: 'vertical' | 'horizontal', score: number, against: number}) => {
-  const player = {
-    username: "GamerPro123",
-    score: 1250,
-    against: 980,
-    avatarUrl: "/api/placeholder/48/48"
-  };
+
+
+const PlayerCard = ({ layout = 'vertical', score, against, p_id } :
+  {layout?: 'vertical' | 'horizontal', score: number, against: number, p_id: number | null}) => {
+  // const player = {
+  //   username: "GamerPro123",
+  //   score: 1250,
+  //   against: 980,
+  //   avatarUrl: "https://picsum.photos/200"
+  // };
+
+
 
   // Determine if we should use column or row layout
   const isVertical = layout === 'vertical';
 
+  // if (!p_id)
+  //   return <PlayerCardSkeleton layout={layout} />;
+
+  const {data: player, isLoading, error} = useGetData<User>(`users/${p_id}`);
+
+  if (isLoading || error) {
+    return <PlayerCardSkeleton layout={layout} />;
+  }
+
+
   return (
-    <div className={`bg-white rounded-lg shadow-sm p-1 ${isVertical ? 'max-w-xs' : 'max-w-xs pb-0'}`}>
+    <div className={` border border-white-500 shadow-sm p-2 ${isVertical ? 'max-w-xs' : 'max-w-xs'}`}>
       {/* Container that changes between column and row */}
       <div className={`flex ${isVertical ? 'flex-col' : 'flex-row items-center justify-between'}`}>
         {/* Player info section */}
-        <div className="flex flex-col items-center mb-3">
-          <div className="mb-1">
+        <div className={`flex flex-col items-center ${isVertical ? 'mb-1' : 'mr-4'}`}>
+          <div className="mb-1 rounded-full border-2 border-green-300">
             <img
-              src={player.avatarUrl}
+              src={player?.profile.avatar}
               alt="Player avatar"
-              className="w-10 h-10 rounded-full"
+              className="w-12 h-12 rounded-full"
             />
           </div>
-          <h3 className="text-base font-medium text-gray-900">
-            {player.username}
+          <h3 className="text-base font-medium text-white">
+            {player?.username}
           </h3>
         </div>
 
@@ -37,13 +54,13 @@ const PlayerCard = ({ layout = 'vertical', score, against } : {layout?: 'vertica
         `}>
           <div className="text-center">
             <p className="text-sm text-gray-500">Score</p>
-            <p className="text-lg font-semibold text-green-600">
+            <p className="text-lg font-semibold text-green-300">
               {score}
             </p>
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-500">Against</p>
-            <p className="text-lg font-semibold text-red-600">
+            <p className="text-lg font-semibold text-red-300">
               {against}
             </p>
           </div>

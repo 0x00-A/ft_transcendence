@@ -21,7 +21,7 @@ channel_layer = get_channel_layer()
 canvas_size: int = 480
 canvas_width: int = 480
 canvas_height: int = 480
-losing_score: int = 7
+losing_score: int = 10
 
 ball_raduis: int = 8
 initial_ball_speed = 4
@@ -58,6 +58,10 @@ class GameInstance:
         self.game_id = game_id
         self.ball = Ball(x=canvas_width / 2, y=canvas_height / 2,
                          radius=ball_raduis, angle=initial_ball_angle)
+        self.player1_id = None
+        self.player2_id = None
+        self.player3_id = None
+        self.player4_id = None
         self.player1_score = 0
         self.player2_score = 0
         self.player3_score = 0
@@ -71,7 +75,7 @@ class GameInstance:
         self.winner = 0
         self.paddle_speed = 4
         self.paddle_width: int = 15
-        self.paddle_height: int = 80
+        self.paddle_height: int = 70
         self.corner_size = 10
         self.scorer = None
         self.state = {
@@ -79,21 +83,21 @@ class GameInstance:
             "player1_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player1_paddle_w": self.paddle_width,
             "player1_paddle_h": self.paddle_height,
-            "player1_paddle_color": 'red',
+            "player1_paddle_color": '#ff4136',
             "player1_lost": False,
 
             "player2_paddle_x": canvas_width / 2 - self.paddle_height / 2,
             "player2_paddle_y": 10,
             "player2_paddle_w": self.paddle_height,
             "player2_paddle_h": self.paddle_width,
-            "player2_paddle_color": 'blue',
+            "player2_paddle_color": '#2196f3',
             "player2_lost": False,
 
             "player3_paddle_x": canvas_width - self.paddle_width - 10,
             "player3_paddle_y": canvas_height / 2 - self.paddle_height / 2,
             "player3_paddle_w": self.paddle_width,
             "player3_paddle_h": self.paddle_height,
-            "player3_paddle_color": 'orange',
+            "player3_paddle_color": '#2ecc40',
             "player3_lost": False,
 
 
@@ -101,7 +105,7 @@ class GameInstance:
             "player4_paddle_y": canvas_height - self.paddle_width - 10,
             "player4_paddle_w": self.paddle_height,
             "player4_paddle_h": self.paddle_width,
-            "player4_paddle_color": 'green',
+            "player4_paddle_color": '#9c27b0',
             "player4_lost": False,
 
             # "player1_score": 0,
@@ -192,6 +196,10 @@ class GameInstance:
     def reverse_vertical_direction(self):
         self.increase_ball_speed()
         self.ball.dy = -self.ball.dy
+        # Add slight horizontal angle to prevent direct wall bouncing
+        if abs(self.ball.dx) < 0.2:  # If ball is moving almost vertically
+            # Add a small random horizontal component
+            self.ball.dx += random.uniform(-0.5, 0.5)
         # Correct the ball position to stay within bounds
         if self.ball.y - self.ball.radius <= 0:
             self.ball.y = self.ball.radius
@@ -201,6 +209,10 @@ class GameInstance:
     def reverse_horizontal_direction(self):
         self.increase_ball_speed()
         self.ball.dx = -self.ball.dx
+        # Add slight vertical angle to prevent direct wall bouncing
+        if abs(self.ball.dy) < 0.2:  # If ball is moving almost horizontally
+            # Add a small random vertical component
+            self.ball.dy += random.uniform(-0.5, 0.5)
         # Correct the ball position to stay within bounds
         if self.ball.x - self.ball.radius <= 0:
             self.ball.x = self.ball.radius
@@ -306,7 +318,7 @@ class GameInstance:
         if paddle == 'player1_paddle' or paddle == 'player3_paddle':
             relative_impact = (
                 self.ball.y - (self.state[f"{paddle}_y"] + self.state[f"{paddle}_h"] / 2)) / (self.state[f"{paddle}_h"] / 2)
-            max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+            max_bounce_angle = math.pi / 3  # 45 degrees maximum bounce angle
 
             # Calculate new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
@@ -323,7 +335,7 @@ class GameInstance:
             # For horizontal paddle - calculate relative impact based on x position
             relative_impact = (
                 self.ball.x - (self.state[f"{paddle}_x"] + self.state[f"{paddle}_w"] / 2)) / (self.state[f"{paddle}_w"] / 2)
-            max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
+            max_bounce_angle = math.pi / 3  # 45 degrees maximum bounce angle
 
             # Calculate new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
@@ -503,16 +515,21 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
     #         await Match.objects.filter(match_id=self.game_id).aupdate(status='started')
 
     async def set_player_id_name(self):
+        game: GameInstance = get_game(self.game_id)
         user = self.scope['user']
         if await MultiGame.objects.filter(game_id=self.game_id).aexists():
             if await user.multi_games_as_player1.filter(game_id=self.game_id).aexists():
                 self.player_id = 'player1'
+                game.player1_id = user.id
             elif await user.multi_games_as_player2.filter(game_id=self.game_id).aexists():
                 self.player_id = 'player2'
+                game.player2_id = user.id
             elif await user.multi_games_as_player3.filter(game_id=self.game_id).aexists():
                 self.player_id = 'player3'
+                game.player3_id = user.id
             elif await user.multi_games_as_player4.filter(game_id=self.game_id).aexists():
                 self.player_id = 'player4'
+                game.player4_id = user.id
         # elif await Match.objects.filter(match_id=self.game_id).aexists():
         #     if await user.matches_as_player1.filter(match_id=self.game_id).aexists():
         #         self.player_id = 'player1'
@@ -542,6 +559,10 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'player2_paddle_y': game.state["player2_paddle_y"],
                     'player3_paddle_x': game.state["player3_paddle_x"],
                     'player4_paddle_y': game.state["player4_paddle_y"],
+                    'player1_id': game.player1_id,
+                    'player2_id': game.player2_id,
+                    'player3_id': game.player3_id,
+                    'player4_id': game.player4_id,
                     'player1_color': game.state["player1_paddle_color"],
                     'player2_color': game.state["player2_paddle_color"],
                     'player3_color': game.state["player3_paddle_color"],
@@ -553,6 +574,10 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'player3_paddle_x': game.state["player4_paddle_y"],
                     'player4_paddle_y': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
 
+                    'player1_id': game.player2_id,
+                    'player2_id': game.player3_id,
+                    'player3_id': game.player4_id,
+                    'player4_id': game.player1_id,
                     'player1_color': game.state["player2_paddle_color"],
                     'player2_color': game.state["player3_paddle_color"],
                     'player3_color': game.state["player4_paddle_color"],
@@ -563,6 +588,10 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'player2_paddle_y': canvas_size - game.state["player4_paddle_y"] - game.paddle_width,
                     'player3_paddle_x': canvas_size - game.state["player1_paddle_x"] - game.paddle_width,
                     'player4_paddle_y': canvas_size - game.state["player2_paddle_y"] - game.paddle_width,
+                    'player1_id': game.player3_id,
+                    'player2_id': game.player4_id,
+                    'player3_id': game.player1_id,
+                    'player4_id': game.player2_id,
                     'player1_color': game.state["player3_paddle_color"],
                     'player2_color': game.state["player4_paddle_color"],
                     'player3_color': game.state["player1_paddle_color"],
@@ -573,6 +602,10 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     'player2_paddle_y': game.state["player1_paddle_x"],
                     'player3_paddle_x': canvas_size - game.state["player2_paddle_y"] - game.paddle_width,
                     'player4_paddle_y': game.state["player3_paddle_x"],
+                    'player1_id': game.player4_id,
+                    'player2_id': game.player1_id,
+                    'player3_id': game.player2_id,
+                    'player4_id': game.player3_id,
                     'player1_color': game.state["player4_paddle_color"],
                     'player2_color': game.state["player1_paddle_color"],
                     'player3_color': game.state["player2_paddle_color"],
