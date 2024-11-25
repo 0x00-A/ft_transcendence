@@ -105,3 +105,14 @@ export interface conversationProps {
   status: boolean;
   blocked: boolean;
 }
+
+/////////////////////
+// AUTH INTERFACES //
+/////////////////////
+
+export interface SignupFormData {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
+}

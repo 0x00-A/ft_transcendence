@@ -1,6 +1,5 @@
 .authContainer {
-    min-height: 100%;
-    margin: 0;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,21 +9,20 @@
     background-color: var(--main-surface-tertiary);
     width: 500px;
     height: 700px;
-    margin: 5px;
-    /* margin-left: 5px; */
-    /* border-left: 1px solid aliceblue; */
+    /* gap: 2rem; */
+    padding: 5rem;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    perspective: 700px;
+    justify-content: space-between;
+    /* box-sizing: border-box; */
+    perspective: 100px;
     transition: 2s;
 }
 
 .authFormSwitch {
-    transition: transform 2s;
+    transition: transform 1s;
     transform-origin: left center;
     transform-style: preserve-3d;
     /* perspective: 100px; */
@@ -49,8 +47,7 @@
 }
 
 .authFormHeader h1 {
-    font-size: 40px;
-    /* font-family: Arial, Helvetica, sans-serif; */
+    font-size: 4.5rem;
     letter-spacing: 2px;
 }
 

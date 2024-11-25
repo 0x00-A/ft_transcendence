@@ -49,6 +49,7 @@ const useSignup = () => {
     reset,
     watch,
     setError,
+    clearErrors,
   } = useForm<SignupFormData>({
     resolver: yupResolver(schema),
     reValidateMode:'onChange',
@@ -56,13 +57,13 @@ const useSignup = () => {
   });
   const mutation = useMutation({
     mutationFn: async (data: SignupFormData) => {return await apiClient.post(API_REGISTER_URL, data);},
-    onError: (error) => {
-      if (error.response) {
-          console.error('Error message:', error.response.data);
-        } else {
-          console.error('Unexpected error:', error.message);
-        }
-    }
+    // onError: (error) => {
+    //   if (error.response) {
+    //       console.error('Error message:', error.response.data);
+    //     } else {
+    //       console.error('Unexpected error:', error.message);
+    //     }
+    // }
   });
   return {
     register,
@@ -72,6 +73,7 @@ const useSignup = () => {
     reset,
     watch,
     setError,
+    clearErrors,
   };
 };
 
