@@ -158,6 +158,10 @@ const Game = () => {
     return () => {
       if (ws.current) {
         console.log('Closing matchmaker websocket ....');
+        sendMessage({
+          event: 'remove_from_queue',
+        });
+        setGameState(null);
         ws.current.close();
       }
       clearTimeout(timeout);
