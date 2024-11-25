@@ -91,11 +91,6 @@ const MessageList: React.FC<MessageListProps> = ({
     ) || [];
   }, [friendsData, searchQuery]);
 
-  const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
-    setSelectedConversation(conversation);
-    onSelectMessage(conversation);
-  }, [onSelectMessage]);
-
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
@@ -128,18 +123,6 @@ const MessageList: React.FC<MessageListProps> = ({
   }, [
     location.state,
   ]);
-
-  const handleConversationClick = useCallback((conversation: conversationProps) => {
-    refetch();
-    handleConversationSelect(conversation);
-    setIsSearchActive(false);
-    setSearchQuery('');
-    setMenuState(prev => ({
-      ...prev,
-      isOpen: false,
-      activeIndex: null,
-    }));
-  }, [ConversationList, handleConversationSelect]);
 
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
@@ -253,24 +236,46 @@ const MessageList: React.FC<MessageListProps> = ({
     };
   }, []);
   
+  
+  const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
+    console.log(">>>>setSelectedConversation: ", conversation)
+    setSelectedConversation(conversation);
+    onSelectMessage(conversation);
+  }, [onSelectMessage]);
+  const handleConversationClick = useCallback((conversation: conversationProps) => {
+    // refetch();
+    handleConversationSelect(conversation);
+    setIsSearchActive(false);
+    setSearchQuery('');
+    setMenuState(prev => ({
+      ...prev,
+      isOpen: false,
+      activeIndex: null,
+    }));
+  }, [ConversationList, handleConversationSelect]);
+
   const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
-    
-      await refetch();
-      handleConversationSelect(newConversation);
-      setIsSearchActive(false);
-      setSearchQuery('');
-      setMenuState(prev => ({
-        ...prev,
-        isOpen: false,
-        activeIndex: null,
-      }));
-
+      console.log("newConversation: ", newConversation);
+      
+      if (newConversation && newConversation.id) {
+        await refetch();
+        handleConversationSelect(newConversation);
+        setIsSearchActive(false);
+        setSearchQuery('');
+        setMenuState(prev => ({
+          ...prev,
+          isOpen: false,
+          activeIndex: null,
+        }));
+      } else {
+        console.error('Invalid conversation created');
+      }
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
-  }, [user, refetch, handleConversationSelect]);
+ }, [user, refetch, handleConversationSelect]);
 
   return (
     <div className={css.container}>

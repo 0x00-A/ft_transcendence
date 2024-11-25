@@ -13,7 +13,7 @@ class Conversation(models.Model):
         on_delete=models.CASCADE,
         related_name='conversations_as_user2'
     )
-    last_message = models.TextField(blank=True, null=True)
+    last_message = models.TextField(blank=True, null=True, default='Send first message')
     unread_messages_user1 = models.IntegerField(default=0)
     unread_messages_user2 = models.IntegerField(default=0)  
     created_at = models.DateTimeField(auto_now_add=True)
