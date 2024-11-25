@@ -74,19 +74,17 @@ class GetConversationsView(APIView):
                     other_user_username = conversation['user2_username']
                     other_user_avatar = conversation['user2_avatar']
                     other_last_seen = conversation['user2_last_seen']
+                    other_status = conversation['user2_is_online']
                     
                 else:
                     other_user_id = conversation['user1_id']
                     other_user_username = conversation['user1_username']
                     other_user_avatar = conversation['user1_avatar']
                     other_last_seen = conversation['user1_last_seen']
+                    other_status = conversation['user1_is_online']
                 
                 updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
                 truncated_message = conversation['last_message']
-                
-                print("________________________")
-                print(conversation['is_online'])
-                print("________________________")
                 conversation_data = {
                     'id': conversation['id'],
                     'last_seen': other_last_seen,
@@ -96,7 +94,7 @@ class GetConversationsView(APIView):
                     'lastMessage': truncated_message,
                     'time': self.format_time(updated_at),
                     'unreadCount': conversation['unread_messages'] or '',
-                    'status': conversation['is_online'],
+                    'status': other_status,
                     'blocked': False,
                 }
                 conversations_data.append(conversation_data)
