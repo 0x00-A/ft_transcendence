@@ -5,6 +5,8 @@ from .models import Conversation, Message
 class ConversationSerializer(serializers.ModelSerializer):
     user1_username = serializers.CharField(source='user1.username', read_only=True)
     user2_username = serializers.CharField(source='user2.username', read_only=True)
+    user1_last_seen = serializers.CharField(source='user1.last_seen', read_only=True)
+    user2_last_seen = serializers.CharField(source='user2.last_seen', read_only=True)
     user1_id = serializers.IntegerField(source='user1.id', read_only=True)
     user2_id = serializers.IntegerField(source='user2.id', read_only=True)
     user1_avatar = serializers.SerializerMethodField()
@@ -17,6 +19,8 @@ class ConversationSerializer(serializers.ModelSerializer):
             'id',
             'user1_id',
             'user2_id',
+            'user1_last_seen',
+            'user2_last_seen',
             'user1_username', 
             'user1_avatar', 
             'user2_username', 

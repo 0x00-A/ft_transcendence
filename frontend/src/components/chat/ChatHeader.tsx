@@ -3,16 +3,12 @@ import css from './ChatHeader.module.css';
 import { FaCircleInfo } from 'react-icons/fa6';
 import { useTyping } from '@/contexts/TypingContext';
 import { useUser } from '@/contexts/UserContext';
+import { conversationProps } from '@/types/apiTypes';
 
 
 interface ChatHeaderProps {
   toggleSidebar: () => void;
-  onSelectedConversation: {
-    avatar: string;
-    name: string;
-    time: string;
-    status: boolean;
-  } | null;
+  onSelectedConversation: conversationProps | null;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -22,7 +18,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   const { typing } = useTyping();
   const { user } = useUser(); 
-  const isReceiver = user?.id === typing.senderId; 
+  const isReceiver = user?.id === typing.senderId;
+
+  console.log("onSelectedConversation: ", onSelectedConversation?.status);
 
 const renderUserStatus = () => {
     if (!onSelectedConversation) return null;
@@ -37,7 +35,7 @@ const renderUserStatus = () => {
       case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {onSelectedConversation.time}
+            Last seen at {onSelectedConversation.last_seen}
           </p>
         );
     }

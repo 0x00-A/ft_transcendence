@@ -89,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'profile', 'friend_request_status']
+                  'last_name', 'profile', 'friend_request_status', 'last_seen']
 
     # def get_games(self, obj):
     #     games_as_player1 = obj.games_as_player1.all()

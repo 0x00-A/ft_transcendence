@@ -76,8 +76,7 @@ const MessageList: React.FC<MessageListProps> = ({
   } = useGetData<conversationProps[]>('chat/conversations');
   
   
-  console.log("rander MessageList >>>>>>>>>>>>>>>>>>: ", ConversationList)
-
+  console.log("ConversationList: ", ConversationList)
 
   useEffect(() => {
     if (lastMessage) {
