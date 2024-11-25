@@ -11,7 +11,8 @@ class ConversationSerializer(serializers.ModelSerializer):
     user2_id = serializers.IntegerField(source='user2.id', read_only=True)
     user1_avatar = serializers.SerializerMethodField()
     user2_avatar = serializers.SerializerMethodField()
-    is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
+    user1_is_online = serializers.BooleanField(source='user1.profile.is_online', read_only=True)
+    user2_is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
 
     class Meta:
         model = Conversation
@@ -21,16 +22,16 @@ class ConversationSerializer(serializers.ModelSerializer):
             'user2_id',
             'user1_last_seen',
             'user2_last_seen',
-            'user1_username', 
-            'user1_avatar', 
+            'user1_username',
+            'user1_avatar',
             'user2_username', 
             'user2_avatar', 
             'last_message', 
             'unread_messages',
-            'is_online',
+            'user1_is_online',
+            'user2_is_online',
             'created_at', 
             'updated_at'
-            
         ]
     
     def get_user1_avatar(self, obj):
