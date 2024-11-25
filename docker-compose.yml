@@ -12,6 +12,7 @@ services:
     command: >
       sh -c "python manage.py wait_for_db &&
               python manage.py migrate &&
+              python manage.py create_badges &&
               python manage.py load_initial_data &&
               python manage.py createsuperuser_auto &&
               python manage.py create_achievements &&

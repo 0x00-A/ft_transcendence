@@ -1,0 +1,231 @@
+.editInfosForm {
+    background-color: #1E2533;
+    height: 100%;
+    width: 100%;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding: 2rem;
+}
+
+.title {
+    align-self: center;
+    width: 90%;
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.editAvatar {
+    align-self: center;
+    width: 90%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    /* justify-content: space-between; */
+}
+
+.avatar, .defaultAvatar {
+    border: 2px solid #F8C25C;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+}
+
+.defaultAvatar {
+    background-color: #ffffff;
+}
+
+.avatarButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.avatarButtons input {
+    display: none;
+}
+
+.avatarBtn, .removeAvatarBtn {
+    background-color: #0E1725;
+    padding: 8px;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.avatarBtn:hover, .removeAvatarBtn:hover {
+    background-color: #1E2533;
+}
+
+.avatarBtn {
+    border: 1px solid #F8C25C;
+}
+
+.removeAvatarBtn {
+    border: 1px solid #AA2926;
+}
+
+.editInfos {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: 2rem;
+}
+
+.containerFiled {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.label {
+    font-size: 1.5rem;
+    color: #D1D3D4;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+    background-color: #0E1725;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1.4rem;
+    color: #D1D3D4;
+}
+
+.saveContainer {
+    align-self: end;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.saveBtn {
+    padding: 10px 25px;
+    border: 1px solid #F8C25C;
+    background-color: #0e1725;
+    border-radius: 10px;
+    color: #D1D3D4;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.saveBtn:hover {
+    background-color: #1E2533;
+    color: white;
+}
+
+.formsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* border: 1px solid aqua; */
+    width: 100%;
+
+}
+
+.formProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.formSecurity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bluredBgConfirm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.saveConfirmContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E2533;
+    border-radius: 25px;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    gap: 2.5rem;
+}
+
+.saveConfirmContainer h1 {
+    font-size: 2.2rem;
+    color: #ffffff;
+}
+
+.saveConfirmContainer p {
+    color: #D1D3D4;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+}
+
+.saveConfirmContainer label{
+    font-size: 1.4rem;
+    color: #D1D3D4;
+}
+
+.saveConfirmContainer input {
+    width: 100%;
+    height: 45px;
+    background-color: #0E1725;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1.2rem;
+    color: #D1D3D4;
+}
+
+.ConfirmButtons {
+    display: flex;
+    gap: 4rem;
+}
+
+.confirmBtn, .closeBtn {
+    background-color: #0E1725;
+    width: 100px;
+    height: 50px;
+    padding: 10px 15px;
+    font-size: 1.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #D1D3D4;
+}
+
+.fieldError {
+    color: #AA2926;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.confirmBtn:hover, .closeBtn:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}
+
+.confirmBtn {
+    border: 1px solid #F8C25C;
+}
+
+.closeBtn {
+    border: 1px solid #AA2926;
+}

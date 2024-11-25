@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.core.files.base import ContentFile
 import requests
 from ..models import User
-from ..models import Profile
+# from ..models import Profile
 
 class Oauth2UserSerializer(serializers.ModelSerializer):
 

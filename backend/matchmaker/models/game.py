@@ -60,6 +60,12 @@ class Game(models.Model):
         print(f"--------------- Game: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2
+        # if winner == 1:
+        #     self.player1.profile.update_score(p1_score - p2_score)
+        #     self.player2.profile.update_score(p2_score)
+        # else:
+        #     self.player2.profile.update_score(p2_score - p1_score)
+        #     self.player1.profile.update_score(p1_score)
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.status = 'ended'
@@ -109,6 +115,7 @@ class Game(models.Model):
 
             player.profile.stats["performanceData"] = stats
             # player.profile.save()
+
 
         self.player1.save()
         self.player2.save()

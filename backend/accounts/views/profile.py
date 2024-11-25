@@ -136,18 +136,46 @@ class EditProfileView(APIView):
 
     def put(self, request):
         user = request.user
-        print('REQUEST:', request.data)
-        serializer = EditProfileSerializer(
-            user, data=request.data, partial=True)
+        print('--->>REQUEST DATA ==>: ', request.data, '<<---')
+
+        serializer = EditProfileSerializer(user, context={'request': request}, data=request.data, partial=True)
         if request.FILES:
             print('FILES:', request.FILES)
             serializer.files = request.FILES
         if serializer.is_valid():
             serializer.save()
             print('api ==> edit profile: Changes apply to your profile successfuly')
-            return Response({'message: changes apply to your profile successfuly'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Changes apply to your profile successfuly'}, status=status.HTTP_200_OK)
         print('api ==> edit profile: Failed to apply Changes to your profile')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        print('--->>REQUEST DATA ==>: ', request.data, '<<---')
+
+        if 'current_password' not in request.data or 'new_password' not in request.data or 'confirm_password' not in request.data:
+            return Response(
+                {'error': 'Please provide both current and new passwords'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if not user.check_password(request.data['current_password']):
+            return Response(
+                {'error': 'Current password is incorrect'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if request.data['new_password'] != request.data['confirm_password']:
+            return Response(
+                {'error': 'Passwords do not match'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user.set_password(request.data['new_password'])
+        user.save()
+        print('api ==> change password: Password changed successfully')
+        return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
 
 
 # class UploadAvatarView(APIView):

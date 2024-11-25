@@ -275,3 +275,5 @@ class CancelFriendRequestView(APIView):
                 {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+

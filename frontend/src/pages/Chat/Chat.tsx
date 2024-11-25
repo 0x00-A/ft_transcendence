@@ -1,71 +1,30 @@
 import css from './Chat.module.css';
-import moment from 'moment';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import ChatHeader from '../../components/chat/ChatHeader';
 import MessageList from '../../components/chat/MessageList';
-import SearchMessages from '../../components/chat/SearchMessages';
 import OptionsButton from '../../components/chat/OptionsButton';
 import NoChatSelected from '../../components/chat/NoChatSelected';
 import SideInfoChat from '../../components/chat/SideInfoChat';
-import MessageInput from '../../components/chat/MessageInput';
-import MessageArea from '../../components/chat/MessageArea';
-import chatData from './chatdata';
-import messages from './messages';
+import ChatContent from '@/components/chat/ChatContent';
+import { TypingProvider } from '@/contexts/TypingContext';
+import { useUser } from '@/contexts/UserContext';
+import { WebSocketChatProvider } from '@/contexts/WebSocketChatProvider';
+import { conversationProps } from '@/types/apiTypes';
 
-interface SelectedMessageProps {
-  avatar: string;
-  name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: 'online' | 'offline' | 'typing';
-  lastSeen?: string;
-  blocked: boolean;
-}
-interface ChatMessage {
-  name: string;
-  content: string;
-  sender: boolean;
-  avatar: string;
-  time: string;
-}
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [selectedMessage, setSelectedMessage] =
-    useState<SelectedMessageProps | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedSearch, setSelectedSearch] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [selectedConversation, setSelectedConversation] =
+    useState<conversationProps | null>(null);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [customSticker, setCustomSticker] = useState(
     '<img src="/icons/chat/like.svg" alt="love" />'
   );
+  const { user } = useUser();
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      sidebarLeftRef.current &&
-      !sidebarLeftRef.current.contains(e.target as Node)
-    ) {
-      setSelectedSearch(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (selectedMessage) {
-      setChatMessages(chatData[selectedMessage.name] || []);
-    }
-  }, [selectedMessage]);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -76,81 +35,54 @@ const Chat = () => {
     return <Navigate to="/signup" />;
   }
 
-
-  const handleSendMessage = (
-    newMessage: string,
-    isSticker: boolean = false
-  ) => {
-    if (selectedMessage) {
-      const message = {
-        name: 'You',
-        content: newMessage,
-        sender: true,
-        avatar: 'https://picsum.photos/200',
-        time: moment().format('HH:mm A'),
-      };
-
-      if (isSticker) {
-        message.content = newMessage;
-      }
-
-      setChatMessages((prevMessages) => [...prevMessages, message]);
-    }
-  };
+  console.log("rander chat >>>>>>>>>>>>>>>>>>>>>>>>>")
 
   const handleStickerChange = (newSticker: string) => {
     setCustomSticker(newSticker);
   };
 
-  const handleBlockUser = (userName: string) => {
-    console.log('nameblock: ', userName);
-    const updatedMessages = messages.map((msg) =>
-      msg.name === userName ? { ...msg, blocked: !msg.blocked } : msg
-    );
-    console.log(updatedMessages);
-  };
 
   return (
-    <main className={css.CenterContainer}>
-      <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
-        <div className={css.sidebarLeft} ref={sidebarLeftRef}>
-          <OptionsButton />
-          <MessageList
-            onSelectMessage={setSelectedMessage}
-            onBlockUser={handleBlockUser}
-          />
-        </div>
-        <div className={css.chatBody}>
-          {selectedMessage ? (
-            <>
-              <ChatHeader
-                toggleSidebar={toggleSidebar}
-                selectedMessage={selectedMessage}
-              />
-              <div className={css.messageArea}>
-                <MessageArea messages={chatMessages} />
-              </div>
-              <MessageInput
-                onSendMessage={handleSendMessage}
-                customSticker={customSticker}
-                isBlocked={selectedMessage.blocked}
-                onUnblock={() => handleBlockUser(selectedMessage.name)}
-              />
-            </>
-          ) : (
-            <NoChatSelected />
-          )}
-        </div>
-        {selectedMessage && !isExpanded && (
-          <div className={css.sidebarRight}>
-            <SideInfoChat
-              selectedMessage={selectedMessage}
-              onEmojiChange={handleStickerChange}
+    <TypingProvider>
+    <WebSocketChatProvider userId={user?.id || 0}>
+      <main className={css.CenterContainer}>
+        <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
+          <div className={css.sidebarLeft} ref={sidebarLeftRef}>
+            <OptionsButton />
+            <MessageList
+              onSelectMessage={setSelectedConversation}
             />
           </div>
-        )}
-      </div>
-    </main>
+          <div className={css.chatBody}>
+            {selectedConversation ? (
+              <>
+                <ChatHeader
+                  toggleSidebar={toggleSidebar}
+                  onSelectedConversation={selectedConversation}
+                  />
+                <ChatContent
+                  key={selectedConversation.id}
+                  onSelectedConversation={selectedConversation}
+                  customSticker={customSticker}
+                />
+              </>
+            ) : (
+              <NoChatSelected />
+            )}
+          </div>
+          {selectedConversation && !isExpanded && (
+            <div className={css.sidebarRight}>
+              <SideInfoChat
+                onSelectedConversation={selectedConversation}
+                onEmojiChange={handleStickerChange}
+              />
+            </div>
+          )}
+        </div>
+      </main>
+    </WebSocketChatProvider>
+    </TypingProvider>
+
   );
 };
 

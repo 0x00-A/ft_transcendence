@@ -142,7 +142,8 @@ function AppContent() {
               <Route path="/store" element={<Store />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/" element={<Profile />} />
+              <Route path="/profile/:username" element={<Profile />} />
               <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

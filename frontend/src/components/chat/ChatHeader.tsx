@@ -1,33 +1,41 @@
 import React from 'react';
 import css from './ChatHeader.module.css';
 import { FaCircleInfo } from 'react-icons/fa6';
+import { useTyping } from '@/contexts/TypingContext';
+import { useUser } from '@/contexts/UserContext';
+import { conversationProps } from '@/types/apiTypes';
+
 
 interface ChatHeaderProps {
   toggleSidebar: () => void;
-  selectedMessage: {
-    avatar: string;
-    name: string;
-    status: 'online' | 'offline' | 'typing';
-    lastSeen?: string;
-  } | null;
+  onSelectedConversation: conversationProps | null;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
   toggleSidebar,
-  selectedMessage,
+  onSelectedConversation,
 }) => {
-  const renderUserStatus = () => {
-    if (!selectedMessage) return null;
 
-    switch (selectedMessage.status) {
-      case 'online':
-        return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
-      case 'typing':
-        return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
-      case 'offline':
+  const { typing } = useTyping();
+  const { user } = useUser(); 
+  const isReceiver = user?.id === typing.senderId;
+
+  console.log("onSelectedConversation: ", onSelectedConversation?.status);
+
+const renderUserStatus = () => {
+    if (!onSelectedConversation) return null;
+
+    if (typing.typing && !isReceiver ) {
+      return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
+    }
+
+    switch (onSelectedConversation.status) {
+      case true:
+        return <p className={`${css.userStatus} ${css.online}`}>Active now</p>;
+      case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {selectedMessage.lastSeen}
+            Last seen at {onSelectedConversation.last_seen}
           </p>
         );
     }
@@ -35,16 +43,18 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   return (
     <header className={css.chatHeader}>
-      {selectedMessage ? (
+      {onSelectedConversation ? (
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
-            <img
-              src={selectedMessage.avatar}
-              alt="User"
-              className={css.userAvatar}
-            />
+            <div className={`${css.userAvatar} ${onSelectedConversation.status ? css.online : ''}`}>
+              <img
+                src={onSelectedConversation.avatar}
+                alt="User"
+                className={css.imageAvatar}
+              />
+            </div>
             <div className={css.userDetails}>
-              <h2 className={css.userName}>{selectedMessage.name}</h2>
+              <h2 className={css.userName}>{onSelectedConversation.name}</h2>
               {renderUserStatus()}
             </div>
           </div>

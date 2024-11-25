@@ -39,7 +39,7 @@ const OptionsButton = () => {
 
   return (
     <div className={css.optionsButtonContainer}>
-      <h2>Chat</h2>
+      <h2 className={css.title}>Chat</h2>
 
       <div className={css.sideButtons}>
         <NewMessage ref={buttonRef} onClick={handleNewClick} />
@@ -47,7 +47,7 @@ const OptionsButton = () => {
       </div>
       {showMenu && (
         <div ref={menuRef} className={css.menu}>
-          <div className={css.menuItem}>
+          <div className={css.menuItem} onClick={() => navigate('/profile')}>
             <FaUser /> See your profile
           </div>
           <div className={css.menuItem}>
