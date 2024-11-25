@@ -333,7 +333,7 @@ const MessageList: React.FC<MessageListProps> = ({
           ConversationList?.map((conversation, index) => (
             <MessageItem
               key={index}
-              {...conversation}
+              conversation={conversation}
               isSelected={selectedConversation?.id === conversation.id}
               onClick={() => handleConversationClick(conversation)}
               onMoreClick={(e) => handleMoreClick(e, index)}

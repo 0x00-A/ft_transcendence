@@ -5,17 +5,12 @@ import ProfileSection from './ProfileSection';
 import StatusSection from './StatusSection';
 import ButtonSection from './ButtonSection';
 import SettingsSection from './SettingsSection';
+import { conversationProps } from '@/types/apiTypes';
 
-interface Info {
-  avatar: string;
-  name: string;
-  status: boolean;
-  time: string;
-  blocked: boolean;
-}
+
 
 interface SideInfoChatProps {
-  onSelectedConversation: Info;
+  onSelectedConversation: conversationProps;
   onEmojiChange: (newSticker: string) => void;
 }
 

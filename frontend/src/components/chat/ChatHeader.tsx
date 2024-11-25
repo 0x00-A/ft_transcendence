@@ -31,7 +31,7 @@ const renderUserStatus = () => {
 
     switch (onSelectedConversation.status) {
       case true:
-        return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
+        return <p className={`${css.userStatus} ${css.online}`}>Active now</p>;
       case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
@@ -46,11 +46,13 @@ const renderUserStatus = () => {
       {onSelectedConversation ? (
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
-            <img
-              src={onSelectedConversation.avatar}
-              alt="User"
-              className={css.userAvatar}
-            />
+            <div className={`${css.userAvatar} ${onSelectedConversation.status ? css.online : ''}`}>
+              <img
+                src={onSelectedConversation.avatar}
+                alt="User"
+                className={css.imageAvatar}
+              />
+            </div>
             <div className={css.userDetails}>
               <h2 className={css.userName}>{onSelectedConversation.name}</h2>
               {renderUserStatus()}
