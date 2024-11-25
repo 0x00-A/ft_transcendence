@@ -67,7 +67,8 @@ class MultiGame(models.Model):
     def end_game(self, winner, p1_score, p2_score, p3_score, p4_score):
         print(f"--------------- Game: {self.id} ended -------------------")
 
-        self.winner = self.player1 if winner == 1 else self.player2
+        self.winner = self.player1 if winner == 1 else self.player2 if winner == 2 \
+            else self.player3 if winner == 3 else self.player4
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.p3_score = p3_score
