@@ -31,10 +31,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead } = useWebSocket();
 
 
-  
+  useEffect(() => {
+    if (onSelectedConversation?.id) {
+      markAsRead(onSelectedConversation.id);
+    }
+  }, [onSelectedConversation?.id, markAsRead]);
+
   useEffect(() => {
     setChatMessages(() => [
       ...(fetchedMessages || []),
@@ -83,3 +88,4 @@ const ChatContent: React.FC<ChatContentProps> = ({
 };
 
 export default ChatContent;
+

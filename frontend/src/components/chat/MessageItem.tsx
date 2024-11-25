@@ -3,31 +3,21 @@ import css from './MessageItem.module.css';
 import { CgMoreO } from 'react-icons/cg';
 import { useTyping } from '@/contexts/TypingContext';
 import { useUser } from '@/contexts/UserContext';
+import { conversationProps } from '@/types/apiTypes';
 
-interface MessageItemProps {
-  user_id: number;
-
-  avatar: string;
-  name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
+interface conversationListProps {
   isSelected: boolean;
   onClick: () => void;
   onMoreClick: (e: React.MouseEvent) => void;
   showMoreIcon: boolean;
   isActive: boolean;
+  conversation: conversationProps;
 }
 
-const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
+const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
   (
     {
-      user_id,
-      avatar,
-      name,
-      lastMessage,
-      time,
-      unreadCount,
+      conversation,
       isSelected,
       onClick,
       onMoreClick,
@@ -38,10 +28,10 @@ const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
   ) => {
     const { typing } = useTyping();
     
-    const isReceiver = typing.senderId == user_id;
+    const isReceiver = typing.senderId == conversation.user_id;
     const typingIndicator = typing.typing && isReceiver
       ? 'Typing...'
-      : lastMessage;
+      : conversation.lastMessage;
 
     return (
       <div
@@ -50,18 +40,24 @@ const MessageItem = forwardRef<HTMLDivElement, MessageItemProps>(
         onClick={onClick}
       >
         <div className={css.messageItem}>
-          <img src={avatar} alt={name} className={css.avatar} />
+          <div className={`${css.userAvatar} ${conversation.status ? css.online : ''}`}>
+              <img
+                src={conversation.avatar}
+                alt="User"
+                className={css.imageAvatar}
+              />
+          </div>
           <div className={css.messageContent}>
             <div className={css.messageHeader}>
-              <span className={css.name}>{name}</span>
-              <span className={css.time}>{time}</span>
+              <span className={css.name}>{conversation.name}</span>
+              <span className={css.time}>{conversation.time}</span>
             </div>
             <div className={css.messageBody}>
               <span className={`${css.lastMessage} ${typing.typing && isReceiver ? css.typing : ''}`}>
                 {typingIndicator}
               </span>
-              {unreadCount && unreadCount > 0 && (
-                <span className={css.unreadCount}>{unreadCount}</span>
+              {conversation.unreadCount && conversation.unreadCount > 0 && (
+                <span className={css.unreadCount}>{conversation.unreadCount}</span>
               )}
             </div>
           </div>

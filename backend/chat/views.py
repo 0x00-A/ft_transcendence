@@ -75,6 +75,7 @@ class GetConversationsView(APIView):
                     other_user_avatar = conversation['user2_avatar']
                     other_last_seen = conversation['user2_last_seen']
                     other_status = conversation['user2_is_online']
+                    unread_count = conversation['unread_messages_user2']
                     
                 else:
                     other_user_id = conversation['user1_id']
@@ -82,18 +83,22 @@ class GetConversationsView(APIView):
                     other_user_avatar = conversation['user1_avatar']
                     other_last_seen = conversation['user1_last_seen']
                     other_status = conversation['user1_is_online']
+                    unread_count = conversation['unread_messages_user1']
                 
                 updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
-                truncated_message = conversation['last_message']
+                last_message = conversation['last_message']
+                truncated_message = (
+                    last_message[:10] + "..."
+                )
                 conversation_data = {
                     'id': conversation['id'],
                     'last_seen': other_last_seen,
                     'user_id': other_user_id,
                     'avatar': other_user_avatar,
                     'name': other_user_username,
-                    'lastMessage': truncated_message,
+                    'lastMessage': truncated_message or "Send First message",
                     'time': self.format_time(updated_at),
-                    'unreadCount': conversation['unread_messages'] or '',
+                    'unreadCount': unread_count or '',
                     'status': other_status,
                     'blocked': False,
                 }
@@ -106,7 +111,6 @@ class GetConversationsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
 
