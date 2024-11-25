@@ -143,12 +143,12 @@ hr {
 }
 
 .spinner {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
+  border: 3px solid #5774a1;
+  border-top: 3px solid #f59e0b;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
+  width: 30px;
+  height: 30px;
+  animation: _spin_13q19_145 1s linear infinite;
 }
 
 @keyframes spin {

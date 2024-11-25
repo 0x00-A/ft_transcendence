@@ -12,7 +12,6 @@ import { useLoadingBar } from '../../contexts/LoadingBarContext';
 
 
 
-
 interface SignupFormData {
   username: string;
   email: string;
@@ -56,9 +55,9 @@ const Signup = ({setIslogin, onSetAuthStat}) => {
 
 
    const handleSignup = (data: SignupFormData, event: any) => {
-     event.preventDefault();
-    loadingBarRef.current?.continuousStart();
-     mutation.mutate(data);
+      event.preventDefault();
+      loadingBarRef.current?.continuousStart();
+      mutation.mutate(data);
    };
 
   return (

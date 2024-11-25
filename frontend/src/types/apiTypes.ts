@@ -22,11 +22,21 @@ export interface Stats {
   performanceData: PerformanceDataEntry[];
 }
 
+export interface Badges {
+  name: string;
+  icon: string;
+  level_required: number;
+  xp_reward: number;
+}
+
 export interface Profile {
   user: number;
   avatar: string;
   age: number | null;
   level: number | null;
+  score: number | null;
+  rank: number | null;
+  badge: Badges;
   stats: Stats;
   is_online: boolean;
 }
@@ -81,4 +91,17 @@ export interface Tournament {
   status: string;
   winner: User;
   state: TournamentState;
+}
+
+export interface conversationProps {
+  id: number;
+  last_seen: string;
+  user_id: number;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  status: boolean;
+  blocked: boolean;
 }

@@ -32,6 +32,7 @@ from .views import ProfileApiView
 from rest_framework.routers import DefaultRouter
 from accounts.views import NotificationViewSet
 from .views import EditProfileView
+from .views import ChangePasswordView
 from .views import oauth2_authorize
 
 router = DefaultRouter()
@@ -65,6 +66,7 @@ urlpatterns = [
     path('users/online/', OnlineUsersView.as_view(), name='online-users'),
     path('profile/', ProfileApiView.as_view(), name='profile'),
     path('profile/edit/', EditProfileView.as_view()),
+    path('profile/change_password/', ChangePasswordView.as_view()),
 
     path('friends/', UserFriendsView.as_view(), name='user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(),

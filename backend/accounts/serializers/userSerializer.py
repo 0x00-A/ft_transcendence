@@ -11,9 +11,9 @@ from ..serializers import ProfileSerializer
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={
-                                     'input_type': 'password'})
+                                    'input_type': 'password'})
     password2 = serializers.CharField(write_only=True, required=True, style={
-                                      'input_type': 'password'})
+                                    'input_type': 'password'})
 
     class Meta:
         model = User
@@ -89,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name',
-                  'last_name', 'profile', 'friend_request_status']
+                  'last_name', 'profile', 'friend_request_status', 'last_seen']
 
     # def get_games(self, obj):
     #     games_as_player1 = obj.games_as_player1.all()
