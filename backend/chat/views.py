@@ -7,6 +7,7 @@ from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from datetime import datetime, timezone
 
 User = get_user_model()
 
@@ -34,7 +35,28 @@ class CreateConversationView(APIView):
 
 
 class GetConversationsView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    
+    def format_time(self, timestamp):
+        now = datetime.now(timezone.utc)
+        diff = now - timestamp
+        seconds = diff.total_seconds()
+        if seconds < 60:
+            return 'Just now'
+        minutes = int(seconds // 60)
+        if minutes < 60:
+            return f"{minutes} minute{'s' if minutes != 1 else ''} ago"
+        hours = int(seconds // 3600)
+        if hours < 24:
+            return f"{hours} hour{'s' if hours != 1 else ''} ago"
+        days = int(seconds // 86400)
+        if days < 7:
+            return f"{days} day{'s' if days != 1 else ''} ago"
+        weeks = int(days // 7)
+        if weeks < 52:
+            return f"{weeks} week{'s' if weeks != 1 else ''} ago"
+        years = int(days // 365)
+        return f"{years} year{'s' if years != 1 else ''} ago"
 
     def get(self, request):
         try:
@@ -45,30 +67,40 @@ class GetConversationsView(APIView):
             
             serializer = ConversationSerializer(conversations, many=True)
             conversations_data = []
-
+            
             for conversation in serializer.data:
                 if user.id == conversation['user1_id']:
                     other_user_id = conversation['user2_id']
                     other_user_username = conversation['user2_username']
                     other_user_avatar = conversation['user2_avatar']
+                    other_last_seen = conversation['user2_last_seen']
+                    
                 else:
                     other_user_id = conversation['user1_id']
                     other_user_username = conversation['user1_username']
                     other_user_avatar = conversation['user1_avatar']
-
+                    other_last_seen = conversation['user1_last_seen']
+                
+                updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
+                truncated_message = conversation['last_message']
+                
+                print("________________________")
+                print(conversation['is_online'])
+                print("________________________")
                 conversation_data = {
                     'id': conversation['id'],
-                    'user_id': other_user_id,  
-                    'avatar': other_user_avatar, 
-                    'name': other_user_username, 
-                    'lastMessage': conversation['last_message'][:10] + '...' if len(conversation['last_message']) > 10 else conversation['last_message'],
-                    'time': conversation['updated_at'],
-                    'unreadCount': conversation['unread_messages'] or 0,
+                    'last_seen': other_last_seen,
+                    'user_id': other_user_id,
+                    'avatar': other_user_avatar,
+                    'name': other_user_username,
+                    'lastMessage': truncated_message,
+                    'time': self.format_time(updated_at),
+                    'unreadCount': conversation['unread_messages'] or '',
                     'status': conversation['is_online'],
-                    'blocked': False,  
+                    'blocked': False,
                 }
                 conversations_data.append(conversation_data)
-
+            
             return Response(conversations_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
@@ -78,7 +110,7 @@ class GetConversationsView(APIView):
 
         
 class GetMessagesView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, conversation_id):
         try:

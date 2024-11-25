@@ -63,9 +63,6 @@ const MessageInput = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setInputFocused(true);
-    // setTimeout(() => {
-    //   onTyping(!!e.target.value.trim());
-    // }, 1000);
     if (typingTimeout) {
       clearTimeout(typingTimeout);
     }
