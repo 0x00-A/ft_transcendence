@@ -82,13 +82,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
 
       } else if (data.type === 'typing_status') {
         setTyping({ typing: data.typing, senderId: data.sender_id });
-      } else if (data.type === 'mark_as_read') {
-        // const updatedMessages = messages.map(message => 
-        //   message.conversation === data.conversation_id ? 
-        //   { ...message, seen: true } : message
-        // );
-        // setMessages(updatedMessages);
-      }
+      } 
     };
 
     socket.onclose = () => {

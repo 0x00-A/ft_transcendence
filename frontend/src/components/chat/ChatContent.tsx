@@ -39,7 +39,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       markAsRead(onSelectedConversation.id);
     }
   }, [onSelectedConversation?.id, markAsRead]);
-
+  
   useEffect(() => {
     setChatMessages(() => [
       ...(fetchedMessages || []),
