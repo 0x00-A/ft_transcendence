@@ -5,6 +5,7 @@ import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import { toast } from 'react-toastify';
 import { apiAcceptFriendRequest, apiCancelFriendRequest, apiRejectFriendRequest, apiSendFriendRequest } from '../../api/friendApi';
+import { useNavigate } from 'react-router-dom';
 
 interface Profile {
   user: number;
@@ -37,6 +38,7 @@ const AddFriend: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const { data: suggestedConnections, isLoading: loadingSuggested, error: suggestedError } = useGetData<SuggestedUser[]>('suggested-connections');
   const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
+  const navigate = useNavigate();
 
   if (suggestedError) return <p>Error loading suggested connections: {suggestedError.message}</p>;
   if (usersError) return <p>Error loading users: {usersError.message}</p>;
@@ -70,7 +72,7 @@ const AddFriend: React.FC = () => {
       toast.error(error.message || 'Failed to send friend request' );
     }
   };
-  
+
   const rejectFriendRequest = async (username: string) => {
     try {
       const message = await apiRejectFriendRequest(username);
@@ -80,7 +82,7 @@ const AddFriend: React.FC = () => {
       toast.error(error.message || 'Failed to reject friend request' );
     }
   };
-  
+
   const acceptFriendRequest = async (username: string) => {
     try {
       const message = await apiAcceptFriendRequest(username);
@@ -90,7 +92,7 @@ const AddFriend: React.FC = () => {
       toast.error(error.message || 'Failed to accept friend request' );
     }
   };
-  
+
   const handleCancel = async (username: string) => {
     try {
       const message = await apiCancelFriendRequest(username);
@@ -119,7 +121,7 @@ const AddFriend: React.FC = () => {
         <div className={css.suggestedConnections}>
           <h3 className={css.suggestedConnectionsTitle}>Suggested Connections</h3>
           {loadingSuggested ? (
-            <Loading /> 
+            <Loading />
           ) : (
             <div className={css.results}>
               {suggestedConnections.map(({ user, status }) => (
@@ -136,7 +138,7 @@ const AddFriend: React.FC = () => {
                     ) : (
                       <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
                     )}
-                    <button className={css.viewProfileBtn}>View Profile</button>
+                    <button className={css.viewProfileBtn} onClick={() => navigate(`/profile/${user.username}`)}>View Profile</button>
                   </div>
                 </div>
               ))}
@@ -153,17 +155,17 @@ const AddFriend: React.FC = () => {
           ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
               <div key={user.username} className={css.userCard}>
-                <img 
-                  src={`${user.profile.avatar}`} 
-                  alt={user.username} 
-                  className={css.avatar} 
+                <img
+                  src={`${user.profile.avatar}`}
+                  alt={user.username}
+                  className={css.avatar}
                 />
                 <div className={css.userInfo}>
                   <span className={css.username}>{user.username}</span>
                   <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
                 </div>
                 <div className={css.actions}>
-                  <button className={css.viewProfileBtn}>View Profile</button>
+                  <button className={css.viewProfileBtn} onClick={() => navigate(`/profile/${user.username}`)}>View Profile</button>
 
                   {user.friend_request_status === "accepted" ? (
                     <span className={css.friendsStatus}>Friends</span>

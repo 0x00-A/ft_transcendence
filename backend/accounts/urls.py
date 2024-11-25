@@ -34,6 +34,7 @@ from accounts.views import NotificationViewSet
 from .views import EditProfileView
 from .views import ChangePasswordView
 from .views import oauth2_authorize
+from .views import UserProfileView
 
 router = DefaultRouter()
 router.register(r'notifications', NotificationViewSet, basename='notification')
@@ -61,14 +62,15 @@ urlpatterns = [
     # path('oauth2/google/authorize/', google_authorize),
     # path('oauth2/google/', oauth2_google),
 
-    path('users/', AllUsersView.as_view(), name='all_users'),
-    path('users/<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
-    path('users/online/', OnlineUsersView.as_view(), name='online-users'),
-    path('profile/', ProfileApiView.as_view(), name='profile'),
-    path('profile/edit/', EditProfileView.as_view()),
-    path('profile/change_password/', ChangePasswordView.as_view()),
-
-    path('friends/', UserFriendsView.as_view(), name='user-friends'),
+     path('users/', AllUsersView.as_view(), name='all_users'),
+     path('users/<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
+     path('users/online/', OnlineUsersView.as_view(), name='online-users'),
+     path('profile/', ProfileApiView.as_view(), name='profile'),
+     path('profile/<str:username>/', UserProfileView.as_view(), name='user-profile'),
+     path('profile/edit/', EditProfileView.as_view()),
+     path('profile/change_password/', ChangePasswordView.as_view()),
+     path('friends/<str:username>/', UserFriendsView.as_view(), name='specific-user-friends'),
+    path('friends/', UserFriendsView.as_view(), name='current-user-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(),
          name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),

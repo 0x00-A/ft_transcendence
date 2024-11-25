@@ -25,10 +25,10 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
         model = Game
         fields = ['id', 'start_time', 'opponent', 'result', 'score', 'game_duration']
 
-    def get_opponenet(self, obj):
+    def get_opponent(self, obj):
         if obj.player1 == self.context['request'].user:
-            return obj.player2.username
-        return obj.player1.username
+            return obj.player2
+        return obj.player1
 
     def get_result(self, obj):
         if obj.winner == self.context['request'].user:

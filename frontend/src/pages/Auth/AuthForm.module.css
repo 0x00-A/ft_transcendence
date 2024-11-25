@@ -1,48 +1,42 @@
 .entryArea {
     display: flex;
     flex-direction: column;
-    /* margin-top: 20px; */
     width: auto;
     height: auto;
-    /* height: 35%; */
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 1rem;
     position: relative;
 }
 
 .inputContainer {
     position: relative;
     width: 270px;
+    display: flex;
+    align-items: center;
 }
 
 .inputContainer input {
     background: #41506b;
-    background-color: #2b4450;
+    /* background-color: #2b4450; */
     border-radius: 10px;
     border: none;
     outline: none;
-    padding: 12px;
-    padding-left: 40px;
+    padding: 1.3rem 4rem;
     width: 100%;
     font-size: medium;
     color: white;
 }
 
-.inputContainer img {
+.inputIcon {
+    font-size: 2.5rem;
     position: absolute;
-    top: 12px;
-    left: 10px;
+    left: 1rem;
 }
 
 .inputContainer input:focus {
     background-color: #497285;
 }
-
-/* .inputContainer input:blank {
-    border: 1px solid red;
-} */
 
 .fieldError {
     position: absolute;
@@ -53,16 +47,15 @@
     border-radius: 5px;
     padding: 5px;
     background-color: #fffbe1;
-    z-index: 999;
-    top: 60px;
-    left: 40px;
+    z-index: 5;
+    top: calc(100% + 1rem);
 }
 
 .fieldError::after {
     content: '';
     position: absolute;
-    top: -19px;
-    left: 11%;
+    top: -20px;
+    left: 50%;
     transform: translateX(-50%);
     border: 10px solid transparent;
     border-bottom-color: #fffbe1;
@@ -97,29 +90,36 @@
     text-align:start;
     font-size: large;
 } */
-
+.showPassIcon {
+    position: absolute;
+    /* right: 10px; */
+    left: calc(100% - 3.3rem);
+    font-size: 2.5rem;
+    cursor: pointer;
+}
 
 .authBtn {
     /* border: 1px solid rgb(255, 0, 0); */
     /* width: 60%; */
     /* height: 35px; */
     border-radius: 20px;
-    background-color: #07689f;
+    /* background-color: #07689f; */
     color: var(--text-color);
     font-size: large;
     margin-top: 5px;
-    padding: 8px 50px;
+    padding: 1rem 6rem;
     outline: none;
     border: none;
-    background-color: var(--color-brand--1);
+    background-color: var(--color-active);
 }
 
 .authBtn:hover {
-    background-color: var(--color-active);
+    background-color: var(--color-brand--1);
+    color: white;
     cursor: pointer;
 }
 
-.loginError {
+/* .loginError {
     color: red;
     border: #fffbe1;
-}
+} */
