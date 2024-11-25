@@ -9,23 +9,22 @@ import { useGameInvite } from '@/contexts/GameInviteContext';
 import MatchmakingScreen from '@/pages/Game/MatchmakingScreen/MatchmakingScreen';
 import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
 import PlayerCard from './PlayerCard';
+import PlayerCardSkeleton from './PlayerCardSkeleton';
 
 
 const canvasWidth = 480;
 const canvasHeight = 480;
 const pW = 15;
-const pH = 80;
+const pH = 70;
 const cornerSize = 10;
 
 interface GameProps { game_address: string;
                      requestMultipleGame?:() => void;
                     onReturn: (()=>void);
                     isMatchTournament?: boolean;
-                    p1_id: number;
-                    p2_id: number;
                   }
 
-const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()=>{}, onReturn, isMatchTournament = false, p1_id, p2_id }) => {
+const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()=>{}, onReturn, isMatchTournament = false}) => {
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>('started');
   const [restart, setRestart] = useState(false);
@@ -35,9 +34,9 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
-  const [count, setCount] = useState(3);
+  // const [count, setCount] = useState(3);
 
-  console.log('MultipleGame component rerendered', `stat: ${gameState}`);
+  // console.log('MultipleGame component rerendered', `stat: ${gameState}`);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -45,6 +44,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [score2, setScore2] = useState([0, 0]);
   const [score3, setScore3] = useState([0, 0]);
   const [score4, setScore4] = useState([0, 0]);
+  const [player1_id, setPlayer1_id] = useState<number | null>(null);
+  const [player2_id, setPlayer2_id] = useState<number | null>(null);
+  const [player3_id, setPlayer3_id] = useState<number | null>(null);
+  const [player4_id, setPlayer4_id] = useState<number | null>(null);
 
   const colors = useRef(Array(4).fill('white'))
   const lost = useRef(Array(4).fill(false))
@@ -141,6 +144,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           colors.current[1] = data.state[`player2_color`]
           colors.current[2] = data.state[`player3_color`]
           colors.current[3] = data.state[`player4_color`]
+          setPlayer1_id(data.state[`player1_id`])
+          setPlayer2_id(data.state[`player2_id`])
+          setPlayer3_id(data.state[`player3_id`])
+          setPlayer4_id(data.state[`player4_id`])
           setGameState('started');
         }
         if (data.type === 'player_lost') {
@@ -375,84 +382,62 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   //   );
   // }
 
-  useEffect(() => {
-    // if (gameState === 'started') return;
+  // useEffect(() => {
+  //   // if (gameState === 'started') return;
 
-    if (count > 0) {
-      const timer = setTimeout(() => {
-        setCount((c) => c - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [count]);
-
-
-  const players = [
-    { id: 1, name: "Player 1", score: 5, color: "" },
-    { id: 2, name: "Player 2", score: 3, color: "" },
-    { id: 3, name: "Player 3", score: 7, color: "" },
-    { id: 4, name: "Player 4", score: 4, color: "" }
-  ];
+  //   if (count > 0) {
+  //     const timer = setTimeout(() => {
+  //       setCount((c) => c - 1);
+  //     }, 1000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [count]);
 
   return (
     <div className={css.container}>
       {/* <div className="relative w-[750px]"> */}
         {/* Top Score */}
-        {/* <div className="flex items-center flex-col">
-          <div className={`${players[1].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {'score'} - {score2[0]}
-          </div>
-          <div className={`${players[1].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {'score against'} - {score2[1]}
-          </div>
-        </div> */}
-        <PlayerCard layout='horizontal' score={score2[0]} against={score2[1]}/>
+
+        {player1_id ? <PlayerCard layout='horizontal' score={score2[0]} against={score2[1]} p_id={player2_id}/>
+            : <PlayerCardSkeleton layout='horizontal'/>}
 
         <div className="flex items-center justify-center gap-4">
           {/* Left Score */}
-          {/* <div className={`${players[0].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {'score'} - {score1[0]}
-          </div>
-          <div className={`${players[0].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {'score against'} - {score1[1]}
-          </div> */}
-          <PlayerCard score={score1[0]} against={score1[1]}/>
+          {player1_id ? <PlayerCard score={score1[0]} against={score1[1]} p_id={player1_id}/>
+            : <PlayerCardSkeleton />}
+
 
 
           {/* Game Area */}
-          <div
-            className="relative min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
-            style={{
-              boxSizing: 'content-box',
-              userSelect: 'none',
-              touchAction: 'manipulation'
-            }}
-          >
-            {currentScreen === 'game' && (
-            <div id="gameScreen" className={css.gameScreenDiv}>
-                {/* <div className={css.scoreWrapper}>
-                  <div className={css.player1Score}>{score1}</div>
-                  <div className={css.player2Score}>{score2}</div>
-                </div> */}
-                <canvas
-                  width={canvasWidth}
-                  height={canvasHeight}
-                  id={css.gameCanvas}
-                  ref={canvasRef}
-                />
-            </div>
+          {gameState === 'started' || gameState === 'ended' ? (
+            <div
+              className="flex justify-center items-center relative min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+              style={{
+                boxSizing: 'content-box',
+                userSelect: 'none',
+                touchAction: 'manipulation'
+              }}
+            >
+              {currentScreen === 'game' && (
+              <div id="gameScreen" className={css.gameScreenDiv}>
+                  <canvas
+                    width={canvasWidth}
+                    height={canvasHeight}
+                    id={css.gameCanvas}
+                    ref={canvasRef}
+                  />
+              </div>
 
-            )}
-            {currentScreen === 'end' && (
-              <EndGameScreen
-                isWinner={isWinner}
-                handleRetry={handleRetry}
-                handleMainMenu={handleMainMenu}
-                isMatchTournament={isMatchTournament}
-              />
-            )}
-          </div>
-          {/* {gameState === 'started' || gameState === 'ended' ? (
+              )}
+              {currentScreen === 'end' && (
+                <EndGameScreen
+                  isWinner={isWinner}
+                  handleRetry={handleRetry}
+                  handleMainMenu={handleMainMenu}
+                  isMatchTournament={isMatchTournament}
+                />
+              )}
+            </div>
           ) :
 
           (
@@ -465,7 +450,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
                 }}
               >
               <div className="relative flex items-center justify-center">
-                  <div
+                  {/* <div
                     className="text-9xl font-bold mb-8 transition-all duration-500"
                     style={{
                       opacity: count === 1 ? 0 : 1,
@@ -477,134 +462,31 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
                         GO!
                       </div>
                     </div>}
+                  </div> */}
+                  <div className="animate-pulse text-center">
+                    <p className="text-gray-400">Waiting for players to join...</p>
                   </div>
               </div>
             </div>
 
-          )} */}
+          )}
 
           {/* Right Score */}
-          {/* <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {'score'} - {score3[0]}
-          </div>
-          <div className={`${players[2].color} px-4 py-1 rounded-lg text-white font-bold whitespace-nowrap`}>
-            {'score against'} - {score3[1]}
-          </div> */}
-          <PlayerCard score={score3[0]} against={score3[1]}/>
+
+          {player1_id ? <PlayerCard score={score3[0]} against={score3[1]} p_id={player3_id}/>
+            : <PlayerCardSkeleton />}
         </div>
 
         {/* Bottom Score */}
-        {/* <div className="">
-          <div className={`${players[3].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {'score'} - {score4[0]}
-          </div>
-          <div className={`${players[3].color} px-4 py-1 rounded-lg text-white font-bold`}>
-            {'score against'} - {score4[1]}
-          </div>
-        </div> */}
-        <PlayerCard layout='horizontal' score={score4[0]} against={score4[1]}/>
+
+         {player1_id ? <PlayerCard layout='horizontal' score={score4[0]} against={score4[1]} p_id={player4_id}/>
+            : <PlayerCardSkeleton layout='horizontal'/>}
       </div>
     // </div>
   );
 
 
-  return (
-    <div className={css.container}>
 
-      {/* {!gameState &&
-            <RadarIcon
-              className="text-red-500 animate-ping absolute m-auto  flex justify-center items-center inset-0 opacity-50"
-              size={120}
-            />
-        } */}
-      {/* <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} player={player} /> */}
-        <div className={css.gameArea}>
-          {currentScreen === 'game' && (
-            <div id="gameScreen" className={css.gameScreenDiv}>
-              <div className={css.scoreWrapper}>
-                <div className={css.player1Score}>{score1}</div>
-                <div className={css.player2Score}>{score2}</div>
-              </div>
-              <canvas
-                width={canvasWidth}
-                height={canvasHeight}
-                id={css.gameCanvas}
-                ref={canvasRef}
-              />
-          </div>
-          )}
-          {currentScreen === 'end' && (
-            <EndGameScreen
-              isWinner={isWinner}
-              handleRetry={handleRetry}
-              handleMainMenu={handleMainMenu}
-              isMatchTournament={isMatchTournament}
-            />
-          )}
-        </div>
-
-
-      {gameState === 'started' || gameState === 'ended' ? (
-                  <div
-            className="min-w-[600px] min-h-[600px] max-w-[600px] max-h-[600px] w-[600px] h-[600px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
-            style={{
-              boxSizing: 'content-box',
-              userSelect: 'none',
-              touchAction: 'manipulation'
-            }}
-          >
-            {currentScreen === 'game' && (
-              <div id="gameScreen" className={css.gameScreenDiv}>
-                {/* <div className={css.scoreWrapper}>
-                  <div className={css.player1Score}>{score1}</div>
-                  <div className={css.player2Score}>{score2}</div>
-                </div> */}
-                <canvas
-                  width={canvasWidth}
-                  height={canvasHeight}
-                  id={css.gameCanvas}
-                  ref={canvasRef}
-                />
-            </div>
-
-            )}
-            {currentScreen === 'end' && (
-              <EndGameScreen
-                isWinner={isWinner}
-                handleRetry={handleRetry}
-                handleMainMenu={handleMainMenu}
-                isMatchTournament={isMatchTournament}
-              />
-            )}
-          </div>
-      ) :
-
-      (
-        <div className={css.gameArea}>
-          <div className="relative flex flex-col items-center">
-              <div
-                className="text-9xl font-bold mb-8 transition-all duration-500"
-                style={{
-                  opacity: count === 1 ? 0 : 1,
-                  transform: `scale(${count === 1 ? 1.5 : 1})`
-                }}
-              >
-                {count || <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-6xl font-bold animate-pulse text-yellow-400">
-                    GO!
-                  </div>
-                </div>}
-              </div>
-          </div>
-        </div>
-
-      )
-      }
-
-
-      <ReturnBack onClick={onReturn} />
-    </div>
-  );
 };
 
 export default MultipleGame;

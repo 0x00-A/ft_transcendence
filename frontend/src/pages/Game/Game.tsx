@@ -138,8 +138,6 @@ const Game = () => {
         }
         if (data.event === 'multigame_address') {
           setGameAdrress(data.game_address);
-          // setPlayer1_id(data.player1_id);
-          // setPlayer2_id(data.player2_id);
           setGameState('startMultiGame');
         }
         if (data.event === 'tournament_update') {
@@ -262,7 +260,11 @@ const Game = () => {
   }
 
   if (gameState === 'startMultiGame' && gameAdrress) {
-      return <MultipleGame requestMultipleGame={requestMultipleGame} game_address={gameAdrress} onReturn={()=> {}} p1_id={1} p2_id={2} />
+      return <MultipleGame
+        requestMultipleGame={requestMultipleGame}
+        game_address={gameAdrress}
+        onReturn={handleReturn}
+        />
   }
 
   if (gameState === 'startGame' && gameAdrress) {
