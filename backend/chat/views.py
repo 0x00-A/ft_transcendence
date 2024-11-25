@@ -75,7 +75,7 @@ class GetConversationsView(APIView):
                     other_user_avatar = conversation['user2_avatar']
                     other_last_seen = conversation['user2_last_seen']
                     other_status = conversation['user2_is_online']
-                    unread_count = conversation['unread_messages_user2']
+                    unread_count = conversation['unread_messages_user1']
                     
                 else:
                     other_user_id = conversation['user1_id']
@@ -83,7 +83,7 @@ class GetConversationsView(APIView):
                     other_user_avatar = conversation['user1_avatar']
                     other_last_seen = conversation['user1_last_seen']
                     other_status = conversation['user1_is_online']
-                    unread_count = conversation['unread_messages_user1']
+                    unread_count = conversation['unread_messages_user2']
                 
                 updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
                 last_message = conversation['last_message']

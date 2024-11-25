@@ -78,11 +78,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
     async def handle_mark_as_read(self, data):
-        receiver_id = data.get("receiver_id")
         conversation_id = data.get("conversation_id")
 
-        if receiver_id == self.user.id:
-            await self.mark_conversation_as_read(conversation_id)
+        if not conversation_id:
+            return
+
+        await self.mark_conversation_as_read(conversation_id, self.user)
 
         await self.send(text_data=json.dumps({
             "type": "mark_as_read",
@@ -110,11 +111,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, sender_id, receiver_id, message):
         sender = User.objects.get(id=sender_id)
         receiver = User.objects.get(id=receiver_id)
+        print(f"Receiver ID: {receiver_id}, Sender ID: {sender_id}")
+
 
         conversation, created = Conversation.objects.get_or_create(
             user1=min(sender, receiver, key=lambda user: user.id),
             user2=max(sender, receiver, key=lambda user: user.id)
         )
+        print(f"Conversation Users: {conversation.user1.id}, {conversation.user2.id}")
 
         Message.objects.create(
             conversation=conversation,
@@ -124,15 +128,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         conversation.last_message = message
-        if sender_id != receiver_id:
-            conversation.unread_messages += 1
+        if receiver == conversation.user1:
+            conversation.unread_messages_user1 += 1
+        elif receiver == conversation.user2:
+            conversation.unread_messages_user2 += 1
         conversation.save()
+        print(f"Unread User1: {conversation.unread_messages_user1}, Unread User2: {conversation.unread_messages_user2}")
 
         return conversation
     @sync_to_async
-    def mark_conversation_as_read(self, conversation_id):
+    def mark_conversation_as_read(self, conversation_id, user):
         conversation = Conversation.objects.get(id=conversation_id)
 
-        conversation.unread_messages = 0
+        if user == conversation.user1:
+            conversation.unread_messages_user1 = 0
+        elif user == conversation.user2:
+            conversation.unread_messages_user2 = 0
+
+        conversation.messages.filter(receiver=user, seen=False).update(seen=True)
+
         conversation.save()
 

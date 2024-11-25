@@ -14,7 +14,8 @@ class Conversation(models.Model):
         related_name='conversations_as_user2'
     )
     last_message = models.TextField(blank=True, null=True)
-    unread_messages = models.IntegerField(default=0) 
+    unread_messages_user1 = models.IntegerField(default=0)
+    unread_messages_user2 = models.IntegerField(default=0)  
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

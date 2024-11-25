@@ -29,7 +29,6 @@ class ConversationSerializer(serializers.ModelSerializer):
             'user2_username', 
             'user2_avatar', 
             'last_message', 
-            'unread_messages',
             'unread_messages_user1',
             'unread_messages_user2',
             'user1_is_online',
