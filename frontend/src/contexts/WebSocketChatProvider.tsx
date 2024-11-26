@@ -17,6 +17,7 @@ interface WebSocketContextType {
   sendTypingStatus: (receiverId: number, typing: boolean) => void;
   messages: MessageProps[];
   markAsRead: (conversationId: number) => void;
+  updateActiveConversation: (conversationId: number) => void;
   lastMessage: {
     conversationId: number;
     content: string;
@@ -138,8 +139,19 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
 
+  const updateActiveConversation = (conversationId: number) => {
+    const socket = socketRef.current;
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(
+        JSON.stringify({
+          action: "update_active_conversation",
+          conversation_id: conversationId,
+        })
+      );
+    }
+  };
   return (
-    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, messages, lastMessage }}>
+    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage }}>
       {children}
     </WebSocketContext.Provider>
   );
