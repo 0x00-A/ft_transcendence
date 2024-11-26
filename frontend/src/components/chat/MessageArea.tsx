@@ -50,7 +50,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
           <span className={css.typingDot}></span>
           <span className={css.typingDot}></span>
           <span className={css.typingDot}></span>
-      </div>
+        </div>
       )}
       <div className={css.scrollMessages} ref={messageEndRef} />
     </div>
