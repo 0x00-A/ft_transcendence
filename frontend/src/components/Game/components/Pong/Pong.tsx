@@ -348,7 +348,7 @@ const Pong: React.FC<GameProps> = ({
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('keydown', (e) => handleKeyDown(e));
+    window.addEventListener('keyadown', (e) => handleKeyDown(e));
     window.addEventListener('keyup', (e) => handleKeyUp(e));
     canvas.addEventListener('mousemove', (e) => handleMouseMove(e));
 
