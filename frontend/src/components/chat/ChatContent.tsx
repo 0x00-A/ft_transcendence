@@ -46,37 +46,21 @@ const ChatContent: React.FC<ChatContentProps> = ({
   }, [onSelectedConversation?.id]);
   
   useEffect(() => {
-    console.log("-------------websocketMessages---", websocketMessages);
-    console.log("-------------onSelectedConversation---id:", onSelectedConversation?.id);
-  
     if (!websocketMessages || websocketMessages.length === 0) {
-      console.log("No WebSocket messages or websocketMessages is undefined.");
       setChatMessages(fetchedMessages || []);
       return;
     }
-  
     const lastMessage = websocketMessages[websocketMessages.length - 1];
-    console.log("Last WebSocket Message:", lastMessage);
-  
     if (lastMessage?.conversation === onSelectedConversation?.id) {
-      console.log("Matching conversation found, updating chat messages.");
       setChatMessages(() => [
         ...(fetchedMessages || []),
         ...websocketMessages,
       ]);
     } else {
-      console.log("No matching conversation. Using fetchedMessages only.");
       setChatMessages(fetchedMessages || []);
     }
   }, [fetchedMessages, websocketMessages, onSelectedConversation?.id]);
-  
 
-  // useEffect(() => {
-  //   setChatMessages(() => [
-  //     ...(fetchedMessages || []),
-  //     ...websocketMessages,
-  //   ]);
-  // }, [fetchedMessages, websocketMessages]);
 
   
   const handleSendMessage = useCallback(
