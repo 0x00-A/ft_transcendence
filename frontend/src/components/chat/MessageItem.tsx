@@ -29,9 +29,6 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
     const { typing } = useTyping();
     
     const isReceiver = typing.senderId == conversation.user_id;
-    const typingIndicator = typing.typing && isReceiver
-      ? 'Typing...'
-      : conversation.lastMessage;
 
     return (
       <div
@@ -40,12 +37,19 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
         onClick={onClick}
       >
         <div className={css.messageItem}>
-          <div className={`${css.userAvatar} ${conversation.status ? css.online : ''}`}>
+          <div className={`${css.userAvatar} ${conversation.status && !(typing.typing && isReceiver) ? css.online : ''}`}>
               <img
                 src={conversation.avatar}
                 alt="User"
                 className={css.imageAvatar}
               />
+              {typing.typing && isReceiver && (
+                <div className={css.typingIndicator}>
+                  <span className={css.typingDot}></span>
+                  <span className={css.typingDot}></span>
+                  <span className={css.typingDot}></span>
+                </div>
+              )}
           </div>
           <div className={css.messageContent}>
             <div className={css.messageHeader}>
@@ -53,8 +57,8 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
               <span className={css.time}>{conversation.time}</span>
             </div>
             <div className={css.messageBody}>
-              <span className={`${css.lastMessage} ${typing.typing && isReceiver ? css.typing : ''}`}>
-                {typingIndicator}
+              <span className={`${css.lastMessage}`}>
+                {conversation.lastMessage}
               </span>
               {conversation.unreadCount && conversation.unreadCount > 0 && (
                 <span className={css.unreadCount}>{conversation.unreadCount}</span>
