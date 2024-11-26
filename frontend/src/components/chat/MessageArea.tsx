@@ -24,9 +24,8 @@ interface MessageAreaProps {
 
 const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-  const { user } = useUser(); 
   const { typing } = useTyping();
-  const isReceiver = user?.id === typing.senderId; 
+  const isReceiver = typing.senderId == conversationData?.user_id;
 
   console.log("typing: ", typing);
   useEffect(() => {
@@ -45,7 +44,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
           conversationData={conversationData}
         />
       ))}
-      {typing.typing && !isReceiver && (
+      {typing.typing && isReceiver && (
         <div className={css.typingIndicator}>
           <span className={css.typingDot}></span>
           <span className={css.typingDot}></span>
