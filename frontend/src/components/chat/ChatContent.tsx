@@ -49,7 +49,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
     console.log("-------------websocketMessages---", websocketMessages);
     console.log("-------------onSelectedConversation---id:", onSelectedConversation?.id);
   
-    // Handle undefined or empty websocketMessages
     if (!websocketMessages || websocketMessages.length === 0) {
       console.log("No WebSocket messages or websocketMessages is undefined.");
       setChatMessages(fetchedMessages || []);
