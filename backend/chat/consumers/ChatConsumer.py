@@ -16,6 +16,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.user.is_authenticated:
+            await self.set_active_conversation(self.user.id, -1)
             await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
 
     async def receive(self, text_data):
@@ -23,13 +24,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         action = data.get("action")
 
         print(f"Action: {action}, Data: {data}")
-        if action == "send_message":
+        if action == "update_active_conversation":
+            await self.update_active_conversation(data)
+        elif action == "send_message":
             await self.handle_send_message(data)
         elif action == "typing":
             await self.handle_typing_status(data)
         elif action == "mark_as_read":
             await self.handle_mark_as_read(data)
 
+    @sync_to_async
+    def set_active_conversation(self, user_id, conversation_id):
+        user = User.objects.get(id=user_id)
+        user.active_conversation = conversation_id
+        user.save()
+
+    async def update_active_conversation(self, data):
+        conversation_id = data.get("conversation_id")
+        if conversation_id is not None:
+            await self.set_active_conversation(self.user.id, conversation_id)
+    
     async def handle_send_message(self, data):
         message = data.get("message")
         receiver_id = data.get("receiver_id") 
@@ -126,15 +140,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
             receiver=receiver,
             content=message
         )
-
         conversation.last_message = message
-        if receiver == conversation.user1:
-            conversation.unread_messages_user1 += 1
-        elif receiver == conversation.user2:
-            conversation.unread_messages_user2 += 1
+        print(f" >>>> receiver_id,: {receiver_id}, conversation.id: {conversation.id} <<<<")
+        print(f" >>>> receiver.active_conversation: {receiver.active_conversation}")
+        is_active =  receiver.active_conversation == conversation.id
+        print(f" >>>> is_active: {is_active}")
+        if not is_active:
+            if receiver == conversation.user1:
+                conversation.unread_messages_user1 += 1
+            elif receiver == conversation.user2:
+                conversation.unread_messages_user2 += 1
+            print(f"Unread User1: {conversation.unread_messages_user1}, Unread User2: {conversation.unread_messages_user2}")
         conversation.save()
-        print(f"Unread User1: {conversation.unread_messages_user1}, Unread User2: {conversation.unread_messages_user2}")
-
         return conversation
     @sync_to_async
     def mark_conversation_as_read(self, conversation_id, user):

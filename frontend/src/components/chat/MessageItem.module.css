@@ -47,10 +47,11 @@
   height: 15px;
   border-radius: 50%;
   background-color: transparent; 
-  border: 2px solid white;
+  border: none;
 }
 
 .userAvatar.online::after {
+  border: 2px solid white;
   background-color: green;
 }
 

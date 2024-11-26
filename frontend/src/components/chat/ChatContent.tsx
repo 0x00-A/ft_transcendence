@@ -31,21 +31,53 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation } = useWebSocket();
 
-
+  useEffect(() => {
+    if (onSelectedConversation?.id) {
+      updateActiveConversation(onSelectedConversation.id);
+    }
+  }, [onSelectedConversation?.id]);
+  
   useEffect(() => {
     if (onSelectedConversation?.id) {
       markAsRead(onSelectedConversation.id);
     }
-  }, [onSelectedConversation?.id, markAsRead]);
+  }, [onSelectedConversation?.id]);
   
   useEffect(() => {
-    setChatMessages(() => [
-      ...(fetchedMessages || []),
-      ...websocketMessages,
-    ]);
-  }, [fetchedMessages, websocketMessages]);
+    console.log("-------------websocketMessages---", websocketMessages);
+    console.log("-------------onSelectedConversation---id:", onSelectedConversation?.id);
+  
+    // Handle undefined or empty websocketMessages
+    if (!websocketMessages || websocketMessages.length === 0) {
+      console.log("No WebSocket messages or websocketMessages is undefined.");
+      setChatMessages(fetchedMessages || []);
+      return;
+    }
+  
+    const lastMessage = websocketMessages[websocketMessages.length - 1];
+    console.log("Last WebSocket Message:", lastMessage);
+  
+    if (lastMessage?.conversation === onSelectedConversation?.id) {
+      console.log("Matching conversation found, updating chat messages.");
+      setChatMessages(() => [
+        ...(fetchedMessages || []),
+        ...websocketMessages,
+      ]);
+    } else {
+      console.log("No matching conversation. Using fetchedMessages only.");
+      setChatMessages(fetchedMessages || []);
+    }
+  }, [fetchedMessages, websocketMessages, onSelectedConversation?.id]);
+  
+
+  // useEffect(() => {
+  //   setChatMessages(() => [
+  //     ...(fetchedMessages || []),
+  //     ...websocketMessages,
+  //   ]);
+  // }, [fetchedMessages, websocketMessages]);
 
   
   const handleSendMessage = useCallback(
