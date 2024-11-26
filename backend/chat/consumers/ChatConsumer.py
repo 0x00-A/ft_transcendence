@@ -162,7 +162,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
         elif user == conversation.user2:
             conversation.unread_messages_user2 = 0
 
-        conversation.messages.filter(receiver=user, seen=False).update(seen=True)
-
         conversation.save()
 

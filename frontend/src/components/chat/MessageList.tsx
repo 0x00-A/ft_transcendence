@@ -60,7 +60,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage} = useWebSocket();
+  const { lastMessage, updateActiveConversation} = useWebSocket();
 
   const { 
     data: friendsData, 
@@ -174,6 +174,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const handleClose = () => {
     if (selectedConversation !== null) {
+      updateActiveConversation(-1);
       handleConversationSelect(null);
     }
     setMenuState((prevState) => ({
@@ -243,7 +244,6 @@ const MessageList: React.FC<MessageListProps> = ({
     onSelectMessage(conversation);
   }, [onSelectMessage]);
   const handleConversationClick = useCallback((conversation: conversationProps) => {
-    // refetch();
     handleConversationSelect(conversation);
     setIsSearchActive(false);
     setSearchQuery('');
