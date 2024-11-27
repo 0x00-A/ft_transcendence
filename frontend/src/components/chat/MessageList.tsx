@@ -80,7 +80,6 @@ const MessageList: React.FC<MessageListProps> = ({
   
   
   console.log(" >> << ConversationList: ", ConversationList)
-  refetch();
   useEffect(() => {
     if (lastMessage || markAsReadData?.status) {
       console.log("*************markAsReadData: ", markAsReadData)
