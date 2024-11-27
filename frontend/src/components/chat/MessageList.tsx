@@ -21,6 +21,8 @@ import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
 import { toast } from 'react-toastify';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -41,6 +43,7 @@ interface Friend {
 const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
 }) => {
+  const navigate = useNavigate();
   const [selectedConversation, setSelectedConversation] = useState<conversationProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
@@ -60,8 +63,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage, updateActiveConversation, markAsReadData} = useWebSocket();
-
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead} = useWebSocket();
 
   const { 
     data: friendsData, 
@@ -185,6 +187,29 @@ const MessageList: React.FC<MessageListProps> = ({
       activeIndex: null,
     }));
   };
+  
+  
+  const handleMarkAsRead = (id: number) => {
+    if (ConversationList && menuState.activeIndex !== null) {
+      markAsRead(id);
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+    }
+  };
+
+  const handleViewProfile = (name: string) => {
+    if (ConversationList && menuState.activeIndex !== null) {
+      navigate(`/profile/${name}`)
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+    }
+  };
 
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -245,6 +270,8 @@ const MessageList: React.FC<MessageListProps> = ({
     setSelectedConversation(conversation);
     onSelectMessage(conversation);
   }, [onSelectMessage]);
+
+  
   const handleConversationClick = useCallback((conversation: conversationProps) => {
     handleConversationSelect(conversation);
     setIsSearchActive(false);
@@ -351,7 +378,7 @@ const MessageList: React.FC<MessageListProps> = ({
           ))
         )}
 
-        {menuState.isOpen && menuState.position && (
+        {menuState.isOpen && menuState.position  && ConversationList && menuState.activeIndex !== null && (
           <div
             ref={menuRef}
             className={css.menu}
@@ -360,7 +387,9 @@ const MessageList: React.FC<MessageListProps> = ({
               left: `${menuState.position.left}px`,
             }}
           >
-            <div className={css.menuItem}>
+            <div 
+              className={css.menuItem}
+              onClick={() => handleMarkAsRead(ConversationList[menuState.activeIndex!].id)}>
               <FaCheck /> <span>Mark as read</span>
             </div>
             <div className={css.menuItem} onClick={handleClose}>
@@ -369,7 +398,10 @@ const MessageList: React.FC<MessageListProps> = ({
             <div className={css.menuItem}>
               <FaBell /> <span>Mute notifications</span>
             </div>
-            <div className={css.menuItem}>
+            <div
+              className={css.menuItem}
+              onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
+            >
               <FaUser /> <span>View Profile</span>
             </div>
             <hr />
