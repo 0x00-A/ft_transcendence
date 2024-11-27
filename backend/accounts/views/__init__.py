@@ -3,6 +3,7 @@ from .login import RefreshToken
 from .login import LoginVerifyOTPView
 from .logout import LogoutView
 from .signup import SignupView
+from .signup import verify_email
 from .oauth2_authentication import oauth2_authentication
 from .oauth2_authentication import oauth2_authorize
 

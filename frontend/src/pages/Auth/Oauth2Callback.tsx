@@ -23,7 +23,6 @@ const Oauth2Callback = () => {
 
     const {register, handleSubmit, errors, mutation, reset} = useOauth2Username()
 
-
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status')

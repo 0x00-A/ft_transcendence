@@ -15,7 +15,6 @@ import pyotp
 import qrcode
 
 
-
 def generate_otp():
     return random.randint(100000, 999999)
 

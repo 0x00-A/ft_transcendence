@@ -15,7 +15,6 @@ const Oauth2 = () => {
   //   const url = API_OAUTH2_URL + api;
   //   window.location.href = url;
   // }
-
   return (
     <div className={css.oauth2Container}>
       <div className={css.or}><div/><p>OR</p><div/></div>
