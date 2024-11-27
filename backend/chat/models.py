@@ -18,6 +18,8 @@ class Conversation(models.Model):
     unread_messages_user2 = models.IntegerField(default=0)  
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user1_block_status = models.BooleanField(default=False) 
+    user2_block_status = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('user1', 'user2') 

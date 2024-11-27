@@ -14,7 +14,8 @@ class ConversationSerializer(serializers.ModelSerializer):
     user2_avatar = serializers.SerializerMethodField()
     user1_is_online = serializers.BooleanField(source='user1.profile.is_online', read_only=True)
     user2_is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
-    block_status = serializers.SerializerMethodField()
+    user1_block_status = serializers.BooleanField(read_only=True)
+    user2_block_status = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Conversation
@@ -35,7 +36,8 @@ class ConversationSerializer(serializers.ModelSerializer):
             'user2_is_online',
             'created_at', 
             'updated_at',
-            'block_status',
+            'user1_block_status',
+            'user2_block_status'
         ]
     
     def get_user1_avatar(self, obj):
@@ -44,22 +46,6 @@ class ConversationSerializer(serializers.ModelSerializer):
     def get_user2_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.user2.profile.avatar}"
     
-    def get_block_status(self, obj):
-        if 'request' not in self.context:
-            return 'null'
-        if self.context['request'].user == obj.user1:
-            user = obj.user2
-        else:
-            user = obj.user1
-        try:
-            BlockRelationship.objects.get(blocker=self.context['request'].user, blocked=user)
-            return 'Blocker'
-        except BlockRelationship.DoesNotExist:
-            try:
-                BlockRelationship.objects.get(blocker=user, blocked=self.context['request'].user)
-                return 'Blocked'
-            except BlockRelationship.DoesNotExist:
-                return 'null'
 
 
 class MessageSerializer(serializers.ModelSerializer):

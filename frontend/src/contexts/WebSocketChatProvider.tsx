@@ -27,7 +27,9 @@ interface WebSocketContextType {
     status: string;
     conversationId: number;
   } | null;
+  toggleBlockStatus: (conversation_id: number, blocker_id: number, blocked_id: number, status: boolean) => void;
 }
+
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
 
@@ -160,8 +162,29 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
       );
     }
   };
+
+  const toggleBlockStatus = (conversationId: number, blockerId: number, blockedId: number, status: boolean) => {
+    const socket = socketRef.current;
+    console.log('Sending toggle block status:', {
+      conversationId,
+      blockerId,
+      blockedId,
+      status,
+    });
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(
+        JSON.stringify({
+          action: 'toggle_block_status',
+          conversation_id: conversationId,
+          blocker_id: blockerId,
+          blocked_id: blockedId,
+          status,
+        })
+      );
+    }
+  };
   return (
-    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage, markAsReadData }}>
+    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage, markAsReadData, toggleBlockStatus }}>
       {children}
     </WebSocketContext.Provider>
   );
