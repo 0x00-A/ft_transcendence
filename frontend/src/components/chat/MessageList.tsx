@@ -63,7 +63,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead} = useWebSocket();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus} = useWebSocket();
 
   const { 
     data: friendsData, 
@@ -173,6 +173,17 @@ const MessageList: React.FC<MessageListProps> = ({
     } catch (error: any) {
       toast.error(error.message);
     }
+  };
+
+  const handleBlock = async (id: number, blockedId: number) => {
+    if (user?.id !== undefined) {
+      toggleBlockStatus(id, user.id, blockedId, true);
+    }
+    setMenuState((prevState) => ({
+      ...prevState,
+      isOpen: false,
+      activeIndex: null,
+    }));
   };
 
   const handleClose = () => {
@@ -406,11 +417,9 @@ const MessageList: React.FC<MessageListProps> = ({
             <hr />
             <div
               className={css.menuItem}
+              onClick={() => handleBlock(ConversationList[menuState.activeIndex!].id, ConversationList[menuState.activeIndex!].user_id)}
             >
-              <FaBan />
-              <span>
-                block
-              </span>
+              <FaBan /><span> block </span>
             </div>
             <div className={css.menuItem}>
               <FaArchive /> <span>Archive chat</span>

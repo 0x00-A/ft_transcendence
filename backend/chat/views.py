@@ -115,6 +115,7 @@ class GetConversationsView(APIView):
                     other_last_seen = conversation['user2_last_seen']
                     other_status = conversation['user2_is_online']
                     unread_count = conversation['unread_messages_user1']
+                    block_status = conversation['user1_block_status']
 
                 else:
                     other_user_id = conversation['user1_id']
@@ -123,6 +124,7 @@ class GetConversationsView(APIView):
                     other_last_seen = conversation['user1_last_seen']
                     other_status = conversation['user1_is_online']
                     unread_count = conversation['unread_messages_user2']
+                    block_status = conversation['user2_block_status']
 
                 updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
                 last_message = conversation['last_message']
@@ -138,7 +140,7 @@ class GetConversationsView(APIView):
                     'time': format_time(updated_at),
                     'unreadCount': unread_count or '',
                     'status': other_status,
-                    'block_status': conversation['block_status'],
+                    'block_status': block_status,
                 }
                 conversations_data.append(conversation_data)
             

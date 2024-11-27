@@ -2,6 +2,8 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from ..models import User, Message, Conversation
+from django.db.models import Q
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -32,6 +34,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.handle_typing_status(data)
         elif action == "mark_as_read":
             await self.handle_mark_as_read(data)
+        elif action == "toggle_block_status":
+            blocker_id = data.get("blocker_id")
+            blocked_id = data.get("blocked_id")
+            status = data.get("status") 
+            await self.toggle_block_status(data.get("conversation_id"), blocker_id, blocked_id, status)
+
+
+    @sync_to_async
+    def get_conversation(self, sender_id, receiver_id):
+
+        conversation = Conversation.objects.get(
+            Q(user1_id=sender_id, user2_id=receiver_id) | Q(user1_id=receiver_id, user2_id=sender_id),
+            defaults={
+                'user1_id': sender_id,
+                'user2_id': receiver_id,
+            }
+        )
+        return conversation
+    @sync_to_async
+    def toggle_block_status(self, conversation_id, blocker_id, blocked_id, status):
+        conversation = Conversation.objects.get(id=conversation_id)
+        print("---------------------------")
+        print(conversation)
+        print("---------------------------")
+        print( conversation.user2_id)
+        print("---------------------------")
+        print( conversation.user1_id)
+        print("---------------------------")
+        if blocker_id == conversation.user1_id and blocked_id == conversation.user2_id:
+            conversation.user1_block_status = status
+            conversation.user2_block_status = status
+        elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
+            conversation.user1_block_status = status
+            conversation.user2_block_status = status
+        conversation.save()
 
     @sync_to_async
     def set_active_conversation(self, user_id, conversation_id):
@@ -49,8 +86,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_id = data.get("receiver_id") 
         sender_id = self.user.id
 
-        if not receiver_id or not message:
-            return  
+        # if not receiver_id or not message:
+        #     return  
+        # conversation = await self.get_conversation(sender_id, receiver_id)
+
+        # if conversation.user1_block_status and conversation.user1 == self.user:
+        #     return 
+        # if conversation.user2_block_status and conversation.user2 == self.user:
+        #     return 
 
         conversation = await self.save_message(sender_id, receiver_id, message)
 
