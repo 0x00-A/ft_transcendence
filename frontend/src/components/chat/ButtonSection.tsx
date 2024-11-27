@@ -3,6 +3,8 @@ import css from './ButtonSection.module.css';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
 // import { FaUserCircle, FaSearch, FaUserPlus } from 'react-icons/fa';
 
 // import { Button } from '@/components/ui/button';
@@ -18,6 +20,7 @@ const CooldownButton = ({
 }) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+
 
   const handleClick = () => {
     if (!isDisabled) {
@@ -66,6 +69,8 @@ const CooldownButton = ({
 const ButtonSection: React.FC = () => {
   const { user } = useUser();
   const { sendMessage } = useWebSocket();
+  const navigate = useNavigate();
+
 
   const handleSendInvite = () => {
     sendMessage({
@@ -76,7 +81,7 @@ const ButtonSection: React.FC = () => {
   };
   return (
     <div className={css.buttonSection}>
-      <div className={css.button}>
+      <div className={css.button} onClick={() => navigate('/profile')}>
         <img className={css.icon} src="/icons/chat/Profile.svg" alt="I" />
         {/* <FaUserCircle className={css.icon} /> */}
         <p>Profile</p>
