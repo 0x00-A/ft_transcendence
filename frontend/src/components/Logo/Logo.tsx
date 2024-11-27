@@ -1,5 +1,5 @@
-import { NavLink } from 'react-router-dom';
-import css from './Logo.module.css';
+// import { NavLink } from 'react-router-dom';
+// import css from './Logo.module.css';
 import LogoSVG from '/icons/logo.svg';
 
 function Logo({ style }: { style: string }) {

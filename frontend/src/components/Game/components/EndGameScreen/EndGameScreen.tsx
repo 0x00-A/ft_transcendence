@@ -1,8 +1,5 @@
-import { Link } from 'react-router-dom';
 import GameButton from '../GameButton/GameButton';
 import css from './EndGameScreen.module.css';
-
-import React from 'react';
 
 const EndGameScreen = ({
   isWinner,

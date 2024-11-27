@@ -1,8 +1,6 @@
 // Achievements.js
-import React, { useState } from 'react';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+// import { useState } from 'react';
 import css from './Achievements.module.css';
-import { TrendingUp } from "lucide-react"
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts"
 import {
   ChartConfig,
@@ -31,25 +29,25 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
-const achievementsData = [
-  { title: "Bronze", image: "/icons/pngegg.png", progress: 60 },
-  { title: "Silver", image: "/icons/bronze.png", progress: 80 },
-  { title: "Gold", image: "/icons/pngegg.png", progress: 50 },
-  { title: "Platinum", image: "/icons/pngegg.png", progress: 40 },
-  { title: "Diamond", image: "/icons/pngegg.png", progress: 70 },
-  { title: "FT-PONG", image: "/icons/pngegg.png", progress: 90 },
-];
+// const achievementsData = [
+//   { title: "Bronze", image: "/icons/pngegg.png", progress: 60 },
+//   { title: "Silver", image: "/icons/bronze.png", progress: 80 },
+//   { title: "Gold", image: "/icons/pngegg.png", progress: 50 },
+//   { title: "Platinum", image: "/icons/pngegg.png", progress: 40 },
+//   { title: "Diamond", image: "/icons/pngegg.png", progress: 70 },
+//   { title: "FT-PONG", image: "/icons/pngegg.png", progress: 90 },
+// ];
 
 const Achievements = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? achievementsData.length - 1 : prevIndex - 1));
-  };
+  // const handlePrev = () => {
+  //   setCurrentIndex((prevIndex) => (prevIndex === 0 ? achievementsData.length - 1 : prevIndex - 1));
+  // };
 
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === achievementsData.length - 1 ? 0 : prevIndex + 1));
-  };
+  // const handleNext = () => {
+  //   setCurrentIndex((prevIndex) => (prevIndex === achievementsData.length - 1 ? 0 : prevIndex + 1));
+  // };
 
   return (
       <>
@@ -97,7 +95,7 @@ const Achievements = () => {
             </Line>
           </LineChart>
         </ChartContainer>
-        
+
       </>
   );
 };

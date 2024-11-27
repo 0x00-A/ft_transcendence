@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
@@ -39,7 +39,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       markAsRead(onSelectedConversation.id);
     }
   }, [onSelectedConversation?.id, markAsRead]);
-  
+
   useEffect(() => {
     setChatMessages(() => [
       ...(fetchedMessages || []),
@@ -47,19 +47,19 @@ const ChatContent: React.FC<ChatContentProps> = ({
     ]);
   }, [fetchedMessages, websocketMessages]);
 
-  
+
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
-        sendMessage(onSelectedConversation.user_id, message); 
+        sendMessage(onSelectedConversation.user_id, message);
       }
     },
     [sendMessage, onSelectedConversation.user_id]
   );
-  
+
     const handleTyping = useCallback(
       (isTyping: boolean) => {
-        sendTypingStatus(onSelectedConversation.user_id, isTyping); 
+        sendTypingStatus(onSelectedConversation.user_id, isTyping);
       },
       [sendTypingStatus, onSelectedConversation.user_id]
     );
@@ -88,4 +88,3 @@ const ChatContent: React.FC<ChatContentProps> = ({
 };
 
 export default ChatContent;
-

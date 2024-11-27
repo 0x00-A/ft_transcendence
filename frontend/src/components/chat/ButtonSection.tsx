@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import css from './ButtonSection.module.css';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
-import { toast } from 'react-toastify';
 // import { FaUserCircle, FaSearch, FaUserPlus } from 'react-icons/fa';
 
 // import { Button } from '@/components/ui/button';

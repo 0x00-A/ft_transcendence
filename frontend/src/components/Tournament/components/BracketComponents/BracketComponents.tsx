@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import css from './BracketComponents.module.css';
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {

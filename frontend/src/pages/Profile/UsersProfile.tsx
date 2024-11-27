@@ -1,5 +1,4 @@
 // React
-import { useState } from 'react';
 // Components
 import UsersProfileHeader from '@/components/Profile/UsersProfileHeader';
 import UserProfileFriends from "@/components/Profile/UserProfileFriends";
