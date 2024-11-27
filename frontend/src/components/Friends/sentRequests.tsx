@@ -49,7 +49,7 @@ const SentRequests: React.FC = () => {
       ) : (
         <div className={css.list}>
           {isLoading ? (
-            <Loading /> 
+            <Loading />
           ) : error ? (
             <p>Error loading friends</p>
           ) : sentRequests?.map((request) => (

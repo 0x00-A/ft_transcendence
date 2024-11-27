@@ -22,7 +22,7 @@ class GameManager(models.Manager):
 
 class Game(models.Model):
     GAME_STATUS_CHOICES = [
-        ('waiting', 'Game waiting'),
+        # ('waiting', 'Game waiting'),
         ('started', 'Game started'),
         ('ended', 'Game ended'),
     ]
@@ -37,7 +37,7 @@ class Game(models.Model):
     p1_score = models.IntegerField(default=0)
     p2_score = models.IntegerField(default=0)
     status = models.CharField(
-        max_length=20, choices=GAME_STATUS_CHOICES, default='waiting')
+        max_length=20, choices=GAME_STATUS_CHOICES, default='started')
 
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
@@ -60,12 +60,12 @@ class Game(models.Model):
         print(f"--------------- Game: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2
-        # if winner == 1:
-        #     self.player1.profile.update_score(p1_score - p2_score)
-        #     self.player2.profile.update_score(p2_score)
-        # else:
-        #     self.player2.profile.update_score(p2_score - p1_score)
-        #     self.player1.profile.update_score(p1_score)
+        if winner == 1:
+            self.player1.profile.update_score(win=True, result=p1_score - p2_score)
+            self.player2.profile.update_score(win=False, result=p1_score - p2_score)
+        else:
+            self.player2.profile.update_score(win=True, result=p2_score - p1_score)
+            self.player1.profile.update_score(win=False, result=p2_score - p1_score)
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.status = 'ended'

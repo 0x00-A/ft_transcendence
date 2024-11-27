@@ -46,6 +46,7 @@ export interface User {
   username: string;
   email: string;
   is_oauth_user: boolean;
+  is2fa_active: boolean;
   first_name: string;
   last_name: string;
   profile: Profile;
@@ -103,5 +104,16 @@ export interface conversationProps {
   time: string;
   unreadCount?: number;
   status: boolean;
-  blocked: boolean;
+  blocked: string,
+  blocker: string,
+}
+/////////////////////
+// AUTH INTERFACES //
+/////////////////////
+
+export interface SignupFormData {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
 }

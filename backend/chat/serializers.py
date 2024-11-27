@@ -13,6 +13,8 @@ class ConversationSerializer(serializers.ModelSerializer):
     user2_avatar = serializers.SerializerMethodField()
     user1_is_online = serializers.BooleanField(source='user1.profile.is_online', read_only=True)
     user2_is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
+    user1_blocked_user_name = serializers.CharField(source='user1.profile.blocked_user_name', read_only=True)
+    user2_blocked_user_name = serializers.CharField(source='user2.profile.blocked_user_name', read_only=True)
 
     class Meta:
         model = Conversation
@@ -31,6 +33,8 @@ class ConversationSerializer(serializers.ModelSerializer):
             'unread_messages_user2',
             'user1_is_online',
             'user2_is_online',
+            'user1_blocked_user_name',
+            'user2_blocked_user_name',
             'created_at', 
             'updated_at'
         ]

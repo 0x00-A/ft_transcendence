@@ -79,8 +79,8 @@ const MessageList: React.FC<MessageListProps> = ({
   } = useGetData<conversationProps[]>('chat/conversations');
   
   
-  console.log("ConversationList: ", ConversationList)
-  
+  console.log(" >> << ConversationList: ", ConversationList)
+  refetch();
   useEffect(() => {
     if (lastMessage || markAsReadData?.status) {
       console.log("*************markAsReadData: ", markAsReadData)

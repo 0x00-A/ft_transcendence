@@ -36,6 +36,7 @@ class CreateConversationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        print('----------------------------------')
         user1 = request.user
         user2_id = request.data.get("user2_id")
 
@@ -43,6 +44,7 @@ class CreateConversationView(APIView):
             return Response({"error": "user2_id is required."}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
+
             user2 = User.objects.get(id=user2_id)
             conversation, created = Conversation.objects.get_or_create(
                 user1=min(user1, user2, key=lambda u: u.id),
@@ -56,12 +58,14 @@ class CreateConversationView(APIView):
                 other_last_seen = conversation.user2.last_seen
                 other_status = conversation.user2.profile.is_online
                 unread_count = conversation.unread_messages_user1
+                other_blocked = conversation.user2.profile.blocked_user_name
             else:
                 other_user_id = conversation.user1.id
                 other_user_username = conversation.user1.username
                 other_user_avatar = f"http://localhost:8000/media/{conversation.user1.profile.avatar}"
                 other_last_seen = conversation.user1.last_seen
                 other_status = conversation.user1.profile.is_online
+                other_blocked = conversation.user1.profile.blocked_user_name
                 unread_count = conversation.unread_messages_user2
             
             updated_at = datetime.fromisoformat(conversation.updated_at.isoformat().replace('Z', '+00:00'))
@@ -78,7 +82,7 @@ class CreateConversationView(APIView):
                 'time': format_time(updated_at),
                 'unreadCount': unread_count or '',
                 'status': other_status,
-                'blocked': False,
+                'blocked': other_blocked,
             }
 
             return Response(conversation_data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
@@ -103,6 +107,9 @@ class GetConversationsView(APIView):
             for conversation in serializer.data:
                 if not conversation.get('user1_id') or not conversation.get('user2_id'):
                     continue
+                
+                user1_blocked = conversation['user1_blocked_user_name']
+                user2_blocked = conversation['user2_blocked_user_name']
                 if user.id == conversation['user1_id']:
                     other_user_id = conversation['user2_id']
                     other_user_username = conversation['user2_username']
@@ -110,6 +117,13 @@ class GetConversationsView(APIView):
                     other_last_seen = conversation['user2_last_seen']
                     other_status = conversation['user2_is_online']
                     unread_count = conversation['unread_messages_user1']
+
+                    if user2_blocked == user.username:
+                        blocker = user.username  
+                        blocked = other_user_username 
+                    elif user2_blocked == 'none' and user1_blocked == other_user_username:
+                        blocker = None
+                        blocked = other_user_username
                     
                 else:
                     other_user_id = conversation['user1_id']
@@ -118,12 +132,18 @@ class GetConversationsView(APIView):
                     other_last_seen = conversation['user1_last_seen']
                     other_status = conversation['user1_is_online']
                     unread_count = conversation['unread_messages_user2']
-                
+
+                    if user1_blocked == user.username:
+                        blocker = user.username  
+                        blocked = other_user_username  
+                    elif user1_blocked == 'none' and user2_blocked == other_user_username:
+                        blocker = None
+                        blocked = other_user_username
+
                 updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
                 last_message = conversation['last_message']
-                truncated_message = (
-                    last_message[:10] + "..."
-                )
+                truncated_message = last_message[:10] + "..." if len(last_message) > 10 else last_message
+
                 conversation_data = {
                     'id': conversation['id'],
                     'last_seen': other_last_seen,
@@ -134,16 +154,19 @@ class GetConversationsView(APIView):
                     'time': format_time(updated_at),
                     'unreadCount': unread_count or '',
                     'status': other_status,
-                    'blocked': False,
+                    'blocked': blocked,
+                    'blocker': blocker,
                 }
                 conversations_data.append(conversation_data)
             
             return Response(conversations_data, status=status.HTTP_200_OK)
+        
         except Exception as e:
             return Response(
                 {'error': 'Internal server error', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
