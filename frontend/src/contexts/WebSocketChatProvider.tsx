@@ -23,6 +23,10 @@ interface WebSocketContextType {
     content: string;
     timestamp: string;
   } | null;
+  markAsReadData: {
+    status: string;
+    conversationId: number;
+  } | null;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
@@ -46,6 +50,10 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     conversationId: number;
     content: string;
     timestamp: string;
+  } | null>(null);
+  const [markAsReadData, setMarkAsReadData] = useState<{
+    status: string;
+    conversationId: number;
   } | null>(null);
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
@@ -83,7 +91,9 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
 
       } else if (data.type === 'typing_status') {
         setTyping({ typing: data.typing, senderId: data.sender_id });
-      } 
+      } else if (data.type === 'mark_as_read') {
+        setMarkAsReadData({ status: data.status, conversationId: data.conversation_id, });
+      }
     };
 
     socket.onclose = () => {
@@ -151,7 +161,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
   return (
-    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage }}>
+    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage, markAsReadData }}>
       {children}
     </WebSocketContext.Provider>
   );
