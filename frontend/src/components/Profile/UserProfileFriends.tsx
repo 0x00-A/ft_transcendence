@@ -21,16 +21,26 @@ interface Friend {
   profile: FriendProfile;
 }
 
+interface MutualFriend {
+    mutual_friends: Friend[];
+    mutual_friends_count: number;
+}
+
 
 const UserProfileFriends = ({username}) => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
     const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>(`/friends/${username}`);
+    const { data: mutualFriends, isLoading : mutualIsLoading, error: mutualError, refetch: mutualRefetch } = useGetData<MutualFriend>(`/friends/mutual/${username}`);
     const navigate = useNavigate();
-    const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
-    const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
+    // const mutualFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
+    // const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
     if (isLoading) return <Loading />;
+
+    if (mutualIsLoading) return <Loading />;
+    console.log('==> User profile Mutual Friends data == ', mutualFriends);
+
 
     console.log('==> User profile Friends data == ', friendsData);
 
@@ -46,51 +56,52 @@ const UserProfileFriends = ({username}) => {
         </div>
         <div className={css.friendsList}>
             <div className={css.buttonsGrp}>
-                <button onClick={() => setBtnActive(!isBtnActive)}
+                <button onClick={() => setBtnActive(true)}
                     className={`${css.button} ${isBtnActive  ? css.buttonActive : ''}`}>
-                    Online
+                    Mutual Friends {mutualFriends?.mutual_friends_count}
                 </button>
-                <button onClick={() => setBtnActive(!isBtnActive)}
+                <button onClick={() => setBtnActive(false)}
                     className={`${css.button} ${!isBtnActive ? css.buttonActive : ''}`}>
-                    Offline
+                    All Friends
                 </button>
             </div>
             <div className={css.friendList}>
                 { isLoading && <Loading /> }
                 { error && <p>{error.message}</p> }
                 { friendsData?.length == 0 && <div className={css.noFriends}>
-                    <span>You are lonely</span>
-                    <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
+                    <span>This Player is Lonely</span>
+                    {/* <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
                         <img src="/icons/friend/addFriend.svg" alt="Add" />
                         <span>Add friends</span>
-                    </button>
+                    </button> */}
                 </div> }
-                { isBtnActive && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Online friends</span> }
-                { !isBtnActive && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> }
-                { isBtnActive && onlineFriends && onlineFriends?.length > 0 && onlineFriends?.map((friend, index) => (
+                { isBtnActive && mutualIsLoading && <Loading /> }
+                { isBtnActive && friendsData!.length > 0 && mutualFriends!.mutual_friends?.length == 0 && <span className={css.noCurrentFriend}>No Mutual friends</span> }
+                {/* { !isBtnActive && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> } */}
+                { isBtnActive && mutualFriends?.mutual_friends && mutualFriends.mutual_friends?.length > 0 && mutualFriends?.mutual_friends?.map((friend, index) => (
                     <div className={css.friendItem} key={index}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
                              <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
                              <span className={css.level}>Level: {friend.profile.level}</span>
                          </div>
-                         <div className={`${css.status} ${css.online}`}>
+                         {/* <div className={`${css.status} ${css.online}`}>
                             <span className={css.statusIndicator}></span>
                             Online
-                         </div>
+                         </div> */}
                      </div>
                 ))}
-                { !isBtnActive &&  offlineFriends && offlineFriends?.length > 0 && offlineFriends?.map((friend, index) => (
+                { !isBtnActive &&  friendsData && friendsData?.length > 0 && friendsData?.map((friend, index) => (
                     <div className={css.friendItem} key={index}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
                              <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
                              <span className={css.level}>Level: {friend.profile.level}</span>
                          </div>
-                         <div className={`${css.status} ${css.offline}`}>
+                         {/* <div className={`${css.status} ${css.offline}`}>
                             <span className={css.statusIndicator}></span>
                             Offline
-                         </div>
+                         </div> */}
                      </div>
                 ))}
             </div>

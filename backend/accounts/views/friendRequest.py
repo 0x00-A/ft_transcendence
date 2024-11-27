@@ -9,6 +9,42 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class MutualFriendsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get(self, request, username):
+        try:
+            user = request.user
+            otherUser = User.objects.get(username=username)
+
+            mutual_friends = user.friends.filter(
+                id__in=otherUser.friends.values_list('id', flat=True)
+            ).select_related('profile')
+
+            serializer = self.serializer_class(mutual_friends, many=True)
+
+            response_data = {
+                'mutual_friends_count': mutual_friends.count(),
+                'mutual_friends': serializer.data,
+                # 'target_user': {
+                #     'username': otherUser.username,
+                #     'id': otherUser.id
+                # }
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User with this username does not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': 'Internal server error'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 class SuggestedConnectionsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FriendRequestSerializer
