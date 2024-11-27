@@ -1,4 +1,3 @@
-import { IoMdNotificationsOutline } from 'react-icons/io';
 
 import css from './Topbar.module.css';
 import { useNavigate } from 'react-router-dom';

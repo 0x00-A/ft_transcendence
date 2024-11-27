@@ -4,7 +4,7 @@ import css from './ThemeToggle.module.css';
 import { MdSunny } from 'react-icons/md';
 import { FaMoon } from 'react-icons/fa';
 import {
-  DARK_MODE_ICON_SIZE,
+  // DARK_MODE_ICON_SIZE,
   MENU_ICON_COLOR,
   MENU_ICON_SIZE,
 } from '../../../../config/constants';

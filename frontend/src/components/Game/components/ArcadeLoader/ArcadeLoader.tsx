@@ -1,4 +1,3 @@
-import React from 'react';
 import css from './ArcadeLoader.module.css';
 
 const ArcadeLoader = ({ className = '' }: { className?: string }) => {

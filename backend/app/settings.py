@@ -73,7 +73,7 @@ GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 # ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 # ALLOWED_HOST S = []
@@ -82,11 +82,10 @@ ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
+    # 'daphne',
     'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -108,6 +107,9 @@ INSTALLED_APPS = [
     'matchmaker.apps.MatchmakerConfig',
     'chat',
 ]
+
+if DEBUG:
+    INSTALLED_APPS.insert(0, "daphne")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -202,13 +204,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-# MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'static/media'
+STATIC_ROOT = BASE_DIR / 'static/static'
 
-STATIC_URL = '/static/static/'
-MEDIA_URL = '/static/media/'
 
-STATIC_ROOT = '/web/static'
-MEDIA_ROOT = '/web/media'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+# STATIC_ROOT = '/web/static'
+# MEDIA_ROOT = '/web/media'
 
 
 # Default primary key field type

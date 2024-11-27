@@ -2,12 +2,10 @@ import styles from './Game.module.css';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Shield, Users, Trophy, Globe, ArrowRight, Gamepad2, Key } from 'lucide-react';
+import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
 
 
 import { useEffect, useRef, useState } from 'react';
@@ -28,7 +26,6 @@ import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage
 import NoTournamentIcon from '../../components/Tournament/components/NoTournament/NoTournamnet';
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
