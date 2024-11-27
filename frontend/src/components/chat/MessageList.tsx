@@ -60,7 +60,8 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage, updateActiveConversation} = useWebSocket();
+  const { lastMessage, updateActiveConversation, markAsReadData} = useWebSocket();
+
 
   const { 
     data: friendsData, 
@@ -77,12 +78,13 @@ const MessageList: React.FC<MessageListProps> = ({
   
   
   console.log("ConversationList: ", ConversationList)
-
+  
   useEffect(() => {
-    if (lastMessage) {
+    if (lastMessage || markAsReadData?.status) {
+      console.log("*************markAsReadData: ", markAsReadData)
       refetch();
     }
-  }, [lastMessage]);
+  }, [lastMessage, markAsReadData]);
 
 
   const filteredFriends = useMemo(() => {

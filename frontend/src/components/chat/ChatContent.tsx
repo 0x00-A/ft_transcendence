@@ -61,8 +61,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
     }
   }, [fetchedMessages, websocketMessages, onSelectedConversation?.id]);
 
-
-  
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
