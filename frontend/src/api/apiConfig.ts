@@ -1,4 +1,15 @@
 
+export interface ApiResponse<T> {
+    status: string;
+    data: T;
+    message?: string;
+}
+
+export interface ApiErrorResponse {
+    status: number;
+    error: string;
+    details?: string;
+}
 
 export const API_BASE_URL = "http://localhost:8000/api";
 

@@ -104,3 +104,8 @@ export interface SignupFormData {
   password: string;
   password2: string;
 }
+
+export interface LoginData {
+  username: string;
+  password: string;
+}

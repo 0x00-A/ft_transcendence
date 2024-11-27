@@ -40,6 +40,7 @@ from .views import Enable2FAView
 from .views import VerifyOTPView
 from .views import Disable2FAView
 from .views import LoginVerifyOTPView
+from .views import verify_email
 
 router = DefaultRouter()
 router.register(r'notifications', NotificationViewSet, basename='notification')
@@ -48,6 +49,7 @@ router.register(r'notifications', NotificationViewSet, basename='notification')
 urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
+    path('auth/verify_email/<uuid:token>/', verify_email),
     path('auth/login/', LoginView.as_view()),
     path('login/verify_otp/', LoginVerifyOTPView.as_view()),
     re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$',

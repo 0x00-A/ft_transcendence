@@ -1,7 +1,7 @@
 // Styles
 import css from './AuthPongBox.module.css';
 
-const AuthPongBox = ({isLogin, setIslogin}) => {
+const AuthPongBox = ({isLogin, setIslogin}: {isLogin: boolean, setIslogin: React.Dispatch<React.SetStateAction<boolean>>}) => {
   return (
     <div className={`${css.authPongBox} ${isLogin ? css.switchPongBox : ''}`}>
       <div className={css.pong}>

@@ -8,7 +8,6 @@ import useEditProfile from '@/hooks/profile/useEditInfosProfile'
 // Contexts
 import { useUser } from '@/contexts/UserContext';
 
-toast
 
 interface EditProfileFormData {
     username: string;
