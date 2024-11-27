@@ -101,15 +101,13 @@ class GetConversationsView(APIView):
                 Q(user1=user) | Q(user2=user)
             ).select_related('user1', 'user2').order_by('-updated_at')
             
-            serializer = ConversationSerializer(conversations, many=True)
+            serializer = ConversationSerializer(conversations, context={'request': request}, many=True)
             conversations_data = []
             
             for conversation in serializer.data:
                 if not conversation.get('user1_id') or not conversation.get('user2_id'):
                     continue
                 
-                user1_blocked = conversation['user1_blocked_user_name']
-                user2_blocked = conversation['user2_blocked_user_name']
                 if user.id == conversation['user1_id']:
                     other_user_id = conversation['user2_id']
                     other_user_username = conversation['user2_username']
@@ -118,13 +116,6 @@ class GetConversationsView(APIView):
                     other_status = conversation['user2_is_online']
                     unread_count = conversation['unread_messages_user1']
 
-                    if user2_blocked == user.username:
-                        blocker = user.username  
-                        blocked = other_user_username 
-                    elif user2_blocked == 'none' and user1_blocked == other_user_username:
-                        blocker = None
-                        blocked = other_user_username
-                    
                 else:
                     other_user_id = conversation['user1_id']
                     other_user_username = conversation['user1_username']
@@ -132,13 +123,6 @@ class GetConversationsView(APIView):
                     other_last_seen = conversation['user1_last_seen']
                     other_status = conversation['user1_is_online']
                     unread_count = conversation['unread_messages_user2']
-
-                    if user1_blocked == user.username:
-                        blocker = user.username  
-                        blocked = other_user_username  
-                    elif user1_blocked == 'none' and user2_blocked == other_user_username:
-                        blocker = None
-                        blocked = other_user_username
 
                 updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
                 last_message = conversation['last_message']
@@ -154,8 +138,7 @@ class GetConversationsView(APIView):
                     'time': format_time(updated_at),
                     'unreadCount': unread_count or '',
                     'status': other_status,
-                    'blocked': blocked,
-                    'blocker': blocker,
+                    'block_status': conversation['block_status'],
                 }
                 conversations_data.append(conversation_data)
             

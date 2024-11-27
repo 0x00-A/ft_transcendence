@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from accounts.serializers.userSerializer import UserSerializer
 from .models import Conversation, Message
+from accounts.models import BlockRelationship
 
 class ConversationSerializer(serializers.ModelSerializer):
     user1_username = serializers.CharField(source='user1.username', read_only=True)
@@ -13,8 +14,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     user2_avatar = serializers.SerializerMethodField()
     user1_is_online = serializers.BooleanField(source='user1.profile.is_online', read_only=True)
     user2_is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
-    user1_blocked_user_name = serializers.CharField(source='user1.profile.blocked_user_name', read_only=True)
-    user2_blocked_user_name = serializers.CharField(source='user2.profile.blocked_user_name', read_only=True)
+    block_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Conversation
@@ -33,10 +33,9 @@ class ConversationSerializer(serializers.ModelSerializer):
             'unread_messages_user2',
             'user1_is_online',
             'user2_is_online',
-            'user1_blocked_user_name',
-            'user2_blocked_user_name',
             'created_at', 
-            'updated_at'
+            'updated_at',
+            'block_status',
         ]
     
     def get_user1_avatar(self, obj):
@@ -44,6 +43,23 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     def get_user2_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.user2.profile.avatar}"
+    
+    def get_block_status(self, obj):
+        if 'request' not in self.context:
+            return 'null'
+        if self.context['request'].user == obj.user1:
+            user = obj.user2
+        else:
+            user = obj.user1
+        try:
+            BlockRelationship.objects.get(blocker=self.context['request'].user, blocked=user)
+            return 'Blocker'
+        except BlockRelationship.DoesNotExist:
+            try:
+                BlockRelationship.objects.get(blocker=user, blocked=self.context['request'].user)
+                return 'Blocked'
+            except BlockRelationship.DoesNotExist:
+                return 'null'
 
 
 class MessageSerializer(serializers.ModelSerializer):

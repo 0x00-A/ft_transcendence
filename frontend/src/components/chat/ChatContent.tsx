@@ -88,10 +88,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
           <MessageArea
             messages={chatMessages}
             conversationData={onSelectedConversation}
-          />
-        )}
+            />
+          )}
       </div>
       <MessageInput
+        conversationData={onSelectedConversation}
         customSticker={customSticker}
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
