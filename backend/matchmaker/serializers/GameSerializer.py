@@ -19,16 +19,27 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
     game_duration = serializers.SerializerMethodField()
     result = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
-    opponent = serializers.SerializerMethodField()
+    opponent_avatar = serializers.SerializerMethodField()
+    opponent_username = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Game
-        fields = ['id', 'start_time', 'opponent', 'result', 'score', 'game_duration']
+        fields = ['id', 'start_time', 'opponent_username', 'opponent_avatar', 'result', 'score', 'game_duration']
 
-    def get_opponenet(self, obj):
+    def validate(self, data):
+        print(f'Validating data: {data}')
+        return data
+
+    def get_opponent_username(self, obj):
         if obj.player1 == self.context['request'].user:
             return obj.player2.username
         return obj.player1.username
+
+    def get_opponent_avatar(self, obj):
+        if obj.player1 == self.context['request'].user:
+            return f"http://localhost:8000/media/{obj.player2.profile.avatar}"
+        return f"http://localhost:8000/media/{obj.player1.profile.avatar}"
 
     def get_result(self, obj):
         if obj.winner == self.context['request'].user:
@@ -39,4 +50,6 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
         return f'{obj.p1_score} - {obj.p2_score}'
 
     def get_game_duration(self, obj):
+        if not obj.end_time or not obj.start_time:
+            return None
         return obj.end_time - obj.start_time

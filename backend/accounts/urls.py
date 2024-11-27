@@ -1,6 +1,8 @@
 from django.urls import path
 from django.urls import re_path
 from .views import OnlineUsersView
+from .views import UserDetailView
+from rest_framework_simplejwt.views import TokenRefreshView
 from .views import SignupView
 from .views import LoginView
 from .views import oauth2_authentication
@@ -32,6 +34,12 @@ from accounts.views import NotificationViewSet
 from .views import EditProfileView
 from .views import ChangePasswordView
 from .views import oauth2_authorize
+from .views import UserProfileView
+from .views import MutualFriendsView
+from .views import Enable2FAView
+from .views import VerifyOTPView
+from .views import Disable2FAView
+from .views import LoginVerifyOTPView
 
 router = DefaultRouter()
 router.register(r'notifications', NotificationViewSet, basename='notification')
@@ -41,6 +49,7 @@ urlpatterns = [
     # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/signup/', SignupView.as_view()),
     path('auth/login/', LoginView.as_view()),
+    path('login/verify_otp/', LoginVerifyOTPView.as_view()),
     re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$',
             oauth2_authentication, name='oauth2_authentication'),
     re_path(r'^auth/oauth2/authorize/(?P<choice>intra|discord|google)/$',
@@ -48,6 +57,9 @@ urlpatterns = [
     path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
     path('oauth2/verify_login/', ConfirmOauth2Login.as_view()),
     path('auth/logout/', LogoutView.as_view()),
+    path('security/enable_2fa/', Enable2FAView.as_view()),
+    path('security/verify_otp/', VerifyOTPView.as_view()),
+    path('security/disable_2fa/', Disable2FAView.as_view()),
 
     path('auth/new_username/', oauth2_set_username),
     # path('oauth2/discord/authorize/', discord_authorize),
@@ -59,13 +71,16 @@ urlpatterns = [
     # path('oauth2/google/authorize/', google_authorize),
     # path('oauth2/google/', oauth2_google),
 
-    path('users/', AllUsersView.as_view(), name='all_users'),
-    path('users/online/', OnlineUsersView.as_view(), name='online-users'),
-    path('profile/', ProfileApiView.as_view(), name='profile'),
-    path('profile/edit/', EditProfileView.as_view()),
-    path('profile/change_password/', ChangePasswordView.as_view()),
-
-    path('friends/', UserFriendsView.as_view(), name='user-friends'),
+     path('users/', AllUsersView.as_view(), name='all_users'),
+     path('users/<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
+     path('users/online/', OnlineUsersView.as_view(), name='online-users'),
+     path('profile/', ProfileApiView.as_view(), name='profile'),
+     path('profile/<str:username>/', UserProfileView.as_view(), name='user-profile'),
+     path('edit/informations/', EditProfileView.as_view()),
+     path('security/change_password/', ChangePasswordView.as_view()),
+     path('friends/<str:username>/', UserFriendsView.as_view(), name='specific-user-friends'),
+    path('friends/', UserFriendsView.as_view(), name='current-user-friends'),
+    path('friends/mutual/<str:username>/', MutualFriendsView.as_view(), name='mutual-friends'),
     path('suggested-connections/', SuggestedConnectionsView.as_view(),
          name='suggested-connections'),
     path('friends/online/', OnlineFriendsView.as_view(), name='online-friends'),

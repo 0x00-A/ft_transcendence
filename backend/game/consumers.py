@@ -273,9 +273,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.set_player_id_name()
             else:
                 await self.set_player_id_name()
-                await self.broadcast_initial_state()
-                await self.set_game_started()
                 await self.send_countdown_to_clients()
+                await self.broadcast_initial_state()
+                # await self.set_game_started()
                 # Start the game loop
                 asyncio.create_task(self.start_game(self.game_id))
         else:
@@ -320,6 +320,13 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.player_id = 'player2'
         else:
             await self.close()
+            return
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'player_id',
+                'player': self.player_id,
+            }
+        ))
 
     async def broadcast_initial_state(self):
         game: GameInstance = get_game(self.game_id)

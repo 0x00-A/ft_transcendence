@@ -28,11 +28,14 @@ class BlockUserView(APIView):
             )
 
             if created:
+                target_user.profile.blocked_user_name = request.user.username
+                target_user.profile.save()
                 request.user.friends.remove(target_user)
                 FriendRequest.objects.filter(
                     Q(sender=request.user, receiver=target_user) | 
                     Q(sender=target_user, receiver=request.user)
                 ).delete()
+
                 return Response({'message': 'User blocked and removed from friends'}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'User is already blocked'}, status=status.HTTP_400_BAD_REQUEST)
@@ -52,6 +55,8 @@ class UnblockUserView(APIView):
             target_user = User.objects.get(username=username)
             deleted_count, _ = BlockRelationship.objects.filter(blocker=request.user, blocked=target_user).delete()
             if deleted_count > 0:
+                target_user.profile.blocked_user_name = 'none'
+                target_user.profile.save()
                 return Response({'message': 'User unblocked'}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'User is not blocked'}, status=status.HTTP_400_BAD_REQUEST)

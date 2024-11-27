@@ -42,6 +42,8 @@ import OtpAuth from './pages/Auth/OtpAuth';
 import RemoteGame from './components/Game/RemoteGame/RemoteGame';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
+import MultipleGame from './components/Game/MultipleGame/MultipleGame';
+import UsersProfile from './pages/Profile/UsersProfile';
 
 
 function App() {
@@ -80,23 +82,24 @@ function AppContent() {
 
 
   const showSidebarRoutes = [
-    '/',
-    '/play',
-    '/play/',
-    '/chat',
-    '/chat/',
-    '/friends',
-    '/friends/',
-    '/search',
-    '/search/',
-    '/store',
-    '/store/',
-    '/leaderboard',
-    '/leaderboard/',
-    '/profile',
-    '/auth/2factor',
+  '/',
+  '/test',
+  '/play',
+  '/chat',
+  '/friends',
+  '/search',
+  '/store',
+  '/leaderboard',
+  '/profile',
+  '/auth/2factor',
+  /^\/profile\/[^/]+\/?$/,
   ];
   const location = useLocation();
+  const shouldShowSidebar = showSidebarRoutes.some((route) => {
+  return typeof route === 'string'
+    ? route === location.pathname || route + '/' === location.pathname
+    : route.test(location.pathname); // Test against regex
+});
   const { isLoggedIn } = useAuth();
   // const loading = usePreLoader();
 
@@ -116,11 +119,11 @@ function AppContent() {
   return (
     <div className="app-container ">
       <PreLoader />
-      {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
+      {shouldShowSidebar && isLoggedIn && (
         <Sidebar />
       )}
       <div className="main-content">
-        {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
+        {shouldShowSidebar && isLoggedIn && (
           <Topbar />
         )}
         <Routes>
@@ -131,6 +134,7 @@ function AppContent() {
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/play" element={<Game />} />
+              <Route path="/test" element={<MultipleGame game_address='game' p1_id={1} p2_id={2} onReturn={() => {}}/>} />
               <Route path="/game/chat" element={<GameChat />} />
               <Route path="/game/chat/:room" element={<Room />} />
               <Route path="/chat" element={<Chat />} />
@@ -139,8 +143,8 @@ function AppContent() {
               <Route path="/store" element={<Store />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/profile/" element={<Profile />} />
-              <Route path="/profile/:username" element={<Profile />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/:username" element={<UsersProfile />} />
               <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

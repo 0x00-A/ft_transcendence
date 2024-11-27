@@ -49,7 +49,7 @@ const renderUserStatus = () => {
       {onSelectedConversation ? (
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
-            <div className={`${css.userAvatar} ${onSelectedConversation.status ? css.online : ''}`} onClick={() => navigate('/profile')}>
+            <div className={`${css.userAvatar} ${onSelectedConversation.status ? css.online : ''}`} onClick={() => navigate(`/profile/${onSelectedConversation.name}`)}>
               <img
                 src={onSelectedConversation.avatar}
                 alt="User"
@@ -57,7 +57,7 @@ const renderUserStatus = () => {
               />
             </div>
             <div className={css.userDetails}>
-              <div className={css.usernameheader} onClick={() => navigate('/profile')}>
+              <div className={css.usernameheader} onClick={() => navigate(`/profile/${onSelectedConversation.name}`)}>
                 <h2 className={css.userName}>{onSelectedConversation.name} </h2>
               </div>
               {renderUserStatus()}
