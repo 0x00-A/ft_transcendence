@@ -86,14 +86,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_id = data.get("receiver_id") 
         sender_id = self.user.id
 
-        # if not receiver_id or not message:
-        #     return  
-        # conversation = await self.get_conversation(sender_id, receiver_id)
+        if not receiver_id or not message:
+            return
+        # conversation = Conversation.objects.get(id=conversation_id)
+        conversation = await self.get_conversation(sender_id, receiver_id)
 
-        # if conversation.user1_block_status and conversation.user1 == self.user:
-        #     return 
-        # if conversation.user2_block_status and conversation.user2 == self.user:
-        #     return 
+        if conversation.user1_block_status and conversation.user1_id == self.user.id:
+            return 
+        if conversation.user2_block_status and conversation.user2_id == self.user.id:
+            return 
 
         conversation = await self.save_message(sender_id, receiver_id, message)
 
