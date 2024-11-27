@@ -4,6 +4,8 @@ import { FaCircleInfo } from 'react-icons/fa6';
 import { useTyping } from '@/contexts/TypingContext';
 import { useUser } from '@/contexts/UserContext';
 import { conversationProps } from '@/types/apiTypes';
+import { useNavigate } from 'react-router-dom';
+
 
 
 interface ChatHeaderProps {
@@ -18,6 +20,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
 
   const { typing } = useTyping();
   const isReceiver = typing.senderId == onSelectedConversation?.user_id;
+  const navigate = useNavigate();
+
 
   console.log("onSelectedConversation: ", onSelectedConversation?.status);
 
@@ -45,7 +49,7 @@ const renderUserStatus = () => {
       {onSelectedConversation ? (
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
-            <div className={`${css.userAvatar} ${onSelectedConversation.status ? css.online : ''}`}>
+            <div className={`${css.userAvatar} ${onSelectedConversation.status ? css.online : ''}`} onClick={() => navigate('/profile')}>
               <img
                 src={onSelectedConversation.avatar}
                 alt="User"
@@ -53,7 +57,9 @@ const renderUserStatus = () => {
               />
             </div>
             <div className={css.userDetails}>
-              <h2 className={css.userName}>{onSelectedConversation.name}</h2>
+              <div className={css.usernameheader} onClick={() => navigate('/profile')}>
+                <h2 className={css.userName}>{onSelectedConversation.name} </h2>
+              </div>
               {renderUserStatus()}
             </div>
           </div>
