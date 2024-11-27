@@ -11,7 +11,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.core.mail import send_mail
 from rest_framework.views import APIView
-# import pyotp
+import pyotp
+import qrcode
 
 
 
@@ -37,6 +38,47 @@ def send_otp_email(user):
 
 #         pass
 
+class LoginVerifyOTPView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        if 'otp' not in request.data:
+            return Response({'error': 'OTP is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'username' not in request.data:
+            return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = User.objects.get(username=request.data['username'])
+            if not user.is2fa_active:
+                return Response({'error': '2FA is not enabled by user'}, status=status.HTTP_400_BAD_REQUEST)
+            if user.otp_secret:
+                totp = pyotp.TOTP(user.otp_secret)
+                if totp.verify(request.data['otp']):
+                    token = get_token_for_user(user)
+                    if token:
+                        response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)
+                        response.set_cookie(
+                            key = 'access_token',
+                            value = token['access'],
+                            httponly = True,
+                            secure = False,
+                            samesite = 'Strict'
+                        )
+                        response.set_cookie(
+                            key = 'refresh_token',
+                            value = token['refresh'],
+                            httponly = True,
+                            secure = False,
+                            samesite = 'Strict'
+                        )
+                        print('apiBackend ==> login verify otp status: login success')
+                        return response
+                    return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+                return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'OTP secret not found'}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 class LoginView(CreateAPIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -51,16 +93,9 @@ class LoginView(CreateAPIView):
             )
         if user is not None:
             if user.is2fa_active:
-                user.otp_secret = generate_otp()
-                user.otp_expires = timezone.now() + timedelta(minutes=5)
-                user.save()
-                send_otp_email(user)
-                data = {
-                    "2FA_required": True,
-                    "message": "n otp message sent to your email to verify your account"
-                }
-                print('apiBackend ==> login status: user enabled 2FAC')
-                return Response(data=data, status=status.HTTP_202_ACCEPTED)
+                return Response({"status": "2FA_REQUIRED",
+                                 "message": "2FA is required. Please enter your OTP code.",
+                                 "username": user.username}, status=status.HTTP_200_OK)
             token = get_token_for_user(user)
             if token:
                 response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)

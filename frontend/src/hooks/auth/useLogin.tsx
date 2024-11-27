@@ -47,7 +47,12 @@ const useLogin = () => {
       errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
       errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
       error?.response.data?.message && setError("root", {type: '', message: error.response.data.error});
-    }
+    },
+    // onSuccess(data) {
+    //   if (data.data.status && data.data.status === '2FA_REQUIRED') {
+    //     <Navigate to={''}/>
+    //   }
+    // }
   });
 
   return {

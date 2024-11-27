@@ -16,14 +16,14 @@ class Profile(models.Model):
     stats = models.JSONField(default=dict, blank=True)
     is_online = models.BooleanField(default=False)
 
-    # def update_score(self, win, result):
-    #     self.score += result
-    #     if win:
-    #         self.score += 10 + self.badge.xp_reward
-    #     self.level = self.calculate_level()
-    #     self.update_badge()
-    #     # self.update_ranks()
-    #     self.save()
+    def update_score(self, win:False, result):
+        self.score += result
+        if win:
+            self.score += 10 + self.badge.xp_reward
+        self.level = self.calculate_level()
+        self.update_badge()
+        # self.update_ranks()
+        self.save()
 
     # def calculate_level(self):
     #     return self.score // 100
