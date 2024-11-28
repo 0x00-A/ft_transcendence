@@ -32,8 +32,9 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const {user} = useUser()
-  const { toggleBlockStatus, blockStatusUpdate} = useWebSocket();
+  const { toggleBlockStatus} = useWebSocket();
 
+  console.log("--------render inputmessage----")
   
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
