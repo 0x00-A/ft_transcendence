@@ -35,8 +35,6 @@ const Login = () => {
 
   useEffect(() => {
     if (mutation.isSuccess) {
-      console.log();
-
       if (mutation.data?.data?.status && mutation.data?.data.status === '2FA_REQUIRED') {
         console.log(mutation.data.data);
         reset();
@@ -45,7 +43,6 @@ const Login = () => {
       }
       toast.success(mutation.data?.data?.message);
       reset();
-      console.log('apiClient ==> Login response: ', mutation.data?.data?.message);
       setIsLoggedIn(true);
       navigate('/');
     }
@@ -53,13 +50,12 @@ const Login = () => {
 
   useEffect(() => {
     if (errors.root) {
-      toast.error(errors.root.message);
+      toast.error(errors.root?.message?.at(0)??'something went wrong!');
     }
     return () => {
       loadingBarRef.current?.complete();
     }
   }, [mutation.isError])
-
 
   const handleLogin = (data: LoginFormData) => {
     loadingBarRef.current?.continuousStart();

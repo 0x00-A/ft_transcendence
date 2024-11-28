@@ -1,6 +1,7 @@
 from .login import LoginView
 from .login import RefreshToken
 from .login import LoginVerifyOTPView
+from .login import SetPasswordView
 from .logout import LogoutView
 from .signup import SignupView
 from .signup import verify_email
