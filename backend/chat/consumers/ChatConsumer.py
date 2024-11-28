@@ -39,6 +39,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             blocked_id = data.get("blocked_id")
             status = data.get("status") 
             await self.toggle_block_status(data.get("conversation_id"), blocker_id, blocked_id, status)
+            await self.send_block_status_update(data.get("conversation_id"), blocker_id, blocked_id)
 
 
     @sync_to_async
@@ -62,13 +63,58 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print("---------------------------")
         print( conversation.user1_id)
         print("---------------------------")
-        if blocker_id == conversation.user1_id and blocked_id == conversation.user2_id:
-            conversation.user1_block_status = status
-            conversation.user2_block_status = status
-        elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
-            conversation.user1_block_status = status
-            conversation.user2_block_status = status
+        if status:
+            if blocker_id == conversation.user1_id and blocked_id == conversation.user2_id:
+                conversation.user1_block_status = "blocker"
+                conversation.user2_block_status = "blocked"
+            elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
+                conversation.user1_block_status = "blocked"
+                conversation.user2_block_status = "blocker"
+        else: 
+            conversation.user1_block_status = None
+            conversation.user2_block_status = None
         conversation.save()
+
+    async def send_block_status_update(self, conversation_id, blocker_id, blocked_id):
+
+        print("---------------------------")
+        print(conversation_id)
+        print("---------------------------")
+        print(blocker_id)
+        print("---------------------------")
+        print(blocked_id)
+        print("---------------------------")
+
+        await self.channel_layer.group_send(
+            f"user_{blocker_id}",
+            {
+                "type": "block_status_update",
+                "conversation_id": conversation_id,
+                "blocker_id": blocker_id,
+                "blocked_id": blocked_id,
+                "block_status": "success"
+            }
+        )
+
+        await self.channel_layer.group_send(
+            f"user_{blocked_id}",
+            {
+                "type": "block_status_update",
+                "conversation_id": conversation_id,
+                "blocker_id": blocker_id,
+                "blocked_id": blocked_id,
+                "block_status": "success"
+            }
+        )
+    
+    async def block_status_update(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "block_status_update",
+            "conversation_id": event["conversation_id"],
+            "blocker_id": event["blocker_id"],
+            "blocked_id": event["blocked_id"],
+            "block_status": event["block_status"],
+        }))
 
     @sync_to_async
     def set_active_conversation(self, user_id, conversation_id):
@@ -89,12 +135,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not receiver_id or not message:
             return
         # conversation = Conversation.objects.get(id=conversation_id)
-        conversation = await self.get_conversation(sender_id, receiver_id)
+        # conversation = await self.get_conversation(sender_id, receiver_id)
+        # print("___________***********______")
+        # print(conversation)
+        # print("___________***********______")
 
-        if conversation.user1_block_status and conversation.user1_id == self.user.id:
-            return 
-        if conversation.user2_block_status and conversation.user2_id == self.user.id:
-            return 
+        # if conversation.user1_block_status and conversation.user1_id == self.user.id:
+        #     return 
+        # if conversation.user2_block_status and conversation.user2_id == self.user.id:
+        #     return 
 
         conversation = await self.save_message(sender_id, receiver_id, message)
 
