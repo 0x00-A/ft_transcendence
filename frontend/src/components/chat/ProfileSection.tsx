@@ -2,8 +2,8 @@
 import css from './ProfileSection.module.css';
 
 interface ProfileSectionProps {
-  avatarUrl: string | null;
-  name: string | null;
+  avatarUrl: string;
+  name: string;
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({ avatarUrl, name }) => {
