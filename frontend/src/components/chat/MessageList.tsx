@@ -89,10 +89,15 @@ const MessageList: React.FC<MessageListProps> = ({
 
   useEffect(() => {
     if (blockStatusUpdate) {
-      console.log(" >> << blockStatusUpdate: ", blockStatusUpdate)
+      const selectedConversationId = blockStatusUpdate.conversationId;
       refetch();
+      const foundConversation = ConversationList?.find(convo => convo.id === selectedConversationId);
+      console.log(" >> << blockStatusUpdate: ", blockStatusUpdate)
+      console.log(" >> << selectedConversation: ", selectedConversation)
+      setSelectedConversation(foundConversation!); 
+      onSelectMessage(foundConversation!)
     }
-  }, [blockStatusUpdate]);
+  }, [blockStatusUpdate, ConversationList]);
 
 
   const filteredFriends = useMemo(() => {
