@@ -12,18 +12,19 @@ class Profile(models.Model):
     score = models.PositiveIntegerField(default=0)
     level = models.PositiveSmallIntegerField(default=0)
     rank = models.PositiveSmallIntegerField(null=True, blank=True)
-    badge = models.ForeignKey(to=Badge, on_delete=models.SET_NULL, null=True, blank=True)
+    badge = models.ForeignKey(
+        to=Badge, on_delete=models.SET_NULL, null=True, blank=True)
     stats = models.JSONField(default=dict, blank=True)
     is_online = models.BooleanField(default=False)
 
-    # def update_score(self, win, result):
-    #     self.score += result
-    #     if win:
-    #         self.score += 10 + self.badge.xp_reward
-    #     self.level = self.calculate_level()
-    #     self.update_badge()
-    #     # self.update_ranks()
-    #     self.save()
+    def update_score(self, win: False, result):
+        self.score += result
+        if win:
+            self.score += 10 + self.badge.xp_reward
+        # self.level = self.calculate_level()
+        # self.update_badge()
+        # self.update_ranks()
+        self.save()
 
     # def calculate_level(self):
     #     return self.score // 100
@@ -39,7 +40,6 @@ class Profile(models.Model):
     #     if self.rank != rank:
     #         self.rank = rank
     #         self.save()
-
 
     def __str__(self) -> str:
         return self.user.username

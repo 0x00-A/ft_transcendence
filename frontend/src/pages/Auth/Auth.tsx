@@ -4,12 +4,11 @@ import { useState } from 'react';
 import AuthPongBox from '../../components/Auth/AuthPongBox';
 import Login from './Login';
 import Signup from './Signup';
-import Oauth2 from '../../components/Auth/Oauth2';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 // Styles
 import css from './Auth.module.css';
-
 
 
 const Auth = () => {
@@ -26,17 +25,9 @@ const Auth = () => {
     return (
       <div className={css.authContainer}>
         <AuthPongBox isLogin={isLogin} setIslogin={setIslogin}/>
-        <div className={`${css.authFormBox} ${isLogin ? css.authFormSwitch : ''}`}>
-          <div className={css.authFormHeader}>
-            <h1>{isLogin ? "Welcome back" : "Welcome"}</h1>
-            <p>{isLogin ? "" : "Create you account and enjoy the game"}</p>
+          <div className={`${css.authFormBox} ${isLogin ? css.authFormSwitch : ''}`}>
+            {isLogin ? <Login /> : <Signup setIslogin={setIslogin} /> }
           </div>
-          { isLogin ?
-              <Login /> :
-              <Signup setIslogin={setIslogin} />
-          }
-          <Oauth2 />
-        </div>
       </div>
     );
 }

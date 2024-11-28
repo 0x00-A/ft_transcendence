@@ -11,7 +11,7 @@ import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 
-django.setup()
+# django.setup()
 
 import chat.routing  # noqa
 import accounts.routing  # noqa

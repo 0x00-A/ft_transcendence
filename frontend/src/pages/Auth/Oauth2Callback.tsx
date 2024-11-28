@@ -1,16 +1,13 @@
 // React
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 // Contexts
 import { useAuth } from '../../contexts/AuthContext';
 // Hooks
 import useOauth2Username from '../../hooks/auth/useOauth2Username';
 // Styles
-import authCss from '@/pages/Auth/AuthForm.module.css';
 import css from './Oauth2Callback.module.css';
-import UserIcon from "../../assets/userIcon.svg";
-import apiClient from '@/api/apiClient';
+import { FaRegUser } from "react-icons/fa";
 
 
 interface UsernameFormData {
@@ -25,7 +22,6 @@ const Oauth2Callback = () => {
     const {setIsLoggedIn} = useAuth();
 
     const {register, handleSubmit, errors, mutation, reset} = useOauth2Username()
-
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -72,10 +68,10 @@ const Oauth2Callback = () => {
             </div>
             <p>Select new username and continue</p>
             <div className={css.inputContainer}>
-              <img src={UserIcon} alt="X" />
+              <FaRegUser className={css.userIcon} />
               <input type="text" placeholder="username" {...register('username')} />
-              {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
             </div>
+            {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
             <button type="submit" className={css.submitBtn}>
               Submit
             </button>

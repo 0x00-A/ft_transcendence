@@ -8,7 +8,6 @@ import useEditProfile from '@/hooks/profile/useEditInfosProfile'
 // Contexts
 import { useUser } from '@/contexts/UserContext';
 
-toast
 
 interface EditProfileFormData {
     username: string;
@@ -18,9 +17,9 @@ interface EditProfileFormData {
     password: string;
 }
 
-const EditInfosProfile = ({setEditProfile}) => {
+const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-    const { register, handleSubmit, mutation, reset, errors, watch, setValue, setError}  = useEditProfile();
+    const { register, handleSubmit, mutation, reset, errors, watch, setValue}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string>('null');
     const fileInputRef = useRef<HTMLInputElement | null>(null);

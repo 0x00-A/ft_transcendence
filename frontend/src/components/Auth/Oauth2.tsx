@@ -10,12 +10,6 @@ import {API_OAUTH2_URL} from "../../api/apiConfig";
 
 const Oauth2 = () => {
 
-  // const handleClick = (api:string) => {
-  //   // const redirect_uri = encodeURIComponent('http://localhost:3000/oauth2/callback');
-  //   const url = API_OAUTH2_URL + api;
-  //   window.location.href = url;
-  // }
-
   return (
     <div className={css.oauth2Container}>
       <div className={css.or}><div/><p>OR</p><div/></div>

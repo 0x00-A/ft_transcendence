@@ -1,22 +1,75 @@
-.otpContainer {
+/* .otpContainer {
     min-height: 100%;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+    border: 1px solid white;
+
+} */
 
 .otpForm {
-    background-color: var(--main-surface-tertiary);
-    width: 400px;
-    height: 500px;
-    border: 1px solid white;
+    background-color: #1E2533;
+    width: 100%;
+    height: 100%;
     border-radius: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 4rem;
 }
 
-.otp input {
+.otpForm h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--main-text-primary);
+}
+
+.fieldContainer {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.label {
+    font-size: 1.5rem;
+    color: #D1D3D4;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+    background-color: #0E1725;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    padding-right: 50px;
+    font-size: 1.4rem;
+    color: #D1D3D4;
+}
+
+.submitBtn {
+    background-color: #0E1725;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 40px;
+    padding: 20px;
+    font-size: 1.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #D1D3D4;
+}
+
+.submitBtn:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}
+
+.submitBtn {
+    border: 1px solid #F8C25C;
 }
