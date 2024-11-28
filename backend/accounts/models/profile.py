@@ -16,6 +16,7 @@ class Profile(models.Model):
         to=Badge, on_delete=models.SET_NULL, null=True, blank=True)
     stats = models.JSONField(default=dict, blank=True)
     is_online = models.BooleanField(default=False)
+    blocked_user_name = models.CharField(max_length=150, default="none", blank=True)
 
     def update_score(self, win: False, result):
         self.score += result

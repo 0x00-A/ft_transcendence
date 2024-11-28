@@ -104,9 +104,8 @@ export interface conversationProps {
   time: string;
   unreadCount?: number;
   status: boolean;
-  blocked: boolean;
+  block_status: string,
 }
-
 /////////////////////
 // AUTH INTERFACES //
 /////////////////////

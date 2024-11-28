@@ -3,14 +3,17 @@ import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
+import { conversationProps } from '@/types/apiTypes';
 
 interface MessageInputProps {
   customSticker: string;
   onSendMessage: (message: string) => void;
   onTyping: (isTyping: boolean) => void;
+  conversationData: conversationProps | null;
 }
 
 const MessageInput = ({
+  conversationData,
   customSticker,
   onSendMessage,
   onTyping,
@@ -87,17 +90,21 @@ const MessageInput = ({
     }
   };
 
-  // if (isBlocked) {
-  //   return (
-  //     <div className={css.messageBlock}>
-  //       <h2>User is blocked</h2>
-  //       <p>You can't message them in this chat, and you won't receive their messages.</p>
-  //       <button className={css.buttonUnblock} onClick={onUnblock}>
-  //         Unblock
-  //       </button>
-  //     </div>
-  //   );
-  // }
+  if (conversationData?.block_status) {
+    return (
+      <div className={css.messageBlock}>
+        {conversationData?.block_status == "Blocker" ?  <h2> I blocked {conversationData.name}</h2> : <h2> you are blocked</h2>}
+        
+        <p>You can't send messages to this user, and you won't receive their messages.</p>
+        {conversationData?.block_status == "Blocker" && (
+          <button className={css.buttonUnblock} onClick={() => onSendMessage("unblock")}>
+            Unblock
+          </button>
+        )}
+      </div>
+    );
+  }
+
 
   const handleSendMessage = () => {
     if (message.trim()) {
