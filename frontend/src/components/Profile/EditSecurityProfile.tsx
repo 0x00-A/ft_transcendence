@@ -18,7 +18,7 @@ interface ChangePasswordForm {
   confirm_password: string;
 }
 
-const EditSecurityProfile = ({setEditProfile}) => {
+const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
     const { register, handleSubmit, errors, mutation } = useChangePass();
     const [qrcode, setQrcode] = useState(null);
@@ -64,8 +64,8 @@ const EditSecurityProfile = ({setEditProfile}) => {
             refetch();
         }
         catch (error) {
-            console.log(error.response.data);
-            toast.error(error.response.data.error);
+            console.log(error?.response?.data);
+            toast.error(error?.response.data.error);
         }
     }
 
@@ -168,7 +168,7 @@ const EditSecurityProfile = ({setEditProfile}) => {
                         <div className={css.containerFiled}>
                             <label htmlFor="" className={css.label}>Confirm your Password</label>
                             <div><input type={ showPassword.pass2fa ? "text" : "password"} className={css.input} onChange={(e) => setConfirPass2fa(e.target.value)} />
-                                {showPassword.pass2fa ?
+                                { showPassword.pass2fa ?
                                   <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("pass2fa")}/> :
                                   <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("pass2fa")}/>
                                 }

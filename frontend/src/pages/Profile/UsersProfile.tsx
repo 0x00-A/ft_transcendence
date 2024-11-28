@@ -1,5 +1,3 @@
-// React
-import { useState } from 'react';
 // Components
 import UsersProfileHeader from '@/components/Profile/UsersProfileHeader';
 import UserProfileFriends from "@/components/Profile/UserProfileFriends";
@@ -11,9 +9,8 @@ import { useParams } from 'react-router-dom';
 
 const UsersProfile = () => {
 
-    const {username} = useParams();
-
-    console.log(username);
+  const {username} = useParams();
+  console.log(username);
   return (
     <div className={css.profileContainer}>
       <UsersProfileHeader username={username} />
