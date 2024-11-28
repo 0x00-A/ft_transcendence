@@ -18,7 +18,6 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
   const toggleCustomizeChat = () =>
     setIsCustomizeChatOpen(!isCustomizeChatOpen);
 
-  // Custom SVG stickers
   const customStickers = [
     '<img src="/icons/chat/love.svg" alt="svg" />',
     '<img src="/icons/chat/cat1.svg" alt="svg" />',
@@ -38,9 +37,24 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
     setShowStickerPicker(false);
   };
 
+  // const handleBlock = async (activeConversation: conversationProps) => {
+  //   if (user?.id !== undefined) {
+  //     if (activeConversation.block_status == "blocker")
+  //       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
+  //     else if (activeConversation.block_status == "blocked")
+  //       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
+  //     else
+  //       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
+  //   }
+  //   setMenuState((prevState) => ({
+  //     ...prevState,
+  //     isOpen: false,
+  //     activeIndex: null,
+  //   }));
+  // };
+
   return (
     <div className={css.settingsSection}>
-      {/* Chat info section */}
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={toggleChatInfo}>
           Chat info
@@ -57,7 +71,6 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
         )}
       </div>
 
-      {/* Customize chat section */}
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={toggleCustomizeChat}>
           Customize chat
@@ -89,7 +102,6 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
         )}
       </div>
 
-      {/* Privacy section */}
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={togglePrivacy}>
           Privacy
@@ -102,7 +114,10 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
             <div className={css.Item}>
               <FaBell /> Mute notifications
             </div>
-            <div className={css.Item}>
+            <div
+              className={css.Item}
+              // onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
+              >
               <FaBan /> Block
             </div>
           </div>

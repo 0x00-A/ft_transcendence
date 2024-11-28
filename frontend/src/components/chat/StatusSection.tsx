@@ -1,23 +1,25 @@
 import React from 'react';
 import css from './StatusSection.module.css';
-import { conversationProps } from '@/types/apiTypes';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 
 interface StatusSectionProps {
-  status: conversationProps;
 }
 
-const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
-  const renderUserStatus = () => {
-    if (!status) return null;
+const StatusSection: React.FC<StatusSectionProps> = () => {
 
-    switch (status.status) {
+  const { selectedConversation } = useSelectedConversation();
+
+  const renderUserStatus = () => {
+    if (!selectedConversation) return null;
+
+    switch (selectedConversation?.status) {
       case true:
         return <p className={`${css.userStatus} ${css.online}`}>Active now</p>;
       case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {status.last_seen}
+            Last seen at {selectedConversation?.last_seen}
           </p>
         );
     }

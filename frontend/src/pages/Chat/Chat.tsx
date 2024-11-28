@@ -11,19 +11,19 @@ import ChatContent from '@/components/chat/ChatContent';
 import { TypingProvider } from '@/contexts/TypingContext';
 import { useUser } from '@/contexts/UserContext';
 import { WebSocketChatProvider } from '@/contexts/WebSocketChatProvider';
-import { conversationProps } from '@/types/apiTypes';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 
 const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-  const [selectedConversation, setSelectedConversation] =
-    useState<conversationProps | null>(null);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
   const [customSticker, setCustomSticker] = useState(
     '<img src="/icons/chat/like.svg" alt="love" />'
   );
   const { user } = useUser();
+  const { selectedConversation } = useSelectedConversation();
+
 
 
   const toggleSidebar = () => {
@@ -49,20 +49,16 @@ const Chat = () => {
         <div className={`${css.container} ${isExpanded ? css.expanded : ''}`}>
           <div className={css.sidebarLeft} ref={sidebarLeftRef}>
             <OptionsButton />
-            <MessageList
-              onSelectMessage={setSelectedConversation}
-            />
+            <MessageList />
           </div>
           <div className={css.chatBody}>
             {selectedConversation ? (
               <>
                 <ChatHeader
                   toggleSidebar={toggleSidebar}
-                  onSelectedConversation={selectedConversation}
                   />
                 <ChatContent
                   key={selectedConversation.id}
-                  onSelectedConversation={selectedConversation}
                   customSticker={customSticker}
                 />
               </>
@@ -73,7 +69,6 @@ const Chat = () => {
           {selectedConversation && !isExpanded && (
             <div className={css.sidebarRight}>
               <SideInfoChat
-                onSelectedConversation={selectedConversation}
                 onEmojiChange={handleStickerChange}
               />
             </div>
@@ -82,7 +77,6 @@ const Chat = () => {
       </main>
     </WebSocketChatProvider>
     </TypingProvider>
-
   );
 };
 
