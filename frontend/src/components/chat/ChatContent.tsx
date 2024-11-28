@@ -31,22 +31,35 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation } = useWebSocket();
 
+  useEffect(() => {
+    if (onSelectedConversation?.id) {
+      updateActiveConversation(onSelectedConversation.id);
+    }
+  }, [onSelectedConversation?.id]);
 
   useEffect(() => {
     if (onSelectedConversation?.id) {
       markAsRead(onSelectedConversation.id);
     }
-  }, [onSelectedConversation?.id, markAsRead]);
+  }, [onSelectedConversation?.id]);
 
   useEffect(() => {
-    setChatMessages(() => [
-      ...(fetchedMessages || []),
-      ...websocketMessages,
-    ]);
-  }, [fetchedMessages, websocketMessages]);
-
+    if (!websocketMessages || websocketMessages.length === 0) {
+      setChatMessages(fetchedMessages || []);
+      return;
+    }
+    const lastMessage = websocketMessages[websocketMessages.length - 1];
+    if (lastMessage?.conversation === onSelectedConversation?.id) {
+      setChatMessages(() => [
+        ...(fetchedMessages || []),
+        ...websocketMessages,
+      ]);
+    } else {
+      setChatMessages(fetchedMessages || []);
+    }
+  }, [fetchedMessages, websocketMessages, onSelectedConversation?.id]);
 
   const handleSendMessage = useCallback(
     (message: string) => {
@@ -75,10 +88,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
           <MessageArea
             messages={chatMessages}
             conversationData={onSelectedConversation}
-          />
-        )}
+            />
+          )}
       </div>
       <MessageInput
+        conversationData={onSelectedConversation}
         customSticker={customSticker}
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
