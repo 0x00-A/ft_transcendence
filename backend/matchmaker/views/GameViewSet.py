@@ -6,6 +6,7 @@ from matchmaker.serializers import GameSerializer
 from matchmaker.serializers.GameSerializer import ProfileGamesSerializer
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.renderers import JSONRenderer
 
 
 class GameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -25,8 +26,6 @@ class ProfileGamesView(APIView):
         user = request.user
         played_games = Game.objects.filter(player1=user) | Game.objects.filter(player2=user)
         serializer = ProfileGamesSerializer(played_games, many=True, context={'request': request})
-
         # all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
         # last_5_games = all_games[:5]
-
         return Response(data=serializer.data, status=status.HTTP_200_OK)

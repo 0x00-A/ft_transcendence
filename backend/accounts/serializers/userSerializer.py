@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework_simplejwt.tokens import Token
 from ..models.user import User
+from ..models.user import EmailVerification
 from ..models.profile import Profile
 from ..models.friends import FriendRequest
 from ..models.BlockRelationship import BlockRelationship
@@ -9,6 +10,20 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.files.base import ContentFile
 from ..serializers import ProfileSerializer
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+def send_verification_email(user):
+    token = EmailVerification.objects.create(user=user)
+    verification_link = f'http://localhost:8000/api/auth/verify_email/{token.token}/'
+    send_mail(
+        'Verify your email',
+        f'Click on the link to verify your email: {verification_link}',
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False,
+    )
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -50,7 +65,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if not created:
             raise serializers.ValidationError('User already exist!')
         user.set_password(password)
+        user.is_active = False
         user.save()
+        send_verification_email(user)
         return user
 
 
@@ -77,6 +94,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
             if (not user.check_password(attrs['password'])):
                 raise serializers.ValidationError(
                     {'password': 'password not valid'})
+            if not user.is_active:
+                print('------->> user is not active <<--------')
+                raise serializers.ValidationError(
+                    {'error': 'user is not verified, please verify your email'})
         except User.DoesNotExist:
             raise serializers.ValidationError(
                 {'username': 'username not exist'})
@@ -91,8 +112,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name',
-                  'last_name', 'profile', 'friend_request_status', 'last_seen', 'friend_status']
+        fields = ['id', 'username', 'first_name', 'is_oauth_user', 'is2fa_active',
+                  'last_name', 'profile', 'friend_status', 'friend_request_status']
 
     def get_friend_status(self, obj):
         if 'request' not in self.context or self.context['request'].user == obj:

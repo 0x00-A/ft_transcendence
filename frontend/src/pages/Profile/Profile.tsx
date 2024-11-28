@@ -15,7 +15,6 @@ const Profile = () => {
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
 
-
   const handleOutsideClick = (event: React.MouseEvent) => {
 
     // if (isConfirmSave) {

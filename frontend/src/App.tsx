@@ -75,25 +75,24 @@ function AppContent() {
 
 
   const showSidebarRoutes = [
-    '/',
-    '/test',
-    '/play',
-    '/play/',
-    '/chat',
-    '/chat/',
-    '/friends',
-    '/friends/',
-    '/search',
-    '/search/',
-    '/store',
-    '/store/',
-    '/leaderboard',
-    '/leaderboard/',
-    '/profile',
-    '/profile/:username',
-    '/auth/2factor',
+  '/',
+  '/test',
+  '/play',
+  '/chat',
+  '/friends',
+  '/search',
+  '/store',
+  '/leaderboard',
+  '/profile',
+  '/auth/2factor',
+  /^\/profile\/[^/]+\/?$/,
   ];
   const location = useLocation();
+  const shouldShowSidebar = showSidebarRoutes.some((route) => {
+  return typeof route === 'string'
+    ? route === location.pathname || route + '/' === location.pathname
+    : route.test(location.pathname); // Test against regex
+});
   const { isLoggedIn } = useAuth();
   // const loading = usePreLoader();
 
@@ -113,11 +112,11 @@ function AppContent() {
   return (
     <div className="app-container ">
       <PreLoader />
-      {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
+      {shouldShowSidebar && isLoggedIn && (
         <Sidebar />
       )}
       <div className="main-content">
-        {showSidebarRoutes.includes(location.pathname) && isLoggedIn && (
+        {shouldShowSidebar && isLoggedIn && (
           <Topbar />
         )}
         <Routes>
