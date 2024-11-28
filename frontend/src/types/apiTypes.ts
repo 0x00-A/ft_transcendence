@@ -105,6 +105,7 @@ export interface conversationProps {
   unreadCount?: number;
   status: boolean;
   block_status: string,
+  block_status_display: string,
 }
 /////////////////////
 // AUTH INTERFACES //

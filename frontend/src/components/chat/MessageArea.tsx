@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
-import { useUser } from '@/contexts/UserContext';
 import { useTyping } from '@/contexts/TypingContext';
 import { conversationProps } from '@/types/apiTypes';
 

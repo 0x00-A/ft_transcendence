@@ -27,11 +27,18 @@ const ChatContent: React.FC<ChatContentProps> = ({
   customSticker,
 }) => {
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-  const { data: fetchedMessages, isLoading, error } = useGetData<MessageProps[]>(
+  const { data: fetchedMessages, isLoading, error, refetch } = useGetData<MessageProps[]>(
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, blockStatusUpdate } = useWebSocket();
+
+  useEffect(() => {
+    if (blockStatusUpdate) {
+      console.log(" >> ChatContent << blockStatusUpdate: ", blockStatusUpdate)
+      refetch();
+    }
+  }, [blockStatusUpdate]);
 
   useEffect(() => {
     if (onSelectedConversation?.id) {

@@ -63,7 +63,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus} = useWebSocket();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate} = useWebSocket();
 
   const { 
     data: friendsData, 
@@ -86,6 +86,13 @@ const MessageList: React.FC<MessageListProps> = ({
       refetch();
     }
   }, [lastMessage, markAsReadData]);
+
+  useEffect(() => {
+    if (blockStatusUpdate) {
+      console.log(" >> << blockStatusUpdate: ", blockStatusUpdate)
+      refetch();
+    }
+  }, [blockStatusUpdate]);
 
 
   const filteredFriends = useMemo(() => {
@@ -175,9 +182,14 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
-  const handleBlock = async (id: number, blockedId: number) => {
+  const handleBlock = async (activeConversation: conversationProps) => {
     if (user?.id !== undefined) {
-      toggleBlockStatus(id, user.id, blockedId, true);
+      if (activeConversation.block_status == "blocker")
+        toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
+      else if (activeConversation.block_status == "blocked")
+        toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
+      else
+        toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
     }
     setMenuState((prevState) => ({
       ...prevState,
@@ -417,9 +429,9 @@ const MessageList: React.FC<MessageListProps> = ({
             <hr />
             <div
               className={css.menuItem}
-              onClick={() => handleBlock(ConversationList[menuState.activeIndex!].id, ConversationList[menuState.activeIndex!].user_id)}
+              onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
-              <FaBan /><span> block </span>
+              <FaBan /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
             </div>
             <div className={css.menuItem}>
               <FaArchive /> <span>Archive chat</span>
