@@ -1,7 +1,6 @@
 import React from 'react';
 import css from './MessageArea.module.css';
 import { useUser } from '@/contexts/UserContext';
-import { conversationProps } from '@/types/apiTypes';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {
