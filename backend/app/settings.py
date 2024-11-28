@@ -70,7 +70,8 @@ GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
@@ -85,7 +86,6 @@ if ALLOWED_HOSTS_ENV:
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',
     'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,12 +98,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     'corsheaders',
-    # 'accounts',
     'rest_framework_simplejwt',
     'debug_toolbar',
     'channels',
     'game',
-    # 'matchmaker',
     'matchmaker.apps.MatchmakerConfig',
     'chat',
 ]
