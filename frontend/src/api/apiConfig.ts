@@ -30,3 +30,5 @@ export const API_GET_PROFILE_URL = "/profile/";
 export const API_EDIT_PROFILE_URL = "/edit/informations/";
 
 export const API_CHANGE_PASSWORD_URL = "/security/change_password/";
+
+export const API_SET_PASSWORD = "/security/set_password/";

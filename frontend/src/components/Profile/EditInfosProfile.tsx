@@ -7,15 +7,9 @@ import { toast } from 'react-toastify';
 import useEditProfile from '@/hooks/profile/useEditInfosProfile'
 // Contexts
 import { useUser } from '@/contexts/UserContext';
+// Types
+import { EditProfileFormData } from '@/types/apiTypes';
 
-
-interface EditProfileFormData {
-    username: string;
-    avatar: FileList;
-    first_name: string;
-    last_name: string;
-    password: string;
-}
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
@@ -35,6 +29,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         if (data.first_name) formData.append('first_name', data.first_name);
         if (data.last_name) formData.append('last_name', data.last_name);
         if (data.password) formData.append('password', data.password);
+        if (data.otp) formData.append('otp', data.otp);
         mutation.mutate(formData);
     };
     const handleChangeAvatar = (event: { preventDefault: () => void; }) => {
