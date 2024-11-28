@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 import { useTyping } from '@/contexts/TypingContext';
-import { conversationProps } from '@/types/apiTypes';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {

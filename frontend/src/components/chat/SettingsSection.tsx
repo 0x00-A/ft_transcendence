@@ -2,6 +2,9 @@ import { useState } from 'react';
 import css from './SettingsSection.module.css';
 import { FaBell, FaBan, FaThumbtack } from 'react-icons/fa';
 import { FaAngleDown, FaAngleUp, FaFaceGrin } from 'react-icons/fa6';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
+import { useUser } from '@/contexts/UserContext';
+import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 
 interface SettingsSectionProps {
   onEmojiChange: (emoji: string) => void;
@@ -12,11 +15,16 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
   const [isChatInfoOpen, setIsChatInfoOpen] = useState(false);
   const [isCustomizeChatOpen, setIsCustomizeChatOpen] = useState(false);
   const [showStickerPicker, setShowStickerPicker] = useState(false);
+  const { selectedConversation } = useSelectedConversation();
+  const { user } = useUser();
+  const { toggleBlockStatus } = useWebSocket();
+
+
+
 
   const togglePrivacy = () => setIsPrivacyOpen(!isPrivacyOpen);
   const toggleChatInfo = () => setIsChatInfoOpen(!isChatInfoOpen);
-  const toggleCustomizeChat = () =>
-    setIsCustomizeChatOpen(!isCustomizeChatOpen);
+  const toggleCustomizeChat = () => setIsCustomizeChatOpen(!isCustomizeChatOpen);
 
   const customStickers = [
     '<img src="/icons/chat/love.svg" alt="svg" />',
@@ -37,21 +45,16 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
     setShowStickerPicker(false);
   };
 
-  // const handleBlock = async (activeConversation: conversationProps) => {
-  //   if (user?.id !== undefined) {
-  //     if (activeConversation.block_status == "blocker")
-  //       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
-  //     else if (activeConversation.block_status == "blocked")
-  //       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
-  //     else
-  //       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
-  //   }
-  //   setMenuState((prevState) => ({
-  //     ...prevState,
-  //     isOpen: false,
-  //     activeIndex: null,
-  //   }));
-  // };
+  const handleBlock = async () => {
+    if (user?.id !== undefined) {
+      if (selectedConversation?.block_status == "blocker")
+        toggleBlockStatus(selectedConversation.id, user.id, selectedConversation.user_id, false);
+      else if (selectedConversation?.block_status == "blocked")
+        toggleBlockStatus(selectedConversation.id, user.id, selectedConversation.user_id, true);
+      else
+        toggleBlockStatus(selectedConversation!.id, user.id, selectedConversation!.user_id, true);
+    }
+  };
 
   return (
     <div className={css.settingsSection}>
@@ -116,9 +119,9 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
             </div>
             <div
               className={css.Item}
-              // onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
+              onClick={() => handleBlock()}
               >
-              <FaBan /> Block
+              <FaBan /><span> {selectedConversation?.block_status === "blocker" ? "Unblock" : "Block"} </span>
             </div>
           </div>
         )}

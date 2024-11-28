@@ -4,7 +4,6 @@ import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
-import { conversationProps } from '@/types/apiTypes';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {
