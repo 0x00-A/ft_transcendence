@@ -130,7 +130,8 @@ class GetConversationsView(APIView):
                 else:
                     block_status_display = None
 
-                updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
+                updated_at_str = conversation['updated_at']
+                updated_at = datetime.fromisoformat(updated_at_str)
                 last_message = conversation['last_message']
                 truncated_message = last_message[:10] + "..." if len(last_message) > 10 else last_message
 

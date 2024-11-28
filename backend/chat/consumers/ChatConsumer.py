@@ -221,7 +221,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"Receiver ID: {receiver_id}, Sender ID: {sender_id}")
 
 
-        conversation, created = Conversation.objects.get_or_create(
+        conversation = Conversation.objects.get(
             user1=min(sender, receiver, key=lambda user: user.id),
             user2=max(sender, receiver, key=lambda user: user.id)
         )
