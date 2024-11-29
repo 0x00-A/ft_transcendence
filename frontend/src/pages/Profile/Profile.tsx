@@ -19,6 +19,8 @@ import { SetPasswordForm } from '@/types/apiTypes';
 // Hooks
 import useSetPassword from '@/hooks/auth/useSetPassword';
 
+type PasswordFields = "new_pass" | "confirm_pass";
+
 const Profile = () => {
 
   const { register, handleSubmit, errors, mutation } = useSetPassword();
@@ -30,7 +32,7 @@ const Profile = () => {
       confirm_pass: false,
   });
 
-  const togglePasswordVisibility = (field:string) => {
+  const togglePasswordVisibility = (field:PasswordFields) => {
       setShowPassword((prevState) => ({
         ...prevState,
         [field]: !prevState[field],
@@ -39,16 +41,17 @@ const Profile = () => {
 
   useEffect(() => {
     if (mutation.isSuccess) {
-      console.log('set_password==> ', mutation.data);
-      toast.success(mutation.data?.message);
+      toast.success(mutation?.data?.data?.message);
       setEditProfile(false);
     }
   }, [mutation.isSuccess]);
+
   useEffect(() => {
     if (mutation.isError) {
       toast.error(mutation.error?.message);
+      toast.error(errors.root?.message);
     }
-  }, mutation.isError);
+  }, [mutation.isError]);
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     // if (isConfirmSave) {
@@ -59,8 +62,7 @@ const Profile = () => {
     }
   };
 
-  const handleSetPassword = (data: SetPasswordForm, event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSetPassword = (data: SetPasswordForm) => {
     mutation.mutate(data);
   }
 
