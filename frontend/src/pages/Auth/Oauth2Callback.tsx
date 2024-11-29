@@ -23,7 +23,6 @@ const Oauth2Callback = () => {
 
     const {register, handleSubmit, errors, mutation, reset} = useOauth2Username()
 
-
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status')
@@ -62,7 +61,7 @@ const Oauth2Callback = () => {
 
   return (
     <div className={css.oauth2Container}>
-        {isUsernameForm &&
+        { isUsernameForm &&
           <form noValidate={true} className={css.usernameForm} onSubmit={ handleSubmit(handleClick) }>
             <div className={css.usernameFormHeader}>
               <h1>{formStatus}</h1>

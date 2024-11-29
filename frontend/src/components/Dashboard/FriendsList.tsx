@@ -1,15 +1,14 @@
-import React from 'react';
 import css from './FriendsList.module.css';
 import { useGetData } from '@/api/apiHooks';
 import Loading from '../Friends/Loading';
 
-const friendsData = [
-  { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
-  { name: 'rel-isma', level: 11.5, status: 'online', avatar: 'https://picsum.photos/203' },
-  { name: 'aigounad', level: 8.5, status: 'offline', avatar: 'https://picsum.photos/204' },
-  { name: 'l9ra3', level: 8.2, status: 'online', avatar: 'https://picsum.photos/202' },
-  { name: 'aka', level: 5.5, status: 'offline', avatar: 'https://picsum.photos/206' },
-];
+// const friendsData = [
+//   { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
+//   { name: 'rel-isma', level: 11.5, status: 'online', avatar: 'https://picsum.photos/203' },
+//   { name: 'aigounad', level: 8.5, status: 'offline', avatar: 'https://picsum.photos/204' },
+//   { name: 'l9ra3', level: 8.2, status: 'online', avatar: 'https://picsum.photos/202' },
+//   { name: 'aka', level: 5.5, status: 'offline', avatar: 'https://picsum.photos/206' },
+// ];
 
 interface FriendProfile {
     avatar: string;
@@ -24,7 +23,7 @@ interface Friend {
 }
 
 const FriendsList = () => {
-  const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
+  const { data: friendsData, isLoading, error } = useGetData<Friend[]>('friends');
 
   return (
       <>

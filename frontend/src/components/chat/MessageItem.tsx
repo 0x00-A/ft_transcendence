@@ -2,7 +2,6 @@ import React, { forwardRef } from 'react';
 import css from './MessageItem.module.css';
 import { CgMoreO } from 'react-icons/cg';
 import { useTyping } from '@/contexts/TypingContext';
-import { useUser } from '@/contexts/UserContext';
 import { conversationProps } from '@/types/apiTypes';
 
 interface conversationListProps {
@@ -27,7 +26,7 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
     ref
   ) => {
     const { typing } = useTyping();
-    
+
     const isReceiver = typing.senderId == conversation.user_id;
 
     return (

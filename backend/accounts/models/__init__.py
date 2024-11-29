@@ -1,4 +1,5 @@
 from .user import User
+from .user import EmailVerification
 from .profile import Profile
 from .friends import FriendRequest
 from .BlockRelationship import BlockRelationship

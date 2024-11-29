@@ -117,3 +117,23 @@ export interface SignupFormData {
   password: string;
   password2: string;
 }
+
+export interface LoginData {
+  username: string;
+  password: string;
+}
+
+export interface EditProfileFormData {
+    username: string;
+    avatar: FileList;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    otp: string;
+}
+
+export interface SetPasswordForm {
+  password: string;
+  password2: string;
+}

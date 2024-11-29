@@ -1,4 +1,3 @@
-import React from 'react';
 import css from './Leaderboard.module.css';
 
 const leaderboardData = [
@@ -44,7 +43,7 @@ const Leaderboard = () => {
               ))}
             </div>
         </div>
-        
+
       </>
   );
 };

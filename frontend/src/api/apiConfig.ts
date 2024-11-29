@@ -1,4 +1,15 @@
 
+export interface ApiResponse<T> {
+    status: string;
+    data: T;
+    message?: string;
+}
+
+export interface ApiErrorResponse {
+    status: number;
+    error: string;
+    details?: string;
+}
 
 export const API_BASE_URL = "http://localhost:8000/api";
 
@@ -19,3 +30,5 @@ export const API_GET_PROFILE_URL = "/profile/";
 export const API_EDIT_PROFILE_URL = "/edit/informations/";
 
 export const API_CHANGE_PASSWORD_URL = "/security/change_password/";
+
+export const API_SET_PASSWORD = "/security/set_password/";

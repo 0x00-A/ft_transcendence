@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
@@ -70,7 +70,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
     },
     [sendMessage, selectedConversation!.user_id]
   );
-  
+
     const handleTyping = useCallback(
       (isTyping: boolean) => {
         sendTypingStatus(selectedConversation!.user_id, isTyping); 
@@ -102,4 +102,3 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
 };
 
 export default ChatContent;
-

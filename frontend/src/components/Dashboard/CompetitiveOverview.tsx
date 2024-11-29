@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TrendingUp, Crown, Award, Target } from 'lucide-react';
+import { useState } from 'react';
+import { TrendingUp, Crown, Award } from 'lucide-react';
 import styles from './CompetitiveOverview.module.css';
 
 const CompetitiveOverview = () => {
