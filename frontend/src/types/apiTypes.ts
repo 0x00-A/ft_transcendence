@@ -124,7 +124,7 @@ export interface LoginData {
 
 export interface EditProfileFormData {
     username: string;
-    avatar: FileList;
+    avatar: FileList | null;
     first_name: string;
     last_name: string;
     email: string;
@@ -135,4 +135,36 @@ export interface EditProfileFormData {
 export interface SetPasswordForm {
   password: string;
   password2: string;
+}
+
+export interface ChangePasswordForm {
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+export interface GameHistory {
+  start_time: string;
+  oppenent_username: string;
+  oppenent_avatar: string;
+  result: string;
+  score: string;
+  game_duration: string;
+}
+
+interface FriendProfile {
+    avatar: string;
+    is_online: boolean;
+    level: number;
+}
+
+export interface Friend {
+  id: string;
+  username: string;
+  profile: FriendProfile;
+}
+
+export interface MutualFriend {
+    mutual_friends: Friend[];
+    mutual_friends_count: number;
 }

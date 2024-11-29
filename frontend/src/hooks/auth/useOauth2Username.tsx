@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 // API
 import apiClient from '@/api/apiClient';
 import { API_NEW_USERNAME_URL } from '@/api/apiConfig';
+import axios from 'axios';
 
 interface UsernameFormData {
   username: string;
@@ -45,10 +46,12 @@ const useOauth2Username = () => {
   const mutation = useMutation({
     mutationFn: async (data: UsernameFormData) => { return await apiClient.post(API_NEW_USERNAME_URL, data) },
     onError: (error) => {
-      const errs = error?.response.data as UsernameFormData;
-      errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
-      error?.response.data?.message && setError("root", {type: '', message: error.response.data.message});
-    }
+      if (axios.isAxiosError(error)) {
+        const errs = error?.response?.data;
+        errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true});
+        errs?.error && setError("root", {type: '', message: errs.error});
+      }
+    },
   });
   return {
     register,
