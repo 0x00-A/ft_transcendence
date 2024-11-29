@@ -17,7 +17,7 @@ import { useLoadingBar } from '../../contexts/LoadingBarContext';
 import { SignupFormData } from '@/types/apiTypes';
 import Oauth2 from '@/components/Auth/Oauth2';
 
-
+type PasswordFields = "password" | "confirm_pass";
 
 const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
@@ -48,7 +48,7 @@ const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<bo
       mutation.mutate(data);
    };
 
-   const togglePasswordVisibility = (field: string) => {
+   const togglePasswordVisibility = (field: PasswordFields) => {
         setShowPassword((prevState) => ({
           ...prevState,
           [field]: !prevState[field],

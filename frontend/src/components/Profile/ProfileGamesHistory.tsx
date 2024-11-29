@@ -5,16 +5,10 @@ import { FaHistory } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { IoGameControllerOutline } from "react-icons/io5";
 import { useGetData } from '@/api/apiHooks';
+// Api
+import { GameHistory } from '@/types/apiTypes';
 
 
-interface GameHistory {
-  start_time: string;
-  oppenent_username: string;
-  oppenent_avatar: string;
-  result: string;
-  score: string;
-  game_duration: string;
-}
 
 const gameHistoryFields = ["Date & Time", "Name", "Result", "Score", "Type", "Duration", "Rematch"] as const;
 
@@ -22,7 +16,7 @@ const gameHistoryFields = ["Date & Time", "Name", "Result", "Score", "Type", "Du
 const ProfileGamesHistory = () => {
 
     const navigate = useNavigate();
-    const { data: playedGames, isLoading, error, refetch } = useGetData<GameHistory[]>('/matchmaker/played_games');
+    const { data: playedGames, isLoading } = useGetData<GameHistory[]>('/matchmaker/played_games');
     if (isLoading) return <p>Loading...</p>;
     console.log(playedGames);
 
@@ -71,44 +65,3 @@ const ProfileGamesHistory = () => {
 }
 
 export default ProfileGamesHistory
-
-
-// <div className={css.friendList}>
-//                 { isLoading && <Loading/> }
-//                 { error && <p>{error.message}</p> }
-//                 { friendsData?.length == 0 && <div className={css.noFriends}>
-//                     <span className={css.noFriendsTitle}>You are lonely</span>
-//                     <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
-//                         <img src="/icons/friend/addFriend.svg" alt="Add" />
-//                         <span>Add friends</span>
-//                     </button>
-//                 </div> }
-//                 { isBtnActive && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Online friends</span> }
-//                 { !isBtnActive && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> }
-//                 { isBtnActive && onlineFriends && onlineFriends?.length > 0 && onlineFriends?.map((friend, index) => (
-//                     <div className={css.friendItem} key={index}>
-//                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-//                          <div className={css.friendInfo}>
-//                              <span className={css.name}>{friend.username}</span>
-//                              <span className={css.level}>Level: {friend.profile.level}</span>
-//                          </div>
-//                          <div className={`${css.status} ${css.online}`}>
-//                             <span className={css.statusIndicator}></span>
-//                             Online
-//                          </div>
-//                      </div>
-//                 ))}
-//                 { !isBtnActive &&  offlineFriends && offlineFriends?.length > 0 && offlineFriends?.map((friend, index) => (
-//                     <div className={css.friendItem} key={index}>
-//                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-//                          <div className={css.friendInfo}>
-//                              <span className={css.name}>{friend.username}</span>
-//                              <span className={css.level}>Level: {friend.profile.level}</span>
-//                          </div>
-//                          <div className={`${css.status} ${css.offline}`}>
-//                             <span className={css.statusIndicator}></span>
-//                             Offline
-//                          </div>
-//                      </div>
-//                 ))}
-//             </div>

@@ -7,8 +7,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { useGetData } from "@/api/apiHooks";
 // Components
 import Loading from "@/components/Friends/Loading";
-import { c } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
-import { Navigate, replace, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface FriendProfile {
     avatar: string;
@@ -27,7 +26,7 @@ const ProfileFriends = () => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
-    const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>(`/friends`);
+    const { data: friendsData, isLoading, error } = useGetData<Friend[]>(`/friends`);
     const navigate = useNavigate();
     const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
@@ -63,8 +62,8 @@ const ProfileFriends = () => {
                         <span>Add friends</span>
                     </button>
                 </div> }
-                { isBtnActive && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Online friends</span> }
-                { !isBtnActive && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> }
+                { isBtnActive && friendsData && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Online friends</span> }
+                { !isBtnActive && friendsData && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> }
                 { isBtnActive && onlineFriends && onlineFriends?.length > 0 && onlineFriends?.map((friend, index) => (
                     <div className={css.friendItem} key={index}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
@@ -98,37 +97,3 @@ const ProfileFriends = () => {
 }
 
 export default ProfileFriends
-
-
-
-
-// { friendsData && friendsData?.length > 0 &&  friendsData?.map((friend, index) => (
-
-//                     <div className={css.friendItem} key={index}>
-//                         <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-//                         <div className={css.friendInfo}>
-//                             <span className={css.name}>{friend.username}</span>
-//                             <span className={css.level}>Level: {friend.profile.level}</span>
-//                         </div>
-//                         <div className={`${css.status} ${friend.profile.is_online ? css.online : css.offline}`}>
-//                             <span className={css.statusIndicator}></span>
-//                                 {friend.profile.is_online ? 'Online' : 'Offline'}
-//                         </div>
-//                     </div>
-//                 ))}
-
-
-        //
-        //
-        //
-        //
-        //     { friendsData?.length > 0 && friendsData.map((friend, index) => (
-        //       <div className={css.friendItem} key={index}>
-        //         <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-        //         <div className={css.friendInfo}>
-        //           <span className={css.name}>{friend.username}</span>
-        //         </div>
-        //       <div/>
-        //     )}
-
-        // </div>

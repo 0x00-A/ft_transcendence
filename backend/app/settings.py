@@ -72,6 +72,7 @@ GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
+SERVER_URL = os.environ.get('SERVER_URL', 'http://localhost:8000')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
@@ -202,8 +203,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproje
 # STATIC_ROOT = '/web/static'ct.com/en/3.2/howto/static-files/
-
-# MEDIA_ROOT = '/web/media'
 
 
 STATIC_URL = '/static/'
