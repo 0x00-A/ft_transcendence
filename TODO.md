@@ -22,3 +22,4 @@ MAHDI:
  - [ ] 2 factor authentication
  - [ ] if the user activate the 2fac in discord or google or intra
  - [ ] default avatar picture handling in backend
+ - [ ] is_password_set true or false

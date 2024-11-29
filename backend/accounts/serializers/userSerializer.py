@@ -65,6 +65,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if not created:
             raise serializers.ValidationError('User already exist!')
         user.set_password(password)
+        user.is_password_set = True
         user.is_active = False
         user.save()
         send_verification_email(user)
