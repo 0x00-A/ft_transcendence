@@ -84,6 +84,7 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     volumes:
+      - ./certs/letsencrypt:/etc/letsencrypt
       - static_data:/web
       - react_build:/usr/share/nginx/html
     ports:
