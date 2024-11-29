@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom';
 const UsersProfile = () => {
 
   const {username} = useParams();
-  console.log(username);
+  if (!username) return null;
+
   return (
     <div className={css.profileContainer}>
       <UsersProfileHeader username={username} />

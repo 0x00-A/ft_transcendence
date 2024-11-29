@@ -10,20 +10,18 @@ import { toast } from 'react-toastify';
 import useChangePass from '@/hooks/profile/useChangePass';
 import apiClient from '@/api/apiClient';
 import { useUser } from '@/contexts/UserContext';
+import axios from 'axios';
+// Types
+import { ChangePasswordForm } from '@/types/apiTypes';
 
-
-interface ChangePasswordForm {
-  current_password: string;
-  new_password: string;
-  confirm_password: string;
-}
+type ShowPasswordFields = 'current_pass' | 'new_pass' | 'confirm_pass' | 'pass2fa';
 
 const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
     const { register, handleSubmit, errors, mutation } = useChangePass();
     const [qrcode, setQrcode] = useState(null);
-    const [verifCode, setVerifCode] = useState(null);
-    const [confiPass2fa, setConfirPass2fa] = useState(null);
+    const [verifCode, setVerifCode] = useState<string | null>(null);
+    const [confiPass2fa, setConfirPass2fa] = useState<string | null>(null);
     const { user: profileData, isLoading, refetch } = useUser();
 
     if (isLoading) {
@@ -39,53 +37,54 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
         pass2fa: false,
     });
 
-    const handleDisable2fa = async (e) => {
-        e.preventDefault();
+    const handleDisable2fa = async () => {
         try{
             const response = await apiClient.post('/security/disable_2fa/', {password: confiPass2fa})
-            console.log(response.data);
             toast.success(response.data.message);
             setEditProfile(false);
             refetch();
         }
         catch (error) {
-            console.log(error.response.data);
-            toast.error(error.response.data.error);
+            if (axios.isAxiosError(error)) {
+                toast.error(error?.response?.data?.error);
+            } else {
+                toast.error('An error occurred. Please try again later');
+            }
         }
     }
 
-    const handleEnable2fa = async (e) => {
-        e.preventDefault();
+    const handleEnable2fa = async () => {
         try{
             const response = await apiClient.post('/security/verify_otp/', {otp: verifCode})
-            console.log(response.data);
             toast.success(response.data.message);
             setEditProfile(false);
             refetch();
         }
         catch (error) {
-            console.log(error?.response?.data);
-            toast.error(error?.response.data.error);
+            if (axios.isAxiosError(error)) {
+                toast.error(error?.response?.data?.error);
+            } else {
+                toast.error('An error occurred. Please try again later');
+            }
         }
     }
 
-    const handleGetQrcode = (e) => {
-        e.preventDefault();
-        console.log('Enable 2FA');
-        const response =  apiClient.post('/security/enable_2fa/', {})
-        .then((response) => {
-            console.log(response.data);
+    const handleGetQrcode = async () => {
+        try {
+            const response = await apiClient.post('/security/enable_2fa/', {})
             setQrcode(response.data.qr_code);
-            return response.data;
-        })
-        .catch((error) => {
-            console.log(error.response.data);
-            return error.response.data;
-        });
-        console.log('response==> ', response);
+        }
+        catch(error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error?.response?.data?.error);
+            } else {
+                toast.error('An error occurred. Please try again later');
+            }
+            setQrcode(null);
+        }
     };
 
-    const togglePasswordVisibility = (field) => {
+    const togglePasswordVisibility = (field: ShowPasswordFields) => {
         setShowPassword((prevState) => ({
           ...prevState,
           [field]: !prevState[field],
@@ -93,7 +92,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     };
     useEffect(() => {
         if (mutation.isSuccess) {
-            toast.success(mutation.data.message);
+            toast.success(mutation.data?.data?.message);
             setEditProfile(false);
         }
    }, [mutation.isSuccess]);
@@ -104,7 +103,6 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
    }), [mutation.isError];
 
     const handleChangePassword = (data: ChangePasswordForm) => {
-        console.log(data);
         mutation.mutate(data);
     };
 
@@ -174,7 +172,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                                 }
                             </div>
                         </div>
-                        <button disabled={confiPass2fa?.length > 0 ? false : true} className={css.disableBtn} onClick={handleDisable2fa}>Disable 2FA</button>
+                        <button disabled={confiPass2fa && confiPass2fa?.length > 0 ? false : true} className={css.disableBtn} onClick={handleDisable2fa}>Disable 2FA</button>
                     </div>}
             </div>
         </div>
