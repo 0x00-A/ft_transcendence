@@ -30,7 +30,7 @@ RUN pip install --upgrade pip && \
 
 COPY . /app/backend
 
-USER django-user
+#USER django-user
 
 EXPOSE 8000
 
