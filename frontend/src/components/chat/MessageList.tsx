@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
@@ -15,23 +15,19 @@ import {
   FaThumbtack,
   FaTimes,
 } from 'react-icons/fa';
-import messages from '@/pages/Chat/messages';
 import { useGetData } from '@/api/apiHooks';
+import { useUser } from '@/contexts/UserContext';
+import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
+import { toast } from 'react-toastify';
+import { conversationProps } from '@/types/apiTypes';
+import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useNavigate } from 'react-router-dom';
 
-interface Message {
-  avatar: string;
-  name: string;
-  lastMessage: string;
-  time: string;
-  unreadCount?: number;
-  status: 'online' | 'offline' | 'typing';
-  lastSeen?: string;
-  blocked: boolean;
-}
+
+
 
 interface MessageListProps {
-  onSelectMessage: (message: Message | null) => void;
-  onBlockUser: (userName: string) => void;
+  onSelectMessage: (message: conversationProps | null) => void;
 }
 
 interface FriendProfile {
@@ -44,22 +40,11 @@ interface Friend {
   profile: FriendProfile;
 }
 
-interface Conversation {
-  id: number; 
-  user1: string; 
-  user2: string; 
-  lastMessage: string;
-  unreadMessages: number; 
-  createdAt: string; 
-  updatedAt: string; 
-}
-
-
 const MessageList: React.FC<MessageListProps> = ({
   onSelectMessage,
-  onBlockUser,
 }) => {
-  const [selectedMessageIndex, setSelectedMessageIndex] = useState<number | null>(null);
+  const navigate = useNavigate();
+  const [selectedConversation, setSelectedConversation] = useState<conversationProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
   const [menuState, setMenuState] = useState<{
@@ -72,33 +57,55 @@ const MessageList: React.FC<MessageListProps> = ({
     activeIndex: null,
   });
 
-  const menuRef = useRef(null);
+  const {user} = useUser()
+  const menuRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { data: friendsData, isLoading, error} = useGetData<Friend[]>('friends');
-  const { data: ConversationList} = useGetData<Conversation[]>('chat/conversations');
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus} = useWebSocket();
+
+  const {
+    data: friendsData,
+    isLoading: friendsLoading,
+    error: friendsError
+  } = useGetData<Friend[]>('friends');
+
+  const {
+    data: ConversationList,
+    refetch,
+    isLoading: conversationsLoading,
+    error: conversationsError
+  } = useGetData<conversationProps[]>('chat/conversations');
 
 
-  console.log("ConversationList: ", ConversationList);
-  console.log("friendsData: ", friendsData);
-  const filteredFriends = friendsData?.filter((friend) =>
-    friend.username.toLowerCase().includes(searchQuery.toLowerCase())
-) || [];
-console.log("filteredFriends: ", filteredFriends);
+  console.log(" >> << ConversationList: ", ConversationList)
+  useEffect(() => {
+    if (lastMessage || markAsReadData?.status) {
+      console.log("*************markAsReadData: ", markAsReadData)
+      refetch();
+    }
+  }, [lastMessage, markAsReadData]);
+
+
+  const filteredFriends = useMemo(() => {
+    return friendsData?.filter((friend) =>
+      friend.username.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
+  }, [friendsData, searchQuery]);
+
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
+
     if (selectedFriend) {
-      const messageIndex = messages.findIndex(
-        (message) => message.name === selectedFriend.username
+      const matchedConversation = ConversationList?.find(
+        conversation => conversation.name === selectedFriend.username
       );
 
-      if (messageIndex !== -1) {
-        const foundMessage = messages[messageIndex];
-        onSelectMessage(foundMessage);
-        setSelectedMessageIndex(messageIndex);
+      if (matchedConversation) {
+        handleConversationSelect(matchedConversation);
+
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState((prevState) => ({
@@ -106,24 +113,24 @@ console.log("filteredFriends: ", filteredFriends);
           isOpen: false,
           activeIndex: null,
         }));
+      } else {
+        const friendToStart = friendsData?.find(
+          friend => friend.username === selectedFriend.username
+        );
+
+        if (friendToStart) {
+          handleSearchItemClick(friendToStart);
+        }
       }
     }
-  }, [location.state]);
+  }, [
+    location.state,
+  ]);
 
-  const handleClick = (index: number, message: Message) => {
-    setSelectedMessageIndex(index);
-    onSelectMessage(message);
-    setIsSearchActive(false);
-    setSearchQuery('');
-    setMenuState((prevState) => ({
-      ...prevState,
-      isOpen: false,
-      activeIndex: null,
-    }));
-  };
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
+    console.log("eeeeeeeeeeeeeee: ", e);
     const messageListRect = messageListRef.current?.getBoundingClientRect();
     const buttonRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
@@ -151,8 +158,27 @@ console.log("filteredFriends: ", filteredFriends);
     }
   };
 
-  const handleBlock = (userName: string) => {
-    onBlockUser(userName);
+
+  const handleDelete = async (id: Number) => {
+    try {
+      const response = await apiDeleteConversation(id);
+
+      toast.success(response.message);
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleBlock = async (id: number, blockedId: number) => {
+    if (user?.id !== undefined) {
+      toggleBlockStatus(id, user.id, blockedId, true);
+    }
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
@@ -161,15 +187,38 @@ console.log("filteredFriends: ", filteredFriends);
   };
 
   const handleClose = () => {
-    if (selectedMessageIndex !== null) {
-      onSelectMessage(null);
-      setSelectedMessageIndex(null);
+    if (selectedConversation !== null) {
+      updateActiveConversation(-1);
+      handleConversationSelect(null);
     }
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
       activeIndex: null,
     }));
+  };
+
+
+  const handleMarkAsRead = (id: number) => {
+    if (ConversationList && menuState.activeIndex !== null) {
+      markAsRead(id);
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+    }
+  };
+
+  const handleViewProfile = (name: string) => {
+    if (ConversationList && menuState.activeIndex !== null) {
+      navigate(`/profile/${name}`)
+      setMenuState((prevState) => ({
+        ...prevState,
+        isOpen: false,
+        activeIndex: null,
+      }));
+    }
   };
 
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,16 +254,20 @@ console.log("filteredFriends: ", filteredFriends);
     };
   }, []);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      searchContainerRef.current &&
-      !searchContainerRef.current.contains(e.target as Node)
-    ) {
-      setIsSearchActive(false);
-    }
-  };
+
 
   useEffect(() => {
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+
+      const isOutsideSearch = searchContainerRef.current && searchContainerRef?.current?.contains(target);
+      const isOutsideMainContainer = messageListRef.current && messageListRef?.current?.contains(target);
+
+      if (isOutsideSearch && isOutsideMainContainer) {
+        setIsSearchActive(false);
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -222,14 +275,47 @@ console.log("filteredFriends: ", filteredFriends);
   }, []);
 
 
-  if (isLoading) {
-    return <div className={css.loading}>Loading...</div>;
-  }
+  const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
+    console.log(">>>>setSelectedConversation: ", conversation)
+    setSelectedConversation(conversation);
+    onSelectMessage(conversation);
+  }, [onSelectMessage]);
 
-  if (error) {
-    return <div className={css.error}>Error loading friends</div>;
-  }
-  
+
+  const handleConversationClick = useCallback((conversation: conversationProps) => {
+    handleConversationSelect(conversation);
+    setIsSearchActive(false);
+    setSearchQuery('');
+    setMenuState(prev => ({
+      ...prev,
+      isOpen: false,
+      activeIndex: null,
+    }));
+  }, [ConversationList, handleConversationSelect]);
+
+  const handleSearchItemClick = useCallback(async (friend: Friend) => {
+    try {
+      const newConversation = await apiCreateConversation(friend.id);
+      console.log("newConversation: ", newConversation);
+
+      if (newConversation && newConversation.id) {
+        await refetch();
+        handleConversationSelect(newConversation);
+        setIsSearchActive(false);
+        setSearchQuery('');
+        setMenuState(prev => ({
+          ...prev,
+          isOpen: false,
+          activeIndex: null,
+        }));
+      } else {
+        console.error('Invalid conversation created');
+      }
+    } catch (error) {
+      console.error('Failed to create conversation:', error);
+    }
+ }, [user, refetch, handleConversationSelect]);
+
   return (
     <div className={css.container}>
       <div ref={searchContainerRef} className={css.searchContainer}>
@@ -252,14 +338,23 @@ console.log("filteredFriends: ", filteredFriends);
       </div>
 
       <div ref={messageListRef} className={css.messageList}>
-      {isLoading ? (
+      {(friendsLoading || conversationsLoading) ? (
           <div className={css.statusMessage}>
             <div className={css.spinner}></div>
-            <span>Loading friends...</span>
+            <span >
+              {friendsLoading
+                ? "Loading friends..."
+                : "Loading conversations..."}
+            </span>
           </div>
-        ) : error ? (
+        ) : friendsError || conversationsError ? (
           <div className={css.statusMessage}>
-            <span className={css.error}>Failed to load friends. Please try again.</span>
+            <span className={css.error}>
+              {friendsError
+                ? "Failed to load friends. "
+                : "Failed to load conversations. "}
+              Please try again.
+            </span>
           </div>
         ) : isSearchActive ? (
           <>
@@ -268,23 +363,23 @@ console.log("filteredFriends: ", filteredFriends);
                 <span>No users found matching "{searchQuery}"</span>
               </div>
             ) : (
-              filteredFriends.map((friend) => (
+              filteredFriends.map((friend, index) => (
                 <SearchResultItem
-                  key={friend.id}
+                  key={index}
                   avatar={friend.profile.avatar}
                   name={friend.username}
-                  // onClick={() => handleFriendClick(friend)}
+                  onClick={() => handleSearchItemClick(friend)}
                 />
               ))
             )}
           </>
         ) : (
-          messages.map((message, index) => (
+          ConversationList?.map((conversation, index) => (
             <MessageItem
               key={index}
-              {...message}
-              isSelected={selectedMessageIndex === index}
-              onClick={() => handleClick(index, message)}
+              conversation={conversation}
+              isSelected={selectedConversation?.id === conversation.id}
+              onClick={() => handleConversationClick(conversation)}
               onMoreClick={(e) => handleMoreClick(e, index)}
               showMoreIcon={true}
               isActive={menuState.activeIndex === index}
@@ -293,7 +388,7 @@ console.log("filteredFriends: ", filteredFriends);
           ))
         )}
 
-        {menuState.isOpen && menuState.position && (
+        {menuState.isOpen && menuState.position  && ConversationList && menuState.activeIndex !== null && (
           <div
             ref={menuRef}
             className={css.menu}
@@ -302,7 +397,9 @@ console.log("filteredFriends: ", filteredFriends);
               left: `${menuState.position.left}px`,
             }}
           >
-            <div className={css.menuItem}>
+            <div
+              className={css.menuItem}
+              onClick={() => handleMarkAsRead(ConversationList[menuState.activeIndex!].id)}>
               <FaCheck /> <span>Mark as read</span>
             </div>
             <div className={css.menuItem} onClick={handleClose}>
@@ -311,23 +408,26 @@ console.log("filteredFriends: ", filteredFriends);
             <div className={css.menuItem}>
               <FaBell /> <span>Mute notifications</span>
             </div>
-            <div className={css.menuItem}>
+            <div
+              className={css.menuItem}
+              onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
+            >
               <FaUser /> <span>View Profile</span>
             </div>
             <hr />
             <div
               className={css.menuItem}
-              onClick={() => handleBlock(messages[menuState.activeIndex!].name)}
+              onClick={() => handleBlock(ConversationList[menuState.activeIndex!].id, ConversationList[menuState.activeIndex!].user_id)}
             >
-              <FaBan />
-              <span>
-                {messages[selectedMessageIndex!]?.blocked ? 'Unblock' : 'Block'}
-              </span>
+              <FaBan /><span> block </span>
             </div>
             <div className={css.menuItem}>
               <FaArchive /> <span>Archive chat</span>
             </div>
-            <div className={css.menuItem}>
+            <div
+              className={css.menuItem}
+              onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
+              >
               <FaTrash />
               <span>Delete chat</span>
             </div>

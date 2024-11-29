@@ -5,31 +5,26 @@ import ProfileSection from './ProfileSection';
 import StatusSection from './StatusSection';
 import ButtonSection from './ButtonSection';
 import SettingsSection from './SettingsSection';
+import { conversationProps } from '@/types/apiTypes';
 
-interface Info {
-  avatar: string;
-  name: string;
-  status: 'online' | 'offline' | 'typing';
-  lastSeen?: string;
-  blocked: boolean;
-}
+
 
 interface SideInfoChatProps {
-  selectedMessage: Info;
+  onSelectedConversation: conversationProps;
   onEmojiChange: (newSticker: string) => void;
 }
 
 const SideInfoChat: React.FC<SideInfoChatProps> = ({
-  selectedMessage,
+  onSelectedConversation,
   onEmojiChange,
 }) => {
   return (
     <div className={css.sideInfoChat}>
       <ProfileSection
-        avatarUrl={selectedMessage.avatar}
-        name={selectedMessage.name}
+        avatarUrl={onSelectedConversation.avatar}
+        name={onSelectedConversation.name}
       />
-      <StatusSection status={selectedMessage} />
+      <StatusSection status={onSelectedConversation} />
       <ButtonSection />
       <SettingsSection onEmojiChange={onEmojiChange} />
     </div>

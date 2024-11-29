@@ -18,13 +18,34 @@
 .userInfo {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .userAvatar {
+  position: relative;
+  cursor: pointer;
+}
+.imageAvatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  margin-right: 15px;
+}
+
+.userAvatar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: transparent; 
+  border: none;
+}
+
+.userAvatar.online::after {
+  border: 2px solid white;
+  background-color: green;
 }
 
 .userDetails {
@@ -32,14 +53,20 @@
   flex-direction: column;
 }
 
+.usernameheader{
+  cursor: pointer;
+}
 .userName {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--text-color);
+  
 }
 
 .userStatus {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: var(--online-typing);
+  /* font-weight: bold;
+  letter-spacing: 2px; */
 }
 
 .chatActions {
@@ -78,9 +105,11 @@
   color: green;
 }
 
-.typing {
-  color: green;
+.userStatus.typing {
+  color: #f0a500;
+  font-style: italic;
 }
+
 
 .offline {
   color: #f8f3e3b0;

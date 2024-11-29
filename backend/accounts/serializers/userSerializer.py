@@ -13,22 +13,24 @@ from ..serializers import ProfileSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 
+
 def send_verification_email(user):
-        token = EmailVerification.objects.create(user=user)
-        verification_link = f'http://localhost:3000/auth/verify_email/{token.token}/'
-        send_mail(
-            'Verify your email',
-            f'Click on the link to verify your email: {verification_link}',
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-            fail_silently=False,
-        )
+    token = EmailVerification.objects.create(user=user)
+    verification_link = f'http://localhost:3000/auth/verify_email/{token.token}/'
+    send_mail(
+        'Verify your email',
+        f'Click on the link to verify your email: {verification_link}',
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False,
+    )
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={
-                                     'input_type': 'password'})
+        'input_type': 'password'})
     password2 = serializers.CharField(write_only=True, required=True, style={
-                                      'input_type': 'password'})
+        'input_type': 'password'})
 
     class Meta:
         model = User
@@ -97,7 +99,8 @@ class SetPasswordSerializer(serializers.Serializer):
                 {'error': 'Request is required'})
         user = self.context['request'].user
         if not user.is_oauth_user:
-            raise serializers.ValidationError({'error': 'Only oauth2 users can set password'})
+            raise serializers.ValidationError(
+                {'error': 'Only oauth2 users can set password'})
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
@@ -141,25 +144,28 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'is_oauth_user', 'is2fa_active',
-                  'last_name', 'profile', 'friend_status', 'friend_request_status']
+        fields = ['id', 'friend_status', 'username', 'first_name',
+                  'last_name', 'profile', 'friend_request_status', 'last_seen', 'active_conversation', 'is_oauth_user', 'is2fa_active']
 
     def get_friend_status(self, obj):
         if 'request' not in self.context or self.context['request'].user == obj:
             return 'self'
         try:
-            BlockRelationship.objects.get(blocker=self.context['request'].user, blocked=obj)
+            BlockRelationship.objects.get(
+                blocker=self.context['request'].user, blocked=obj)
             print('-->>>-you are the blocker-<<--------')
             return 'Blocker'
         except BlockRelationship.DoesNotExist:
             try:
-                BlockRelationship.objects.get(blocker=obj, blocked=self.context['request'].user)
+                BlockRelationship.objects.get(
+                    blocker=obj, blocked=self.context['request'].user)
                 print('-->>>-you are the blocked-<<--------')
                 return 'Blocked'
             except BlockRelationship.DoesNotExist:
                 pass
         try:
-            as_sender = FriendRequest.objects.get(sender=self.context['request'].user, receiver=obj)
+            as_sender = FriendRequest.objects.get(
+                sender=self.context['request'].user, receiver=obj)
             print('---as sender-->>', as_sender.status, '<<--------')
             if as_sender.status == 'accepted':
                 return 'Friends'
@@ -170,7 +176,8 @@ class UserSerializer(serializers.ModelSerializer):
             return as_sender.status
         except FriendRequest.DoesNotExist:
             try:
-                as_reciever = FriendRequest.objects.get(sender=obj, receiver=self.context['request'].user)
+                as_reciever = FriendRequest.objects.get(
+                    sender=obj, receiver=self.context['request'].user)
                 print('---as reciever-->>', as_reciever.status, '<<--------')
                 if as_reciever.status == 'accepted':
                     return 'Friends'

@@ -43,6 +43,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         print(f'Websocket Message Recieved: {event}')
         if event == 'request_remote_game':
             await Matchmaker.request_remote_game(self.player_id)
+        elif event == 'request_multiple_game':
+            await Matchmaker.request_multi_game(self.player_id)
         elif event == 'request_tournament':
             tournament_name = data.get('tournament_name')
             await Matchmaker.create_tournament(self.player_id, tournament_name)

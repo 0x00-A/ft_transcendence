@@ -12,7 +12,7 @@ const CreateTournamentModal = ({
 }) => {
   const [tournamentName, setTournamentName] = useState('');
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTournamentName(e.target.value);
   };
 

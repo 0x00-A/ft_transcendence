@@ -17,7 +17,7 @@
   color: var(--text-color);
   /* max-width: 1920px; */
   min-width: 778px;
-  margin: auto;
+  /* margin: auto; */
 }
 
 .topContainer {
@@ -205,7 +205,7 @@
   background-color: #e5e7eb;
   padding: 1rem;
   border-radius: 8px;
-  height: 49%;
+  height: 32%;
 }
 
 .iconMode {

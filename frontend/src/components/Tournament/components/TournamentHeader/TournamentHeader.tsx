@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import css from './TournamentHeader.module.css';
 
 function Round({ children }: PropsWithChildren) {

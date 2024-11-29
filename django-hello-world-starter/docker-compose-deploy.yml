@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - static_data:/web
+    environment:
+      - SECRET_KEY=valueforsecretkey
+      - ALLOWED_HOSTS=127.0.0.1,localhost
+
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    volumes:
+      - static_data:/static_data
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+
+volumes:
+  static_data:

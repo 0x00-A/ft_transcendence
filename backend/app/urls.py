@@ -39,4 +39,5 @@ urlpatterns = [
     path('api/matchmaker/', include('matchmaker.urls')),
     path('api/', include('accounts.urls')),
     path('api/chat/', include('chat.urls')),
-] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+    # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

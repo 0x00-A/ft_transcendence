@@ -1,22 +1,20 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import css from './RemoteTournament.module.css';
-import { useGetData } from '../../../api/apiHooks';
 import RemoteGame from '../../Game/RemoteGame/RemoteGame';
 import TournamentHeader from '../components/TournamentHeader/TournamentHeader';
 import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
-import { MessageData } from '@/contexts/WebSocketContext';
 import LeaveTournamentButton from './LeaveTournamentButton';
 
-function IconLabelButtons({ onClick }: { onClick: () => void }) {
-  return (
-    <button onClick={onClick} className={`${css.playButton}`}>
-      Ready
-    </button>
-  );
-}
+// function IconLabelButtons({ onClick }: { onClick: () => void }) {
+//   return (
+//     <button onClick={onClick} className={`${css.playButton}`}>
+//       Ready
+//     </button>
+//   );
+// }
 
 const Match = ({
   // player1,
@@ -119,7 +117,7 @@ const RemoteTournament = ({
   matchStarted: boolean;
   matchAddress: string | null;
   setMatchStarted: React.Dispatch<React.SetStateAction<boolean>>;
-  sendMessage: (message: MessageData) => void;
+  sendMessage: (message: Record<string, any>) => void;
   onReturn: ()=>void;
   opponentReady: boolean;
   setOpponentReady: React.Dispatch<React.SetStateAction<boolean>>;

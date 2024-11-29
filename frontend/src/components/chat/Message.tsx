@@ -1,43 +1,55 @@
 import React from 'react';
 import css from './MessageArea.module.css';
+import { useUser } from '@/contexts/UserContext';
+import { conversationProps } from '@/types/apiTypes';
 
 interface MessageProps {
-  name: string;
+  id: number;
+  conversation: number;
+  sender: number;
+  receiver: number;
   content: string;
-  sender: boolean;
-  avatar: string;
-  time: string;
+  timestamp: string;
+  seen?: boolean;
 }
 
-const Message: React.FC<MessageProps> = ({
-  content,
-  sender,
-  avatar,
-  time,
-  name,
-}) => {
+interface MessageComponentProps {
+  message: MessageProps;
+  conversationData: conversationProps | null;
+}
+
+
+const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }) => {
+  const { content, timestamp } = message;
+
+  // console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
+  const {user} = useUser()
   const isSticker = content.includes('<img');
-
-  console.log('content:', content);
-
+  const isSender = user?.id === message.sender;
   return (
     <div
-      className={`${css.messageWrapper} ${sender ? css.sender : css.receiver}`}
+      className={`${css.messageWrapper} ${isSender ? css.sender : css.receiver}`}
     >
-      {!sender && <img src={avatar} alt="avatar" className={css.avatar} />}
+      {!isSender && (
+        <img
+          src={conversationData?.avatar}
+          alt="avatar"
+          className={css.avatar}
+        />
+      )}
       <div className={css.sideMessage}>
         <div className={css.nameAndTime}>
-          {!sender ? (
-            <div className={css.receiverInfo}>
-              <p>{name}</p> • <span>{time}</span>
+          {isSender ? (
+            <div className={css.senderInfo}>
+              <span>{new Date(timestamp).toLocaleTimeString()}</span> • <p>YOU</p>
             </div>
           ) : (
-            <div className={css.senderInfo}>
-              <span>{time}</span> • <p>YOU</p>
+            <div className={css.receiverInfo}>
+              <p>{conversationData?.name}</p>
+              • <span>{new Date(timestamp).toLocaleTimeString()}</span>
             </div>
           )}
         </div>
-        {/* <div className={css.messageBubble}> */}
         {isSticker ? (
           <div
             className={css.stickerContainer}
@@ -48,7 +60,6 @@ const Message: React.FC<MessageProps> = ({
             <p>{content}</p>
           </div>
         )}
-        {/* </div> */}
       </div>
     </div>
   );

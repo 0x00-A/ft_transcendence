@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import css from './Tournament.module.css';
 import Paddle from '../../Game/components/utils/Paddle';
 import Ball from '../../Game/components/utils/Ball';
@@ -372,11 +372,11 @@ const Pong: React.FC<GameProps> = ({
   );
 };
 
-type FormProps = {
-  onSubmit: (players: string[]) => void;
-  players: string[];
-  setPlayers: React.Dispatch<React.SetStateAction<string[]>>;
-};
+// type FormProps = {
+//   onSubmit: (players: string[]) => void;
+//   players: string[];
+//   setPlayers: React.Dispatch<React.SetStateAction<string[]>>;
+// };
 
 type Match = {
   player1: string;

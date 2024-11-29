@@ -1,13 +1,10 @@
 import React from 'react';
 import css from './StatusSection.module.css';
+import { conversationProps } from '@/types/apiTypes';
 
-interface Info {
-  status: 'online' | 'offline' | 'typing';
-  lastSeen?: string;
-}
 
 interface StatusSectionProps {
-  status: Info;
+  status: conversationProps;
 }
 
 const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
@@ -15,17 +12,14 @@ const StatusSection: React.FC<StatusSectionProps> = ({ status }) => {
     if (!status) return null;
 
     switch (status.status) {
-      case 'online':
-        return <p className={`${css.userStatus} ${css.online}`}>Online</p>;
-      case 'typing':
-        return <p className={`${css.userStatus} ${css.typing}`}>Online</p>;
-      case 'offline':
+      case true:
+        return <p className={`${css.userStatus} ${css.online}`}>Active now</p>;
+      case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {status.lastSeen}
+            Last seen at {status.last_seen}
           </p>
         );
-      default:
     }
   };
 
