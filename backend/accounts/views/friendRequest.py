@@ -112,10 +112,12 @@ class UserFriendsView(APIView):
 
 class OnlineFriendsView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ProfileSerializer
+    serializer_class = UserSerializer
 
+    print("........................................")
     def get(self, request):
         try:
+            print(f"User: {user}")
             user = request.user
             online_friends = user.friends.filter(profile__is_online=True)
             serializer = UserSerializer(online_friends, many=True)
