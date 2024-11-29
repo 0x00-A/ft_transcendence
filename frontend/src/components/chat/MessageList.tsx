@@ -22,12 +22,12 @@ import { toast } from 'react-toastify';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 
 
 
 interface MessageListProps {
-  onSelectMessage: (message: conversationProps | null) => void;
 }
 
 interface FriendProfile {
@@ -40,11 +40,8 @@ interface Friend {
   profile: FriendProfile;
 }
 
-const MessageList: React.FC<MessageListProps> = ({
-  onSelectMessage,
-}) => {
+const MessageList: React.FC<MessageListProps> = () => {
   const navigate = useNavigate();
-  const [selectedConversation, setSelectedConversation] = useState<conversationProps | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
   const [menuState, setMenuState] = useState<{
@@ -63,12 +60,15 @@ const MessageList: React.FC<MessageListProps> = ({
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus} = useWebSocket();
+  const { setSelectedConversation, selectedConversation } = useSelectedConversation();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocket();
 
-  const {
-    data: friendsData,
-    isLoading: friendsLoading,
-    error: friendsError
+
+  
+  const { 
+    data: friendsData, 
+    isLoading: friendsLoading, 
+    error: friendsError 
   } = useGetData<Friend[]>('friends');
 
   const {
@@ -77,15 +77,31 @@ const MessageList: React.FC<MessageListProps> = ({
     isLoading: conversationsLoading,
     error: conversationsError
   } = useGetData<conversationProps[]>('chat/conversations');
-
-
+  
   console.log(" >> << ConversationList: ", ConversationList)
   useEffect(() => {
-    if (lastMessage || markAsReadData?.status) {
-      console.log("*************markAsReadData: ", markAsReadData)
+    if (blockStatusUpdate) {
+      const selectedConversationId = blockStatusUpdate.conversationId;
+      refetch();
+      if (selectedConversation)
+        {
+          const foundConversation = ConversationList?.find(convo => convo.id === selectedConversationId);
+          setSelectedConversation(foundConversation!);
+        }
+    }
+  }, [blockStatusUpdate, ConversationList]);
+  
+  useEffect(() => {
+    if (markAsReadData?.status) {
       refetch();
     }
-  }, [lastMessage, markAsReadData]);
+  }, [markAsReadData]);
+
+  useEffect(() => {
+    if (lastMessage) {
+      refetch();
+    }
+  }, [lastMessage]);
 
 
   const filteredFriends = useMemo(() => {
@@ -130,7 +146,6 @@ const MessageList: React.FC<MessageListProps> = ({
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
-    console.log("eeeeeeeeeeeeeee: ", e);
     const messageListRect = messageListRef.current?.getBoundingClientRect();
     const buttonRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
@@ -175,9 +190,14 @@ const MessageList: React.FC<MessageListProps> = ({
     }
   };
 
-  const handleBlock = async (id: number, blockedId: number) => {
+  const handleBlock = async (activeConversation: conversationProps) => {
     if (user?.id !== undefined) {
-      toggleBlockStatus(id, user.id, blockedId, true);
+      if (activeConversation.block_status == "blocker")
+        toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
+      else if (activeConversation.block_status == "blocked")
+        toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
+      else
+        toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
     }
     setMenuState((prevState) => ({
       ...prevState,
@@ -276,10 +296,8 @@ const MessageList: React.FC<MessageListProps> = ({
 
 
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
-    console.log(">>>>setSelectedConversation: ", conversation)
     setSelectedConversation(conversation);
-    onSelectMessage(conversation);
-  }, [onSelectMessage]);
+  }, [setSelectedConversation]);
 
 
   const handleConversationClick = useCallback((conversation: conversationProps) => {
@@ -417,9 +435,9 @@ const MessageList: React.FC<MessageListProps> = ({
             <hr />
             <div
               className={css.menuItem}
-              onClick={() => handleBlock(ConversationList[menuState.activeIndex!].id, ConversationList[menuState.activeIndex!].user_id)}
+              onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
-              <FaBan /><span> block </span>
+              <FaBan /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
             </div>
             <div className={css.menuItem}>
               <FaArchive /> <span>Archive chat</span>

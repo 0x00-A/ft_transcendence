@@ -8,6 +8,8 @@ from django.db.models import Q
 from ..models import Profile, FriendRequest
 from ..serializers import UserSerializer
 from ..serializers import EditProfileSerializer
+from app.settings import MEDIA_URL
+from app.settings import SERVER_URL
 
 
 User = get_user_model()
@@ -260,9 +262,11 @@ class Enable2FAView(APIView):
         print('api ==> enable 2fa: Provisioning URI generated', privisioning_uri)
         qr = qrcode.make(privisioning_uri)
         qr.show()
-        qr_code = f"media/qrcodes/{user.username}_2fa.png"
-        qr.save(qr_code)
-        return Response({'qr_code': f"http://localhost:8000/{qr_code}"}, status=status.HTTP_200_OK)
+        qr_code = f"{MEDIA_URL}qrcodes/{user.username}_2fa.png"
+        print('=====QR_CODE=====', qr_code)
+        qr.save(f"static{qr_code}")
+        return Response({'qr_code': f"{SERVER_URL}{qr_code}"}, status=status.HTTP_200_OK)
+
 
 class Disable2FAView(APIView):
     permission_classes = [IsAuthenticated]

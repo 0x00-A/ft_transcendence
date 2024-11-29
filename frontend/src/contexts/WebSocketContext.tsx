@@ -154,12 +154,12 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = JSON.parse(event.data);
         console.log(data);
 
-        // if (
-        //   data.event === 'friend_request' ||
-        //   data.event === 'status_update'
-        // ) {
-        //
-        // }
+        if (
+          data.event === 'friend_request' ||
+          data.event === 'status_update'
+        ) {
+        toast.success('hello friends')
+        }
         if (
           data.event === 'notification'
         ) {

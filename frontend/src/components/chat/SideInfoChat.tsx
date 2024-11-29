@@ -5,26 +5,27 @@ import ProfileSection from './ProfileSection';
 import StatusSection from './StatusSection';
 import ButtonSection from './ButtonSection';
 import SettingsSection from './SettingsSection';
-import { conversationProps } from '@/types/apiTypes';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 
 
 interface SideInfoChatProps {
-  onSelectedConversation: conversationProps;
   onEmojiChange: (newSticker: string) => void;
 }
 
 const SideInfoChat: React.FC<SideInfoChatProps> = ({
-  onSelectedConversation,
   onEmojiChange,
 }) => {
+
+  const { selectedConversation } = useSelectedConversation();
+
   return (
     <div className={css.sideInfoChat}>
       <ProfileSection
-        avatarUrl={onSelectedConversation.avatar}
-        name={onSelectedConversation.name}
+        avatarUrl={selectedConversation!.avatar}
+        name={selectedConversation!.name}
       />
-      <StatusSection status={onSelectedConversation} />
+      <StatusSection/>
       <ButtonSection />
       <SettingsSection onEmojiChange={onEmojiChange} />
     </div>

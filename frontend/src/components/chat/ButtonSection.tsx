@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import css from './ButtonSection.module.css';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
+import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 // import { FaUserCircle, FaSearch, FaUserPlus } from 'react-icons/fa';
@@ -68,9 +70,10 @@ const CooldownButton = ({
 const ButtonSection: React.FC = () => {
   const { user } = useUser();
   const { sendMessage } = useWebSocket();
-  // const navigate = useNavigate();
+  const { selectedConversation } = useSelectedConversation();
+  const navigate = useNavigate();
 
-  // onClick={() => navigate(`/profile/${onSelectedConversation.name}`)}
+
   const handleSendInvite = () => {
     sendMessage({
       event: 'game_invite',
@@ -81,15 +84,17 @@ const ButtonSection: React.FC = () => {
   return (
     <div className={css.buttonSection}>
       <div className={css.button} >
-        <img className={css.icon} src="/icons/chat/Profile.svg" alt="I" />
-        {/* <FaUserCircle className={css.icon} /> */}
+        <div
+          onClick={() => navigate(`/profile/${selectedConversation?.name}`)}
+        >
+          <img className={css.icon} src="/icons/chat/Profile.svg" alt="I" />
+        </div>
         <p>Profile</p>
       </div>
-      <div className={css.button}>
+      {/* <div className={css.button}>
         <img className={css.icon} src="/icons/chat/Search.svg" alt="I" />
-        {/* <FaSearch className={css.icon} /> */}
         <p>Search</p>
-      </div>
+      </div> */}
       {/* <div className={css.button}>
         <img className={css.icon} src="/icons/chat/Invite.svg" alt="I" />
         <p>Invite</p>
