@@ -8,7 +8,7 @@ services:
     # ports:
     #   - "8000:8000"
     volumes:
-      - static_data:/app/backend/static
+      - static_data:/web/static
     environment:
       # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
       - ALLOWED_HOSTS=$ALLOWED_HOSTS
@@ -44,7 +44,7 @@ services:
     # ports:
     #   - "3000:3000"
     volumes:
-      - react_build:/app/frontend/dist
+      - react_build:/app/dist
 
     depends_on:
       backend:
@@ -87,7 +87,7 @@ services:
       - static_data:/web
       - react_build:/usr/share/nginx/html
     ports:
-      - "8080:8080"
+      - "80:80"
     networks:
       - default_network
     depends_on:

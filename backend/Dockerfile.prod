@@ -37,7 +37,7 @@ COPY . /app/backend
 COPY ./scripts /scripts
 RUN chmod +x /scripts/*
 
-USER django-user
+#USER django-user
 
 EXPOSE 8000
 

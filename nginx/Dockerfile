@@ -17,6 +17,7 @@ USER root
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+RUN rm -rf /usr/share/nginx/html/*
 
 # VOLUME /vol/static
 
