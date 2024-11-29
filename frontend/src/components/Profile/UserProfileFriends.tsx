@@ -7,43 +7,23 @@ import { FaUserFriends } from "react-icons/fa";
 import { useGetData } from "@/api/apiHooks";
 // Components
 import Loading from "@/components/Friends/Loading";
-import { Navigate, replace, useNavigate } from 'react-router-dom';
-
-interface FriendProfile {
-    avatar: string;
-    is_online: boolean;
-    level: number;
-}
-
-interface Friend {
-  id: string;
-  username: string;
-  profile: FriendProfile;
-}
-
-interface MutualFriend {
-    mutual_friends: Friend[];
-    mutual_friends_count: number;
-}
+import { useNavigate } from 'react-router-dom';
+// Types
+import { MutualFriend, Friend } from '@/types/apiTypes';
 
 
-const UserProfileFriends = ({username}) => {
+const UserProfileFriends = ({username}:{username:string}) => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
-    const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>(`/friends/${username}`);
-    const { data: mutualFriends, isLoading : mutualIsLoading, error: mutualError, refetch: mutualRefetch } = useGetData<MutualFriend>(`/friends/mutual/${username}`);
+    const { data: friendsData, isLoading, error } = useGetData<Friend[]>(`/friends/${username}`);
+    const { data: mutualFriends, isLoading : mutualIsLoading} = useGetData<MutualFriend>(`/friends/mutual/${username}`);
     const navigate = useNavigate();
     // const mutualFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     // const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
     if (isLoading) return <Loading />;
 
     if (mutualIsLoading) return <Loading />;
-    console.log('==> User profile Mutual Friends data == ', mutualFriends);
-
-
-    console.log('==> User profile Friends data == ', friendsData);
-
 
   return (
     <div className={css.profileFriendsContainer}>

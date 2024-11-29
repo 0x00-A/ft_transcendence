@@ -5,7 +5,6 @@ import ProfileSection from './ProfileSection';
 import StatusSection from './StatusSection';
 import ButtonSection from './ButtonSection';
 import SettingsSection from './SettingsSection';
-import { conversationProps } from '@/types/apiTypes';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 

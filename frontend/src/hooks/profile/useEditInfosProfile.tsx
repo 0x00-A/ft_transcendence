@@ -42,32 +42,8 @@ const schema = yup.object().shape({
   //   }),
 });
 
-// const EditProfileApi = async (data: EditProfileFormData) => {
-//   // try {
-//     const response = await apiClient.put(
-//         API_EDIT_PROFILE_URL,
-//         data,
-//     );
-//     return response.data
-  // }
-  // catch (error) {
-  //   // if (axios.isAxiosError(error)) {
-  //   //   if (error.response) {
-  //   //     console.error('Server responded with an error:', error.response.data);
-  //   //     console.error('Status code:', error.response.status);
-  //   //   } else if (error.request) {
-  //   //     console.error('No response from server:', error.request);
-  //   //   } else {
-  //   //     console.error('Error setting up request:', error.message);
-  //   //   }
-  //   // } else {
-  //   //   console.error('Unexpected error:', error);
-  //   // }
-  // }
-// }
 
 const useEditInfosProfile = () => {
-  // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
   const {
     register,
     handleSubmit,
@@ -82,10 +58,7 @@ const useEditInfosProfile = () => {
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (data: EditProfileFormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
-    // onSuccess: (data) => {
-    //   console.log('apiClient ==> EditProfile response: ', data);
-    // },
+    mutationFn: async (data: FormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;

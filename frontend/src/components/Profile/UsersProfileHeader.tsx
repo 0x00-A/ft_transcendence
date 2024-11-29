@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 // API
 import apiClient from '@/api/apiClient';
 import { API_GET_PROFILE_URL } from '@/api/apiConfig';
-
+import { apiAcceptFriendRequest, apiCancelFriendRequest, apiSendFriendRequest } from '@/api/friendApi';
 // Styles
 import { IoIosMore } from 'react-icons/io';
 import css from './ProfileHeader.module.css'
@@ -12,26 +12,22 @@ import { LiaUserFriendsSolid } from "react-icons/lia";
 import { TbUserCancel } from "react-icons/tb";
 import { FaUserCheck } from "react-icons/fa6";
 import { HiOutlineUserAdd } from "react-icons/hi";
-import { MdBlock, MdEdit, MdOutlineMessage } from "react-icons/md";
+import { MdBlock, MdOutlineMessage } from "react-icons/md";
 import ArcadeLoader from '../Game/components/ArcadeLoader/ArcadeLoader';
-import { useGetData } from '@/api/apiHooks';
-import { apiAcceptFriendRequest, apiCancelFriendRequest, apiSendFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 
-const getProfile = async (username) => {
+const getProfile = async (username:string) => {
 
     const response = await apiClient.get(
       `${API_GET_PROFILE_URL}${username}/`
     );
-    console.log(response)
-    console.log('apiClient ==> getProfile response: ', response.status, response.data);
     return response.data
 }
 
-const UsersProfileHeader = ({username}) => {
+const UsersProfileHeader = ({username}:{username:string}) => {
     const [isMore, setMore] = useState(false);
 
-    const {data: user, isLoading, isError, isSuccess, error, refetch} = useQuery({
+    const {data: user, isLoading, refetch} = useQuery({
         queryKey: ["myquerykey1"],
         queryFn: () => getProfile(username),
     });

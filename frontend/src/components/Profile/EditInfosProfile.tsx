@@ -20,8 +20,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     const { user: profileData, refetch } = useUser();
     const formValues = watch(['username', 'first_name', 'last_name', 'avatar', 'email']);
 
-    const handleEditProfile = (data: EditProfileFormData, event:any) => {
-        event.preventDefault();
+    const handleEditProfile = (data: EditProfileFormData) => {
         const formData = new FormData();
         if (data.avatar && data.avatar.length > 0 ) formData.append('avatar', data.avatar[0]);
         if (selectedAvatar === 'remove') formData.append('removeAvatar', "true");
@@ -54,8 +53,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     }
     useEffect(() => {
         if (mutation.isSuccess) {
-            console.log('--->', mutation.data);
-            toast.success(mutation.data?.message);
+            toast.success(mutation.data?.data?.message);
             reset();
             refetch();
             setEditProfile(false);
