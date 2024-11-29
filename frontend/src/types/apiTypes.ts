@@ -45,7 +45,7 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  is_oauth_user: boolean;
+  is_password_set: boolean;
   is2fa_active: boolean;
   first_name: string;
   last_name: string;
