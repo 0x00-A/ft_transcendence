@@ -94,6 +94,18 @@ export interface Tournament {
   state: TournamentState;
 }
 
+export interface conversationProps {
+  id: number;
+  last_seen: string;
+  user_id: number;
+  avatar: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount?: number;
+  status: boolean;
+  block_status: string,
+}
 /////////////////////
 // AUTH INTERFACES //
 /////////////////////

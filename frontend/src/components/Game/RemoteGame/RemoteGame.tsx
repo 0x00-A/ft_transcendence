@@ -3,12 +3,8 @@ import { GameScreens, GameState } from '../../../types/types';
 import css from './RemoteGame.module.css';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
-import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
-import { useGameInvite } from '@/contexts/GameInviteContext';
-import PlayerMatchupBanner from './PlayerMatchupBanner';
-import MatchmakingScreen from '@/pages/Game/MatchmakingScreen/MatchmakingScreen';
-import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
+import PlayerMatchupBanner from '../components/PlayerMatchupBanner';
 
 
 const canvasWidth = 650;
@@ -71,14 +67,11 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   });
 
   useEffect(() => {
+    SwitchSound(true);
     hitWallSound.current.preload = 'auto';
     hitWallSound.current.load(); // Preload the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
     paddleHitSound.current.load();
-
-    return () => {
-      // setGameAccepted(false);
-    }
   }, [sound]);
 
 
@@ -93,7 +86,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       if (!gameSocket) return;
       ws.current = gameSocket;
 
-      gameSocket.onopen = (e) => {
+      gameSocket.onopen = () => {
         console.log('Game WebSocket connected');
         setGameState('waiting');
 

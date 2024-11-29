@@ -5,7 +5,7 @@
     "skipLibCheck": true,
     "module": "CommonJS",
     // "module": "ESNext",
-    "moduleResolution": "bundler",
+    // "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "noEmit": true

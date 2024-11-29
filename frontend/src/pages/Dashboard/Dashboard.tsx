@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import css from './Dashboard.module.css';
 import Welcome from '../../components/Dashboard/Welcome';
 import CompetitiveOverview from '../../components/Dashboard/CompetitiveOverview';

@@ -1,64 +1,47 @@
-// MessageInput.tsx
 import { useState, useRef, useEffect } from 'react';
 import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
+import { conversationProps } from '@/types/apiTypes';
 
 interface MessageInputProps {
-  onSendMessage: (message: string, isSticker?: boolean) => void;
   customSticker: string;
-  isBlocked: boolean;
-  onUnblock: () => void;
+  onSendMessage: (message: string) => void;
+  onTyping: (isTyping: boolean) => void;
+  conversationData: conversationProps | null;
 }
 
 const MessageInput = ({
-  onSendMessage,
+  conversationData,
   customSticker,
-  isBlocked,
-  onUnblock,
+  onSendMessage,
+  onTyping,
+  
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
-  
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
-
-  const handleSend = () => {
-    if (!message.trim() && !customSticker) return;
-    
-    if (message.trim()) {
-      onSendMessage(message, false);
-      setMessage('');
-    } else if (customSticker) {
-      onSendMessage(customSticker, true);
-    }
-
-    setIsFlying(true);
-    setInputFocused(false);
-    setTimeout(() => {
-      setIsFlying(false);
-    }, 300);
-    
-    inputRef.current?.focus();
-  };
 
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     setShowEmojiPicker(false);
-    if (inputRef.current) {
+    if (textareaRef.current) {
       setInputFocused(true);
-      inputRef.current.focus();
+      textareaRef.current.focus();
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      handleSendMessage(); 
     }
   };
 
@@ -80,9 +63,25 @@ const MessageInput = ({
     };
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setInputFocused(true);
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    const newTimeout = setTimeout(() => {
+      onTyping(false);
+    }, 4000);
+
+    setTypingTimeout(newTimeout);
+    onTyping(true);
+
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
   };
 
   const handleInputBlur = () => {
@@ -91,22 +90,39 @@ const MessageInput = ({
     }
   };
 
-  if (isBlocked) {
+  if (conversationData?.block_status) {
     return (
       <div className={css.messageBlock}>
-        <h2>
-          User is blocked
-        </h2>
-        <p>
-          You can't message them in this chat, and you won't receive their
-          messages.
-        </p>
-        <button className={css.buttonUnblock} onClick={onUnblock}>
-          Unblock
-        </button>
+        {conversationData?.block_status == "Blocker" ?  <h2> I blocked {conversationData.name}</h2> : <h2> you are blocked</h2>}
+        
+        <p>You can't send messages to this user, and you won't receive their messages.</p>
+        {conversationData?.block_status == "Blocker" && (
+          <button className={css.buttonUnblock} onClick={() => onSendMessage("unblock")}>
+            Unblock
+          </button>
+        )}
       </div>
     );
   }
+
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      onSendMessage(message);
+    }
+    else if (customSticker) {
+      onSendMessage(customSticker);
+    }
+    setMessage('');
+    setIsFlying(true);
+    setInputFocused(false);
+    onTyping(false);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current?.focus();
+    }
+    setTimeout(() => setIsFlying(false), 500);
+  };
 
   return (
     <div className={css.messageInputWrapper}>
@@ -115,19 +131,19 @@ const MessageInput = ({
           <Picker data={data} onEmojiSelect={handleEmojiClick} />
         </div>
       )}
-      
+
       <div className={css.messageInputContainer}>
-        <input
-          ref={inputRef}
-          type="text"
+        <textarea
+          ref={textareaRef}
           placeholder="Write a message"
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onBlur={handleInputBlur}
-          className={css.input}
+          className={css.textarea}
+          rows={1}
         />
-        
+
         <button
           ref={buttonEmojiRef}
           className={css.buttonEmoji}
@@ -136,8 +152,8 @@ const MessageInput = ({
         >
           <FaSmile size={22} />
         </button>
-        
-        <button 
+
+        <button
           className={css.buttonClip}
           aria-label="Attach file"
         >
@@ -146,19 +162,20 @@ const MessageInput = ({
       </div>
 
       <button
-        onClick={handleSend}
+        onClick={handleSendMessage}
         className={`${css.sendButton} ${
           isFlying ? css.animateIcon : ''
         } ${!message.trim() && !customSticker ? css.disabled : ''}`}
         disabled={!message.trim() && !customSticker}
         aria-label="Send message"
+        
       >
         {inputFocused || message.trim() ? (
           <FaPaperPlane size={22} />
         ) : (
-          <span 
+          <span
             className={css.stickerContainer}
-            dangerouslySetInnerHTML={{ __html: customSticker }} 
+            dangerouslySetInnerHTML={{ __html: customSticker }}
           />
         )}
       </button>

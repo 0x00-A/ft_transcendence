@@ -304,18 +304,18 @@ const Pong: React.FC<GameProps> = ({
       }
     };
 
-    const paddle1bot = () => {
-      if (ball.dx < 0) {
-        if (ball.y < paddle1.y + paddle1.paddleHitPoint)
-          paddle1.y -= paddle1.speed;
-        if (paddle1.y <= 0) paddle1.y = 0;
+    // const paddle1bot = () => {
+    //   if (ball.dx < 0) {
+    //     if (ball.y < paddle1.y + paddle1.paddleHitPoint)
+    //       paddle1.y -= paddle1.speed;
+    //     if (paddle1.y <= 0) paddle1.y = 0;
 
-        if (ball.y > paddle1.y + paddle1.paddleHitPoint)
-          paddle1.y += paddle1.speed;
-        if (paddle1.y + paddle1.height >= ctx.canvas.height)
-          paddle1.y = ctx.canvas.height - paddle1.height;
-      }
-    };
+    //     if (ball.y > paddle1.y + paddle1.paddleHitPoint)
+    //       paddle1.y += paddle1.speed;
+    //     if (paddle1.y + paddle1.height >= ctx.canvas.height)
+    //       paddle1.y = ctx.canvas.height - paddle1.height;
+    //   }
+    // };
     const paddle2bot = () => {
       if (ball.dx > 0) {
         if (ball.y < paddle2.y + paddle2.paddleHitPoint)

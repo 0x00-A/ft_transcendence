@@ -38,6 +38,7 @@ from matchmaker.models.game import Game
 from matchmaker.matchmaker import Matchmaker
 from django.db.models import Q
 from accounts.models import Profile
+from django.utils import timezone
 
 
 connected_users = {}
@@ -67,6 +68,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 await profile.asave()
             except Profile.DoesNotExist:
                 return
+    async def set_last_seen(self):
+        if self.username:
+            try:
+                user = await User.objects.aget(username=self.username)
+                user.last_seen = timezone.now().strftime("%H:%M")
+                await user.asave()
+            except User.DoesNotExist:
+                return
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -83,6 +92,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         if self.username in connected_users:
             del connected_users[self.username]
         await self.set_online_status(False)
+        await self.set_last_seen()
         return await super().disconnect(close_code)
 
     async def handle_accept(self, sender, recipient):

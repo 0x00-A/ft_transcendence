@@ -2,12 +2,10 @@ import styles from './Game.module.css';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Shield, Users, Trophy, Globe, ArrowRight, Gamepad2, Key } from 'lucide-react';
+import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
 
 
 import { useEffect, useRef, useState } from 'react';
@@ -25,24 +23,25 @@ import ArcadeLoader from '../../components/Game/components/ArcadeLoader/ArcadeLo
 import Tournament from '../../components/Tournament/Tournament/Tournament';
 import { toast } from 'react-toastify';
 import ErrorMessage from '@/components/Game/components/ErrorMessage/ErrorMessage';
-import NoTournamentIcon from './NoTournament/NoTournamnet';
+import NoTournamentIcon from '../../components/Tournament/components/NoTournament/NoTournamnet';
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { formatDate } from '@/utils/helpers';
-import MatchmakingScreen from './MatchmakingScreen/MatchmakingScreen';
+import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
+import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 
   const Modes = [
     { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
     { id: 1, title: 'Remote Game', icon: Globe, description: 'Challenge online' },
     { id: 2, title: 'Remote Tournament', icon: Trophy, description: 'Create Online tournament' },
     { id: 3, title: 'Local Tournament', icon: Users, description: 'Local tournament' },
+    { id: 4, title: 'Multiple Game', icon: Users, description: '4 players on same board' },
   ];
 
 const Game = () => {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
-  const [gameState, setGameState] = useState<'started' | 'inqueue' | null>(null);
+  const [gameState, setGameState] = useState<'startGame' | 'inqueue' | 'startMultiGame' | null>(null);
   const [gameAdrress, setGameAdrress] = useState<string | null>(null);
   const [player1_id, setPlayer1_id] = useState<number | null>(null);
   const [player2_id, setPlayer2_id] = useState<number | null>(null);
@@ -54,9 +53,9 @@ const Game = () => {
   const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
-  const isUnmounting = useRef(false);
+  // const isUnmounting = useRef(false);
 
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
 
   // if (!isLoggedIn)
   //   return;
@@ -125,14 +124,18 @@ const Game = () => {
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
-          if (gameState === 'started') return
+          if (gameState === 'startGame') return
           setGameState('inqueue');
         }
         if (data.event === 'game_address') {
           setGameAdrress(data.game_address);
           setPlayer1_id(data.player1_id);
           setPlayer2_id(data.player2_id);
-          setGameState('started');
+          setGameState('startGame');
+        }
+        if (data.event === 'multigame_address') {
+          setGameAdrress(data.game_address);
+          setGameState('startMultiGame');
         }
         if (data.event === 'tournament_update') {
           setTournamentStat(data.tournament_stat);
@@ -152,6 +155,10 @@ const Game = () => {
     return () => {
       if (ws.current) {
         console.log('Closing matchmaker websocket ....');
+        sendMessage({
+          event: 'remove_from_queue',
+        });
+        setGameState(null);
         ws.current.close();
       }
       clearTimeout(timeout);
@@ -168,12 +175,12 @@ const Game = () => {
   //   };
   // }, [setGameAccepted]);
 
-  useEffect(() => {
-    isUnmounting.current = true; // Flag component as ready to unmount
-    return () => {
-      isUnmounting.current = false; // Reset flag for dependency changes
-    };
-  }, []);
+  // useEffect(() => {
+  //   isUnmounting.current = true; // Flag component as ready to unmount
+  //   return () => {
+  //     isUnmounting.current = false; // Reset flag for dependency changes
+  //   };
+  // }, []);
 
   const sendMessage = (message: Record<string, any>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
@@ -187,6 +194,13 @@ const Game = () => {
     console.log('request remote game');
     sendMessage({
         event: 'request_remote_game',
+    })
+  };
+
+  const requestMultipleGame = () => {
+    console.log('request multi game');
+    sendMessage({
+        event: 'request_multiple_game',
     })
   };
 
@@ -225,6 +239,11 @@ const Game = () => {
     return <Tournament onReturn={handleReturn} />;
   }
 
+  if (selectedMode === 4) {
+    requestMultipleGame();
+    setSelectedMode(null);
+  }
+
   if (gameAccepted && gameInvite) {
       return <RemoteGame key={gameInvite}
         onReturn={() => {
@@ -241,8 +260,16 @@ const Game = () => {
         />;
   }
 
-  if (gameState === 'started') {
-    if (gameAdrress) return <RemoteGame
+  if (gameState === 'startMultiGame' && gameAdrress) {
+      return <MultipleGame
+        requestMultipleGame={requestMultipleGame}
+        game_address={gameAdrress}
+        onReturn={handleReturn}
+        />
+  }
+
+  if (gameState === 'startGame' && gameAdrress) {
+    return <RemoteGame
         key={gameAdrress}
         onReturn={handleReturn}
         requestRemoteGame={requestRemoteGame}

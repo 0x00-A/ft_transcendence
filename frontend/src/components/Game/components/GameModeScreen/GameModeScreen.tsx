@@ -4,7 +4,6 @@ import { Controller, GameScreens } from '../../../../types/types';
 import { useState } from 'react';
 import OptionsScreen from '../OptionsScreen/OptionsScreen';
 import GameButton from '../GameButton/GameButton';
-import PixelButton from '../PixelButton/PixelButton';
 
 const GameModeScreen = ({
   onNext,

@@ -1,12 +1,10 @@
 import css from './Bracket.module.css';
 
 const Match = ({
-  matchNumber = 0,
   player1,
   player2,
   winner,
 }: {
-  matchNumber?: Number;
   player1: string;
   player2: string;
   winner: Number;
@@ -40,17 +38,17 @@ const Bracket = () => {
       <section className={`${css.round} ${css.quarterfinals}`}>
         <div className={css.winners}>
           <div className={css.matchups}>
-            <Match matchNumber={1} player1="Uno" player2="Ocho" winner={1} />
-            <Match matchNumber={2} player1="Dos" player2="Ocho" winner={2} />
+            <Match player1="Uno" player2="Ocho" winner={1} />
+            <Match player1="Dos" player2="Ocho" winner={2} />
           </div>
           <Connector />
         </div>
 
         <div className={css.winners}>
           <div className={css.matchups}>
-            <Match matchNumber={3} player1="Treis" player2="Seis" winner={2} />
+            <Match player1="Treis" player2="Seis" winner={2} />
             <Match
-              matchNumber={4}
+
               player1="Cuatro"
               player2="Cinco"
               winner={2}
@@ -63,8 +61,8 @@ const Bracket = () => {
       <section className={`${css.round} ${css.semifinals}`}>
         <div className={css.winners}>
           <div className={css.matchups}>
-            <Match matchNumber={5} player1="Uno" player2="Dos" winner={1} />
-            <Match matchNumber={6} player1="Seis" player2="Cinco" winner={1} />
+            <Match player1="Uno" player2="Dos" winner={1} />
+            <Match player1="Seis" player2="Cinco" winner={1} />
           </div>
           <Connector />
         </div>
@@ -73,7 +71,7 @@ const Bracket = () => {
       <section className={`${css.round} ${css.finals}`}>
         <div className={css.winners}>
           <div className={css.matchups}>
-            <Match matchNumber={7} player1="Uno" player2="Seis" winner={1} />
+            <Match player1="Uno" player2="Seis" winner={1} />
           </div>
         </div>
       </section>

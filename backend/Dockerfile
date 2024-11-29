@@ -4,6 +4,7 @@ LABEL maintainer='abdelatif'
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV DJANGO_SETTINGS_MODULE=app.settings
 
 COPY ./requirements*.txt /tmp/
 # COPY ./requirements.dev.txt /tmp/requirements.dev.txt
@@ -29,7 +30,7 @@ RUN pip install --upgrade pip && \
 
 COPY . /app/backend
 
-USER django-user
+#USER django-user
 
 EXPOSE 8000
 

@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const PreLoader = () => {
   const [hidden, setHidden] = useState(false);
-  const {isLoggedIn ,isLoading} = useAuth()
+  const {isLoading} = useAuth()
 
   // if (!isLoggedIn)
   //   return

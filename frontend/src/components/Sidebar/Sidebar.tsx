@@ -10,12 +10,11 @@ import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import {
   MENU_ICON_COLOR,
   MENU_ICON_SIZE,
-  SIDEBAR_RESIZE_WIDTH,
+  // SIDEBAR_RESIZE_WIDTH,
 } from '../../config/constants';
 import apiClient from '../../api/apiClient';
 import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
-import { config } from 'process';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -53,14 +52,14 @@ export default function Sidebar() {
     setShowConfirm(false);
   };
 
-  const handleResize = () => {
-    if (window.innerWidth <= SIDEBAR_RESIZE_WIDTH) {
-      setOpen(false);
-    }
-    if (window.innerWidth > SIDEBAR_RESIZE_WIDTH) {
-      setOpen(false);
-    }
-  };
+  // const handleResize = () => {
+  //   if (window.innerWidth <= SIDEBAR_RESIZE_WIDTH) {
+  //     setOpen(false);
+  //   }
+  //   if (window.innerWidth > SIDEBAR_RESIZE_WIDTH) {
+  //     setOpen(false);
+  //   }
+  // };
 
   // useEffect(() => {
   //   window.addEventListener('resize', handleResize);
