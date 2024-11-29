@@ -35,14 +35,13 @@ const useSetPassword = () => {
   const mutation = useMutation({
     mutationFn: async (data: SetPasswordForm) => await apiClient.post(API_SET_PASSWORD, data),
     onError: (error) => {
-      console.log('set password===>', error);
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
           errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
           errs?.error && setError("root", {type: '', message: errs?.error});
-        } else {
-          setError("root", {type: '', message: 'Something went wrong!'});
-        }
+      } else {
+        setError("root", {type: '', message: 'Something went wrong!'});
+      }
     }
   });
   return {
