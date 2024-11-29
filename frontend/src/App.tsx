@@ -33,10 +33,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { UserProvider } from './contexts/UserContext';
 import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
-import OtpAuth from './pages/Auth/OtpAuth';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
 import UsersProfile from './pages/Profile/UsersProfile';
+import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
+
 import VerifyEmail from './pages/Auth/VerifyEmail';
 
 
@@ -48,6 +49,7 @@ function App() {
           <UserProvider>
             <GameInviteProvider>
               <WebSocketProvider>
+                <SelectedConversationProvider>
                 <ConnectionStatus />
                 <ToastContainer
                   position="top-center"
@@ -63,6 +65,7 @@ function App() {
                   toastClassName='toastStyle'
                   />
                 <AppContent />
+                </SelectedConversationProvider>
               </WebSocketProvider>
             </ GameInviteProvider>
           </UserProvider>
@@ -124,7 +127,6 @@ function AppContent() {
             <Route path="/auth" element={<Auth />}/>
             <Route path="/oauth2/callback" element={<Oauth2Callback />} />
             <Route path='/auth/verify_email/:token' element={<VerifyEmail/>} />
-            <Route path='/auth/2factor' element={<OtpAuth/>} />
             <Route path="*" element={<PageNotFound />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />

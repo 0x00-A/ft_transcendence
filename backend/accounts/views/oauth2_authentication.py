@@ -63,7 +63,7 @@ def oauth2_authentication(request, choice):
     if token is None:
         print('api ==> oauth2_authentication: Failed to get tokens for user')
         return redirect(f"{settings.API_CLIENT_OAUTH2_REDIRECT_URI}?status=failed&error={quote('Getting tokens for user failed')}")
-    response = redirect(f"{settings.API_CLIENT_OAUTH2_REDIRECT_URI}?status=success")
+    response =  redirect(f"{settings.API_CLIENT_OAUTH2_REDIRECT_URI}?status=success")
     response.set_cookie(
         key = 'access_token',
         value = token['access'],

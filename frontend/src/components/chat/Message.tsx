@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './MessageArea.module.css';
 import { useUser } from '@/contexts/UserContext';
-import { conversationProps } from '@/types/apiTypes';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {
   id: number;
@@ -15,15 +15,16 @@ interface MessageProps {
 
 interface MessageComponentProps {
   message: MessageProps;
-  conversationData: conversationProps | null;
 }
 
 
-const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }) => {
+const Message: React.FC<MessageComponentProps> = ({ message }) => {
   const { content, timestamp } = message;
 
   // console.log("rander Message >>>>>>>>>>>>>>>>>>>>>>>>>")
   const {user} = useUser()
+  const { selectedConversation } = useSelectedConversation();
+
   const isSticker = content.includes('<img');
   const isSender = user?.id === message.sender;
   return (
@@ -32,7 +33,7 @@ const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }
     >
       {!isSender && (
         <img
-          src={conversationData?.avatar}
+          src={selectedConversation?.avatar}
           alt="avatar"
           className={css.avatar}
         />
@@ -45,7 +46,7 @@ const Message: React.FC<MessageComponentProps> = ({ message,  conversationData }
             </div>
           ) : (
             <div className={css.receiverInfo}>
-              <p>{conversationData?.name}</p>
+              <p>{selectedConversation?.name}</p>
               • <span>{new Date(timestamp).toLocaleTimeString()}</span>
             </div>
           )}

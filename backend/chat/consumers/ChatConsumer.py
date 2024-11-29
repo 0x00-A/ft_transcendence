@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import sync_to_async
 from ..models import User, Message, Conversation
+from asgiref.sync import sync_to_async
 from django.db.models import Q
 
 
@@ -26,49 +26,99 @@ class ChatConsumer(AsyncWebsocketConsumer):
         action = data.get("action")
 
         print(f"Action: {action}, Data: {data}")
-        if action == "update_active_conversation":
-            await self.update_active_conversation(data)
-        elif action == "send_message":
-            await self.handle_send_message(data)
-        elif action == "typing":
-            await self.handle_typing_status(data)
-        elif action == "mark_as_read":
-            await self.handle_mark_as_read(data)
-        elif action == "toggle_block_status":
-            blocker_id = data.get("blocker_id")
-            blocked_id = data.get("blocked_id")
-            status = data.get("status") 
-            await self.toggle_block_status(data.get("conversation_id"), blocker_id, blocked_id, status)
+        try:
+            if action == "update_active_conversation":
+                await self.update_active_conversation(data)
+            elif action == "send_message":
+                await self.handle_send_message(data)
+            elif action == "typing":
+                await self.handle_typing_status(data)
+            elif action == "mark_as_read":
+                await self.handle_mark_as_read(data)
+            elif action == "toggle_block_status":
+                await self.handle_block_status(data)
+        except Exception as e:
+            print(f"Error handling action {action}: {str(e)}")
+            await self.send(text_data=json.dumps({
+                "type": "error",
+                "message": str(e)
+            }))
 
+    async def handle_block_status(self, data):
+        conversation_id = data.get("conversation_id")
+        blocker_id = data.get("blocker_id")
+        blocked_id = data.get("blocked_id")
+        status = data.get("status")
 
-    @sync_to_async
-    def get_conversation(self, sender_id, receiver_id):
+        if not all([conversation_id, blocker_id, blocked_id]):
+            raise ValueError("Missing required block status parameters")
 
-        conversation = Conversation.objects.get(
-            Q(user1_id=sender_id, user2_id=receiver_id) | Q(user1_id=receiver_id, user2_id=sender_id),
-            defaults={
-                'user1_id': sender_id,
-                'user2_id': receiver_id,
-            }
-        )
-        return conversation
+        await self.toggle_block_status(conversation_id, blocker_id, blocked_id, status)
+        await self.send_block_status_update(conversation_id, blocker_id, blocked_id)
+
     @sync_to_async
     def toggle_block_status(self, conversation_id, blocker_id, blocked_id, status):
         conversation = Conversation.objects.get(id=conversation_id)
-        print("---------------------------")
-        print(conversation)
-        print("---------------------------")
-        print( conversation.user2_id)
-        print("---------------------------")
-        print( conversation.user1_id)
-        print("---------------------------")
-        if blocker_id == conversation.user1_id and blocked_id == conversation.user2_id:
-            conversation.user1_block_status = status
-            conversation.user2_block_status = status
-        elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
-            conversation.user1_block_status = status
-            conversation.user2_block_status = status
+
+        if status:
+            if blocker_id == conversation.user1_id and blocked_id == conversation.user2_id:
+                conversation.user1_block_status = "blocker"
+                if conversation.user2_block_status != "blocker":
+                    conversation.user2_block_status = "blocked"
+            elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
+                conversation.user2_block_status = "blocker"
+                if conversation.user1_block_status != "blocker": 
+                    conversation.user1_block_status = "blocked"
+        else:
+            if blocker_id == conversation.user1_id:
+                if conversation.user2_block_status == "blocker": 
+                    conversation.user1_block_status = "blocked"
+                else:
+                    conversation.user1_block_status = None
+                    conversation.user2_block_status = None
+
+            elif blocker_id == conversation.user2_id:
+                if conversation.user1_block_status == "blocker":
+                    conversation.user2_block_status = "blocked"
+                else:
+                    conversation.user1_block_status = None
+                    conversation.user2_block_status = None
+
+
         conversation.save()
+
+
+    async def send_block_status_update(self, conversation_id, blocker_id, blocked_id):
+        await self.channel_layer.group_send(
+            f"user_{blocker_id}",
+            {
+                "type": "block_status_update",
+                "conversation_id": conversation_id,
+                "blocker_id": blocker_id,
+                "blocked_id": blocked_id,
+                "block_status": "success"
+            }
+        )
+
+        await self.channel_layer.group_send(
+            f"user_{blocked_id}",
+            {
+                "type": "block_status_update",
+                "conversation_id": conversation_id,
+                "blocker_id": blocker_id,
+                "blocked_id": blocked_id,
+                "block_status": "success"
+            }
+        )
+    
+    async def block_status_update(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "block_status_update",
+            "conversation_id": event["conversation_id"],
+            "blocker_id": event["blocker_id"],
+            "blocked_id": event["blocked_id"],
+            "block_status": event["block_status"],
+        }))
 
     @sync_to_async
     def set_active_conversation(self, user_id, conversation_id):
@@ -88,15 +138,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if not receiver_id or not message:
             return
-        # conversation = Conversation.objects.get(id=conversation_id)
-        conversation = await self.get_conversation(sender_id, receiver_id)
 
-        if conversation.user1_block_status and conversation.user1_id == self.user.id:
-            return 
-        if conversation.user2_block_status and conversation.user2_id == self.user.id:
-            return 
+        conversation = await self.get_or_create_conversation(sender_id, receiver_id)
 
-        conversation = await self.save_message(sender_id, receiver_id, message)
+        print("---******user1_id*****---")
+        print(conversation.user1_id)
+        print("---******user2_id*****---")
+        print(conversation.user2_id)
+
+        if await self.is_conversation_blocked(conversation, sender_id):
+            raise ValueError("Cannot send message. Conversation is blocked.")
+
+        saved_conversation = await self.save_message(sender_id, receiver_id, message)
 
         await self.channel_layer.group_send(
             f"user_{sender_id}",
@@ -105,7 +158,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "message": message,
                 "sender_id": sender_id,
                 "receiver_id": receiver_id,
-                "conversation_id": conversation.id,
+                "conversation_id": saved_conversation.id,
             }
         )
         await self.channel_layer.group_send(
@@ -115,9 +168,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "message": message,
                 "sender_id": sender_id,
                 "receiver_id": receiver_id,
-                "conversation_id": conversation.id,
+                "conversation_id": saved_conversation.id,
             }
         )
+
+    async def get_or_create_conversation(self, sender_id, receiver_id):
+        return await sync_to_async(Conversation.objects.get)(
+            user1_id=min(sender_id, receiver_id),
+            user2_id=max(sender_id, receiver_id),
+        )
+
+    async def is_conversation_blocked(self, conversation, sender_id):
+        conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
+        
+        if sender_id == conversation.user1_id and conversation.user1_block_status == "blocked":
+            return True
+        if sender_id == conversation.user2_id and conversation.user2_block_status == "blocked":
+            return True
+        return False
 
     async def handle_typing_status(self, data):
         typing = data.get("typing", False)
@@ -135,6 +203,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "sender_id": sender_id,
             }
         )
+
     async def handle_mark_as_read(self, data):
         conversation_id = data.get("conversation_id")
 
@@ -172,7 +241,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"Receiver ID: {receiver_id}, Sender ID: {sender_id}")
 
 
-        conversation, created = Conversation.objects.get_or_create(
+        conversation = Conversation.objects.get(
             user1=min(sender, receiver, key=lambda user: user.id),
             user2=max(sender, receiver, key=lambda user: user.id)
         )
@@ -197,6 +266,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(f"Unread User1: {conversation.unread_messages_user1}, Unread User2: {conversation.unread_messages_user2}")
         conversation.save()
         return conversation
+    
     @sync_to_async
     def mark_conversation_as_read(self, conversation_id, user):
         conversation = Conversation.objects.get(id=conversation_id)
@@ -207,4 +277,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             conversation.unread_messages_user2 = 0
 
         conversation.save()
-

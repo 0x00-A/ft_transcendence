@@ -47,7 +47,7 @@ class SetPasswordView(APIView):
             return Response({'error': 'Password confirmation is required'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = SetPasswordSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.update(request.user, serializer.validated_data)
         return Response({'message': 'Password updated'}, status=status.HTTP_200_OK)
 
 

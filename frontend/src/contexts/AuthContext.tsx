@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       navigate('/auth')
     }
     catch (error) {
-      console.log('Logout error ==> ', error.response.data.error);
+      // console.log('Logout error ==> ', error.response.data.error);
     }
   }
 

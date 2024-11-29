@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import FriendRequest, Profile, BlockRelationship
 from ..serializers import FriendRequestSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
+from accounts.consumers import NotificationConsumer
+
 
 User = get_user_model()
 
@@ -107,6 +109,7 @@ class UserFriendsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class OnlineFriendsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProfileSerializer
@@ -179,6 +182,7 @@ class SendFriendRequestView(APIView):
 
             if created:
                 # serializer = FriendRequestSerializer(friend_request)
+                NotificationConsumer.send_notification_to_user(receiver.id , {'event' :'friend_request'})
                 return Response({'message': 'Friend request sent successfully'},
                         status=status.HTTP_201_CREATED)
 

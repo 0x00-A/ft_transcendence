@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 import { useTyping } from '@/contexts/TypingContext';
-import { conversationProps } from '@/types/apiTypes';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {
   id: number;
@@ -18,13 +18,14 @@ interface MessageProps {
 
 interface MessageAreaProps {
   messages: MessageProps[];
-  conversationData: conversationProps | null;
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages}) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const { typing } = useTyping();
-  const isReceiver = typing.senderId == conversationData?.user_id;
+  const { selectedConversation } = useSelectedConversation();
+
+  const isReceiver = typing.senderId == selectedConversation?.user_id;
 
   console.log("typing: ", typing);
   useEffect(() => {
@@ -40,7 +41,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, conversationData}) 
         <Message
           key={index}
           message={message}
-          conversationData={conversationData}
         />
       ))}
       {typing.typing && isReceiver && (
