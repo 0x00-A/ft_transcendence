@@ -8,7 +8,7 @@ services:
     # ports:
     #   - "8000:8000"
     volumes:
-      - static_data:/web/static
+      - static_data:/app/backend/static
     environment:
       # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
       - ALLOWED_HOSTS=$ALLOWED_HOSTS
@@ -39,7 +39,7 @@ services:
 
   frontend:
     build:
-      context: ./vite-project
+      context: frontend
       dockerfile: Dockerfile.prod
     # ports:
     #   - "3000:3000"
