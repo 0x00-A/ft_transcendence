@@ -274,16 +274,14 @@ const MessageList: React.FC<MessageListProps> = () => {
     };
   }, []);
 
-
-
   useEffect(() => {
-
+    
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-
-      const isOutsideSearch = searchContainerRef.current && searchContainerRef?.current?.contains(target);
-      const isOutsideMainContainer = messageListRef.current && messageListRef?.current?.contains(target);
-
+    
+      const isOutsideSearch = searchContainerRef.current && !searchContainerRef.current.contains(target);
+      const isOutsideMainContainer = messageListRef.current && !messageListRef.current.contains(target);
+    
       if (isOutsideSearch && isOutsideMainContainer) {
         setIsSearchActive(false);
       }
@@ -293,6 +291,7 @@ const MessageList: React.FC<MessageListProps> = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
 
 
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
