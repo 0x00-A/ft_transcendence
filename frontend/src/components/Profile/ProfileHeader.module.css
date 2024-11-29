@@ -9,7 +9,7 @@
 }
 
 .profileBackground {
-    background-image: url('/public/rachid.png');
+    background-image: url('/rachid.png');
     width: 95%;
     height: 60%;
     border-radius: 20px 20px 0 0;
@@ -25,7 +25,7 @@
     right: 10px;
     width: 200px;
     height: 50px;
-    /* background-color: #283245; */
+    background-color: #283245;
     border: none;
     display: flex;
     align-items: center;
@@ -36,10 +36,29 @@
     /* font-size: 17px; */
 }
 
-.friendStatBtn {
-    width: 150px;
-    height: 50px;
-    padding: 5px 10px;
+.friendsStat {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.friendState {
+    width: 80%;
+    height: 100%;
+    /* border: 1px solid white; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* gap: 1rem;
+    padding: 1.5rem; */
+    background-color: #1e2533;
+    color: #f8f3e3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 2rem;
+    border-radius: 8px;
+    /* padding: 5px 10px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -49,11 +68,30 @@
     transition: background-color 0.2s, transform 0.2s;
     background-color: #1e2533;
     color: #f8f3e3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); */
+}
+
+.friendStatBtn {
+    /* border: 1px solid white; */
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* border: none; */
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    background-color: #1e2533;
+    color: #f8f3e3;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
-.friendStatBtn img {
-    width: 20px;
+.friendsStateIcon {
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
 }
 
 .moreIcon {
@@ -272,4 +310,3 @@
     background: linear-gradient(180deg, #384B6C 0%, #2B374D 63%, #1E2533 100%);
     border-top: 4px solid #517abc;
 }
-

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import css from './FriendRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import moment from 'moment';
@@ -27,11 +27,11 @@ interface FriendRequest {
 
 const FriendRequests: React.FC = () => {
 
-  const { 
-    data: friendPending, 
-    isLoading, 
-    error, 
-    refetch 
+  const {
+    data: friendPending,
+    isLoading,
+    error,
+    refetch
   } = useGetData<FriendRequest[]>('friend-requests/pending');
 
 
@@ -97,7 +97,7 @@ const FriendRequests: React.FC = () => {
                     Reject
                   </button>
                 </div>
-                
+
               </div>
             ))}
           </div>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const PlayerCardSkeleton = ({ layout = 'vertical' }) => {
   const isVertical = layout === 'vertical';
 

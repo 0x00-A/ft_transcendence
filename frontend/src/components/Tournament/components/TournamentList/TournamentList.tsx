@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import css from './TournamentList.module.css';
-import { useGetData } from '../../../../api/apiHooks';
 
 import ArcadeLoader from '../../../Game/components/ArcadeLoader/ArcadeLoader';
 import ErrorMessage from '../../../Game/components/ErrorMessage/ErrorMessage';
@@ -37,9 +34,9 @@ const TournamentList = ({
   //     fetchTournaments();
   // }, []);
 
-  function isInTournament(players: number[], player_id: number) {
-    return players.some((id) => id === player_id);
-  }
+  // function isInTournament(players: number[], player_id: number) {
+  //   return players.some((id) => id === player_id);
+  // }
 
   // if (error) return <p>error</p>
 

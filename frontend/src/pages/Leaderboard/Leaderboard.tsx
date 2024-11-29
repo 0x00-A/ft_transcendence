@@ -1,9 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import css from './Leaderboard.module.css';
-import { useEffect, useRef, useState } from 'react';
-import { log } from 'console';
-import { useWebSocket } from '@/contexts/WebSocketContext';
+import { useRef } from 'react';
 
 const Leaderboard = () => {
   const { isLoggedIn } = useAuth();
@@ -63,7 +61,6 @@ const Leaderboard = () => {
   return (
     <main ref={boxRef} className={css.container}>
       <p>Leaderboard</p>
-      <button>send Invite</button>
     </main>
   );
 };

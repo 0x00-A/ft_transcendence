@@ -12,7 +12,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'avatar', 'level', 'score', 'rank', 'badge', 'stats', 'is_online']
+        fields = ['id', 'username', 'avatar', 'level', 'score', 'rank', 'badge', 'stats', 'is_online', 'blocked_user_name']
 
     def get_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.avatar}"

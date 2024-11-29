@@ -3,11 +3,6 @@ import { GameScreens, GameState } from '../../../types/types';
 import css from './MultipleGame.module.css';
 import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
-import ArcadeLoader from '../components/ArcadeLoader/ArcadeLoader';
-import ReturnBack from '../components/ReturnBack/ReturnBack';
-import { useGameInvite } from '@/contexts/GameInviteContext';
-import MatchmakingScreen from '@/pages/Game/MatchmakingScreen/MatchmakingScreen';
-import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
 import PlayerCard from './PlayerCard';
 import PlayerCardSkeleton from './PlayerCardSkeleton';
 
@@ -28,7 +23,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>('started');
   const [restart, setRestart] = useState(false);
-  const [player, setPlayer] = useState<string>('');
+  // const [player, setPlayer] = useState<string>('');
 
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('game');
   const [isGameOver, setIsGameOver] = useState(false);
@@ -95,15 +90,13 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
 
   useEffect(() => {
+    SwitchSound(true)
+
     hitWallSound.current.preload = 'auto';
     hitWallSound.current.load(); // Preload the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
     paddleHitSound.current.load();
-
-    return () => {
-      // setGameAccepted(false);
-    }
-  }, [sound]);
+  }, []);
 
 
 
@@ -117,7 +110,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       if (!gameSocket) return;
       ws.current = gameSocket;
 
-      gameSocket.onopen = (e) => {
+      gameSocket.onopen = () => {
         console.log('Game WebSocket connected');
         setGameState('waiting');
 
@@ -157,10 +150,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           lost.current[2] = data.state[`player3_lost`]
           lost.current[3] = data.state[`player4_lost`]
         }
-        if (data.type === 'player_id') {
-          // console.log(data);
-          setPlayer(data.player)
-        }
+        // if (data.type === 'player_id') {
+        //   // console.log(data);
+        //   setPlayer(data.player)
+        // }
         if (data.type === 'game_update') {
           ballRef.current.x = data.state.ball.x;
           ballRef.current.y = data.state.ball.y;
@@ -221,17 +214,17 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
 
-    const drawDashedLine = () => {
-      ctx.setLineDash([15, 7.1]); // [dash length, gap length]
-      ctx.strokeStyle = '#f8f3e3';
-      ctx.lineWidth = 3;
+    // const drawDashedLine = () => {
+    //   ctx.setLineDash([15, 7.1]); // [dash length, gap length]
+    //   ctx.strokeStyle = '#f8f3e3';
+    //   ctx.lineWidth = 3;
 
-      ctx.beginPath();
-      ctx.moveTo(canvas.width / 2, 10);
-      ctx.lineTo(canvas.width / 2, canvas.height - 10);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    };
+    //   ctx.beginPath();
+    //   ctx.moveTo(canvas.width / 2, 10);
+    //   ctx.lineTo(canvas.width / 2, canvas.height - 10);
+    //   ctx.stroke();
+    //   ctx.setLineDash([]);
+    // };
 
     const keysPressed: boolean[] = [false];
     const handleKeyDown = (event: KeyboardEvent) => {

@@ -1,6 +1,5 @@
 import { useGetData } from '@/api/apiHooks';
 import { User } from '@/types/apiTypes';
-import React from 'react';
 import PlayerCardSkeleton from './PlayerCardSkeleton';
 
 

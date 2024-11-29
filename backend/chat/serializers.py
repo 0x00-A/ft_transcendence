@@ -1,12 +1,11 @@
 from rest_framework import serializers
 from accounts.serializers.userSerializer import UserSerializer
 from .models import Conversation, Message
+from accounts.models import BlockRelationship
 
 class ConversationSerializer(serializers.ModelSerializer):
     user1_username = serializers.CharField(source='user1.username', read_only=True)
     user2_username = serializers.CharField(source='user2.username', read_only=True)
-    # unread_messages_user1 = serializers.IntegerField(read_only=True)
-    # unread_messages_user2 = serializers.IntegerField(read_only=True)
     user1_last_seen = serializers.CharField(source='user1.last_seen', read_only=True)
     user2_last_seen = serializers.CharField(source='user2.last_seen', read_only=True)
     user1_id = serializers.IntegerField(source='user1.id', read_only=True)
@@ -15,6 +14,8 @@ class ConversationSerializer(serializers.ModelSerializer):
     user2_avatar = serializers.SerializerMethodField()
     user1_is_online = serializers.BooleanField(source='user1.profile.is_online', read_only=True)
     user2_is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
+    user1_block_status = serializers.BooleanField(read_only=True)
+    user2_block_status = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Conversation
@@ -34,7 +35,9 @@ class ConversationSerializer(serializers.ModelSerializer):
             'user1_is_online',
             'user2_is_online',
             'created_at', 
-            'updated_at'
+            'updated_at',
+            'user1_block_status',
+            'user2_block_status'
         ]
     
     def get_user1_avatar(self, obj):
@@ -42,6 +45,7 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     def get_user2_avatar(self, obj):
         return f"http://localhost:8000/media/{obj.user2.profile.avatar}"
+    
 
 
 class MessageSerializer(serializers.ModelSerializer):

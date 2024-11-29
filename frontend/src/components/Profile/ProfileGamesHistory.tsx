@@ -6,31 +6,25 @@ import { useNavigate } from 'react-router-dom';
 import { IoGameControllerOutline } from "react-icons/io5";
 import { useGetData } from '@/api/apiHooks';
 
-interface Player {
-    username: string;
-    avatar: string;
-}
 
 interface GameHistory {
-  dateTime: string;
-  player: Player;
+  start_time: string;
+  oppenent_username: string;
+  oppenent_avatar: string;
   result: string;
   score: string;
-  gameType: string;
-  duration: string;
+  game_duration: string;
 }
 
 const gameHistoryFields = ["Date & Time", "Name", "Result", "Score", "Type", "Duration", "Rematch"] as const;
 
-const gamesHistory = [
-    {"dateTime": "2021-09-01 12:00", "player": {"username": "John", "avatar": "https://picsum.photos/200"}, "result": "Win", "score": "11 - 5", "gameType": "local", "duration": "00:30", "rematch": "Yes"},
-    {"dateTime": "2021-09-01 12:00", "player": {"username": "mahdi", "avatar": "https://picsum.photos/200"}, "result": "Lose", "score": "6 - 11", "gameType": "remote", "duration": "00:30", "rematch": "Yes"},
-]
 
 const ProfileGamesHistory = () => {
 
     const navigate = useNavigate();
-    // const { data: friendsData, isLoading, error, refetch } = useGetData<GameHistory[]>('');
+    const { data: playedGames, isLoading, error, refetch } = useGetData<GameHistory[]>('/matchmaker/played_games');
+    if (isLoading) return <p>Loading...</p>;
+    console.log(playedGames);
 
 
   return (
@@ -50,24 +44,24 @@ const ProfileGamesHistory = () => {
                   <span key={index} className={css.headerField}>{field}</span>
                 ))}
             </div>
-            { gamesHistory?.length == 0 && <div className={css.noGames}>
+            { playedGames?.length == 0 && <div className={css.noGames}>
                 <span className={css.noHistoryTitle}>You don't play any games alkhari</span>
                 <button className={css.playBtn} onClick={() => navigate('/play')}>
                     <IoGameControllerOutline className={css.playIcon}/>
                     <span>Play Now</span>
                 </button>
             </div> }
-            { gamesHistory?.length > 0 && gamesHistory.map((game, index) => (
+            { playedGames!.length > 0 && playedGames?.map((game, index) => (
                 <div key={index} className={css.tableRow}>
-                    <span className={css.historyField}>{game.dateTime}</span>
+                    <span className={css.historyField}>{game?.start_time}</span>
                     <div className={css.player}>
-                        <img src={game.player?.avatar} alt={game.player?.username} className={css.avatar} />
-                        <span className={css.name}>{game.player?.username}</span>
+                        <img src={game.oppenent_avatar} alt={game?.oppenent_username} className={css.avatar} />
+                        <span className={css.name}>{game.oppenent_username}</span>
                     </div>
                     <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{game.result}</span>
                     <span className={css.historyField}>{game.score}</span>
-                    <span className={css.historyField}>{game.gameType}</span>
-                    <span className={css.historyField}>{game.duration}</span>
+                    <span className={css.historyField}>One to One</span>
+                    <span className={css.historyField}>{game.game_duration}</span>
                     <button className={css.inviteBtn}>Invite</button>
                 </div>
             ))}

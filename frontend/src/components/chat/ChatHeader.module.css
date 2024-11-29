@@ -23,6 +23,7 @@
 
 .userAvatar {
   position: relative;
+  cursor: pointer;
 }
 .imageAvatar {
   width: 50px;
@@ -39,10 +40,11 @@
   height: 15px;
   border-radius: 50%;
   background-color: transparent; 
-  border: 2px solid white;
+  border: none;
 }
 
 .userAvatar.online::after {
+  border: 2px solid white;
   background-color: green;
 }
 
@@ -51,6 +53,9 @@
   flex-direction: column;
 }
 
+.usernameheader{
+  cursor: pointer;
+}
 .userName {
   font-size: 1.8rem;
   color: var(--text-color);
