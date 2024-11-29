@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
-import {API_REGISTER_URL, ApiResponse} from '@/api/apiConfig';
+import {API_REGISTER_URL} from '@/api/apiConfig';
 import axios from 'axios';
 
 interface SignupFormData {

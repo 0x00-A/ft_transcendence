@@ -16,7 +16,7 @@ from django.conf import settings
 
 def send_verification_email(user):
     token = EmailVerification.objects.create(user=user)
-    verification_link = f'http://localhost:8000/api/auth/verify_email/{token.token}/'
+    verification_link = f'http://localhost:3000/auth/verify_email/{token.token}/'
     send_mail(
         'Verify your email',
         f'Click on the link to verify your email: {verification_link}',
@@ -80,6 +80,39 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
+class SetPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True, required=True, style={
+                                     'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={
+                                      'input_type': 'password'})
+
+    def validate_password(self, value):
+        try:
+            validate_password(value)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError(str(exc))
+        return value
+
+    def validate(self, attrs):
+        if not self.context['request']:
+            raise serializers.ValidationError(
+                {'error': 'Request is required'})
+        user = self.context['request'].user
+        if not user.is_oauth_user:
+            raise serializers.ValidationError(
+                {'error': 'Only oauth2 users can set password'})
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError(
+                {'password': 'Passwords do not match'})
+        return attrs
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password')
+        instance.set_password(password)
+        instance.save()
+        return instance
+
+
 class UserLoginSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(write_only=True, required=True)
@@ -95,9 +128,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {'password': 'password not valid'})
             if not user.is_active:
-                print('------->> user is not active <<--------')
                 raise serializers.ValidationError(
-                    {'error': 'user is not verified, please verify your email'})
+                    {'error': 'User is not active, Please verify your email and retry again!'})
         except User.DoesNotExist:
             raise serializers.ValidationError(
                 {'username': 'username not exist'})

@@ -3,21 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // API
 import apiClient from '@/api/apiClient';
 import { API_EDIT_PROFILE_URL } from '@/api/apiConfig';
-import { AxiosError } from 'axios';
-
-
-interface EditProfileFormData {
-    username: string;
-    avatar: FileList;
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-}
+import axios from 'axios';
+import { EditProfileFormData } from '@/types/apiTypes';
 
 const schema = yup.object().shape({
   username: yup
@@ -52,13 +42,13 @@ const schema = yup.object().shape({
   //   }),
 });
 
-const EditProfileApi = async (data) => {
-  // try {
-    const response = await apiClient.put(
-        API_EDIT_PROFILE_URL,
-        data,
-    );
-    return response.data
+// const EditProfileApi = async (data: EditProfileFormData) => {
+//   // try {
+//     const response = await apiClient.put(
+//         API_EDIT_PROFILE_URL,
+//         data,
+//     );
+//     return response.data
   // }
   // catch (error) {
   //   // if (axios.isAxiosError(error)) {
@@ -74,7 +64,7 @@ const EditProfileApi = async (data) => {
   //   //   console.error('Unexpected error:', error);
   //   // }
   // }
-}
+// }
 
 const useEditInfosProfile = () => {
   // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
@@ -92,18 +82,24 @@ const useEditInfosProfile = () => {
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: EditProfileApi,
-    onSuccess: (data) => {
-      console.log('apiClient ==> EditProfile response: ', data);
-    },
-    onError: (error: AxiosError) => {
-      const errs = error?.response.data as EditProfileFormData;
-      errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
-      errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-      errs?.first_name && setError("first_name", {type: '', message: errs?.first_name}, {shouldFocus:true})
-      errs?.last_name && setError("last_name", {type: '', message: errs?.last_name}, {shouldFocus:true})
-      errs?.email && setError("email", {type: '', message: errs?.email}, {shouldFocus:true})
-      error?.response.data?.error && setError("root", {type: '', message: error.response.data.error});
+    mutationFn: async (data: EditProfileFormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
+    // onSuccess: (data) => {
+    //   console.log('apiClient ==> EditProfile response: ', data);
+    // },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        const errs = error?.response?.data;
+        errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
+        errs?.first_name && setError("first_name", {type: '', message: errs?.first_name}, {shouldFocus:true})
+        errs?.last_name && setError("last_name", {type: '', message: errs?.last_name}, {shouldFocus:true})
+        errs?.email && setError("email", {type: '', message: errs?.email}, {shouldFocus:true})
+        errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
+        errs?.avatar && setError("avatar", {type: '', message: errs?.avatar}, {shouldFocus:true})
+        errs?.otp && setError("otp", {type: '', message: errs?.otp}, {shouldFocus:true})
+        errs?.error && setError("root", {type: '', message: errs?.error});
+      } else {
+        setError("root", {type: '', message: 'Something went wrong!'});
+      }
     }
   });
   return {
