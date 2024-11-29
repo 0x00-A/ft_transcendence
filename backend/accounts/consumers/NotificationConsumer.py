@@ -198,23 +198,29 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             print("NotificationsConsumer: User is not connected.")
 
     @classmethod
-    def send_notification_to_user(cls, user_id, notification):
+    def send_notification_to_user(cls, user_id, message):
         username = cls.get_username(user_id)
         if username in connected_users:
             channel_layer = get_channel_layer()
             channel_name = connected_users[username]
 
-            if isinstance(notification, Notification):
-                notification_data = notification.to_dict()
+            if isinstance(message, Notification):
+                notification_data = message.to_dict()
+                async_to_sync(channel_layer.send)(
+                    channel_name,
+                    {
+                        "type": "user.notification",
+                        "message": notification_data,
+                    }
+                )
             else:
-                notification_data = notification
-            async_to_sync(channel_layer.send)(
-                channel_name,
-                {
-                    "type": "user.notification",  # Method in the consumer
-                    "message": notification_data,
-                }
-            )
+                async_to_sync(channel_layer.send)(
+                    channel_name,
+                    {
+                        "type": "user.message",
+                        "message": message,
+                    }
+                )
 
     async def user_message(self, event):
         message = event["message"]
@@ -223,11 +229,15 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def user_notification(self, event):
         message = event["message"]
-        print(f"Sending Notifiaction: {event["message"]}")
+        print(f"Sending Notification: {event["message"]}")
         await self.send(text_data=json.dumps({
             'event': 'notification',
             'data': message
         }))
+    async def user_message(self, event):
+        message = event["message"]
+        print(f"Sending Message: {event["message"]}")
+        await self.send(text_data=json.dumps(message))
 
     async def get_user_id(self, username):
         try:

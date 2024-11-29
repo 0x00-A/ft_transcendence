@@ -63,15 +63,30 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if status:
             if blocker_id == conversation.user1_id and blocked_id == conversation.user2_id:
                 conversation.user1_block_status = "blocker"
-                conversation.user2_block_status = "blocked"
+                if conversation.user2_block_status != "blocker":
+                    conversation.user2_block_status = "blocked"
             elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
-                conversation.user1_block_status = "blocked"
                 conversation.user2_block_status = "blocker"
-        else: 
-            conversation.user1_block_status = None
-            conversation.user2_block_status = None
-        
+                if conversation.user1_block_status != "blocker": 
+                    conversation.user1_block_status = "blocked"
+        else:
+            if blocker_id == conversation.user1_id:
+                if conversation.user2_block_status == "blocker": 
+                    conversation.user1_block_status = "blocked"
+                else:
+                    conversation.user1_block_status = None
+                    conversation.user2_block_status = None
+
+            elif blocker_id == conversation.user2_id:
+                if conversation.user1_block_status == "blocker":
+                    conversation.user2_block_status = "blocked"
+                else:
+                    conversation.user1_block_status = None
+                    conversation.user2_block_status = None
+
+
         conversation.save()
+
 
     async def send_block_status_update(self, conversation_id, blocker_id, blocked_id):
         await self.channel_layer.group_send(
