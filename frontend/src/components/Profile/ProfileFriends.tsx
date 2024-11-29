@@ -8,7 +8,7 @@ import { useGetData } from "@/api/apiHooks";
 // Components
 import Loading from "@/components/Friends/Loading";
 import { c } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, replace, useNavigate } from 'react-router-dom';
 
 interface FriendProfile {
     avatar: string;
@@ -26,7 +26,8 @@ interface Friend {
 const ProfileFriends = () => {
 
     const [isBtnActive, setBtnActive] = useState(true);
-    const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
+    // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
+    const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>(`/friends`);
     const navigate = useNavigate();
     const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
@@ -68,7 +69,7 @@ const ProfileFriends = () => {
                     <div className={css.friendItem} key={index}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
-                             <span className={css.name}>{friend.username}</span>
+                             <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
                              <span className={css.level}>Level: {friend.profile.level}</span>
                          </div>
                          <div className={`${css.status} ${css.online}`}>
@@ -81,7 +82,7 @@ const ProfileFriends = () => {
                     <div className={css.friendItem} key={index}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
-                             <span className={css.name}>{friend.username}</span>
+                             <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
                              <span className={css.level}>Level: {friend.profile.level}</span>
                          </div>
                          <div className={`${css.status} ${css.offline}`}>

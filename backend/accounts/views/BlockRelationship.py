@@ -33,6 +33,7 @@ class BlockUserView(APIView):
                     Q(sender=request.user, receiver=target_user) | 
                     Q(sender=target_user, receiver=request.user)
                 ).delete()
+
                 return Response({'message': 'User blocked and removed from friends'}, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'User is already blocked'}, status=status.HTTP_400_BAD_REQUEST)

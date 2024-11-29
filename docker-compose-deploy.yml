@@ -1,0 +1,131 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        DEV: "false"
+      dockerfile: Dockerfile.prod
+    # ports:
+    #   - "8000:8000"
+    volumes:
+      - static_data:/app/backend/static
+    environment:
+      # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
+      - ALLOWED_HOSTS=$ALLOWED_HOSTS
+      - DB_HOST=$DB_HOST
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - DEBUG=0
+      - SECRET_KEY=$SECRET_KEY
+    env_file:
+      - .env
+    networks:
+      - default_network
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "check"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./vite-project
+      dockerfile: Dockerfile.prod
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - react_build:/app/frontend/dist
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  db:
+    image: postgres:13-alpine
+    restart: on-failure
+    # build:
+    #   context: ./db
+    #   dockerfile: Dockerfile
+
+    # ports:
+    #   - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASS
+    networks:
+      - default_network
+
+  redis:
+    image: "redis:latest"
+    restart: on-failure
+    # ports:
+    #   - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - default_network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: on-failure
+    volumes:
+      - static_data:/web
+      - react_build:/usr/share/nginx/html
+    ports:
+      - "8080:8080"
+    networks:
+      - default_network
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  redis_data:
+  static_data:
+  react_build:
+
+
+networks:
+  default_network:
+    driver: bridge
+
+
+# services:
+#   app:
+#     build:
+#       context: .
+#     volumes:
+#       - static_data:/web
+#     environment:
+#       - SECRET_KEY=valueforsecretkey
+#       - ALLOWED_HOSTS=127.0.0.1,localhost
+
+#   proxy:
+#     build:
+#       context: ./proxy
+#       dockerfile: Dockerfile
+#     volumes:
+#       - static_data:/web
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       - app
+
+# volumes:
+#   static_data:

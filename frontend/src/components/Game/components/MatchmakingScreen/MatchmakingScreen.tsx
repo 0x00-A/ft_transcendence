@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
 import { useGetData } from '@/api/apiHooks';
 

@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
 import {API_REGISTER_URL} from '@/api/apiConfig';
+import axios from 'axios';
 
 interface SignupFormData {
   username: string;
@@ -34,10 +35,15 @@ const schema = yup.object().shape({
     .required('password confirmation is required!'),
 });
 
-// const signupApi = async (data: SignupFormData) => {
-//   // try {
-//     const response = await apiClient.post(API_REGISTER_URL, data);
+// const signupApi = async (data: SignupFormData) : Promise<ApiResponse<SignupFormData> | undefined> => {
+//   try {
+//     const response = await apiClient.post<ApiResponse<SignupFormData>>(
+//       API_REGISTER_URL,
+//       data
+//     );
 //     return response.data
+//   } catch (error) {
+//   }
 // }
 
 const useSignup = () => {
@@ -49,18 +55,24 @@ const useSignup = () => {
     reset,
     watch,
     setError,
+    clearErrors,
   } = useForm<SignupFormData>({
     resolver: yupResolver(schema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (data: SignupFormData) => {return await apiClient.post(API_REGISTER_URL, data);},
+    mutationFn: async (data: SignupFormData) => await apiClient.post(API_REGISTER_URL, data),
     onError: (error) => {
-      if (error.response) {
-          console.error('Error message:', error.response.data);
+      console.log('Signup error ==> ', error);
+      if (axios.isAxiosError(error)) {
+          const errs = error?.response?.data;
+          errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
+          errs?.email && setError("email", {type: '', message: errs?.email}, {shouldFocus:true})
+          errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
+          errs?.error && setError("root", {type: '', message: errs?.error});
         } else {
-          console.error('Unexpected error:', error.message);
+          setError("root", {type: '', message: 'Something went wrong!'});
         }
     }
   });
@@ -72,6 +84,7 @@ const useSignup = () => {
     reset,
     watch,
     setError,
+    clearErrors,
   };
 };
 

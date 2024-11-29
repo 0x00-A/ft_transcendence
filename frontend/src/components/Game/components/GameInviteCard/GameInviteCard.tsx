@@ -3,7 +3,6 @@ import { Check, X, GamepadIcon } from 'lucide-react';
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
 } from '@/components/ui/card';

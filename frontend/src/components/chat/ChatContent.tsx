@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
@@ -31,35 +31,48 @@ const ChatContent: React.FC<ChatContentProps> = ({
     `chat/conversations/${onSelectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead } = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation } = useWebSocket();
 
+  useEffect(() => {
+    if (onSelectedConversation?.id) {
+      updateActiveConversation(onSelectedConversation.id);
+    }
+  }, [onSelectedConversation?.id]);
 
   useEffect(() => {
     if (onSelectedConversation?.id) {
       markAsRead(onSelectedConversation.id);
     }
-  }, [onSelectedConversation?.id, markAsRead]);
-  
-  useEffect(() => {
-    setChatMessages(() => [
-      ...(fetchedMessages || []),
-      ...websocketMessages,
-    ]);
-  }, [fetchedMessages, websocketMessages]);
+  }, [onSelectedConversation?.id]);
 
-  
+  useEffect(() => {
+    if (!websocketMessages || websocketMessages.length === 0) {
+      setChatMessages(fetchedMessages || []);
+      return;
+    }
+    const lastMessage = websocketMessages[websocketMessages.length - 1];
+    if (lastMessage?.conversation === onSelectedConversation?.id) {
+      setChatMessages(() => [
+        ...(fetchedMessages || []),
+        ...websocketMessages,
+      ]);
+    } else {
+      setChatMessages(fetchedMessages || []);
+    }
+  }, [fetchedMessages, websocketMessages, onSelectedConversation?.id]);
+
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
-        sendMessage(onSelectedConversation.user_id, message); 
+        sendMessage(onSelectedConversation.user_id, message);
       }
     },
     [sendMessage, onSelectedConversation.user_id]
   );
-  
+
     const handleTyping = useCallback(
       (isTyping: boolean) => {
-        sendTypingStatus(onSelectedConversation.user_id, isTyping); 
+        sendTypingStatus(onSelectedConversation.user_id, isTyping);
       },
       [sendTypingStatus, onSelectedConversation.user_id]
     );
@@ -75,10 +88,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
           <MessageArea
             messages={chatMessages}
             conversationData={onSelectedConversation}
-          />
-        )}
+            />
+          )}
       </div>
       <MessageInput
+        conversationData={onSelectedConversation}
         customSticker={customSticker}
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
@@ -88,4 +102,3 @@ const ChatContent: React.FC<ChatContentProps> = ({
 };
 
 export default ChatContent;
-

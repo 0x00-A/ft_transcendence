@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 const useContainerSize = (canvasRef: RefObject<HTMLCanvasElement>) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
