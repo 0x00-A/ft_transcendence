@@ -37,6 +37,7 @@ import OtpAuth from './pages/Auth/OtpAuth';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
 import UsersProfile from './pages/Profile/UsersProfile';
+import VerifyEmail from './pages/Auth/VerifyEmail';
 
 
 function App() {
@@ -73,7 +74,6 @@ function App() {
 
 function AppContent() {
 
-
   const showSidebarRoutes = [
   '/',
   '/test',
@@ -83,9 +83,10 @@ function AppContent() {
   '/search',
   '/store',
   '/leaderboard',
-  '/profile',
   '/auth/2factor',
+  '/profile',
   /^\/profile\/[^/]+\/?$/,
+  '/auth/verify_email',
   ];
   const location = useLocation();
   const shouldShowSidebar = showSidebarRoutes.some((route) => {
@@ -122,6 +123,7 @@ function AppContent() {
         <Routes>
             <Route path="/auth" element={<Auth />}/>
             <Route path="/oauth2/callback" element={<Oauth2Callback />} />
+            <Route path='/auth/verify_email/:token' element={<VerifyEmail/>} />
             <Route path='/auth/2factor' element={<OtpAuth/>} />
             <Route path="*" element={<PageNotFound />} />
             <Route element={<ProtectedRoute />}>

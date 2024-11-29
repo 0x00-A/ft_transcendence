@@ -1,11 +1,12 @@
 from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from ..models import User
 from ..serializers import UserLoginSerializer
+from ..serializers import SetPasswordSerializer
 import random
 from django.utils import timezone
 from datetime import timedelta
@@ -36,6 +37,19 @@ def send_otp_email(user):
 #         if user:
 
 #         pass
+class SetPasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if 'password' not in request.data:
+            return Response({'error': 'Password is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'password2' not in request.data:
+            return Response({'error': 'Password confirmation is required'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = SetPasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message': 'Password updated'}, status=status.HTTP_200_OK)
+
 
 class LoginVerifyOTPView(APIView):
     permission_classes = [AllowAny]
@@ -85,6 +99,9 @@ class LoginView(CreateAPIView):
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            print('apiBackend ==> login status: Invalid data', serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.is_valid(raise_exception=True)
         user = authenticate(
             username = serializer.validated_data['username'],
