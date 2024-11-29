@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, blank=False)
@@ -14,3 +15,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class EmailVerification(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 import { useTyping } from '@/contexts/TypingContext';

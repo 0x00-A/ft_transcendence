@@ -1,28 +1,8 @@
-// import css from './ConfirmationModal.module.css';
-
-// const ConfirmationModal = ({ message, onConfirm, onCancel }) => {
-//   return (
-//     <div className={css['modal-overlay']}>
-//       <div className={css['modal-content']}>
-//         <p>{message}</p>
-//         <div className={css['modal-buttons']}>
-//           <button className={css['confirm-button']} onClick={onConfirm}>
-//             Confirm
-//           </button>
-//           <button className={css['cancel-button']} onClick={onCancel}>
-//             Cancel
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ConfirmationModal;
-
 import styles from './ConfirmationModal.module.css';
 
-const ConfirmationModal = ({ message, onConfirm, onCancel, show }) => {
+const ConfirmationModal = ({ message, onConfirm, onCancel, show } :
+  { message: string, onConfirm: ()=>void, onCancel: ()=>void, show: boolean }
+) => {
   if (!show) return null;
 
   return (

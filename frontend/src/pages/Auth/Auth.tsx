@@ -11,7 +11,6 @@ import { Navigate } from 'react-router-dom';
 import css from './Auth.module.css';
 
 
-
 const Auth = () => {
     const [isLogin, setIslogin] = useState(true);
     const {isLoggedIn, isLoading} = useAuth();

@@ -55,7 +55,7 @@ const MessageList: React.FC<MessageListProps> = () => {
   });
 
   const {user} = useUser()
-  const menuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
   const messageListRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -70,12 +70,12 @@ const MessageList: React.FC<MessageListProps> = () => {
     isLoading: friendsLoading, 
     error: friendsError 
   } = useGetData<Friend[]>('friends');
-  
-  const { 
-    data: ConversationList, 
+
+  const {
+    data: ConversationList,
     refetch,
     isLoading: conversationsLoading,
-    error: conversationsError 
+    error: conversationsError
   } = useGetData<conversationProps[]>('chat/conversations');
   
   console.log(" >> << ConversationList: ", ConversationList)
@@ -113,15 +113,15 @@ const MessageList: React.FC<MessageListProps> = () => {
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
-    
+
     if (selectedFriend) {
       const matchedConversation = ConversationList?.find(
         conversation => conversation.name === selectedFriend.username
       );
-  
+
       if (matchedConversation) {
         handleConversationSelect(matchedConversation);
-        
+
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState((prevState) => ({
@@ -133,7 +133,7 @@ const MessageList: React.FC<MessageListProps> = () => {
         const friendToStart = friendsData?.find(
           friend => friend.username === selectedFriend.username
         );
-  
+
         if (friendToStart) {
           handleSearchItemClick(friendToStart);
         }
@@ -177,7 +177,7 @@ const MessageList: React.FC<MessageListProps> = () => {
   const handleDelete = async (id: Number) => {
     try {
       const response = await apiDeleteConversation(id);
-      
+
       toast.success(response.message);
       setMenuState((prevState) => ({
         ...prevState,
@@ -217,8 +217,8 @@ const MessageList: React.FC<MessageListProps> = () => {
       activeIndex: null,
     }));
   };
-  
-  
+
+
   const handleMarkAsRead = (id: number) => {
     if (ConversationList && menuState.activeIndex !== null) {
       markAsRead(id);
@@ -274,16 +274,16 @@ const MessageList: React.FC<MessageListProps> = () => {
     };
   }, []);
 
-  
-  
+
+
   useEffect(() => {
-    
+
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-    
-      const isOutsideSearch = searchContainerRef.current && !searchContainerRef.current.contains(target);
-      const isOutsideMainContainer = messageListRef.current && !messageListRef.current.contains(target);
-    
+
+      const isOutsideSearch = searchContainerRef.current && searchContainerRef?.current?.contains(target);
+      const isOutsideMainContainer = messageListRef.current && messageListRef?.current?.contains(target);
+
       if (isOutsideSearch && isOutsideMainContainer) {
         setIsSearchActive(false);
       }
@@ -293,13 +293,13 @@ const MessageList: React.FC<MessageListProps> = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  
-  
+
+
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
     setSelectedConversation(conversation);
   }, [setSelectedConversation]);
 
-  
+
   const handleConversationClick = useCallback((conversation: conversationProps) => {
     handleConversationSelect(conversation);
     setIsSearchActive(false);
@@ -315,7 +315,7 @@ const MessageList: React.FC<MessageListProps> = () => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
       console.log("newConversation: ", newConversation);
-      
+
       if (newConversation && newConversation.id) {
         await refetch();
         handleConversationSelect(newConversation);
@@ -360,16 +360,16 @@ const MessageList: React.FC<MessageListProps> = () => {
           <div className={css.statusMessage}>
             <div className={css.spinner}></div>
             <span >
-              {friendsLoading 
-                ? "Loading friends..." 
+              {friendsLoading
+                ? "Loading friends..."
                 : "Loading conversations..."}
             </span>
           </div>
         ) : friendsError || conversationsError ? (
           <div className={css.statusMessage}>
             <span className={css.error}>
-              {friendsError 
-                ? "Failed to load friends. " 
+              {friendsError
+                ? "Failed to load friends. "
                 : "Failed to load conversations. "}
               Please try again.
             </span>
@@ -415,7 +415,7 @@ const MessageList: React.FC<MessageListProps> = () => {
               left: `${menuState.position.left}px`,
             }}
           >
-            <div 
+            <div
               className={css.menuItem}
               onClick={() => handleMarkAsRead(ConversationList[menuState.activeIndex!].id)}>
               <FaCheck /> <span>Mark as read</span>
@@ -442,7 +442,7 @@ const MessageList: React.FC<MessageListProps> = () => {
             <div className={css.menuItem}>
               <FaArchive /> <span>Archive chat</span>
             </div>
-            <div 
+            <div
               className={css.menuItem}
               onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
               >

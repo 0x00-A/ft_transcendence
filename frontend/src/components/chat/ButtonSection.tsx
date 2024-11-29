@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import css from './ButtonSection.module.css';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
-import { toast } from 'react-toastify';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';

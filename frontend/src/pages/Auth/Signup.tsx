@@ -19,11 +19,9 @@ import Oauth2 from '@/components/Auth/Oauth2';
 
 
 
+const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-
-const Signup = ({setIslogin}) => {
-
-  const { register, handleSubmit, errors, mutation, reset, setError} = useSignup();
+  const { register, handleSubmit, errors, mutation, reset} = useSignup();
   const loadingBarRef = useLoadingBar();
   const [showPassword, setShowPassword] = useState({
         password: false,
@@ -32,31 +30,17 @@ const Signup = ({setIslogin}) => {
 
    useEffect(() => {
      if (mutation.isSuccess) {
-        toast.success(mutation.data.message);
+        toast.success(mutation?.data?.data?.message);
         reset();
         setIslogin(true);
-        // setTimeout(() => {
-        //   onSetAuthStat(null);
-        // }, 5000);
      }
    }, [mutation.isSuccess, setIslogin]);
 
-   useEffect(() => {
-     if (mutation.isError) {
-        const err = mutation.error?.response.data as SignupFormData;
-        console.log(err?.username);
-        err?.username && setError("username", {type: '', message: err?.username}, {shouldFocus:true})
-        err?.email && setError("email", {type: '', message: err?.email}, {shouldFocus:true})
-        err?.password && setError("password", {type: '', message: err?.password}, {shouldFocus:true})
-     }
-   }, [mutation.isError, mutation.error])
-
     useEffect(() => {
-    return () => {
-      loadingBarRef.current?.complete();
-    }
+      return () => {
+        loadingBarRef.current?.complete();
+      }
   }, [mutation.isError])
-
 
    const handleSignup = (data: SignupFormData, event: any) => {
       event.preventDefault();
@@ -64,24 +48,16 @@ const Signup = ({setIslogin}) => {
       mutation.mutate(data);
    };
 
-   const togglePasswordVisibility = (field) => {
+   const togglePasswordVisibility = (field: string) => {
         setShowPassword((prevState) => ({
           ...prevState,
           [field]: !prevState[field],
         }));
     };
 
-  //  <div><input type={ showPassword.confirm_pass ? "text" : "password"} className={css.input} {...register('confirm_password')}/>
-  //   {showPassword.confirm_pass ?
-  //     <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_password")}/> :
-  //     <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_password")}/>
-  //   }</div>
-
   return (
       <div className={css.loginContainer}>
-        <div className={css.authFormHeader}>
-            <h1>Welcome back</h1>
-        </div>
+        <h1 className={css.authTitle}>Welcome back</h1>
         <form noValidate={true} className={css.entryArea} onSubmit={ handleSubmit(handleSignup) }>
           <div className={css.inputContainer}>
             <FaRegUser className={css.inputIcon}/>

@@ -18,7 +18,7 @@ interface ChangePasswordForm {
   confirm_password: string;
 }
 
-const EditSecurityProfile = ({setEditProfile}) => {
+const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
     const { register, handleSubmit, errors, mutation } = useChangePass();
     const [qrcode, setQrcode] = useState(null);
@@ -64,8 +64,8 @@ const EditSecurityProfile = ({setEditProfile}) => {
             refetch();
         }
         catch (error) {
-            console.log(error.response.data);
-            toast.error(error.response.data.error);
+            console.log(error?.response?.data);
+            toast.error(error?.response.data.error);
         }
     }
 
@@ -116,8 +116,8 @@ const EditSecurityProfile = ({setEditProfile}) => {
                     <label htmlFor="" className={css.label}>Current Password</label>
                     <div><input type={ showPassword.current_pass ? "text" : "password"} className={css.input} {...register('current_password')}/>
                     {showPassword.current_pass ?
-                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_password")}/> :
-                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_password")}/>
+                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/> :
+                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/>
                     }</div>
                     {errors.current_password && <span className={css.fieldError}>{errors.current_password.message}</span>}
                 </div>
@@ -125,8 +125,8 @@ const EditSecurityProfile = ({setEditProfile}) => {
                     <label htmlFor="" className={css.label}>New Password</label>
                     <div><input type={ showPassword.new_pass ? "text" : "password"} className={css.input} {...register('new_password')}/>
                     {showPassword.new_pass ?
-                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_password")}/> :
-                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_password")}/>
+                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/> :
+                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/>
                     }</div>
                     {errors.new_password && <span className={css.fieldError}>{errors.new_password.message}</span>}
                 </div>
@@ -134,8 +134,8 @@ const EditSecurityProfile = ({setEditProfile}) => {
                     <label htmlFor="" className={css.label}>Confirm New Password</label>
                     <div><input type={ showPassword.confirm_pass ? "text" : "password"} className={css.input} {...register('confirm_password')}/>
                     {showPassword.confirm_pass ?
-                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_password")}/> :
-                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_password")}/>
+                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
+                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/>
                     }</div>
                     {errors.confirm_password && <span className={css.fieldError}>{errors.confirm_password.message}</span>}
                 </div>
@@ -168,7 +168,7 @@ const EditSecurityProfile = ({setEditProfile}) => {
                         <div className={css.containerFiled}>
                             <label htmlFor="" className={css.label}>Confirm your Password</label>
                             <div><input type={ showPassword.pass2fa ? "text" : "password"} className={css.input} onChange={(e) => setConfirPass2fa(e.target.value)} />
-                                {showPassword.pass2fa ?
+                                { showPassword.pass2fa ?
                                   <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("pass2fa")}/> :
                                   <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("pass2fa")}/>
                                 }

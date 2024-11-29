@@ -13,6 +13,7 @@ import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
 import { toast } from 'react-toastify';
+// Components
 import OtpAuth from './OtpAuth';
 import Oauth2 from '../../components/Auth/Oauth2';
 
@@ -34,15 +35,14 @@ const Login = () => {
 
   useEffect(() => {
     if (mutation.isSuccess) {
-      if (mutation.data.data.status && mutation.data.data.status === '2FA_REQUIRED') {
+      if (mutation.data?.data?.status && mutation.data?.data.status === '2FA_REQUIRED') {
         console.log(mutation.data.data);
         reset();
         setOtpRequired(true);
         return ;
       }
-      toast.success(mutation.data.data.message);
+      toast.success(mutation.data?.data?.message);
       reset();
-      console.log('apiClient ==> Login response: ', mutation.data.data.message);
       setIsLoggedIn(true);
       navigate('/');
     }
@@ -50,13 +50,12 @@ const Login = () => {
 
   useEffect(() => {
     if (errors.root) {
-      toast.error(errors.root.message);
+      toast.error(errors.root?.message?.at(0)??'something went wrong!');
     }
     return () => {
       loadingBarRef.current?.complete();
     }
   }, [mutation.isError])
-
 
   const handleLogin = (data: LoginFormData) => {
     loadingBarRef.current?.continuousStart();

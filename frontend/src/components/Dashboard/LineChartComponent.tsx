@@ -1,6 +1,5 @@
-import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Trophy, Target, Clock } from 'lucide-react';
+import { Target, Clock } from 'lucide-react';
 import css from './LineChartComponent.module.css';
 import { useUser } from '@/contexts/UserContext';
 import { Stats } from '@/types/apiTypes';

@@ -3,16 +3,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
   background-color: var(--color-game-screen-bg);
   height: calc(100vh - 116px - 64px);
   border-radius: 10px;
-  min-height: 800px;
+  min-height: 640px;
   box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.6),
     0 2px 5px rgba(0, 0, 0, 0.4) inset;
   padding: 30px;
   position: relative;
+
 }
 
 .gameArea {

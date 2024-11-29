@@ -4,13 +4,11 @@ import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
-import apiClient from "../../api/apiClient";
+import apiClient from "@/api/apiClient";
 import { API_LOGIN_URL } from '@/api/apiConfig';
+import { LoginData } from '@/types/apiTypes';
+import axios from 'axios';
 
-interface LoginData {
-  username: string;
-  password: string;
-}
 
 const schema = yup.object().shape({
   username: yup
@@ -25,7 +23,13 @@ const schema = yup.object().shape({
 });
 
 // const loginUser = async (user: LoginData) => {
-//   return apiClient.post(API_LOGIN_URL, user);
+//   try {
+//     return await apiClient.post(API_LOGIN_URL, user);
+//   }
+//   catch (error) {
+//     return error;
+//   }
+//   // return await apiClient.post(API_LOGIN_URL, user);
 // };
 
 const useLogin = () => {
@@ -41,12 +45,17 @@ const useLogin = () => {
     mode: 'onChange'
   });
   const mutation = useMutation({
-    mutationFn: async (data: LoginData) =>  {return await apiClient.post(API_LOGIN_URL, data)},
+    mutationFn: async (user: LoginData) => await apiClient.post(API_LOGIN_URL, user),
     onError(error) {
-      const errs = error?.response.data as LoginData;
-      errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
-      errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-      error?.response.data?.message && setError("root", {type: '', message: error.response.data.error});
+      console.log('Login error ==> ', error);
+      if (axios.isAxiosError(error)) {
+        const errs = error?.response?.data;
+        errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
+        errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
+        errs?.error && setError("root", {type: '', message: errs?.error});
+      } else {
+        setError("root", {type: '', message: 'Something went wrong!'});
+      }
     },
     // onSuccess(data) {
     //   if (data.data.status && data.data.status === '2FA_REQUIRED') {
