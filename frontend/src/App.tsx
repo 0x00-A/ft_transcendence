@@ -36,6 +36,8 @@ import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext'
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
 import UsersProfile from './pages/Profile/UsersProfile';
+import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
+
 import VerifyEmail from './pages/Auth/VerifyEmail';
 
 
@@ -47,6 +49,7 @@ function App() {
           <UserProvider>
             <GameInviteProvider>
               <WebSocketProvider>
+                <SelectedConversationProvider>
                 <ConnectionStatus />
                 <ToastContainer
                   position="top-center"
@@ -62,6 +65,7 @@ function App() {
                   toastClassName='toastStyle'
                   />
                 <AppContent />
+                </SelectedConversationProvider>
               </WebSocketProvider>
             </ GameInviteProvider>
           </UserProvider>

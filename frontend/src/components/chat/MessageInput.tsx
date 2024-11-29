@@ -4,6 +4,9 @@ import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
+import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useUser } from '@/contexts/UserContext';
+
 
 interface MessageInputProps {
   customSticker: string;
@@ -28,7 +31,11 @@ const MessageInput = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
+  const {user} = useUser()
+  const { toggleBlockStatus } = useWebSocket();
 
+  console.log("--------render MessageInput-------")
+  
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     setShowEmojiPicker(false);
@@ -90,14 +97,22 @@ const MessageInput = ({
     }
   };
 
+  const handleBlock = async (activeConversation: conversationProps) => {
+    if (user?.id !== undefined) {
+      toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
+    }
+  };
+
   if (conversationData?.block_status) {
     return (
       <div className={css.messageBlock}>
-        {conversationData?.block_status == "Blocker" ?  <h2> I blocked {conversationData.name}</h2> : <h2> you are blocked</h2>}
-        
+        <h2>{conversationData?.block_status_display}</h2>
         <p>You can't send messages to this user, and you won't receive their messages.</p>
-        {conversationData?.block_status == "Blocker" && (
-          <button className={css.buttonUnblock} onClick={() => onSendMessage("unblock")}>
+        {conversationData?.block_status == "blocker" && (
+          <button
+            className={css.buttonUnblock}
+            onClick={() => handleBlock(conversationData)}
+            >
             Unblock
           </button>
         )}

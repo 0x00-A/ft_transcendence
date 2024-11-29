@@ -58,14 +58,12 @@ class CreateConversationView(APIView):
                 other_last_seen = conversation.user2.last_seen
                 other_status = conversation.user2.profile.is_online
                 unread_count = conversation.unread_messages_user1
-                other_blocked = conversation.user2.profile.blocked_user_name
             else:
                 other_user_id = conversation.user1.id
                 other_user_username = conversation.user1.username
                 other_user_avatar = f"http://localhost:8000/media/{conversation.user1.profile.avatar}"
                 other_last_seen = conversation.user1.last_seen
                 other_status = conversation.user1.profile.is_online
-                other_blocked = conversation.user1.profile.blocked_user_name
                 unread_count = conversation.unread_messages_user2
             
             updated_at = datetime.fromisoformat(conversation.updated_at.isoformat().replace('Z', '+00:00'))
@@ -82,7 +80,6 @@ class CreateConversationView(APIView):
                 'time': format_time(updated_at),
                 'unreadCount': unread_count or '',
                 'status': other_status,
-                'blocked': other_blocked,
             }
 
             return Response(conversation_data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
@@ -126,7 +123,15 @@ class GetConversationsView(APIView):
                     unread_count = conversation['unread_messages_user2']
                     block_status = conversation['user2_block_status']
 
-                updated_at = datetime.fromisoformat(conversation['updated_at'].replace('Z', '+00:00'))
+                if block_status == "blocker":
+                    block_status_display = "You have blocked this user"
+                elif block_status == "blocked":
+                    block_status_display = "You are blocked by this user"
+                else:
+                    block_status_display = None
+
+                updated_at_str = conversation['updated_at']
+                updated_at = datetime.fromisoformat(updated_at_str)
                 last_message = conversation['last_message']
                 truncated_message = last_message[:10] + "..." if len(last_message) > 10 else last_message
 
@@ -141,6 +146,7 @@ class GetConversationsView(APIView):
                     'unreadCount': unread_count or '',
                     'status': other_status,
                     'block_status': block_status,
+                    'block_status_display': block_status_display,
                 }
                 conversations_data.append(conversation_data)
             
