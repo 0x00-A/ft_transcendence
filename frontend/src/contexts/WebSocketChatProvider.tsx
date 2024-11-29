@@ -12,6 +12,13 @@ interface MessageProps {
   seen: boolean;
 }
 
+interface BlockStatusUpdate {
+  conversationId: number;
+  blockerId: number;
+  blockedId: number;
+  blockStatus: string;
+}
+
 interface WebSocketContextType {
   sendMessage: (receiverId: number, message: string) => void;
   sendTypingStatus: (receiverId: number, typing: boolean) => void;
@@ -28,6 +35,7 @@ interface WebSocketContextType {
     conversationId: number;
   } | null;
   toggleBlockStatus: (conversation_id: number, blocker_id: number, blocked_id: number, status: boolean) => void;
+  blockStatusUpdate: BlockStatusUpdate | null;
 }
 
 
@@ -57,6 +65,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     status: string;
     conversationId: number;
   } | null>(null);
+  const [blockStatusUpdate, setBlockStatusUpdate] = useState<BlockStatusUpdate | null>(null); 
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
 
@@ -95,6 +104,15 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         setTyping({ typing: data.typing, senderId: data.sender_id });
       } else if (data.type === 'mark_as_read') {
         setMarkAsReadData({ status: data.status, conversationId: data.conversation_id, });
+      } else if (data.type === 'block_status_update') {
+        const blockStatusData: BlockStatusUpdate = {
+          conversationId: data.conversation_id,
+          blockerId: data.blocker_id,
+          blockedId: data.blocked_id,
+          blockStatus: data.block_status,
+        };
+        console.log('>>>>>>>>>>>>>>>>>Sending toggle block status:', blockStatusData);
+        setBlockStatusUpdate(blockStatusData); 
       }
     };
 
@@ -165,12 +183,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
 
   const toggleBlockStatus = (conversationId: number, blockerId: number, blockedId: number, status: boolean) => {
     const socket = socketRef.current;
-    console.log('Sending toggle block status:', {
-      conversationId,
-      blockerId,
-      blockedId,
-      status,
-    });
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
@@ -184,7 +196,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
   return (
-    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage, markAsReadData, toggleBlockStatus }}>
+    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage, markAsReadData, toggleBlockStatus, blockStatusUpdate }}>
       {children}
     </WebSocketContext.Provider>
   );

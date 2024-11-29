@@ -14,8 +14,8 @@ class ConversationSerializer(serializers.ModelSerializer):
     user2_avatar = serializers.SerializerMethodField()
     user1_is_online = serializers.BooleanField(source='user1.profile.is_online', read_only=True)
     user2_is_online = serializers.BooleanField(source='user2.profile.is_online', read_only=True)
-    user1_block_status = serializers.BooleanField(read_only=True)
-    user2_block_status = serializers.BooleanField(read_only=True)
+    user1_block_status = serializers.CharField(read_only=True)
+    user2_block_status = serializers.CharField(read_only=True)
 
     class Meta:
         model = Conversation
