@@ -121,8 +121,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_id = data.get("receiver_id") 
         sender_id = self.user.id
 
-        # if not receiver_id or not message:
-        #     raise ValueError("Missing receiver or message")
         if not receiver_id or not message:
             return
 
