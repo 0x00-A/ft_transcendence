@@ -59,8 +59,8 @@
   color: #f8f3e3;
 }
 
-.navButton img,
-.addFriendButton img {
+.navButton .icon,
+.addFriendButton .icon {
   margin-right: 20px;
   width: 30px;
   height: 30px;
@@ -80,8 +80,8 @@
   padding: 10px 0;
 }
 
-.collapsed .navButton img,
-.collapsed .addFriendButton img {
+.collapsed .navButton .icon,
+.collapsed .addFriendButton .icon {
   margin-right: 0;
 }
 

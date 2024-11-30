@@ -5,16 +5,6 @@ import SearchResultItem from './SearchResultItem';
 import { useLocation } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { HiArrowLeft } from 'react-icons/hi';
-import {
-  FaCheck,
-  FaBell,
-  FaUser,
-  FaBan,
-  FaArchive,
-  FaTrash,
-  FaThumbtack,
-  FaTimes,
-} from 'react-icons/fa';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
@@ -23,6 +13,7 @@ import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
+import { CircleX, CheckCheck, User, Ban, Trash2 } from 'lucide-react';
 
 
 
@@ -417,40 +408,30 @@ const MessageList: React.FC<MessageListProps> = () => {
             <div
               className={css.menuItem}
               onClick={() => handleMarkAsRead(ConversationList[menuState.activeIndex!].id)}>
-              <FaCheck /> <span>Mark as read</span>
+              <CheckCheck /> <span>Mark as read</span>
             </div>
             <div className={css.menuItem} onClick={handleClose}>
-              <FaTimes /> <span>Close Chat</span>
-            </div>
-            <div className={css.menuItem}>
-              <FaBell /> <span>Mute notifications</span>
+              <CircleX /> <span>Close Chat</span>
             </div>
             <div
               className={css.menuItem}
               onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
             >
-              <FaUser /> <span>View Profile</span>
+              <User /> <span>View Profile</span>
             </div>
             <hr />
             <div
               className={css.menuItem}
               onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
-              <FaBan /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
-            </div>
-            <div className={css.menuItem}>
-              <FaArchive /> <span>Archive chat</span>
+              <Ban /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
             </div>
             <div
               className={css.menuItem}
               onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
               >
-              <FaTrash />
+              <Trash2 />
               <span>Delete chat</span>
-            </div>
-            <div className={css.menuItem}>
-              <FaThumbtack />
-              <span>Pin chat</span>
             </div>
           </div>
         )}

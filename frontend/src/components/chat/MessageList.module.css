@@ -18,6 +18,9 @@
 }
 
 .menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   position: absolute;
   background-color: var(--main-surface-primary);
   color: var(--text-color);
