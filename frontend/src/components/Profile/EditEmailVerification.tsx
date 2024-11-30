@@ -17,7 +17,7 @@ const EditEmailVerification = () => {
                     navigate('/profile');
                 }
                 try {
-                    const response = await apiClient.put(, { token });
+                    const response = await apiClient.put('', { token });
                     toast.success(response.data.message);
                     navigate('/auth');
                 } catch (error) {

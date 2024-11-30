@@ -45,7 +45,8 @@ services:
     #   - "3000:3000"
     volumes:
       - react_build:/app/dist
-
+    networks:
+      - default_network
     depends_on:
       - backend
         #condition: service_healthy
