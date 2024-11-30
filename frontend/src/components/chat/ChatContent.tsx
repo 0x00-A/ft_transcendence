@@ -53,6 +53,10 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
     }
     const lastMessage = websocketMessages[websocketMessages.length - 1];
     if (lastMessage?.conversation === selectedConversation?.id) {
+      console.log("+++++++++++++++++++++++++++++++")
+      console.log("websocketMessages: ", websocketMessages)
+      console.log("fetchedMessages: ", fetchedMessages)
+      console.log("+++++++++++++++++++++++++++++++")
       setChatMessages(() => [
         ...(fetchedMessages || []),
         ...websocketMessages,
