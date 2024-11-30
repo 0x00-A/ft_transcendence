@@ -229,3 +229,24 @@
 .closeBtn {
     border: 1px solid #AA2926;
 }
+
+.emailInput {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.editEmailBtn {
+    position: absolute;
+    left: calc(100% - 8rem);
+    padding: 4px;
+    border: 1px solid #F8C25C;
+    border-radius: 8px;
+    color: #D1D3D4;
+    cursor: pointer;
+}
+
+.editEmailBtn:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}

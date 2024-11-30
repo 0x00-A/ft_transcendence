@@ -185,6 +185,69 @@ class EditProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+from django.core.mail import send_mail
+from django.conf import settings
+from ..models.user import EmailVerification
+
+def send_verification_email(user, email):
+    token = EmailVerification.objects.create(user=user, new_email=email)
+    verification_link = f'http://localhost:3000/profile/{token.token}/'
+    send_mail(
+        'Verify your email',
+        f'Click on the link to verify your email: {verification_link}',
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+        fail_silently=False,
+    )
+
+class ChangeEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        if 'email' not in request.data:
+            return Response(
+                {'error': 'Please provide email'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            User.objects.get(email=request.data['email'])
+            return Response(
+                {'error': 'Email is already taken'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except User.DoesNotExist:
+            pass
+        send_verification_email(user, request.data['email'])
+        print('api ==> change email: Email sent successfully')
+        return Response({'message': 'Verification link was sent to your email successfully'}, status=status.HTTP_200_OK)
+
+
+from uuid import UUID
+
+class ChangeEmailVerificationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        if 'token' not in request.data:
+            return Response(
+                {'error': 'Token is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            UUID(request.data.get('token'), version=4)
+        except ValueError:
+            return Response({'error': 'Invalid token!'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            verify = EmailVerification.objects.get(token=request.data.get('token'))
+        except EmailVerification.DoesNotExist:
+            return Response({'error': 'Invalid token, your email is not verified!'}, status=status.HTTP_400_BAD_REQUEST)
+        user = verify.user
+        user.email = verify.new_email
+        user.save()
+        verify.delete()
+        return Response({'message': 'Your email has been verified successfully'}, status=status.HTTP_200_OK)
+
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
 

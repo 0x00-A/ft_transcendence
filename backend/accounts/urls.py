@@ -42,6 +42,8 @@ from .views import Disable2FAView
 from .views import LoginVerifyOTPView
 from .views import verify_email
 from .views import SetPasswordView
+from .views import ChangeEmailView
+from .views import ChangeEmailVerificationView
 
 router = DefaultRouter()
 router.register(r'notifications', NotificationViewSet, basename='notification')
@@ -65,6 +67,7 @@ urlpatterns = [
     path('security/verify_otp/', VerifyOTPView.as_view()),
     path('security/disable_2fa/', Disable2FAView.as_view()),
 
+
     path('auth/new_username/', oauth2_set_username),
     # path('oauth2/discord/authorize/', discord_authorize),
 
@@ -81,6 +84,8 @@ urlpatterns = [
      path('profile/', ProfileApiView.as_view(), name='profile'),
      path('profile/<str:username>/', UserProfileView.as_view(), name='user-profile'),
      path('edit/informations/', EditProfileView.as_view()),
+     path('edit/change_email/', ChangeEmailView.as_view()),
+     path('edit/change_email/verify/', ChangeEmailVerificationView.as_view()),
      path('security/change_password/', ChangePasswordView.as_view()),
      path('friends/<str:username>/', UserFriendsView.as_view(), name='specific-user-friends'),
     path('friends/', UserFriendsView.as_view(), name='current-user-friends'),

@@ -5,7 +5,7 @@ import uuid
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, blank=False)
     is_oauth_user = models.BooleanField(default=False)
-    is_password_set = models.BooleanField(default=False)
+    is_password_set = models.BooleanField(default=True)
     friends = models.ManyToManyField('self', blank=True, symmetrical=True)
     is2fa_active = models.BooleanField(default=False)
     otp_secret = models.CharField(max_length=32, blank=True, null=True)
@@ -22,6 +22,7 @@ class EmailVerification(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    new_email = models.EmailField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.user.username

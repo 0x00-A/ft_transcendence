@@ -9,6 +9,8 @@ import useEditProfile from '@/hooks/profile/useEditInfosProfile'
 import { useUser } from '@/contexts/UserContext';
 // Types
 import { EditProfileFormData } from '@/types/apiTypes';
+import apiClient from '@/api/apiClient';
+import axios from 'axios';
 
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
@@ -16,9 +18,11 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     const { register, handleSubmit, mutation, reset, errors, watch, setValue}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string>('null');
+    const [isVerifyEmail, setVerifyEmail] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const { user: profileData, refetch } = useUser();
-    const formValues = watch(['username', 'first_name', 'last_name', 'avatar', 'email']);
+    const formValues = watch(['username', 'first_name', 'last_name', 'avatar']);
+    const emailValue = watch('email');
 
     const handleEditProfile = (data: EditProfileFormData) => {
         const formData = new FormData();
@@ -67,6 +71,21 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         }
    }), [mutation.isError];
 
+   const handleVerifyEmail = async () => {
+        try {
+            const response = await apiClient.post('edit/verify_email', { email: emailValue });
+            toast.success(response.data.message);
+            setEditProfile(false);
+        }
+        catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error?.response?.data?.error);
+            } else {
+                toast.error('An error occurred. Please try again later');
+            }
+        }
+   }
+
     return (
         <form className={css.editInfosForm} onSubmit={ handleSubmit(handleEditProfile) } encType="multipart/form-data">
             <h1 className={css.title}>Edit your Information</h1>
@@ -101,29 +120,53 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                 </div>
                 <div className={css.containerFiled}>
                     <label htmlFor="" className={css.label}>Email</label>
-                    <input required={false} type="text" className={css.input}
-                      placeholder={profileData?.email ? profileData?.email : 'Enter new email'} {...register('email')}/>
-                      {errors.email && <span className={css.fieldError}>{errors.email.message}</span>}
+                    <div className={css.emailInput}>
+                        <input required={false} type="email" className={css.input}
+                        placeholder={profileData?.email ? profileData?.email : 'Enter new email'} {...register('email')}/>
+                        <button className={css.editEmailBtn} disabled={!emailValue} onClick={handleVerifyEmail}>
+                            Verify
+                        </button>
+                    </div>
+                      { errors.email && <span className={css.fieldError}>{errors.email.message}</span> }
                 </div>
                 <div className={css.saveContainer}>
                     {errors.root && <span className={css.fieldError}>{errors.root.message}</span>}
                     <button type='button' className={css.saveBtn} onClick={handleSaveBtn}>Save</button>
                 </div>
-                <div className={`${isConfirmSave ? css.bluredBgConfirm : ''}`}>
-                    { isConfirmSave && <div className={css.saveConfirmContainer}>
-                        <h1>Confirm Your Account</h1>
-                        <p>Please enter your password to save the changes. Thank you for your time all this just to protect you !</p>
+                <div className={`${isVerifyEmail ? css.bluredBgConfirm : ''}`}>
+                    { isVerifyEmail && <div className={css.saveConfirmContainer}>
+                        <h1>Confirm Your Email</h1>
+                        <p>we've sent a verification code to your new email. please enter the code.</p>
                         <div className={css.containerFiled}>
                             <label htmlFor="">Confirm Your Password</label>
                             <input required={true} type="password" className={css.input}
-                              placeholder={profileData?.email ? profileData?.email : 'Enter your password'} {...register('password')}/>
+                              placeholder='Enter your 6-digit-code' />
+                              {errors.otp && <span className={css.fieldError}>{errors.otp.message}</span>}
+                        </div>
+                        <div className={css.ConfirmButtons}>
+                          <button className={css.closeBtn} onClick={() => setVerifyEmail(false)}>Cancel</button>
+                          <button type='submit' className={css.confirmBtn}>Verify</button>
+                        </div>
+                        <div className={css.resendOtp}>
+                            <p>Didn't receive the code?</p> <span className={css.resendLink}>Resend code</span>
+                        </div>
+                    </div> }
+                </div>
+                <div className={`${isConfirmSave ? css.bluredBgConfirm : ''}`}>
+                    { isConfirmSave && <div className={css.saveConfirmContainer}>
+                        <h1>Confirm Your Password</h1>
+                        <p>Please enter your password to save the changes. Thank you for your time all this just to protect you !</p>
+                        <div className={css.containerFiled}>
+                            <label htmlFor="">Enter the otp</label>
+                            <input required={true} type="text" className={css.input}
+                              placeholder='Enter your password' {...register('password')}/>
                               {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
                         </div>
                         <div className={css.ConfirmButtons}>
                           <button className={css.closeBtn} onClick={() => setConfirmSave(false)}>Close</button>
                           <button type='submit' className={css.confirmBtn}>Confirm</button>
                         </div>
-                    </div>}
+                    </div> }
                 </div>
             </div>
         </form>
