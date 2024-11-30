@@ -15,10 +15,10 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
 
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('otp: ', otp);
+    // console.log('otp: ', otp);
     try {
         const response = await apiClient.post('/login/verify_otp/', {otp: otp, username: username});
-        console.log(response.data);
+        // console.log(response.data);
         toast.success(response.data.message);
         setOtpRequired(false);
         setIsLoggedIn(true);

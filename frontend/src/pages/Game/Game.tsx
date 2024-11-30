@@ -59,7 +59,7 @@ const Game = () => {
 
   // if (!isLoggedIn)
   //   return;
-  console.log('Game component rerendered');
+  // console.log('Game component rerendered');
 
   const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
 
@@ -103,13 +103,13 @@ const Game = () => {
       ws.current = socket;
 
       socket.onopen = () => {
-        console.log('Matchmaker Socket connected');
+        // console.log('Matchmaker Socket connected');
       };
 
       socket.onmessage = (e) => {
         refetchData();
         const data = JSON.parse(e.data);
-        console.log(data);
+        // console.log(data);
 
         if (data.event === 'error') {
           toast.error(data.message);
@@ -148,13 +148,13 @@ const Game = () => {
         }
       };
       socket.onclose = () => {
-        console.log('Matchmaker Socket disconnected');
+        // console.log('Matchmaker Socket disconnected');
       };
     }, 500);
 
     return () => {
       if (ws.current) {
-        console.log('Closing matchmaker websocket ....');
+        // console.log('Closing matchmaker websocket ....');
         sendMessage({
           event: 'remove_from_queue',
         });
@@ -184,21 +184,21 @@ const Game = () => {
 
   const sendMessage = (message: Record<string, any>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
-      console.log(`sending message: ${message}`);
+      // console.log(`sending message: ${message}`);
 
       ws.current.send(JSON.stringify(message));
     }
   };
 
   const requestRemoteGame = () => {
-    console.log('request remote game');
+    // console.log('request remote game');
     sendMessage({
         event: 'request_remote_game',
     })
   };
 
   const requestMultipleGame = () => {
-    console.log('request multi game');
+    // console.log('request multi game');
     sendMessage({
         event: 'request_multiple_game',
     })
@@ -206,7 +206,7 @@ const Game = () => {
 
   const requestTournament = () => {
     setIsModalOpen(true);
-    console.log('request tournament');
+    // console.log('request tournament');
   };
 
   const handleJoin = (tournamentId: number) => {

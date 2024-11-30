@@ -10,10 +10,12 @@ from ..models import User
 from ..views.login import get_token_for_user
 from ..views.oauth2_utils import exchange_code, get_oauth2_user
 from urllib.parse import quote
+from app.settings import SERVER_URL
 
-REDIRECT_URI = "http://localhost:8000/api/oauth2/discord/"
+REDIRECT_URI = f"{SERVER_URL}/api/oauth2/discord/"
 
 CALLBACK_URI = ''
+
 
 def discord_authorize(request):
     if request.method == 'GET':
@@ -31,9 +33,9 @@ def oauth2_discord(request):
     if code is None:
         return redirect(discord_authorize)
     token = exchange_code(code, {'redirect_uri': REDIRECT_URI,
-                                              'token_url': settings.DISCORD_TOKEN_URL,
-                                              'client_id': settings.DISCORD_CLIENT_ID,
-                                              'client_secret': settings.DISCORD_CLIENT_SECRET})
+                                 'token_url': settings.DISCORD_TOKEN_URL,
+                                 'client_id': settings.DISCORD_CLIENT_ID,
+                                 'client_secret': settings.DISCORD_CLIENT_SECRET})
     if token is None:
         return redirect(f"{request.session['callback_uri']}?status=failed&error={quote('Failed to get the token from discord!')}")
         # return Response(data={"error": "Failed to get the token from discord!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -49,13 +51,13 @@ def oauth2_discord(request):
         if User.objects.filter(username=discord_user['username']).exists():
             request.session['user_data'] = {
                 'email': discord_user['email'],
-                'avatar_link' : f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png"
-                }
+                'avatar_link': f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png"
+            }
             return redirect(f"{request.session['callback_uri']}?status=set_username&message={quote('your discord username already taken, Please choose a new one!')}")
-        serializer = Oauth2UserSerializer(data = {
+        serializer = Oauth2UserSerializer(data={
             'username': discord_user['username'],
-            'email' : discord_user['email'],
-            'avatar_link' : f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png",
+            'email': discord_user['email'],
+            'avatar_link': f"https://cdn.discordapp.com/avatars/{discord_user['id']}/{discord_user['avatar']}.png",
         })
         if not serializer.is_valid():
             return redirect(f"{request.session['callback_uri']}?status=failed&error={quote('A data in your discord user not compatible with our criteria!')}")
@@ -66,17 +68,17 @@ def oauth2_discord(request):
     token = get_token_for_user(check_user)
     response = redirect(f"{request.session['callback_uri']}?status=success")
     response.set_cookie(
-        key = 'access_token',
-        value = token['access'],
-        httponly = True,
-        secure = True,
-        samesite = 'Strict'
+        key='access_token',
+        value=token['access'],
+        httponly=True,
+        secure=True,
+        samesite='Strict'
     )
     response.set_cookie(
-        key = 'refresh_token',
-        value = token['refresh'],
-        httponly = True,
-        secure = True,
-        samesite = 'Strict'
+        key='refresh_token',
+        value=token['refresh'],
+        httponly=True,
+        secure=True,
+        samesite='Strict'
     )
     return response

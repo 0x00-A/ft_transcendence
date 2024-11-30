@@ -21,7 +21,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   const navigate = useNavigate();
 
 
-  console.log("onSelectedConversation: ", selectedConversation?.status);
+  // console.log("onSelectedConversation: ", selectedConversation?.status);
 
 const renderUserStatus = () => {
     if (!selectedConversation) return null;

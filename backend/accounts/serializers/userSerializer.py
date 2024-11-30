@@ -12,11 +12,12 @@ from django.core.files.base import ContentFile
 from ..serializers import ProfileSerializer
 from django.core.mail import send_mail
 from django.conf import settings
+from app.settings import SERVER_URL
 
 
 def send_verification_email(user):
     token = EmailVerification.objects.create(user=user)
-    verification_link = f'http://localhost:3000/auth/verify_email/{token.token}/'
+    verification_link = f'{SERVER_URL}/auth/verify_email/{token.token}/'
     send_mail(
         'Verify your email',
         f'Click on the link to verify your email: {verification_link}',

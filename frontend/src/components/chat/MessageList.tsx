@@ -64,11 +64,11 @@ const MessageList: React.FC<MessageListProps> = () => {
   const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocket();
 
 
-  
-  const { 
-    data: friendsData, 
-    isLoading: friendsLoading, 
-    error: friendsError 
+
+  const {
+    data: friendsData,
+    isLoading: friendsLoading,
+    error: friendsError
   } = useGetData<Friend[]>('friends');
 
   const {
@@ -77,8 +77,8 @@ const MessageList: React.FC<MessageListProps> = () => {
     isLoading: conversationsLoading,
     error: conversationsError
   } = useGetData<conversationProps[]>('chat/conversations');
-  
-  console.log(" >> << ConversationList: ", ConversationList)
+
+  // console.log(" >> << ConversationList: ", ConversationList)
   useEffect(() => {
     if (blockStatusUpdate) {
       const selectedConversationId = blockStatusUpdate.conversationId;
@@ -90,7 +90,7 @@ const MessageList: React.FC<MessageListProps> = () => {
         }
     }
   }, [blockStatusUpdate, ConversationList]);
-  
+
   useEffect(() => {
     if (markAsReadData?.status) {
       refetch();
@@ -274,16 +274,14 @@ const MessageList: React.FC<MessageListProps> = () => {
     };
   }, []);
 
-
-
   useEffect(() => {
-
+    
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-
-      const isOutsideSearch = searchContainerRef.current && searchContainerRef?.current?.contains(target);
-      const isOutsideMainContainer = messageListRef.current && messageListRef?.current?.contains(target);
-
+    
+      const isOutsideSearch = searchContainerRef.current && !searchContainerRef.current.contains(target);
+      const isOutsideMainContainer = messageListRef.current && !messageListRef.current.contains(target);
+    
       if (isOutsideSearch && isOutsideMainContainer) {
         setIsSearchActive(false);
       }
@@ -293,6 +291,7 @@ const MessageList: React.FC<MessageListProps> = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
 
 
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
@@ -314,7 +313,7 @@ const MessageList: React.FC<MessageListProps> = () => {
   const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
-      console.log("newConversation: ", newConversation);
+      // console.log("newConversation: ", newConversation);
 
       if (newConversation && newConversation.id) {
         await refetch();

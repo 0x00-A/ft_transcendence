@@ -22,7 +22,7 @@ const LeaveTournamentButton = ({
 
   const handleLeaveTournament = () => {
     // Add your tournament leaving logic here
-    console.log('Left tournament');
+    // console.log('Left tournament');
     onLeaveTournament();
   };
 

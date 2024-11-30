@@ -31,21 +31,21 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation} = useWebSocket();
 
 
-  console.log("-------render ChatContent--------------")
-  console.log("onSelectedConversation: ", selectedConversation)
-  
+  // console.log("-------render ChatContent--------------")
+  // console.log("onSelectedConversation: ", selectedConversation)
+
   useEffect(() => {
     if (selectedConversation?.id) {
       updateActiveConversation(selectedConversation.id);
     }
   }, [selectedConversation?.id]);
-  
+
   useEffect(() => {
     if (selectedConversation?.id && selectedConversation.unreadCount) {
       markAsRead(selectedConversation.id);
     }
   }, [selectedConversation?.id]);
-  
+
   useEffect(() => {
     if (!websocketMessages || websocketMessages.length === 0) {
       setChatMessages(fetchedMessages || []);
@@ -53,6 +53,10 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
     }
     const lastMessage = websocketMessages[websocketMessages.length - 1];
     if (lastMessage?.conversation === selectedConversation?.id) {
+      console.log("+++++++++++++++++++++++++++++++")
+      console.log("websocketMessages: ", websocketMessages)
+      console.log("fetchedMessages: ", fetchedMessages)
+      console.log("+++++++++++++++++++++++++++++++")
       setChatMessages(() => [
         ...(fetchedMessages || []),
         ...websocketMessages,
@@ -65,7 +69,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
-        sendMessage(selectedConversation!.user_id, message); 
+        sendMessage(selectedConversation!.user_id, message);
       }
     },
     [sendMessage, selectedConversation!.user_id]
@@ -73,7 +77,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
 
     const handleTyping = useCallback(
       (isTyping: boolean) => {
-        sendTypingStatus(selectedConversation!.user_id, isTyping); 
+        sendTypingStatus(selectedConversation!.user_id, isTyping);
       },
       [sendTypingStatus, selectedConversation!.user_id]
     );

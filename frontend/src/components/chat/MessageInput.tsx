@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
@@ -6,7 +6,6 @@ import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useUser } from '@/contexts/UserContext';
-
 
 interface MessageInputProps {
   customSticker: string;
@@ -20,22 +19,28 @@ const MessageInput = ({
   customSticker,
   onSendMessage,
   onTyping,
-  
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
-  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
-  const {user} = useUser()
+  const { user } = useUser();
   const { toggleBlockStatus } = useWebSocket();
 
-  console.log("--------render MessageInput-------")
-  
+<<<<<<< HEAD
+  console.log('--------render MessageInput-------');
+=======
+  // console.log("--------render MessageInput-------")
+>>>>>>> main
+
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     setShowEmojiPicker(false);
@@ -48,7 +53,7 @@ const MessageInput = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage(); 
+      handleSendMessage();
     }
   };
 
@@ -70,31 +75,38 @@ const MessageInput = ({
     };
   }, []);
 
+  const debounce = (callback: (...args: any[]) => void, delay: number) => {
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    return (...args: any[]) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    };
+  };
+
+  const debouncedOnTyping = useCallback(debounce(onTyping, 1000), [onTyping]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
     setInputFocused(true);
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
-
-    const newTimeout = setTimeout(() => {
-      onTyping(false);
-    }, 4000);
-
-    setTypingTimeout(newTimeout);
-    onTyping(true);
-
 
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
+
+    debouncedOnTyping(true);
   };
 
   const handleInputBlur = () => {
     if (!message.trim()) {
       setInputFocused(false);
     }
+    onTyping(false);
   };
 
   const handleBlock = async (activeConversation: conversationProps) => {
@@ -108,11 +120,11 @@ const MessageInput = ({
       <div className={css.messageBlock}>
         <h2>{conversationData?.block_status_display}</h2>
         <p>You can't send messages to this user, and you won't receive their messages.</p>
-        {conversationData?.block_status == "blocker" && (
+        {conversationData?.block_status === 'blocker' && (
           <button
             className={css.buttonUnblock}
             onClick={() => handleBlock(conversationData)}
-            >
+          >
             Unblock
           </button>
         )}
@@ -120,18 +132,16 @@ const MessageInput = ({
     );
   }
 
-
   const handleSendMessage = () => {
     if (message.trim()) {
       onSendMessage(message);
-    }
-    else if (customSticker) {
+    } else if (customSticker) {
       onSendMessage(customSticker);
     }
     setMessage('');
     setIsFlying(true);
     setInputFocused(false);
-    onTyping(false);
+    onTyping(false); // Stop typing on send
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current?.focus();
@@ -172,7 +182,8 @@ const MessageInput = ({
           className={css.buttonClip}
           aria-label="Attach file"
         >
-          <FaPaperclip size={22} />
+          <img className={css.invite} src="/icons/chat/inviteBlack.svg" alt="invite" />
+          {/* <FaPaperclip size={22} /> */}
         </button>
       </div>
 
@@ -183,7 +194,6 @@ const MessageInput = ({
         } ${!message.trim() && !customSticker ? css.disabled : ''}`}
         disabled={!message.trim() && !customSticker}
         aria-label="Send message"
-        
       >
         {inputFocused || message.trim() ? (
           <FaPaperPlane size={22} />
