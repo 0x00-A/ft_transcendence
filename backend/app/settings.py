@@ -77,7 +77,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 if DEBUG:
-    SERVER_URL = f"http://{os.environ.get('HOSTNAME')}:{os.environ.get('PORT')}"
+    SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
 else:
     SERVER_URL = os.environ.get('SERVER_URL')
 
