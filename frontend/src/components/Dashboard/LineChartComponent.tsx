@@ -6,7 +6,7 @@ import { Stats } from '@/types/apiTypes';
 
 const LineChartComponent = () => {
   const {user} = useUser()
-  console.log(user);
+  // console.log(user);
 
   // const performanceData = [
   //   { day: 'Mon', duration: 2.5 },

@@ -162,7 +162,7 @@ const RemoteTournament = ({
     }
   }, [])
 
-  console.log(tournamentStat);
+  // console.log(tournamentStat);
 
   const playerReady = (match_id: number) => {
   sendMessage({ event: 'player_ready',

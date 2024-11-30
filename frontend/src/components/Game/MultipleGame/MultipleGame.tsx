@@ -193,7 +193,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       };
 
       gameSocket.onclose = () => {
-        console.log('Game WebSocket Disconnected');
+        // console.log('Game WebSocket Disconnected');
         // setGameState('ended');
         // setCurrentScreen('end');
       };
@@ -201,7 +201,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
     return () => {
       if (ws.current) {
-        console.log('Closing game websocket ....');
+        // console.log('Closing game websocket ....');
         ws.current.close();
       }
       clearTimeout(timeout);

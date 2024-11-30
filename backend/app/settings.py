@@ -72,10 +72,14 @@ GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
-SERVER_URL = os.environ.get('SERVER_URL', 'http://localhost:8000')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+
+if DEBUG:
+    SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
+else:
+    SERVER_URL = os.environ.get('SERVER_URL')
 
 # ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 # ALLOWED_HOST S = []
@@ -284,9 +288,9 @@ CHANNEL_LAYERS = {
     },
 }
 # Allow specific origins
-CORS_ALLOWED_ORIGINS = [
-    'http://0.0.0.0:3000',
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://0.0.0.0:3000',
+# ]
 
 CORS_ALLOW_METHODS = [
     'GET',
@@ -304,7 +308,14 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
+                        'https://wwww.ft-pong.me',
+                        'https://127.0.0.1',
+                        'https://localhost',
+                        # 'wss://yourdomain.com'
+                        ]

@@ -57,7 +57,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch notifications from the API
   const fetchNotifications = async () => {
     try {
-      const { data } = await apiClient.get("notifications/");
+      const { data } = await apiClient.get("/notifications/");
       setNotifications(data);
       setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
     } catch (error) {
@@ -68,7 +68,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   // Mark a notification as read
   const markAsRead = async (notificationId: number) => {
     try {
-      await apiClient.patch(`notifications/${notificationId}/mark-read/`);
+      await apiClient.patch(`/notifications/${notificationId}/mark-read/`);
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
       );
@@ -81,7 +81,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      await apiClient.patch("notifications/mark-all-read/");
+      await apiClient.patch("/notifications/mark-all-read/");
       setNotifications((prev) =>
         prev.map((n) => ({ ...n, is_read: true }))
       );
@@ -93,7 +93,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const deleteAllNotifications = async () => {
     try {
-      await apiClient.delete('notifications/delete-all/');
+      await apiClient.delete('/notifications/delete-all/');
       setNotifications([]);
       setUnreadCount(0);
     } catch (error) {
@@ -124,7 +124,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleAcceptInvite = (from: string) => {
-    console.log(`Accepted invite from ${from}`);
+    // console.log(`Accepted invite from ${from}`);
     sendMessage({
       event: 'invite_accept',
       from: from,
@@ -133,7 +133,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleRejectInvite = (from: string) => {
-    console.log(`Rejected invite from ${from}`);
+    // console.log(`Rejected invite from ${from}`);
     sendMessage({
       event: 'invite_reject',
       from: from,
@@ -147,12 +147,12 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
 
       ws.current.onopen = () => {
-        console.log('Notification WebSocket connected');
+        // console.log('Notification WebSocket connected');
       };
 
       ws.current.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data);
+        // console.log(data);
 
         if (
           data.event === 'friend_request' ||
@@ -183,7 +183,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       };
 
       ws.current.onclose = () => {
-        console.log('Notification WebSocket disconnected');
+        // console.log('Notification WebSocket disconnected');
         // Reconnect logic
       };
 
