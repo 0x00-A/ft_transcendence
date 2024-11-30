@@ -176,7 +176,7 @@ const MessageInput = ({
           className={css.buttonClip}
           aria-label="Attach file"
         >
-          <Dice2 />
+          <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
         </button>
       </div>
 

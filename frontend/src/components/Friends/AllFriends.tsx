@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
-import { FaSearch } from 'react-icons/fa';
+import { MessageSquareText, UserPlus, Ban, Search } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import NoFound from './NoFound';
 import { apiBlockRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
-
-
+import FriendSkeleton from './friendSkeleton';
 
 interface FriendProfile {
   avatar: string;
@@ -33,8 +32,6 @@ const AllFriends: React.FC = () => {
       )
     : [];
 
-  // console.log("friendsData: ", friendsData);
-
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
@@ -52,9 +49,9 @@ const AllFriends: React.FC = () => {
   return (
     <div className={css.allFriends}>
       <h1 className={css.title}>All Friends</h1>
-
+      
       <div className={css.searchContainer}>
-        <FaSearch className={css.searchIcon} />
+        <Search className={css.searchIcon} />
         <input
           type="text"
           className={css.searchInput}
@@ -63,11 +60,10 @@ const AllFriends: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
-
+      
       <div className={css.friendList}>
-        {isLoading ? (
-          <Loading />
+        {true ? (
+          <FriendSkeleton/>
         ) : error ? (
           <p>Error loading friends</p>
         ) : filteredFriends.length > 0 ? (
@@ -88,21 +84,27 @@ const AllFriends: React.FC = () => {
               </div>
               <div className={css.actions}>
                 <button
-                  className={css.actionButton}
+                  className={`${css.actionButton} ${css.messageButton}`}
                   onClick={() => handleMessageClick(friend)}
+                  title="Message"
                 >
-                  Message
+                  <MessageSquareText size={20} />
                 </button>
-                <button className={css.actionButton}>Invite</button>
-                <button className={css.actionButton}>View Profile</button>
                 <button
-                  className={css.actionButton}
-                  onClick={() => blockRequest(friend.username)}
+                  className={`${css.actionButton} ${css.inviteButton}`}
+                  title="Invite"
                 >
-                  Block</button>
+                  <UserPlus size={20} />
+                </button>
+                <button
+                  className={`${css.actionButton} ${css.blockButton}`}
+                  onClick={() => blockRequest(friend.username)}
+                  title="Block"
+                >
+                  <Ban size={20} />
+                </button>
               </div>
             </div>
-
           ))
         ) : (
           <NoFound />
