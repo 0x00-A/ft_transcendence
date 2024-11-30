@@ -47,8 +47,8 @@ services:
       - react_build:/app/dist
 
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+        #condition: service_healthy
 
   db:
     image: postgres:13-alpine
@@ -93,8 +93,8 @@ services:
     networks:
       - default_network
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+        #condition: service_healthy
 
 volumes:
   db-data:
