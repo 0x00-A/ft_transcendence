@@ -178,6 +178,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           conversation_id: conversationId,
         })
       );
+      setMessages([]);
     }
   };
 
