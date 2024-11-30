@@ -11,7 +11,6 @@ from uuid import UUID
 from app.settings import SERVER_URL
 
 
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def verify_email(request):

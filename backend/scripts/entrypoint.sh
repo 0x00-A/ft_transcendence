@@ -8,8 +8,8 @@ python manage.py collectstatic --noinput
 python manage.py makemigrations
 python manage.py migrate
 python manage.py create_badges
-# python manage.py load_initial_data
-# python manage.py createsuperuser_auto
+python manage.py load_initial_data
+python manage.py createsuperuser_auto
 python manage.py create_achievements
 # python manage.py runserver 0.0.0.0:8000
 #uwsgi --socket :8000 --master --enable-threads --module app.wsgi

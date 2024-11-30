@@ -72,10 +72,14 @@ GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
-SERVER_URL = os.environ.get('SERVER_URL', 'http://localhost:8000')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+
+if DEBUG:
+    SERVER_URL = f"http://{os.environ.get('HOSTNAME')}:{os.environ.get('PORT')}"
+else:
+    SERVER_URL = os.environ.get('SERVER_URL')
 
 # ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 # ALLOWED_HOST S = []

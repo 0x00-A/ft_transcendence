@@ -1,8 +1,8 @@
-// import { SERVER_PORT } from "../config/constants";
+import { SERVER_PORT } from "@/config/constants";
 
 export const getApiUrl = (endpoint: string) => {
-    // const baseUrl = window.location.origin;
-    const baseUrl = `${window.location.protocol}//${window.location.hostname}`;
-    // return `${baseUrl}:${SERVER_PORT}/api/${endpoint}`;
-    return `${baseUrl}/api${endpoint}`;
+    const protocol = window.location.protocol;
+    const host = window.location.hostname;
+    const port = window.location.port ? `:${SERVER_PORT}` : '';
+    return `${protocol}//${host}${port}/api${endpoint}`;
 };
