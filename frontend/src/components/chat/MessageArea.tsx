@@ -14,8 +14,6 @@ interface MessageProps {
   seen?: boolean;
 }
 
-
-
 interface MessageAreaProps {
   messages: MessageProps[];
 }
@@ -27,7 +25,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages}) => {
 
   const isReceiver = typing.senderId == selectedConversation?.user_id;
 
-  console.log("typing: ", typing);
+  // console.log("typing: ", typing);
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });

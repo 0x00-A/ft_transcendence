@@ -42,7 +42,8 @@ export default function Sidebar() {
       loadingBarRef.current?.complete();
       setIsLoggedIn(false);
       const response = await apiClient.post(API_LOGOUT_URL);
-      console.log('apiClient ==> Logout response: ', response.data.message);
+      // console.log('apiClient ==> Logout response: ', response.data.message);
+      response;
       setShowConfirm(false);
       navigate('/auth');
     })();

@@ -47,7 +47,7 @@ const useLogin = () => {
   const mutation = useMutation({
     mutationFn: async (user: LoginData) => await apiClient.post(API_LOGIN_URL, user),
     onError(error) {
-      console.log('Login error ==> ', error);
+      // console.log('Login error ==> ', error);
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})

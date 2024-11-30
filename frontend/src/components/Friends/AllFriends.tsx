@@ -33,7 +33,7 @@ const AllFriends: React.FC = () => {
       )
     : [];
 
-  console.log("friendsData: ", friendsData);
+  // console.log("friendsData: ", friendsData);
 
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });

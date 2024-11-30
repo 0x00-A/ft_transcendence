@@ -8,11 +8,13 @@ from rest_framework.permissions import AllowAny
 from ..serializers import Oauth2UserSerializer
 from ..models import User
 from ..views.login import get_token_for_user
-from ..views.oauth2_utils import exchange_code,get_oauth2_user
+from ..views.oauth2_utils import exchange_code, get_oauth2_user
 from urllib.parse import quote
+from app.settings import SERVER_URL
 
 
-REDIRECT_URI = "http://localhost:8000/api/oauth2/google/"
+
+REDIRECT_URI = f"{SERVER_URL}/api/oauth2/google/"
 
 
 def google_authorize(request):
@@ -44,24 +46,26 @@ def oauth2_google(request):
     if google_user is None:
         return redirect(f"{request.session['callback_uri']}?status=400&error={quote('Failed to get user google resources!')}")
         # return Response(data={"error": "Failed to get user google resources!"}, status=status.HTTP_400_BAD_REQUEST)
-    try :
+    try:
         check_user = User.objects.get(email=google_user['email'])
     except User.DoesNotExist:
         check_user = None
     if check_user is None:
         google_username = f"{google_user['given_name']}".replace(" ", "_")
         if User.objects.filter(username=google_username).exists():
-            request.session['user_data'] = {'email': google_user['email'],'avatar_link' : google_user['picture']}
-            return redirect(f"{request.session['callback_uri']}?status=set_username&message={quote('your google username already taken, Please choose a new one!')}")            # return Response(data={ 'message': "The provider's username already taken, Please choose a new one!",
-        serializer = Oauth2UserSerializer(data = {
-            'username' : google_username,
-            'email' : google_user['email'],
-            'avatar_link' : google_user['picture'],
+            request.session['user_data'] = {
+                'email': google_user['email'], 'avatar_link': google_user['picture']}
+            # return Response(data={ 'message': "The provider's username already taken, Please choose a new one!",
+            return redirect(f"{request.session['callback_uri']}?status=set_username&message={quote('your google username already taken, Please choose a new one!')}")
+        serializer = Oauth2UserSerializer(data={
+            'username': google_username,
+            'email': google_user['email'],
+            'avatar_link': google_user['picture'],
         })
         if not serializer.is_valid():
             return redirect(f"{request.session['callback_uri']}?status=failed&error={quote('A data in your google user not compatible with our criteria!')}")
         serializer.save()
-        check_user = authenticate(email = serializer.validated_data['email'])
+        check_user = authenticate(email=serializer.validated_data['email'])
         if check_user is None:
             return redirect(f"{request.session['callback_uri']}?status=failed&error={quote('Authenticate the user failed')}")
     token = get_token_for_user(check_user)
@@ -69,17 +73,17 @@ def oauth2_google(request):
         return redirect(f"{request.session['callback_uri']}?status=failed&error={quote('Getting tokens for user failed')}")
     response = redirect(f"{request.session['callback_uri']}?status=success")
     response.set_cookie(
-        key = 'access_token',
-        value = token['access'],
-        httponly = True,
-        secure = True,
-        samesite = 'Strict'
+        key='access_token',
+        value=token['access'],
+        httponly=True,
+        secure=True,
+        samesite='Strict'
     )
     response.set_cookie(
-        key = 'refresh_token',
-        value = token['refresh'],
-        httponly = True,
-        secure = True,
-        samesite = 'Strict'
+        key='refresh_token',
+        value=token['refresh'],
+        httponly=True,
+        secure=True,
+        samesite='Strict'
     )
     return response

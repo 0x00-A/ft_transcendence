@@ -36,7 +36,7 @@ const BlockedList: React.FC = () => {
       const message = await apiUnBlockRequest(username);
       toast.success(message)
       refetch();
-      console.log(message);
+      // console.log(message);
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept friend request')
     }
@@ -52,16 +52,16 @@ const BlockedList: React.FC = () => {
 
   const renderNoBlockedUsers = () => (
     <div className={css.emptyState}>
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        width="80" 
-        height="80" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="1.5" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="80"
+        height="80"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         className={css.emptyIcon}
       >
         <circle cx="12" cy="12" r="10" />
@@ -98,10 +98,10 @@ const BlockedList: React.FC = () => {
 
       <div className={css.list}>
       {isLoading ? (
-          <Loading /> 
+          <Loading />
         ) : error ? (
           <p>Error loading friends</p>
-        ) : 
+        ) :
         filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
             <div key={user.blocked.id} className={css.userCard}>

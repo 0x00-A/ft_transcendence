@@ -9,6 +9,10 @@
   position: relative;
 }
 
+.invite {
+  width: 22px;
+  height: 22px;
+}
 .messageBlock {
   color: var(--text-color);
   background-color: var(--selected-color);

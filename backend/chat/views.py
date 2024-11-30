@@ -8,6 +8,7 @@ from .serializers import ConversationSerializer, MessageSerializer
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from datetime import datetime, timezone
+from app.settings import SERVER_URL, MEDIA_URL
 
 User = get_user_model()
 
@@ -42,7 +43,7 @@ class CreateConversationView(APIView):
 
         if not user2_id:
             return Response({"error": "user2_id is required."}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
 
             user2 = User.objects.get(id=user2_id)
@@ -54,22 +55,22 @@ class CreateConversationView(APIView):
             if user1.id == conversation.user1.id:
                 other_user_id = conversation.user2.id
                 other_user_username = conversation.user2.username
-                other_user_avatar = f"http://localhost:8000/media/{conversation.user2.profile.avatar}"
+                other_user_avatar = f"{SERVER_URL}{MEDIA_URL}{conversation.user2.profile.avatar}"
                 other_last_seen = conversation.user2.last_seen
                 other_status = conversation.user2.profile.is_online
                 unread_count = conversation.unread_messages_user1
             else:
                 other_user_id = conversation.user1.id
                 other_user_username = conversation.user1.username
-                other_user_avatar = f"http://localhost:8000/media/{conversation.user1.profile.avatar}"
+                other_user_avatar = f"{SERVER_URL}{MEDIA_URL}{conversation.user1.profile.avatar}"
                 other_last_seen = conversation.user1.last_seen
                 other_status = conversation.user1.profile.is_online
                 unread_count = conversation.unread_messages_user2
-            
+
             updated_at = datetime.fromisoformat(conversation.updated_at.isoformat().replace('Z', '+00:00'))
             last_message = conversation.last_message or "Send"
             truncated_message = f"{last_message[:10]}..." if len(last_message) > 10 else last_message
-            
+
             conversation_data = {
                 'id': conversation.id,
                 'last_seen': other_last_seen,
@@ -83,28 +84,28 @@ class CreateConversationView(APIView):
             }
 
             return Response(conversation_data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
-        
+
         except User.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class GetConversationsView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request):
         try:
             user = request.user
             conversations = Conversation.objects.filter(
                 Q(user1=user) | Q(user2=user)
             ).select_related('user1', 'user2').order_by('-updated_at')
-            
+
             serializer = ConversationSerializer(conversations, context={'request': request}, many=True)
             conversations_data = []
-            
+
             for conversation in serializer.data:
                 if not conversation.get('user1_id') or not conversation.get('user2_id'):
                     continue
-                
+
                 if user.id == conversation['user1_id']:
                     other_user_id = conversation['user2_id']
                     other_user_username = conversation['user2_username']
@@ -149,9 +150,9 @@ class GetConversationsView(APIView):
                     'block_status_display': block_status_display,
                 }
                 conversations_data.append(conversation_data)
-            
+
             return Response(conversations_data, status=status.HTTP_200_OK)
-        
+
         except Exception as e:
             return Response(
                 {'error': 'Internal server error', 'details': str(e)},

@@ -13,7 +13,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({
   onClick,
 }) => {
 
-  console.log(">>>>>>>>>>>>search friends>>>>>>");
+  // console.log(">>>>>>>>>>>>search friends>>>>>>");
   return (
     <div className={css.searchResultItem} onClick={onClick}>
       <img src={avatar} alt={name} className={css.avatar} />

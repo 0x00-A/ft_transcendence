@@ -8,8 +8,10 @@ from ..models import User
 from ..views.login import get_token_for_user
 from ..views.oauth2_utils import exchange_code, get_oauth2_user
 from urllib.parse import quote
+from app.settings import SERVER_URL
 
-REDIRECT_URI = "http://localhost:8000/api/oauth2/intra/"
+
+REDIRECT_URI = f"{SERVER_URL}/api/oauth2/intra/"
 
 def intra_authorize(request):
     if request.method == 'GET':

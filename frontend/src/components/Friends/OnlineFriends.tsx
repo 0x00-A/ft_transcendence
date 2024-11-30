@@ -17,7 +17,7 @@ interface Friend {
 
 const OnlineFriends: React.FC = () => {
   const navigate = useNavigate();
-  const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('friends/online');
+  const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('online-friends');
 
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
