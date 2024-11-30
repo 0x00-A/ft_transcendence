@@ -40,6 +40,9 @@ from .profile import UserProfileView
 from .profile import Enable2FAView
 from .profile import VerifyOTPView
 from .profile import Disable2FAView
+from .profile import ChangeEmailView
+from .profile import ChangeEmailVerificationView
+
 
 from .BlockRelationship import BlockUserView
 from .BlockRelationship import BlockedUsersView

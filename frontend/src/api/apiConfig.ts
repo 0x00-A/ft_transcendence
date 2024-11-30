@@ -32,3 +32,7 @@ export const API_EDIT_PROFILE_URL = "/edit/informations/";
 export const API_CHANGE_PASSWORD_URL = "/security/change_password/";
 
 export const API_SET_PASSWORD = "/security/set_password/";
+
+export const API_CHANGE_EMAIL_URL = "/edit/change_email/"
+
+export const API_CHANGE_EMAIL_VERIFICATION_URL = "/edit/change_email/verify/";
