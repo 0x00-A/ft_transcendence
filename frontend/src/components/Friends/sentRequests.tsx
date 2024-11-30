@@ -6,6 +6,7 @@ import Loading from './Loading';
 import NoSentRequests from './NoSentRequests';
 import { apiCancelFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
+import { X } from 'lucide-react';
 
 interface Profile {
   id: number;
@@ -66,8 +67,9 @@ const SentRequests: React.FC = () => {
               <button
                 className={css.cancelButton}
                 onClick={() => handleCancel(request.receiver.username)}
+                title="Cancel"
               >
-                Cancel
+                <X size={20}/>
               </button>
             </div>
           ))}

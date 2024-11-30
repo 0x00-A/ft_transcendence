@@ -6,6 +6,7 @@ import Loading from './Loading';
 import NoFriendRequests from './NoFriendRequests';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
+import { Check, X } from 'lucide-react';
 
 
 interface Profile {
@@ -90,11 +91,17 @@ const FriendRequests: React.FC = () => {
                   <button
                     className={css.acceptButton}
                     onClick={() => acceptFriendRequest(request.sender.username)}
-                  >
-                    Accept
+                    title='Accept'
+                    >
+                    <Check size={20} />
+
                   </button>
-                  <button onClick={() => rejectFriendRequest(request.sender.username)} className={css.rejectBtn}>
-                    Reject
+                  <button
+                    onClick={() => rejectFriendRequest(request.sender.username)}
+                    className={css.rejectBtn}
+                    title='Reject'
+                    >
+                    <X size={20} />
                   </button>
                 </div>
 

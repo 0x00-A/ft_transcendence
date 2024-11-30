@@ -4,7 +4,7 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
-import { User, Dice2 } from 'lucide-react';
+import { User } from 'lucide-react';
 // import { useNavigate } from 'react-router-dom';
 
 // import { FaUserCircle, FaSearch, FaUserPlus } from 'react-icons/fa';
@@ -52,10 +52,10 @@ const CooldownButton = ({
 
   return (
     <button disabled={isDisabled} className={`relative ${className}`}>
-      < Dice2
+      <img
         onClick={handleClick}
         className={`${isDisabled ? css.iconDisabled : css.icon}`}
-        color="#F8F3E3"
+        src="/icons/chat/Invite.svg" alt="Invite"
       />
       <p className="cursor-text">Invite</p>
       {isDisabled && (

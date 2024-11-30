@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import css from './BlockedList.module.css';
-import { FaSearch } from 'react-icons/fa';
+import { Search, Unlock, Ban } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import moment from 'moment';
 import { apiUnBlockRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
+
 
 
 interface BlockedUser {
@@ -52,22 +53,7 @@ const BlockedList: React.FC = () => {
 
   const renderNoBlockedUsers = () => (
     <div className={css.emptyState}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="80"
-        height="80"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={css.emptyIcon}
-      >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
-      </svg>
+      <Ban size={80} color='#6b7280'/>
       <h3 className={css.emptyTitle}>No Blocked Users</h3>
       <p className={css.emptyDescription}>
         You haven't blocked any users. Users you block will appear here.
@@ -85,7 +71,7 @@ const BlockedList: React.FC = () => {
 
       {/* Search input */}
       <div className={css.searchContainer}>
-        <FaSearch className={css.searchIcon} />
+        <Search className={css.searchIcon} />
 
         <input
           type="text"
@@ -117,13 +103,13 @@ const BlockedList: React.FC = () => {
               <button
                 className={css.unblockButton}
                 onClick={() => unBlockRequest(user.blocked.username)}
+                title='UnBlock'
               >
-                Unblock
+                <Unlock size={20}/>
               </button>
             </div>
           ))
         ) : (
-          // <p>No blocked users found</p>
           renderNoBlockedUsers()
         )}
       </div>

@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import NoOnlineFriends from './NoOnlineFriends';
+import { MessageSquareText } from 'lucide-react';
+
 
 interface Friend {
   id: number;
@@ -44,14 +46,14 @@ const OnlineFriends: React.FC = () => {
                 <span className={css.online}>Online</span>
               </div>
               <div className={css.actions}>
-                <button
-                  className={css.actionButton}
+              <button
+                  className={`${css.actionButton} ${css.messageButton}`}
                   onClick={() => handleMessageClick(friend)}
+                  title="Message"
                 >
-                  Message
+                  <MessageSquareText size={20} />
                 </button>
                 <button className={css.actionButton}>Invite</button>
-                <button className={css.actionButton}>View Profile</button>
               </div>
             </div>
           ))

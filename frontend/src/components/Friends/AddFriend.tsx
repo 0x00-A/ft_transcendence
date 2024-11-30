@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { FaSearch } from 'react-icons/fa';
 import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
 import Loading from './Loading';
 import { toast } from 'react-toastify';
 import { apiAcceptFriendRequest, apiCancelFriendRequest, apiRejectFriendRequest, apiSendFriendRequest } from '../../api/friendApi';
 import { useNavigate } from 'react-router-dom';
+import { 
+  UserPlus,
+  X,       
+  Check,   
+  Users,
+  Clock,    
+  Eye,
+  Search     
+} from 'lucide-react';
+
 
 interface Profile {
   user: number;
@@ -107,7 +116,7 @@ const AddFriend: React.FC = () => {
     <div className={css.addFriend}>
       <h1 className={css.title}>Search & Add Friends</h1>
       <div className={css.searchContainer}>
-        <FaSearch className={css.searchIcon} />
+        <Search className={css.searchIcon} />
         <input
           type="text"
           placeholder="Find your friend"
@@ -132,13 +141,36 @@ const AddFriend: React.FC = () => {
                   </div>
                   <div className={css.actions}>
                     {status === "Friends" ? (
-                      <span className={css.friendsBtn}>Friends</span>
+                      <span
+                        className={css.friendsBtn}
+                        title='Friend'
+                        >
+                          <Users size={20}/>
+                        </span>
                     ) : status === "Pending" ? (
-                      <span className={css.pendingBtn}>Pending</span>
+                      <span
+                      className={css.pendingBtn}
+                      title='Pending'
+                      >
+                        <Clock size={20}/>
+                      </span>
                     ) : (
-                      <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>Add Friend</button>
+                      <button
+                        onClick={() => sendFriendRequest(user.username)}
+                        className={css.addFriendBtn}
+                        title="Add Friend"
+
+                        >
+                          <UserPlus size={20}/>
+                        </button>
                     )}
-                    <button className={css.viewProfileBtn} onClick={() => navigate(`/profile/${user.username}`)}>View Profile</button>
+                    <button
+                      className={css.viewProfileBtn} 
+                      onClick={() => navigate(`/profile/${user.username}`)}
+                      title='View Profile'
+                      >
+                        <Eye size={20}/>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -165,26 +197,53 @@ const AddFriend: React.FC = () => {
                   <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
                 </div>
                 <div className={css.actions}>
-                  <button className={css.viewProfileBtn} onClick={() => navigate(`/profile/${user.username}`)}>View Profile</button>
+                  <button
+                    className={css.viewProfileBtn}
+                    onClick={() => navigate(`/profile/${user.username}`)}
+                    title='View Profile'
+                    >
+                     <Eye size={20}/>
+                    </button>
 
                   {user.friend_request_status === "accepted" ? (
-                    <span className={css.friendsStatus}>Friends</span>
+                    <span 
+                    className={css.friendsStatus}
+                    title='Friend'
+                    >
+                      <Users size={20}/>
+                    </span>
                   ) : user.friend_request_status === "pending" ? (
                     <>
-                      <button onClick={() => acceptFriendRequest(user.username)} className={css.acceptBtn}>
-                        Accept
+                      <button
+                        onClick={() => acceptFriendRequest(user.username)}
+                        className={css.acceptBtn}
+                        title='Accept'
+                      >
+                        <Check size={20} />
                       </button>
-                      <button onClick={() => rejectFriendRequest(user.username)} className={css.rejectBtn}>
-                        Reject
+                      <button
+                        onClick={() => rejectFriendRequest(user.username)}
+                        className={css.rejectBtn}
+                        title='Reject'
+                      >
+                        <X size={20} />
                       </button>
                     </>
                   ) : user.friend_request_status === "cancel" ? (
-                    <button onClick={() => handleCancel(user.username)} className={css.cancelBtn}>
-                      Cancel
+                    <button
+                      onClick={() => handleCancel(user.username)}
+                      className={css.cancelBtn}
+                      title='Cancel'
+                    >
+                      <X size={20}/>
                     </button>
                   ) : (
-                    <button onClick={() => sendFriendRequest(user.username)} className={css.addFriendBtn}>
-                      Add Friend
+                    <button
+                      onClick={() => sendFriendRequest(user.username)}
+                      className={css.addFriendBtn}
+                      title='Add friend'
+                      >
+                        <UserPlus size={20}/>
                     </button>
                   )}
                 </div>

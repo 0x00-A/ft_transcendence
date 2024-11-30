@@ -3,8 +3,6 @@ import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
 import { useLocation } from 'react-router-dom';
-import { FiSearch } from 'react-icons/fi';
-import { HiArrowLeft } from 'react-icons/hi';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
@@ -13,7 +11,9 @@ import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-import { CircleX, CheckCheck, User, Ban, Trash2 } from 'lucide-react';
+import { CircleX, CheckCheck, User, Ban, Trash2, Search, ArrowBigLeft } from 'lucide-react';
+import ConversationSkeleton from './ConversationSkeleton';
+import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 
 
 
@@ -329,9 +329,9 @@ const MessageList: React.FC<MessageListProps> = () => {
       <div ref={searchContainerRef} className={css.searchContainer}>
         <div className={`${css.searchBar} ${isSearchActive ? css.showIcon : ''}`}>
           {isSearchActive && (
-            <HiArrowLeft className={css.arrowIcon} onClick={handleSearchClose} />
+            <ArrowBigLeft className={css.arrowIcon} onClick={handleSearchClose} />
           )}
-          <FiSearch
+          <Search
             className={`${css.searchIcon} ${isSearchActive ? css.searchInSide : ''}`}
           />
           <input
@@ -346,14 +346,18 @@ const MessageList: React.FC<MessageListProps> = () => {
       </div>
 
       <div ref={messageListRef} className={css.messageList}>
-      {(friendsLoading || conversationsLoading) ? (
+      {(true) ? (
           <div className={css.statusMessage}>
-            <div className={css.spinner}></div>
-            <span >
               {friendsLoading
-                ? "Loading friends..."
-                : "Loading conversations..."}
-            </span>
+                ? <> 
+                    <SearchFriendsSkeleton />
+                    <SearchFriendsSkeleton />
+                  </>
+                : <>
+                    <ConversationSkeleton />
+                    <ConversationSkeleton />
+                  </>
+                }
           </div>
         ) : friendsError || conversationsError ? (
           <div className={css.statusMessage}>
