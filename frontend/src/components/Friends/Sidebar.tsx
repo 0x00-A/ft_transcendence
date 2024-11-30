@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import css from './Sidebar.module.css';
 import { FaArrowCircleRight, FaArrowCircleLeft } from 'react-icons/fa';
-import { Users, UserPlus, UserRoundPlus, UserX, Ban, CircleDot } from 'lucide-react';
+import { Users, UserCog, UserRoundPlus, UserX, Ban, CircleDot } from 'lucide-react';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
           className={`${css.navButton} ${currentView === 'requests' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('requests')}
         >
-          <UserPlus className={css.icon}/>
+          <UserCog className={css.icon}/>
           <span className={css.buttonText}>Friend Requests</span>
         </button>
         <button
