@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
+import { FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useUser } from '@/contexts/UserContext';
+import { SendHorizontal, SmilePlus, Dice2 } from 'lucide-react';
+
 
 interface MessageInputProps {
   customSticker: string;
@@ -167,15 +169,14 @@ const MessageInput = ({
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           aria-label="Open emoji picker"
         >
-          <FaSmile size={22} />
+          <SmilePlus />
         </button>
 
         <button
           className={css.buttonClip}
           aria-label="Attach file"
         >
-          <img className={css.invite} src="/icons/chat/inviteBlack.svg" alt="invite" />
-          {/* <FaPaperclip size={22} /> */}
+          <Dice2 />
         </button>
       </div>
 
@@ -188,7 +189,7 @@ const MessageInput = ({
         aria-label="Send message"
       >
         {inputFocused || message.trim() ? (
-          <FaPaperPlane size={22} />
+          <SendHorizontal />
         ) : (
           <span
             className={css.stickerContainer}

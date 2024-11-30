@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import css from './Sidebar.module.css';
 import { FaArrowCircleRight, FaArrowCircleLeft } from 'react-icons/fa';
+import { Users, UserPlus, UserRoundPlus, UserX, Ban, CircleDot } from 'lucide-react';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
@@ -17,41 +18,42 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
   };
 
   return (
+    
     <nav className={`${css.sidebar} ${isCollapsed ? css.collapsed : ''}`}>
       <div className={css.sidebarContent}>
         <button
           className={`${css.navButton} ${currentView === 'all' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('all')}
         >
-          <img src="/icons/friend/allFriends.svg" alt="All" />
+          <Users className={css.icon}/>
           <span className={css.buttonText}>All Friends</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'online' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('online')}
         >
-          <img src="/icons/friend/onlineFriend.svg" alt="Online" />
+          <CircleDot className={css.icon}/>
           <span className={css.buttonText}>Online Friends</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'requests' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('requests')}
         >
-          <img src="/icons/friend/requestsFriend.svg" alt="Requests" />
+          <UserPlus className={css.icon}/>
           <span className={css.buttonText}>Friend Requests</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'sent' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('sent')}
         >
-          <img src="/icons/friend/sentRequests.svg" alt="Sent" />
+          <UserX className={css.icon}/>
           <span className={css.buttonText}>Sent Requests</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'blocked' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => setView('blocked')}
         >
-          <img src="/icons/friend/blockList.svg" alt="Blocked" />
+         <Ban className={css.icon}/>
           <span className={css.buttonText}>Blocked List</span>
         </button>
       </div>
@@ -59,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         className={`${css.addFriendButton} ${currentView === 'add' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
         onClick={() => setView('add')}
       >
-        <img src="/icons/friend/addFriend.svg" alt="Add" />
+        <UserRoundPlus className={css.icon}/>
         <span className={css.buttonText}>Add Friend</span>
       </button>
       <button className={css.collapseButton} onClick={toggleCollapse}>

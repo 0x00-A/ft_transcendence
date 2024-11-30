@@ -1,6 +1,6 @@
 import React from 'react';
 import css from './ChatHeader.module.css';
-import { FaCircleInfo } from 'react-icons/fa6';
+import { Info } from 'lucide-react';
 import { useTyping } from '@/contexts/TypingContext';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
@@ -64,7 +64,7 @@ const renderUserStatus = () => {
           <div className={css.chatActions}>
             <button className={css.backButton} onClick={toggleSidebar}>
               <i>
-                <FaCircleInfo color="#F8F3E3" />
+                <Info color="#F8F3E3" />
               </i>
             </button>
           </div>
