@@ -1,9 +1,10 @@
-import { SERVER_PORT } from "../config/constants";
+import { SERVER_PORT } from "@/config/constants";
 
 const getWebSocketUrl = (endpoint: string) => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.hostname;
-    return `${protocol}//${host}:${SERVER_PORT}/ws/${endpoint}`;
+    const port = window.location.port ? `:${SERVER_PORT}` : '';
+    return `${protocol}//${host}${port}/ws/${endpoint}`;
 };
 
 export default getWebSocketUrl;

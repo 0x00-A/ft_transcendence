@@ -32,7 +32,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [sound, SwitchSound] = useState(true);
   const [count, setCount] = useState(3);
 
-  console.log('RemoteGame component rerendered', `stat: ${gameState}`);
+  // console.log('RemoteGame component rerendered', `stat: ${gameState}`);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -87,7 +87,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       ws.current = gameSocket;
 
       gameSocket.onopen = () => {
-        console.log('Game WebSocket connected');
+        // console.log('Game WebSocket connected');
         setGameState('waiting');
 
         // Send the canvas dimensions
@@ -143,7 +143,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       };
 
       gameSocket.onclose = () => {
-        console.log('Game WebSocket Disconnected');
+        // console.log('Game WebSocket Disconnected');
         // setGameState('ended');
         // setCurrentScreen('end');
       };
@@ -151,7 +151,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
     return () => {
       if (ws.current) {
-        console.log('Closing game websocket ....');
+        // console.log('Closing game websocket ....');
         ws.current.close();
       }
       clearTimeout(timeout);

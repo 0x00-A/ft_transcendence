@@ -5,10 +5,10 @@ services:
       args:
         DEV: "false"
       dockerfile: Dockerfile.prod
-    # ports:
-    #   - "8000:8000"
+    ports:
+      - "8000:8000"
     volumes:
-      - static_data:/web/static
+      - static_data:/app/backend/static
     environment:
       # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
       - ALLOWED_HOSTS=$ALLOWED_HOSTS
@@ -39,7 +39,7 @@ services:
 
   frontend:
     build:
-      context: ./vite-project
+      context: frontend
       dockerfile: Dockerfile.prod
     # ports:
     #   - "3000:3000"
@@ -47,8 +47,8 @@ services:
       - react_build:/app/dist
 
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+        #condition: service_healthy
 
   db:
     image: postgres:13-alpine
@@ -93,8 +93,8 @@ services:
     networks:
       - default_network
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+        #condition: service_healthy
 
 volumes:
   db-data:
