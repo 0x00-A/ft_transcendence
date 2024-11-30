@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from ..models.profile import Profile, User
 from ..serializers.badgeSerializer import BadgeSerializer
-
+from app.settings import SERVER_URL, MEDIA_URL
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -12,10 +12,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'avatar', 'level', 'score', 'rank', 'badge', 'stats', 'is_online', 'blocked_user_name']
+        fields = ['id', 'username', 'avatar', 'level', 'score',
+                  'rank', 'badge', 'stats', 'is_online', 'blocked_user_name']
 
     def get_avatar(self, obj):
-        return f"http://localhost:8000/media/{obj.avatar}"
+        return f"{SERVER_URL}{MEDIA_URL}{obj.avatar}"
 
     def get_username(self, obj):
         return obj.user.username
@@ -28,7 +29,8 @@ class EditProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'avatar', 'removeAvatar', 'password']
+        fields = ['username', 'first_name', 'last_name',
+                  'avatar', 'removeAvatar', 'password']
 
     def validate_username(self, value):
         if any(ch.isupper() for ch in value):
@@ -43,11 +45,13 @@ class EditProfileSerializer(serializers.ModelSerializer):
         print('----attr---->', attrs, '<--------')
         password = attrs.get('password')
         if password is None:
-            raise serializers.ValidationError({'password': 'Password is required to update your informations!'})
+            raise serializers.ValidationError(
+                {'password': 'Password is required to update your informations!'})
         print('-----context--->>', self.context['request'].user, '<--------')
         user = self.context['request'].user
         if not user.check_password(password):
-            raise serializers.ValidationError({'password': 'Incorrect password!'})
+            raise serializers.ValidationError(
+                {'password': 'Incorrect password!'})
         return super().validate(attrs)
 
     def update(self, instance, validated_data):

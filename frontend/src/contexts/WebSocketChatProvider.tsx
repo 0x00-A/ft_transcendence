@@ -65,7 +65,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     status: string;
     conversationId: number;
   } | null>(null);
-  const [blockStatusUpdate, setBlockStatusUpdate] = useState<BlockStatusUpdate | null>(null); 
+  const [blockStatusUpdate, setBlockStatusUpdate] = useState<BlockStatusUpdate | null>(null);
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
 
@@ -74,11 +74,11 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
-      console.log('WebSocket connection opened');
+      // console.log('WebSocket connection opened');
     };
 
     socket.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data);
+      // console.log('WebSocket message received:', event.data);
       const data = JSON.parse(event.data);
 
       if (data.type === 'chat_message') {
@@ -111,13 +111,13 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           blockedId: data.blocked_id,
           blockStatus: data.block_status,
         };
-        console.log('>>>>>>>>>>>>>>>>>Sending toggle block status:', blockStatusData);
-        setBlockStatusUpdate(blockStatusData); 
+        // console.log('>>>>>>>>>>>>>>>>>Sending toggle block status:', blockStatusData);
+        setBlockStatusUpdate(blockStatusData);
       }
     };
 
     socket.onclose = () => {
-      console.log('WebSocket connection closed');
+      // console.log('WebSocket connection closed');
     };
 
     socket.onerror = (error) => {

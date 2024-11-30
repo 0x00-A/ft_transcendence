@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from matchmaker.models import Game
 from accounts.serializers.userSerializer import UserSerializer
+from app.settings import SERVER_URL, MEDIA_URL
 
 
 class GameSerializer(serializers.ModelSerializer):
@@ -11,7 +12,8 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ['id', 'player1', 'player2', 'p1_score', 'p2_score', 'status', 'winner', 'start_time']
+        fields = ['id', 'player1', 'player2', 'p1_score',
+                  'p2_score', 'status', 'winner', 'start_time']
 
 
 class ProfileGamesSerializer(serializers.ModelSerializer):
@@ -22,10 +24,10 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
     opponent_avatar = serializers.SerializerMethodField()
     opponent_username = serializers.SerializerMethodField()
 
-
     class Meta:
         model = Game
-        fields = ['id', 'start_time', 'opponent_username', 'opponent_avatar', 'result', 'score', 'game_duration']
+        fields = ['id', 'start_time', 'opponent_username',
+                  'opponent_avatar', 'result', 'score', 'game_duration']
 
     def validate(self, data):
         print(f'Validating data: {data}')
@@ -38,8 +40,8 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
 
     def get_opponent_avatar(self, obj):
         if obj.player1 == self.context['request'].user:
-            return f"http://localhost:8000/media/{obj.player2.profile.avatar}"
-        return f"http://localhost:8000/media/{obj.player1.profile.avatar}"
+            return f"{SERVER_URL}{MEDIA_URL}{obj.player2.profile.avatar}"
+        return f"{SERVER_URL}{MEDIA_URL}{obj.player1.profile.avatar}"
 
     def get_result(self, obj):
         if obj.winner == self.context['request'].user:
