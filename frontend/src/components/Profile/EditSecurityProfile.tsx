@@ -27,7 +27,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     if (isLoading) {
         return <div>Loading...</div>
     }
-    console.log(profileData);
+    // console.log(profileData);
 
 
     const [showPassword, setShowPassword] = useState({

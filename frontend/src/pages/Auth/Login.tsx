@@ -36,7 +36,7 @@ const Login = () => {
   useEffect(() => {
     if (mutation.isSuccess) {
       if (mutation.data?.data?.status && mutation.data?.data.status === '2FA_REQUIRED') {
-        console.log(mutation.data.data);
+        // console.log(mutation.data.data);
         reset();
         setOtpRequired(true);
         return ;

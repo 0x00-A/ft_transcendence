@@ -20,7 +20,7 @@ const MessageInput = ({
   customSticker,
   onSendMessage,
   onTyping,
-  
+
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -34,8 +34,8 @@ const MessageInput = ({
   const {user} = useUser()
   const { toggleBlockStatus } = useWebSocket();
 
-  console.log("--------render MessageInput-------")
-  
+  // console.log("--------render MessageInput-------")
+
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     setShowEmojiPicker(false);
@@ -48,7 +48,7 @@ const MessageInput = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage(); 
+      handleSendMessage();
     }
   };
 
@@ -183,7 +183,7 @@ const MessageInput = ({
         } ${!message.trim() && !customSticker ? css.disabled : ''}`}
         disabled={!message.trim() && !customSticker}
         aria-label="Send message"
-        
+
       >
         {inputFocused || message.trim() ? (
           <FaPaperPlane size={22} />

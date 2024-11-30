@@ -18,7 +18,7 @@ const ProfileGamesHistory = () => {
     const navigate = useNavigate();
     const { data: playedGames, isLoading } = useGetData<GameHistory[]>('/matchmaker/played_games');
     if (isLoading) return <p>Loading...</p>;
-    console.log(playedGames);
+    // console.log(playedGames);
 
 
   return (

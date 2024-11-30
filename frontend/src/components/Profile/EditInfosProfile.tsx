@@ -60,7 +60,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         }
    }, [mutation.isSuccess]);
    useEffect(() => {
-        console.log(isConfirmSave);
+        // console.log(isConfirmSave);
         if (mutation.isError && isConfirmSave) {
             setConfirmSave(false);
             mutation.reset();
