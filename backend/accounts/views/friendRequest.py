@@ -7,6 +7,7 @@ from ..models import FriendRequest, Profile, BlockRelationship
 from ..serializers import FriendRequestSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
 from accounts.consumers import NotificationConsumer
+from rest_framework.permissions import AllowAny
 
 
 User = get_user_model()
@@ -48,7 +49,7 @@ class MutualFriendsView(APIView):
             )
 
 class SuggestedConnectionsView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = FriendRequestSerializer
 
     def get(self, request):
@@ -78,6 +79,7 @@ class UserFriendsView(APIView):
 
     def get(self, request, username=None):
         if username:
+
             try:
                 user = User.objects.get(username=username)
                 friends = user.friends.all()
@@ -114,10 +116,8 @@ class OnlineFriendsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
-    print("........................................")
     def get(self, request):
         try:
-            print(f"User: {user}")
             user = request.user
             online_friends = user.friends.filter(profile__is_online=True)
             serializer = UserSerializer(online_friends, many=True)

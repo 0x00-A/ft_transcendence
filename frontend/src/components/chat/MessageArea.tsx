@@ -14,8 +14,6 @@ interface MessageProps {
   seen?: boolean;
 }
 
-
-
 interface MessageAreaProps {
   messages: MessageProps[];
 }
