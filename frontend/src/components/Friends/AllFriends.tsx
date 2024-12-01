@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
-import { MessageSquareText, UserPlus, Ban, Search } from 'lucide-react';
+import { MessageSquareText, UserPlus, Ban, Search, UserX } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
 import NoFound from './NoFound';
-import { apiBlockRequest } from '@/api/friendApi';
+import { apiBlockRequest, apiRemoveFriend } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import FriendSkeleton from './FriendSkeleton';
 
@@ -41,6 +41,14 @@ const AllFriends: React.FC = () => {
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept friend request')
+    }
+  };
+  const removeFriend = async (username: string) => {
+    try {
+      await apiRemoveFriend(username);
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to remove friend')
     }
   };
 
@@ -100,6 +108,13 @@ const AllFriends: React.FC = () => {
                   title="Block"
                 >
                   <Ban size={20} />
+                </button>
+                <button
+                  className={`${css.actionButton} ${css.blockButton}`}
+                  onClick={() => removeFriend(friend.username)}
+                  title="Remove"
+                >
+                  <UserX size={20} />
                 </button>
               </div>
             </div>

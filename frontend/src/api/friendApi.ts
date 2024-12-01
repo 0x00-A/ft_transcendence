@@ -40,6 +40,19 @@ export const apiRejectFriendRequest = async (username: string) => {
     }
 };
 
+export const apiRemoveFriend = async (username: string) => {
+    try {
+        const response = await apiClient.delete(`/friend/remove/${username}/`);
+        return response.data.message || 'Friend removed';
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.error) {
+            throw new Error(error.response.data.error);
+        } else {
+            throw new Error('Error Friend removed');
+        }
+    }
+};
+
 
 export const apiCancelFriendRequest = async (username: string) => {
     try {

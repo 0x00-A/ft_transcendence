@@ -19,6 +19,7 @@ from .views import AcceptFriendRequestView
 from .views import RejectFriendRequestView
 from .views import PendingFriendRequestsView
 from .views import UserFriendsView
+from .views import RemoveFriendView
 from .views import SentFriendRequestsView
 from .views import CancelFriendRequestView
 from .views import OnlineFriendsView
@@ -104,6 +105,7 @@ urlpatterns = [
          name='friend-request-list'),
     path('friend-request/cancel/<str:username>/',
          CancelFriendRequestView.as_view(), name='cancel-friend-request'),
+     path('friend/remove/<str:username>/', RemoveFriendView.as_view(), name='remove-friend'),
 
     path('block/<str:username>/', BlockUserView.as_view(), name='block_user'),
     path('unblock/<str:username>/', UnblockUserView.as_view(), name='unblock_user'),

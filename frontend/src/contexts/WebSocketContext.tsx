@@ -116,7 +116,7 @@ const showFriendRequestToast = (from: string) => {
       toastId: from,
       autoClose: 10000,
       closeOnClick: false,
-      closeButton: false,
+      closeButton: true,
       style: {
         padding: '0',
         margin: '0',
