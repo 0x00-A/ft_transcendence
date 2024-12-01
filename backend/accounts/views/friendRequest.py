@@ -8,6 +8,8 @@ from ..serializers import FriendRequestSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
 from accounts.consumers import NotificationConsumer
 from rest_framework.permissions import AllowAny
+from django.db.models import Q
+
 
 
 User = get_user_model()
@@ -333,6 +335,43 @@ class CancelFriendRequestView(APIView):
         except (User.DoesNotExist, FriendRequest.DoesNotExist):
             return Response(
                 {'error': 'Request not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': 'Internal server error'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class RemoveFriendView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def delete(self, request, username):
+        try:
+            user = request.user
+            friend_to_remove = User.objects.get(username=username)
+
+            if friend_to_remove not in user.friends.all():
+                return Response(
+                    {'error': 'This user is not your friend'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            user.friends.remove(friend_to_remove)
+            FriendRequest.objects.filter(
+                    Q(sender=user, receiver=friend_to_remove) | 
+                    Q(sender=friend_to_remove, receiver=user)
+                ).delete()
+
+            return Response(
+                {"message": "Friend removed successfully"},
+                status=status.HTTP_200_OK
+            )
+
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User does not exist'},
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:

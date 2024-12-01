@@ -30,6 +30,7 @@ from .friendRequest import CancelFriendRequestView
 from .friendRequest import OnlineFriendsView
 from .friendRequest import SuggestedConnectionsView
 from .friendRequest import MutualFriendsView
+from .friendRequest import RemoveFriendView
 
 from .profile import AllUsersView
 from .profile import UserDetailView
