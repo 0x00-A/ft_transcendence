@@ -94,6 +94,17 @@ export interface Tournament {
   state: TournamentState;
 }
 
+export interface MessageProps {
+  id: number;
+  conversation: number;
+  sender: number;
+  receiver: number;
+  content: string;
+  timestamp: string;
+  seen?: boolean;
+}
+
+
 export interface conversationProps {
   id: number;
   last_seen: string;

@@ -184,7 +184,12 @@ class SendFriendRequestView(APIView):
 
             if created:
                 # serializer = FriendRequestSerializer(friend_request)
-                NotificationConsumer.send_notification_to_user(receiver.id , {'event' :'friend_request'})
+                notification_data = {
+                    'event': 'friend_request',
+                    'from': sender_user.username,
+                    'message': f'{sender_user.username} has sent you a friend request!'
+                }
+                NotificationConsumer.send_notification_to_user(receiver.id, notification_data)
                 return Response({'message': 'Friend request sent successfully'},
                         status=status.HTTP_201_CREATED)
 
@@ -194,8 +199,6 @@ class SendFriendRequestView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as e:
-            # Log the exception
-            logger.error(f"Internal server error: {e}")
             return Response(
                 {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

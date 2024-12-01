@@ -2,9 +2,9 @@ import React from 'react';
 import css from './OnlineFriends.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useGetData } from '../../api/apiHooks';
-import Loading from './Loading';
 import NoOnlineFriends from './NoOnlineFriends';
 import { MessageSquareText } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
 
 
 interface Friend {
@@ -30,7 +30,7 @@ const OnlineFriends: React.FC = () => {
       <h1 className={css.title}>Online Friends</h1>
       <div className={css.friendList}>
         {isLoading ? (
-          <Loading />
+          <FriendSkeleton/>
         ) : error ? (
           <p>Error: loading</p>
         ) : onlineFriends && onlineFriends.length > 0 ? (

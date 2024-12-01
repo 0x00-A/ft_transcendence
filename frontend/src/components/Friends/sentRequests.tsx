@@ -2,11 +2,11 @@ import React from 'react';
 import css from './SentRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import moment from 'moment';
-import Loading from './Loading';
 import NoSentRequests from './NoSentRequests';
 import { apiCancelFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import { X } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
 
 interface Profile {
   id: number;
@@ -50,7 +50,7 @@ const SentRequests: React.FC = () => {
       ) : (
         <div className={css.list}>
           {isLoading ? (
-            <Loading />
+            <FriendSkeleton/>
           ) : error ? (
             <p>Error loading friends</p>
           ) : sentRequests?.map((request) => (

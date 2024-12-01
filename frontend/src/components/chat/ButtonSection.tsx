@@ -78,7 +78,7 @@ const ButtonSection: React.FC = () => {
     sendMessage({
       event: 'game_invite',
       from: user?.username,
-      to: 'user2',
+      to: selectedConversation?.name,
     });
   };
   return (
@@ -91,10 +91,6 @@ const ButtonSection: React.FC = () => {
         </div>
         <p>Profile</p>
       </div>
-      {/* <div className={css.button}>
-        <img className={css.icon} src="/icons/chat/Search.svg" alt="I" />
-        <p>Search</p>
-      </div> */}
       <CooldownButton onClick={handleSendInvite} />
     </div>
   );

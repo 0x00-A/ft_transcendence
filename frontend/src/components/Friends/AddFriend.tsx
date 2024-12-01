@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import css from './AddFriend.module.css';
 import { useGetData } from '../../api/apiHooks';
-import Loading from './Loading';
 import { toast } from 'react-toastify';
 import { apiAcceptFriendRequest, apiCancelFriendRequest, apiRejectFriendRequest, apiSendFriendRequest } from '../../api/friendApi';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +13,7 @@ import {
   Eye,
   Search     
 } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
 
 
 interface Profile {
@@ -130,7 +130,7 @@ const AddFriend: React.FC = () => {
         <div className={css.suggestedConnections}>
           <h3 className={css.suggestedConnectionsTitle}>Suggested Connections</h3>
           {loadingSuggested ? (
-            <Loading />
+            <FriendSkeleton/>
           ) : (
             <div className={css.results}>
               {suggestedConnections.map(({ user, status }) => (
@@ -179,11 +179,10 @@ const AddFriend: React.FC = () => {
         </div>
       )}
 
-     {/* Display search results */}
       {searchTerm !== '' && (
         <div className={css.results}>
           {loadingUsers ? (
-            <Loading />
+            <FriendSkeleton/>
           ) : searchResults.length > 0 ? (
             searchResults.map((user) => (
               <div key={user.username} className={css.userCard}>
@@ -202,7 +201,7 @@ const AddFriend: React.FC = () => {
                     onClick={() => navigate(`/profile/${user.username}`)}
                     title='View Profile'
                     >
-                     <Eye size={20}/>
+                      <Eye size={20}/>
                     </button>
 
                   {user.friend_request_status === "accepted" ? (

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import css from './BlockedList.module.css';
 import { Search, Unlock, Ban } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
-import Loading from './Loading';
 import moment from 'moment';
 import { apiUnBlockRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
+import FriendSkeleton from './FriendSkeleton';
 
 
 
@@ -84,7 +84,7 @@ const BlockedList: React.FC = () => {
 
       <div className={css.list}>
       {isLoading ? (
-          <Loading />
+          <FriendSkeleton/>
         ) : error ? (
           <p>Error loading friends</p>
         ) :

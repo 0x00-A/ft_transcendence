@@ -1,21 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-
-interface MessageProps {
-  id: number;
-  conversation: number;
-  sender: number;
-  receiver: number;
-  content: string;
-  timestamp: string;
-  seen?: boolean;
-}
-
+import { MessageProps } from '@/types/apiTypes';
 
 interface ChatContentProps {
   customSticker: string;
@@ -23,16 +13,11 @@ interface ChatContentProps {
 
 const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
   const { selectedConversation } = useSelectedConversation();
-  const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
   const { data: fetchedMessages, isLoading, error } = useGetData<MessageProps[]>(
     `chat/conversations/${selectedConversation?.id}/messages`
   );
 
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation} = useWebSocket();
-
-
-  // console.log("-------render ChatContent--------------")
-  // console.log("onSelectedConversation: ", selectedConversation)
 
   useEffect(() => {
     if (selectedConversation?.id) {
@@ -46,24 +31,20 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
     }
   }, [selectedConversation?.id]);
 
-  useEffect(() => {
+  const memoizedChatMessages = useMemo(() => {
     if (!websocketMessages || websocketMessages.length === 0) {
-      setChatMessages(fetchedMessages || []);
-      return;
+      return fetchedMessages || [];
     }
+  
     const lastMessage = websocketMessages[websocketMessages.length - 1];
     if (lastMessage?.conversation === selectedConversation?.id) {
-      console.log("+++++++++++++++++++++++++++++++")
-      console.log("websocketMessages: ", websocketMessages)
-      console.log("fetchedMessages: ", fetchedMessages)
-      console.log("+++++++++++++++++++++++++++++++")
-      setChatMessages(() => [
+      return [
         ...(fetchedMessages || []),
         ...websocketMessages,
-      ]);
-    } else {
-      setChatMessages(fetchedMessages || []);
+      ];
     }
+  
+    return fetchedMessages || [];
   }, [fetchedMessages, websocketMessages, selectedConversation?.id]);
 
   const handleSendMessage = useCallback(
@@ -91,7 +72,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
           <div>Error loading messages</div>
         ) : (
           <MessageArea
-            messages={chatMessages}
+            messages={memoizedChatMessages}
             />
           )}
       </div>
