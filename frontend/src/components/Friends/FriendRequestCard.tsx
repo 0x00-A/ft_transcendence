@@ -21,9 +21,6 @@ const FriendRequestCard: React.FC<FriendRequestCardProps> = ({
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 1) {
           clearInterval(timer);
-          setTimeout(() => {
-            onReject();
-          }, 1000);
           return 0;
         }
         return prevSeconds - 1;

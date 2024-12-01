@@ -37,8 +37,7 @@ const AllFriends: React.FC = () => {
 
   const blockRequest = async (username: string) => {
     try {
-      const message = await apiBlockRequest(username);
-      toast.success(message);
+      await apiBlockRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept friend request')

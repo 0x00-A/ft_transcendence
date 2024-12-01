@@ -183,7 +183,6 @@ class SendFriendRequestView(APIView):
                     )
 
             if created:
-                # serializer = FriendRequestSerializer(friend_request)
                 notification_data = {
                     'event': 'friend_request',
                     'from': sender_user.username,
@@ -219,8 +218,13 @@ class AcceptFriendRequestView(APIView):
             friend_request.save()
             friend_request.refresh_from_db()
 
-            # Add as friends (symmetrical)
             receiver.friends.add(sender_user)
+            notification_data = {
+                'event': 'friend_request_accepted',
+                'from': receiver.username,
+                'message': f'{receiver.username} has accepted your friend request! You are now friends.'
+            }
+            NotificationConsumer.send_notification_to_user(sender_user.id, notification_data)
 
             return Response({"message": "Friend request accepted successfully"}, status=status.HTTP_200_OK)
 

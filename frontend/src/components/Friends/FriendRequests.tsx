@@ -38,8 +38,7 @@ const FriendRequests: React.FC = () => {
 
   const acceptFriendRequest = async (username: string) => {
     try {
-      const message = await apiAcceptFriendRequest(username);
-      toast.success(message);
+      await apiAcceptFriendRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept friend request');
@@ -49,8 +48,7 @@ const FriendRequests: React.FC = () => {
 
   const rejectFriendRequest = async (username: string) => {
     try {
-      const message = await apiRejectFriendRequest(username);
-      toast.success(message);
+      await apiRejectFriendRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to reject friend request');

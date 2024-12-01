@@ -29,8 +29,7 @@ const SentRequests: React.FC = () => {
 
   const handleCancel = async (username: string) => {
     try {
-      const message = await apiCancelFriendRequest(username);
-      toast.success(message);
+      await apiCancelFriendRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to cancel friend request');
