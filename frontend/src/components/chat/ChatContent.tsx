@@ -3,7 +3,7 @@ import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
 import { useGetData } from '@/api/apiHooks';
-import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { MessageProps } from '@/types/apiTypes';
 
@@ -17,7 +17,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
     `chat/conversations/${selectedConversation?.id}/messages`
   );
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation} = useWebSocket();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation} = useWebSocketChat();
 
   useEffect(() => {
     if (selectedConversation?.id) {

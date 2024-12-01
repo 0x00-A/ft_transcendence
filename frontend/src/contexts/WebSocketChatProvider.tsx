@@ -41,14 +41,6 @@ interface WebSocketContextType {
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
 
-export const useWebSocket = () => {
-  const context = useContext(WebSocketContext);
-  if (!context) {
-    throw new Error('useWebSocket must be used within a WebSocketProvider');
-  }
-  return context;
-};
-
 interface WebSocketProviderProps {
   children: React.ReactNode;
   userId: number;
@@ -201,4 +193,12 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
       {children}
     </WebSocketContext.Provider>
   );
+};
+
+export const useWebSocketChat = () => {
+  const context = useContext(WebSocketContext);
+  if (!context) {
+    throw new Error('useWebSocket must be used within a WebSocketProvider');
+  }
+  return context;
 };
