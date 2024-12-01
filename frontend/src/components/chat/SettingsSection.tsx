@@ -4,7 +4,7 @@ import { FaBell, FaBan, FaThumbtack } from 'react-icons/fa';
 import { FaAngleDown, FaAngleUp, FaFaceGrin } from 'react-icons/fa6';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useUser } from '@/contexts/UserContext';
-import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 
 interface SettingsSectionProps {
   onEmojiChange: (emoji: string) => void;
@@ -17,7 +17,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({ onEmojiChange }) => {
   const [showStickerPicker, setShowStickerPicker] = useState(false);
   const { selectedConversation } = useSelectedConversation();
   const { user } = useUser();
-  const { toggleBlockStatus } = useWebSocket();
+  const { toggleBlockStatus } = useWebSocketChat();
 
 
 

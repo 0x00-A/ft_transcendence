@@ -8,7 +8,7 @@ import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
 import { toast } from 'react-toastify';
 import { conversationProps } from '@/types/apiTypes';
-import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { CircleX, CheckCheck, User, Ban, Trash2, Search, ArrowBigLeft } from 'lucide-react';
@@ -52,7 +52,7 @@ const MessageList: React.FC<MessageListProps> = () => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { setSelectedConversation, selectedConversation } = useSelectedConversation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocket();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
 
 
 

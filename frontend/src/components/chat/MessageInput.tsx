@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
-import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
+import { useWebSocket } from '@/contexts/WebSocketContext';
+
 import { useUser } from '@/contexts/UserContext';
 import { SendHorizontal, SmilePlus } from 'lucide-react';
 
@@ -32,8 +33,10 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const { user } = useUser();
-  // const { sendMessage } = useWebSocketGame();
-  const { toggleBlockStatus } = useWebSocket();
+  // const { sendMessage } = useWebSocketChatGame();
+  const { toggleBlockStatus } = useWebSocketChat();
+  const { sendMessage } = useWebSocket();
+
 
   // console.log("--------render MessageInput-------")
 
@@ -145,13 +148,13 @@ const MessageInput = ({
     setTimeout(() => setIsFlying(false), 500);
   };
 
-  // const handleSendInvite = (username: string) => {
-  //   sendMessage({
-  //     event: 'game_invite',
-  //     from: user?.username,
-  //     to: username,
-  //   });
-  // };
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+  };
 
 
   return (
@@ -186,7 +189,7 @@ const MessageInput = ({
         <button
           className={css.buttonClip}
           aria-label="invite game"
-          // onClick={ () =>  handleSendInvite(conversationData!.name)}
+          onClick={ () =>  handleSendInvite(conversationData!.name)}
         >
           <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
         </button>
