@@ -2,11 +2,11 @@ import React from 'react';
 import css from './FriendRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import moment from 'moment';
-import Loading from './Loading';
 import NoFriendRequests from './NoFriendRequests';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import { Check, X } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
 
 
 interface Profile {
@@ -69,9 +69,7 @@ const FriendRequests: React.FC = () => {
 
       <div className={css.listContainer}>
         {isLoading ? (
-          <div className={css.loadingContainer}>
-            <Loading />
-          </div>
+          <FriendSkeleton/>
         ) : error ? (
           <p className={css.errorMessage}>Error fetching friend requests: {error.message}</p>
         ) : friendPending && friendPending.length > 0 ? (

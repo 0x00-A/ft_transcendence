@@ -346,7 +346,7 @@ const MessageList: React.FC<MessageListProps> = () => {
       </div>
 
       <div ref={messageListRef} className={css.messageList}>
-      {(true) ? (
+      {(conversationsLoading || friendsLoading) ? (
           <div className={css.statusMessage}>
               {friendsLoading
                 ? <> 

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useGameInvite } from './GameInviteContext';
 import apiClient from '@/api/apiClient';
 import { useAuth } from './AuthContext';
+import FriendRequestCard from '@/components/Friends/FriendRequestCard';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
@@ -103,6 +104,34 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const {acceptInvite} = useGameInvite()
 
+  const showFriendRequestToast = (from: string) => {
+    toast(
+      <FriendRequestCard
+        from={from}
+        onAccept={() => handleAcceptRequest(from)}
+        onReject={() => handleRejectRequest(from)}
+      />,
+      {
+        toastId: from,
+        autoClose: 10000,
+        closeOnClick: false,
+        closeButton: false,
+        style: {
+          padding: '0',
+          margin: '0',
+        },
+      }
+    );
+  };
+  
+  const handleAcceptRequest = (from: string) => {
+    console.log(`Accept request from ${from}`);
+  };
+
+  const handleRejectRequest = (from: string) => {
+    console.log(`Rejected request from ${from}`);
+  };
+
   const showGameInviteToast = (from: string) => {
     toast(
       <GameInviteCard
@@ -124,7 +153,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleAcceptInvite = (from: string) => {
-    // console.log(`Accepted invite from ${from}`);
+    console.log(`Accepted invite from ${from}`);
     sendMessage({
       event: 'invite_accept',
       from: from,
@@ -133,7 +162,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleRejectInvite = (from: string) => {
-    // console.log(`Rejected invite from ${from}`);
+    console.log(`Rejected invite from ${from}`);
     sendMessage({
       event: 'invite_reject',
       from: from,
@@ -158,7 +187,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
           data.event === 'friend_request' ||
           data.event === 'status_update'
         ) {
-        toast.success('hello friends')
+          showFriendRequestToast(data.from);
         }
         if (
           data.event === 'notification'

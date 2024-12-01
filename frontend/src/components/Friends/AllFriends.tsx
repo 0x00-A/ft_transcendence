@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
 import { MessageSquareText, UserPlus, Ban, Search } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
-import Loading from './Loading';
 import NoFound from './NoFound';
 import { apiBlockRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
-import FriendSkeleton from './friendSkeleton';
+import FriendSkeleton from './FriendSkeleton';
 
 interface FriendProfile {
   avatar: string;
@@ -62,7 +61,7 @@ const AllFriends: React.FC = () => {
       </div>
       
       <div className={css.friendList}>
-        {true ? (
+        {isLoading ? (
           <FriendSkeleton/>
         ) : error ? (
           <p>Error loading friends</p>

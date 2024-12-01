@@ -3,16 +3,7 @@ import css from './MessageArea.module.css';
 import Message from './Message';
 import { useTyping } from '@/contexts/TypingContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-
-interface MessageProps {
-  id: number;
-  conversation: number;
-  sender: number;
-  receiver: number;
-  content: string;
-  timestamp: string;
-  seen?: boolean;
-}
+import { MessageProps } from '@/types/apiTypes';
 
 interface MessageAreaProps {
   messages: MessageProps[];
@@ -25,7 +16,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages}) => {
 
   const isReceiver = typing.senderId == selectedConversation?.user_id;
 
-  // console.log("typing: ", typing);
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
