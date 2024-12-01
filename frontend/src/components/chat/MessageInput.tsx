@@ -6,7 +6,8 @@ import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocket } from '@/contexts/WebSocketChatProvider';
 import { useUser } from '@/contexts/UserContext';
-import { SendHorizontal, SmilePlus, Dice2 } from 'lucide-react';
+import { SendHorizontal, SmilePlus } from 'lucide-react';
+
 
 
 interface MessageInputProps {
@@ -31,6 +32,7 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const { user } = useUser();
+  // const { sendMessage } = useWebSocketGame();
   const { toggleBlockStatus } = useWebSocket();
 
   // console.log("--------render MessageInput-------")
@@ -143,6 +145,15 @@ const MessageInput = ({
     setTimeout(() => setIsFlying(false), 500);
   };
 
+  // const handleSendInvite = (username: string) => {
+  //   sendMessage({
+  //     event: 'game_invite',
+  //     from: user?.username,
+  //     to: username,
+  //   });
+  // };
+
+
   return (
     <div className={css.messageInputWrapper}>
       {showEmojiPicker && (
@@ -175,6 +186,7 @@ const MessageInput = ({
         <button
           className={css.buttonClip}
           aria-label="invite game"
+          // onClick={ () =>  handleSendInvite(conversationData!.name)}
         >
           <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
         </button>
