@@ -5,6 +5,8 @@ import { useGetData } from '../../api/apiHooks';
 import NoOnlineFriends from './NoOnlineFriends';
 import { MessageSquareText } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
+import { useUser } from '@/contexts/UserContext';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
 
 interface Friend {
@@ -19,11 +21,22 @@ interface Friend {
 
 const OnlineFriends: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { sendMessage } = useWebSocket();
   const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('online-friends');
 
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
+
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+  };
+
 
   return (
     <div className={css.onlineFriends}>
@@ -53,7 +66,15 @@ const OnlineFriends: React.FC = () => {
                 >
                   <MessageSquareText size={20} />
                 </button>
-                <button className={css.actionButton}>Invite</button>
+                <button
+                  className={css.actionButton}
+                  onClick={ () =>  handleSendInvite(friend.username)}
+                  title='Invite'
+                  >
+                  <img
+                    src="/icons/chat/Invite.svg" alt="Invite"
+                  />
+                </button>
               </div>
             </div>
           ))

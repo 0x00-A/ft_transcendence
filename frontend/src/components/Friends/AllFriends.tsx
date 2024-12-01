@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
-import { MessageSquareText, UserPlus, Ban, Search, UserX } from 'lucide-react';
+import { MessageSquareText, Ban, Search, UserX } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
 import NoFound from './NoFound';
 import { apiBlockRequest, apiRemoveFriend } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import FriendSkeleton from './FriendSkeleton';
+import { useUser } from '@/contexts/UserContext';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
 interface FriendProfile {
   avatar: string;
@@ -22,6 +24,8 @@ interface Friend {
 const AllFriends: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { sendMessage } = useWebSocket();
 
   const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
 
@@ -50,6 +54,14 @@ const AllFriends: React.FC = () => {
     } catch (error: any) {
       toast.error(error.message || 'Failed to remove friend')
     }
+  };
+
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
   };
 
   return (
@@ -97,10 +109,13 @@ const AllFriends: React.FC = () => {
                   <MessageSquareText size={20} />
                 </button>
                 <button
-                  className={`${css.actionButton} ${css.inviteButton}`}
-                  title="Invite"
-                >
-                  <UserPlus size={20} />
+                  className={css.actionButton}
+                  onClick={ () =>  handleSendInvite(friend.username)}
+                  title='Invite'
+                  >
+                  <img
+                    src="/icons/chat/Invite.svg" alt="Invite"
+                  />
                 </button>
                 <button
                   className={`${css.actionButton} ${css.blockButton}`}
