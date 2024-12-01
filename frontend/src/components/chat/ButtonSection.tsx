@@ -75,6 +75,7 @@ const ButtonSection: React.FC = () => {
 
 
   const handleSendInvite = () => {
+    console.log(" selectedConversation?.name: ",  selectedConversation?.name)
     sendMessage({
       event: 'game_invite',
       from: user?.username,

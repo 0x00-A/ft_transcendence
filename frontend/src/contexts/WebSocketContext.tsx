@@ -13,6 +13,7 @@ import { useGameInvite } from './GameInviteContext';
 import apiClient from '@/api/apiClient';
 import { useAuth } from './AuthContext';
 import FriendRequestCard from '@/components/Friends/FriendRequestCard';
+import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
@@ -104,33 +105,60 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const {acceptInvite} = useGameInvite()
 
-  const showFriendRequestToast = (from: string) => {
-    toast(
-      <FriendRequestCard
-        from={from}
-        onAccept={() => handleAcceptRequest(from)}
-        onReject={() => handleRejectRequest(from)}
-      />,
-      {
-        toastId: from,
-        autoClose: 10000,
-        closeOnClick: false,
-        closeButton: false,
-        style: {
-          padding: '0',
-          margin: '0',
-        },
-      }
-    );
-  };
-  
-  const handleAcceptRequest = (from: string) => {
-    console.log(`Accept request from ${from}`);
+const showFriendRequestToast = (from: string) => {
+  toast(
+    <FriendRequestCard
+      from={from}
+      onAccept={() => handleAcceptRequest(from)}
+      onReject={() => handleRejectRequest(from)}
+    />,
+    {
+      toastId: from,
+      autoClose: 10000,
+      closeOnClick: false,
+      closeButton: false,
+      style: {
+        padding: '0',
+        margin: '0',
+      },
+    }
+  );
+};
+
+  const handleAcceptRequest = async (from: string) => {
+    try {
+      await acceptFriendRequest(from);
+      toast.dismiss(from);
+    } catch (error) {
+      toast.error('Failed to accept friend request');
+    }
   };
 
-  const handleRejectRequest = (from: string) => {
-    console.log(`Rejected request from ${from}`);
+  const handleRejectRequest = async (from: string) => {
+    try {
+      await rejectFriendRequest(from); 
+      toast.dismiss(from);
+    } catch (error) {
+      toast.error('Failed to reject friend request');
+    }
   };
+
+  const acceptFriendRequest = async (username: string) => {
+    try {
+      await apiAcceptFriendRequest(username);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to accept friend request');
+    }
+  };
+
+  const rejectFriendRequest = async (username: string) => {
+    try {
+      await apiRejectFriendRequest(username);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to reject friend request');
+    }
+  };
+
 
   const showGameInviteToast = (from: string) => {
     toast(
@@ -183,11 +211,32 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = JSON.parse(event.data);
         // console.log(data);
 
+        if (data.event === 'friend_request_accepted') {
+          toast.success(`${data.from} has accepted your friend request!`);
+          const notification: Notification = {
+            id: data.id || Date.now(),
+            title: 'Friend Request Accepted',
+            message: data.message,
+            is_read: false,
+            created_at: new Date(),
+            user: data.from,
+          };
+          handleIncomingNotification(notification);
+        }
         if (
           data.event === 'friend_request' ||
           data.event === 'status_update'
         ) {
           showFriendRequestToast(data.from);
+          const notification: Notification = {
+            id: data.id || Date.now(),
+            title: 'Friend Request',
+            message: data.message,
+            is_read: false,
+            created_at: new Date(),
+            user: data.from,
+          };
+          handleIncomingNotification(notification);
         }
         if (
           data.event === 'notification'
