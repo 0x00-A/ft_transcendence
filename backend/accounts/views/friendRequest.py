@@ -185,12 +185,22 @@ class SendFriendRequestView(APIView):
                     )
 
             if created:
-                receiver.has_new_requests = True
-                receiver.save()
-                # notification = Notification.objects.create(
-                #     sender_user.username, title='friend_request', message=f'{sender_user.username} has sent you a friend request!')
-                # Notification.save()
-                # NotificationConsumer.send_notification_to_user(receiver.id, notification)
+                # set notification
+                notification = Notification.objects.create(
+                    user=receiver,
+                    link='/friends?view=requests',
+                    title='friend_request',
+                    message=f'{sender_user.username} has sent you a friend request!')
+                notification.save()
+                NotificationConsumer.send_notification_to_user(receiver.id, notification)
+
+                # for toast pup
+                notification_data = {
+                    'event': 'friend_request',
+                    'from': sender_user.username,
+                    'message': f'{sender_user.username} has sent you a friend request!'
+                }
+                NotificationConsumer.send_notification_to_user(receiver.id, notification_data)
                 return Response({'message': 'Friend request sent successfully'},
                         status=status.HTTP_201_CREATED)
 
@@ -221,8 +231,15 @@ class AcceptFriendRequestView(APIView):
             friend_request.refresh_from_db()
 
             receiver.friends.add(sender_user)
-            receiver.has_new_requests = False
-            receiver.save()
+
+            # set notification
+            notification = Notification.objects.create(
+                user=receiver,
+                link='/profile/{receiver.username}',
+                title='friend_request_accepted',
+                message=f'{receiver.username} has accepted your friend request! You are now friends.')
+            notification.save()
+            NotificationConsumer.send_notification_to_user(sender_user.id, notification)
 
             notification_data = {
                 'event': 'friend_request_accepted',

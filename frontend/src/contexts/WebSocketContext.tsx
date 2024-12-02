@@ -26,6 +26,7 @@ export type MessageType =
 export interface Notification {
   id: number;
   title: string;
+  link: string;
   message: string;
   is_read: boolean;
   created_at: Date;
@@ -150,7 +151,6 @@ const showFriendRequestToast = (from: string) => {
     try {
       await acceptFriendRequest(from);
       setHasNewRequests(false);
-      // await updateHasNewRequests(false);
       toast.dismiss(from);
     } catch (error) {
       toast.error('Failed to accept friend request');
@@ -238,7 +238,6 @@ const showFriendRequestToast = (from: string) => {
 
         if (data.event === 'friend_request_accepted') {
           toast.success(`${data.from} has accepted your friend request!`);
-          // handleIncomingNotification(notification);
         }
         if (
           data.event === 'friend_request' ||
@@ -246,7 +245,6 @@ const showFriendRequestToast = (from: string) => {
         ) {
           setHasNewRequests(true);
           showFriendRequestToast(data.from);
-          handleIncomingNotification(data);
         }
         if (
           data.event === 'notification'
