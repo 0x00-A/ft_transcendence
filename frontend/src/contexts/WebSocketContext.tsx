@@ -39,6 +39,7 @@ export interface WebSocketContextType {
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
+  markRequestAsRead: () => void;
   unreadCount: number;
   hasNewRequests: boolean;
 }
@@ -232,36 +233,20 @@ const showFriendRequestToast = (from: string) => {
 
       ws.current.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        // console.log(data);
+
+        console.log(data);
 
         if (data.event === 'friend_request_accepted') {
           toast.success(`${data.from} has accepted your friend request!`);
-          const notification: Notification = {
-            id: data.id || Date.now(),
-            title: 'Friend Request Accepted',
-            message: data.message,
-            is_read: false,
-            created_at: new Date(),
-            user: data.from,
-          };
-          handleIncomingNotification(notification);
+          // handleIncomingNotification(notification);
         }
         if (
           data.event === 'friend_request' ||
           data.event === 'status_update'
         ) {
           setHasNewRequests(true);
-          // updateHasNewRequests(true);
           showFriendRequestToast(data.from);
-          const notification: Notification = {
-            id: data.id || Date.now(),
-            title: 'Friend Request',
-            message: data.message,
-            is_read: false,
-            created_at: new Date(),
-            user: data.from,
-          };
-          handleIncomingNotification(notification);
+          handleIncomingNotification(data);
         }
         if (
           data.event === 'notification'
@@ -295,6 +280,17 @@ const showFriendRequestToast = (from: string) => {
       };
   }, [isLoggedIn]);
 
+  const markRequestAsRead = () => {
+    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+      console.log("Sending mark_request_as_read...");
+      sendMessage({ event: 'mark_request_as_read' });
+      setHasNewRequests(false);
+    } else {
+      console.error("WebSocket is not open. Cannot mark request as read.");
+    }
+  };
+  
+
   const handleIncomingNotification = (data: Notification) => {
     // const newNotification: Notification = {
     //   type: data.type,
@@ -324,6 +320,7 @@ const showFriendRequestToast = (from: string) => {
       deleteAllNotifications,
       unreadCount,
       hasNewRequests,
+      markRequestAsRead,
       }}>
       {children}
     </WebSocketContext.Provider>
