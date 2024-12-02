@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from accounts.models import Notification
 from accounts.serializers import NotificationSerializer
+from rest_framework.views import APIView
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
@@ -31,3 +32,9 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def delete_all_notifications(self, request, pk=None):
         self.get_queryset().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class HasNewRequestsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        return Response({'hasNewRequests': request.user.has_new_requests}, status=status.HTTP_200_OK)

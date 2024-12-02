@@ -33,6 +33,7 @@ from .views import ProfileApiView
 from rest_framework.routers import DefaultRouter
 from accounts.views import NotificationViewSet
 from .views import EditProfileView
+from .views import HasNewRequestsView
 from .views import ChangePasswordView
 from .views import oauth2_authorize
 from .views import UserProfileView
@@ -95,6 +96,7 @@ urlpatterns = [
     path('friend-request/send/<str:username>/',
          SendFriendRequestView.as_view(), name='send-friend-request'),
     path('online-friends/', OnlineFriendsView.as_view(), name='online-friends'),
+    path('has-new-requests/', HasNewRequestsView.as_view(), name='has-new-requests'),
     path('friend-request/accept/<str:username>/',
          AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('friend-request/reject/<str:username>/',
