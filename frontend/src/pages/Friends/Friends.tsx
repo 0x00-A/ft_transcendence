@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import css from './Friends.module.css';
@@ -16,6 +16,14 @@ const Friends: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const [currentView, setCurrentView] = useState<ViewType>('add');
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const view = params.get('view') as ViewType;
+    if (view) {
+      setCurrentView(view);
+    }
+  }, [location.search]);
+  
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }
