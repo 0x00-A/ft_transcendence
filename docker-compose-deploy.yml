@@ -8,7 +8,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      # - ./backend:/app/backend
       - static_data:/app/backend/static
+      - django-logs:/app/backend/logs
+      # - ./logs/django_logs.log:/app/backend/django_logs.log
     environment:
       # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
       - ALLOWED_HOSTS=$ALLOWED_HOSTS
@@ -23,7 +26,7 @@ services:
     env_file:
       - .env
     networks:
-      - default_network
+      - default_network-deploy
     depends_on:
       db:
         condition: service_started
@@ -46,7 +49,7 @@ services:
     volumes:
       - react_build:/app/dist
     networks:
-      - default_network
+      - default_network-deploy
     depends_on:
       - backend
         #condition: service_healthy
@@ -67,7 +70,7 @@ services:
       - POSTGRES_USER=$DB_USER
       - POSTGRES_PASSWORD=$DB_PASS
     networks:
-      - default_network
+      - default_network-deploy
 
   redis:
     image: "redis:latest"
@@ -77,7 +80,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - default_network
+      - default_network-deploy
 
   nginx:
     build:
@@ -92,20 +95,95 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - default_network
+      - default_network-deploy
     depends_on:
       - backend
         #condition: service_healthy
+
+  elasticsearch:
+    build:
+      context: ./elk/elasticsearch/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      xpack.security.enabled: false
+      # Bootstrap password.
+      # Used to initialize the keystore during the initial startup of
+      # Elasticsearch. Ignored on subsequent runs.
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+      network.host: 0.0.0.0
+    networks:
+      - default_network-deploy
+    restart: unless-stopped
+
+  logstash:
+    # image: docker.elastic.co/logstash/logstash:8.12.2
+    build:
+      context: ./elk/logstash/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    # container_name: elk-logstash
+    volumes:
+      - ./elk/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - django-logs:/var/log/django
+      - ls-data:/usr/share/logstash/data
+
+    ports:
+      - "5044:5044"
+    environment:
+      node.name: logstash
+      LS_JAVA_OPTS: -Xms256m -Xmx256m
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+      http.host: 0.0.0.0
+    depends_on:
+      - elasticsearch
+    networks:
+      - default_network-deploy
+    restart: unless-stopped
+
+  kibana:
+    build:
+      context: ./elk/kibana/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - kb-data:/usr/share/kibana/data
+    ports:
+      - 5601:5601
+    environment:
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    networks:
+      - default_network-deploy
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
 
 volumes:
   db-data:
   redis_data:
   static_data:
   react_build:
+  django-logs:
+  es-data:
+  ls-data:
+  kb-data:
 
 
 networks:
-  default_network:
+  default_network-deploy:
     driver: bridge
 
 
