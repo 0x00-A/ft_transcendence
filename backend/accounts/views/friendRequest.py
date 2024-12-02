@@ -185,6 +185,8 @@ class SendFriendRequestView(APIView):
                     )
 
             if created:
+                receiver.has_new_requests = True
+                receiver.save()
                 notification_data = {
                     'event': 'friend_request',
                     'from': sender_user.username,
@@ -221,6 +223,9 @@ class AcceptFriendRequestView(APIView):
             friend_request.refresh_from_db()
 
             receiver.friends.add(sender_user)
+            receiver.has_new_requests = False
+            receiver.save()
+
             notification_data = {
                 'event': 'friend_request_accepted',
                 'from': receiver.username,

@@ -40,6 +40,7 @@ export interface WebSocketContextType {
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
   unreadCount: number;
+  hasNewRequests: boolean;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
@@ -52,9 +53,28 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const ws = useRef<WebSocket | null>(null);
+  const [hasNewRequests, setHasNewRequests] = useState<boolean>(false);
 
   const { isLoggedIn } = useAuth();
 
+
+  useEffect(() => {
+    const fetchHasNewRequests = async () => {
+      try {
+        const { data } = await apiClient.get('has-new-requests/');
+
+        console.log("+++data.hasNewRequests+++ ", data.hasNewRequests)
+        
+        setHasNewRequests(data.hasNewRequests);
+      } catch (error) {
+        console.error('Error fetching new requests status:', error);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchHasNewRequests();
+    }
+  }, [isLoggedIn]);
 
   // Fetch notifications from the API
   const fetchNotifications = async () => {
@@ -128,15 +148,18 @@ const showFriendRequestToast = (from: string) => {
   const handleAcceptRequest = async (from: string) => {
     try {
       await acceptFriendRequest(from);
+      setHasNewRequests(false);
+      // await updateHasNewRequests(false);
       toast.dismiss(from);
     } catch (error) {
       toast.error('Failed to accept friend request');
     }
   };
-
+  
   const handleRejectRequest = async (from: string) => {
     try {
       await rejectFriendRequest(from); 
+      setHasNewRequests(false);
       toast.dismiss(from);
     } catch (error) {
       toast.error('Failed to reject friend request');
@@ -227,6 +250,8 @@ const showFriendRequestToast = (from: string) => {
           data.event === 'friend_request' ||
           data.event === 'status_update'
         ) {
+          setHasNewRequests(true);
+          // updateHasNewRequests(true);
           showFriendRequestToast(data.from);
           const notification: Notification = {
             id: data.id || Date.now(),
@@ -298,6 +323,7 @@ const showFriendRequestToast = (from: string) => {
       markAsRead,
       deleteAllNotifications,
       unreadCount,
+      hasNewRequests,
       }}>
       {children}
     </WebSocketContext.Provider>

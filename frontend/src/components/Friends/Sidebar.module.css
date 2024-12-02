@@ -122,3 +122,20 @@
   right: 50%;
   transform: translateX(50%);
 }
+
+
+.iconContainer {
+  position: relative; 
+  display: inline-flex;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 15px; 
+  height: 15px;
+  background-color: red; 
+  border-radius: 50%; 
+  border: 2px solid white;
+}

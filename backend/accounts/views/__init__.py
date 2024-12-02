@@ -53,3 +53,4 @@ from .BlockRelationship import UnblockUserView
 from .profile import ProfileApiView
 
 from .NotificationViewSet import NotificationViewSet
+from .NotificationViewSet import HasNewRequestsView

@@ -81,6 +81,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         event = data['event']
         print(f'Notication Websocket Message Recieved: {event}')
+        if event == 'mark_request_as_read':
+            await self.handle_request_read(self.username, data['request_id'])
         if event == 'game_invite':
             await self.handle_invite(self.username, data.get('to'))
         if event == 'invite_accept':
@@ -94,6 +96,27 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.set_online_status(False)
         await self.set_last_seen()
         return await super().disconnect(close_code)
+
+    # async def handle_request_read(self, username, request_id):
+    #     # Find the user request and set it to false (read)
+    #     try:
+    #         user_request = await Request.objects.aget(id=request_id, user__username=username)
+    #         user_request.has_new_request = False
+    #         await user_request.asave()
+
+    #         # Notify the user that their request was marked as read
+    #         message = {
+    #             'event': 'request_read',
+    #             'message': 'Your request has been marked as read.'
+    #         }
+    #         await self.send_message(username, message)
+
+    #     except Request.DoesNotExist:
+    #         message = {
+    #             'event': 'error',
+    #             'message': 'Request not found.'
+    #         }
+    #         await self.send_message(username, message)
 
     async def handle_accept(self, sender, recipient):
         if sender not in connected_users:

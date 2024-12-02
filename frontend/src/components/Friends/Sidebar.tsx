@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import css from './Sidebar.module.css';
 import { FaArrowCircleRight, FaArrowCircleLeft } from 'react-icons/fa';
 import { Users, UserCog, UserRoundPlus, UserX, Ban, CircleDot } from 'lucide-react';
+import { useWebSocket } from '@/contexts/WebSocketContext';
+
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
@@ -14,6 +16,8 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
+  const { hasNewRequests } = useWebSocket();
+
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -45,7 +49,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
           className={`${css.navButton} ${currentView === 'requests' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => handleViewChange('requests')}
         >
-          <UserCog className={css.icon}/>
+          <div className={css.iconContainer}>
+            <UserCog className={css.icon} />
+            {hasNewRequests && <span className={css.notificationBadge}></span>}
+          </div>
           <span className={css.buttonText}>Friend Requests</span>
         </button>
         <button
