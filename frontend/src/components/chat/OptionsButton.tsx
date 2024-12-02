@@ -14,9 +14,6 @@ const OptionsButton = () => {
   const handleOptionsClick = () => {
     setShowMenu(!showMenu);
   };
-  const handleNewClick = () => {
-    navigate('/friends');
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,7 +39,7 @@ const OptionsButton = () => {
       <h2 className={css.title}>Chat</h2>
 
       <div className={css.sideButtons}>
-        <NewMessage ref={buttonRef} onClick={handleNewClick} />
+        <NewMessage ref={buttonRef} />
         <MoreButton ref={buttonRef} onClick={handleOptionsClick} />
       </div>
       {showMenu && (

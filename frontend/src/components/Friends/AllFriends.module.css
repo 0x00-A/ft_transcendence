@@ -148,10 +148,12 @@
 
 .actionButton:hover {
   background-color: #7892b8;
-  color: var(--text-color);
 }
 
-.messageButton, .inviteButton, .blockButton {
+.blockButton:hover, .removeButton:hover {
+  background-color: #e91c05;
+}
+.messageButton, .inviteButton, .blockButton, .removeButton {
   position: relative;
   display: flex;
   align-items: center;

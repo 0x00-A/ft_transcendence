@@ -125,7 +125,7 @@ const AllFriends: React.FC = () => {
                   <Ban size={20} />
                 </button>
                 <button
-                  className={`${css.actionButton} ${css.blockButton}`}
+                  className={`${css.actionButton} ${css.removeButton}`}
                   onClick={() => removeFriend(friend.username)}
                   title="Remove"
                 >

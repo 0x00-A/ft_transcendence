@@ -1,17 +1,19 @@
 import { forwardRef } from 'react';
 import css from './NewMessage.module.css';
 import { SquarePen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface NewMessageProps {
-  onClick: () => void;
 }
 
 const NewMessage = forwardRef<HTMLDivElement, NewMessageProps>(
-  ({ onClick }, ref) => {
+  ({}, ref) => {
     return (
-      <div className={css.newMessage} onClick={onClick} ref={ref}>
-        <SquarePen />
-      </div>
+      <Link to="/friends?view=add">
+        <div className={css.newMessage} ref={ref}>
+          <SquarePen />
+        </div>
+      </Link>
     );
   }
 );
