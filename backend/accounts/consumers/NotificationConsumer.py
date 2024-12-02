@@ -81,8 +81,9 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         event = data['event']
         print(f'Notication Websocket Message Recieved: {event}')
+        print(f'data Websocket Message Recieved: {data}')
         if event == 'mark_request_as_read':
-            await self.handle_request_read(self.username, data['request_id'])
+            await self.handle_request_read()
         if event == 'game_invite':
             await self.handle_invite(self.username, data.get('to'))
         if event == 'invite_accept':
@@ -97,26 +98,20 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.set_last_seen()
         return await super().disconnect(close_code)
 
-    # async def handle_request_read(self, username, request_id):
-    #     # Find the user request and set it to false (read)
-    #     try:
-    #         user_request = await Request.objects.aget(id=request_id, user__username=username)
-    #         user_request.has_new_request = False
-    #         await user_request.asave()
+    async def handle_request_read(self):
 
-    #         # Notify the user that their request was marked as read
-    #         message = {
-    #             'event': 'request_read',
-    #             'message': 'Your request has been marked as read.'
-    #         }
-    #         await self.send_message(username, message)
+        print("************************mark*********")
+        print(self.user.has_new_requests)
+        self.user.has_new_requests = False
+        await self.user.asave()
+        print(self.user.has_new_requests)
 
-    #     except Request.DoesNotExist:
-    #         message = {
-    #             'event': 'error',
-    #             'message': 'Request not found.'
-    #         }
-    #         await self.send_message(username, message)
+        message = {
+            'event': 'request_read',
+            'message': 'Your request has been marked as read.'
+        }
+        await self.send_message(message)
+
 
     async def handle_accept(self, sender, recipient):
         if sender not in connected_users:

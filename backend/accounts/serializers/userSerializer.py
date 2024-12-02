@@ -148,7 +148,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'friend_status', 'username', 'first_name', 'email',
-                  'last_name', 'profile', 'friend_request_status', 'last_seen', 'active_conversation', 'is_password_set', 'is2fa_active']
+                  'last_name', 'profile', 'friend_request_status', 'last_seen', 'active_conversation', 'is_password_set', 'is2fa_active', 'has_new_requests']
 
     def get_friend_status(self, obj):
         if 'request' not in self.context or self.context['request'].user == obj:

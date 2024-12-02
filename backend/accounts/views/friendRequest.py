@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from ..models import FriendRequest, Profile, BlockRelationship
+from ..models import FriendRequest, Profile, BlockRelationship, Notification
 from ..serializers import FriendRequestSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
 from accounts.consumers import NotificationConsumer
@@ -187,12 +187,10 @@ class SendFriendRequestView(APIView):
             if created:
                 receiver.has_new_requests = True
                 receiver.save()
-                notification_data = {
-                    'event': 'friend_request',
-                    'from': sender_user.username,
-                    'message': f'{sender_user.username} has sent you a friend request!'
-                }
-                NotificationConsumer.send_notification_to_user(receiver.id, notification_data)
+                # notification = Notification.objects.create(
+                #     sender_user.username, title='friend_request', message=f'{sender_user.username} has sent you a friend request!')
+                # Notification.save()
+                # NotificationConsumer.send_notification_to_user(receiver.id, notification)
                 return Response({'message': 'Friend request sent successfully'},
                         status=status.HTTP_201_CREATED)
 
@@ -203,7 +201,7 @@ class SendFriendRequestView(APIView):
             )
         except Exception as e:
             return Response(
-                {'error': 'Internal server error'},
+                {'error': f'Internal server error :{e}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 

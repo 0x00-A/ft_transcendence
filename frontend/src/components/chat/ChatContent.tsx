@@ -73,7 +73,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
         ) : (
           <MessageArea
             messages={memoizedChatMessages}
-            />
+          />
           )}
       </div>
       <MessageInput
