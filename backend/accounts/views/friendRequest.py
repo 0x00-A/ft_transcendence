@@ -235,7 +235,7 @@ class AcceptFriendRequestView(APIView):
             # set notification
             notification = Notification.objects.create(
                 user=receiver,
-                link='/profile/{receiver.username}',
+                link=f'/profile/{receiver.username}',
                 title='friend_request_accepted',
                 message=f'{receiver.username} has accepted your friend request! You are now friends.')
             notification.save()
