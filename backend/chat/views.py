@@ -135,6 +135,9 @@ class GetConversationsView(APIView):
                 updated_at = datetime.fromisoformat(updated_at_str)
                 last_message = conversation['last_message']
                 truncated_message = last_message[:10] + "..." if len(last_message) > 10 else last_message
+                
+                if conversation['user2_id'] != user.id and (last_message == "Send first message"):
+                    continue
 
                 conversation_data = {
                     'id': conversation['id'],
