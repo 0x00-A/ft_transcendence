@@ -16,8 +16,19 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
   const { data: fetchedMessages, isLoading, error } = useGetData<MessageProps[]>(
     `chat/conversations/${selectedConversation?.id}/messages`
   );
+  const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
 
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation} = useWebSocketChat();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages} = useWebSocketChat();
+  
+
+  useEffect(() => {
+    console.log('Clearing messages');
+    clearMessages();
+
+    return ()=>{
+      clearMessages();
+    }
+  }, []);
 
   useEffect(() => {
     if (selectedConversation?.id) {
@@ -30,23 +41,27 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
       markAsRead(selectedConversation.id);
     }
   }, [selectedConversation?.id]);
-
-  const memoizedChatMessages = useMemo(() => {
+        
+  useEffect(() => {
     if (!websocketMessages || websocketMessages.length === 0) {
-      return fetchedMessages || [];
+      setChatMessages(fetchedMessages || []);
+      return;
     }
-  
-    const lastMessage = websocketMessages[websocketMessages.length - 1];
-    if (lastMessage?.conversation === selectedConversation?.id) {
-      return [
-        ...(fetchedMessages || []),
-        ...websocketMessages,
-      ];
+    
+    const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
+    // const lastMessageFetch = fetchedMessages![fetchedMessages.length - 1];
+    
+    // if (lastMessageSocket.content === lastMessageFetch.content) {
+    //   setChatMessages(fetchedMessages || []);
+    //   return;
+    // }
+    if (lastMessageSocket?.conversation === selectedConversation?.id) {
+      setChatMessages([...(fetchedMessages || []), ...websocketMessages]);
+    } else {
+      setChatMessages(fetchedMessages || []);
     }
-  
-    return fetchedMessages || [];
   }, [fetchedMessages, websocketMessages, selectedConversation?.id]);
-
+  
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
@@ -72,7 +87,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ customSticker }) => {
           <div>Error loading messages</div>
         ) : (
           <MessageArea
-            messages={memoizedChatMessages}
+            messages={chatMessages}
           />
           )}
       </div>

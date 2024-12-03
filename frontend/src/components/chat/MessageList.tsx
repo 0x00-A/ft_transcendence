@@ -16,11 +16,6 @@ import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 
 
-
-
-interface MessageListProps {
-}
-
 interface FriendProfile {
   avatar: string;
 }
@@ -31,7 +26,7 @@ interface Friend {
   profile: FriendProfile;
 }
 
-const MessageList: React.FC<MessageListProps> = () => {
+const MessageList = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
@@ -69,6 +64,8 @@ const MessageList: React.FC<MessageListProps> = () => {
     error: conversationsError
   } = useGetData<conversationProps[]>('chat/conversations');
 
+
+  
   // console.log(" >> << ConversationList: ", ConversationList)
   useEffect(() => {
     if (blockStatusUpdate) {
