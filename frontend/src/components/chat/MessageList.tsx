@@ -196,8 +196,9 @@ const MessageList = () => {
 
   const handleClose = () => {
     if (selectedConversation !== null) {
+      console.log("selectedConversation: ", selectedConversation)
       updateActiveConversation(-1);
-      handleConversationSelect(null);
+      setSelectedConversation(null);
     }
     setMenuState((prevState) => ({
       ...prevState,
@@ -284,11 +285,13 @@ const MessageList = () => {
 
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
     setSelectedConversation(conversation);
-  }, [setSelectedConversation]);
-
-
-  const handleConversationClick = useCallback((conversation: conversationProps) => {
-    handleConversationSelect(conversation);
+  }, [selectedConversation]);
+  
+  
+  const handleConversationClick = useCallback((conversation: conversationProps | null) => {
+    
+    console.log(" ..... selectedConversation: ", conversation)
+    setSelectedConversation(conversation);
     setIsSearchActive(false);
     setSearchQuery('');
     setMenuState(prev => ({
@@ -296,16 +299,16 @@ const MessageList = () => {
       isOpen: false,
       activeIndex: null,
     }));
-  }, [ConversationList, handleConversationSelect]);
-
+  }, [ConversationList, selectedConversation]);
+  
   const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
-      // console.log("newConversation: ", newConversation);
-
+      
       if (newConversation && newConversation.id) {
         await refetch();
-        handleConversationSelect(newConversation);
+        console.log("new => Conversation: ", newConversation);
+        setSelectedConversation(newConversation);
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState(prev => ({
@@ -319,7 +322,7 @@ const MessageList = () => {
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
- }, [user, refetch, handleConversationSelect]);
+ }, [user, refetch]);
 
   return (
     <div className={css.container}>

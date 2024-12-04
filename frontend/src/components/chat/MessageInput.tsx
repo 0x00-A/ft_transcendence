@@ -12,7 +12,6 @@ import { SendHorizontal, SmilePlus } from 'lucide-react';
 
 
 interface MessageInputProps {
-  customSticker: string;
   onSendMessage: (message: string) => void;
   onTyping: (isTyping: boolean) => void;
   conversationData: conversationProps | null;
@@ -20,7 +19,6 @@ interface MessageInputProps {
 
 const MessageInput = ({
   conversationData,
-  customSticker,
   onSendMessage,
   onTyping,
 }: MessageInputProps) => {
@@ -134,13 +132,11 @@ const MessageInput = ({
   const handleSendMessage = () => {
     if (message.trim()) {
       onSendMessage(message);
-    } else if (customSticker) {
-      onSendMessage(customSticker);
     }
     setMessage('');
     setIsFlying(true);
     setInputFocused(false);
-    onTyping(false); // Stop typing on send
+    onTyping(false);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current?.focus();
@@ -199,18 +195,11 @@ const MessageInput = ({
         onClick={handleSendMessage}
         className={`${css.sendButton} ${
           isFlying ? css.animateIcon : ''
-        } ${!message.trim() && !customSticker ? css.disabled : ''}`}
-        disabled={!message.trim() && !customSticker}
+        } ${!message.trim()  ? css.disabled : ''}`}
+        disabled={!message.trim()}
         aria-label="Send message"
       >
-        {inputFocused || message.trim() ? (
-          <SendHorizontal />
-        ) : (
-          <span
-            className={css.stickerContainer}
-            dangerouslySetInnerHTML={{ __html: customSticker }}
-          />
-        )}
+        <SendHorizontal />
       </button>
     </div>
   );

@@ -37,7 +37,6 @@ class CreateConversationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        print('----------------------------------')
         user1 = request.user
         user2_id = request.data.get("user2_id")
 
@@ -45,48 +44,47 @@ class CreateConversationView(APIView):
             return Response({"error": "user2_id is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-
             user2 = User.objects.get(id=user2_id)
+
             conversation, created = Conversation.objects.get_or_create(
                 user1=min(user1, user2, key=lambda u: u.id),
                 user2=max(user1, user2, key=lambda u: u.id)
             )
 
-            if user1.id == conversation.user1.id:
-                other_user_id = conversation.user2.id
-                other_user_username = conversation.user2.username
-                other_user_avatar = f"{SERVER_URL}{MEDIA_URL}{conversation.user2.profile.avatar}"
-                other_last_seen = conversation.user2.last_seen
-                other_status = conversation.user2.profile.is_online
+            if user1 == conversation.user1:
+                other_user = conversation.user2
                 unread_count = conversation.unread_messages_user1
             else:
-                other_user_id = conversation.user1.id
-                other_user_username = conversation.user1.username
-                other_user_avatar = f"{SERVER_URL}{MEDIA_URL}{conversation.user1.profile.avatar}"
-                other_last_seen = conversation.user1.last_seen
-                other_status = conversation.user1.profile.is_online
+                other_user = conversation.user1
                 unread_count = conversation.unread_messages_user2
 
-            updated_at = datetime.fromisoformat(conversation.updated_at.isoformat().replace('Z', '+00:00'))
-            last_message = conversation.last_message or "Send"
+            last_message = conversation.last_message or "Send first message"
             truncated_message = f"{last_message[:10]}..." if len(last_message) > 10 else last_message
+            updated_at = conversation.updated_at.isoformat()
 
             conversation_data = {
                 'id': conversation.id,
-                'last_seen': other_last_seen,
-                'user_id': other_user_id,
-                'avatar': other_user_avatar,
-                'name': other_user_username,
+                'last_seen': other_user.last_seen,
+                'user_id': other_user.id,
+                'avatar': f"{SERVER_URL}{MEDIA_URL}{other_user.profile.avatar}",
+                'name': other_user.username,
                 'lastMessage': truncated_message,
-                'time': format_time(updated_at),
+                'time': format_time(conversation.updated_at),
                 'unreadCount': unread_count or '',
-                'status': other_status,
+                'status': other_user.profile.is_online,
             }
 
-            return Response(conversation_data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+            status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+            return Response(conversation_data, status=status_code)
 
         except User.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {"error": "An unexpected error occurred.", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
 
 class GetConversationsView(APIView):
@@ -131,14 +129,18 @@ class GetConversationsView(APIView):
                 else:
                     block_status_display = None
 
+                last_message = conversation['last_message']
+                print("last Message >>>>>>>>>>>")
+                print(last_message)
+                print(conversation['user2_id'])
+                print(user.id)
+                # if last_message == "Send first message" and user.id == conversation['user2_id']:
+                #     continue
+
                 updated_at_str = conversation['updated_at']
                 updated_at = datetime.fromisoformat(updated_at_str)
-                last_message = conversation['last_message']
                 truncated_message = last_message[:10] + "..." if len(last_message) > 10 else last_message
                 
-                if conversation['user2_id'] != user.id and (last_message == "Send first message"):
-                    continue
-
                 conversation_data = {
                     'id': conversation['id'],
                     'last_seen': other_last_seen,
