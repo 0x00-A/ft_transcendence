@@ -18,9 +18,6 @@ const Chat = () => {
   const { isLoggedIn } = useAuth();
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const sidebarLeftRef = useRef<HTMLDivElement | null>(null);
-  const [customSticker, setCustomSticker] = useState(
-    '<img src="/icons/chat/like.svg" alt="love" />'
-  );
   const { user } = useUser();
   const { selectedConversation } = useSelectedConversation();
 
@@ -36,11 +33,6 @@ const Chat = () => {
   }
 
   // console.log("rander chat >>>>>>>>>>>>>>>>>>>>>>>>>")
-
-  const handleStickerChange = (newSticker: string) => {
-    setCustomSticker(newSticker);
-  };
-
 
   return (
     <TypingProvider>
@@ -59,7 +51,6 @@ const Chat = () => {
                   />
                 <ChatContent
                   key={selectedConversation.id}
-                  customSticker={customSticker}
                 />
               </>
             ) : (
@@ -69,7 +60,6 @@ const Chat = () => {
           {selectedConversation && !isExpanded && (
             <div className={css.sidebarRight}>
               <SideInfoChat
-                onEmojiChange={handleStickerChange}
               />
             </div>
           )}
