@@ -1,4 +1,4 @@
-import  { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
@@ -7,44 +7,51 @@ import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { MessageProps } from '@/types/apiTypes';
 
-
-
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const { data: fetchedMessages, isLoading, error } = useGetData<MessageProps[]>(
     `chat/conversations/${selectedConversation?.id}/messages`
   );
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
-  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages} = useWebSocketChat();
+  const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
   useEffect(() => {
+    if (!selectedConversation) return;
+    clearMessages()
     setFetchedChatMessages(fetchedMessages || []);
-  }, []);
-
+  }, [selectedConversation, fetchedMessages]);
+  
   useEffect(() => {
-    if (!websocketMessages || websocketMessages.length === 0) {
+    if (!selectedConversation) return;
+
+    if (websocketMessages.length === 0) {
       setChatMessages(fetchedChatMessages || []);
       return;
     }
-    
+
     const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
-    if (lastMessageSocket?.conversation === selectedConversation?.id) {
+    if (lastMessageSocket?.conversation === selectedConversation.id) {
       setChatMessages([...(fetchedChatMessages || []), ...websocketMessages]);
     } else {
       setChatMessages(fetchedChatMessages || []);
     }
-  }, [fetchedChatMessages, websocketMessages, selectedConversation?.id]);
+  }, [fetchedChatMessages, websocketMessages, selectedConversation]);
 
   useEffect(() => {
     if (selectedConversation?.id) {
       updateActiveConversation(selectedConversation.id);
+      if (selectedConversation.unreadCount) {
+        markAsRead(selectedConversation.id);
+      }
     }
-    if (selectedConversation?.id && selectedConversation.unreadCount) {
-      markAsRead(selectedConversation.id);
-    }
-  }, [selectedConversation?.id]);
+  }, [selectedConversation]);
 
+  useEffect(() => {
+    return () => {
+      clearMessages();
+    };
+  }, []);
 
   const handleSendMessage = useCallback(
     (message: string) => {
@@ -52,15 +59,15 @@ const ChatContent = () => {
         sendMessage(selectedConversation!.user_id, message);
       }
     },
-    [sendMessage, selectedConversation!.user_id]
+    [sendMessage, selectedConversation?.user_id]
   );
 
-    const handleTyping = useCallback(
-      (isTyping: boolean) => {
-        sendTypingStatus(selectedConversation!.user_id, isTyping);
-      },
-      [sendTypingStatus, selectedConversation!.user_id]
-    );
+  const handleTyping = useCallback(
+    (isTyping: boolean) => {
+      sendTypingStatus(selectedConversation!.user_id, isTyping);
+    },
+    [sendTypingStatus, selectedConversation?.user_id]
+  );
 
   return (
     <>
@@ -70,10 +77,8 @@ const ChatContent = () => {
         ) : error ? (
           <div>Error loading messages</div>
         ) : (
-          <MessageArea
-            messages={chatMessages}
-          />
-          )}
+          <MessageArea messages={chatMessages} />
+        )}
       </div>
       <MessageInput
         conversationData={selectedConversation}
