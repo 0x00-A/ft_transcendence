@@ -5,11 +5,8 @@ import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useWebSocket } from '@/contexts/WebSocketContext';
-
 import { useUser } from '@/contexts/UserContext';
 import { SendHorizontal, SmilePlus } from 'lucide-react';
-
-
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
@@ -31,16 +28,11 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const { user } = useUser();
-  // const { sendMessage } = useWebSocketChatGame();
   const { toggleBlockStatus } = useWebSocketChat();
   const { sendMessage } = useWebSocket();
 
-
-  // console.log("--------render MessageInput-------")
-
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
-    setShowEmojiPicker(false);
     if (textareaRef.current) {
       setInputFocused(true);
       textareaRef.current.focus();
@@ -85,10 +77,20 @@ const MessageInput = ({
     };
   };
 
-  const debouncedOnTyping = useCallback(debounce(onTyping, 1000), [onTyping]);
+  const debouncedOnTyping = useCallback(
+    debounce((isTyping: boolean) => {
+      if (message.trim() &&isTyping && inputFocused ) {
+        onTyping(true);
+      } else {
+        onTyping(false);
+      }
+    }, 1000),
+    [onTyping, inputFocused]
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+    const newValue = e.target.value;
+    setMessage(newValue);
     setInputFocused(true);
 
     if (textareaRef.current) {
@@ -96,7 +98,11 @@ const MessageInput = ({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
 
-    debouncedOnTyping(true);
+    if (newValue.trim()) {
+      debouncedOnTyping(true);
+    } else {
+      debouncedOnTyping(false);
+    }
   };
 
   const handleInputBlur = () => {
@@ -152,7 +158,6 @@ const MessageInput = ({
     });
   };
 
-
   return (
     <div className={css.messageInputWrapper}>
       {showEmojiPicker && (
@@ -184,8 +189,8 @@ const MessageInput = ({
 
         <button
           className={css.buttonClip}
-          aria-label="invite game"
-          onClick={ () =>  handleSendInvite(conversationData!.name)}
+          aria-label="Invite game"
+          onClick={() => handleSendInvite(conversationData!.name)}
         >
           <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
         </button>
@@ -195,7 +200,7 @@ const MessageInput = ({
         onClick={handleSendMessage}
         className={`${css.sendButton} ${
           isFlying ? css.animateIcon : ''
-        } ${!message.trim()  ? css.disabled : ''}`}
+        } ${!message.trim() ? css.disabled : ''}`}
         disabled={!message.trim()}
         aria-label="Send message"
       >
