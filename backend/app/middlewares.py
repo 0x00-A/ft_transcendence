@@ -1,18 +1,12 @@
-from channels.middleware import BaseMiddleware
-from urllib.parse import parse_qs
-from accounts.models.profile import Profile
-from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError, AuthenticationFailed
-from django.contrib.auth.models import AnonymousUser
-from channels.db import database_sync_to_async
-from django.contrib.auth import get_user_model
-from asgiref.sync import sync_to_async
-from http.cookies import SimpleCookie
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
+from channels.middleware import BaseMiddleware
+from django.contrib.auth.models import AnonymousUser
+from asgiref.sync import sync_to_async
+from http.cookies import SimpleCookie
 
-User = get_user_model()
 
 
 # @database_sync_to_async

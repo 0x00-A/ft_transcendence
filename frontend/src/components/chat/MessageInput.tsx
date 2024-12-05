@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { FaPaperPlane, FaPaperclip, FaSmile } from 'react-icons/fa';
+import { FaPaperPlane, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
@@ -19,10 +19,6 @@ const MessageInput = ({
   customSticker,
   onSendMessage,
   onTyping,
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 }: MessageInputProps) => {
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -35,11 +31,7 @@ const MessageInput = ({
   const { user } = useUser();
   const { toggleBlockStatus } = useWebSocket();
 
-<<<<<<< HEAD
-  console.log('--------render MessageInput-------');
-=======
   // console.log("--------render MessageInput-------")
->>>>>>> main
 
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);

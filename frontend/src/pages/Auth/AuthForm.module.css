@@ -145,6 +145,17 @@
     cursor: pointer;
 }
 
+.forgotPass {
+    cursor: pointer;
+    color: var(--text-color);
+    text-decoration: underline;
+    font-size: 1.4rem;
+}
+
+.forgotPass:hover {
+    font-size: 1.5rem;
+}
+
 /* .loginError {
     color: red;
     border: #fffbe1;

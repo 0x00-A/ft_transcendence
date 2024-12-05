@@ -38,7 +38,8 @@ const useLogin = () => {
     handleSubmit,
     formState: {errors},
     setError,
-    reset
+    reset,
+    watch
   } = useForm<LoginData>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -71,6 +72,7 @@ const useLogin = () => {
     setError,
     reset,
     mutation,
+    watch
   };
 }
 

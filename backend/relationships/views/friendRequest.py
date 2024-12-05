@@ -1,16 +1,20 @@
-from accounts.serializers.userSerializer import UserSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from ..models import FriendRequest, Profile, BlockRelationship
-from ..serializers import FriendRequestSerializer, ProfileSerializer
-from django.contrib.auth import get_user_model
-from accounts.consumers import NotificationConsumer
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
 
-User = get_user_model()
+from accounts.serializers import UserSerializer
+from relationships.models import FriendRequest, BlockRelationship
+from accounts.models import Profile, User
+from relationships.serializers import FriendRequestSerializer
+from accounts.consumers import NotificationConsumer
+
+
 
 class MutualFriendsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -333,5 +337,3 @@ class CancelFriendRequestView(APIView):
                 {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-

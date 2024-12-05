@@ -1,41 +1,27 @@
 from rest_framework import serializers
+
 from django.core.exceptions import ValidationError as DjangoValidationError
-from rest_framework_simplejwt.tokens import Token
-from ..models.user import User
-from ..models.user import EmailVerification
-from ..models.profile import Profile
-from ..models.friends import FriendRequest
-from ..models.BlockRelationship import BlockRelationship
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.core.files.base import ContentFile
-from ..serializers import ProfileSerializer
-from django.core.mail import send_mail
-from django.conf import settings
-from app.settings import SERVER_URL
 
+from accounts.models import User, PasswordReset
+from relationships.models import FriendRequest, BlockRelationship
+from accounts.serializers import ProfileSerializer
+from uuid import UUID
 
-def send_verification_email(user):
-    token = EmailVerification.objects.create(user=user)
-    verification_link = f'{SERVER_URL}/auth/verify_email/{token.token}/'
-    send_mail(
-        'Verify your email',
-        f'Click on the link to verify your email: {verification_link}',
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
-        fail_silently=False,
-    )
+# class TokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user: User) -> Token:
+#         token = super().get_token(user)
+#         token['user_id'] = user.pk
+#         token['username'] = user.username
+#         return token
 
-
-class UserRegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, style={
-        'input_type': 'password'})
-    password2 = serializers.CharField(write_only=True, required=True, style={
-        'input_type': 'password'})
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password', 'password2']
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(write_only=True, required=True, style={
+                                     'input_type': 'password'})
+    confirm_password = serializers.CharField(write_only=True, required=True, style={
+                                      'input_type': 'password'})
+    token = serializers.CharField(write_only=True, required=True)
 
     def validate_password(self, value):
         try:
@@ -44,42 +30,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(str(exc))
         return value
 
-    def validate_username(self, value):
-        if any(ch.isupper() for ch in value):
-            raise serializers.ValidationError(
-                {'Username must be lowercase!'})
-        if len(value) < 4:
-            raise serializers.ValidationError(
-                {'Username must be at least 4 characters!'})
-        return value
-
     def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
+        try:
+            UUID(attrs['token'], version=4)
+        except ValueError:
+            raise serializers.ValidationError({'error': 'Invalid token!'})
+        if attrs['new_password'] != attrs['confirm_password']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
         return attrs
 
-    def create(self, validated_data):
-        validated_data.pop('password2')
-        password = validated_data.pop('password')
-        user, created = User.objects.get_or_create(**validated_data)
-        if not created:
-            raise serializers.ValidationError('User already exist!')
-        user.set_password(password)
-        user.is_password_set = True
-        user.is_active = False
-        user.save()
-        send_verification_email(user)
-        return user
-
-
-class TokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user: User) -> Token:
-        token = super().get_token(user)
-        token['user_id'] = user.pk
-        token['username'] = user.username
-        return token
+    # def update(self, instance, validated_data):
+    #     user = instance.user
+    #     user.set_password(validated_data['password'])
+    #     user.save()
+    #     return user
 
 
 class SetPasswordSerializer(serializers.Serializer):
@@ -116,27 +81,6 @@ class SetPasswordSerializer(serializers.Serializer):
         return instance
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
-
-    username = serializers.CharField(write_only=True, required=True)
-
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-
-    def validate(self, attrs):
-        try:
-            user = User.objects.get(username=attrs['username'])
-            if (not user.check_password(attrs['password'])):
-                raise serializers.ValidationError(
-                    {'password': 'password not valid'})
-            if not user.is_active:
-                raise serializers.ValidationError(
-                    {'error': 'User is not active, Please verify your email and retry again!'})
-        except User.DoesNotExist:
-            raise serializers.ValidationError(
-                {'username': 'username not exist'})
-        return attrs
 
 
 class UserSerializer(serializers.ModelSerializer):
