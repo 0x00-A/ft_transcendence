@@ -18,7 +18,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.user.is_authenticated:
-            # await self.set_active_conversation(self.user.id, -1)
+            await self.set_active_conversation(self.user.id, -1)
             await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
 
     async def receive(self, text_data):
