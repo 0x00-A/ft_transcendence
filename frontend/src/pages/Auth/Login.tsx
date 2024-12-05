@@ -16,6 +16,9 @@ import { toast } from 'react-toastify';
 // Components
 import OtpAuth from './OtpAuth';
 import Oauth2 from '../../components/Auth/Oauth2';
+import apiClient from '@/api/apiClient';
+import { API_RESET_PASSWORD_REQUEST_URL } from '@/api/apiConfig';
+import axios from 'axios';
 
 
 interface LoginFormData {
@@ -25,12 +28,13 @@ interface LoginFormData {
 
 const Login = () => {
 
-  const {register, handleSubmit, errors, mutation, reset} = useLogin();
+  const {register, handleSubmit, errors, mutation, reset, watch} = useLogin();
   const navigate = useNavigate()
   const {setIsLoggedIn} = useAuth()
   const loadingBarRef = useLoadingBar();
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpRequired, setOtpRequired] = useState(false);
+  const username = watch('username');
 
 
   useEffect(() => {
@@ -62,6 +66,26 @@ const Login = () => {
     mutation.mutate(data);
   };
 
+  const handleForgotPass = async () => {
+
+    if (!username) {
+      toast.error('Please enter your username!');
+      return;
+    }
+    if (username && !errors.username) {
+      try {
+        const response = await apiClient.post(API_RESET_PASSWORD_REQUEST_URL, {username: username});
+        toast.success(response.data?.message);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data?.error);
+        } else {
+          toast.error('Something went wrong!');
+        }
+      }
+    }
+  }
+
   return (
     <div className={css.loginContainer}>
       { isOtpRequired ? <OtpAuth setOtpRequired={setOtpRequired} username={mutation.data?.data.username} /> :
@@ -83,7 +107,7 @@ const Login = () => {
                 {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
               </div>
               {/* {errors.root && <span className={css.loginError}>{errors.root.message}</span>} */}
-              <p>Forgot password?</p>
+              <div className={css.forgotPass} onClick={ handleForgotPass }>Forgot your password?</div>
               <button type="submit" className={css.authBtn}>
                 Sign in
               </button>

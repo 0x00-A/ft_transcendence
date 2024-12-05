@@ -1,20 +1,19 @@
-from .models import Achievement, UserAchievement
-from .models import Notification
 from django.contrib import admin
-from django.conf import settings
-from .models import User
-from .models import Profile
-from .models import FriendRequest
-from .models import Badge
 
-# Register your models here.
+from accounts.models import User, EmailVerification ,Profile, Badge
+from accounts.models import Achievement
+from accounts.models import UserAchievement
+from accounts.models import Notification
+
+
 admin.site.register(User)
+admin.site.register(EmailVerification)
 admin.site.register(Profile)
-admin.site.register(FriendRequest)
-admin.site.register(UserAchievement)
-admin.site.register(Notification)
+
 admin.site.register(Badge)
-# admin.site.register(Game)
+admin.site.register(UserAchievement)
+
+admin.site.register(Notification)
 
 
 @admin.register(Achievement)

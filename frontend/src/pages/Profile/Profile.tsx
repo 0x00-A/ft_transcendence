@@ -6,20 +6,26 @@ import ProfileFriends from "@/components/Profile/ProfileFriends";
 import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
 import EditInfosProfile from '@/components/Profile/EditInfosProfile'
 import EditSecurityProfile from '@/components/Profile/EditSecurityProfile';
+import SetPassword from '@/components/Profile/SetPassword';
 // Styles
 import css from './Profile.module.css';
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import { toast } from 'react-toastify';
 // Api
 import { useUser } from '@/contexts/UserContext';
-import SetPassword from '@/components/Profile/SetPassword';
 
 
 const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
-  const { user: currentUser, isLoading } = useUser()
 
+  const { user: currentUser, error, isLoading } = useUser()
+  // const { data: currentUser, isLoading, error, refetch } = useGetData<UserProfileData>(API_GET_PROFILE_URL);
+
+  if (error) {
+    toast.error('Failed to load profile data');
+  }
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     // if (isConfirmSave) {

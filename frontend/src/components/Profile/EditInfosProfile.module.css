@@ -26,11 +26,18 @@
     /* justify-content: space-between; */
 }
 
-.avatar, .defaultAvatar {
+.avatarContainer {
     border: 2px solid #F8C25C;
-    width: 125px;
-    height: 125px;
     border-radius: 50%;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+}
+
+.avatarContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .defaultAvatar {

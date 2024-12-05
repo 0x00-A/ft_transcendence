@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from accounts.serializers.userSerializer import UserSerializer
 from .models import Conversation, Message
-from accounts.models import BlockRelationship
 from app.settings import SERVER_URL, MEDIA_URL
 
 
