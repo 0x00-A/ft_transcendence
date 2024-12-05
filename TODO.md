@@ -23,3 +23,6 @@ MAHDI:
  - [ ] if the user activate the 2fac in discord or google or intra
  - [ ] default avatar picture handling in backend
  - [ ] is_password_set true or false
+
+CHAT:
+ - [ ] mark a read
