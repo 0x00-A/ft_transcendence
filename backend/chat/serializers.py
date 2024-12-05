@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Conversation, Message
 from app.settings import SERVER_URL, MEDIA_URL
+from datetime import datetime
 
 
 class ConversationSerializer(serializers.ModelSerializer):
@@ -54,7 +55,11 @@ class ConversationSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    timestamp = serializers.SerializerMethodField()
+
     class Meta:
         model = Message
         fields = ['id', 'conversation', 'sender',
-                  'receiver', 'content', 'timestamp', 'seen']
+                    'receiver', 'content', 'timestamp', 'seen']
+    def get_timestamp(self, obj):
+        return obj.timestamp.strftime('%H:%M')
