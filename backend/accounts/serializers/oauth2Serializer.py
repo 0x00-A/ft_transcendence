@@ -1,10 +1,12 @@
 from rest_framework import serializers
+
 from django.core.files.base import ContentFile
 import requests
-from ..models import User
-# from ..models import Profile
 
-class Oauth2UserSerializer(serializers.ModelSerializer):
+from accounts.models import User
+
+
+class Oauth2Serializer(serializers.ModelSerializer):
 
     avatar_link = serializers.CharField()
 

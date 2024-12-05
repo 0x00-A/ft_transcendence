@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,14 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # env = environ.Env(
 #     DEBUG=(bool, False)
 # )
-
-#############################
-# AUTHENTICATION PARAMETERS #
-#############################
-
-API_CLIENT_OAUTH2_REDIRECT_URI = os.environ.get(
-    'API_CLIENT_OAUTH2_REDIRECT_URI')
-OAUTH2_REDIRECT_URI = os.environ.get('OAUTH2_REDIRECT_URI')
 
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -39,32 +32,6 @@ EMAIL_HOST_USER = 'mahdimardi18@gmail.com'
 EMAIL_HOST_PASSWORD = 'pyaj yhzg gzog yslf'
 DEFAULT_FROM_EMAIL = 'mahdimardi18@gmail.com'
 
-###############
-# DISCORD ENV #
-###############
-DISCORD_AUTHORIZATION_URL = os.environ.get('DISCORD_AUTHORIZATION_URL')
-DISCORD_TOKEN_URL = os.environ.get('DISCORD_TOKEN_URL')
-DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID')
-DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET')
-DISCORD_USER_URL = os.environ.get('DISCORD_USER_URL')
-
-###############
-#  INTRA ENV  #
-###############
-INTRA_CLIENT_ID = os.environ.get('INTRA_CLIENT_ID')
-INTRA_CLIENT_SECRET = os.environ.get('INTRA_CLIENT_SECRET')
-INTRA_AUTHORIZATION_URL = os.environ.get('INTRA_AUTHORIZATION_URL')
-INTRA_TOKEN_URL = os.environ.get('INTRA_TOKEN_URL')
-INTRA_USER_URL = os.environ.get('INTRA_USER_URL')
-
-################
-#  GOOGLE ENV  #
-################
-GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
-GOOGLE_AUTHORIZATION_URL = os.environ.get('GOOGLE_AUTHORIZATION_URL')
-GOOGLE_TOKEN_URL = os.environ.get('GOOGLE_TOKEN_URL')
-GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -99,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'relationships',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',

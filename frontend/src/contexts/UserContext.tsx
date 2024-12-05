@@ -27,6 +27,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const { isLoggedIn } = useAuth();
 
 
+  // const { data: user, isLoading, error, refetch } = useGetData<UserProfileData>(API_GET_PROFILE_URL,
+  // {
+  //   enabled: isLoggedIn, // React Query will skip the query if this is false
+  // }
   const { data: user, isLoading, error, refetch } = useGetData<User>('matchmaker/current-user/me',
   {
     enabled: isLoggedIn, // React Query will skip the query if this is false

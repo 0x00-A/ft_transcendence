@@ -1,10 +1,15 @@
+from .signupSerializer import SignupSerializer
+from .loginSerializer import LoginSerializer
+from .oauth2Serializer import Oauth2Serializer
+
+from .userProfileSerializer import UserProfileSerializer
+
 from .profileSerialzer import ProfileSerializer
 from .profileSerialzer import EditProfileSerializer
-from .userSerializer import UserLoginSerializer
-from .userSerializer import UserRegisterSerializer
+
 from .userSerializer import SetPasswordSerializer
-from .oauth2Serializer import Oauth2UserSerializer
-from .friendRequestSerializer import FriendRequestSerializer
+from .userSerializer import ResetPasswordSerializer
 from .userSerializer import UserSerializer
+
 from .NotificationSerializer import NotificationSerializer
 from .badgeSerializer import BadgeSerializer

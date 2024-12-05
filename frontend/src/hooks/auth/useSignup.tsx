@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
-import {API_REGISTER_URL} from '@/api/apiConfig';
+import { API_SIGNUP_URL } from '@/api/apiConfig';
 import axios from 'axios';
 
 interface SignupFormData {
@@ -62,7 +62,7 @@ const useSignup = () => {
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (data: SignupFormData) => await apiClient.post(API_REGISTER_URL, data),
+    mutationFn: async (data: SignupFormData) => await apiClient.post(API_SIGNUP_URL, data),
     onError: (error) => {
       // console.log('Signup error ==> ', error);
       if (axios.isAxiosError(error)) {

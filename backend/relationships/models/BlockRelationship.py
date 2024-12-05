@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from accounts.models import User
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
-User = get_user_model()
 
 class BlockRelationship(models.Model):
     blocker = models.ForeignKey(User, related_name='blocked_users', on_delete=models.CASCADE)

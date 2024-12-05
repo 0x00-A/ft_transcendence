@@ -13,6 +13,7 @@ import { useUser } from '@/contexts/UserContext';
 import axios from 'axios';
 // Types
 import { ChangePasswordForm } from '@/types/apiTypes';
+import { API_DISABLE_2FA_URL, API_ENABLE_2FA_REQUEST_URL, API_ENABLE_2FA_URL } from '@/api/apiConfig';
 
 type ShowPasswordFields = 'current_pass' | 'new_pass' | 'confirm_pass' | 'pass2fa';
 
@@ -39,7 +40,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleDisable2fa = async () => {
         try{
-            const response = await apiClient.post('/security/disable_2fa/', {password: confiPass2fa})
+            const response = await apiClient.post(API_DISABLE_2FA_URL, {password: confiPass2fa})
             toast.success(response.data.message);
             setEditProfile(false);
             refetch();
@@ -55,7 +56,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleEnable2fa = async () => {
         try{
-            const response = await apiClient.post('/security/verify_otp/', {otp: verifCode})
+            const response = await apiClient.post(API_ENABLE_2FA_URL, {otp: verifCode})
             toast.success(response.data.message);
             setEditProfile(false);
             refetch();
@@ -71,7 +72,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleGetQrcode = async () => {
         try {
-            const response = await apiClient.post('/security/enable_2fa/', {})
+            const response = await apiClient.post(API_ENABLE_2FA_REQUEST_URL, {})
             setQrcode(response.data.qr_code);
         }
         catch(error) {

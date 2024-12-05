@@ -2,17 +2,21 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+
 from django.shortcuts import redirect
-from ..serializers import UserRegisterSerializer
-from ..models import EmailVerification
-from rest_framework.decorators import api_view, permission_classes
 from urllib.parse import quote
 from uuid import UUID
 from app.settings import SERVER_URL
 
+from accounts.serializers import SignupSerializer
+from accounts.models import EmailVerification
+
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@authentication_classes([])
 def verify_email(request):
     if 'token' not in request.data:
         return Response({'error': 'Token is required!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -35,9 +39,11 @@ def verify_email(request):
 
 class SignupView(CreateAPIView):
     permission_classes = [AllowAny]
-    serializer_class = UserRegisterSerializer
+    authentication_classes = []
+    serializer_class = SignupSerializer
 
     def post(self, request, *args, **kwargs):
+        print('api ==> signup: User account creation started')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -46,14 +52,3 @@ class SignupView(CreateAPIView):
         print('api ==> signup: User account created')
         return Response(data={'message': message}, status=status.HTTP_201_CREATED, headers=headers)
 
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def signup_user(request):
-#     print('--------', request.data, '--------')
-#     if request.method == 'POST':
-#         serializer = UserRegisterSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         msg = 'Your account has been created, you can login now.'
-#         return Response({'message': msg}, status=status.HTTP_201_CREATED)

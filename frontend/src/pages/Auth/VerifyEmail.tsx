@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { API_EMAIL_VERIFICATION_URL } from '@/api/apiConfig';
 
 const VerifyEmail = () => {
     const { token } = useParams();
@@ -17,7 +18,7 @@ const VerifyEmail = () => {
                     navigate('/auth');
                 }
                 try {
-                    const response = await apiClient.post('/auth/verify_email/', { token });
+                    const response = await apiClient.post(API_EMAIL_VERIFICATION_URL, { token });
                     toast.success(response.data.message);
                     navigate('/auth');
                 } catch (error) {
