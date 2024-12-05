@@ -11,6 +11,7 @@ import { useUser } from '@/contexts/UserContext';
 import { EditProfileFormData } from '@/types/apiTypes';
 import apiClient from '@/api/apiClient';
 import axios from 'axios';
+import { API_UPDATE_EMAIL_REQUEST_URL, REDIRECT_URL_UPDATE_EMAIL } from '@/api/apiConfig';
 
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
@@ -73,7 +74,10 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
 
    const handleVerifyEmail = async () => {
         try {
-            const response = await apiClient.post('edit/verify_email', { email: emailValue });
+            const response = await apiClient.post(API_UPDATE_EMAIL_REQUEST_URL, {
+                email: emailValue,
+                // redirect_url: REDIRECT_URL_UPDATE_EMAIL
+            });
             toast.success(response.data.message);
             setEditProfile(false);
         }
@@ -90,9 +94,18 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         <form className={css.editInfosForm} onSubmit={ handleSubmit(handleEditProfile) } encType="multipart/form-data">
             <h1 className={css.title}>Edit your Information</h1>
             <div className={css.editAvatar}>
-                { selectedAvatar === 'null' ? <img src={profileData?.profile.avatar} alt={profileData?.username} className={css.avatar}/> :
-                    (selectedAvatar === 'remove' ? <img src="/icons/defaultAvatar.png" alt={profileData?.username} className={css.defaultAvatar}/> :
-                    <img src={selectedAvatar} alt={profileData?.username} className={css.avatar}/>) }
+
+
+                {selectedAvatar === 'null' ? (
+                    <div className={css.avatarContainer}> <img src={profileData?.profile.avatar} alt="" /></div>) :
+                    (selectedAvatar === 'remove' ? <div className={css.avatarContainer}><img src='/icons/defaultAvatar.png' alt="" /></div> :
+                    <div className={css.avatarContainer}><img src={selectedAvatar} alt="" /></div> )}
+
+                {/* // { selectedAvatar === 'null' ? <img src={profileData?.profile.avatar} alt={profileData?.username} className={css.avatar}/> :
+
+                    <div style={{backgroundImage: `url('${selectedAvatar}')`}} className={css.avatarContainer}></div>) } */}
+
+
                 <div className={css.avatarButtons}>
                   <input type="file" accept='image/*' {...register('avatar')} ref={(e) => { register("avatar"); fileInputRef.current = e}} onChange={handleFileChange}/>
                   <button className={css.avatarBtn} onClick={handleChangeAvatar}>Change Avatar</button>
@@ -157,8 +170,8 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                         <h1>Confirm Your Password</h1>
                         <p>Please enter your password to save the changes. Thank you for your time all this just to protect you !</p>
                         <div className={css.containerFiled}>
-                            <label htmlFor="">Enter the otp</label>
-                            <input required={true} type="text" className={css.input}
+                            <label htmlFor="">Enter you password</label>
+                            <input required={true} type="password" className={css.input}
                               placeholder='Enter your password' {...register('password')}/>
                               {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
                         </div>
@@ -174,3 +187,19 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
 }
 
 export default EditInfosProfile
+
+
+// {selectedAvatar === 'null' ? (
+//                     <div
+//                         className={css.avatarContainer}
+//                         style={{
+//                         backgroundImage: `url('${profileData?.profile.avatar}')`
+//                         }}
+//                     ></div>
+//                     ) : (selectedAvatar === 'remove' ? <div className={css.avatarContainer} style={{
+//                         backgroundImage: `url('/icons/defaultAvatar.png')`
+//                         }}></div> :
+
+//                 // { selectedAvatar === 'null' ? <img src={profileData?.profile.avatar} alt={profileData?.username} className={css.avatar}/> :
+
+//                     <div style={{backgroundImage: `url('${selectedAvatar}')`}} className={css.avatarContainer}></div>) }

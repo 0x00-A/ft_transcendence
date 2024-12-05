@@ -229,14 +229,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def user_notification(self, event):
         message = event["message"]
-        print(f"Sending Notification: {event["message"]}")
+        # print(f"Sending Notification: {event["message"]}")
         await self.send(text_data=json.dumps({
             'event': 'notification',
             'data': message
         }))
     async def user_message(self, event):
         message = event["message"]
-        print(f"Sending Message: {event["message"]}")
+        # print(f"Sending Message: {event["message"]}")
         await self.send(text_data=json.dumps(message))
 
     async def get_user_id(self, username):

@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from accounts.models import User
+
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
 class Conversation(models.Model):
     user1 = models.ForeignKey(
@@ -15,26 +17,26 @@ class Conversation(models.Model):
     )
     last_message = models.TextField(blank=True, null=True, default='Send first message')
     unread_messages_user1 = models.IntegerField(default=0)
-    unread_messages_user2 = models.IntegerField(default=0)  
+    unread_messages_user2 = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user1_block_status = models.CharField(
-        max_length=10, 
-        choices=[('blocker', 'Blocker'), ('blocked', 'Blocked'), (None, 'None')], 
-        blank=True, 
+        max_length=10,
+        choices=[('blocker', 'Blocker'), ('blocked', 'Blocked'), (None, 'None')],
+        blank=True,
         null=True,
-        default=None 
+        default=None
     )
     user2_block_status = models.CharField(
-        max_length=10, 
-        choices=[('blocker', 'Blocker'), ('blocked', 'Blocked'), (None, 'None')], 
-        blank=True, 
+        max_length=10,
+        choices=[('blocker', 'Blocker'), ('blocked', 'Blocked'), (None, 'None')],
+        blank=True,
         null=True,
-        default=None 
+        default=None
     )
 
     class Meta:
-        unique_together = ('user1', 'user2') 
+        unique_together = ('user1', 'user2')
 
     def __str__(self):
         return f"Conversation between {self.user1} and {self.user2}"
@@ -50,4 +52,3 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver} at {self.timestamp}"
-

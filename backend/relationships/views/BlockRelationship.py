@@ -2,13 +2,17 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from ..models import BlockRelationship, FriendRequest
-from ..serializers.BlockedUserSerializer import BlockedUserSerializer
+
 from django.utils import timezone
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 from django.db.models import Q
 
-User = get_user_model()
+from accounts.models import User
+from relationships.models import BlockRelationship, FriendRequest
+from relationships.serializers import BlockedUserSerializer
+
+
 
 class BlockUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -30,7 +34,7 @@ class BlockUserView(APIView):
             if created:
                 request.user.friends.remove(target_user)
                 FriendRequest.objects.filter(
-                    Q(sender=request.user, receiver=target_user) | 
+                    Q(sender=request.user, receiver=target_user) |
                     Q(sender=target_user, receiver=request.user)
                 ).delete()
 
@@ -42,7 +46,7 @@ class BlockUserView(APIView):
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception:
             return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 
 class UnblockUserView(APIView):
     permission_classes = [IsAuthenticated]

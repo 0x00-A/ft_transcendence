@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from ..models import Badge
+
+from accounts.models import Badge
 from app.settings import MEDIA_URL
 from app.settings import SERVER_URL
 

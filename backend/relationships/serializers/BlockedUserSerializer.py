@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from ..models.BlockRelationship import BlockRelationship
-from accounts.serializers.userSerializer import UserSerializer 
+from relationships.models import BlockRelationship
+
+from accounts.serializers.userSerializer import UserSerializer
 
 class BlockedUserSerializer(serializers.ModelSerializer):
     blocker = UserSerializer(read_only=True)

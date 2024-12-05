@@ -5,28 +5,18 @@ import css from './ProfileFriends.module.css';
 import { FaUserFriends } from "react-icons/fa";
 // API
 import { useGetData } from "@/api/apiHooks";
+import { API_GET_FRIENDS_URL } from '@/api/apiConfig';
 // Components
 import Loading from "@/components/Friends/Loading";
 import { useNavigate } from 'react-router-dom';
-
-interface FriendProfile {
-    avatar: string;
-    is_online: boolean;
-    level: number;
-}
-
-interface Friend {
-  id: string;
-  username: string;
-  profile: FriendProfile;
-}
+// Types
+import { Friends } from '@/types/apiTypes';
 
 
 const ProfileFriends = () => {
 
     const [isBtnActive, setBtnActive] = useState(true);
-    // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
-    const { data: friendsData, isLoading, error } = useGetData<Friend[]>(`/friends`);
+    const { data: friendsData, isLoading, error } = useGetData<Friends[]>(API_GET_FRIENDS_URL);
     const navigate = useNavigate();
     const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
@@ -43,11 +33,11 @@ const ProfileFriends = () => {
         </div>
         <div className={css.friendsList}>
             <div className={css.buttonsGrp}>
-                <button onClick={() => setBtnActive(!isBtnActive)}
+                <button onClick={() => setBtnActive(true)}
                     className={`${css.button} ${isBtnActive  ? css.buttonActive : ''}`}>
                     Online
                 </button>
-                <button onClick={() => setBtnActive(!isBtnActive)}
+                <button onClick={() => setBtnActive(false)}
                     className={`${css.button} ${!isBtnActive ? css.buttonActive : ''}`}>
                     Offline
                 </button>
