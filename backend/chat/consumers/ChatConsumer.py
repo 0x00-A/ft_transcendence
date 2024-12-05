@@ -18,7 +18,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.user.is_authenticated:
-            await self.set_active_conversation(self.user.id, -1)
+            await self.dis_active_conversation(self.user.id, -1)
             await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
 
     async def receive(self, text_data):
@@ -123,6 +123,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def set_active_conversation(self, user_id, conversation_id):
         user = User.objects.get(id=user_id)
+        user.active_conversation = conversation_id
+        user.save()
+    @sync_to_async
+    def dis_active_conversation(self, user_id, conversation_id):
+        user = User.objects.get(id=user_id)
+        if user.active_conversation != -1:
+            return
         user.active_conversation = conversation_id
         user.save()
 
