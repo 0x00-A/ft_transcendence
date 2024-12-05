@@ -100,6 +100,34 @@ services:
       - backend
         #condition: service_healthy
 
+  # The setup service is responsible for setting up the Elasticsearch cluster
+  setup:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+    # The user to run commands as inside the container
+    user: "0"
+    # The command to run inside the container
+    command: >
+      bash -c '
+        elasticsearch-certutil ca --pem -out /usr/share/elasticsearch/config/certs/ca.zip &&
+        unzip /usr/share/elasticsearch/config/certs/ca.zip -d /usr/share/elasticsearch/config/certs/ca/ &&
+        elasticsearch-certutil cert --pem --ca /usr/share/elasticsearch/config/certs/ca/ca.crt \
+          --ca-key /usr/share/elasticsearch/config/certs/ca/ca.key \
+          --dns es01 \
+          -out /usr/share/elasticsearch/config/certs/certs.zip &&
+        unzip /usr/share/elasticsearch/config/certs/certs.zip -d /usr/share/elasticsearch/config/certs/ &&
+        chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/config/certs &&
+        chmod -R 600 /usr/share/elasticsearch/config/certs/* &&
+        touch /usr/share/elasticsearch/config/certs/es01/es01.crt
+      '
+    # The healthcheck to determine the health of this service
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
   elasticsearch:
     build:
       context: ./elk/elasticsearch/
