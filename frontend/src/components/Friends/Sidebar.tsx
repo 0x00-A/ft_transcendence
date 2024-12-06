@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './Sidebar.module.css';
-import { FaArrowCircleRight, FaArrowCircleLeft } from 'react-icons/fa';
 import {  CircleDot } from 'lucide-react';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { RiUserReceived2Line, RiUserShared2Line, RiUserForbidLine } from "react-icons/ri";
 import { LuUserPlus } from "react-icons/lu";
 import { FiUsers } from "react-icons/fi";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
@@ -80,13 +80,14 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         <LuUserPlus className={css.icon}/>
         <span className={css.buttonText}>Add Friend</span>
       </button>
-      <button className={css.collapseButton} onClick={toggleCollapse}>
-        {isCollapsed ? (
-          <FaArrowCircleRight size={30} />
-        ) : (
-          <FaArrowCircleLeft size={30} />
-        )}
+      <button 
+        className={css.collapseButton} 
+        onClick={toggleCollapse} 
+        aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+      >
+        {isCollapsed ? <FaChevronLeft size={20} /> : <FaChevronRight size={20} />}
       </button>
+
     </nav>
   );
 };
