@@ -178,34 +178,38 @@ const MessageInput = ({
           rows={1}
         />
 
-        <button
-          ref={buttonEmojiRef}
-          className={css.buttonEmoji}
-          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-          aria-label="Open emoji picker"
-        >
-          <SmilePlus />
-        </button>
+        <div className={css.buttonAndSend}>
+          <div className={css.EmojiAndInvite}>
+            <button
+              ref={buttonEmojiRef}
+              className={css.buttonEmoji}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              aria-label="Open emoji picker"
+            >
+              <SmilePlus />
+            </button>
 
+            <button
+              className={css.buttonClip}
+              aria-label="Invite game"
+              onClick={() => handleSendInvite(conversationData!.name)}
+            >
+              <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
+            </button>
+        </div>
         <button
-          className={css.buttonClip}
-          aria-label="Invite game"
-          onClick={() => handleSendInvite(conversationData!.name)}
+          onClick={handleSendMessage}
+          className={`${css.sendButton} ${
+            isFlying ? css.animateIcon : ''
+          } ${!message.trim() ? css.disabled : ''}`}
+          disabled={!message.trim()}
+          aria-label="Send message"
         >
-          <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
+          <SendHorizontal />
         </button>
+        </div>
       </div>
 
-      <button
-        onClick={handleSendMessage}
-        className={`${css.sendButton} ${
-          isFlying ? css.animateIcon : ''
-        } ${!message.trim() ? css.disabled : ''}`}
-        disabled={!message.trim()}
-        aria-label="Send message"
-      >
-        <SendHorizontal />
-      </button>
     </div>
   );
 };
