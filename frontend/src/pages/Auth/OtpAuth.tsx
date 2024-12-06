@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_LOGIN_OTP_URL } from '@/api/apiConfig';
 
 
 
@@ -17,8 +18,7 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
     e.preventDefault();
     // console.log('otp: ', otp);
     try {
-        const response = await apiClient.post('/login/verify_otp/', {otp: otp, username: username});
-        // console.log(response.data);
+        const response = await apiClient.post(API_LOGIN_OTP_URL, {otp: otp, username: username});
         toast.success(response.data.message);
         setOtpRequired(false);
         setIsLoggedIn(true);

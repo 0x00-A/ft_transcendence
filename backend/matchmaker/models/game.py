@@ -61,11 +61,11 @@ class Game(models.Model):
 
         self.winner = self.player1 if winner == 1 else self.player2
         if winner == 1:
-            self.player1.profile.update_score(win=True, result=p1_score - p2_score)
-            self.player2.profile.update_score(win=False, result=p1_score - p2_score)
+            self.player1.profile.update_score(win=True, result=p1_score - p2_score, p2_badge=self.player2.profile.badge.xp_reward)
+            self.player2.profile.update_score(win=False, result=p2_score, p2_badge=self.player1.profile.badge.xp_reward)
         else:
-            self.player2.profile.update_score(win=True, result=p2_score - p1_score)
-            self.player1.profile.update_score(win=False, result=p2_score - p1_score)
+            self.player2.profile.update_score(win=True, result=p2_score - p1_score, p2_badge=self.player1.profile.badge.xp_reward)
+            self.player1.profile.update_score(win=False, result=p1_score, p2_badge=self.player2.profile.badge.xp_reward)
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.status = 'ended'
@@ -85,14 +85,20 @@ class Game(models.Model):
             player.save()
 
         self.player1.profile.stats['games_played'] += 1
+        self.player1.profile.played_games += 1
         self.player2.profile.stats['games_played'] += 1
+        self.player2.profile.played_games += 1
 
         if self.winner == self.player1:
             self.player1.profile.stats['wins'] += 1
             self.player2.profile.stats['losses'] += 1
+            self.player1.profile.wins += 1
+            self.player2.profile.losses += 1
         elif self.winner == self.player2:
             self.player2.profile.stats['wins'] += 1
             self.player1.profile.stats['losses'] += 1
+            self.player2.profile.wins += 1
+            self.player1.profile.losses += 1
 
         current_day = self.end_time.strftime('%a')
         duration = (self.end_time -
