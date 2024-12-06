@@ -94,8 +94,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 else:
                     conversation.user1_block_status = None
                     conversation.user2_block_status = None
-
-
         conversation.save()
 
 
@@ -245,7 +243,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not conversation_id:
             return
 
-        print("-*-*-*-*--**-*-*-")
         await self.mark_conversation_as_read(conversation_id, self.user)
 
         await self.send(text_data=json.dumps({
@@ -274,14 +271,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, sender_id, receiver_id, message):
         sender = User.objects.get(id=sender_id)
         receiver = User.objects.get(id=receiver_id)
-        print(f"Receiver ID: {receiver_id}, Sender ID: {sender_id}")
-
 
         conversation = Conversation.objects.get(
             user1=min(sender, receiver, key=lambda user: user.id),
             user2=max(sender, receiver, key=lambda user: user.id)
         )
-        print(f"Conversation Users: {conversation.user1.id}, {conversation.user2.id}")
 
         Message.objects.create(
             conversation=conversation,
@@ -290,16 +284,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=message
         )
         conversation.last_message = message
-        print(f" >>>> receiver_id,: {receiver_id}, conversation.id: {conversation.id} <<<<")
-        print(f" >>>> receiver.active_conversation: {receiver.active_conversation}")
         is_active =  receiver.active_conversation == conversation.id
-        print(f" >>>> is_active: {is_active}")
         if not is_active:
             if receiver == conversation.user1:
                 conversation.unread_messages_user1 += 1
             elif receiver == conversation.user2:
                 conversation.unread_messages_user2 += 1
-            print(f"Unread User1: {conversation.unread_messages_user1}, Unread User2: {conversation.unread_messages_user2}")
         conversation.save()
         return conversation
     
