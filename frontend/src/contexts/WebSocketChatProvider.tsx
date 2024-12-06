@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
+import moment from 'moment';
 
 interface MessageProps {
   id: number;
@@ -71,7 +72,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     };
 
     socket.onmessage = (event) => {
-      // console.log('WebSocket message received:', event.data);
       const data = JSON.parse(event.data);
 
       if (data.type === 'chat_message') {
@@ -81,7 +81,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           sender: data.sender_id,
           receiver: userId,
           content: data.message,
-          timestamp: new Date().toISOString(),
+          timestamp: moment().format('HH:mm'),
           seen: false,
         };
 
@@ -90,7 +90,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         setLastMessage({
           conversationId: data.conversation_id,
           content: data.message,
-          timestamp: new Date().toISOString(),
+          timestamp: moment().format('HH:mm'),
         });
 
       } else if (data.type === 'typing_status') {
