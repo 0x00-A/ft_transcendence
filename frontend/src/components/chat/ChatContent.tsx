@@ -6,6 +6,7 @@ import { useGetData } from '@/api/apiHooks';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { MessageProps } from '@/types/apiTypes';
+import ChatSkeleton from './ChatSkeleton';
 
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
@@ -40,8 +41,11 @@ const ChatContent = () => {
 
   useEffect(() => {
     if (selectedConversation?.id) {
+      console.log("/*/*/*/*/*/")
       updateActiveConversation(selectedConversation.id);
       if (selectedConversation.unreadCount) {
+        console.log("/* yes i here */")
+        console.log(selectedConversation.id)
         markAsRead(selectedConversation.id);
       }
     }
@@ -73,7 +77,7 @@ const ChatContent = () => {
     <>
       <div className={css.messageArea}>
         {isLoading ? (
-          <div>Loading messages...</div>
+          <ChatSkeleton />
         ) : error ? (
           <div>Error loading messages</div>
         ) : (

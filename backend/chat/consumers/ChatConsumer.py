@@ -3,6 +3,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from ..models import User, Message, Conversation
 from asgiref.sync import sync_to_async
 from django.db.models import Q
+from accounts.models import  Notification
+from accounts.consumers import NotificationConsumer
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -11,6 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if self.user.is_authenticated:
             self.user_group_name = f"user_{self.user.id}"
             
+            await self.update_open_chat_status(self.user.id, True)
             await self.channel_layer.group_add(self.user_group_name, self.channel_name)
             await self.accept()
         else:
@@ -18,8 +21,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.user.is_authenticated:
+            await self.update_open_chat_status(self.user.id, False)
             await self.dis_active_conversation(self.user.id, -1)
             await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
+
+    @sync_to_async
+    def update_open_chat_status(self, user_id, status):
+        user = User.objects.get(id=user_id)
+        user.open_chat = status
+        user.save()
+    
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -137,7 +148,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         conversation_id = data.get("conversation_id")
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
-    
+
+    @sync_to_async
+    def get_user_open_chat_status(self, user_id):
+        user = User.objects.get(id=user_id)
+        return user.open_chat
+
+    @sync_to_async
+    def send_notification_to_receiver(self, receiver_id, sender_id, message):
+        sender_user = User.objects.get(id=sender_id)
+        receiver_user = User.objects.get(id=receiver_id)
+
+        notification = Notification.objects.create(
+            user=receiver_user,
+            link=f"/chat",
+            title="New Message",
+            message=f"{sender_user.username} sent you a message: {message}",
+        )
+        notification.save()
+        NotificationConsumer.send_notification_to_user(receiver_id, notification)
+
     async def handle_send_message(self, data):
         message = data.get("message")
         receiver_id = data.get("receiver_id") 
@@ -151,6 +181,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if await self.is_conversation_blocked(conversation, sender_id):
             raise ValueError("Cannot send message. Conversation is blocked.")
 
+        is_open_chat = await self.get_user_open_chat_status(receiver_id)
+        if not is_open_chat:
+            await self.send_notification_to_receiver(receiver_id, sender_id, message)
         saved_conversation = await self.save_message(sender_id, receiver_id, message)
 
         await self.channel_layer.group_send(
@@ -212,6 +245,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not conversation_id:
             return
 
+        print("-*-*-*-*--**-*-*-")
         await self.mark_conversation_as_read(conversation_id, self.user)
 
         await self.send(text_data=json.dumps({
