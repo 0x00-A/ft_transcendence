@@ -9,6 +9,14 @@
   position: relative;
 }
 
+.buttonAndSend {
+  display: flex;
+  justify-content: space-between;
+}
+
+.EmojiAndInvite {
+  display: flex;
+}
 .invite {
   width: 22px;
   height: 22px;
@@ -54,7 +62,6 @@
 }
 
 .textarea {
-  flex: 1;
   background-color: transparent;
   color: #1e2533;
   border: none;
@@ -62,16 +69,17 @@
   font-size: 15px;
   min-width: 0;
   resize: none;
-  max-height: 120px;
+  max-height: 150px;
   overflow-y: auto;
   line-height: 1.5;
   padding: 0;
-  margin-bottom: 5px;
+  margin-top: 10px;
 }
 
-.textarea::placeholder {
-  color: #1e2533;
-  opacity: 0.6;
+
+.textarea {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #d1d8e7; 
 }
 
 .textarea:focus {
@@ -80,7 +88,7 @@
 
 .messageInputContainer {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   padding: 8px 16px;
   background-color: #d0d8e7;
   border-radius: 24px;
@@ -112,6 +120,8 @@
 
 .buttonEmoji,
 .buttonClip {
+  width: 40px;
+  height: 40px;
   position: relative;
   display: flex;
   align-items: center;
