@@ -19,12 +19,7 @@ import Oauth2 from '../../components/Auth/Oauth2';
 import apiClient from '@/api/apiClient';
 import { API_RESET_PASSWORD_REQUEST_URL } from '@/api/apiConfig';
 import axios from 'axios';
-
-
-interface LoginFormData {
-  username: string;
-  password: string;
-}
+import { LoginFormData } from '@/types/apiTypes';
 
 const Login = () => {
 

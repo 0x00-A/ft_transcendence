@@ -7,7 +7,7 @@ import { BiShow } from "react-icons/bi";
 import useResetPass from '@/hooks/auth/useResetPass';
 import { ResetPasswordForm } from '@/types/apiTypes';
 import { toast } from 'react-toastify';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 type ShowPasswordFields = 'new_pass' | 'confirm_pass';

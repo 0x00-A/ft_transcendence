@@ -130,7 +130,7 @@ export interface SignupFormData {
   password2: string;
 }
 
-export interface LoginData {
+export interface LoginFormData {
   username: string;
   password: string;
 }
