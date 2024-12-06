@@ -12,7 +12,7 @@ class User(AbstractUser):
     otp_expires = models.DateTimeField(blank=True, null=True)
     last_seen = models.CharField(max_length=50, default="Never", blank=True)
     active_conversation = models.IntegerField(default=-1)
-    has_new_requests = models.BooleanField(default=False)
+    open_chat = models.BooleanField(default=False)
 
 
     def __str__(self):

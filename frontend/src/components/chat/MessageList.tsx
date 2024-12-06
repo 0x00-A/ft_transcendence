@@ -11,7 +11,7 @@ import { conversationProps } from '@/types/apiTypes';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-import { CircleX, CheckCheck, User, Ban, Trash2, Search, ArrowBigLeft } from 'lucide-react';
+import { CircleX, CheckCheck, User, Ban, Search, ArrowBigLeft } from 'lucide-react';
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 
@@ -108,7 +108,7 @@ const MessageList = () => {
       );
 
       if (matchedConversation) {
-        handleConversationSelect(matchedConversation);
+        setSelectedConversation(matchedConversation);
 
         setIsSearchActive(false);
         setSearchQuery('');
@@ -158,23 +158,6 @@ const MessageList = () => {
         activeIndex:
           prevState.activeIndex !== index || !prevState.isOpen ? index : null,
       }));
-    }
-  };
-
-
-  const handleDelete = async (id: Number) => {
-    try {
-      const response = await apiDeleteConversation(id);
-
-      toast.success(response.message);
-      setMenuState((prevState) => ({
-        ...prevState,
-        isOpen: false,
-        activeIndex: null,
-      }));
-      refetch();
-    } catch (error: any) {
-      toast.error(error.message);
     }
   };
 
@@ -284,6 +267,7 @@ const MessageList = () => {
 
 
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
+    console.log(" ..... selectedConversation: ", conversation)
     setSelectedConversation(conversation);
   }, [selectedConversation]);
   
@@ -417,25 +401,18 @@ const MessageList = () => {
             <div className={css.menuItem} onClick={handleClose}>
               <CircleX /> <span>Close Chat</span>
             </div>
+            <hr />
             <div
               className={css.menuItem}
               onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
             >
               <User /> <span>View Profile</span>
             </div>
-            <hr />
             <div
               className={css.menuItem}
               onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
               <Ban /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
-            </div>
-            <div
-              className={css.menuItem}
-              onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
-              >
-              <Trash2 />
-              <span>Delete chat</span>
             </div>
           </div>
         )}

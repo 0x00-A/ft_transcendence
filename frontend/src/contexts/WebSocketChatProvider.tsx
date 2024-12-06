@@ -152,14 +152,24 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
 
   const markAsRead = (conversationId: number) => {
     const socket = socketRef.current;
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(
-        JSON.stringify({
-          action: 'mark_as_read',
-          conversation_id: conversationId,
-        })
-      );
-    }
+    let retryCount = 0;
+    const maxRetries = 5; 
+  
+    const sendMarkAsRead = () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(
+          JSON.stringify({
+            action: 'mark_as_read',
+            conversation_id: conversationId,
+          })
+        );
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(sendMarkAsRead, 1000);
+      }
+    };
+  
+    sendMarkAsRead();
   };
 
   const updateActiveConversation = (conversationId: number) => {

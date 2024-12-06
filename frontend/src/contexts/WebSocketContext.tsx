@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { useGameInvite } from './GameInviteContext';
 import apiClient from '@/api/apiClient';
 import { useAuth } from './AuthContext';
+import { useUser } from '@/contexts/UserContext';
 import FriendRequestCard from '@/components/Friends/FriendRequestCard';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 // import { WebSocketContextType, Notification } from './types';
@@ -40,9 +41,7 @@ export interface WebSocketContextType {
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
-  markRequestAsRead: () => void;
   unreadCount: number;
-  hasNewRequests: boolean;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
@@ -55,28 +54,11 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const ws = useRef<WebSocket | null>(null);
-  const [hasNewRequests, setHasNewRequests] = useState<boolean>(false);
 
   const { isLoggedIn } = useAuth();
+  const {user} = useUser()
 
 
-  useEffect(() => {
-    const fetchHasNewRequests = async () => {
-      try {
-        const { data } = await apiClient.get('has-new-requests/');
-
-        console.log("+++data.hasNewRequests+++ ", data.hasNewRequests)
-        
-        setHasNewRequests(data.hasNewRequests);
-      } catch (error) {
-        console.error('Error fetching new requests status:', error);
-      }
-    };
-
-    if (isLoggedIn) {
-      fetchHasNewRequests();
-    }
-  }, [isLoggedIn]);
 
   // Fetch notifications from the API
   const fetchNotifications = async () => {
@@ -150,7 +132,6 @@ const showFriendRequestToast = (from: string) => {
   const handleAcceptRequest = async (from: string) => {
     try {
       await acceptFriendRequest(from);
-      setHasNewRequests(false);
       toast.dismiss(from);
     } catch (error) {
       toast.error('Failed to accept friend request');
@@ -160,7 +141,6 @@ const showFriendRequestToast = (from: string) => {
   const handleRejectRequest = async (from: string) => {
     try {
       await rejectFriendRequest(from); 
-      setHasNewRequests(false);
       toast.dismiss(from);
     } catch (error) {
       toast.error('Failed to reject friend request');
@@ -222,15 +202,16 @@ const showFriendRequestToast = (from: string) => {
     toast.dismiss(from);
   };
 
+  console.log(user);
   useEffect(() => {
       if (!isLoggedIn)
         return;
       ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
 
       ws.current.onopen = () => {
-        // console.log('Notification WebSocket connected');
+        console.log('Notification WebSocket connected');
       };
-
+      
       ws.current.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
@@ -243,7 +224,6 @@ const showFriendRequestToast = (from: string) => {
           data.event === 'friend_request' ||
           data.event === 'status_update'
         ) {
-          setHasNewRequests(true);
           showFriendRequestToast(data.from);
         }
         if (
@@ -278,16 +258,6 @@ const showFriendRequestToast = (from: string) => {
       };
   }, [isLoggedIn]);
 
-  const markRequestAsRead = () => {
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      console.log("Sending mark_request_as_read...");
-      sendMessage({ event: 'mark_request_as_read' });
-      setHasNewRequests(false);
-    } else {
-      console.error("WebSocket is not open. Cannot mark request as read.");
-    }
-  };
-  
 
   const handleIncomingNotification = (data: Notification) => {
     // const newNotification: Notification = {
@@ -317,8 +287,6 @@ const showFriendRequestToast = (from: string) => {
       markAsRead,
       deleteAllNotifications,
       unreadCount,
-      hasNewRequests,
-      markRequestAsRead,
       }}>
       {children}
     </WebSocketContext.Provider>

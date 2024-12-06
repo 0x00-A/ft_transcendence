@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './Sidebar.module.css';
 import {  CircleDot } from 'lucide-react';
-import { useWebSocket } from '@/contexts/WebSocketContext';
 import { RiUserReceived2Line, RiUserShared2Line, RiUserForbidLine } from "react-icons/ri";
 import { LuUserPlus } from "react-icons/lu";
 import { FiUsers } from "react-icons/fi";
@@ -19,7 +18,6 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
-  const { hasNewRequests } = useWebSocket();
 
 
   const toggleCollapse = () => {
@@ -54,7 +52,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         >
           <div className={css.iconContainer}>
             <RiUserReceived2Line className={css.icon} />
-            {hasNewRequests && <span className={css.notificationBadge}></span>}
           </div>
           <span className={css.buttonText}>Friend Requests</span>
         </button>
