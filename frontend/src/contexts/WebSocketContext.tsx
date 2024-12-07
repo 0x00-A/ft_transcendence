@@ -220,6 +220,9 @@ const showFriendRequestToast = (from: string) => {
         if (data.event === 'friend_request_accepted') {
           toast.success(`${data.from} has accepted your friend request!`);
         }
+        if (data.event === 'new_message') {
+          toast(`${data.from} has sent you a message.`);
+        }
         if (
           data.event === 'friend_request' ||
           data.event === 'status_update'

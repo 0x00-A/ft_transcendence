@@ -78,7 +78,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     conversation.user2_block_status = "blocked"
             elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
                 conversation.user2_block_status = "blocker"
-                if conversation.user1_block_status != "blocker": 
+                if conversation.user1_block_status != "blocker":
                     conversation.user1_block_status = "blocked"
         else:
             if blocker_id == conversation.user1_id:
@@ -165,6 +165,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         notification.save()
         NotificationConsumer.send_notification_to_user(receiver_id, notification)
+        notification_data = {
+            "event": "new_message",
+            "from": self.user.username,
+            "message": f"{self.user.username} sent you a message.",
+        }
+        NotificationConsumer.send_notification_to_user(receiver_id, notification_data)
 
     async def handle_send_message(self, data):
         message = data.get("message")
