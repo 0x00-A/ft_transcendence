@@ -22,11 +22,12 @@ const MessageInput = ({
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
-  const [inputFocused, setInputFocused] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const { user } = useUser();
   const { toggleBlockStatus } = useWebSocketChat();
   const { sendMessage } = useWebSocket();
@@ -34,7 +35,6 @@ const MessageInput = ({
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     if (textareaRef.current) {
-      setInputFocused(true);
       textareaRef.current.focus();
     }
   };
@@ -64,52 +64,32 @@ const MessageInput = ({
     };
   }, []);
 
-  const debounce = (callback: (...args: any[]) => void, delay: number) => {
-    let timeoutId: NodeJS.Timeout | null = null;
-
-    return (...args: any[]) => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      timeoutId = setTimeout(() => {
-        callback(...args);
-      }, delay);
-    };
-  };
-
-  const debouncedOnTyping = useCallback(
-    debounce((isTyping: boolean) => {
-      if (message.trim() &&isTyping && inputFocused ) {
-        onTyping(true);
-      } else {
-        onTyping(false);
-      }
-    }, 1000),
-    [onTyping, inputFocused]
-  );
-
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setMessage(newValue);
-    setInputFocused(true);
 
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
 
-    if (newValue.trim()) {
-      debouncedOnTyping(true);
-    } else {
-      debouncedOnTyping(false);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
     }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      if (newValue.trim()) {
+        onTyping(true);
+      } else {
+        onTyping(false);
+      }
+    }, 5000); // Trigger `onTyping` after 5 seconds of inactivity
   };
 
   const handleInputBlur = () => {
     if (!message.trim()) {
-      setInputFocused(false);
+      onTyping(false);
     }
-    onTyping(false);
   };
 
   const handleBlock = async (activeConversation: conversationProps) => {
@@ -138,11 +118,10 @@ const MessageInput = ({
   const handleSendMessage = () => {
     if (message.trim()) {
       onSendMessage(message);
+      onTyping(false);
     }
     setMessage('');
     setIsFlying(true);
-    setInputFocused(false);
-    onTyping(false);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current?.focus();
@@ -196,20 +175,19 @@ const MessageInput = ({
             >
               <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
             </button>
-        </div>
-        <button
-          onClick={handleSendMessage}
-          className={`${css.sendButton} ${
-            isFlying ? css.animateIcon : ''
-          } ${!message.trim() ? css.disabled : ''}`}
-          disabled={!message.trim()}
-          aria-label="Send message"
-        >
-          <SendHorizontal />
-        </button>
+          </div>
+          <button
+            onClick={handleSendMessage}
+            className={`${css.sendButton} ${
+              isFlying ? css.animateIcon : ''
+            } ${!message.trim() ? css.disabled : ''}`}
+            disabled={!message.trim()}
+            aria-label="Send message"
+          >
+            <SendHorizontal />
+          </button>
         </div>
       </div>
-
     </div>
   );
 };

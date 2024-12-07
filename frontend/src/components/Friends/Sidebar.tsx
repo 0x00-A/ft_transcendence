@@ -82,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         onClick={toggleCollapse} 
         aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
       >
-        {isCollapsed ? <FaChevronLeft size={20} /> : <FaChevronRight size={20} />}
+        {isCollapsed ? <FaChevronLeft size={15} /> : <FaChevronRight size={15} />}
       </button>
 
     </nav>
