@@ -10,7 +10,7 @@ fclean:
 	docker compose -f docker-compose.yml down --rmi all -v
 
 up:
-	docker compose -f docker-compose.yml --env-file .env up
+	docker-compose -f docker-compose.yml --env-file .env up
 
 deploy:
 	docker compose -f docker-compose-deploy.yml --env-file .env up
