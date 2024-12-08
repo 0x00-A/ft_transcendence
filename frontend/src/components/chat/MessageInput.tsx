@@ -77,15 +77,15 @@ const MessageInput = ({
       clearTimeout(typingTimeoutRef.current);
     }
 
-    // typingTimeoutRef.current = setTimeout(() => {
-    //   if (newValue.trim()) {
-    //     console.log("is typing......")
-    //     console.log(newValue)
-    //     onTyping(true);
-    //   } else {
-    //     onTyping(false);
-    //   }
-    // }, 2000);
+    typingTimeoutRef.current = setTimeout(() => {
+      if (newValue.trim()) {
+        console.log("is typing......")
+        console.log(newValue)
+        onTyping(true);
+      } else {
+        onTyping(false);
+      }
+    }, 2000);
   };
 
   const handleInputBlur = () => {
