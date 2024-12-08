@@ -144,9 +144,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def update_active_conversation(self, data):
         conversation_id = data.get("conversation_id")
-        print("xxxxxxxxx")
-        print(conversation_id)
-        print("xxxxxxxxx")
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
 
