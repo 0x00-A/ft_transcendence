@@ -144,6 +144,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def update_active_conversation(self, data):
         conversation_id = data.get("conversation_id")
+        print("xxxxxxxxx")
+        print(conversation_id)
+        print("xxxxxxxxx")
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
 
@@ -291,6 +294,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         conversation.last_message = message
         is_active =  receiver.active_conversation == conversation.id
+        print("**** ==== ****")
+        print(is_active)
+        print(receiver.active_conversation)
+        print(conversation.id)
+        print("**** ==== ****")
         if not is_active:
             if receiver == conversation.user1:
                 conversation.unread_messages_user1 += 1

@@ -55,6 +55,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.username = user.username
             self.id = user.id
             await self.set_online_status(True)
+            await self.set_active_conversation(-1)
 
             connected_users[self.username] = self.channel_name
         else:
@@ -68,6 +69,16 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 await profile.asave()
             except Profile.DoesNotExist:
                 return
+
+    async def set_active_conversation(self, value):
+        if self.username:
+            try:
+                user = await User.objects.aget(username=self.username)
+                user.active_conversation = value
+                await user.asave()
+            except User.DoesNotExist:
+                return
+            
     async def set_last_seen(self):
         if self.username:
             try:

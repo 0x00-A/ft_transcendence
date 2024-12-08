@@ -17,6 +17,7 @@ const ChatContent = () => {
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
+  console.log("rander chat content")
   useEffect(() => {
     if (!selectedConversation) return;
     clearMessages()
@@ -41,7 +42,7 @@ const ChatContent = () => {
 
   useEffect(() => {
     if (selectedConversation?.id) {
-      console.log("/*/*/*/*/*/")
+      console.log("updateActiveConversation..")
       updateActiveConversation(selectedConversation.id);
       if (selectedConversation.unreadCount) {
         console.log("/* yes i here */")

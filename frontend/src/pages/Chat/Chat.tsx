@@ -32,7 +32,8 @@ const Chat = () => {
     return <Navigate to="/signup" />;
   }
 
-  // console.log("rander chat >>>>>>>>>>>>>>>>>>>>>>>>>")
+  console.log("rander chat >>>>>")
+  console.log(selectedConversation)
 
   return (
     <TypingProvider>
