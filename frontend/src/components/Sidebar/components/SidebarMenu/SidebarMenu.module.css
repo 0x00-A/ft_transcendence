@@ -67,7 +67,7 @@
     transform 0.5s ease; */
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1264px) {
   .menu li a {
     padding: 15px 20px !important;
   }
