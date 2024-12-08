@@ -10,10 +10,10 @@ import {
 } from '../../../../config/constants';
 
 const ThemeToggle = ({
-  open,
+  open = false,
   className = '',
 }: {
-  open: boolean;
+  open?: boolean;
   className?: string;
 }) => {
   const [theme, setTheme] = useState('light');
@@ -45,7 +45,7 @@ const ThemeToggle = ({
             size={MENU_ICON_SIZE}
             className={css['icon sun-icon']}
           />
-          <p className={`${open ? css.open : css.hidden}`}>Light mode</p>
+          <p className={`${open ? '' : ''}`}>Light mode</p>
         </>
       ) : (
         <>
@@ -54,7 +54,7 @@ const ThemeToggle = ({
             size={MENU_ICON_SIZE}
             className={css['icon moon-icon']}
           />
-          <p className={`${open ? css.open : css.hidden}`}>Dark mode</p>
+          <p className={`${open ? '' : ''}`}>Dark mode</p>
         </>
       )}
     </button>
