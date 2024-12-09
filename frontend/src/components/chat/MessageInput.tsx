@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import debounce from 'lodash.debounce';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
@@ -19,23 +20,42 @@ const MessageInput = ({
   onSendMessage,
   onTyping,
 }: MessageInputProps) => {
+
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
-
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const emojiRef = useRef<HTMLDivElement>(null);
-  const buttonEmojiRef = useRef<HTMLButtonElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const { user } = useUser();
   const { toggleBlockStatus } = useWebSocketChat();
   const { sendMessage } = useWebSocket();
 
-  const handleEmojiClick = (emoji: any) => {
-    setMessage((prev) => prev + emoji.native);
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+  const handleTypingDebounced = useCallback(
+    debounce((isTyping: boolean) => {
+      onTyping(isTyping);
+    }, 2000), 
+    [onTyping]
+  );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    setMessage(newValue);
+  
+    if (e.target) {
+      e.target.style.height = 'auto';
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    }
+  
+    if (!message.trim()) {
+      onTyping(true); 
+    }
+  
+    handleTypingDebounced(false);
+  };
+
+
+  const handleInputBlur = () => {
+    if (!message.trim()) {
+      onTyping(false);
     }
   };
 
@@ -46,52 +66,14 @@ const MessageInput = ({
     }
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      emojiRef.current &&
-      !emojiRef.current.contains(event.target as Node) &&
-      buttonEmojiRef.current &&
-      !buttonEmojiRef.current.contains(event.target as Node)
-    ) {
-      setShowEmojiPicker(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    setMessage(newValue);
-
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-
-    typingTimeoutRef.current = setTimeout(() => {
-      if (newValue.trim()) {
-        console.log("is typing......")
-        console.log(newValue)
-        onTyping(true);
-      } else {
-        onTyping(false);
-      }
-    }, 2000);
-  };
-
-  const handleInputBlur = () => {
-    if (!message.trim()) {
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      onSendMessage(message);
       onTyping(false);
     }
+    setMessage('');
+    setIsFlying(true);
+    setTimeout(() => setIsFlying(false), 500);
   };
 
   const handleBlock = async (activeConversation: conversationProps) => {
@@ -99,6 +81,27 @@ const MessageInput = ({
       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
     }
   };
+
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+  };
+
+  const handleEmojiClick = (emoji: any) => {
+    setMessage((prev) => prev + emoji.native);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      handleTypingDebounced.cancel();
+    };
+  }, [handleTypingDebounced]);
 
   if (conversationData?.block_status) {
     return (
@@ -117,32 +120,10 @@ const MessageInput = ({
     );
   }
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      onSendMessage(message);
-      onTyping(false);
-    }
-    setMessage('');
-    setIsFlying(true);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current?.focus();
-    }
-    setTimeout(() => setIsFlying(false), 500);
-  };
-
-  const handleSendInvite = (username: string) => {
-    sendMessage({
-      event: 'game_invite',
-      from: user?.username,
-      to: username,
-    });
-  };
-
   return (
     <div className={css.messageInputWrapper}>
       {showEmojiPicker && (
-        <div ref={emojiRef} className={css.emojiPicker}>
+        <div className={css.emojiPicker}>
           <Picker data={data} onEmojiSelect={handleEmojiClick} />
         </div>
       )}
@@ -162,7 +143,6 @@ const MessageInput = ({
         <div className={css.buttonAndSend}>
           <div className={css.EmojiAndInvite}>
             <button
-              ref={buttonEmojiRef}
               className={css.buttonEmoji}
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               aria-label="Open emoji picker"
