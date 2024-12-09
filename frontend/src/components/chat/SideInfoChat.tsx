@@ -16,11 +16,13 @@ const SideInfoChat = () => {
 
   return (
     <div className={css.sideInfoChat}>
-      <ProfileSection
-        avatarUrl={selectedConversation!.avatar}
-        name={selectedConversation!.name}
-      />
-      <StatusSection/>
+      <div>
+        <ProfileSection
+          avatarUrl={selectedConversation!.avatar}
+          name={selectedConversation!.name}
+        />
+        <StatusSection/>
+      </div>
       <ButtonSection />
       <SettingsSection />
     </div>
