@@ -1,113 +1,112 @@
 services:
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     args:
-  #       DEV: "false"
-  #     dockerfile: Dockerfile.prod
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     # - ./backend:/app/backend
-  #     - static_data:/app/backend/static
-  #     - django-logs:/app/backend/logs
-  #     # - ./logs/django_logs.log:/app/backend/django_logs.log
-  #   environment:
-  #     # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
-  #     - ALLOWED_HOSTS=$ALLOWED_HOSTS
-  #     - DB_HOST=$DB_HOST
-  #     - DB_NAME=$DB_NAME
-  #     - DB_USER=$DB_USER
-  #     - DB_PASS=$DB_PASS
-  #     - REDIS_HOST=$REDIS_HOST
-  #     - REDIS_PORT=$REDIS_PORT
-  #     - DEBUG=0
-  #     - SECRET_KEY=$SECRET_KEY
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - default_network-deploy
-  #   depends_on:
-  #     db:
-  #       condition: service_started
-  #     redis:
-  #       condition: service_started
-  #   restart: on-failure
-  #   healthcheck:
-  #     test: ["CMD", "python", "manage.py", "check"]
-  #     interval: 10s
-  #     timeout: 10s
-  #     retries: 5
-  #     start_period: 10s
+  backend:
+    build:
+      context: ./backend
+      args:
+        DEV: "false"
+      dockerfile: Dockerfile.prod
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - static_data:/app/backend/static
+      - django-logs:/app/backend/logs
+    environment:
+      - ALLOWED_HOSTS=$ALLOWED_HOSTS
+      - DB_HOST=$DB_HOST
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - DEBUG=0
+      - SECRET_KEY=$SECRET_KEY
+    env_file:
+      - .env
+    networks:
+      - default_network-deploy
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "python", "manage.py", "check"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
-  # frontend:
-  #   build:
-  #     context: frontend
-  #     dockerfile: Dockerfile.prod
-  #   # ports:
-  #   #   - "3000:3000"
-  #   volumes:
-  #     - react_build:/app/dist
-  #   networks:
-  #     - default_network-deploy
-  #   depends_on:
-  #     - backend
-  #       #condition: service_healthy
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - react_build:/app/dist
+    networks:
+      - default_network-deploy
+    depends_on:
+      backend:
+        condition: service_healthy
 
-  # db:
-  #   image: postgres:13-alpine
-  #   restart: on-failure
-  #   # build:
-  #   #   context: ./db
-  #   #   dockerfile: Dockerfile
+  db:
+    image: postgres:13-alpine
+    container_name: postgres
+    restart: on-failure
+    # ports:
+    #   - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASS
+    networks:
+      - default_network-deploy
 
-  #   # ports:
-  #   #   - '5432:5432'
-  #   volumes:
-  #     - db-data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_DB=$DB_NAME
-  #     - POSTGRES_USER=$DB_USER
-  #     - POSTGRES_PASSWORD=$DB_PASS
-  #   networks:
-  #     - default_network-deploy
+  redis:
+    image: "redis:latest"
+    container_name: redis
+    restart: on-failure
+    # ports:
+    #   - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - default_network-deploy
 
-  # redis:
-  #   image: "redis:latest"
-  #   restart: on-failure
-  #   # ports:
-  #   #   - "6379:6379"
-  #   volumes:
-  #     - redis_data:/data
-  #   networks:
-  #     - default_network-deploy
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: on-failure
+    volumes:
+      - ./certs/letsencrypt:/etc/letsencrypt
+      - static_data:/web
+      - react_build:/usr/share/nginx/html
+    ports:
+      - "81:80"
+      - "443:443"
+    networks:
+      - default_network-deploy
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
 
-  # nginx:
-  #   build:
-  #     context: ./nginx
-  #     dockerfile: Dockerfile
-  #   restart: on-failure
-  #   volumes:
-  #     - ./certs/letsencrypt:/etc/letsencrypt
-  #     - static_data:/web
-  #     - react_build:/usr/share/nginx/html
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   networks:
-  #     - default_network-deploy
-  #   depends_on:
-  #     - backend
-  #       #condition: service_healthy
-
-  # The setup service is responsible for setting up the Elasticsearch cluster
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: elk-setup
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
-    # The user to run commands as inside the container
     user: "0"
-    # The command to run inside the container
     command: >
       bash -c '
         if [ ! -f config/certs/ca.zip ]; then
@@ -126,8 +125,6 @@ services:
         fi;
         echo "Setting file permissions";
         chown -R root:root config/certs;
-        find . -type d -exec chmod 750 \{\} \;;
-        find . -type f -exec chmod 640 \{\} \;;
         echo "Waiting for Elasticsearch availability";
         until curl -s --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt https://es:9200 | grep -q "missing authentication credentials"; do sleep 10; done;
         echo "Setting kibana_system password";
@@ -138,16 +135,8 @@ services:
           -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
           echo "All done!";
       '
-    # chown -R root:root config/certs;
-    # find . -type d -exec chmod 750 \{\} \;;
-    # find . -type f -exec chmod 640 \{\} \;;
-    # chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/config/certs &&
-    # chmod -R 600 /usr/share/elasticsearch/config/certs/*
-    # touch /usr/share/elasticsearch/config/certs/es/es.crt
     networks:
       - default_network-deploy
-
-    # The healthcheck to determine the health of this service
     healthcheck:
       test: ["CMD-SHELL", "[ -f config/certs/es/es.crt ]"]
       interval: 1s
@@ -155,34 +144,38 @@ services:
       retries: 120
 
   es:
-    build:
-      context: ./elk/elasticsearch/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: slasticsearch
     volumes:
-      # - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - certs:/usr/share/elasticsearch/config/certs
       - es-data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
       - 9300:9300
     environment:
-      - node.name=es
-      - cluster.name=${CLUSTER_NAME}
+      # - node.name=es
+      # - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - bootstrap.memory_lock=true
+      # - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key=certs/es/es.key
       - xpack.security.http.ssl.certificate=certs/es/es.crt
       - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - logger.level=error
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key=certs/es/es.key
       - xpack.security.transport.ssl.certificate=certs/es/es.crt
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       # - xpack.license.self_generated.type=${LICENSE}
+      # - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    # mem_limit: ${ES_MEM_LIMIT}
+    # ulimits:
+    #   memlock:
+    #     soft: -1
+    #     hard: -1
     networks:
       - default_network-deploy
     depends_on:
@@ -194,18 +187,17 @@ services:
       interval: 10s
       retries: 120
 
-
   logstash:
     # image: docker.elastic.co/logstash/logstash:8.12.2
     build:
       context: ./elk/logstash/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
-    # container_name: elk-logstash
+    container_name: logstash
     user: root
     volumes:
       - certs:/usr/share/logstash/config/certs
-      - ./elk/logstash/pipeline:/usr/share/logstash/pipeline
+      # - ./elk/logstash/pipeline:/usr/share/logstash/pipeline
       # - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - django-logs:/var/log/django
       - ls-data:/usr/share/logstash/data
@@ -213,8 +205,8 @@ services:
     ports:
       - "5044:5044"
     environment:
+      # - LS_JAVA_OPTS=-Xms256m -Xmx256m
       # - node.name=logstash
-      # LS_JAVA_OPTS: -Xms256m -Xmx256m
       # LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
       # http.host: 0.0.0.0
       - xpack.monitoring.enabled=false
@@ -229,12 +221,9 @@ services:
     restart: unless-stopped
 
   kibana:
-    build:
-      context: ./elk/kibana/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION}
+    container_name: kibana
     volumes:
-      # - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
       - certs:/usr/share/kibana/config/certs
       - kb-data:/usr/share/kibana/data
     ports:
@@ -251,7 +240,7 @@ services:
       - SERVER_SSL_ENABLED=true
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/kibana/kibana.crt
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/kibana/kibana.key
-
+      # - LOGGING_ROOT_LEVEL=error
       # - KIBANA_SYSTEM_PASSWORD=${KIBANA_PASSWORD:-}
     networks:
       - default_network-deploy
@@ -275,28 +264,3 @@ volumes:
 networks:
   default_network-deploy:
     driver: bridge
-
-
-# services:
-#   app:
-#     build:
-#       context: .
-#     volumes:
-#       - static_data:/web
-#     environment:
-#       - SECRET_KEY=valueforsecretkey
-#       - ALLOWED_HOSTS=127.0.0.1,localhost
-
-#   proxy:
-#     build:
-#       context: ./proxy
-#       dockerfile: Dockerfile
-#     volumes:
-#       - static_data:/web
-#     ports:
-#       - "8080:8080"
-#     depends_on:
-#       - app
-
-# volumes:
-#   static_data:

@@ -1,4 +1,0 @@
-config.reload.automatic: true
-http.host: ${http.host}
-node.name: ${node.name}
-xpack.monitoring.enabled: ${xpack.monitoring.enabled}

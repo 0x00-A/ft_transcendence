@@ -339,29 +339,82 @@ LOGGING = {
     'handlers': {
         'file': {
             'level': 'DEBUG',
-            # 'class': 'logging.FileHandler',
-            'class': 'logging.handlers.RotatingFileHandler',
+            'class': 'logging.FileHandler',
+            # 'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(LOG_DIR, 'django_logs.log'),
-            'maxBytes': 1024 * 1024 * 10,  # 10 MB
-            'backupCount': 5,
+            # 'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            # 'backupCount': 5,
             'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'ERROR',  # Change from DEBUG to ERROR
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
-        'django': {
+        # '': {  # Root logger configuration
+        #     'level': 'DEBUG',
+        #     # Log messages will be written to the 'file' handler
+        #     'handlers': ['file'],
+        # },
+        'django.request': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'daphne': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'django.db.backends': {
-            'level': 'INFO',
-            'handlers': ['file'],
-            'propagate': True,
-        }
+        # 'django': {
+        #     'handlers': ['file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        # 'daphne': {
+        #     'handlers': ['file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        # 'django.db.backends': {
+        #     'level': 'INFO',
+        #     'handlers': ['file'],
+        #     'propagate': True,
+        # },
+        # 'django.channels': {
+        #     'handlers': ['console'],
+        #     'level': 'ERROR',  # Adjust this to reduce verbosity
+        #     'propagate': True,
+        # },
     },
 }
+
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'logstash': {
+#             'level': 'INFO',
+#             'class': 'logstash.TCPLogstashHandler',
+#             'host': 'logstash',
+#             'port': 5959,  # Default value: 5959
+#             'version': 1,
+#             'message_type': 'django',
+#             'fqdn': False,
+#             'tags': ['django.request'],
+#         },
+#         'console': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler'
+#         },
+#     },
+#     'loggers': {
+#         'django.request': {
+#             'handlers': ['logstash'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+
+#         'django': {
+#             'handlers': ['console'],
+#             'propogate': True,
+#         },
+#     }
+# }
