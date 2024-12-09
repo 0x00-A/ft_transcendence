@@ -56,12 +56,15 @@ const ButtonSection: React.FC = () => {
         <p>Profile</p>
       </div>
       <div className={css.button}>
-        <img
+        <div
           onClick={handleSendInvite}
           className={`${css.iconInvite} ${isInviteDisabled ? css.disabled : ''}`}
-          src="/icons/chat/Invite.svg"
-          alt="Invite Button"
-        />
+        >
+          <img
+            src="/icons/chat/Invite.svg"
+            alt="Invite Button"
+          />
+        </div>
         <p>Invite</p>
         {isInviteDisabled && (
           <span className={css.cooldownTimer}>{timeLeft}s</span>

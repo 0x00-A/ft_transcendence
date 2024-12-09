@@ -151,6 +151,14 @@
   opacity: 0.6;
   transform: none;
 }
+.cooldownTimer {
+  opacity: 1;
+  position: absolute;
+  font-size: 12px;
+  color: rgb(255, 255, 255);
+  top: -15px;
+  left: 10px;
+}
 
 .actionButton:hover {
   background-color: #7892b8;
@@ -169,11 +177,3 @@
   padding: 0;
 }
 
-.cooldownTimer {
-  opacity: 1;
-  position: absolute;
-  font-size: 12px;
-  color: rgb(255, 255, 255);
-  top: -15px;
-  left: 10px;
-}
