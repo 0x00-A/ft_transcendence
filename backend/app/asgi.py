@@ -28,8 +28,8 @@ from django.core.asgi import get_asgi_application  # noqa
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
-logger = logging.getLogger('django')
-logger.debug("This is a test log behind Nginx!")
+# logger = logging.getLogger('django')
+# logger.debug("This is a test log behind Nginx!")
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
