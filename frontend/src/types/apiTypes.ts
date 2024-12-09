@@ -178,7 +178,7 @@ export interface Friends {
 }
 
 export interface MutualFriend {
-  mutual_friends: Friends;
+  mutual_friends: Friends[];
   mutual_friends_count: number;
 }
 

@@ -21,6 +21,8 @@ const SettingsSection = () => {
   );
   const navigate = useNavigate();
 
+  console.log("mutualFriends: ", mutualFriends)
+
   const togglePrivacy = () => setIsPrivacyOpen(!isPrivacyOpen);
   const toggleMutualFriends = () => setIsMutualFriendsOpen(!isMutualFriendsOpen);
 
@@ -59,9 +61,13 @@ const SettingsSection = () => {
         {isMutualFriendsOpen && (
           <div className={css.sectionContent}>
             <div className={css.mutualFriendsContainer}>
-              {mutualIsLoading
-                  ?  <MutualFriendSkeleton  />
-                  : mutualFriends?.mutual_friends.map((friend: Friends) => (
+            {isMutualFriendsOpen && (
+              <div className={css.sectionContent}>
+                <div className={css.mutualFriendsContainer}>
+                  {mutualIsLoading ? (
+                    <MutualFriendSkeleton />
+                  ) : mutualFriends?.mutual_friends ? (
+                    mutualFriends.mutual_friends.map((friend: Friends) => (
                       <div
                         key={friend.id}
                         className={css.mutualFriendItem}
@@ -72,7 +78,11 @@ const SettingsSection = () => {
                         </div>
                         <span>{friend.username}</span>
                       </div>
-                    ))}
+                    ))
+                  ) : null}
+            </div>
+          </div>
+        )}
             </div>
           </div>
         )}
