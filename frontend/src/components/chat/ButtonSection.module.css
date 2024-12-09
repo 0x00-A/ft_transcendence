@@ -1,34 +1,37 @@
 .buttonSection {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   width: 100%;
+  padding: 10px 0;
 }
 
 .button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: background-color 0.3s ease;
+  gap: 5px;
+  position: relative;
 }
 
-
-.icon {
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-}
-.iconDisabled {
+.iconInvite {
   width: 25px;
   height: 25px;
-  margin-bottom: 10px;
-  cursor:not-allowed;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: relative;
 }
 
-p {
-  color: var(--text-color);
-  font-size: 14px;
-  margin: 0;
+
+.iconInvite.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
 }
 
+.cooldownTimer {
+  position: absolute;
+  font-size: 12px;
+  color: rgb(240, 0, 0);
+  top: -20px;
+}
