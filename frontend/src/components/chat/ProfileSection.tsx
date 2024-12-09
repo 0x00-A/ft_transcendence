@@ -1,16 +1,15 @@
-// import { useState, useRef, useEffect } from 'react';
 import css from './ProfileSection.module.css';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
-interface ProfileSectionProps {
-  avatarUrl: string;
-  name: string;
-}
 
-const ProfileSection: React.FC<ProfileSectionProps> = ({ avatarUrl, name }) => {
+const ProfileSection = () => {
+  const { selectedConversation } = useSelectedConversation();
+
   return (
     <div className={css.profileSection}>
-      <img className={css.avatar} src={avatarUrl} alt="avatar" />
-      <h2 className={css.name}>{name}</h2>
+      <img className={css.avatar} src={selectedConversation?.avatar} alt="avatar" />
+      <h2 className={css.name}>{selectedConversation?.name}</h2>
+      {selectedConversation?.status ? <p className={css.online} >Active now</p> : <p className={css.offline}>{"Last seen at " + selectedConversation?.last_seen}</p> }
     </div>
   );
 };
