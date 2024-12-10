@@ -6,8 +6,8 @@ services:
         DEV: "false"
       dockerfile: Dockerfile.prod
     container_name: backend
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     volumes:
       - ./backend:/app/backend
       - static_data:/app/backend/static
@@ -87,9 +87,10 @@ services:
     container_name: nginx
     restart: on-failure
     volumes:
-      - ./certs/letsencrypt:/etc/letsencrypt
+      - ./certs/letsencrypt:/etc/letsencrypt ###
       - static_data:/web
       - react_build:/usr/share/nginx/html
+      - nginx-logs:/var/log/nginx/
     ports:
       - "81:80"
       - "443:443"
@@ -99,6 +100,8 @@ services:
       backend:
         condition: service_healthy
       frontend:
+        condition: service_started
+      kibana:
         condition: service_started
 
   setup:
@@ -116,10 +119,9 @@ services:
         fi;
         if [ ! -f config/certs/certs.zip ]; then
           echo "Creating certs";
-          echo -e "instances:\n  - name: es\n    dns:\n      - es\n      - localhost\n      - 127.0.0.1\n  - name: kibana\n    dns:\n      - kibana\n      - localhost\n      - 127.0.0.1" > config/certs/instances.yml;
           elasticsearch-certutil cert --silent --pem --ca-cert config/certs/ca/ca.crt \
             --ca-key config/certs/ca/ca.key \
-            --in config/certs/instances.yml \
+            --dns es --dns localhost --ip 127.0.0.1 \
             -out config/certs/certs.zip;
           unzip config/certs/certs.zip -d config/certs;
         fi;
@@ -135,6 +137,7 @@ services:
           -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
           echo "All done!";
       '
+    # echo -e "instances:\n  - name: es\n    dns:\n      - es\n      - localhost\n      - 127.0.0.1\n  - name: kibana\n    dns:\n      - kibana\n      - localhost\n      - 127.0.0.1" > config/certs/instances.yml;
     networks:
       - default_network-deploy
     healthcheck:
@@ -200,6 +203,7 @@ services:
       # - ./elk/logstash/pipeline:/usr/share/logstash/pipeline
       # - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - django-logs:/var/log/django
+      - nginx-logs:/var/log/nginx
       - ls-data:/usr/share/logstash/data
 
     ports:
@@ -226,8 +230,8 @@ services:
     volumes:
       - certs:/usr/share/kibana/config/certs
       - kb-data:/usr/share/kibana/data
-    ports:
-      - 5601:5601
+    # ports:
+    #   - 5601:5601
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=https://es:9200
@@ -237,9 +241,11 @@ services:
       # - xpack.security.audit.enabled=true
       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-      - SERVER_SSL_ENABLED=true
-      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/kibana/kibana.crt
-      - SERVER_SSL_KEY=/usr/share/kibana/config/certs/kibana/kibana.key
+      # - SERVER_BASEPATH="/kibana"
+      # - SERVER_REWRITEBASEPATH="true"
+      # - SERVER_SSL_ENABLED=true
+      # - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/kibana/kibana.crt
+      # - SERVER_SSL_KEY=/usr/share/kibana/config/certs/kibana/kibana.key
       # - LOGGING_ROOT_LEVEL=error
       # - KIBANA_SYSTEM_PASSWORD=${KIBANA_PASSWORD:-}
     networks:
@@ -255,6 +261,7 @@ volumes:
   static_data:
   react_build:
   django-logs:
+  nginx-logs:
   es-data:
   ls-data:
   kb-data:

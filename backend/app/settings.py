@@ -337,19 +337,33 @@ LOGGING = {
         },
     },
     'handlers': {
+        # 'file': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.FileHandler',
+        #     # 'class': 'logging.handlers.RotatingFileHandler',
+        #     'filename': os.path.join(LOG_DIR, 'django_logs.log'),
+        #     # 'maxBytes': 1024 * 1024 * 10,  # 10 MB
+        #     # 'backupCount': 5,
+        #     'formatter': 'verbose',
+        # },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            # 'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_DIR, 'django_logs.log'),
-            # 'maxBytes': 1024 * 1024 * 10,  # 10 MB
-            # 'backupCount': 5,
+            # 'filename': '/var/log/django/app.log',
+            'filename': os.path.join(LOG_DIR, 'app.log'),
             'formatter': 'verbose',
         },
-        'console': {
-            'level': 'ERROR',  # Change from DEBUG to ERROR
-            'class': 'logging.StreamHandler',
-        },
+        # 'error_file': {
+        #     'level': 'ERROR',
+        #     'class': 'logging.FileHandler',
+        #     # 'filename': '/var/log/django/error.log',
+        #     'filename': os.path.join(LOG_DIR, 'error.log'),
+        #     'formatter': 'verbose',
+        # },
+        # 'console': {
+        #     'level': 'ERROR',  # Change from DEBUG to ERROR
+        #     'class': 'logging.StreamHandler',
+        # },
     },
     'loggers': {
         # '': {  # Root logger configuration
@@ -357,15 +371,20 @@ LOGGING = {
         #     # Log messages will be written to the 'file' handler
         #     'handlers': ['file'],
         # },
-        'django.request': {
+        # 'django.request': {
+        #     'handlers': ['error_file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'django': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        # 'django': {
+        # 'django.security': {
         #     'handlers': ['file'],
-        #     'level': 'DEBUG',
-        #     'propagate': True,
+        #     'level': 'INFO',  # You can adjust the level to capture specific events
+        #     'propagate': False,
         # },
         # 'daphne': {
         #     'handlers': ['file'],
