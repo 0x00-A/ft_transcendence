@@ -65,7 +65,7 @@ const SettingsSection = () => {
                 <div className={css.mutualFriendsContainer}>
                   {mutualIsLoading ? (
                     <MutualFriendSkeleton />
-                  ) : mutualFriends?.mutual_friends ? (
+                  ) : mutualFriends?.mutual_friends && mutualFriends.mutual_friends.length > 0 ? (
                     mutualFriends.mutual_friends.map((friend: Friends) => (
                       <div
                         key={friend.id}
@@ -78,10 +78,17 @@ const SettingsSection = () => {
                         <span>{friend.username}</span>
                       </div>
                     ))
-                  ) : null}
-            </div>
-          </div>
-        )}
+                  ) : (
+                    <div className={css.noMutualFriends}>
+                      <p>No mutual friends found.</p>
+                      <button className={css.addUserButton} onClick={() => navigate('/friends?view=add')}>
+                        Add User
+                      </button>
+                    </div>
+                  )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
