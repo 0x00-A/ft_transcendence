@@ -11,7 +11,7 @@ import {
   Users,
   Clock,    
   Eye,
-  Search     
+  Search,   
 } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
 
