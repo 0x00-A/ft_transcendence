@@ -28,6 +28,38 @@ const MessageInput = ({
   const { user } = useUser();
   const { toggleBlockStatus } = useWebSocketChat();
   const { sendMessage } = useWebSocket();
+  const [isInviteDisabled, setIsInviteDisabled] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+
+  const handleSendInvite = (username: string) => {
+
+    if (isInviteDisabled) return;
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+
+    setIsInviteDisabled(true);
+    setTimeLeft(10);
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isInviteDisabled && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timeLeft === 0 && isInviteDisabled) {
+      setIsInviteDisabled(false);
+    }
+
+    return () => clearInterval(timer);
+  }, [isInviteDisabled, timeLeft]);
 
   const handleTypingDebounced = useCallback(
     debounce((isTyping: boolean) => {
@@ -80,14 +112,6 @@ const MessageInput = ({
     if (user?.id !== undefined) {
       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
     }
-  };
-
-  const handleSendInvite = (username: string) => {
-    sendMessage({
-      event: 'game_invite',
-      from: user?.username,
-      to: username,
-    });
   };
 
   const handleEmojiClick = (emoji: any) => {
@@ -147,15 +171,18 @@ const MessageInput = ({
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               aria-label="Open emoji picker"
             >
-              <SmilePlus />
+              <SmilePlus size={25}/>
             </button>
 
             <button
-              className={css.buttonClip}
+              className={`${css.buttonClip} ${isInviteDisabled ? css.disabled : ''}`}
               aria-label="Invite game"
               onClick={() => handleSendInvite(conversationData!.name)}
             >
-              <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
+              {isInviteDisabled
+                ? <span className={css.cooldownTimer}>{timeLeft}s</span> 
+                : <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
+              }
             </button>
           </div>
           <button

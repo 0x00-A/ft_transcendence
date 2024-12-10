@@ -21,7 +21,6 @@ const SettingsSection = () => {
   );
   const navigate = useNavigate();
 
-  console.log("mutualFriends: ", mutualFriends)
 
   const togglePrivacy = () => setIsPrivacyOpen(!isPrivacyOpen);
   const toggleMutualFriends = () => setIsMutualFriendsOpen(!isMutualFriendsOpen);

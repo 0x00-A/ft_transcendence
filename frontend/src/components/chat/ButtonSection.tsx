@@ -4,7 +4,9 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
-import { User } from 'lucide-react';
+import { User, UserX } from 'lucide-react';
+import { apiRemoveFriend } from '@/api/friendApi';
+import { toast } from 'react-toastify';
 
 const ButtonSection: React.FC = () => {
   const { user } = useUser();
@@ -44,6 +46,15 @@ const ButtonSection: React.FC = () => {
     return () => clearInterval(timer);
   }, [isInviteDisabled, timeLeft]);
 
+  const removeFriend = async () => {
+    try {
+      await apiRemoveFriend(selectedConversation!.name);
+      // refetch();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to remove friend')
+    }
+  };
+
   return (
     <div className={css.buttonSection}>
       <div className={css.button}>
@@ -54,6 +65,15 @@ const ButtonSection: React.FC = () => {
           <User size={30} color="#F8F3E3" />
         </div>
         <p>Profile</p>
+      </div>
+      <div className={css.button}>
+        <div
+          className={css.icon}
+          onClick={removeFriend}
+        >
+          <UserX size={30} color="#F8F3E3" />
+        </div>
+        <p>Unfriend</p>
       </div>
       <div className={css.button}>
         <div

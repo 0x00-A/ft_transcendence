@@ -98,6 +98,7 @@
   transition: box-shadow 0.2s ease;
   max-height: 150px;
   position: relative;
+  gap: 0.5rem
 }
 
 .inputActions {
@@ -141,7 +142,16 @@
   transform: scale(1.1);
 }
 
+.buttonClip.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
 
+.buttonClip img {
+  width: 23px;
+  height: 23px;
+}
 .sendButton {
   background-color: #d0d8e7;
   color: #1e2533;
