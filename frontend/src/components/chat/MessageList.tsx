@@ -125,9 +125,7 @@ const MessageList = () => {
         }
       }
     }
-  }, [
-    location.state,
-  ]);
+  }, [location.state]);
 
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
@@ -262,14 +260,6 @@ const MessageList = () => {
     };
   }, []);
 
-
-
-  const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
-    console.log(" ..... selectedConversation: ", conversation)
-    setSelectedConversation(conversation);
-  }, [selectedConversation]);
-  
-  
   const handleConversationClick = useCallback((conversation: conversationProps | null) => {
     
     console.log(" ..... selectedConversation: ", conversation)

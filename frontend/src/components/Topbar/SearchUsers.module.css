@@ -37,7 +37,7 @@
     top: 110%;
     left: 0;
     width: 100%;
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
     background-color: #394056;
     border: 1px solid #384b6c;
@@ -69,19 +69,40 @@
     border-radius: 5px;
   }
   
+  .userCard:hover {
+    transform: scale(1.02);
+  }
+
+  .userCard.selected {
+    background-color: #5774a1;
+    transform: scale(1.02);
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  
+  .userCard.selected .username {
+    color: #f8f3e3;
+  }
+  
+  .userCard.selected .fullName {
+    color: #e0e0e0;
+  }
+
   .avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 0.5rem;
+    cursor: pointer;
   }
   
   .userInfo {
+    cursor: pointer;
     flex: 1;
   }
   
   .username {
     font-weight: bold;
+    color: #f8f3e3;
   }
   
   .fullName {
@@ -89,24 +110,92 @@
     color: #555;
   }
 
-  .viewProfileBtn {
-    padding: 8px 10px;
-    background-color: #394056;
-    color: #f8f3e3;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s;
-  }
-
-  .viewProfileBtn:hover {
-    background-color: #7892b8;
+  .actions {
+    display: flex;
+    gap: 10px;
   }
   
+  .viewProfileBtn,
+  .addFriendBtn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    background-color: #394056;
+    color: #f8f3e3;
+  }
+  
+  
+  .viewProfileBtn:hover {
+    background-color: #5774a1;
+    transform: scale(1.05);
+  }
+  
+  .addFriendBtn:hover {
+    background-color: #5774a1;
+    transform: scale(1.05);
+  }
   .noResults {
     padding: 1rem;
     text-align: center;
     color: #b0b9d0;
   }
   
+  .acceptBtn,
+.rejectBtn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s, transform 0.2s;
+  background-color: #394056;
+  color: #f8f3e3;
+}
+.rejectBtn:hover {
+  background-color: #e53935; 
+  transform: scale(1.05);
+}
+
+.acceptBtn:hover {
+  background-color: #45a049; 
+  transform: scale(1.05); 
+}
+
+.cancelBtn {   
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s, transform 0.2s;
+  color: #f8f3e3; 
+  background-color: #394056; 
+}
+
+.cancelBtn:hover {
+  background-color: #c0392b;    
+  transform: scale(1.05);        
+}
+
+.cancelBtn:focus {
+  outline: none;            
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); 
+}
+
+.friendsStatus {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #f8f3e3; 
+  background-color: #394056; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+  transition: background-color 0.3s; 
+}
+
+.friendsStatus:hover {
+  background-color: #5774a1;
+  transform: scale(1.05);        
+}
