@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
 from django.db.models.signals import post_delete
 from django.contrib.auth.signals import user_logged_in
+from django.contrib.auth.signals import user_logged_out
+import logging
 
 from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
@@ -14,8 +16,8 @@ from accounts.consumers import NotificationConsumer
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-       Profile.objects.create(user=instance,
-                              rank=Profile.objects.count() + 1, badge=Badge.objects.get(name='Bronze'))
+        Profile.objects.create(user=instance,
+                               rank=Profile.objects.count() + 1, badge=Badge.objects.get(name='Bronze'))
 
 
 @receiver(post_save, sender=User)
@@ -80,6 +82,23 @@ def unlock_achievements_on_game(sender, instance, **kwargs):
                 NotificationConsumer.send_notification_to_user(
                     user.id, notification)
             user_achievement.save()
+
+
+logger = logging.getLogger('django')
+
+
+# @receiver(user_logged_in)
+# def log_user_login(sender, request, user, **kwargs):
+#     print(
+#         f"User {user.username} logged in from IP {request.META['REMOTE_ADDR']}")
+#     logger.info(
+#         f"User {user.username} logged in successfully from IP {request.META['REMOTE_ADDR']}")
+
+
+# @receiver(user_logged_out)
+# def log_user_logout(sender, request, user, **kwargs):
+#     logger.info(
+#         f"User {user.username} logged out successfully from IP {request.META['REMOTE_ADDR']}")
 
 
 @receiver(user_logged_in)
