@@ -14,7 +14,6 @@ import { CircleX, CheckCheck, User, Ban, Search, ArrowBigLeft } from 'lucide-rea
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 
-
 interface FriendProfile {
   avatar: string;
 }
