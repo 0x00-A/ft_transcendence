@@ -119,9 +119,10 @@ services:
         fi;
         if [ ! -f config/certs/certs.zip ]; then
           echo "Creating certs";
+          echo -e "instances:\n  - name: es\n    dns:\n      - es\n      - localhost\n      - 127.0.0.1\n  - name: kibana\n    dns:\n      - kibana\n      - localhost\n      - 127.0.0.1" > config/certs/instances.yml;
           elasticsearch-certutil cert --silent --pem --ca-cert config/certs/ca/ca.crt \
             --ca-key config/certs/ca/ca.key \
-            --dns es --dns localhost --ip 127.0.0.1 \
+            --in config/certs/instances.yml \
             -out config/certs/certs.zip;
           unzip config/certs/certs.zip -d config/certs;
         fi;
@@ -166,7 +167,7 @@ services:
       - xpack.security.http.ssl.key=certs/es/es.key
       - xpack.security.http.ssl.certificate=certs/es/es.crt
       - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-      - logger.level=error
+      # - logger.level=error
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key=certs/es/es.key
       - xpack.security.transport.ssl.certificate=certs/es/es.crt
@@ -241,8 +242,8 @@ services:
       # - xpack.security.audit.enabled=true
       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-      # - SERVER_BASEPATH="/kibana"
-      # - SERVER_REWRITEBASEPATH="true"
+      - SERVER_BASEPATH="/kibana"
+      - SERVER_REWRITEBASEPATH="true"
       # - SERVER_SSL_ENABLED=true
       # - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/kibana/kibana.crt
       # - SERVER_SSL_KEY=/usr/share/kibana/config/certs/kibana/kibana.key
