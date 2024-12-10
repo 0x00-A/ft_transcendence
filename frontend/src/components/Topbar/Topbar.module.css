@@ -14,8 +14,9 @@
 }
 
 .searchUsers {
-  margin-left: 100px;
-  width: 80%;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 .iconButton {
   position: relative;
