@@ -108,3 +108,27 @@
   border-radius: 50%;
   border: 2px solid var(--text-color);
 }
+
+.noMutualFriends {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 1rem;
+  color: #72767d;
+}
+
+.addUserButton {
+  background-color: #5774a1;
+  color: var(--text-color);
+  letter-spacing: 1px;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addUserButton:hover {
+  background-color: #384b6c;
+}

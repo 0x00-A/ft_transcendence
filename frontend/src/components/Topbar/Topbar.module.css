@@ -1,12 +1,22 @@
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 15px;
   /* padding: 10px 20px; */
   margin-bottom: 20px;
 }
 
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.searchUsers {
+  margin-left: 100px;
+  width: 80%;
+}
 .iconButton {
   position: relative;
   display: flex;
