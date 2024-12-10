@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import css from './SearchUsers.module.css';
 import { useGetData } from '../../api/apiHooks';
 import { useNavigate } from 'react-router-dom';
-import { Search, Eye, UserPlus, Check, X, Users } from 'lucide-react';
+import { Search, Eye, UserPlus, Check, X, MessageSquareText } from 'lucide-react';
 import FriendSkeleton from '../Friends/FriendSkeleton';
 import {
   apiSendFriendRequest,
@@ -34,6 +34,12 @@ const SearchUsers: React.FC = () => {
 
   const { data: users, isLoading: loadingUsers, error: usersError } = useGetData<User[]>('users');
   const navigate = useNavigate();
+
+  const handleMessageClick = (friend: User) => {
+    navigate('/chat', { state: { selectedFriend: friend } });
+    setShowResults(false);
+    setSearchTerm('');
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -201,11 +207,12 @@ const SearchUsers: React.FC = () => {
                   </button>
 
                   {user.friend_request_status === "accepted" ? (
-                    <span 
-                      className={css.friendsStatus}
-                      title='Friend'
+                    <span
+                      onClick={() => handleMessageClick(user)}
+                      className={css.messageButton}
+                      title='Message'
                     >
-                      <Users size={20}/>
+                      <MessageSquareText size={20}/>
                     </span>
                   ) : user.friend_request_status === "pending" ? (
                     <>
