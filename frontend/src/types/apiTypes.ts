@@ -157,9 +157,10 @@ export interface ChangePasswordForm {
 }
 
 export interface GameHistory {
+  id: number
   start_time: string;
-  oppenent_username: string;
-  oppenent_avatar: string;
+  opponent_username: string;
+  opponent_avatar: string;
   result: string;
   score: string;
   game_duration: string;

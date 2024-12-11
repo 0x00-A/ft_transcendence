@@ -42,6 +42,7 @@ def oauth2_authentication(request, choice):
         print('api ==> oauth2_authentication: Failed to get the token')
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get the token from {choice}')}")
     user_data = get_oauth2_user(token, choice)
+    print('------------------>> User getted from oauth2_authentication <<------------------')
     if user_data is None:
         print('api ==> oauth2_authentication: Failed to get user data')
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get user {choice} resources!')}")
@@ -57,8 +58,7 @@ def oauth2_authentication(request, choice):
             return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Your {choice} username is already exist, Please choose a new one!')}")
         serializer = Oauth2Serializer(data=user_data)
         if not serializer.is_valid():
-            print(
-                'api ==> oauth2_authentication: User data not compatible with our criteria')
+            print('api ==> oauth2_authentication: User data not compatible with our criteria')
             return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'A data in your {choice} user not compatible with our criteria!')}")
         serializer.save()
         check_user = authenticate(email=serializer.validated_data['email'])

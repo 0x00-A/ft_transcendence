@@ -5,6 +5,7 @@ import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
 import PlayerMatchupBanner from '../components/PlayerMatchupBanner';
+import { useUser } from '@/contexts/UserContext';
 
 
 const canvasWidth = 650;
@@ -31,6 +32,8 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
   const [count, setCount] = useState(3);
+
+  const { refetch, user, isLoading } = useUser();
 
   // console.log('RemoteGame component rerendered', `stat: ${gameState}`);
 
@@ -133,6 +136,14 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
             setCurrentScreen('end');
             gameSocket.close();
             ws.current = null;
+
+            refetch();
+            console.log('--------user refetched-------');
+            if (isLoading) {
+              return <div>Loading...</div>;
+            }
+            console.log('----user----', user);
+
             // setGameAccepted(false)
           }
         }

@@ -75,7 +75,7 @@ const ResetPassword = () => {
                     { errors.confirm_password && <span className={css.fieldError}>{errors.confirm_password.message}</span> }
                 </div>
                 <div className={css.ConfirmButtons}>
-                    <button type='reset' className={css.closeBtn}>Cancel</button>
+                    <button type='reset' className={css.closeBtn} onClick={() => navigate('/auth')}>Cancel</button>
                     <button type='submit' className={css.confirmBtn}>Save</button>
                 </div>
             </form>
