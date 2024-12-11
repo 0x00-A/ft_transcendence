@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from ..models.profile import Profile, User
-from ..serializers.badgeSerializer import BadgeSerializer
+
+from accounts.models import Profile, User
+from accounts.serializers.badgeSerializer import BadgeSerializer
 from app.settings import SERVER_URL, MEDIA_URL
 
 

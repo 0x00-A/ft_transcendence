@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,14 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # env = environ.Env(
 #     DEBUG=(bool, False)
 # )
-
-#############################
-# AUTHENTICATION PARAMETERS #
-#############################
-
-API_CLIENT_OAUTH2_REDIRECT_URI = os.environ.get(
-    'API_CLIENT_OAUTH2_REDIRECT_URI')
-OAUTH2_REDIRECT_URI = os.environ.get('OAUTH2_REDIRECT_URI')
 
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -39,32 +32,6 @@ EMAIL_HOST_USER = 'mahdimardi18@gmail.com'
 EMAIL_HOST_PASSWORD = 'pyaj yhzg gzog yslf'
 DEFAULT_FROM_EMAIL = 'mahdimardi18@gmail.com'
 
-###############
-# DISCORD ENV #
-###############
-DISCORD_AUTHORIZATION_URL = os.environ.get('DISCORD_AUTHORIZATION_URL')
-DISCORD_TOKEN_URL = os.environ.get('DISCORD_TOKEN_URL')
-DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID')
-DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET')
-DISCORD_USER_URL = os.environ.get('DISCORD_USER_URL')
-
-###############
-#  INTRA ENV  #
-###############
-INTRA_CLIENT_ID = os.environ.get('INTRA_CLIENT_ID')
-INTRA_CLIENT_SECRET = os.environ.get('INTRA_CLIENT_SECRET')
-INTRA_AUTHORIZATION_URL = os.environ.get('INTRA_AUTHORIZATION_URL')
-INTRA_TOKEN_URL = os.environ.get('INTRA_TOKEN_URL')
-INTRA_USER_URL = os.environ.get('INTRA_USER_URL')
-
-################
-#  GOOGLE ENV  #
-################
-GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
-GOOGLE_AUTHORIZATION_URL = os.environ.get('GOOGLE_AUTHORIZATION_URL')
-GOOGLE_TOKEN_URL = os.environ.get('GOOGLE_TOKEN_URL')
-GOOGLE_USER_URL = os.environ.get('GOOGLE_USER_URL')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -74,7 +41,8 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+# DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+DEBUG = True
 
 if DEBUG:
     SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
@@ -98,13 +66,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'core',
+    'relationships',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
     'corsheaders',
     'rest_framework_simplejwt',
-    'debug_toolbar',
     'channels',
     'game',
     'matchmaker.apps.MatchmakerConfig',
@@ -117,13 +86,13 @@ if DEBUG:
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'accounts.middleware.RefreshTokenMiddleware',
 ]
 
@@ -134,9 +103,22 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 ROOT_URLCONF = 'app.urls'
 
+import socket
+hostname = socket.gethostname()
+
+
 INTERNAL_IPS = [
     "127.0.0.1",
+    '172.17.0.1',
+    "172.28.0.3",
+    '192.168.160.1',
+    '192.168.176.1',
+    socket.gethostbyname(hostname),
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
+}
 
 TEMPLATES = [
     {
@@ -169,6 +151,16 @@ DATABASES = {
         # 'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': "django.db.backends.postgresql",
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'mahdi',
+#         'HOST': 'localhost',
+#         # 'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -188,6 +180,29 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': 'sql_queries.log',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console', 'file'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
 
 
 # Internationalization

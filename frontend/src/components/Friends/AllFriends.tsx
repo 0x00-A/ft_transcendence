@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './AllFriends.module.css';
-import { FaSearch } from 'react-icons/fa';
+import { MessageSquareText, Ban, Search, UserX } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
-import Loading from './Loading';
 import NoFound from './NoFound';
-import { apiBlockRequest } from '@/api/friendApi';
+import { apiBlockRequest, apiRemoveFriend } from '@/api/friendApi';
 import { toast } from 'react-toastify';
-
-
+import FriendSkeleton from './FriendSkeleton';
+import { useUser } from '@/contexts/UserContext';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
 interface FriendProfile {
   avatar: string;
@@ -24,6 +24,8 @@ interface Friend {
 const AllFriends: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { sendMessage } = useWebSocket();
 
   const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
 
@@ -33,28 +35,41 @@ const AllFriends: React.FC = () => {
       )
     : [];
 
-  // console.log("friendsData: ", friendsData);
-
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
 
   const blockRequest = async (username: string) => {
     try {
-      const message = await apiBlockRequest(username);
-      toast.success(message);
+      await apiBlockRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept friend request')
     }
   };
+  const removeFriend = async (username: string) => {
+    try {
+      await apiRemoveFriend(username);
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to remove friend')
+    }
+  };
+
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+  };
 
   return (
     <div className={css.allFriends}>
       <h1 className={css.title}>All Friends</h1>
-
+      
       <div className={css.searchContainer}>
-        <FaSearch className={css.searchIcon} />
+        <Search className={css.searchIcon} />
         <input
           type="text"
           className={css.searchInput}
@@ -63,11 +78,10 @@ const AllFriends: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
-
+      
       <div className={css.friendList}>
         {isLoading ? (
-          <Loading />
+          <FriendSkeleton/>
         ) : error ? (
           <p>Error loading friends</p>
         ) : filteredFriends.length > 0 ? (
@@ -88,21 +102,37 @@ const AllFriends: React.FC = () => {
               </div>
               <div className={css.actions}>
                 <button
-                  className={css.actionButton}
+                  className={`${css.actionButton} ${css.messageButton}`}
                   onClick={() => handleMessageClick(friend)}
+                  title="Message"
                 >
-                  Message
+                  <MessageSquareText size={20} />
                 </button>
-                <button className={css.actionButton}>Invite</button>
-                <button className={css.actionButton}>View Profile</button>
                 <button
                   className={css.actionButton}
+                  onClick={ () =>  handleSendInvite(friend.username)}
+                  title='Invite'
+                  >
+                  <img
+                    src="/icons/chat/Invite.svg" alt="Invite"
+                  />
+                </button>
+                <button
+                  className={`${css.actionButton} ${css.blockButton}`}
                   onClick={() => blockRequest(friend.username)}
+                  title="Block"
                 >
-                  Block</button>
+                  <Ban size={20} />
+                </button>
+                <button
+                  className={`${css.actionButton} ${css.removeButton}`}
+                  onClick={() => removeFriend(friend.username)}
+                  title="Remove"
+                >
+                  <UserX size={20} />
+                </button>
               </div>
             </div>
-
           ))
         ) : (
           <NoFound />

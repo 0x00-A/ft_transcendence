@@ -2,10 +2,11 @@ import React from 'react';
 import css from './SentRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import moment from 'moment';
-import Loading from './Loading';
 import NoSentRequests from './NoSentRequests';
 import { apiCancelFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
+import { X } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
 
 interface Profile {
   id: number;
@@ -28,8 +29,7 @@ const SentRequests: React.FC = () => {
 
   const handleCancel = async (username: string) => {
     try {
-      const message = await apiCancelFriendRequest(username);
-      toast.success(message);
+      await apiCancelFriendRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to cancel friend request');
@@ -49,7 +49,7 @@ const SentRequests: React.FC = () => {
       ) : (
         <div className={css.list}>
           {isLoading ? (
-            <Loading />
+            <FriendSkeleton/>
           ) : error ? (
             <p>Error loading friends</p>
           ) : sentRequests?.map((request) => (
@@ -66,8 +66,9 @@ const SentRequests: React.FC = () => {
               <button
                 className={css.cancelButton}
                 onClick={() => handleCancel(request.receiver.username)}
+                title="Cancel"
               >
-                Cancel
+                <X size={20}/>
               </button>
             </div>
           ))}

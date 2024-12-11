@@ -39,6 +39,8 @@ import UsersProfile from './pages/Profile/UsersProfile';
 import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
 
 import VerifyEmail from './pages/Auth/VerifyEmail';
+import ResetPassword from './pages/Auth/ResetPassword';
+import EditEmailVerification from './components/Profile/EditEmailVerification';
 
 
 function App() {
@@ -89,7 +91,8 @@ function AppContent() {
   '/auth/2factor',
   '/profile',
   /^\/profile\/[^/]+\/?$/,
-  '/auth/verify_email',
+  '/auth/email-verification',
+  '/auth/reset-password',
   ];
   const location = useLocation();
   const shouldShowSidebar = showSidebarRoutes.some((route) => {
@@ -126,7 +129,8 @@ function AppContent() {
         <Routes>
             <Route path="/auth" element={<Auth />}/>
             <Route path="/oauth2/callback" element={<Oauth2Callback />} />
-            <Route path='/auth/verify_email/:token' element={<VerifyEmail/>} />
+            <Route path='/auth/email-verification/:token' element={<VerifyEmail />} />
+            <Route path='/auth/reset-password/:token' element={<ResetPassword />} />
             <Route path="*" element={<PageNotFound />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<Dashboard />} />
@@ -139,6 +143,7 @@ function AppContent() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/:username" element={<UsersProfile />} />
+              <Route path="/profile/update-email/:token" element={<EditEmailVerification />} />
               <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

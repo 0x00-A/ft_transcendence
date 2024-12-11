@@ -38,6 +38,7 @@
   text-align: left;
   cursor: pointer;
   font-size: 25px;
+  font-weight: 400;
   border-radius: 20px;
   box-shadow: inset 0 0 0 0 var(--selected-color);
   transition:
@@ -59,8 +60,8 @@
   color: #f8f3e3;
 }
 
-.navButton img,
-.addFriendButton img {
+.navButton .icon,
+.addFriendButton .icon {
   margin-right: 20px;
   width: 30px;
   height: 30px;
@@ -80,8 +81,8 @@
   padding: 10px 0;
 }
 
-.collapsed .navButton img,
-.collapsed .addFriendButton img {
+.collapsed .navButton .icon,
+.collapsed .addFriendButton .icon {
   margin-right: 0;
 }
 
@@ -120,4 +121,21 @@
 .collapsed .collapseButton {
   right: 50%;
   transform: translateX(50%);
+}
+
+
+.iconContainer {
+  position: relative; 
+  display: inline-flex;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  width: 15px; 
+  height: 15px;
+  background-color: red; 
+  border-radius: 50%; 
+  border: 2px solid white;
 }

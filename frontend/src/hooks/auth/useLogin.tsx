@@ -1,26 +1,15 @@
 // REACT
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from "react-hook-form";
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from "@/api/apiClient";
 import { API_LOGIN_URL } from '@/api/apiConfig';
-import { LoginData } from '@/types/apiTypes';
 import axios from 'axios';
+// Types
+import { LoginFormData } from '@/types/apiTypes';
+import { loginSchema } from '@/types/formSchemas';
 
-
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .required('username is required!')
-    .min(4, 'username must be at least 4 characters!')
-    .max(15, 'username must not exceed 15 characters!'),
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('password is required!'),
-});
 
 // const loginUser = async (user: LoginData) => {
 //   try {
@@ -33,21 +22,23 @@ const schema = yup.object().shape({
 // };
 
 const useLogin = () => {
+  
   const {
     register,
     handleSubmit,
     formState: {errors},
     setError,
-    reset
-  } = useForm<LoginData>({
-    resolver: yupResolver(schema),
+    reset,
+    watch
+  } = useForm<LoginFormData>({
+    resolver: yupResolver(loginSchema),
     reValidateMode: 'onChange',
     mode: 'onChange'
   });
+
   const mutation = useMutation({
-    mutationFn: async (user: LoginData) => await apiClient.post(API_LOGIN_URL, user),
+    mutationFn: async (user: LoginFormData) => await apiClient.post(API_LOGIN_URL, user),
     onError(error) {
-      // console.log('Login error ==> ', error);
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
@@ -57,11 +48,6 @@ const useLogin = () => {
         setError("root", {type: '', message: 'Something went wrong!'});
       }
     },
-    // onSuccess(data) {
-    //   if (data.data.status && data.data.status === '2FA_REQUIRED') {
-    //     <Navigate to={''}/>
-    //   }
-    // }
   });
 
   return {
@@ -71,6 +57,7 @@ const useLogin = () => {
     setError,
     reset,
     mutation,
+    watch
   };
 }
 

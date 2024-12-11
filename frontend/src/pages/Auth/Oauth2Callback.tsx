@@ -8,11 +8,9 @@ import useOauth2Username from '../../hooks/auth/useOauth2Username';
 // Styles
 import css from './Oauth2Callback.module.css';
 import { FaRegUser } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 
-interface UsernameFormData {
-  username: string;
-}
 
 const Oauth2Callback = () => {
 
@@ -26,7 +24,9 @@ const Oauth2Callback = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status')
-        if (status === 'success') {
+        if (status && status === 'success') {
+          toast.success('Login successful, welcome!');
+          setIsLoggedIn(true);
           navigate('/');
           // apiClient.get('/oauth2/verify_login')
           // .then(response => {
@@ -43,6 +43,12 @@ const Oauth2Callback = () => {
           setUsernameForm(true)
         }
         else {
+          const error = params.get('error')
+          if (status === 'failed' && error) {
+            toast.error(error);
+          } else {
+            toast.error('Something went wrong, please try again');
+          }
           navigate('/auth')
         }
     }, [navigate]);
@@ -50,13 +56,19 @@ const Oauth2Callback = () => {
     useEffect(() => {
      if (mutation.isSuccess) {
         reset();
+        toast.success('Username set successfully, welcome!');
         setIsLoggedIn(true);
         navigate('/');
      }
    }, [mutation.isSuccess]);
+   useEffect(() => {
+      if (errors.root) {
+        toast.error(errors.root.message);
+      }
+   }, [mutation.isError]);
 
-    const handleClick = (data:UsernameFormData) => {
-      mutation.mutate(data);
+    const handleClick = (username:string) => {
+      mutation.mutate(username);
     }
 
   return (
@@ -75,7 +87,7 @@ const Oauth2Callback = () => {
             <button type="submit" className={css.submitBtn}>
               Submit
             </button>
-            {errors.root && <span className={css.fieldError}>{errors.root.message}</span>}
+            {/* {errors.root && <span className={css.fieldError}>{errors.root.message}</span>} */}
           </form>
         }
     </div>

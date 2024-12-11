@@ -8,8 +8,11 @@ import {
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const NotificationsDropdown = () => {
+  const navigate = useNavigate();
   const { unreadCount, fetchNotifications, markAllAsRead, notifications, deleteAllNotifications } =
     useWebSocket();
 
@@ -77,7 +80,6 @@ const NotificationsDropdown = () => {
   // ];
 
 
-
   return (
     <DropdownMenu onOpenChange={handleClick}  >
       <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 rounded-full  focus:outline-none">
@@ -97,10 +99,18 @@ const NotificationsDropdown = () => {
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
-            {notifications.map((notification) => (
+            {notifications.map((notification, index) => (
               <div
-                key={notification.id}
-                className="px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0"
+                key={index}
+                className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
+                  notification.link && notification.link !== '#' ? 'cursor-pointer' : ''
+                }`}
+                
+                onClick={() => {
+                  if (notification.link && notification.link !== '#') {
+                    navigate(notification.link);
+                  }
+                }}
               >
                 <div className="flex justify-between items-start">
                   <h3 className="text-lg font-bold text-white">

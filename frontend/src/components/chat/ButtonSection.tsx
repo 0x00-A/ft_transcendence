@@ -4,6 +4,7 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
+import { User } from 'lucide-react';
 // import { useNavigate } from 'react-router-dom';
 
 // import { FaUserCircle, FaSearch, FaUserPlus } from 'react-icons/fa';
@@ -54,8 +55,7 @@ const CooldownButton = ({
       <img
         onClick={handleClick}
         className={`${isDisabled ? css.iconDisabled : css.icon}`}
-        src="/icons/chat/Invite.svg"
-        alt="I"
+        src="/icons/chat/Invite.svg" alt="Invite"
       />
       <p className="cursor-text">Invite</p>
       {isDisabled && (
@@ -75,10 +75,11 @@ const ButtonSection: React.FC = () => {
 
 
   const handleSendInvite = () => {
+    console.log(" selectedConversation?.name: ",  selectedConversation?.name)
     sendMessage({
       event: 'game_invite',
       from: user?.username,
-      to: 'user2',
+      to: selectedConversation?.name,
     });
   };
   return (
@@ -87,18 +88,10 @@ const ButtonSection: React.FC = () => {
         <div
           onClick={() => navigate(`/profile/${selectedConversation?.name}`)}
         >
-          <img className={css.icon} src="/icons/chat/Profile.svg" alt="I" />
+          <User className={css.icon} color="#F8F3E3"/>
         </div>
         <p>Profile</p>
       </div>
-      {/* <div className={css.button}>
-        <img className={css.icon} src="/icons/chat/Search.svg" alt="I" />
-        <p>Search</p>
-      </div> */}
-      {/* <div className={css.button}>
-        <img className={css.icon} src="/icons/chat/Invite.svg" alt="I" />
-        <p>Invite</p>
-      </div> */}
       <CooldownButton onClick={handleSendInvite} />
     </div>
   );

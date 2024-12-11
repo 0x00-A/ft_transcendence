@@ -7,12 +7,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         badges = [
-            {"name": "Bronze", "icon": "/badges/Bronze.svg", "xp_reward": 100, "level_required": 0},
-            {"name": "Silver", "icon": "/badges/Silver.svg", "xp_reward": 200, "level_required": 5},
-            {"name": "Gold", "icon": "/badges/Gold.svg", "xp_reward": 300, "level_required": 10},
-            {"name": "Platinum", "icon": "/badges/Platinum.svg", "xp_reward": 400, "level_required": 15},
-            {"name": "Diamond", "icon": "/badges/Diamond.svg", "xp_reward": 500, "level_required": 20},
-            {"name": "Ft-Pong", "icon": "/badges/Ft-Pong.svg", "xp_reward": 700, "level_required": 25},
+            {"name": "Bronze", "icon": "/badges/Bronze.svg", "xp_reward": 10, "level_required": 0},
+            {"name": "Silver", "icon": "/badges/Silver.svg", "xp_reward": 8, "level_required": 5},
+            {"name": "Gold", "icon": "/badges/Gold.svg", "xp_reward": 6, "level_required": 10},
+            {"name": "Platinum", "icon": "/badges/Platinum.svg", "xp_reward": 4, "level_required": 15},
+            {"name": "Diamond", "icon": "/badges/Diamond.svg", "xp_reward": 2, "level_required": 20},
+            {"name": "Ft-Pong", "icon": "/badges/Ft-Pong.svg", "xp_reward": 0, "level_required": 25},
         ]
         for badge in badges:
             Badge.objects.get_or_create(**badge)

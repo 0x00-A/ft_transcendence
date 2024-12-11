@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { FaPaperPlane, FaSmile } from 'react-icons/fa';
 import css from './MessageInput.module.css';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { conversationProps } from '@/types/apiTypes';
-import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
+import { useWebSocket } from '@/contexts/WebSocketContext';
+
 import { useUser } from '@/contexts/UserContext';
+import { SendHorizontal, SmilePlus } from 'lucide-react';
+
+
 
 interface MessageInputProps {
-  customSticker: string;
   onSendMessage: (message: string) => void;
   onTyping: (isTyping: boolean) => void;
   conversationData: conversationProps | null;
@@ -16,7 +19,6 @@ interface MessageInputProps {
 
 const MessageInput = ({
   conversationData,
-  customSticker,
   onSendMessage,
   onTyping,
 }: MessageInputProps) => {
@@ -29,7 +31,10 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const { user } = useUser();
-  const { toggleBlockStatus } = useWebSocket();
+  // const { sendMessage } = useWebSocketChatGame();
+  const { toggleBlockStatus } = useWebSocketChat();
+  const { sendMessage } = useWebSocket();
+
 
   // console.log("--------render MessageInput-------")
 
@@ -127,19 +132,26 @@ const MessageInput = ({
   const handleSendMessage = () => {
     if (message.trim()) {
       onSendMessage(message);
-    } else if (customSticker) {
-      onSendMessage(customSticker);
     }
     setMessage('');
     setIsFlying(true);
     setInputFocused(false);
-    onTyping(false); // Stop typing on send
+    onTyping(false);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current?.focus();
     }
     setTimeout(() => setIsFlying(false), 500);
   };
+
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+  };
+
 
   return (
     <div className={css.messageInputWrapper}>
@@ -167,15 +179,15 @@ const MessageInput = ({
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           aria-label="Open emoji picker"
         >
-          <FaSmile size={22} />
+          <SmilePlus />
         </button>
 
         <button
           className={css.buttonClip}
-          aria-label="Attach file"
+          aria-label="invite game"
+          onClick={ () =>  handleSendInvite(conversationData!.name)}
         >
-          <img className={css.invite} src="/icons/chat/inviteBlack.svg" alt="invite" />
-          {/* <FaPaperclip size={22} /> */}
+          <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
         </button>
       </div>
 
@@ -183,18 +195,11 @@ const MessageInput = ({
         onClick={handleSendMessage}
         className={`${css.sendButton} ${
           isFlying ? css.animateIcon : ''
-        } ${!message.trim() && !customSticker ? css.disabled : ''}`}
-        disabled={!message.trim() && !customSticker}
+        } ${!message.trim()  ? css.disabled : ''}`}
+        disabled={!message.trim()}
         aria-label="Send message"
       >
-        {inputFocused || message.trim() ? (
-          <FaPaperPlane size={22} />
-        ) : (
-          <span
-            className={css.stickerContainer}
-            dangerouslySetInnerHTML={{ __html: customSticker }}
-          />
-        )}
+        <SendHorizontal />
       </button>
     </div>
   );

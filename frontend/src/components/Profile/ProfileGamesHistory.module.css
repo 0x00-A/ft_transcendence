@@ -51,13 +51,14 @@
 .gamesList {
     height: calc(80% - 1rem);
     width: 100%;
-    padding: 15px ;
+    padding: 10px 15px;
+    overflow-y: auto;
 }
 
 .tableHeader,
 .tableRow {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
     align-items: center;
     padding: 10px;
     font-size: 1.3rem;
@@ -123,6 +124,12 @@
 .player {
     display: flex;
     align-items: center;
+}
+
+.dateTimeGame {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .win {

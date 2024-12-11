@@ -3,32 +3,18 @@ import css from './MessageList.module.css';
 import MessageItem from './MessageItem';
 import SearchResultItem from './SearchResultItem';
 import { useLocation } from 'react-router-dom';
-import { FiSearch } from 'react-icons/fi';
-import { HiArrowLeft } from 'react-icons/hi';
-import {
-  FaCheck,
-  FaBell,
-  FaUser,
-  FaBan,
-  FaArchive,
-  FaTrash,
-  FaThumbtack,
-  FaTimes,
-} from 'react-icons/fa';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
 import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
 import { toast } from 'react-toastify';
 import { conversationProps } from '@/types/apiTypes';
-import { useWebSocket } from '@/contexts/WebSocketChatProvider';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
+import { CircleX, CheckCheck, User, Ban, Trash2, Search, ArrowBigLeft } from 'lucide-react';
+import ConversationSkeleton from './ConversationSkeleton';
+import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 
-
-
-
-interface MessageListProps {
-}
 
 interface FriendProfile {
   avatar: string;
@@ -40,7 +26,7 @@ interface Friend {
   profile: FriendProfile;
 }
 
-const MessageList: React.FC<MessageListProps> = () => {
+const MessageList = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
@@ -61,7 +47,7 @@ const MessageList: React.FC<MessageListProps> = () => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { setSelectedConversation, selectedConversation } = useSelectedConversation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocket();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
 
 
 
@@ -78,6 +64,8 @@ const MessageList: React.FC<MessageListProps> = () => {
     error: conversationsError
   } = useGetData<conversationProps[]>('chat/conversations');
 
+
+  
   // console.log(" >> << ConversationList: ", ConversationList)
   useEffect(() => {
     if (blockStatusUpdate) {
@@ -208,8 +196,9 @@ const MessageList: React.FC<MessageListProps> = () => {
 
   const handleClose = () => {
     if (selectedConversation !== null) {
+      console.log("selectedConversation: ", selectedConversation)
       updateActiveConversation(-1);
-      handleConversationSelect(null);
+      setSelectedConversation(null);
     }
     setMenuState((prevState) => ({
       ...prevState,
@@ -296,11 +285,13 @@ const MessageList: React.FC<MessageListProps> = () => {
 
   const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
     setSelectedConversation(conversation);
-  }, [setSelectedConversation]);
-
-
-  const handleConversationClick = useCallback((conversation: conversationProps) => {
-    handleConversationSelect(conversation);
+  }, [selectedConversation]);
+  
+  
+  const handleConversationClick = useCallback((conversation: conversationProps | null) => {
+    
+    console.log(" ..... selectedConversation: ", conversation)
+    setSelectedConversation(conversation);
     setIsSearchActive(false);
     setSearchQuery('');
     setMenuState(prev => ({
@@ -308,16 +299,16 @@ const MessageList: React.FC<MessageListProps> = () => {
       isOpen: false,
       activeIndex: null,
     }));
-  }, [ConversationList, handleConversationSelect]);
-
+  }, [ConversationList, selectedConversation]);
+  
   const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
-      // console.log("newConversation: ", newConversation);
-
+      
       if (newConversation && newConversation.id) {
         await refetch();
-        handleConversationSelect(newConversation);
+        console.log("new => Conversation: ", newConversation);
+        setSelectedConversation(newConversation);
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState(prev => ({
@@ -331,16 +322,16 @@ const MessageList: React.FC<MessageListProps> = () => {
     } catch (error) {
       console.error('Failed to create conversation:', error);
     }
- }, [user, refetch, handleConversationSelect]);
+ }, [user, refetch]);
 
   return (
     <div className={css.container}>
       <div ref={searchContainerRef} className={css.searchContainer}>
         <div className={`${css.searchBar} ${isSearchActive ? css.showIcon : ''}`}>
           {isSearchActive && (
-            <HiArrowLeft className={css.arrowIcon} onClick={handleSearchClose} />
+            <ArrowBigLeft className={css.arrowIcon} onClick={handleSearchClose} />
           )}
-          <FiSearch
+          <Search
             className={`${css.searchIcon} ${isSearchActive ? css.searchInSide : ''}`}
           />
           <input
@@ -355,14 +346,18 @@ const MessageList: React.FC<MessageListProps> = () => {
       </div>
 
       <div ref={messageListRef} className={css.messageList}>
-      {(friendsLoading || conversationsLoading) ? (
+      {(conversationsLoading || friendsLoading) ? (
           <div className={css.statusMessage}>
-            <div className={css.spinner}></div>
-            <span >
               {friendsLoading
-                ? "Loading friends..."
-                : "Loading conversations..."}
-            </span>
+                ? <> 
+                    <SearchFriendsSkeleton />
+                    <SearchFriendsSkeleton />
+                  </>
+                : <>
+                    <ConversationSkeleton />
+                    <ConversationSkeleton />
+                  </>
+                }
           </div>
         ) : friendsError || conversationsError ? (
           <div className={css.statusMessage}>
@@ -417,40 +412,30 @@ const MessageList: React.FC<MessageListProps> = () => {
             <div
               className={css.menuItem}
               onClick={() => handleMarkAsRead(ConversationList[menuState.activeIndex!].id)}>
-              <FaCheck /> <span>Mark as read</span>
+              <CheckCheck /> <span>Mark as read</span>
             </div>
             <div className={css.menuItem} onClick={handleClose}>
-              <FaTimes /> <span>Close Chat</span>
-            </div>
-            <div className={css.menuItem}>
-              <FaBell /> <span>Mute notifications</span>
+              <CircleX /> <span>Close Chat</span>
             </div>
             <div
               className={css.menuItem}
               onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
             >
-              <FaUser /> <span>View Profile</span>
+              <User /> <span>View Profile</span>
             </div>
             <hr />
             <div
               className={css.menuItem}
               onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
-              <FaBan /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
-            </div>
-            <div className={css.menuItem}>
-              <FaArchive /> <span>Archive chat</span>
+              <Ban /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
             </div>
             <div
               className={css.menuItem}
               onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
               >
-              <FaTrash />
+              <Trash2 />
               <span>Delete chat</span>
-            </div>
-            <div className={css.menuItem}>
-              <FaThumbtack />
-              <span>Pin chat</span>
             </div>
           </div>
         )}

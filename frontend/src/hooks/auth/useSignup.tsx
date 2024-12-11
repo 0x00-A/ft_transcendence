@@ -1,39 +1,14 @@
 // React
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
-import {API_REGISTER_URL} from '@/api/apiConfig';
+import { API_SIGNUP_URL } from '@/api/apiConfig';
 import axios from 'axios';
-
-interface SignupFormData {
-  username: string;
-  email: string;
-  password: string;
-  password2: string;
-}
-
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .required('username is required!')
-    .min(4, 'username must be at least 4 characters!')
-    .max(15, 'username must not exceed 15 characters!'),
-  email: yup
-    .string()
-    .email('Invalid email format!')
-    .required('Email is required!'),
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('password is required!'),
-  password2: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+// Types
+import { SignupFormData } from '@/types/apiTypes';
+import { SignupSchema } from '@/types/formSchemas';
 
 // const signupApi = async (data: SignupFormData) : Promise<ApiResponse<SignupFormData> | undefined> => {
 //   try {
@@ -57,14 +32,13 @@ const useSignup = () => {
     setError,
     clearErrors,
   } = useForm<SignupFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(SignupSchema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (data: SignupFormData) => await apiClient.post(API_REGISTER_URL, data),
+    mutationFn: async (data: SignupFormData) => await apiClient.post(API_SIGNUP_URL, data),
     onError: (error) => {
-      // console.log('Signup error ==> ', error);
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
           errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})

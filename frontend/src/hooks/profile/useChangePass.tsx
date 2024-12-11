@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
-import { API_CHANGE_PASSWORD_URL } from '@/api/apiConfig';
+import { API_UPDATE_PASSWORD_URL } from '@/api/apiConfig';
 import axios from 'axios';
 
 
@@ -55,7 +55,7 @@ const useChangePass = () => {
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (data: ChangePasswordForm) => await apiClient.put( API_CHANGE_PASSWORD_URL, data),
+    mutationFn: async (data: ChangePasswordForm) => await apiClient.put( API_UPDATE_PASSWORD_URL, data),
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;

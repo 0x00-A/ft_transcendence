@@ -24,6 +24,7 @@ interface WebSocketContextType {
   sendTypingStatus: (receiverId: number, typing: boolean) => void;
   messages: MessageProps[];
   markAsRead: (conversationId: number) => void;
+  clearMessages: () => void;
   updateActiveConversation: (conversationId: number) => void;
   lastMessage: {
     conversationId: number;
@@ -40,14 +41,6 @@ interface WebSocketContextType {
 
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
-
-export const useWebSocket = () => {
-  const context = useContext(WebSocketContext);
-  if (!context) {
-    throw new Error('useWebSocket must be used within a WebSocketProvider');
-  }
-  return context;
-};
 
 interface WebSocketProviderProps {
   children: React.ReactNode;
@@ -178,7 +171,12 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           conversation_id: conversationId,
         })
       );
+      clearMessages();
     }
+  };
+
+  const clearMessages = () => {
+    setMessages([]);
   };
 
   const toggleBlockStatus = (conversationId: number, blockerId: number, blockedId: number, status: boolean) => {
@@ -196,8 +194,16 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
   return (
-    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, messages, lastMessage, markAsReadData, toggleBlockStatus, blockStatusUpdate }}>
+    <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages, messages, lastMessage, markAsReadData, toggleBlockStatus, blockStatusUpdate }}>
       {children}
     </WebSocketContext.Provider>
   );
+};
+
+export const useWebSocketChat = () => {
+  const context = useContext(WebSocketContext);
+  if (!context) {
+    throw new Error('useWebSocket must be used within a WebSocketProvider');
+  }
+  return context;
 };

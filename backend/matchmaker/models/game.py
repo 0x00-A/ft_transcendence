@@ -1,9 +1,14 @@
 from django.utils import timezone
 from django.db import models
-from accounts.models import User
+from accounts.models import User, Profile, Badge
 
 # User = get_user_model()
+WIN_SCORE = 10
 
+from django.db import connection
+
+for query in connection.queries:
+    print(f"-----------SQL: {query['sql']} | Time: {query['time']}")
 
 class GameManager(models.Manager):
     def create_game(self, player1, player2):
@@ -18,6 +23,7 @@ class GameManager(models.Manager):
 
     def get_completed_games(self):
         return self.filter(game_status='ended')
+
 
 
 class Game(models.Model):
@@ -60,12 +66,15 @@ class Game(models.Model):
         print(f"--------------- Game: {self.id} ended -------------------")
 
         self.winner = self.player1 if winner == 1 else self.player2
-        if winner == 1:
-            self.player1.profile.update_score(win=True, result=p1_score - p2_score)
-            self.player2.profile.update_score(win=False, result=p1_score - p2_score)
-        else:
-            self.player2.profile.update_score(win=True, result=p2_score - p1_score)
-            self.player1.profile.update_score(win=False, result=p2_score - p1_score)
+        # if winner == 1:
+        #     self.player1.profile.update_score(win=True, result=p1_score - p2_score, p2_badge=self.player2.profile.badge.xp_reward)
+        #     self.player2.profile.update_score(win=False, result=p2_score, p2_badge=self.player1.profile.badge.xp_reward)
+        # else:
+        #     self.player2.profile.update_score(win=True, result=p2_score - p1_score, p2_badge=self.player1.profile.badge.xp_reward)
+        #     self.player1.profile.update_score(win=False, result=p1_score, p2_badge=self.player2.profile.badge.xp_reward)
+        # update_ranks()
+        # for profile in Profile.objects.all():
+        #     print('----->>', profile.user.username, profile.score, profile.rank)
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.status = 'ended'
@@ -73,7 +82,7 @@ class Game(models.Model):
         self.save()
 
     def update_stats(self):
-
+        print('----------------- Updating stats begenings -----------------')
         for player in [self.player1, self.player2]:
             # Initialize stats
             if 'wins' not in player.profile.stats:
@@ -87,12 +96,49 @@ class Game(models.Model):
         self.player1.profile.stats['games_played'] += 1
         self.player2.profile.stats['games_played'] += 1
 
+        self.player1.profile.played_games += 1
+        self.player2.profile.played_games += 1
+
         if self.winner == self.player1:
             self.player1.profile.stats['wins'] += 1
             self.player2.profile.stats['losses'] += 1
+            # mahdi added these lines
+            self.player1.profile.wins += 1
+            self.player2.profile.losses += 1
+            self.player1.profile.score += WIN_SCORE + self.p1_score - self.p2_score
+            if self.player1.profile.badge.xp_reward < self.player2.profile.badge.xp_reward:
+                self.player1.profile.score += self.player1.profile.badge.xp_reward * 2
+            else:
+                self.player1.profile.score += self.player1.profile.badge.xp_reward
+            self.player2.profile.score += self.p2_score
+            if self.player2.profile.badge.xp_reward < self.player1.profile.badge.xp_reward:
+                self.player2.profile.score -= self.player2.profile.badge.xp_reward * 2
+            # ----------------------------
         elif self.winner == self.player2:
             self.player2.profile.stats['wins'] += 1
             self.player1.profile.stats['losses'] += 1
+            # mahdi added these lines
+            self.player2.profile.wins += 1
+            self.player1.profile.losses += 1
+            self.player2.profile.score += WIN_SCORE + self.p2_score - self.p1_score
+            if self.player2.profile.badge.xp_reward < self.player1.profile.badge.xp_reward:
+                self.player2.profile.score += self.player2.profile.badge.xp_reward * 2
+            else:
+                self.player2.profile.score += self.player2.profile.badge.xp_reward
+            self.player1.profile.score += self.p1_score
+            if self.player1.profile.badge.xp_reward < self.player2.profile.badge.xp_reward:
+                self.player1.profile.score -= self.player1.profile.badge.xp_reward * 2
+            # ----------------------------
+        # update level
+        self.player1.profile.level = self.player1.profile.score / 100
+        self.player2.profile.level = self.player2.profile.score / 100
+        # update badge
+        badge = Badge.get_badge(self.player1.profile.level)
+        if badge and (not self.player1.profile.badge or self.player1.profile.badge.name != badge.name):
+            self.player1.profile.badge = badge
+        badge = Badge.get_badge(self.player2.profile.level)
+        if badge and (not self.player2.profile.badge or self.player2.profile.badge.name != badge.name):
+            self.player2.profile.badge = badge
 
         current_day = self.end_time.strftime('%a')
         duration = (self.end_time -
@@ -115,7 +161,14 @@ class Game(models.Model):
 
             player.profile.stats["performanceData"] = stats
             # player.profile.save()
-
-
-        self.player1.save()
-        self.player2.save()
+        # print(f'''-----> player1 = {self.player1.username} - score = {self.player1.profile.score} - level = {self.player1.profile.level} - badge = {self.player1.profile.badge.name} - rank = {self.player1.profile.rank} - played_games = {self.player1.profile.played_games} - wins = {self.player1.profile.wins} - losses = {self.player1.profile.losses}''')
+        # print(f'''-----> player2 = {self.player2.username} - score = {self.player2.profile.score} - level = {self.player2.profile.level} - badge = {self.player2.profile.badge.name} - rank = {self.player2.profile.rank} - played_games = {self.player2.profile.played_games} - wins = {self.player2.profile.wins} - losses = {self.player2.profile.losses}''')
+        self.player1.profile.save()
+        self.player2.profile.save()
+        # self.player1.save()
+        # self.player2.save()
+        #update ranks
+        profiles = list(Profile.objects.all().order_by('-score', '-wins', '-played_games'))
+        for rank, profile in enumerate(profiles, 1):
+            profile.rank = rank
+        Profile.objects.bulk_update(profiles, ['rank'])

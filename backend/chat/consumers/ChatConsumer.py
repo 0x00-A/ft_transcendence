@@ -141,11 +141,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         conversation = await self.get_or_create_conversation(sender_id, receiver_id)
 
-        print("---******user1_id*****---")
-        print(conversation.user1_id)
-        print("---******user2_id*****---")
-        print(conversation.user2_id)
-
         if await self.is_conversation_blocked(conversation, sender_id):
             raise ValueError("Cannot send message. Conversation is blocked.")
 

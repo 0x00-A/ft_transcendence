@@ -12,6 +12,7 @@ class User(AbstractUser):
     otp_expires = models.DateTimeField(blank=True, null=True)
     last_seen = models.CharField(max_length=50, default="Never", blank=True)
     active_conversation = models.IntegerField(default=-1)
+    has_new_requests = models.BooleanField(default=False)
 
 
     def __str__(self):
@@ -23,6 +24,14 @@ class EmailVerification(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     new_email = models.EmailField(unique=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+class PasswordReset(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.username

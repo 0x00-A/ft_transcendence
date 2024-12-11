@@ -6,6 +6,7 @@ class Notification(models.Model):
     user = models.ForeignKey(
         User, related_name='notifications', on_delete=models.CASCADE)
     title = models.TextField()
+    link = models.TextField(default='#')
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -17,6 +18,7 @@ class Notification(models.Model):
     def to_dict(self):
         return {
             "title": self.title,
+            "link": self.link,
             "message": self.message,
             "created_at": self.created_at.isoformat(),
             "user": self.user.username,

@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import css from './Sidebar.module.css';
 import { FaArrowCircleRight, FaArrowCircleLeft } from 'react-icons/fa';
+import {  CircleDot } from 'lucide-react';
+import { useWebSocket } from '@/contexts/WebSocketContext';
+import { RiUserReceived2Line, RiUserShared2Line, RiUserForbidLine } from "react-icons/ri";
+import { LuUserPlus } from "react-icons/lu";
+import { FiUsers } from "react-icons/fi";
+
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
@@ -10,10 +17,18 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const navigate = useNavigate();
+  const { hasNewRequests } = useWebSocket();
+
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  const handleViewChange = (view: ViewType) => {
+    setView(view);
+    navigate(`/friends?view=${view}`);
   };
 
   return (
@@ -21,45 +36,48 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
       <div className={css.sidebarContent}>
         <button
           className={`${css.navButton} ${currentView === 'all' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
-          onClick={() => setView('all')}
+          onClick={() => handleViewChange('all')}
         >
-          <img src="/icons/friend/allFriends.svg" alt="All" />
+          <FiUsers className={css.icon}/>
           <span className={css.buttonText}>All Friends</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'online' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
-          onClick={() => setView('online')}
+          onClick={() => handleViewChange('online')}
         >
-          <img src="/icons/friend/onlineFriend.svg" alt="Online" />
+          <CircleDot className={css.icon}/>
           <span className={css.buttonText}>Online Friends</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'requests' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
-          onClick={() => setView('requests')}
+          onClick={() => handleViewChange('requests')}
         >
-          <img src="/icons/friend/requestsFriend.svg" alt="Requests" />
+          <div className={css.iconContainer}>
+            <RiUserReceived2Line className={css.icon} />
+            {hasNewRequests && <span className={css.notificationBadge}></span>}
+          </div>
           <span className={css.buttonText}>Friend Requests</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'sent' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
-          onClick={() => setView('sent')}
+          onClick={() => handleViewChange('sent')}
         >
-          <img src="/icons/friend/sentRequests.svg" alt="Sent" />
+          <RiUserShared2Line className={css.icon}/>
           <span className={css.buttonText}>Sent Requests</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'blocked' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
-          onClick={() => setView('blocked')}
+          onClick={() => handleViewChange('blocked')}
         >
-          <img src="/icons/friend/blockList.svg" alt="Blocked" />
+          <RiUserForbidLine className={css.icon}/>
           <span className={css.buttonText}>Blocked List</span>
         </button>
       </div>
       <button
         className={`${css.addFriendButton} ${currentView === 'add' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
-        onClick={() => setView('add')}
+        onClick={() => handleViewChange('add')}
       >
-        <img src="/icons/friend/addFriend.svg" alt="Add" />
+        <LuUserPlus className={css.icon}/>
         <span className={css.buttonText}>Add Friend</span>
       </button>
       <button className={css.collapseButton} onClick={toggleCollapse}>
