@@ -105,39 +105,106 @@ services:
         condition: service_started
 
   setup:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    # image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    build:
+      context: ./elk/setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
     container_name: elk-setup
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
     user: "0"
-    command: >
-      bash -c '
-        if [ ! -f config/certs/ca.zip ]; then
-          echo "Creating CA";
-          bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
-          unzip config/certs/ca.zip -d config/certs;
-        fi;
-        if [ ! -f config/certs/certs.zip ]; then
-          echo "Creating certs";
-          echo -e "instances:\n  - name: es\n    dns:\n      - es\n      - localhost\n      - 127.0.0.1\n  - name: kibana\n    dns:\n      - kibana\n      - localhost\n      - 127.0.0.1" > config/certs/instances.yml;
-          elasticsearch-certutil cert --silent --pem --ca-cert config/certs/ca/ca.crt \
-            --ca-key config/certs/ca/ca.key \
-            --in config/certs/instances.yml \
-            -out config/certs/certs.zip;
-          unzip config/certs/certs.zip -d config/certs;
-        fi;
-        echo "Setting file permissions";
-        chown -R root:root config/certs;
-        echo "Waiting for Elasticsearch availability";
-        until curl -s --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt https://es:9200 | grep -q "missing authentication credentials"; do sleep 10; done;
-        echo "Setting kibana_system password";
-        until curl -s -X POST --cacert config/certs/ca/ca.crt \
-          -u "elastic:${ELASTIC_PASSWORD}" \
-          -H "Content-Type: application/json" \
-          https://es:9200/_security/user/kibana_system/_password \
-          -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
-          echo "All done!";
-      '
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+    # command: >
+    #   bash -c '
+    #     if [ ! -f config/certs/ca.zip ]; then
+    #       echo "Creating CA";
+    #       bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+    #       unzip config/certs/ca.zip -d config/certs;
+    #     fi;
+    #     if [ ! -f config/certs/certs.zip ]; then
+    #       echo "Creating certs";
+    #       echo -e "instances:\n  - name: es\n    dns:\n      - es\n      - localhost\n      - 127.0.0.1\n  - name: kibana\n    dns:\n      - kibana\n      - localhost\n      - 127.0.0.1" > config/certs/instances.yml;
+    #       elasticsearch-certutil cert --silent --pem --ca-cert config/certs/ca/ca.crt \
+    #         --ca-key config/certs/ca/ca.key \
+    #         --in config/certs/instances.yml \
+    #         -out config/certs/certs.zip;
+    #       unzip config/certs/certs.zip -d config/certs;
+    #     fi;
+    #     echo "Setting file permissions";
+    #     chown -R root:root config/certs;
+    #     echo "Waiting for Elasticsearch availability";
+    #     until curl -s --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt https://es:9200 | grep -q "missing authentication credentials"; do sleep 10; done;
+    #     echo "Setting kibana_system password";
+    #     until curl -s -X POST --cacert config/certs/ca/ca.crt \
+    #       -u "elastic:${ELASTIC_PASSWORD}" \
+    #       -H "Content-Type: application/json" \
+    #       https://es:9200/_security/user/kibana_system/_password \
+    #       -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+    #     until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
+    #         --cacert config/certs/ca/ca.crt \
+    #         -u "elastic:${ELASTIC_PASSWORD}" \
+    #         -H "Content-Type: application/json" \
+    #         -d "{
+    #           \"index_patterns\": [\"logs-*\"],
+    #           \"template\": {
+    #             \"settings\": {
+    #               \"number_of_shards\": 1,
+    #               \"number_of_replicas\": 0
+    #             }
+    #           }
+    #         }" | grep -q "^{\"acknowledged\":true}"; do sleep 10; done;
+    #     until curl -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt \
+    #         -H "Content-Type: application/json" \
+    #         https://elasticsearch:9200/_ilm/policy/my_policy -d '
+    #       {
+    #         "policy": {
+    #           "phases": {
+    #             "hot": {
+    #               "actions": {
+    #                 "rollover": {
+    #                   "max_size": "50GB",
+    #                   "max_age": "30d"
+    #                 }
+    #               }
+    #             },
+    #             "warm": {
+    #               "actions": {
+    #                 "shrink": {
+    #                   "number_of_shards": 1
+    #                 }
+    #               }
+    #             },
+    #             "cold": {
+    #               "actions": {
+    #                 "freeze": {}
+    #               },
+    #               "min_age": "60d"
+    #             },
+    #             "delete": {
+    #               "min_age": "90d",
+    #               "actions": {
+    #                 "delete": {}
+    #               }
+    #             }
+    #           }
+    #         }
+    #       }' | grep -q '^{"acknowledged":true}'; do sleep 10; done
+    #     echo "All done!";
+    #   '
+    # until curl -s -X POST --cacert config/certs/ca/ca.crt \
+    #   -u "elastic:${ELASTIC_PASSWORD}" \
+    #   -H "Content-Type: application/json" \
+    #   https://es:9200/_index_template/logs_template \
+      # -d "{\"index_patterns\": [\"logs-*\"],
+      #     \"template\": {
+      #       \"settings\": {
+      #         \"number_of_shards\": 1,
+      #         \"number_of_replicas\": 0
+      #       }
+      #     }" | grep -q "^{}"; do sleep 10; done;
     # echo -e "instances:\n  - name: es\n    dns:\n      - es\n      - localhost\n      - 127.0.0.1\n  - name: kibana\n    dns:\n      - kibana\n      - localhost\n      - 127.0.0.1" > config/certs/instances.yml;
     networks:
       - default_network-deploy
@@ -149,7 +216,7 @@ services:
 
   es:
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
-    container_name: slasticsearch
+    container_name: elasticsearch
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - es-data:/usr/share/elasticsearch/data
@@ -160,6 +227,7 @@ services:
       # - node.name=es
       # - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node
+      # - index.number_of_replicas=0
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       # - bootstrap.memory_lock=true
       - xpack.security.enabled=true
@@ -167,7 +235,7 @@ services:
       - xpack.security.http.ssl.key=certs/es/es.key
       - xpack.security.http.ssl.certificate=certs/es/es.crt
       - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-      # - logger.level=error
+      - logger.level=warn
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key=certs/es/es.key
       - xpack.security.transport.ssl.certificate=certs/es/es.crt
@@ -175,11 +243,11 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       # - xpack.license.self_generated.type=${LICENSE}
       # - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    # mem_limit: ${ES_MEM_LIMIT}
-    # ulimits:
-    #   memlock:
-    #     soft: -1
-    #     hard: -1
+    mem_limit: ${ES_MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     networks:
       - default_network-deploy
     depends_on:
@@ -218,6 +286,7 @@ services:
       - ELASTIC_USER=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_HOSTS=https://es:9200
+    mem_limit: ${LS_MEM_LIMIT}
     depends_on:
       es:
         condition: service_healthy
@@ -242,6 +311,7 @@ services:
       # - xpack.security.audit.enabled=true
       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - SERVER_BASEPATH="/kibana"
       - SERVER_REWRITEBASEPATH="true"
       # - SERVER_SSL_ENABLED=true
@@ -249,6 +319,7 @@ services:
       # - SERVER_SSL_KEY=/usr/share/kibana/config/certs/kibana/kibana.key
       # - LOGGING_ROOT_LEVEL=error
       # - KIBANA_SYSTEM_PASSWORD=${KIBANA_PASSWORD:-}
+    mem_limit: ${KB_MEM_LIMIT}
     networks:
       - default_network-deploy
     depends_on:
