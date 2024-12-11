@@ -24,7 +24,7 @@ export interface Badge {
 }
 
 export interface Stats {
-  games: number;
+  games_played: number;
   wins: number;
   losses: number;
   performanceData: PerformanceDataEntry[];
@@ -130,7 +130,7 @@ export interface SignupFormData {
   password2: string;
 }
 
-export interface LoginData {
+export interface LoginFormData {
   username: string;
   password: string;
 }
@@ -157,9 +157,10 @@ export interface ChangePasswordForm {
 }
 
 export interface GameHistory {
+  id: number
   start_time: string;
-  oppenent_username: string;
-  oppenent_avatar: string;
+  opponent_username: string;
+  opponent_avatar: string;
   result: string;
   score: string;
   game_duration: string;
@@ -189,4 +190,8 @@ export interface ResetPasswordForm {
   token: string;
   new_password: string;
   confirm_password: string;
+}
+
+export interface UsernameFormData {
+  username: string;
 }

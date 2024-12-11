@@ -7,7 +7,7 @@ import { BiShow } from "react-icons/bi";
 import useResetPass from '@/hooks/auth/useResetPass';
 import { ResetPasswordForm } from '@/types/apiTypes';
 import { toast } from 'react-toastify';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 type ShowPasswordFields = 'new_pass' | 'confirm_pass';
@@ -75,7 +75,7 @@ const ResetPassword = () => {
                     { errors.confirm_password && <span className={css.fieldError}>{errors.confirm_password.message}</span> }
                 </div>
                 <div className={css.ConfirmButtons}>
-                    <button type='reset' className={css.closeBtn}>Cancel</button>
+                    <button type='reset' className={css.closeBtn} onClick={() => navigate('/auth')}>Cancel</button>
                     <button type='submit' className={css.confirmBtn}>Save</button>
                 </div>
             </form>

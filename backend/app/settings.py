@@ -42,6 +42,7 @@ SECRET_KEY = os.environ.get(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+# DEBUG = True
 
 if DEBUG:
     SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
@@ -65,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'core',
     'relationships',
     'rest_framework',
@@ -72,7 +74,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'rest_framework_simplejwt',
-    'debug_toolbar',
     'channels',
     'game',
     'matchmaker.apps.MatchmakerConfig',
@@ -85,13 +86,13 @@ if DEBUG:
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'accounts.middleware.RefreshTokenMiddleware',
 ]
 
@@ -102,9 +103,22 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 ROOT_URLCONF = 'app.urls'
 
+import socket
+hostname = socket.gethostname()
+
+
 INTERNAL_IPS = [
     "127.0.0.1",
+    '172.17.0.1',
+    "172.28.0.3",
+    '192.168.160.1',
+    '192.168.176.1',
+    socket.gethostbyname(hostname),
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
+}
 
 TEMPLATES = [
     {
@@ -137,6 +151,16 @@ DATABASES = {
         # 'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': "django.db.backends.postgresql",
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'mahdi',
+#         'HOST': 'localhost',
+#         # 'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -156,6 +180,29 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': 'sql_queries.log',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console', 'file'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
 
 
 # Internationalization
@@ -287,3 +334,119 @@ CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
                         'https://localhost',
                         # 'wss://yourdomain.com'
                         ]
+
+LOG_DIR = '/app/backend/logs'
+os.makedirs(LOG_DIR, exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        # 'file': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.FileHandler',
+        #     'filename': os.path.join(LOG_DIR, 'django_logs.log'),
+        #     'formatter': 'verbose',
+        # },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'app.log'),
+            'maxBytes': 1024 * 1024 * 1,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        # 'error_file': {
+        #     'level': 'ERROR',
+        #     'class': 'logging.FileHandler',
+        #     # 'filename': '/var/log/django/error.log',
+        #     'filename': os.path.join(LOG_DIR, 'error.log'),
+        #     'formatter': 'verbose',
+        # },
+        # 'console': {
+        #     'level': 'ERROR',  # Change from DEBUG to ERROR
+        #     'class': 'logging.StreamHandler',
+        # },
+    },
+    'loggers': {
+        # '': {  # Root logger configuration
+        #     'level': 'DEBUG',
+        #     # Log messages will be written to the 'file' handler
+        #     'handlers': ['file'],
+        # },
+        # 'django.request': {
+        #     'handlers': ['error_file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        # 'django.security': {
+        #     'handlers': ['file'],
+        #     'level': 'INFO',  # You can adjust the level to capture specific events
+        #     'propagate': False,
+        # },
+        # 'daphne': {
+        #     'handlers': ['file'],
+        #     'level': 'DEBUG',
+        #     'propagate': True,
+        # },
+        # 'django.db.backends': {
+        #     'level': 'INFO',
+        #     'handlers': ['file'],
+        #     'propagate': True,
+        # },
+        # 'django.channels': {
+        #     'handlers': ['console'],
+        #     'level': 'ERROR',  # Adjust this to reduce verbosity
+        #     'propagate': True,
+        # },
+    },
+}
+
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'logstash': {
+#             'level': 'INFO',
+#             'class': 'logstash.TCPLogstashHandler',
+#             'host': 'logstash',
+#             'port': 5959,  # Default value: 5959
+#             'version': 1,
+#             'message_type': 'django',
+#             'fqdn': False,
+#             'tags': ['django.request'],
+#         },
+#         'console': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler'
+#         },
+#     },
+#     'loggers': {
+#         'django.request': {
+#             'handlers': ['logstash'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+
+#         'django': {
+#             'handlers': ['console'],
+#             'propogate': True,
+#         },
+#     }
+# }

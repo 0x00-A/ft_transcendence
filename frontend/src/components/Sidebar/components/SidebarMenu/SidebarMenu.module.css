@@ -1,5 +1,7 @@
 .menu {
   list-style-type: none;
+  margin-top: 25px;
+  flex-grow: 1;
   /* transition-duration: 0.5s; */
   /* transition: all; */
   /* border-image: linear-gradient(to left, var(--sidebar-surface-primary) 0%, red 100%) 1;
@@ -39,10 +41,6 @@
   position: absolute;
 }
 
-.menu li {
-  /* margin: 10px 0; */
-}
-
 .activeTab {
   border-right: 2px solid var(--color-active);
   font-weight: 600 !important;
@@ -61,27 +59,21 @@
   background-color: var(--sidebar-tab-hover);
 }
 
-.hidden {
-  font-size: 1px;
-  opacity: 0;
-}
-
-.open {
+.menu li a p {
   opacity: 1;
   transform: translate(50px, 0);
-  transition:
+  /* transition:
     opacity 1s ease,
-    transform 0.5s ease;
+    transform 0.5s ease; */
 }
 
-.iconBox {
-  /* border: 1px solid red; */
-}
+@media screen and (max-width: 1264px) {
+  .menu li a {
+    padding: 15px 20px !important;
+  }
+  .menu li a p {
+    font-size: 1px;
+    opacity: 0;
+  }
 
-/* .menu img {
-  padding: 5px;
-} */
-
-.resize a {
-  padding: 15px 20px !important;
 }

@@ -13,3 +13,5 @@ from .userSerializer import UserSerializer
 
 from .NotificationSerializer import NotificationSerializer
 from .badgeSerializer import BadgeSerializer
+
+from .achievementsSerializer import AchievementSerializer, UserAchievementsSerializer

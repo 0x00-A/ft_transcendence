@@ -3,6 +3,7 @@ import { useState } from 'react';
 // Styles
 import css from './ProfileFriends.module.css';
 import { FaUserFriends } from "react-icons/fa";
+import { HiOutlineUserAdd } from "react-icons/hi";
 // API
 import { useGetData } from "@/api/apiHooks";
 import { API_GET_FRIENDS_URL } from '@/api/apiConfig';
@@ -48,7 +49,8 @@ const ProfileFriends = () => {
                 { friendsData?.length == 0 && <div className={css.noFriends}>
                     <span>You are lonely</span>
                     <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
-                        <img src="/icons/friend/addFriend.svg" alt="Add" />
+                        {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
+                        <HiOutlineUserAdd size={"2.2rem"}/>
                         <span>Add friends</span>
                     </button>
                 </div> }

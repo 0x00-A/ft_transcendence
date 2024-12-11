@@ -1,30 +1,18 @@
 // React
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
 import { API_RESET_PASSWORD_URL } from '@/api/apiConfig';
 import axios from 'axios';
+// Types
 import { ResetPasswordForm } from '@/types/apiTypes';
-
-
-const schema = yup.object().shape({
-
-  new_password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('new password is required!'),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('new_password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+import { resetPasswordSchema } from '@/types/formSchemas';
 
 
 const useResetPass = () => {
-  // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
+
   const {
     register,
     handleSubmit,
@@ -34,10 +22,11 @@ const useResetPass = () => {
     setError,
     setValue,
   } = useForm<ResetPasswordForm>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(resetPasswordSchema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
+
   const mutation = useMutation({
     mutationFn: async (data: ResetPasswordForm) => await apiClient.post( API_RESET_PASSWORD_URL, data),
     onError: (error) => {
@@ -51,6 +40,7 @@ const useResetPass = () => {
       }
     }
   });
+
   return {
     register,
     handleSubmit,

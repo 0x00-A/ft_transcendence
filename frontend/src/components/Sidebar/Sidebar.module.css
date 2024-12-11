@@ -1,48 +1,49 @@
 .sidebar {
-  position: relative;
-  min-height: 100%;
-  width: 250px;
-  max-width: 250px;
-  min-width: 250px;
+  position: fixed;
+  min-height: 100vh;
+  height: 100dvh;
+  top: 0;
+  z-index: 10;
+  /* position: fixed; */
+  /* width: 300px; */
+  /* width: var(--nav-medium-width); */
+  /* max-width: 300px;
+  min-width: 300px; */
   background-color: var(--sidebar-surface-primary);
+  /* transition-duration: 300ms; */
   padding-top: 1rem;
+  /* overflow: auto; */
 
+  /* min-width: 200px;
+  max-width: 300px; */
+  /* transition: width 0.3s ease; */
 }
 
 .menuBox {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 90%;
+  /* justify-content: space-between; */
+  /* min-height: 100vh; */
+  height: calc(100vh - 55px);
+  /* height: auto; */
 }
 
 .logoBox {
   display: flex;
   justify-content: center;
-  height: 10%;
+  align-items: center;
 }
 
-.normal {
+.logo {
   height: 45px;
   scale: 1.4;
-}
-
-.small {
-  height: 35px;
-  margin-bottom: 10px;
-}
-
-.closed {
-  min-width: 80px;
-  padding-top: 1rem;
-  width: 80px;
 }
 
 .controller {
   position: absolute;
   cursor: pointer;
   right: 0;
-  top: 5.5rem;
+  top: 4.5rem;
   border-radius: 50%;
   border: 1px solid var(--text-color);
   &:hover {
@@ -88,33 +89,43 @@
 }
 .logout > p {
   position: absolute;
-}
-
-.hidden {
-  opacity: 0;
-}
-
-.open {
   opacity: 1;
   transform: translate(50px, 0);
-  transition:
+  /* transition:
     opacity 1s ease,
-    transform 0.5s ease;
+    transform 0.5s ease; */
 }
 
-.padding .logout,
-.padding .darkMode {
-  padding: 15px 20px !important;
+@media screen and (max-width: 1264px) {
+  .sidebar {
+    width: var(--nav-narrow-width);
+  }
+  .logout > p {
+    opacity: 0;
+  }
+
+  .logout,
+  .darkMode {
+    padding: 15px 20px !important;
+  }
+
+  .logo {
+    height: 26px;
+    margin-bottom: 10px;
+    /* transition-duration: 0; */
+  }
 }
 
-/* .navigation {
-  height: auto  ;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1px solid red;
-} */
-/* .sidebar nav ul li a:hover {
-  background-color: var(--sidebar-tab-hover);
-  border-radius: 4px;
-} */
+/* Medium Navigation (Tablet/Default View) */
+@media screen and (min-width: 1264px) and (max-width: 1919px) {
+  .sidebar {
+    width: var(--nav-medium-width);
+  }
+}
+
+/* Wide Navigation (Desktop/Expanded View) */
+@media screen and (min-width: 1920px) {
+  .sidebar {
+    width: var(--nav-wide-width);
+  }
+}

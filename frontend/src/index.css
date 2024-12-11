@@ -54,15 +54,21 @@
   --game-screen-text-color: lightgray;
   --tournament-form-bg: #1e2533;
   --tournament-input-bg: #2b4450;
-  --scrollbar-track-color: #3D4A68;
+  --scrollbar-track-color: #3d4a68;
   --scrollbar-thumb-color: #191a2d;
-
 
   --tournament-header: rgb(55 65 81);
   --tournament-row: rgb(31 41 55);
   --tournament-row-odd: #313749;
 
-  --tw-shadow-colored: 0 4px 6px -1px rgb(30 66 159 / 0.8), 0 2px 4px -2px rgb(30 66 159 / 0.8);
+  --tw-shadow-colored: 0 4px 6px -1px rgb(30 66 159 / 0.8),
+    0 2px 4px -2px rgb(30 66 159 / 0.8);
+
+  --nav-narrow-width: 72px;
+  --nav-medium-width: 244px;
+  --nav-wide-width: 335px;
+  --header-height: 70px;
+  --footer-height: 40px;
 }
 
 [data-theme='dark'] {
@@ -85,16 +91,12 @@
   --tournament-row: #333333;
   --tournament-row-odd: #2a2a2a;
 
-
-
   --chart-1: 200, 100%, 50%;
   --chart-2: 40, 80%, 60%;
-  --color-desktop: #4CAF50;
-  --color-mobile: #2196F3;
+  --color-desktop: #4caf50;
+  --color-mobile: #2196f3;
 
   /* --text-color: #858585; */
-
-
 }
 
 * {
@@ -141,12 +143,12 @@ input:focus {
 } */
 
 ::-webkit-scrollbar {
-    width: 14px;
-    height: 14px
+  width: 14px;
+  height: 14px;
 }
 
 ::-webkit-scrollbar-button {
-    display: none
+  display: none;
 }
 
 ::-webkit-scrollbar-track {
@@ -155,15 +157,15 @@ input:focus {
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--scrollbar-thumb-color);
-    /* border: 1px solid var(--b1) */
+  /* border: 1px solid var(--b1) */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    /* background-color: var(--colors-gray-a4) */
+  /* background-color: var(--colors-gray-a4) */
 }
 
 ::-webkit-scrollbar-corner {
-    background-color: var(--main-surface-primary)
+  background-color: var(--main-surface-primary);
 }
 
 @layer base {

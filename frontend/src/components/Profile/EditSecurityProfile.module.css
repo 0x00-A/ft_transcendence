@@ -1,34 +1,52 @@
 .securityContainer {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    gap: 2rem;
+    align-items: center;
+    gap: 1rem;
     width: 100%;
     height: 100%;
 }
 
-.changePassForm {
+.UpdatePassContainer {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 60%;
+    height: 55%;
     border-radius: 25px;
     background-color: #1E2533;
     padding: 3.5rem;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .title {
+    align-self: self-start;
     font-size: 2.2rem;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
-.containerFiled {
-    width: 80%;
+.changePassForm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1.5rem;
+}
+
+.entryArea {
+    width: 70%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    background-color: #1E2533;
+    gap: 0.7rem;
+}
+
+.containerFiled {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
     position: relative;
 }
 
@@ -37,13 +55,19 @@
     color: #D1D3D4;
 }
 
-.input {
+.passContainer {
     width: 100%;
-    height: 50px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.input {
     background-color: #0E1725;
+    width: 100%;
     border: none;
     border-radius: 10px;
-    padding: 15px;
+    padding: 12px;
     padding-right: 50px;
     font-size: 1.4rem;
     color: #D1D3D4;
@@ -51,17 +75,18 @@
 
 .showPassIcon {
     position: absolute;
-    top: 50%;
     left: calc(100% - 40px);
     font-size: 2.5rem;
     cursor: pointer;
 }
 
 .ConfirmButtons {
-    width: 80%;
+    width: 30%;
     display: flex;
-    justify-content: end;
-    gap: 4rem;
+    align-items: center;
+    flex-direction: column;
+    /* justify-content: end */
+    gap: 3rem;
 }
 
 .confirmBtn, .closeBtn {
@@ -69,9 +94,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70px;
+    width: 90px;
     height: 40px;
-    padding: 10px 15px;
+    padding: 20px;
     font-size: 1.6rem;
     border-radius: 8px;
     cursor: pointer;
@@ -92,24 +117,32 @@
 }
 
 .twoFacForm {
+    /* border: 1px solid #F8C25C; */
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 40%;
+    height: 45%;
     border-radius: 25px;
     background-color: #1E2533;
-    padding: 2.5rem;
+    padding: 2rem;
 }
 
 .twoFacContainer {
+    /* border: 1px solid #F8C25C; */
+    width: 100%;
+    height: 100%;
     display: flex;
-    align-items: center;
-    gap: 2rem;
+    /* align-items: center; */
+    gap: 1rem;
 }
 
 .inputContainer {
+    /* border: 1px solid #F8C25C; */
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
     width: 70%;
-    gap: 1.5rem;
+    height: 100%;
 }
 
 .labelIcon {
@@ -155,6 +188,8 @@
     padding: 8px;
     background-color: #0E1725;
     border-radius: 8px;
+    color: #D1D3D4;
+    cursor: pointer;
 }
 
 .enableBtn:hover {
@@ -163,7 +198,8 @@
 }
 
 .qrCodeContainer {
-    width: 50%;
+    /* border: 1px solid #F8C25C; */
+    width: 40%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -177,6 +213,11 @@
     border-radius: 8px;
     cursor: pointer;
     color: #D1D3D4;
+}
+
+.qrCodeContainer button:hover {
+    background-color: #1E2533;
+    color: #ffffff;
 }
 
 .fieldError {

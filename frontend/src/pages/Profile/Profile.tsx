@@ -7,6 +7,7 @@ import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
 import EditInfosProfile from '@/components/Profile/EditInfosProfile'
 import EditSecurityProfile from '@/components/Profile/EditSecurityProfile';
 import SetPassword from '@/components/Profile/SetPassword';
+import ProfileAchievements from '@/components/Profile/ProfileAchievements';
 // Styles
 import css from './Profile.module.css';
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -19,13 +20,16 @@ const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
-
   const { user: currentUser, error, isLoading } = useUser()
-  // const { data: currentUser, isLoading, error, refetch } = useGetData<UserProfileData>(API_GET_PROFILE_URL);
 
   if (error) {
     toast.error('Failed to load profile data');
   }
+
+  if (isLoading) return <div>Loading...</div>;
+
+  console.log('current user==>> ', currentUser);
+
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     // if (isConfirmSave) {
@@ -36,7 +40,6 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className={css.profileContainer}>
@@ -64,17 +67,12 @@ const Profile = () => {
           </div>
         </div>
       }
-      <ProfileHeader setEditProfile={setEditProfile} currentUser={currentUser} />
+      <ProfileHeader setEditProfile={setEditProfile} />
       <div className={css.profileBodyConatiner}>
         <ProfileFriends />
         <div className={css.rightBodyContainer}>
-          <div className={css.profileAchievContainer}>
-            <div className={css.achievHeader}>
-              <img src="/icons/AchievIcon.svg" className={css.achievIcon}/>
-              <h3>Achievements</h3>
-            </div>
-          </div>
-          <ProfileGamesHistory/>
+          <ProfileAchievements />
+          <ProfileGamesHistory />
         </div>
       </div>
 

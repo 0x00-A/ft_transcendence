@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
-from accounts.models import User
+from accounts.models import User, UserAchievement
 from accounts.serializers import UserProfileSerializer
-from accounts.serializers import UserSerializer
+from accounts.serializers import UserSerializer, UserAchievementsSerializer
 
 
 class MyProfileView(APIView):
@@ -64,3 +64,14 @@ class UserProfileView(APIView):
                 {'error': f'Internal server error: {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class GetMyAchievementsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserAchievementsSerializer
+
+    def get(self, request):
+        user = request.user
+        achievements = UserAchievement.objects.filter(user=user)
+        serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
+        print('api ==> get my achievements: User achievements found')
+        return Response(serializer.data, status=status.HTTP_200_OK)

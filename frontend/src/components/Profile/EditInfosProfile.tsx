@@ -11,7 +11,7 @@ import { useUser } from '@/contexts/UserContext';
 import { EditProfileFormData } from '@/types/apiTypes';
 import apiClient from '@/api/apiClient';
 import axios from 'axios';
-import { API_UPDATE_EMAIL_REQUEST_URL, REDIRECT_URL_UPDATE_EMAIL } from '@/api/apiConfig';
+import { API_UPDATE_EMAIL_REQUEST_URL } from '@/api/apiConfig';
 
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
@@ -94,18 +94,9 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         <form className={css.editInfosForm} onSubmit={ handleSubmit(handleEditProfile) } encType="multipart/form-data">
             <h1 className={css.title}>Edit your Information</h1>
             <div className={css.editAvatar}>
-
-
-                {selectedAvatar === 'null' ? (
-                    <div className={css.avatarContainer}> <img src={profileData?.profile.avatar} alt="" /></div>) :
+                {selectedAvatar === 'null' ? (<div className={css.avatarContainer}> <img src={profileData?.profile.avatar} alt="" /></div>) :
                     (selectedAvatar === 'remove' ? <div className={css.avatarContainer}><img src='/icons/defaultAvatar.png' alt="" /></div> :
                     <div className={css.avatarContainer}><img src={selectedAvatar} alt="" /></div> )}
-
-                {/* // { selectedAvatar === 'null' ? <img src={profileData?.profile.avatar} alt={profileData?.username} className={css.avatar}/> :
-
-                    <div style={{backgroundImage: `url('${selectedAvatar}')`}} className={css.avatarContainer}></div>) } */}
-
-
                 <div className={css.avatarButtons}>
                   <input type="file" accept='image/*' {...register('avatar')} ref={(e) => { register("avatar"); fileInputRef.current = e}} onChange={handleFileChange}/>
                   <button className={css.avatarBtn} onClick={handleChangeAvatar}>Change Avatar</button>

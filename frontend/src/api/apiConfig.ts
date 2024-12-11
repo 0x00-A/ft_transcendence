@@ -43,7 +43,10 @@ export const API_GET_FRIENDS_URL = "/friends";
 
 export const API_CONFIRM_LOGIN_URL = "/auth/confirm_login/";
 
-
 export const REDIRECT_URL_UPDATE_EMAIL = `${window.location.protocol}//${window.location.host}${window.location.port}/edit/update-email`;
 
 export const API_SET_PASSWORD = "/security/set_password/";
+
+export const API_GET_ACHIEVEMENTS_URL = "/achievements";
+
+export const API_GET_PLAYED_GAMES_URL = "/matchmaker/played_games";

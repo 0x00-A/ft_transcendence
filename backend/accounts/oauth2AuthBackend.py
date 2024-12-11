@@ -10,6 +10,7 @@ class Oauth2AuthBackend(BaseBackend):
             user = User.objects.get(email=email)
             if (not user.has_usable_password()) and user.is_oauth_user:
                 return user
+            else:
+                return None
         except User.DoesNotExist:
             return None
-        return user
