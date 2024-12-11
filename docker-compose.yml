@@ -88,8 +88,8 @@ services:
     #   context: ./db
     #   dockerfile: Dockerfile
 
-    # ports:
-    #   - '5432:5432'
+    ports:
+      - '5432:5432'
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:

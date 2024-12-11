@@ -1,0 +1,115 @@
+.profileAchievContainer {
+    height: 40%;
+    width: 100%;
+    background-color: #1e2533;
+    border-radius: 40px;
+}
+
+.achievHeader {
+    height: 25%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 4px solid #283245;
+    font-size: 2.2rem;
+    color: #F8F3E3;
+    font-weight: bold;
+}
+
+.achievIcon {
+    width: 40px;
+    height: 40px;
+}
+
+.achievsContainer {
+    height: 75%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 20px;
+    overflow: auto;
+    /* overflow-x: hidden; */
+    /* border-radius: inherit; */
+}
+
+.achievCard {
+    height: 100%;
+    min-width: 180px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #F8C25C;
+    /* align-items: center; */
+    /* justify-content: space-between; */
+    /* padding: 20px; */
+    border-radius: 10px;
+    /* border: 1px solid white; */
+    background-color: #283245;
+}
+
+.lockedAchievCard {
+    filter: grayscale(100%);
+}
+
+.achievTitle {
+    height: 30%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 3px solid #1e2533;
+    border-radius: 10px 10px 0 0;
+    background-color: #3D4A68;
+    text-align: center;
+}
+
+.achievImg {
+    width: 30px;
+    height: 30px;
+}
+
+.achievDescription {
+    /* border: 1px solid white; */
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+}
+
+.achievProgress {
+    /* border: 1px solid white; */
+    height: 30%;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 3px solid #1e2533;
+    font-size: 2.2rem;
+    /* padding: 20px; */
+}
+
+/* .unklockedAchiev, .lockedAchiev {
+    border: 1px solid white;
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    font-size: 3rem;
+    align-items: center;
+    border: 1px solid #F8C25C;
+} */
+
+/* .unklockedAchiev p {
+    color: #F8F3E3;
+    font-size: small;
+    font-size: 1rem;
+} */
