@@ -9,6 +9,7 @@ import useOauth2Username from '../../hooks/auth/useOauth2Username';
 import css from './Oauth2Callback.module.css';
 import { FaRegUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
+import { UsernameFormData } from '../../types/apiTypes';
 
 
 
@@ -67,7 +68,7 @@ const Oauth2Callback = () => {
       }
    }, [mutation.isError]);
 
-    const handleClick = (username:string) => {
+    const handleClick = (username: UsernameFormData) => {
       mutation.mutate(username);
     }
 

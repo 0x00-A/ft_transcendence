@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import css from './SettingsSection.module.css';
-import { FaBell, FaBan } from 'react-icons/fa';
+import { FaBan } from 'react-icons/fa';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa6';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useUser } from '@/contexts/UserContext';

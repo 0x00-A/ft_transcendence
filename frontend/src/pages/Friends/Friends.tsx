@@ -9,7 +9,7 @@ import SentRequests from '../../components/Friends/sentRequests';
 import FriendRequests from '../../components/Friends/FriendRequests';
 import OnlineFriends from '../../components/Friends/OnlineFriends';
 import AllFriends from '../../components/Friends/AllFriends';
-import { useWebSocket } from '@/contexts/WebSocketContext';
+// import { useWebSocket } from '@/contexts/WebSocketContext';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
@@ -25,12 +25,12 @@ const Friends: React.FC = () => {
     if (view) {
       setCurrentView(view);
     }
-    
+
     // if (hasNewRequests) {
     //   markRequestAsRead();
     // }
   }, [location.search, isLoggedIn]);
-  
+
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }

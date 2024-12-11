@@ -41,8 +41,8 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = bool(int(os.environ.get('DEBUG', 1)))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+# DEBUG = True
 
 if DEBUG:
     SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
