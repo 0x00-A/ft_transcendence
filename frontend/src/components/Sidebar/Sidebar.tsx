@@ -15,6 +15,7 @@ import {
 import apiClient from '../../api/apiClient';
 import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
 
 export default function Sidebar() {
   // const [open, setOpen] = useState(true);
@@ -82,12 +83,12 @@ export default function Sidebar() {
         <Logo style={css.logo} />
       </div>
       <div className={css.menuBox}>
-        <SidebarMenu />
-        <div className={` ${css.bottom}`}>
-          <ThemeToggle className={css.darkMode}></ThemeToggle>
+        <SidebarMenu open={open} />
+        <div className={`${css.bottom}`}>
+          {/* <ThemeToggle className={css.darkMode} open={open}></ThemeToggle> */}
           <div className={css.logout} onClick={handleLogoutClick}>
-            <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
-            <p >Logout</p>
+            <LogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+            <p>Logout</p>
           </div>
         </div>
       </div>

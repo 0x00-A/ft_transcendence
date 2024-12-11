@@ -5,7 +5,7 @@ const NoChatSelected = () => {
   const navigate = useNavigate();
 
   const handleAddFriendsClick = () => {
-    navigate('/friends');
+    navigate('/friends?view=add');
   };
 
   return (

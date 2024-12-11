@@ -5,16 +5,14 @@ import SearchResultItem from './SearchResultItem';
 import { useLocation } from 'react-router-dom';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
-import { apiCreateConversation, apiDeleteConversation } from '@/api/chatApi';
-import { toast } from 'react-toastify';
+import { apiCreateConversation } from '@/api/chatApi';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-import { CircleX, CheckCheck, User, Ban, Trash2, Search, ArrowBigLeft } from 'lucide-react';
+import { CircleX, CheckCheck, User, Ban, Search, ArrowBigLeft } from 'lucide-react';
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
-
 
 interface FriendProfile {
   avatar: string;
@@ -108,7 +106,7 @@ const MessageList = () => {
       );
 
       if (matchedConversation) {
-        handleConversationSelect(matchedConversation);
+        setSelectedConversation(matchedConversation);
 
         setIsSearchActive(false);
         setSearchQuery('');
@@ -127,9 +125,7 @@ const MessageList = () => {
         }
       }
     }
-  }, [
-    location.state,
-  ]);
+  }, [location.state]);
 
 
   const handleMoreClick = (e: React.MouseEvent, index: number) => {
@@ -158,23 +154,6 @@ const MessageList = () => {
         activeIndex:
           prevState.activeIndex !== index || !prevState.isOpen ? index : null,
       }));
-    }
-  };
-
-
-  const handleDelete = async (id: Number) => {
-    try {
-      const response = await apiDeleteConversation(id);
-
-      toast.success(response.message);
-      setMenuState((prevState) => ({
-        ...prevState,
-        isOpen: false,
-        activeIndex: null,
-      }));
-      refetch();
-    } catch (error: any) {
-      toast.error(error.message);
     }
   };
 
@@ -281,13 +260,6 @@ const MessageList = () => {
     };
   }, []);
 
-
-
-  const handleConversationSelect = useCallback((conversation: conversationProps | null) => {
-    setSelectedConversation(conversation);
-  }, [selectedConversation]);
-  
-  
   const handleConversationClick = useCallback((conversation: conversationProps | null) => {
     
     console.log(" ..... selectedConversation: ", conversation)
@@ -417,25 +389,18 @@ const MessageList = () => {
             <div className={css.menuItem} onClick={handleClose}>
               <CircleX /> <span>Close Chat</span>
             </div>
+            <hr />
             <div
               className={css.menuItem}
               onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
             >
               <User /> <span>View Profile</span>
             </div>
-            <hr />
             <div
               className={css.menuItem}
               onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
               <Ban /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
-            </div>
-            <div
-              className={css.menuItem}
-              onClick={() => handleDelete(ConversationList[menuState.activeIndex!].id)}
-              >
-              <Trash2 />
-              <span>Delete chat</span>
             </div>
           </div>
         )}

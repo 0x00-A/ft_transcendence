@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
+import moment from 'moment';
 
 interface MessageProps {
   id: number;
@@ -71,7 +72,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     };
 
     socket.onmessage = (event) => {
-      // console.log('WebSocket message received:', event.data);
       const data = JSON.parse(event.data);
 
       if (data.type === 'chat_message') {
@@ -81,7 +81,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           sender: data.sender_id,
           receiver: userId,
           content: data.message,
-          timestamp: new Date().toISOString(),
+          timestamp: moment().format('HH:mm'),
           seen: false,
         };
 
@@ -90,7 +90,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         setLastMessage({
           conversationId: data.conversation_id,
           content: data.message,
-          timestamp: new Date().toISOString(),
+          timestamp: moment().format('HH:mm'),
         });
 
       } else if (data.type === 'typing_status') {
@@ -152,14 +152,24 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
 
   const markAsRead = (conversationId: number) => {
     const socket = socketRef.current;
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(
-        JSON.stringify({
-          action: 'mark_as_read',
-          conversation_id: conversationId,
-        })
-      );
-    }
+    let retryCount = 0;
+    const maxRetries = 5; 
+  
+    const sendMarkAsRead = () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(
+          JSON.stringify({
+            action: 'mark_as_read',
+            conversation_id: conversationId,
+          })
+        );
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(sendMarkAsRead, 1000);
+      }
+    };
+  
+    sendMarkAsRead();
   };
 
   const updateActiveConversation = (conversationId: number) => {

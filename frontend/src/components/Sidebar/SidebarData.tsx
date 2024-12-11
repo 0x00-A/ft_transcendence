@@ -1,13 +1,4 @@
-import { LiaUserFriendsSolid } from 'react-icons/lia';
-import { IoHomeOutline } from 'react-icons/io5';
-import {
-  IoGameControllerOutline,
-  IoSearchOutline,
-  IoChatbubblesOutline,
-} from 'react-icons/io5';
-import { AiOutlineAppstore } from 'react-icons/ai';
-import { MdOutlineLeaderboard } from 'react-icons/md';
-import { FaRegUser } from "react-icons/fa";
+import { User, Users, MessageSquareText, Gamepad2, LayoutDashboard } from 'lucide-react';
 import {
   MENU_ACTIVE_ICON_COLOR,
   MENU_ICON_COLOR,
@@ -19,9 +10,9 @@ const Menus = [
     id: 0,
     path: '/',
     title: 'Dashboard',
-    icon: <IoHomeOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    icon: <LayoutDashboard size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
     activeIcon: (
-      <IoHomeOutline size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+      <LayoutDashboard size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
     ),
   },
   {
@@ -29,10 +20,10 @@ const Menus = [
     path: '/play',
     title: 'Game',
     icon: (
-      <IoGameControllerOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+      <Gamepad2 size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
     ),
     activeIcon: (
-      <IoGameControllerOutline
+      <Gamepad2
         size={MENU_ICON_SIZE}
         color={MENU_ACTIVE_ICON_COLOR}
       />
@@ -43,10 +34,10 @@ const Menus = [
     path: '/chat',
     title: 'Chat',
     icon: (
-      <IoChatbubblesOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+      <MessageSquareText size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
     ),
     activeIcon: (
-      <IoChatbubblesOutline
+      <MessageSquareText
         size={MENU_ICON_SIZE}
         color={MENU_ACTIVE_ICON_COLOR}
       />
@@ -56,53 +47,53 @@ const Menus = [
     id: 3,
     path: '/friends',
     title: 'Friends ',
-    icon: <LiaUserFriendsSolid size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    icon: <Users size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
     activeIcon: (
-      <LiaUserFriendsSolid
+      <Users
         size={MENU_ICON_SIZE}
         color={MENU_ACTIVE_ICON_COLOR}
       />
     ),
   },
-  {
-    id: 4,
-    path: '/search',
-    title: 'Search',
-    icon: <IoSearchOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
-    activeIcon: (
-      <IoSearchOutline size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
-    ),
-  },
-  {
-    id: 5,
-    path: '/store',
-    title: 'Store',
-    icon: <AiOutlineAppstore size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
-    activeIcon: (
-      <AiOutlineAppstore size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
-    ),
-  },
-  {
-    id: 6,
-    path: '/leaderboard',
-    title: 'Leaderboard',
-    icon: (
-      <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
-    ),
-    activeIcon: (
-      <MdOutlineLeaderboard
-        size={MENU_ICON_SIZE}
-        color={MENU_ACTIVE_ICON_COLOR}
-      />
-    ),
-  },
+  // {
+  //   id: 4,
+  //   path: '/search',
+  //   title: 'Search',
+  //   icon: <IoSearchOutline size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+  //   activeIcon: (
+  //     <IoSearchOutline size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+  //   ),
+  // },
+  // {
+  //   id: 5,
+  //   path: '/store',
+  //   title: 'Store',
+  //   icon: <AiOutlineAppstore size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+  //   activeIcon: (
+  //     <AiOutlineAppstore size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+  //   ),
+  // },
+  // {
+  //   id: 6,
+  //   path: '/leaderboard',
+  //   title: 'Leaderboard',
+  //   icon: (
+  //     <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+  //   ),
+  //   activeIcon: (
+  //     <MdOutlineLeaderboard
+  //       size={MENU_ICON_SIZE}
+  //       color={MENU_ACTIVE_ICON_COLOR}
+  //     />
+  //   ),
+  // },
   {
     id: 7,
     path: '/profile',
     title: 'Profile',
-    icon: <FaRegUser size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+    icon: <User size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
     activeIcon: (
-      <FaRegUser size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
+      <User size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />
     ),
   },
 ];

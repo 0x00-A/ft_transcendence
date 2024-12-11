@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import css from './OnlineFriends.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useGetData } from '../../api/apiHooks';
@@ -24,17 +24,41 @@ const OnlineFriends: React.FC = () => {
   const { user } = useUser();
   const { sendMessage } = useWebSocket();
   const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('online-friends');
+  const [isInviteDisabled, setIsInviteDisabled] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
-  const handleMessageClick = (friend: Friend) => {
-    navigate('/chat', { state: { selectedFriend: friend } });
-  };
 
   const handleSendInvite = (username: string) => {
+
+    if (isInviteDisabled) return;
     sendMessage({
       event: 'game_invite',
       from: user?.username,
       to: username,
     });
+
+    setIsInviteDisabled(true);
+    setTimeLeft(10);
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isInviteDisabled && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timeLeft === 0 && isInviteDisabled) {
+      setIsInviteDisabled(false);
+    }
+
+    return () => clearInterval(timer);
+  }, [isInviteDisabled, timeLeft]);
+
+  const handleMessageClick = (friend: Friend) => {
+    navigate('/chat', { state: { selectedFriend: friend } });
   };
 
 
@@ -67,13 +91,14 @@ const OnlineFriends: React.FC = () => {
                   <MessageSquareText size={20} />
                 </button>
                 <button
-                  className={css.actionButton}
+                  className={`${css.actionButton} ${isInviteDisabled ? css.disabled : ''}`}
                   onClick={ () =>  handleSendInvite(friend.username)}
                   title='Invite'
                   >
-                  <img
-                    src="/icons/chat/Invite.svg" alt="Invite"
-                  />
+                  
+                  {isInviteDisabled ? (
+                    <> <img src="/icons/chat/Invite.svg" alt="Invite" /> <span className={css.cooldownTimer}>{timeLeft}s</span> </>  ): <img src="/icons/chat/Invite.svg" alt="Invite" />
+                  }
                 </button>
               </div>
             </div>

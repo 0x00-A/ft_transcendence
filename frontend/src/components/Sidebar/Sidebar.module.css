@@ -10,13 +10,9 @@
   /* max-width: 300px;
   min-width: 300px; */
   background-color: var(--sidebar-surface-primary);
-  /* transition-duration: 300ms; */
   padding-top: 1rem;
   /* overflow: auto; */
 
-  /* min-width: 200px;
-  max-width: 300px; */
-  /* transition: width 0.3s ease; */
 }
 
 .menuBox {
@@ -31,7 +27,7 @@
 .logoBox {
   display: flex;
   justify-content: center;
-  align-items: center;
+  height: 10%;
 }
 
 .logo {
@@ -43,7 +39,7 @@
   position: absolute;
   cursor: pointer;
   right: 0;
-  top: 4.5rem;
+  top: 5.5rem;
   border-radius: 50%;
   border: 1px solid var(--text-color);
   &:hover {
