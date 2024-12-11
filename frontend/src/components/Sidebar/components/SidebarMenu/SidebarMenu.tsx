@@ -4,7 +4,7 @@ import css from './SidebarMenu.module.css';
 import Menus from '../../SidebarData';
 import { useEffect, useState } from 'react';
 
-export const SidebarMenu = ({ open }: { open: boolean | null }) => {
+export const SidebarMenu = ({ open = false }: { open?: boolean | null }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(location.pathname);
 
@@ -16,7 +16,7 @@ export const SidebarMenu = ({ open }: { open: boolean | null }) => {
     <ul className={css.menu}>
       {Menus.map((item) => (
         <li
-          className={`${open ? '' : css.resize}`}
+          className={`${open ? '' : ''}`}
           key={item.id}
           onClick={() => setActiveLink(item.path)}
         >
@@ -25,8 +25,7 @@ export const SidebarMenu = ({ open }: { open: boolean | null }) => {
             to={item.path}
           >
             {activeLink === item.path ? item.activeIcon : item.icon}
-            {/* if friend and have new request */}
-            <p className={`${open ? css.open : css.hidden}`}>{item.title}</p>
+            <p className={`${open ? '' : ''}`}>{item.title}</p>
           </NavLink>
         </li>
       ))}

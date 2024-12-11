@@ -35,3 +35,8 @@ CHAT:
  - [ ] mark a read
  - [ ] if i user forgot the password
  - [ ]
+
+
+    # grok {
+    #   match => { "message" => "%{IPORHOST:client_ip} - %{DATA:remote_user} \[%{HTTPDATE:timestamp}\] \"%{WORD:method} %{DATA:request} HTTP/%{NUMBER:http_version}\" %{NUMBER:status} %{NUMBER:bytes}" }
+    # }
