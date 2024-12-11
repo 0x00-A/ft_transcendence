@@ -27,28 +27,28 @@ until curl -s -X POST --cacert config/certs/ca/ca.crt \
     -u "elastic:${ELASTIC_PASSWORD}" \
     -H "Content-Type: application/json" \
     https://es:9200/_security/user/kibana_system/_password \
-    -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+    -d '{"password":"${KIBANA_PASSWORD}"}' | grep -q "^{}"; do sleep 10; done;
 
 
-echo "Setting logs template";
-until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
-    --cacert config/certs/ca/ca.crt \
-    -u "elastic:${ELASTIC_PASSWORD}" \
-    -H "Content-Type: application/json" \
-    -d "{
-        \"index_patterns\": [\"logs-*\"],
-        \"template\": {
-        \"settings\": {
-            \"number_of_shards\": 1,
-            \"number_of_replicas\": 0
-        }
-        }
-    }" | grep -q "^{\"acknowledged\":true}"; do sleep 10; done;
+# echo "Setting logs template";
+# until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
+#     --cacert config/certs/ca/ca.crt \
+#     -u "elastic:${ELASTIC_PASSWORD}" \
+#     -H "Content-Type: application/json" \
+#     -d '{
+#         "index_patterns": ["logs-*"],
+#         "template": {
+#         "settings": {
+#             "number_of_shards": 1,
+#             "number_of_replicas": 0
+#         }
+#         }
+#     }' | grep -q '^{"acknowledged":true}'; do sleep 10; done;
 
 echo "Setting ILM policy";
 until curl -s -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert config/certs/ca/ca.crt \
     -H "Content-Type: application/json" \
-    https://es:9200/_ilm/policy/my_policy -d '
+    https://es:9200/_ilm/policy/ilm_policy -d '
     {
     "policy": {
         "phases": {
@@ -82,4 +82,21 @@ until curl -s -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert config/certs/ca/c
         }
     }
     }' | grep -q '^{"acknowledged":true}'; do sleep 10; done
+
+echo "Applying policy to index templates"
+until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
+    --cacert config/certs/ca/ca.crt \
+    -u "elastic:${ELASTIC_PASSWORD}" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "index_patterns": ["logs-*"],
+        "template": {
+            "settings": {
+                "index.lifecycle.name": "ilm_policy",
+                "number_of_shards": 1,
+                "number_of_replicas": 0
+            }
+        }
+    }' | grep -q '^{"acknowledged":true}'; do sleep 10; done;
+
 echo "All done!";
