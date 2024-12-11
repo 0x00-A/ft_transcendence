@@ -71,7 +71,7 @@ export default function Sidebar() {
   // }, []);
 
   return (
-    <aside className={`${css.sidebar}`}>
+    <aside className={`${css.sidebar} `}>
       {/* <img
         className={`${open ? css.norotate : css.rotate} ${css.controller}`}
         onClick={() => setOpen((open) => !open)}
@@ -83,11 +83,11 @@ export default function Sidebar() {
       </div>
       <div className={css.menuBox}>
         <SidebarMenu />
-        <div className={`${css.bottom}`}>
+        <div className={` ${css.bottom}`}>
           <ThemeToggle className={css.darkMode}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
             <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
-            <p>Logout</p>
+            <p >Logout</p>
           </div>
         </div>
       </div>
