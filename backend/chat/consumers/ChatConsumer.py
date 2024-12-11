@@ -179,6 +179,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if not receiver_id or not message:
             return
+        
+        message = message[:300]
 
         conversation = await self.get_or_create_conversation(sender_id, receiver_id)
 
