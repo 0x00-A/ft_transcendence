@@ -32,7 +32,7 @@ const SearchUsers: React.FC = () => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: users, isLoading: loadingUsers, error: usersError } = useGetData<User[]>('users');
+  const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
   const navigate = useNavigate();
 
   const handleMessageClick = (friend: User) => {
@@ -123,6 +123,7 @@ const SearchUsers: React.FC = () => {
   const performUserAction = async (action: () => Promise<void>) => {
     try {
       await action();
+      refetch();
       setShowResults(false);
       setSearchTerm('');
     } catch (error: any) {

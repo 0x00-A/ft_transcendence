@@ -1,33 +1,25 @@
 .sidebar {
   position: relative;
-  min-height: 100vh;
-  /* z-index: 50; */
-  /* position: fixed; */
-  width: 300px;
-  max-width: 300px;
-  min-width: 300px;
+  min-height: 100%;
+  width: 250px;
+  max-width: 250px;
+  min-width: 250px;
   background-color: var(--sidebar-surface-primary);
-  /* transition-duration: 300ms; */
   padding-top: 1rem;
 
-  /* min-width: 200px;
-  max-width: 300px; */
-  /* transition: width 0.3s ease; */
 }
 
 .menuBox {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* min-height: 100vh; */
-  height: calc(100vh - 55px);
-      /* height: auto; */
+  height: 90%;
 }
 
 .logoBox {
   display: flex;
   justify-content: center;
-  align-items: center;
+  height: 10%;
 }
 
 .normal {
@@ -38,12 +30,10 @@
 .small {
   height: 35px;
   margin-bottom: 10px;
-  /* transition-duration: 0; */
 }
 
 .closed {
   min-width: 80px;
-
   padding-top: 1rem;
   width: 80px;
 }
@@ -52,7 +42,7 @@
   position: absolute;
   cursor: pointer;
   right: 0;
-  top: 4.5rem;
+  top: 5.5rem;
   border-radius: 50%;
   border: 1px solid var(--text-color);
   &:hover {
