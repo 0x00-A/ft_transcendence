@@ -27,7 +27,7 @@ until curl -s -X POST --cacert config/certs/ca/ca.crt \
     -u "elastic:${ELASTIC_PASSWORD}" \
     -H "Content-Type: application/json" \
     https://es:9200/_security/user/kibana_system/_password \
-    -d '{"password":"${KIBANA_PASSWORD}"}' | grep -q "^{}"; do sleep 10; done;
+    -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
 
 
 # echo "Setting logs template";
@@ -45,7 +45,7 @@ until curl -s -X POST --cacert config/certs/ca/ca.crt \
 #         }
 #     }' | grep -q '^{"acknowledged":true}'; do sleep 10; done;
 
-echo "Setting ILM policy";
+echo "Creating ILM policy";
 until curl -s -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert config/certs/ca/ca.crt \
     -H "Content-Type: application/json" \
     https://es:9200/_ilm/policy/ilm_policy -d '
@@ -83,7 +83,7 @@ until curl -s -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert config/certs/ca/c
     }
     }' | grep -q '^{"acknowledged":true}'; do sleep 10; done
 
-echo "Applying policy to index templates"
+echo "Configuring index templates settings."
 until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
     --cacert config/certs/ca/ca.crt \
     -u "elastic:${ELASTIC_PASSWORD}" \
