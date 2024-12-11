@@ -17,7 +17,7 @@ import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
   const loadingBarRef = useLoadingBar();
   const { setIsLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ export default function Sidebar() {
   // }, []);
 
   return (
-    <aside className={`${css.sidebar} ${open ? '' : css.closed}`}>
+    <aside className={`${css.sidebar} `}>
       {/* <img
         className={`${open ? css.norotate : css.rotate} ${css.controller}`}
         onClick={() => setOpen((open) => !open)}
@@ -83,11 +83,11 @@ export default function Sidebar() {
       </div>
       <div className={css.menuBox}>
         <SidebarMenu />
-        <div className={`${!open ? '' : ''} ${css.bottom}`}>
+        <div className={` ${css.bottom}`}>
           <ThemeToggle className={css.darkMode}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
             <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
-            <p className={`${open ? '' : ''}`}>Logout</p>
+            <p >Logout</p>
           </div>
         </div>
       </div>
