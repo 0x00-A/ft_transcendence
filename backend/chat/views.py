@@ -130,10 +130,6 @@ class GetConversationsView(APIView):
                     block_status_display = None
 
                 last_message = conversation['last_message']
-                print("last Message >>>>>>>>>>>")
-                print(last_message)
-                print(conversation['user2_id'])
-                print(user.id)
                 # if last_message == "Send first message" and user.id == conversation['user2_id']:
                 #     continue
 
@@ -163,7 +159,6 @@ class GetConversationsView(APIView):
                 {'error': 'Internal server error', 'details': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
