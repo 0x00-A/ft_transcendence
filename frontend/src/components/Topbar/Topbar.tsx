@@ -15,11 +15,18 @@ const Topbar = () => {
       <div className={css.searchUsers}>
         <SearchUsers />
       </div>
-      <div className={css.topbarLeft}>
+      <div className={css.topbarInfo}>
         <NotificationsDropdown />
-        <div className={css.userAccount}  onClick={() => navigate('/profile')}>
-          <p className={css.userName}>{user?.username}</p>
-          <img className={css.userIcon} src={user?.profile.avatar} alt="" />
+        <div className={css.userAccount}>
+          <p
+            onClick={() => navigate('/profile')}
+            className={css.userName}>{user?.username}
+          </p>
+          <img
+            onClick={() => navigate('/profile')}
+            className={css.userIcon}
+            src={user?.profile.avatar} alt=""
+          />
         </div>
       </div>
     </div>

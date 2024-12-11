@@ -8,7 +8,7 @@ import {
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const NotificationsDropdown = () => {
@@ -94,7 +94,7 @@ const NotificationsDropdown = () => {
           </span>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[27rem] text-white bg-[#1e2738] border-gray-600">
+      <DropdownMenuContent className="w-[32rem] text-white bg-[#1e2738] border-gray-600">
         <div className="px-4 py-3 border-b border-gray-600">
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
