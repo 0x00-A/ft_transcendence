@@ -17,16 +17,16 @@ import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const loadingBarRef = useLoadingBar();
   const { setIsLoggedIn } = useAuth();
-  const navigate =useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
       loadingBarRef.current?.complete();
-    }
-  }, [])
+    };
+  }, []);
 
   const [showConfirm, setShowConfirm] = useState(false);
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -72,22 +72,22 @@ export default function Sidebar() {
 
   return (
     <aside className={`${css.sidebar} ${open ? '' : css.closed}`}>
-      <img
+      {/* <img
         className={`${open ? css.norotate : css.rotate} ${css.controller}`}
         onClick={() => setOpen((open) => !open)}
         src="/icons/control.svg"
-      />
+      /> */}
 
       <div className={css.logoBox}>
-        <Logo style={`${open ? css.normal : css.small} ${css.center}`} />
+        <Logo style={css.logo} />
       </div>
       <div className={css.menuBox}>
-        <SidebarMenu open={open} />
-        <div className={`${!open ? css.padding : ''} ${css.bottom}`}>
-          <ThemeToggle className={css.darkMode} open={open}></ThemeToggle>
+        <SidebarMenu />
+        <div className={`${!open ? '' : ''} ${css.bottom}`}>
+          <ThemeToggle className={css.darkMode}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
             <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
-            <p className={`${open ? css.open : css.hidden}`}>Logout</p>
+            <p className={`${open ? '' : ''}`}>Logout</p>
           </div>
         </div>
       </div>
