@@ -105,7 +105,7 @@ const NotificationsDropdown = () => {
                 className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
                   notification.link && notification.link !== '#' ? 'cursor-pointer' : ''
                 }`}
-                
+
                 onClick={() => {
                   if (notification.link && notification.link !== '#') {
                     navigate(notification.link);

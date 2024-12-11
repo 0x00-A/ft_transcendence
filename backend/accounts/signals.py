@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.contrib.auth.signals import user_logged_in
+from django.contrib.auth.signals import user_logged_out
+import logging
 
 from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
@@ -11,11 +13,35 @@ from .models import Badge
 from accounts.consumers import NotificationConsumer
 
 
+@receiver(pre_save, sender=Profile)
+def log_profile_changes(sender, instance, **kwargs):
+    if instance.pk:
+        old_profile = Profile.objects.get(pk=instance.pk)
+        print(f'-----------------Changes applyed to {old_profile.user.username}-----------------')
+        if old_profile.score != instance.score:
+            print(f"-------------Score changedfrom {old_profile.score} to {instance.score}-------------")
+        if old_profile.wins != instance.wins:
+            print(f"-------------Wins changed from {old_profile.wins} to {instance.wins}-------------")
+        if old_profile.losses != instance.losses:
+            print(f"-------------Losses changed from {old_profile.losses} to {instance.losses}-------------")
+        if old_profile.level + 1 == instance.level:
+            print(f"-------------Level changed from {old_profile.level} to {instance.level}-------------")
+            notification = Notification.objects.create(user=instance.user, title='Level Up', message=f"You have reached level {instance.level}")
+            notification.save()
+            NotificationConsumer.send_notification_to_user(instance.user.id, notification)
+        if old_profile.rank != instance.rank:
+            print(f"-------------Rank changed from {old_profile.rank} to {instance.rank}---------------")
+        if old_profile.badge != instance.badge:
+            print(f"-------------Badge changed from {old_profile.badge} to {instance.badge}-------------")
+        # if old_profile.played_games != instance.played_games:
+        #     print(f"-------------Played games {old_profile.user.username} changed from {old_profile.played_games} to {instance.played_games}-------------")
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
        Profile.objects.create(user=instance,
-                              rank=Profile.objects.count() + 1, badge=Badge.objects.get(name='Bronze'))
+                              rank=Profile.objects.count() + 1,
+                              badge=Badge.objects.get(name='Bronze'))
 
 
 @receiver(post_save, sender=User)
@@ -80,6 +106,23 @@ def unlock_achievements_on_game(sender, instance, **kwargs):
                 NotificationConsumer.send_notification_to_user(
                     user.id, notification)
             user_achievement.save()
+
+
+logger = logging.getLogger('django')
+
+
+# @receiver(user_logged_in)
+# def log_user_login(sender, request, user, **kwargs):
+#     print(
+#         f"User {user.username} logged in from IP {request.META['REMOTE_ADDR']}")
+#     logger.info(
+#         f"User {user.username} logged in successfully from IP {request.META['REMOTE_ADDR']}")
+
+
+# @receiver(user_logged_out)
+# def log_user_logout(sender, request, user, **kwargs):
+#     logger.info(
+#         f"User {user.username} logged out successfully from IP {request.META['REMOTE_ADDR']}")
 
 
 @receiver(user_logged_in)

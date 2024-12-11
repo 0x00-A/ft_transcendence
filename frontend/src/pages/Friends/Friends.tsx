@@ -9,12 +9,14 @@ import SentRequests from '../../components/Friends/sentRequests';
 import FriendRequests from '../../components/Friends/FriendRequests';
 import OnlineFriends from '../../components/Friends/OnlineFriends';
 import AllFriends from '../../components/Friends/AllFriends';
+// import { useWebSocket } from '@/contexts/WebSocketContext';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
 const Friends: React.FC = () => {
   const { isLoggedIn } = useAuth();
-  const [currentView, setCurrentView] = useState<ViewType>('all');
+  const [currentView, setCurrentView] = useState<ViewType>('add');
+  // const { markRequestAsRead, hasNewRequests } = useWebSocket();
 
 
   useEffect(() => {
@@ -23,9 +25,12 @@ const Friends: React.FC = () => {
     if (view) {
       setCurrentView(view);
     }
-    
+
+    // if (hasNewRequests) {
+    //   markRequestAsRead();
+    // }
   }, [location.search, isLoggedIn]);
-  
+
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }

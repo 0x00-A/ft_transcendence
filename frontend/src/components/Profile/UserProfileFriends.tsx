@@ -9,14 +9,14 @@ import { useGetData } from "@/api/apiHooks";
 import Loading from "@/components/Friends/Loading";
 import { useNavigate } from 'react-router-dom';
 // Types
-import { MutualFriend, Friend } from '@/types/apiTypes';
+import { MutualFriend, Friends } from '@/types/apiTypes';
 
 
 const UserProfileFriends = ({username}:{username:string}) => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
-    const { data: friendsData, isLoading, error } = useGetData<Friend[]>(`/friends/${username}`);
+    const { data: friendsData, isLoading, error } = useGetData<Friends[]>(`/friends/${username}`);
     const { data: mutualFriends, isLoading : mutualIsLoading} = useGetData<MutualFriend>(`/friends/mutual/${username}`);
     const navigate = useNavigate();
     // const mutualFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);

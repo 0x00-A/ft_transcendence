@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import { FcGoogle } from "react-icons/fc";
 import DiscordIcon from "../../assets/discordIcon.svg";
 // API URL
-import {API_OAUTH2_URL} from "../../api/apiConfig";
+import { API_OAUTH2_URL } from "../../api/apiConfig";
 
 const Oauth2 = () => {
 

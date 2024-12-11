@@ -7,18 +7,21 @@ import { IoGameControllerOutline } from "react-icons/io5";
 import { useGetData } from '@/api/apiHooks';
 // Api
 import { GameHistory } from '@/types/apiTypes';
+import { API_GET_PLAYED_GAMES_URL } from '@/api/apiConfig';
+import Loading from '../Friends/Loading';
 
 
 
-const gameHistoryFields = ["Date & Time", "Name", "Result", "Score", "Type", "Duration", "Rematch"] as const;
+const gameHistoryFields = ["Date & Time", "Name", "Result", "Score", "Duration", "Rematch"] as const;
 
 
 const ProfileGamesHistory = () => {
 
     const navigate = useNavigate();
-    const { data: playedGames, isLoading } = useGetData<GameHistory[]>('/matchmaker/played_games');
-    if (isLoading) return <p>Loading...</p>;
-    // console.log(playedGames);
+    const { data: playedGames, isLoading } = useGetData<GameHistory[]>(API_GET_PLAYED_GAMES_URL);
+    if (isLoading) return <Loading />;
+
+    console.log('played games=> ', playedGames);
 
 
   return (
@@ -45,16 +48,19 @@ const ProfileGamesHistory = () => {
                     <span>Play Now</span>
                 </button>
             </div> }
-            { playedGames!.length > 0 && playedGames?.map((game, index) => (
-                <div key={index} className={css.tableRow}>
-                    <span className={css.historyField}>{game?.start_time}</span>
+            { playedGames!.length > 0 && playedGames?.map((game: GameHistory) => (
+                <div key={game.id} className={css.tableRow}>
+                    <div className={css.dateTimeGame}>
+                      <span className={css.historyField}>{game?.start_time.split("T")[0]}</span>
+                      <span className={css.historyField}>{game?.start_time.substring(11, 16)}</span>
+                    </div>
                     <div className={css.player}>
-                        <img src={game.oppenent_avatar} alt={game?.oppenent_username} className={css.avatar} />
-                        <span className={css.name}>{game.oppenent_username}</span>
+                        <img src={game.opponent_avatar} alt={game?.opponent_username} className={css.avatar} />
+                        <span className={css.name}>{game.opponent_username}</span>
                     </div>
                     <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{game.result}</span>
                     <span className={css.historyField}>{game.score}</span>
-                    <span className={css.historyField}>One to One</span>
+                    {/* <span className={css.historyField}>One to One</span> */}
                     <span className={css.historyField}>{game.game_duration}</span>
                     <button className={css.inviteBtn}>Invite</button>
                 </div>

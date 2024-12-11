@@ -1,15 +1,15 @@
-// React
-
-// API
-
 // Styles
 import css from './ProfileHeader.module.css'
 import { MdEdit } from "react-icons/md";
-// Types
-import { User } from '@/types/apiTypes';
+// Contexts
+import { useUser } from '@/contexts/UserContext';
 
 
-const profileHeader = ({setEditProfile, currentUser}: {setEditProfile:React.Dispatch<React.SetStateAction<boolean>>, currentUser:User|null|undefined}) => {
+const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
+
+  const { user: currentUser, isLoading } = useUser();
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className={css.profileHeaderContainer}>

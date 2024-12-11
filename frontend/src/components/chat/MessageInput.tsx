@@ -87,7 +87,7 @@ const MessageInput = ({
   const handleTypingDebounced = useCallback(
     debounce((isTyping: boolean) => {
       onTyping(isTyping);
-    }, 2000), 
+    }, 2000),
     [onTyping]
   );
 
@@ -102,7 +102,7 @@ const MessageInput = ({
       e.target.style.height = `${e.target.scrollHeight}px`;
     }
     if (!message.trim()) {
-      onTyping(true); 
+      onTyping(true);
     }
     handleTypingDebounced(false);
   };
@@ -129,7 +129,7 @@ const MessageInput = ({
     setMessage('');
     setIsFlying(true);
     setShowEmojiPicker(false);
-    setCharCount(0); 
+    setCharCount(0);
     setTimeout(() => setIsFlying(false), 500);
   };
 
@@ -209,7 +209,7 @@ const MessageInput = ({
               onClick={() => handleSendInvite(conversationData!.name)}
             >
               {isInviteDisabled
-                ? <span className={css.cooldownTimer}>{timeLeft}s</span> 
+                ? <span className={css.cooldownTimer}>{timeLeft}s</span>
                 : <img src="/icons/chat/inviteBlack.svg" alt="Invite" />
               }
             </button>
