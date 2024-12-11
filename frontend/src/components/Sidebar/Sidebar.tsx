@@ -2,11 +2,11 @@ import Logo from '../Logo/Logo';
 import css from './Sidebar.module.css';
 import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
 import { useEffect, useState } from 'react';
-import { IoLogOut } from 'react-icons/io5';
+// import { IoLogOut } from 'react-icons/io5';
 import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
-import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+// import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import {
   MENU_ICON_COLOR,
   MENU_ICON_SIZE,
@@ -83,7 +83,7 @@ export default function Sidebar() {
         <Logo style={css.logo} />
       </div>
       <div className={css.menuBox}>
-        <SidebarMenu open={open} />
+        <SidebarMenu/>
         <div className={`${css.bottom}`}>
           {/* <ThemeToggle className={css.darkMode} open={open}></ThemeToggle> */}
           <div className={css.logout} onClick={handleLogoutClick}>
