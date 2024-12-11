@@ -1,74 +1,56 @@
 from django.urls import path
 from django.urls import re_path
-from .views import OnlineUsersView
-from .views import UserDetailView
-from rest_framework_simplejwt.views import TokenRefreshView
-from .views import SignupView
-from .views import LoginView
-from .views import oauth2_authentication
-from .views import LogoutView
-from .views import discord_authorize
-from .views import oauth2_discord
-from .views import intra_authorize
-from .views import oauth2_intra
-from .views import google_authorize
-from .views import oauth2_google
-from .views import oauth2_set_username
-from .views import SendFriendRequestView
-from .views import AcceptFriendRequestView
-from .views import RejectFriendRequestView
-from .views import PendingFriendRequestsView
-from .views import UserFriendsView
-from .views import SentFriendRequestsView
-from .views import CancelFriendRequestView
-from .views import OnlineFriendsView
-from .views import AllUsersView
-from .views import BlockedUsersView
-from .views import BlockUserView
-from .views import UnblockUserView
-from .views import SuggestedConnectionsView
-from .views import ConfirmOauth2Login
-from .views import ProfileApiView
+
 from rest_framework.routers import DefaultRouter
-from accounts.views import NotificationViewSet
-from .views import EditProfileView
-from .views import ChangePasswordView
-from .views import oauth2_authorize
-from .views import UserProfileView
-from .views import MutualFriendsView
-from .views import Enable2FAView
-from .views import VerifyOTPView
-from .views import Disable2FAView
-from .views import LoginVerifyOTPView
-from .views import verify_email
-from .views import SetPasswordView
-from .views import ChangeEmailView
-from .views import ChangeEmailVerificationView
+
+from accounts import views
 
 router = DefaultRouter()
-router.register(r'notifications', NotificationViewSet, basename='notification')
+router.register(r'notifications', views.NotificationViewSet, basename='notification')
 
 
 urlpatterns = [
-    # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/signup/', SignupView.as_view()),
-    path('auth/verify_email/', verify_email),
-    path('auth/login/', LoginView.as_view()),
-    path('security/set_password/', SetPasswordView.as_view()),
-    path('login/verify_otp/', LoginVerifyOTPView.as_view()),
-    re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$',
-            oauth2_authentication, name='oauth2_authentication'),
-    re_path(r'^auth/oauth2/authorize/(?P<choice>intra|discord|google)/$',
-            oauth2_authorize, name='oauth2_authorize'),
-    path('auth/confirm_login/', ConfirmOauth2Login.as_view()),
-    path('oauth2/verify_login/', ConfirmOauth2Login.as_view()),
-    path('auth/logout/', LogoutView.as_view()),
-    path('security/enable_2fa/', Enable2FAView.as_view()),
-    path('security/verify_otp/', VerifyOTPView.as_view()),
-    path('security/disable_2fa/', Disable2FAView.as_view()),
+
+    path('auth/confirm_login/', views.ConfirmLoginView.as_view(), name='confirm_login'),
+
+    path('auth/signup/', views.SignupView.as_view(), name='signup'),
+    path('auth/email-verification/', views.verify_email, name='email_verification'),
+    path('auth/login/', views.LoginView.as_view(), name='login'),
+    path('auth/login/otp-verification/', views.LoginVerifyOTPView.as_view(), name='otp_verification'),
+    path('auth/reset-password-request/', views.RequestResetPasswordView.as_view(), name='reset_password_request'),
+    path('auth/reset-password/', views.ResetPasswordView.as_view(), name='reset_password'),
+
+    re_path(r'^auth/oauth2/(?P<choice>intra|discord|google)/$', views.oauth2_authentication, name='oauth2_authentication'),
+    re_path(r'^auth/oauth2/authorize/(?P<choice>intra|discord|google)/$', views.oauth2_authorize, name='oauth2_authorize'),
+    path('auth/oauth2/set-username/', views.oauth2_set_username, name='oauth2_set_username'),
+
+    path('auth/logout/', views.LogoutView.as_view(), name='logout'),
+
+    path('profile/', views.MyProfileView.as_view(), name='my_profile'),
+    path('profile/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
+
+    path('edit/profile/', views.EditProfileView.as_view(), name='edit_profile'),
+    path('edit/update-email-request/', views.UpdateEmailRequest.as_view(), name='update_email_request'),
+    path('edit/update-email/', views.UpdateEmailView.as_view(), name='update_email'),
+    path('edit/set-password/', views.SetPasswordView.as_view(), name='set_password'),
+
+    path('security/update-password/', views.UpdatePasswordView.as_view(), name='update_password'),
+    path('security/enable-2fa-request/', views.Enable2faRequest.as_view(), name='enable_2fa_request'),
+    path('security/enable-2fa/', views.Enable2faView.as_view(), name='enable_2fa'),
+    path('security/disable_2fa/', views.Disable2FAView.as_view(), name='disable_2fa'),
+
+    path('users/', views.AllUsersView.as_view(), name='all_users'),
+    path('users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
+    path('users/online/', views.OnlineUsersView.as_view(), name='online_users'),
+
+    path('achievements/', views.GetMyAchievementsView.as_view(), name='achievements'),
+    #  path('profile/', views.ProfileApiView.as_view(), name='profile'),
+
+#     path('security/set_password/', views.SetPasswordView.as_view()),
+#     path('auth/confirm_login/', views.ConfirmOauth2Login.as_view()),
+#     path('oauth2/verify_login/', views.ConfirmOauth2Login.as_view()),
 
 
-    path('auth/new_username/', oauth2_set_username),
     # path('oauth2/discord/authorize/', discord_authorize),
 
     # path('auth/refresh_token/', RefreshToken.as_view()),
@@ -78,35 +60,5 @@ urlpatterns = [
     # path('oauth2/google/authorize/', google_authorize),
     # path('oauth2/google/', oauth2_google),
 
-     path('users/', AllUsersView.as_view(), name='all_users'),
-     path('users/<int:user_id>/', UserDetailView.as_view(), name='user-detail'),
-     path('users/online/', OnlineUsersView.as_view(), name='online-users'),
-     path('profile/', ProfileApiView.as_view(), name='profile'),
-     path('profile/<str:username>/', UserProfileView.as_view(), name='user-profile'),
-     path('edit/informations/', EditProfileView.as_view()),
-     path('edit/change_email/', ChangeEmailView.as_view()),
-     path('edit/change_email/verify/', ChangeEmailVerificationView.as_view()),
-     path('security/change_password/', ChangePasswordView.as_view()),
-     path('friends/<str:username>/', UserFriendsView.as_view(), name='specific-user-friends'),
-    path('friends/mutual/<str:username>/', MutualFriendsView.as_view(), name='mutual-friends'),
-    path('suggested-connections/', SuggestedConnectionsView.as_view(), name='suggested-connections'),
-    path('friends/', UserFriendsView.as_view(), name='current-user-friends'),
-    path('friend-request/send/<str:username>/',
-         SendFriendRequestView.as_view(), name='send-friend-request'),
-    path('online-friends/', OnlineFriendsView.as_view(), name='online-friends'),
-    path('friend-request/accept/<str:username>/',
-         AcceptFriendRequestView.as_view(), name='accept-friend-request'),
-    path('friend-request/reject/<str:username>/',
-         RejectFriendRequestView.as_view(), name='reject-friend-request'),
-    path('friend-requests/pending/', PendingFriendRequestsView.as_view(),
-         name='pending-friend-requests'),
-    path('friend-requests/sent/', SentFriendRequestsView.as_view(),
-         name='friend-request-list'),
-    path('friend-request/cancel/<str:username>/',
-         CancelFriendRequestView.as_view(), name='cancel-friend-request'),
-
-    path('block/<str:username>/', BlockUserView.as_view(), name='block_user'),
-    path('unblock/<str:username>/', UnblockUserView.as_view(), name='unblock_user'),
-    path('blocked/', BlockedUsersView.as_view(), name='blocked_users'),
     *router.urls,
 ]

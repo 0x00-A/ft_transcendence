@@ -1,5 +1,4 @@
 // import { useState, useRef, useEffect } from 'react';
-import React from 'react';
 import css from './SideInfoChat.module.css';
 import ProfileSection from './ProfileSection';
 import StatusSection from './StatusSection';
@@ -9,13 +8,9 @@ import { useSelectedConversation } from '@/contexts/SelectedConversationContext'
 
 
 
-interface SideInfoChatProps {
-  onEmojiChange: (newSticker: string) => void;
-}
 
-const SideInfoChat: React.FC<SideInfoChatProps> = ({
-  onEmojiChange,
-}) => {
+
+const SideInfoChat = () => {
 
   const { selectedConversation } = useSelectedConversation();
 
@@ -27,7 +22,7 @@ const SideInfoChat: React.FC<SideInfoChatProps> = ({
       />
       <StatusSection/>
       <ButtonSection />
-      <SettingsSection onEmojiChange={onEmojiChange} />
+      <SettingsSection />
     </div>
   );
 };

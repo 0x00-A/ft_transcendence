@@ -5,20 +5,11 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 // API
 import apiClient from '@/api/apiClient';
-import { API_NEW_USERNAME_URL } from '@/api/apiConfig';
+import { API_OAUTH2_SETUSERNAME_URL } from '@/api/apiConfig';
 import axios from 'axios';
+// Types
+import { setUsernameSchema } from '@/types/formSchemas';
 
-interface UsernameFormData {
-  username: string;
-}
-
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .required('username is required!')
-    .min(4, 'username must be at least 4 characters!')
-    .max(15, 'username must not exceed 15 characters!'),
-});
 
 // const submitUsername = async (data: UsernameFormData) => {
 //   // try {
@@ -38,18 +29,20 @@ const useOauth2Username = () => {
     formState : {errors},
     reset,
     setError,
-  } = useForm<UsernameFormData>({
-    resolver: yupResolver(schema),
+  } = useForm<string>({
+    resolver: yupResolver(setUsernameSchema),
     reValidateMode: 'onChange',
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (data: UsernameFormData) => { return await apiClient.post(API_NEW_USERNAME_URL, data) },
+    mutationFn: async (username: string) => { return await apiClient.post(API_OAUTH2_SETUSERNAME_URL, username) },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true});
         errs?.error && setError("root", {type: '', message: errs.error});
+      } else {
+        setError("root", {type: '', message: 'Something went wrong!'});
       }
     },
   });

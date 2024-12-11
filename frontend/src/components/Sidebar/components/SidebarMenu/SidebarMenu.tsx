@@ -25,6 +25,7 @@ export const SidebarMenu = ({ open }: { open: boolean | null }) => {
             to={item.path}
           >
             {activeLink === item.path ? item.activeIcon : item.icon}
+            {/* if friend and have new request */}
             <p className={`${open ? css.open : css.hidden}`}>{item.title}</p>
           </NavLink>
         </li>

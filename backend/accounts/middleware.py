@@ -1,5 +1,4 @@
 from django.utils.deprecation import MiddlewareMixin
-from django.conf import settings
 
 class RefreshTokenMiddleware(MiddlewareMixin):
     def process_response(self, request, response):

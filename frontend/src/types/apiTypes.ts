@@ -15,18 +15,19 @@ interface PerformanceDataEntry {
   [day: string]: number; // Each day (e.g., "Mon") maps to a duration
 }
 
-export interface Stats {
-  games_played: number;
-  wins: number;
-  losses: number;
-  performanceData: PerformanceDataEntry[];
-}
 
-export interface Badges {
+export interface Badge {
   name: string;
   icon: string;
   level_required: number;
   xp_reward: number;
+}
+
+export interface Stats {
+  games: number;
+  wins: number;
+  losses: number;
+  performanceData: PerformanceDataEntry[];
 }
 
 export interface Profile {
@@ -36,7 +37,7 @@ export interface Profile {
   level: number | null;
   score: number | null;
   rank: number | null;
-  badge: Badges;
+  badge: Badge;
   stats: Stats;
   is_online: boolean;
 }
@@ -44,11 +45,11 @@ export interface Profile {
 export interface User {
   id: number;
   username: string;
+  first_name: string;
+  last_name: string;
   email: string;
   is_password_set: boolean;
   is2fa_active: boolean;
-  first_name: string;
-  last_name: string;
   profile: Profile;
   friend_request_status?: "accepted" | "pending" | "Add Friend" | "cancel";
 }
@@ -94,6 +95,17 @@ export interface Tournament {
   state: TournamentState;
 }
 
+export interface MessageProps {
+  id: number;
+  conversation: number;
+  sender: number;
+  receiver: number;
+  content: string;
+  timestamp: string;
+  seen?: boolean;
+}
+
+
 export interface conversationProps {
   id: number;
   last_seen: string;
@@ -118,7 +130,7 @@ export interface SignupFormData {
   password2: string;
 }
 
-export interface LoginData {
+export interface LoginFormData {
   username: string;
   password: string;
 }
@@ -145,9 +157,10 @@ export interface ChangePasswordForm {
 }
 
 export interface GameHistory {
+  id: number
   start_time: string;
-  oppenent_username: string;
-  oppenent_avatar: string;
+  opponent_username: string;
+  opponent_avatar: string;
   result: string;
   score: string;
   game_duration: string;
@@ -159,13 +172,22 @@ interface FriendProfile {
     level: number;
 }
 
-export interface Friend {
-  id: string;
+export interface Friends {
+  id: number;
   username: string;
   profile: FriendProfile;
 }
 
 export interface MutualFriend {
-    mutual_friends: Friend[];
-    mutual_friends_count: number;
+  mutual_friends: Friends;
+  mutual_friends_count: number;
+}
+
+////////////////////////
+// PROFILE INTERFACES //
+///////////////////////
+export interface ResetPasswordForm {
+  token: string;
+  new_password: string;
+  confirm_password: string;
 }

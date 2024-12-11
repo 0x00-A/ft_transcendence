@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import css from './Friends.module.css';
@@ -9,13 +9,28 @@ import SentRequests from '../../components/Friends/sentRequests';
 import FriendRequests from '../../components/Friends/FriendRequests';
 import OnlineFriends from '../../components/Friends/OnlineFriends';
 import AllFriends from '../../components/Friends/AllFriends';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
 
 const Friends: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const [currentView, setCurrentView] = useState<ViewType>('add');
+  // const { markRequestAsRead, hasNewRequests } = useWebSocket();
 
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const view = params.get('view') as ViewType;
+    if (view) {
+      setCurrentView(view);
+    }
+    
+    // if (hasNewRequests) {
+    //   markRequestAsRead();
+    // }
+  }, [location.search, isLoggedIn]);
+  
   if (!isLoggedIn) {
     return <Navigate to="/signup" />;
   }

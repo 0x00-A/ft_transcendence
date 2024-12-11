@@ -5,6 +5,8 @@
     border-radius: 25px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    /* border: 1px solid white; */
     gap: 4rem;
     padding: 2rem;
 }
@@ -17,20 +19,28 @@
 }
 
 .editAvatar {
-    align-self: center;
-    width: 90%;
-    height: 20%;
+    /* align-self: center; */
+    /* width: 90%; */
+    /* height: 20%; */
     display: flex;
     align-items: center;
     gap: 3rem;
+    /* border: 1px solid #F8C25C; */
     /* justify-content: space-between; */
 }
 
-.avatar, .defaultAvatar {
+.avatarContainer {
     border: 2px solid #F8C25C;
-    width: 125px;
-    height: 125px;
     border-radius: 50%;
+    overflow: hidden;
+    width: 120px;
+    height: 120px;
+}
+
+.avatarContainer img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
 
 .defaultAvatar {
@@ -53,10 +63,12 @@
     font-size: 1.3rem;
     border-radius: 10px;
     cursor: pointer;
+    color: #D1D3D4;
 }
 
 .avatarBtn:hover, .removeAvatarBtn:hover {
     background-color: #1E2533;
+    color: white;
 }
 
 .avatarBtn {
@@ -68,15 +80,17 @@
 }
 
 .editInfos {
-    align-self: center;
+    /* align-self: center; */
+    /* border: 1px solid #F8C25C; */
     display: flex;
     flex-direction: column;
-    width: 90%;
-    gap: 2rem;
+    align-items: center;
+    width: 70%;
+    gap: 1.5rem;
 }
 
 .containerFiled {
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -236,9 +250,13 @@
     align-items: center;
 }
 
+.emailInput input {
+    padding-right: 8rem;
+}
+
 .editEmailBtn {
     position: absolute;
-    left: calc(100% - 8rem);
+    left: calc(100% - 7rem);
     padding: 4px;
     border: 1px solid #F8C25C;
     border-radius: 8px;

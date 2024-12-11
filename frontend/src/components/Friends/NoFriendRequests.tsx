@@ -1,12 +1,12 @@
 import React from 'react';
 import css from './NoFriendRequests.module.css';
+import { UserCog } from 'lucide-react';
+
 
 const NoFriendRequests: React.FC = () => {
   return (
     <div className={css.container}>
-      <div className={css.iconContainer}>
-        <img src="/icons/friend/requestsFriend.svg" alt="" />
-      </div>
+      <UserCog size={80} color='#6b7280' />
       <h2 className={css.title}>No Friend Requests</h2>
       <p className={css.description}>
         You don't have any pending friend requests right now. 

@@ -1,4 +1,5 @@
 import apiClient from '@/api/apiClient';
+import { API_UPDATE_EMAIL_URL } from '@/api/apiConfig';
 import axios from 'axios';
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,9 +18,9 @@ const EditEmailVerification = () => {
                     navigate('/profile');
                 }
                 try {
-                    const response = await apiClient.put('', { token });
+                    const response = await apiClient.put(API_UPDATE_EMAIL_URL, { token });
                     toast.success(response.data.message);
-                    navigate('/auth');
+                    navigate('/profile');
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
                         toast.error(error?.response?.data.error);
@@ -27,7 +28,7 @@ const EditEmailVerification = () => {
                     else {
                         toast.error('Something went wrong!');
                     }
-                    navigate('/auth');
+                    navigate('/profile');
                 }
             }
         };

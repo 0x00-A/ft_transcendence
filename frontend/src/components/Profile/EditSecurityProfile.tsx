@@ -13,6 +13,7 @@ import { useUser } from '@/contexts/UserContext';
 import axios from 'axios';
 // Types
 import { ChangePasswordForm } from '@/types/apiTypes';
+import { API_DISABLE_2FA_URL, API_ENABLE_2FA_REQUEST_URL, API_ENABLE_2FA_URL } from '@/api/apiConfig';
 
 type ShowPasswordFields = 'current_pass' | 'new_pass' | 'confirm_pass' | 'pass2fa';
 
@@ -27,8 +28,6 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     if (isLoading) {
         return <div>Loading...</div>
     }
-    // console.log(profileData);
-
 
     const [showPassword, setShowPassword] = useState({
         current_pass: false,
@@ -39,7 +38,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleDisable2fa = async () => {
         try{
-            const response = await apiClient.post('/security/disable_2fa/', {password: confiPass2fa})
+            const response = await apiClient.post(API_DISABLE_2FA_URL, {password: confiPass2fa})
             toast.success(response.data.message);
             setEditProfile(false);
             refetch();
@@ -55,7 +54,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleEnable2fa = async () => {
         try{
-            const response = await apiClient.post('/security/verify_otp/', {otp: verifCode})
+            const response = await apiClient.post(API_ENABLE_2FA_URL, {otp: verifCode})
             toast.success(response.data.message);
             setEditProfile(false);
             refetch();
@@ -71,7 +70,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleGetQrcode = async () => {
         try {
-            const response = await apiClient.post('/security/enable_2fa/', {})
+            const response = await apiClient.post(API_ENABLE_2FA_REQUEST_URL, {})
             setQrcode(response.data.qr_code);
         }
         catch(error) {
@@ -108,40 +107,44 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     return (
         <div className={css.securityContainer}>
-            <form action="submit" className={css.changePassForm} onSubmit={handleSubmit(handleChangePassword)}>
+            <div className={css.UpdatePassContainer}>
                 <h1 className={css.title}>Change Password</h1>
-                <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>Current Password</label>
-                    <div><input type={ showPassword.current_pass ? "text" : "password"} className={css.input} {...register('current_password')}/>
-                    {showPassword.current_pass ?
-                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/> :
-                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/>
-                    }</div>
-                    {errors.current_password && <span className={css.fieldError}>{errors.current_password.message}</span>}
-                </div>
-                <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>New Password</label>
-                    <div><input type={ showPassword.new_pass ? "text" : "password"} className={css.input} {...register('new_password')}/>
-                    {showPassword.new_pass ?
-                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/> :
-                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/>
-                    }</div>
-                    {errors.new_password && <span className={css.fieldError}>{errors.new_password.message}</span>}
-                </div>
-                <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>Confirm New Password</label>
-                    <div><input type={ showPassword.confirm_pass ? "text" : "password"} className={css.input} {...register('confirm_password')}/>
-                    {showPassword.confirm_pass ?
-                      <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
-                      <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/>
-                    }</div>
-                    {errors.confirm_password && <span className={css.fieldError}>{errors.confirm_password.message}</span>}
-                </div>
-                <div className={css.ConfirmButtons}>
-                    <button type='reset' className={css.closeBtn}>Reset</button>
-                    <button type='submit' className={css.confirmBtn}>Save</button>
-                </div>
-            </form>
+                <form action="submit" className={css.changePassForm} onSubmit={handleSubmit(handleChangePassword)}>
+                    <div className={css.entryArea}>
+                        <div className={css.containerFiled}>
+                            <label htmlFor="" className={css.label}>Current Password</label>
+                            <div className={css.passContainer}><input type={ showPassword.current_pass ? "text" : "password"} className={css.input} {...register('current_password')}/>
+                            {showPassword.current_pass ?
+                              <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/> :
+                              <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/>
+                            }</div>
+                            {errors.current_password && <span className={css.fieldError}>{errors.current_password.message}</span>}
+                        </div>
+                        <div className={css.containerFiled}>
+                            <label htmlFor="" className={css.label}>New Password</label>
+                            <div className={css.passContainer}><input type={ showPassword.new_pass ? "text" : "password"} className={css.input} {...register('new_password')}/>
+                            {showPassword.new_pass ?
+                              <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/> :
+                              <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/>
+                            }</div>
+                            {errors.new_password && <span className={css.fieldError}>{errors.new_password.message}</span>}
+                        </div>
+                        <div className={css.containerFiled}>
+                            <label htmlFor="" className={css.label}>Confirm New Password</label>
+                            <div className={css.passContainer}><input type={ showPassword.confirm_pass ? "text" : "password"} className={css.input} {...register('confirm_password')}/>
+                            {showPassword.confirm_pass ?
+                              <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
+                              <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/>
+                            }</div>
+                            {errors.confirm_password && <span className={css.fieldError}>{errors.confirm_password.message}</span>}
+                        </div>
+                    </div>
+                    <div className={css.ConfirmButtons}>
+                        <button type='reset' className={css.closeBtn}>Reset</button>
+                        <button type='submit' className={css.confirmBtn}>Save</button>
+                    </div>
+                </form>
+            </div>
             <div className={css.twoFacForm}>
                 <h1 className={css.title}>Two Factor Authentication (2Fa)</h1>
                 {!profileData?.is2fa_active ?

@@ -2,10 +2,11 @@ import React from 'react';
 import css from './FriendRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
 import moment from 'moment';
-import Loading from './Loading';
 import NoFriendRequests from './NoFriendRequests';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
+import { Check, X } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
 
 
 interface Profile {
@@ -37,8 +38,7 @@ const FriendRequests: React.FC = () => {
 
   const acceptFriendRequest = async (username: string) => {
     try {
-      const message = await apiAcceptFriendRequest(username);
-      toast.success(message);
+      await apiAcceptFriendRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept friend request');
@@ -48,8 +48,7 @@ const FriendRequests: React.FC = () => {
 
   const rejectFriendRequest = async (username: string) => {
     try {
-      const message = await apiRejectFriendRequest(username);
-      toast.success(message);
+      await apiRejectFriendRequest(username);
       refetch();
     } catch (error: any) {
       toast.error(error.message || 'Failed to reject friend request');
@@ -68,9 +67,7 @@ const FriendRequests: React.FC = () => {
 
       <div className={css.listContainer}>
         {isLoading ? (
-          <div className={css.loadingContainer}>
-            <Loading />
-          </div>
+          <FriendSkeleton/>
         ) : error ? (
           <p className={css.errorMessage}>Error fetching friend requests: {error.message}</p>
         ) : friendPending && friendPending.length > 0 ? (
@@ -90,11 +87,17 @@ const FriendRequests: React.FC = () => {
                   <button
                     className={css.acceptButton}
                     onClick={() => acceptFriendRequest(request.sender.username)}
-                  >
-                    Accept
+                    title='Accept'
+                    >
+                    <Check size={20} />
+
                   </button>
-                  <button onClick={() => rejectFriendRequest(request.sender.username)} className={css.rejectBtn}>
-                    Reject
+                  <button
+                    onClick={() => rejectFriendRequest(request.sender.username)}
+                    className={css.rejectBtn}
+                    title='Reject'
+                    >
+                    <X size={20} />
                   </button>
                 </div>
 

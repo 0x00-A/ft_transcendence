@@ -11,6 +11,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { MdLockOutline } from "react-icons/md";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
+
 // Contexts
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
 // Types
@@ -57,7 +58,8 @@ const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<bo
 
   return (
       <div className={css.loginContainer}>
-        <h1 className={css.authTitle}>Welcome back</h1>
+        <h1 className={css.authTitle}>Welcome</h1>
+        <p>Join us and enjoy the game</p>
         <form noValidate={true} className={css.entryArea} onSubmit={ handleSubmit(handleSignup) }>
           <div className={css.inputContainer}>
             <FaRegUser className={css.inputIcon}/>

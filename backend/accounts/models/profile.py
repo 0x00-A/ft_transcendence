@@ -1,7 +1,10 @@
 from django.db import models
+
 from .user import User
 from .badge import Badge
 
+
+# Profile.objects.bulk_update(profiles, ['rank'])
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -15,32 +18,40 @@ class Profile(models.Model):
     badge = models.ForeignKey(
         to=Badge, on_delete=models.SET_NULL, null=True, blank=True)
     stats = models.JSONField(default=dict, blank=True)
+    played_games = models.PositiveIntegerField(default=0)
+    wins = models.PositiveIntegerField(default=0)
+    losses = models.PositiveIntegerField(default=0)
     is_online = models.BooleanField(default=False)
     blocked_user_name = models.CharField(max_length=150, default="none", blank=True)
 
-    def update_score(self, win: False, result):
-        self.score += result
-        if win:
-            self.score += 10 + self.badge.xp_reward
-        # self.level = self.calculate_level()
-        # self.update_badge()
-        # self.update_ranks()
-        self.save()
+    # def update_score(self, win:False, result, p2_badge):
+    #     if win:
+    #         self.score += WIN_SCORE + result
+    #         if self.badge.xp_reward < p2_badge:
+    #             self.score += self.badge.xp_reward * 2
+    #         else:
+    #             self.score += self.badge.xp_reward
+    #     else:
+    #         self.score += result
+    #         if self.badge.xp_reward < p2_badge:
+    #             self.score -= p2_badge * 2
+    #     self.save()
+    #     self.calculate_level()
+    #     self.update_badge()
+    #     # update_ranks()
 
     # def calculate_level(self):
-    #     return self.score // 100
+    #     self.level = self.score // 100
+    #     self.save()
 
     # def update_badge(self):
     #     badge = Badge.get_badge(self.level)
-    #     if badge and (not self.badge or self.badge['name'] != badge.name):
+    #     if badge and (not self.badge or self.badge.name != badge.name):
     #         self.badge = badge
     #         self.save()
 
-    # def update_ranks(self):
-    #     rank = self.__class__.objects.filter(score__gt=self.score).count() + 1
-    #     if self.rank != rank:
-    #         self.rank = rank
-    #         self.save()
+
+
 
     def __str__(self) -> str:
         return self.user.username

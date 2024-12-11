@@ -2,8 +2,12 @@ import React from 'react';
 import css from './OnlineFriends.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useGetData } from '../../api/apiHooks';
-import Loading from './Loading';
 import NoOnlineFriends from './NoOnlineFriends';
+import { MessageSquareText } from 'lucide-react';
+import FriendSkeleton from './FriendSkeleton';
+import { useUser } from '@/contexts/UserContext';
+import { useWebSocket } from '@/contexts/WebSocketContext';
+
 
 interface Friend {
   id: number;
@@ -17,18 +21,29 @@ interface Friend {
 
 const OnlineFriends: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { sendMessage } = useWebSocket();
   const { data: onlineFriends, isLoading, error } = useGetData<Friend[]>('online-friends');
 
   const handleMessageClick = (friend: Friend) => {
     navigate('/chat', { state: { selectedFriend: friend } });
   };
 
+  const handleSendInvite = (username: string) => {
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+  };
+
+
   return (
     <div className={css.onlineFriends}>
       <h1 className={css.title}>Online Friends</h1>
       <div className={css.friendList}>
         {isLoading ? (
-          <Loading />
+          <FriendSkeleton/>
         ) : error ? (
           <p>Error: loading</p>
         ) : onlineFriends && onlineFriends.length > 0 ? (
@@ -44,14 +59,22 @@ const OnlineFriends: React.FC = () => {
                 <span className={css.online}>Online</span>
               </div>
               <div className={css.actions}>
+              <button
+                  className={`${css.actionButton} ${css.messageButton}`}
+                  onClick={() => handleMessageClick(friend)}
+                  title="Message"
+                >
+                  <MessageSquareText size={20} />
+                </button>
                 <button
                   className={css.actionButton}
-                  onClick={() => handleMessageClick(friend)}
-                >
-                  Message
+                  onClick={ () =>  handleSendInvite(friend.username)}
+                  title='Invite'
+                  >
+                  <img
+                    src="/icons/chat/Invite.svg" alt="Invite"
+                  />
                 </button>
-                <button className={css.actionButton}>Invite</button>
-                <button className={css.actionButton}>View Profile</button>
               </div>
             </div>
           ))
