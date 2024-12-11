@@ -24,7 +24,7 @@ export interface Badge {
 }
 
 export interface Stats {
-  games: number;
+  games_played: number;
   wins: number;
   losses: number;
   performanceData: PerformanceDataEntry[];
@@ -179,7 +179,7 @@ export interface Friends {
 }
 
 export interface MutualFriend {
-  mutual_friends: Friends;
+  mutual_friends: Friends[];
   mutual_friends_count: number;
 }
 
@@ -190,4 +190,8 @@ export interface ResetPasswordForm {
   token: string;
   new_password: string;
   confirm_password: string;
+}
+
+export interface UsernameFormData {
+  username: string;
 }

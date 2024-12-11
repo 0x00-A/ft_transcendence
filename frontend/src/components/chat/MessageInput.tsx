@@ -43,6 +43,7 @@ const MessageInput = ({
     setShowEmojiPicker(false);
     if (textareaRef.current) {
       setInputFocused(true);
+      inputFocused;
       textareaRef.current.focus();
     }
   };

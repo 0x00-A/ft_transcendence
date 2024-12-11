@@ -1,5 +1,5 @@
 // React
-import * as yup from 'yup';
+// import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
@@ -9,6 +9,7 @@ import { API_OAUTH2_SETUSERNAME_URL } from '@/api/apiConfig';
 import axios from 'axios';
 // Types
 import { setUsernameSchema } from '@/types/formSchemas';
+import { UsernameFormData } from '../../types/apiTypes';
 
 
 // const submitUsername = async (data: UsernameFormData) => {
@@ -29,13 +30,13 @@ const useOauth2Username = () => {
     formState : {errors},
     reset,
     setError,
-  } = useForm<string>({
+  } = useForm<UsernameFormData>({
     resolver: yupResolver(setUsernameSchema),
     reValidateMode: 'onChange',
     mode: 'onChange',
   });
   const mutation = useMutation({
-    mutationFn: async (username: string) => { return await apiClient.post(API_OAUTH2_SETUSERNAME_URL, username) },
+    mutationFn: async (username: UsernameFormData) => { return await apiClient.post(API_OAUTH2_SETUSERNAME_URL, username) },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
