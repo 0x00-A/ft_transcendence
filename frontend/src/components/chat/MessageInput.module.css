@@ -78,6 +78,9 @@
   margin: 10px;
 }
 
+.textarea:-moz-focusring {
+  outline: none;
+}
 
 .textarea {
   scrollbar-width: thin;

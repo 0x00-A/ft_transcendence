@@ -25,12 +25,33 @@ const MessageInput = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const emojiRef = useRef<HTMLDivElement>(null);
+  const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const { user } = useUser();
   const { toggleBlockStatus } = useWebSocketChat();
   const { sendMessage } = useWebSocket();
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
 
+
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      emojiRef.current &&
+      !emojiRef.current.contains(event.target as Node) &&
+      buttonEmojiRef.current &&
+      !buttonEmojiRef.current.contains(event.target as Node)
+    ) {
+      setShowEmojiPicker(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSendInvite = (username: string) => {
 
@@ -105,6 +126,7 @@ const MessageInput = ({
     }
     setMessage('');
     setIsFlying(true);
+    setShowEmojiPicker(false);
     setTimeout(() => setIsFlying(false), 500);
   };
 
@@ -147,7 +169,7 @@ const MessageInput = ({
   return (
     <div className={css.messageInputWrapper}>
       {showEmojiPicker && (
-        <div className={css.emojiPicker}>
+        <div ref={emojiRef} className={css.emojiPicker}>
           <Picker data={data} onEmojiSelect={handleEmojiClick} />
         </div>
       )}
@@ -167,6 +189,7 @@ const MessageInput = ({
         <div className={css.buttonAndSend}>
           <div className={css.EmojiAndInvite}>
             <button
+              ref={buttonEmojiRef}
               className={css.buttonEmoji}
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
               aria-label="Open emoji picker"
