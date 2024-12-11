@@ -38,7 +38,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages}) => {
           <span className={css.typingDot}></span>
         </div>
       )}
-      <div className={css.scrollMessages} ref={messageEndRef} />
+      <div ref={messageEndRef} />
     </div>
   );
 };

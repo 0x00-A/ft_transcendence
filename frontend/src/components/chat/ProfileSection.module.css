@@ -15,3 +15,11 @@
   font-size: 1.1em;
   margin: 0;
 }
+
+.online {
+  color: green;
+}
+
+.offline {
+  color: #f8f3e3b0;
+}

@@ -20,9 +20,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   const isReceiver = typing.senderId == selectedConversation?.user_id;
   const navigate = useNavigate();
 
-
-  // console.log("onSelectedConversation: ", selectedConversation?.status);
-
 const renderUserStatus = () => {
     if (!selectedConversation) return null;
 

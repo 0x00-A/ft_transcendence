@@ -130,10 +130,6 @@ class GetConversationsView(APIView):
                     block_status_display = None
 
                 last_message = conversation['last_message']
-                print("last Message >>>>>>>>>>>")
-                print(last_message)
-                print(conversation['user2_id'])
-                print(user.id)
                 # if last_message == "Send first message" and user.id == conversation['user2_id']:
                 #     continue
 
@@ -164,7 +160,6 @@ class GetConversationsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -186,28 +181,5 @@ class GetMessagesView(APIView):
         except Exception as e:
             return Response(
                 {'error': 'Internal server error', 'details': str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-class DeleteConversationView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request, conversation_id):
-        try:
-            user = request.user
-            conversation = Conversation.objects.get(
-                Q(id=conversation_id),
-                Q(user1=user) | Q(user2=user)
-            )
-            conversation.delete()
-            return Response({"message": "Conversation deleted successfully."}, status=status.HTTP_200_OK)
-        except Conversation.DoesNotExist:
-            return Response(
-                {"error": "Conversation not found or access denied."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        except Exception as e:
-            return Response(
-                {"error": "Internal server error", "details": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

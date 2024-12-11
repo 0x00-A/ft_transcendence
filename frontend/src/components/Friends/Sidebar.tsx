@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import css from './Sidebar.module.css';
-import { FaArrowCircleRight, FaArrowCircleLeft } from 'react-icons/fa';
 import {  CircleDot } from 'lucide-react';
-import { useWebSocket } from '@/contexts/WebSocketContext';
 import { RiUserReceived2Line, RiUserShared2Line, RiUserForbidLine } from "react-icons/ri";
 import { LuUserPlus } from "react-icons/lu";
 import { FiUsers } from "react-icons/fi";
+import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
@@ -19,7 +18,6 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
-  const { hasNewRequests } = useWebSocket();
 
 
   const toggleCollapse = () => {
@@ -54,7 +52,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         >
           <div className={css.iconContainer}>
             <RiUserReceived2Line className={css.icon} />
-            {hasNewRequests && <span className={css.notificationBadge}></span>}
           </div>
           <span className={css.buttonText}>Friend Requests</span>
         </button>
@@ -80,13 +77,14 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         <LuUserPlus className={css.icon}/>
         <span className={css.buttonText}>Add Friend</span>
       </button>
-      <button className={css.collapseButton} onClick={toggleCollapse}>
-        {isCollapsed ? (
-          <FaArrowCircleRight size={30} />
-        ) : (
-          <FaArrowCircleLeft size={30} />
-        )}
+      <button 
+        className={css.collapseButton} 
+        onClick={toggleCollapse} 
+        aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+      >
+        {isCollapsed ? <FaChevronLeft size={15} /> : <FaChevronRight size={15} />}
       </button>
+
     </nav>
   );
 };

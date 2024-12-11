@@ -94,7 +94,7 @@ const NotificationsDropdown = () => {
           </span>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[27rem] text-white bg-[#1e2738] border-gray-600">
+      <DropdownMenuContent className="w-[32rem] text-white bg-[#1e2738] border-gray-600">
         <div className="px-4 py-3 border-b border-gray-600">
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>

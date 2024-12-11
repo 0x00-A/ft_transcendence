@@ -1,71 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import css from './ButtonSection.module.css';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
-import { User } from 'lucide-react';
-// import { useNavigate } from 'react-router-dom';
-
-// import { FaUserCircle, FaSearch, FaUserPlus } from 'react-icons/fa';
-
-// import { Button } from '@/components/ui/button';
-
-const CooldownButton = ({
-  onClick,
-  cooldownTime = 10000,
-  className = '',
-}: {
-  onClick: () => void;
-  className?: string;
-  cooldownTime?: number;
-}) => {
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
-
-
-  const handleClick = () => {
-    if (!isDisabled) {
-      onClick?.();
-      setIsDisabled(true);
-      setTimeLeft(cooldownTime / 1000);
-    }
-  };
-
-  useEffect(() => {
-    let timerId: NodeJS.Timeout;
-
-    if (isDisabled && timeLeft > 0) {
-      timerId = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
-
-    if (timeLeft === 0 && isDisabled) {
-      setIsDisabled(false);
-    }
-
-    return () => {
-      if (timerId) clearInterval(timerId);
-    };
-  }, [isDisabled, timeLeft]);
-
-  return (
-    <button disabled={isDisabled} className={`relative ${className}`}>
-      <img
-        onClick={handleClick}
-        className={`${isDisabled ? css.iconDisabled : css.icon}`}
-        src="/icons/chat/Invite.svg" alt="Invite"
-      />
-      <p className="cursor-text">Invite</p>
-      {isDisabled && (
-        <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm text-gray-500">
-          {timeLeft}s
-        </span>
-      )}
-    </button>
-  );
-};
+import { User, UserX } from 'lucide-react';
+import { apiRemoveFriend } from '@/api/friendApi';
+import { toast } from 'react-toastify';
 
 const ButtonSection: React.FC = () => {
   const { user } = useUser();
@@ -73,26 +14,82 @@ const ButtonSection: React.FC = () => {
   const { selectedConversation } = useSelectedConversation();
   const navigate = useNavigate();
 
+  const [isInviteDisabled, setIsInviteDisabled] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   const handleSendInvite = () => {
-    console.log(" selectedConversation?.name: ",  selectedConversation?.name)
+    if (isInviteDisabled) return;
+
     sendMessage({
       event: 'game_invite',
       from: user?.username,
       to: selectedConversation?.name,
     });
+
+    setIsInviteDisabled(true);
+    setTimeLeft(10);
   };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isInviteDisabled && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timeLeft === 0 && isInviteDisabled) {
+      setIsInviteDisabled(false);
+    }
+
+    return () => clearInterval(timer);
+  }, [isInviteDisabled, timeLeft]);
+
+  const removeFriend = async () => {
+    try {
+      await apiRemoveFriend(selectedConversation!.name);
+      // refetch();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to remove friend')
+    }
+  };
+
   return (
     <div className={css.buttonSection}>
-      <div className={css.button} >
+      <div className={css.button}>
         <div
+          className={css.icon}
           onClick={() => navigate(`/profile/${selectedConversation?.name}`)}
         >
-          <User className={css.icon} color="#F8F3E3"/>
+          <User size={30} color="#F8F3E3" />
         </div>
         <p>Profile</p>
       </div>
-      <CooldownButton onClick={handleSendInvite} />
+      <div className={css.button}>
+        <div
+          className={css.icon}
+          onClick={removeFriend}
+        >
+          <UserX size={30} color="#F8F3E3" />
+        </div>
+        <p>Unfriend</p>
+      </div>
+      <div className={css.button}>
+        <div
+          onClick={handleSendInvite}
+          className={`${css.iconInvite} ${isInviteDisabled ? css.disabled : ''}`}
+        >
+          <img
+            src="/icons/chat/Invite.svg"
+            alt="Invite Button"
+          />
+        </div>
+        <p>Invite</p>
+        {isInviteDisabled && (
+          <span className={css.cooldownTimer}>{timeLeft}s</span>
+        )}
+      </div>
     </div>
   );
 };

@@ -55,6 +55,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.username = user.username
             self.id = user.id
             await self.set_online_status(True)
+            await self.set_active_conversation(-1)
 
             connected_users[self.username] = self.channel_name
         else:
@@ -68,6 +69,16 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 await profile.asave()
             except Profile.DoesNotExist:
                 return
+
+    async def set_active_conversation(self, value):
+        if self.username:
+            try:
+                user = await User.objects.aget(username=self.username)
+                user.active_conversation = value
+                await user.asave()
+            except User.DoesNotExist:
+                return
+            
     async def set_last_seen(self):
         if self.username:
             try:
@@ -82,8 +93,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         event = data['event']
         print(f'Notication Websocket Message Recieved: {event}')
         print(f'data Websocket Message Recieved: {data}')
-        if event == 'mark_request_as_read':
-            await self.handle_request_read()
         if event == 'game_invite':
             await self.handle_invite(self.username, data.get('to'))
         if event == 'invite_accept':
@@ -97,20 +106,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.set_online_status(False)
         await self.set_last_seen()
         return await super().disconnect(close_code)
-
-    async def handle_request_read(self):
-
-        print("************************mark*********")
-        print(self.user.has_new_requests)
-        self.user.has_new_requests = False
-        await self.user.asave()
-        print(self.user.has_new_requests)
-
-        message = {
-            'event': 'request_read',
-            'message': 'Your request has been marked as read.'
-        }
-        await self.send_message(message)
 
 
     async def handle_accept(self, sender, recipient):

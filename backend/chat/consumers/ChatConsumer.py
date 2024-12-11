@@ -3,6 +3,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from ..models import User, Message, Conversation
 from asgiref.sync import sync_to_async
 from django.db.models import Q
+from accounts.models import  Notification
+from accounts.consumers import NotificationConsumer
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -11,6 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if self.user.is_authenticated:
             self.user_group_name = f"user_{self.user.id}"
             
+            await self.update_open_chat_status(self.user.id, True)
             await self.channel_layer.group_add(self.user_group_name, self.channel_name)
             await self.accept()
         else:
@@ -18,8 +21,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.user.is_authenticated:
-            await self.set_active_conversation(self.user.id, -1)
+            await self.update_open_chat_status(self.user.id, False)
+            await self.dis_active_conversation(self.user.id, -1)
             await self.channel_layer.group_discard(self.user_group_name, self.channel_name)
+
+    @sync_to_async
+    def update_open_chat_status(self, user_id, status):
+        user = User.objects.get(id=user_id)
+        user.open_chat = status
+        user.save()
+    
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -67,7 +78,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     conversation.user2_block_status = "blocked"
             elif blocker_id == conversation.user2_id and blocked_id == conversation.user1_id:
                 conversation.user2_block_status = "blocker"
-                if conversation.user1_block_status != "blocker": 
+                if conversation.user1_block_status != "blocker":
                     conversation.user1_block_status = "blocked"
         else:
             if blocker_id == conversation.user1_id:
@@ -83,8 +94,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 else:
                     conversation.user1_block_status = None
                     conversation.user2_block_status = None
-
-
         conversation.save()
 
 
@@ -125,12 +134,44 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=user_id)
         user.active_conversation = conversation_id
         user.save()
+    @sync_to_async
+    def dis_active_conversation(self, user_id, conversation_id):
+        user = User.objects.get(id=user_id)
+        if user.active_conversation != -1:
+            return
+        user.active_conversation = conversation_id
+        user.save()
 
     async def update_active_conversation(self, data):
         conversation_id = data.get("conversation_id")
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
-    
+
+    @sync_to_async
+    def get_user_open_chat_status(self, user_id):
+        user = User.objects.get(id=user_id)
+        return user.open_chat
+
+    @sync_to_async
+    def send_notification_to_receiver(self, receiver_id, sender_id, message):
+        sender_user = User.objects.get(id=sender_id)
+        receiver_user = User.objects.get(id=receiver_id)
+
+        notification = Notification.objects.create(
+            user=receiver_user,
+            link=f"/chat",
+            title="New Message",
+            message=f"{sender_user.username} sent you a message: {message}",
+        )
+        notification.save()
+        NotificationConsumer.send_notification_to_user(receiver_id, notification)
+        notification_data = {
+            "event": "new_message",
+            "from": self.user.username,
+            "message": f"{self.user.username} sent you a message.",
+        }
+        NotificationConsumer.send_notification_to_user(receiver_id, notification_data)
+
     async def handle_send_message(self, data):
         message = data.get("message")
         receiver_id = data.get("receiver_id") 
@@ -138,12 +179,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if not receiver_id or not message:
             return
+        
+        message = message[:300]
 
         conversation = await self.get_or_create_conversation(sender_id, receiver_id)
 
         if await self.is_conversation_blocked(conversation, sender_id):
             raise ValueError("Cannot send message. Conversation is blocked.")
 
+        is_open_chat = await self.get_user_open_chat_status(receiver_id)
+        if not is_open_chat:
+            await self.send_notification_to_receiver(receiver_id, sender_id, message)
         saved_conversation = await self.save_message(sender_id, receiver_id, message)
 
         await self.channel_layer.group_send(
@@ -233,14 +279,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, sender_id, receiver_id, message):
         sender = User.objects.get(id=sender_id)
         receiver = User.objects.get(id=receiver_id)
-        print(f"Receiver ID: {receiver_id}, Sender ID: {sender_id}")
-
 
         conversation = Conversation.objects.get(
             user1=min(sender, receiver, key=lambda user: user.id),
             user2=max(sender, receiver, key=lambda user: user.id)
         )
-        print(f"Conversation Users: {conversation.user1.id}, {conversation.user2.id}")
 
         Message.objects.create(
             conversation=conversation,
@@ -249,16 +292,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=message
         )
         conversation.last_message = message
-        print(f" >>>> receiver_id,: {receiver_id}, conversation.id: {conversation.id} <<<<")
-        print(f" >>>> receiver.active_conversation: {receiver.active_conversation}")
         is_active =  receiver.active_conversation == conversation.id
-        print(f" >>>> is_active: {is_active}")
+        print("**** ==== ****")
+        print(is_active)
+        print(receiver.active_conversation)
+        print(conversation.id)
+        print("**** ==== ****")
         if not is_active:
             if receiver == conversation.user1:
                 conversation.unread_messages_user1 += 1
             elif receiver == conversation.user2:
                 conversation.unread_messages_user2 += 1
-            print(f"Unread User1: {conversation.unread_messages_user1}, Unread User2: {conversation.unread_messages_user2}")
         conversation.save()
         return conversation
     

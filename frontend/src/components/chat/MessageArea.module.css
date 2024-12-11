@@ -58,11 +58,6 @@
   margin-right: 10px;
 }
 
-/* .time {
-  display: block;
-  text-align: right;
-} */
-
 .sender .nameAndTime {
   justify-content: end;
 }
@@ -88,7 +83,7 @@
   margin-right: 5px;
 }
 .receiverInfo span {
-  font-size: 8px;
+  font-size: 10px;
   margin-left: 5px;
   color: #dcdee2;
 }
@@ -97,7 +92,7 @@
   margin-left: 5px;
 }
 .senderInfo span {
-  font-size: 8px;
+  font-size: 10px;
   margin-right: 5px;
   color: #dcdee2;
 }

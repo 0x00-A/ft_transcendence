@@ -9,6 +9,16 @@
   position: relative;
 }
 
+.buttonAndSend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -10px;
+}
+
+.EmojiAndInvite {
+  display: flex;
+  align-items: center;
+}
 .invite {
   width: 22px;
   height: 22px;
@@ -54,7 +64,6 @@
 }
 
 .textarea {
-  flex: 1;
   background-color: transparent;
   color: #1e2533;
   border: none;
@@ -62,16 +71,21 @@
   font-size: 15px;
   min-width: 0;
   resize: none;
-  max-height: 120px;
+  max-height: 150px;
   overflow-y: auto;
   line-height: 1.5;
   padding: 0;
-  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 
-.textarea::placeholder {
-  color: #1e2533;
-  opacity: 0.6;
+.textarea:-moz-focusring {
+  outline: none;
+}
+
+.textarea {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #d1d8e7; 
 }
 
 .textarea:focus {
@@ -80,15 +94,15 @@
 
 .messageInputContainer {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   padding: 8px 16px;
   background-color: #d0d8e7;
   border-radius: 24px;
   flex: 1;
-  gap: 8px;
   transition: box-shadow 0.2s ease;
   max-height: 150px;
   position: relative;
+  gap: 0.5rem
 }
 
 .inputActions {
@@ -112,6 +126,8 @@
 
 .buttonEmoji,
 .buttonClip {
+  width: 40px;
+  height: 40px;
   position: relative;
   display: flex;
   align-items: center;
@@ -120,7 +136,6 @@
   border: none;
   cursor: pointer;
   color: #1e2533;
-  padding: 6px;
   border-radius: 50%;
   transition: all 0.2s ease;
 }
@@ -131,14 +146,23 @@
   transform: scale(1.1);
 }
 
+.buttonClip.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
 
+.buttonClip img {
+  width: 23px;
+  height: 23px;
+}
 .sendButton {
   background-color: #d0d8e7;
   color: #1e2533;
   border: none;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,5 +242,12 @@
   }
 }
 
-
+.characterCounter {
+  margin-top: -8px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
 
