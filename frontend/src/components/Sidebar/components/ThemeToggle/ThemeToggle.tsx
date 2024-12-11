@@ -1,8 +1,9 @@
 // ThemeToggle.js
 import { useEffect, useState } from 'react';
 import css from './ThemeToggle.module.css';
-import { MdSunny } from 'react-icons/md';
-import { FaMoon } from 'react-icons/fa';
+// import { MdSunny } from 'react-icons/md';
+// import { FaMoon } from 'react-icons/fa';
+import { Moon, SunMoon } from 'lucide-react';
 import {
   // DARK_MODE_ICON_SIZE,
   MENU_ICON_COLOR,
@@ -40,7 +41,7 @@ const ThemeToggle = ({
     >
       {theme === 'dark' ? (
         <>
-          <MdSunny
+          <SunMoon
             color={MENU_ICON_COLOR}
             size={MENU_ICON_SIZE}
             className={css['icon sun-icon']}
@@ -49,7 +50,7 @@ const ThemeToggle = ({
         </>
       ) : (
         <>
-          <FaMoon
+          <Moon
             color={MENU_ICON_COLOR}
             size={MENU_ICON_SIZE}
             className={css['icon moon-icon']}
