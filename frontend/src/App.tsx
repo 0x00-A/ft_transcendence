@@ -119,7 +119,7 @@ function AppContent() {
       {shouldShowSidebar && isLoggedIn && (
         <Sidebar />
       )}
-      <div className="main-content">
+      <div className={`main-content ${shouldShowSidebar? '' : 'w-full'}`}>
         {shouldShowSidebar && isLoggedIn && (
           <Topbar />
         )}
