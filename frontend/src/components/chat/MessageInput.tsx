@@ -32,6 +32,8 @@ const MessageInput = ({
   const { sendMessage } = useWebSocket();
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [charCount, setCharCount] = useState(0);
+  const maxChars = 200;
 
 
 
@@ -91,17 +93,17 @@ const MessageInput = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
-    setMessage(newValue);
-  
+    if (newValue.length <= maxChars) {
+      setMessage(newValue);
+      setCharCount(newValue.length);
+    }
     if (e.target) {
       e.target.style.height = 'auto';
       e.target.style.height = `${e.target.scrollHeight}px`;
     }
-  
     if (!message.trim()) {
       onTyping(true); 
     }
-  
     handleTypingDebounced(false);
   };
 
@@ -127,6 +129,7 @@ const MessageInput = ({
     setMessage('');
     setIsFlying(true);
     setShowEmojiPicker(false);
+    setCharCount(0); 
     setTimeout(() => setIsFlying(false), 500);
   };
 
@@ -185,6 +188,9 @@ const MessageInput = ({
           className={css.textarea}
           rows={1}
         />
+        <div className={css.characterCounter}>
+          {charCount}/{maxChars}
+        </div>
 
         <div className={css.buttonAndSend}>
           <div className={css.EmojiAndInvite}>
