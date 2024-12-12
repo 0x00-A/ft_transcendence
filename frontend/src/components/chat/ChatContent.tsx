@@ -24,11 +24,10 @@ interface PaginatedMessagesResponse {
   count: number; 
 }
 
-
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false); // Tracks if there are more messages to load
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
     `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
   );
@@ -37,12 +36,13 @@ const ChatContent = () => {
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
   console.log("rander chat content")
-  console.log("fetchedMessages: ", fetchedMessages)
-
+  
   useEffect(() => {
     if (!selectedConversation) return;
-    clearMessages()
+    clearMessages();
+    console.log("fetchedMessages: ", fetchedMessages?.results)
     setFetchedChatMessages(fetchedMessages?.results || []);
+    setHasMore(!!fetchedMessages?.next);
   }, [selectedConversation, fetchedMessages]);
   
   useEffect(() => {
@@ -61,8 +61,6 @@ const ChatContent = () => {
     }
   }, [fetchedChatMessages, websocketMessages, selectedConversation]);
 
-
-  
   useEffect(() => {
     if (selectedConversation?.id) {
       updateActiveConversation(selectedConversation.id);
@@ -96,7 +94,17 @@ const ChatContent = () => {
   );
 
   const loadMoreMessages = () => {
-    setPage((prevPage) => prevPage + 1);
+    setPage((prevPage) => {
+      const nextPage = prevPage + 1;
+      if (fetchedMessages?.results) {
+        console.log("fetchedMessages?.results: ", fetchedMessages?.results)
+        setChatMessages((prevMessages) => [
+          ...prevMessages,
+          ...fetchedMessages.results,
+        ]);
+      }
+      return nextPage;
+    });
   };
 
   return (
