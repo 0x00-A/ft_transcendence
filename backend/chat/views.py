@@ -168,7 +168,7 @@ class CustomMessagePagination(PageNumberPagination):
 
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
-    pagination_class = CustomMessagePagination
+    # pagination_class = CustomMessagePagination
 
     def get(self, request, conversation_id):
         try:
@@ -178,13 +178,18 @@ class GetMessagesView(APIView):
                 Q(user1=user) | Q(user2=user)
             )
             messages = conversation.messages.all().order_by('timestamp')
-            serializer = MessageSerializer(messages, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            paginator = self.pagination_class()
+            paginated_messages = paginator.paginate_queryset(messages, request)
+            serializer = MessageSerializer(paginated_messages, many=True)
+
+            return paginator.get_paginated_response(serializer.data)
+
         except Conversation.DoesNotExist:
             return Response(
                 {'error': 'Conversation not found or access denied'},
                 status=status.HTTP_404_NOT_FOUND
             )
+
         except Exception as e:
             return Response(
                 {'error': 'Internal server error', 'details': str(e)},

@@ -38,3 +38,19 @@
   color: red;
   font-size: 16px;
 }
+
+.loadMoreButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .loadMoreButton:hover {
+    background-color: #0056b3;
+  }
+  
