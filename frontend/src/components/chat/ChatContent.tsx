@@ -30,11 +30,11 @@ const ChatContent = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
-    `chat/conversations/${selectedConversation?.id}/messages?page=${page}`
+    `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
   );
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
-  const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
+  // const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
   // useEffect(() => {
   //   if (!selectedConversation) return;
@@ -58,6 +58,7 @@ const ChatContent = () => {
   //   }
   // }, [fetchedChatMessages, websocketMessages, selectedConversation]);
   console.log("rander chat content")
+  console.log("fetchedMessages: ", fetchedMessages)
 
   useEffect(() => {
     if (!fetchedMessages) return;

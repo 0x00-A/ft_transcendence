@@ -168,7 +168,7 @@ class CustomMessagePagination(PageNumberPagination):
 
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
-    # pagination_class = CustomMessagePagination
+    pagination_class = CustomMessagePagination
 
     def get(self, request, conversation_id):
         try:
@@ -177,19 +177,37 @@ class GetMessagesView(APIView):
                 Q(id=conversation_id),
                 Q(user1=user) | Q(user2=user)
             )
-            messages = conversation.messages.all().order_by('timestamp')
+            
+            messages = conversation.messages.all().order_by('-timestamp')
+            
             paginator = self.pagination_class()
-            paginated_messages = paginator.paginate_queryset(messages, request)
-            serializer = MessageSerializer(paginated_messages, many=True)
-
-            return paginator.get_paginated_response(serializer.data)
-
+            
+            page = request.query_params.get('page', 1)
+            
+            try:
+                page = int(str(page).rstrip('/'))
+            except (ValueError, TypeError):
+                page = 1  
+            
+            request.query_params._mutable = True
+            request.query_params['page'] = page
+            
+            try:
+                paginated_messages = paginator.paginate_queryset(messages, request)
+                serializer = MessageSerializer(paginated_messages, many=True)
+                return paginator.get_paginated_response(serializer.data)
+            
+            except Exception as pagination_error:
+                return Response(
+                    {'error': 'Pagination error', 'details': str(pagination_error)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
         except Conversation.DoesNotExist:
             return Response(
                 {'error': 'Conversation not found or access denied'},
                 status=status.HTTP_404_NOT_FOUND
             )
-
         except Exception as e:
             return Response(
                 {'error': 'Internal server error', 'details': str(e)},
