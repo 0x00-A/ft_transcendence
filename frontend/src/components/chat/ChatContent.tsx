@@ -94,10 +94,6 @@ const ChatContent = () => {
   );
 
   useEffect(() => {
-
-    // console.log("page: ", page)
-    // console.log("old = fetchedChatMessages: ", fetchedChatMessages)
-    // console.log("new = fetchedMessages?.results: ", fetchedMessages?.results)
     if (page > 1 && fetchedMessages?.results) {
       setFetchedChatMessages((prevMessages) => [
         ...prevMessages,
@@ -109,6 +105,8 @@ const ChatContent = () => {
   const loadMoreMessages = () => {
     setPage((prevPage) => prevPage + 1);
   };
+
+  // const reversedMessages = [...chatMessages].reverse();
 
   return (
     <>
