@@ -36,13 +36,17 @@ const ChatContent = () => {
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
   useEffect(() => {
-
     if (!selectedConversation) return;
     clearMessages();
     
-    if (page == 1) {
+    if (page === 1) {
       setFetchedChatMessages(fetchedMessages?.results || []);
-    };
+    } else if (fetchedMessages?.results) {
+      setFetchedChatMessages((prevMessages) => [
+        ...prevMessages,
+        ...fetchedMessages?.results,
+      ]);
+    }
     setHasMore(!!fetchedMessages?.next);
   }, [selectedConversation, fetchedMessages]);
   
@@ -93,20 +97,11 @@ const ChatContent = () => {
     [sendTypingStatus, selectedConversation?.user_id]
   );
 
-  useEffect(() => {
-    if (page > 1 && fetchedMessages?.results) {
-      setFetchedChatMessages((prevMessages) => [
-        ...prevMessages,
-        ...fetchedMessages.results,
-      ]);
-    }
-  }, [fetchedMessages, page]);
-
   const loadMoreMessages = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  // const reversedMessages = [...chatMessages].reverse();
+  const reversedMessages = [...chatMessages].reverse();
 
   return (
     <>
@@ -122,7 +117,7 @@ const ChatContent = () => {
                 Show More
               </button>
             )}
-            <MessageArea messages={chatMessages} />
+            <MessageArea messages={reversedMessages} />
           </>
         )}
       </div>
