@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 from datetime import datetime, timezone
 from app.settings import SERVER_URL, MEDIA_URL
+from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
 
@@ -160,8 +161,14 @@ class GetConversationsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+class CustomMessagePagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomMessagePagination
 
     def get(self, request, conversation_id):
         try:
