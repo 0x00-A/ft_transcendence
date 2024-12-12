@@ -115,7 +115,6 @@ function AppContent() {
     }
   }, [gameAccepted, gameInvite]);
 
-
   return (
     <div className="app-container ">
       <PreLoader />

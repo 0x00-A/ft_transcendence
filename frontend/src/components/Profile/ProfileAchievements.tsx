@@ -5,26 +5,9 @@ import { HiOutlineLockOpen } from "react-icons/hi2";
 import { HiOutlineLockClosed } from "react-icons/hi2";
 import { API_GET_ACHIEVEMENTS_URL } from '@/api/apiConfig';
 import { useGetData } from '@/api/apiHooks';
-import Loading from '../Friends/Loading';
+import { UserAchievements } from '@/types/apiTypes';
 
-interface Achievement {
-    name: string;
-    description: string;
-    image: string;
-    condition: {
-        games_won: number;
-    };
-    progress: number;
-}
 
-interface UserAchievements {
-    achievement: Achievement;
-    progress: {
-        games_won: number;
-    };
-    is_unlocked: boolean;
-    unlocked_at: string;
-}
 
 // const achievements = {"name": "First Paddle", "description": "Win your first game",
 //     "image": "/icons/AchievIcon.svg", "condition": {"win": 1}, "progress": 0,
@@ -34,8 +17,10 @@ const ProfileAchievements = () => {
 
     const {data: achievements, isLoading, error} = useGetData<UserAchievements[]>(API_GET_ACHIEVEMENTS_URL);
 
-    if (isLoading) return <Loading />;
     console.log('achievements===>>', achievements);
+    if (error) {
+        return <div>{error.message}</div>
+    }
 
   return (
     <div className={css.profileAchievContainer}>
@@ -44,7 +29,6 @@ const ProfileAchievements = () => {
           <h3>Achievements</h3>
         </div>
         <div className={css.achievsContainer}>
-            {error && <p>{error.message}</p>}
             {achievements?.length == 0 && <p>No achievements found!</p>}
             {achievements && achievements.map((achievement: UserAchievements, index: number) => (
                 <div key={index} className={`${!achievement.is_unlocked ? css.lockedAchievCard : ''} ${css.achievCard}`}>
@@ -54,7 +38,7 @@ const ProfileAchievements = () => {
                     </div>
                     <div className={css.achievDescription}>
                         <p>{achievement.achievement.description}</p>
-                        <p className={css.progress}>{achievement.progress.games_won} / {achievement.achievement.condition.games_won}</p>
+                        <p className={css.progress}>{achievement.progress[achievement.achievement.condition_name] ?? 0} / {achievement.achievement.condition[achievement.achievement.condition_name]}</p>
                     </div>
                     <div className={css.achievProgress}>
                         { achievement.is_unlocked ? <HiOutlineLockOpen /> : <HiOutlineLockClosed /> }
