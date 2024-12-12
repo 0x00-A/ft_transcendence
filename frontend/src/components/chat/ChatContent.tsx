@@ -28,76 +28,39 @@ interface PaginatedMessagesResponse {
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
     `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
   );
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
-  // const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
-
-  // useEffect(() => {
-  //   if (!selectedConversation) return;
-  //   clearMessages()
-    
-  //   setFetchedChatMessages(fetchedMessages || []);
-  // }, [selectedConversation, fetchedMessages]);
-  
-  // useEffect(() => {
-  //   if (!selectedConversation) return;
-
-  //   if (websocketMessages.length === 0) {
-  //     setChatMessages(fetchedChatMessages || []);
-  //     return;
-  //   }
-
-  //   const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
-  //   if (lastMessageSocket?.conversation === selectedConversation.id) {
-  //     setChatMessages([...(fetchedChatMessages || []), ...websocketMessages]);
-  //   } else {
-  //     setChatMessages(fetchedChatMessages || []);
-  //   }
-  // }, [fetchedChatMessages, websocketMessages, selectedConversation]);
-
+  const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
   console.log("rander chat content")
   console.log("fetchedMessages: ", fetchedMessages)
 
   useEffect(() => {
-    if (!fetchedMessages) return;
+    if (!selectedConversation) return;
+    clearMessages()
+    setFetchedChatMessages(fetchedMessages?.results || []);
+  }, [selectedConversation, fetchedMessages]);
+  
+  useEffect(() => {
+    if (!selectedConversation) return;
 
-    const { results, next } = fetchedMessages;
-
-    if (results.length === 0) {
-      setHasMore(false);
-    } else {
-      setChatMessages((prevMessages) => [...results, ...prevMessages]);
+    if (websocketMessages.length === 0) {
+      setChatMessages(fetchedChatMessages || []);
+      return;
     }
 
-    setHasMore(!!next);
-  }, [fetchedMessages]);
-  
-    useEffect(() => {
-      if (!selectedConversation) return;
-  
-      clearMessages();
-      setChatMessages([]);
-      setPage(1);
-      setHasMore(true); 
-    }, [selectedConversation]);
-  
-  
-    
-    useEffect(() => {
-      if (!selectedConversation) return;
-  
-      if (websocketMessages.length === 0) return;
-  
-      const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
-      if (lastMessageSocket?.conversation === selectedConversation.id) {
-        setChatMessages((prevMessages) => [...prevMessages, ...websocketMessages]);
-      }
-    }, [websocketMessages, selectedConversation]);
+    const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
+    if (lastMessageSocket?.conversation === selectedConversation.id) {
+      setChatMessages([...(fetchedChatMessages || []), ...websocketMessages]);
+    } else {
+      setChatMessages(fetchedChatMessages || []);
+    }
+  }, [fetchedChatMessages, websocketMessages, selectedConversation]);
+
 
   
   useEffect(() => {
