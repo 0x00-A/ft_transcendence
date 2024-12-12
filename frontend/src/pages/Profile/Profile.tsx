@@ -20,16 +20,11 @@ const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
-  const { user: currentUser, error, isLoading } = useUser()
+  const { user: currentUser, error, isLoading } = useUser();
 
-  if (error) {
-    toast.error('Failed to load profile data');
-  }
+  if (error) toast.error(error.message);
 
-  if (isLoading) return <div>Loading...</div>;
-
-  console.log('current user==>> ', currentUser);
-
+  if (isLoading) return <div>Loading...</div>
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     // if (isConfirmSave) {
@@ -39,7 +34,6 @@ const Profile = () => {
       setEditProfile(false);
     }
   };
-
 
   return (
     <div className={css.profileContainer}>
@@ -60,7 +54,7 @@ const Profile = () => {
                   className={`${css.button} ${!activeBtn ? css.buttonActive : ''}`}>
                   Security
                 </button>
-               </div>
+              </div>
               { activeBtn ? <EditInfosProfile setEditProfile={setEditProfile} /> :
                 <EditSecurityProfile setEditProfile={setEditProfile} /> }
             </div>
