@@ -57,6 +57,8 @@ const ChatContent = () => {
   //     setChatMessages(fetchedChatMessages || []);
   //   }
   // }, [fetchedChatMessages, websocketMessages, selectedConversation]);
+
+
   console.log("rander chat content")
   console.log("fetchedMessages: ", fetchedMessages)
 
