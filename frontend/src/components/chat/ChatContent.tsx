@@ -27,7 +27,7 @@ interface PaginatedMessagesResponse {
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false); // Tracks if there are more messages to load
+  const [hasMore, setHasMore] = useState(false); 
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
     `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
   );
@@ -35,13 +35,14 @@ const ChatContent = () => {
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
-  console.log("rander chat content")
-  
   useEffect(() => {
+
     if (!selectedConversation) return;
     clearMessages();
-    console.log("fetchedMessages: ", fetchedMessages?.results)
-    setFetchedChatMessages(fetchedMessages?.results || []);
+    
+    if (page == 1) {
+      setFetchedChatMessages(fetchedMessages?.results || []);
+    };
     setHasMore(!!fetchedMessages?.next);
   }, [selectedConversation, fetchedMessages]);
   
@@ -65,7 +66,6 @@ const ChatContent = () => {
     if (selectedConversation?.id) {
       updateActiveConversation(selectedConversation.id);
       if (selectedConversation.unreadCount) {
-        console.log(selectedConversation.id)
         markAsRead(selectedConversation.id);
       }
     }
@@ -93,18 +93,21 @@ const ChatContent = () => {
     [sendTypingStatus, selectedConversation?.user_id]
   );
 
+  useEffect(() => {
+
+    // console.log("page: ", page)
+    // console.log("old = fetchedChatMessages: ", fetchedChatMessages)
+    // console.log("new = fetchedMessages?.results: ", fetchedMessages?.results)
+    if (page > 1 && fetchedMessages?.results) {
+      setFetchedChatMessages((prevMessages) => [
+        ...prevMessages,
+        ...fetchedMessages.results,
+      ]);
+    }
+  }, [fetchedMessages, page]);
+
   const loadMoreMessages = () => {
-    setPage((prevPage) => {
-      const nextPage = prevPage + 1;
-      if (fetchedMessages?.results) {
-        console.log("fetchedMessages?.results: ", fetchedMessages?.results)
-        setChatMessages((prevMessages) => [
-          ...prevMessages,
-          ...fetchedMessages.results,
-        ]);
-      }
-      return nextPage;
-    });
+    setPage((prevPage) => prevPage + 1);
   };
 
   return (

@@ -40,7 +40,7 @@
 }
 
 .loadMoreButton {
-    background-color: #007bff;
+    background-color: #5774a1;
     color: white;
     border: none;
     padding: 10px;
@@ -51,6 +51,6 @@
   }
   
   .loadMoreButton:hover {
-    background-color: #0056b3;
+    background-color: #60789c;
   }
   
