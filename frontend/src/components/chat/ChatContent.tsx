@@ -39,6 +39,7 @@ const ChatContent = () => {
   // useEffect(() => {
   //   if (!selectedConversation) return;
   //   clearMessages()
+    
   //   setFetchedChatMessages(fetchedMessages || []);
   // }, [selectedConversation, fetchedMessages]);
   
@@ -84,6 +85,7 @@ const ChatContent = () => {
       setPage(1);
       setHasMore(true); 
     }, [selectedConversation]);
+  
   
     
     useEffect(() => {
