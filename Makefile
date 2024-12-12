@@ -1,28 +1,21 @@
+DOCKER_COMPOSE_NAME=docker-compose-deploy.yml
 all: up
 
 clean:
-	docker compose -f docker-compose.yml down -v
-
-clean-deploy:
-	docker compose -f docker-compose-deploy.yml down -v
+	docker compose -f $(DOCKER_COMPOSE_NAME) down -v
 
 fclean:
-	docker compose -f docker-compose.yml down --rmi all -v
+	docker compose -f $(DOCKER_COMPOSE_NAME) down --rmi all -v
 
 up:
-	docker-compose -f docker-compose.yml --env-file .env up
-
-deploy:
-	docker compose -f docker-compose-deploy.yml --env-file .env up
+	docker-compose -f $(DOCKER_COMPOSE_NAME) --env-file .env up
 
 build:
-	docker compose -f docker-compose.yml --env-file .env up --build
+	docker compose -f $(DOCKER_COMPOSE_NAME) --env-file .env up --build
 
-build-deploy:
-	docker compose -f docker-compose-deploy.yml --env-file .env up --build
 
 down:
-	docker compose -f docker-compose.yml down
+	docker compose -f $(DOCKER_COMPOSE_NAME) down
 
 makemigrations:
 	docker compose run --rm backend sh -c "python manage.py makemigrations"
