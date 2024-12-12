@@ -2,11 +2,11 @@ import Logo from '../Logo/Logo';
 import css from './Sidebar.module.css';
 import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
 import { useEffect, useState } from 'react';
-// import { IoLogOut } from 'react-icons/io5';
+import { IoLogOut } from 'react-icons/io5';
 import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { useLoadingBar } from '../../contexts/LoadingBarContext';
-// import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import {
   MENU_ICON_COLOR,
   MENU_ICON_SIZE,
@@ -15,7 +15,6 @@ import {
 import apiClient from '../../api/apiClient';
 import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
 
 export default function Sidebar() {
   // const [open, setOpen] = useState(true);
@@ -72,7 +71,7 @@ export default function Sidebar() {
   // }, []);
 
   return (
-    <aside className={`${css.sidebar} `}>
+    <aside className={`${css.sidebar}`}>
       {/* <img
         className={`${open ? css.norotate : css.rotate} ${css.controller}`}
         onClick={() => setOpen((open) => !open)}
@@ -83,11 +82,11 @@ export default function Sidebar() {
         <Logo style={css.logo} />
       </div>
       <div className={css.menuBox}>
-        <SidebarMenu/>
+        <SidebarMenu />
         <div className={`${css.bottom}`}>
-          {/* <ThemeToggle className={css.darkMode} open={open}></ThemeToggle> */}
+          <ThemeToggle className={css.darkMode}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
-            <LogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+            <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
             <p>Logout</p>
           </div>
         </div>
