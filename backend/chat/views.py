@@ -178,7 +178,7 @@ class GetMessagesView(APIView):
                 Q(user1=user) | Q(user2=user)
             )
             
-            messages = conversation.messages.all().order_by('-timestamp')
+            messages = conversation.messages.all().order_by('timestamp')
             
             paginator = self.pagination_class()
             
