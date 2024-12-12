@@ -303,9 +303,10 @@ CHANNEL_LAYERS = {
     },
 }
 # Allow specific origins
-# CORS_ALLOWED_ORIGINS = [
-#     'http://0.0.0.0:3000',
-# ]
+CORS_ALLOWED_ORIGINS = [
+    'http://0.0.0.0:3000',
+    'http://localhost:3000',
+]
 
 CORS_ALLOW_METHODS = [
     'GET',
