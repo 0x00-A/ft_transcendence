@@ -24,7 +24,7 @@ export interface Badge {
 }
 
 export interface Stats {
-  games: number;
+  games_played: number;
   wins: number;
   losses: number;
   performanceData: PerformanceDataEntry[];
@@ -190,4 +190,24 @@ export interface ResetPasswordForm {
   token: string;
   new_password: string;
   confirm_password: string;
+}
+
+export interface Achievement {
+    name: string;
+    description: string;
+    image: string;
+    condition_name: string;
+    condition: {
+        [key: string]: number;
+    };
+    progress: number;
+}
+
+export interface UserAchievements {
+    achievement: Achievement;
+    progress: {
+        [Key: string]: number;
+    };
+    is_unlocked: boolean;
+    unlocked_at: string;
 }

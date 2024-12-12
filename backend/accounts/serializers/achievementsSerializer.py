@@ -9,7 +9,7 @@ class AchievementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Achievement
-        fields = ['name', 'description', 'condition', 'reward_points', 'image',
+        fields = ['name', 'description', 'condition_name', 'condition', 'reward_points', 'image',
                   'progress_percentage', 'is_unlocked']
 
     def get_image(self, obj):
