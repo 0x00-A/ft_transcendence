@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
@@ -28,17 +28,19 @@ const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false); 
-  const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
-    `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
-  );
   const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
+  const [websocketChatMessages, setWebsocketChatMessages] = useState<MessageProps[]>([]);
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
 
+  const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
+    `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
+  );
+
   useEffect(() => {
     if (!selectedConversation) return;
-    clearMessages();
     
+    clearMessages();
     if (page === 1) {
       setFetchedChatMessages(fetchedMessages?.results || []);
     } else if (fetchedMessages?.results) {
@@ -49,7 +51,8 @@ const ChatContent = () => {
     }
     setHasMore(!!fetchedMessages?.next);
   }, [selectedConversation, fetchedMessages]);
-  
+
+
   useEffect(() => {
     if (!selectedConversation) return;
 
@@ -61,10 +64,20 @@ const ChatContent = () => {
     const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
     if (lastMessageSocket?.conversation === selectedConversation.id) {
       setChatMessages([...(fetchedChatMessages || []), ...websocketMessages]);
+      setWebsocketChatMessages(websocketMessages);
     } else {
       setChatMessages(fetchedChatMessages || []);
     }
   }, [fetchedChatMessages, websocketMessages, selectedConversation]);
+
+  // useEffect(() => {
+  //   if (!selectedConversation) return;
+
+  //   const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
+  //   if (lastMessageSocket?.conversation === selectedConversation.id) {
+  //     setWebsocketChatMessages(websocketMessages);
+  //   }
+  // }, [websocketMessages, selectedConversation]);
 
   useEffect(() => {
     if (selectedConversation?.id) {
@@ -101,7 +114,14 @@ const ChatContent = () => {
     setPage((prevPage) => prevPage + 1);
   };
 
-  const reversedMessages = [...chatMessages].reverse();
+  const reversedFetchedMessages = useMemo(() => {
+    console.log("**/*/*/*/*/*/*")
+    return [...chatMessages].reverse();
+  }, [chatMessages]);
+  
+  const combinedMessages = useMemo(() => {
+    return [...reversedFetchedMessages, ...websocketChatMessages];
+  }, [reversedFetchedMessages, websocketChatMessages]);
 
   return (
     <>
@@ -117,7 +137,7 @@ const ChatContent = () => {
                 Show More
               </button>
             )}
-            <MessageArea messages={reversedMessages} />
+            <MessageArea messages={combinedMessages} />
           </>
         )}
       </div>

@@ -3,7 +3,7 @@ import React from "react";
 const ChatSkeleton: React.FC = () => {
   return (
     <div className="flex flex-col gap-4 p-4">
-      {[...Array(8)].map((_, index) => (
+      {[...Array(12)].map((_, index) => (
         <div
           key={index}
           className={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}
