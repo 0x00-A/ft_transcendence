@@ -32,6 +32,7 @@ const ChatContent = () => {
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
   const [reversedFetchedMessages, setReversedFetchedMessages] = useState<MessageProps[]>([]);
+  // const [preserveScroll, setPreserveScroll] = useState(false);
 
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
     `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
