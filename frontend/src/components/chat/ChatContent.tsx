@@ -28,10 +28,10 @@ const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false); 
-  const [chatMessages, setChatMessages] = useState<MessageProps[]>([]);
   const [websocketChatMessages, setWebsocketChatMessages] = useState<MessageProps[]>([]);
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
+  const [reversedFetchedMessages, setReversedFetchedMessages] = useState<MessageProps[]>([]);
 
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
     `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
@@ -39,8 +39,9 @@ const ChatContent = () => {
 
   useEffect(() => {
     if (!selectedConversation) return;
-    
+    console.log(" i here for clear ")
     clearMessages();
+    setWebsocketChatMessages([]);
     if (page === 1) {
       setFetchedChatMessages(fetchedMessages?.results || []);
     } else if (fetchedMessages?.results) {
@@ -51,34 +52,25 @@ const ChatContent = () => {
     }
     setHasMore(!!fetchedMessages?.next);
   }, [selectedConversation, fetchedMessages]);
-
-
+  
+  
   useEffect(() => {
     if (!selectedConversation) return;
-
+    
+    console.log(" i here ")
     if (websocketMessages.length === 0) {
-      setChatMessages(fetchedChatMessages || []);
+      console.log(" i here for set just fetched ")
+      setReversedFetchedMessages([...fetchedChatMessages].reverse());
       return;
     }
-
     const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
     if (lastMessageSocket?.conversation === selectedConversation.id) {
-      setChatMessages([...(fetchedChatMessages || []), ...websocketMessages]);
       setWebsocketChatMessages(websocketMessages);
     } else {
-      setChatMessages(fetchedChatMessages || []);
+      setReversedFetchedMessages([...fetchedChatMessages].reverse());
     }
-  }, [fetchedChatMessages, websocketMessages, selectedConversation]);
-
-  // useEffect(() => {
-  //   if (!selectedConversation) return;
-
-  //   const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
-  //   if (lastMessageSocket?.conversation === selectedConversation.id) {
-  //     setWebsocketChatMessages(websocketMessages);
-  //   }
-  // }, [websocketMessages, selectedConversation]);
-
+  }, [websocketMessages, selectedConversation]);
+  
   useEffect(() => {
     if (selectedConversation?.id) {
       updateActiveConversation(selectedConversation.id);
@@ -87,13 +79,13 @@ const ChatContent = () => {
       }
     }
   }, [selectedConversation]);
-
+  
   useEffect(() => {
     return () => {
       clearMessages();
     };
   }, []);
-
+  
   const handleSendMessage = useCallback(
     (message: string) => {
       if (message.trim()) {
@@ -102,26 +94,29 @@ const ChatContent = () => {
     },
     [sendMessage, selectedConversation?.user_id]
   );
-
+  
   const handleTyping = useCallback(
     (isTyping: boolean) => {
       sendTypingStatus(selectedConversation!.user_id, isTyping);
     },
     [sendTypingStatus, selectedConversation?.user_id]
   );
-
+  
   const loadMoreMessages = () => {
     setPage((prevPage) => prevPage + 1);
   };
-
-  const reversedFetchedMessages = useMemo(() => {
-    console.log("**/*/*/*/*/*/*")
-    return [...chatMessages].reverse();
-  }, [chatMessages]);
   
-  const combinedMessages = useMemo(() => {
-    return [...reversedFetchedMessages, ...websocketChatMessages];
-  }, [reversedFetchedMessages, websocketChatMessages]);
+  // useEffect(() => {
+    //   if (fetchedChatMessages.length > 0) {
+      //     setReversedFetchedMessages([...fetchedChatMessages].reverse());
+      //   }
+      // }, [page, fetchedChatMessages]);
+      
+      const combinedMessages = useMemo(() => {
+        
+        console.log(" i here for set combinedMessages ")
+        return [...reversedFetchedMessages, ...websocketChatMessages];
+      }, [reversedFetchedMessages, websocketChatMessages]);
 
   return (
     <>
