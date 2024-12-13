@@ -32,7 +32,6 @@ const ChatContent = () => {
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
   const [reversedFetchedMessages, setReversedFetchedMessages] = useState<MessageProps[]>([]);
-  // const [preserveScroll, setPreserveScroll] = useState(false);
 
   const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
     `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
@@ -127,14 +126,12 @@ const ChatContent = () => {
         ) : error ? (
           <div>Error loading messages</div>
         ) : (
-          <>
-            {hasMore && (
-              <button className={css.loadMoreButton} onClick={loadMoreMessages}>
-                Show More
-              </button>
-            )}
-            <MessageArea messages={combinedMessages} />
-          </>
+          <MessageArea
+            messages={combinedMessages}
+            onLoadMore={loadMoreMessages}
+            hasMore={hasMore}
+        />
+
         )}
       </div>
       <MessageInput
