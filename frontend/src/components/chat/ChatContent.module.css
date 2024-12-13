@@ -38,19 +38,3 @@
   color: red;
   font-size: 16px;
 }
-
-.loadMoreButton {
-    background-color: #5774a1;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    width: 100%;
-  }
-  
-  .loadMoreButton:hover {
-    background-color: #60789c;
-  }
-  
