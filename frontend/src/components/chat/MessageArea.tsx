@@ -14,8 +14,7 @@ interface MessageAreaProps {
 const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore }) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const messageAreaRef = useRef<HTMLDivElement | null>(null);
-  const [scrollPosition, setScrollPosition] = useState(0); // Track scroll position before loading more messages
-  const [shouldScroll, setShouldScroll] = useState(true); // Whether to scroll to the bottom or not
+  const [shouldScroll, setShouldScroll] = useState(true);
 
   const { typing } = useTyping();
   const { selectedConversation } = useSelectedConversation();
@@ -24,32 +23,38 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore
 
   const handleLoadMore = () => {
     if (messageAreaRef.current) {
-      // Record the current scroll position before loading more messages
-      setScrollPosition(messageAreaRef.current.scrollTop);
+      const scrollFromBottom = messageAreaRef.current.scrollHeight - 
+                                messageAreaRef.current.scrollTop - 
+                                messageAreaRef.current.clientHeight;
+
+      setShouldScroll(false);
 
       if (onLoadMore) {
-        onLoadMore(); // Load more messages
+        onLoadMore();
       }
 
-      setShouldScroll(false); // Prevent auto-scroll when loading more messages
+      setTimeout(() => {
+        if (messageAreaRef.current) {
+          messageAreaRef.current.scrollTop = 
+            messageAreaRef.current.scrollHeight - 
+            messageAreaRef.current.clientHeight - 
+            scrollFromBottom;
+        }
+      }, 0);
     }
   };
 
-  // Scroll to the bottom when new messages are added (if needed)
   useEffect(() => {
     if (shouldScroll && messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, shouldScroll]);
+      
+      const timer = setTimeout(() => {
+        setShouldScroll(false);
+      }, 100);
 
-  // Ensure scroll position stays at the correct place when "Show More" is clicked
-  useEffect(() => {
-    if (!shouldScroll && messageAreaRef.current) {
-      // After loading more messages, restore the previous scroll position
-      messageAreaRef.current.scrollTop = scrollPosition;
-      setShouldScroll(true); // Allow auto-scroll after the "Show More" is done
+      return () => clearTimeout(timer);
     }
-  }, [shouldScroll, scrollPosition]);
+  }, [messages, typing.typing, shouldScroll]);
 
   return (
     <div className={css.messageArea} ref={messageAreaRef}>
