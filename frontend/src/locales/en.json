@@ -141,5 +141,9 @@
         "pupPending": "Pending",
         "pupAddFriend": "Add friend",
         "notFound": "No User Found"
+    },
+    "notifications": {
+        "title": "Notifications",
+        "clearAll": "Clear All"
     }
 }
