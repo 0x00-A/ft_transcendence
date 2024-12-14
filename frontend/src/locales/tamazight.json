@@ -24,7 +24,36 @@
     "message": {
         "sender": "ⴽⴻⵞⵞ"
     },
-    "message": {
-        "sender": "ⴽⴻⵞⵞ"
+    "MessageList": {
+        "placeholder": "ⵏⴰⴷⵉ ⵖⴻⴼ ⵉⵎⴷⵓⴽⴰⵍ",
+        "noUserFound": "ⵓⵔ ⵓⴼⵉⵏ ⴰⵔⴰ ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵢⴻⵜⵜⴻⵎⵛⴰⴱⵉⵏ",
+        "menu": {
+            "markAsRead": "ⵙⵙⴻⴽⵏⴻⴹ ⴰⴽⴽⴻⵏ ⵢⴻⵖⵔⴰ",
+            "closeChat": "ⵖⴻⵍⵇ ⴰⵎⴻⵙⵍⴰⵢ",
+            "viewProfile": "ⵡⴰⵍⵉ ⴰⴳⴱⵓⵔ",
+            "block": "ⵢⴻⵔⴳⴻⵍ",
+            "unblock": "ⵔⵥⴻⵎ"
+        }
+    },
+    "optionsButton": "ⴰⵎⴻⵙⵍⴰⵢ",
+    "settingsSection": {
+        "profileButton": "ⴰⵍⴻⴳⴷⵉⵙ",
+        "inviteButton": "ⵄⵔⴻⴹ",
+        "privacy": "ⵜⴰⴱⴰⴷⵏⵉⵜ",
+        "mutualFriends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵉⵛⵓⴷⴷⴻⵏ",
+        "block": "ⵢⴻⵔⴳⴻⵍ",
+        "unblock": "ⵔⵥⴻⵎ",
+        "noMutualFriends": "ⵓⵔ ⴷⵓⴼⵉⵏ ⴰⵔⴰ ⵉⵎⴷⵓⴽⴰⵍ ⵉⵛⵓⴷⴷⴻⵏ.",
+        "addUser": "ⵔⵏⵓ ⴰⵎⵙⴻⵇⴷⴰⵛ"
+    },
+    "timeDifference": {
+        "justNow": "Hace un momento",
+        "minute": "Hace {{count}} minuto",
+        "minutes": "Hace {{count}} minutos",
+        "hours": "Hace {{count}} horas",
+        "days": "Hace {{count}} días",
+        "weeks": "Hace {{count}} semanas",
+        "years": "Hace {{count}} años"
     }
+
 }

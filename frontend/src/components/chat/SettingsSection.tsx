@@ -9,6 +9,8 @@ import { useGetData } from '@/api/apiHooks';
 import { MutualFriend, Friends } from '@/types/apiTypes';
 import { useNavigate } from 'react-router-dom';
 import MutualFriendSkeleton from './MutualFriendSkeleton';
+import { useTranslation } from 'react-i18next';
+
 
 const SettingsSection = () => {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
@@ -20,6 +22,8 @@ const SettingsSection = () => {
     `/friends/mutual/${selectedConversation?.name}`
   );
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
 
 
   const togglePrivacy = () => setIsPrivacyOpen(!isPrivacyOpen);
@@ -39,14 +43,17 @@ const SettingsSection = () => {
     <div className={css.settingsSection}>
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={togglePrivacy}>
-          Privacy
+          {t('settingsSection.privacy')}
           {isPrivacyOpen ? <ChevronDown /> : <ChevronRight />}
         </div>
         {isPrivacyOpen && (
           <div className={css.sectionContent}>
             <div className={css.Item} onClick={() => handleBlock()}>
               <FaBan />
-              <span> {selectedConversation?.block_status === 'blocker' ? 'Unblock' : 'Block'} </span>
+              <span> {t(selectedConversation?.block_status === 'blocker'
+                ? 'settingsSection.unblock'
+                : 'settingsSection.block')}
+              </span>
             </div>
           </div>
         )}
@@ -54,7 +61,7 @@ const SettingsSection = () => {
         <hr />
       <div className={css.section}>
         <div className={css.sectionHeader} onClick={toggleMutualFriends}>
-          Mutual Friends
+          {t('settingsSection.mutualFriends')}
           {isMutualFriendsOpen ? <ChevronDown /> : <ChevronRight />}
         </div>
         {isMutualFriendsOpen && (
@@ -80,9 +87,9 @@ const SettingsSection = () => {
                     ))
                   ) : (
                     <div className={css.noMutualFriends}>
-                      <p>No mutual friends found.</p>
+                      <p>{t('settingsSection.noMutualFriends')}</p>
                       <button className={css.addUserButton} onClick={() => navigate('/friends?view=add')}>
-                        Add User
+                        {t('settingsSection.addUser')}
                       </button>
                     </div>
                   )}
