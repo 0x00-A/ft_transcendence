@@ -311,7 +311,7 @@ const MessageList = () => {
           />
           <input
             type="text"
-            placeholder="Search Friends"
+            placeholder={t('MessageList.placeholder')}
             value={searchQuery}
             onChange={handleSearchInput}
             onClick={() => setIsSearchActive(true)}
@@ -340,14 +340,13 @@ const MessageList = () => {
               {friendsError
                 ? "Failed to load friends. "
                 : "Failed to load conversations. "}
-              Please try again.
             </span>
           </div>
         ) : isSearchActive ? (
           <>
             {searchQuery && filteredFriends.length === 0 ? (
               <div className={css.statusMessage}>
-                <span>No users found matching "{searchQuery}"</span>
+                <span>{t('MessageList.noUserFound')} {searchQuery}</span>
               </div>
             ) : (
               filteredFriends.map((friend, index) => (
@@ -387,23 +386,28 @@ const MessageList = () => {
             <div
               className={css.menuItem}
               onClick={() => handleMarkAsRead(ConversationList[menuState.activeIndex!].id)}>
-              <CheckCheck /> <span>Mark as read</span>
+              <CheckCheck /> <span>{t('MessageList.menu.markAsRead')}</span>
             </div>
             <div className={css.menuItem} onClick={handleClose}>
-              <CircleX /> <span>Close Chat</span>
+              <CircleX /> <span>{t('MessageList.menu.closeChat')}</span>
             </div>
             <hr />
             <div
               className={css.menuItem}
               onClick={() => handleViewProfile(ConversationList[menuState.activeIndex!].name)}
             >
-              <User /> <span>View Profile</span>
+              <User /> <span>{t('MessageList.menu.viewProfile')}</span>
             </div>
             <div
               className={css.menuItem}
               onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
-              <Ban /><span> {ConversationList[menuState.activeIndex!].block_status === "blocker" ? "Unblock" : "Block"} </span>
+              <Ban />
+              <span> 
+                {t(ConversationList[menuState.activeIndex!].block_status === "blocker"
+                  ? 'MessageList.menu.unblock'
+                  : 'MessageList.menu.block')} 
+              </span>
             </div>
           </div>
         )}

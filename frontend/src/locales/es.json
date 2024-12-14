@@ -21,7 +21,40 @@
     "messageArea": {
         "showMoreButton": "Mostrar más"
     },
-    "messageList": {
+    "message": {
         "sender": "Tú"
+    },
+    "MessageList": {
+        "placeholder": "Buscar amigas",
+        "noUserFound": "No se encontraron usuarios que coincidan",
+        "menu": {
+            "markAsRead": "Marcar como leído",
+            "closeChat": "Cerrar chat",
+            "viewProfile": "Ver perfil",
+            "block": "Bloquear",
+            "unblock": "Desbloquear"
+        }
+
+    },
+    "optionsButton": "charlar",
+    "settingsSection": {
+        "profileButton": "Perfil",
+        "inviteButton": "Invitar",
+        "privacy": "Privacidad",
+        "mutualFriends": "Amigos en común",
+        "block": "Bloquear",
+        "unblock": "Desbloquear",
+        "noMutualFriends": "No se encontraron amigos en común.",
+        "addUser": "Agregar usuario"
+    },
+    "timeDifference": {
+        "justNow": "Hace un momento",
+        "minute": "Hace {{count}} minuto",
+        "minutes": "Hace {{count}} minutos",
+        "hours": "Hace {{count}} horas",
+        "days": "Hace {{count}} días",
+        "weeks": "Hace {{count}} semanas",
+        "years": "Hace {{count}} años"
     }
+
 }

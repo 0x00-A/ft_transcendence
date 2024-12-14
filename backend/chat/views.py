@@ -61,7 +61,6 @@ class CreateConversationView(APIView):
 
             last_message = conversation.last_message or "Send first message"
             truncated_message = f"{last_message[:10]}..." if len(last_message) > 10 else last_message
-            updated_at = conversation.updated_at.isoformat()
 
             conversation_data = {
                 'id': conversation.id,
@@ -70,7 +69,7 @@ class CreateConversationView(APIView):
                 'avatar': f"{SERVER_URL}{MEDIA_URL}{other_user.profile.avatar}",
                 'name': other_user.username,
                 'lastMessage': truncated_message,
-                'time': format_time(conversation.updated_at),
+                'time': conversation.updated_at,
                 'unreadCount': unread_count or '',
                 'status': other_user.profile.is_online,
             }
@@ -145,7 +144,7 @@ class GetConversationsView(APIView):
                     'avatar': other_user_avatar,
                     'name': other_user_username,
                     'lastMessage': truncated_message or "Send",
-                    'time': format_time(updated_at),
+                    'time': updated_at,
                     'unreadCount': unread_count or '',
                     'status': other_status,
                     'block_status': block_status,

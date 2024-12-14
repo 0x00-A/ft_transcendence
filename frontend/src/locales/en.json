@@ -23,5 +23,35 @@
     },
     "message": {
         "sender": "YOU"
+    },
+    "MessageList": {
+        "placeholder": "Search Friends",
+        "noUserFound": "No users found matching",
+        "menu": {
+            "markAsRead": "Mark as read",
+            "closeChat": "Close Chat",
+            "viewProfile": "View Profile",
+            "block": "Block",
+            "unblock": "Unblock"
+        }
+    },
+    "optionsButton": "Chat",
+    "settingsSection": {
+        "profileButton": "Profile",
+        "inviteButton": "Invite",
+        "privacy": "Privacy",
+        "mutualFriends": "Mutual Friends",
+        "block": "Block",
+        "unblock": "Unblock",
+        "noMutualFriends": "No mutual friends found.",
+        "addUser": "Add User"
+    },
+    "timeDifference": { 
+        "justNow": "Hace un momento",
+        "minutes": "Hace {{count}} minutos",
+        "hours": "Hace {{count}} horas",
+        "days": "Hace {{count}} días",
+        "weeks": "Hace {{count}} semanas",
+        "years": "Hace {{count}} años"
     }
 }
