@@ -141,6 +141,10 @@
         "pupAddFriend": "Agregar amigo",
         "pupMessage": "Mensaje",
         "notFound": "No se encontró ningún usuario"
+    },
+    "notifications": {
+        "title": "Notificaciones",
+        "clearAll": "Limpiar todo"
     }
     
 }

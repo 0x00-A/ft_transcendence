@@ -141,6 +141,10 @@
         "pupAddFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
         "pupMessage": "ⴰⵡⴰⵍ",
         "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ"
+    },
+    "notifications": {
+        "title": "ⵉⴱⴻⴷⴷⵉⵍⴻⵏ",
+        "clearAll": "ⵙⴼⴻⴹ ⴰⴽⴽ"
     }
 
 }
