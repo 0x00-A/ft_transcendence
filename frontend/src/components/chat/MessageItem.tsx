@@ -3,7 +3,9 @@ import css from './MessageItem.module.css';
 import { CgMoreO } from 'react-icons/cg';
 import { useTyping } from '@/contexts/TypingContext';
 import { conversationProps } from '@/types/apiTypes';
-import moment from 'moment';
+import { formatTime } from '@/utils/formatConversationTime';
+// import { useTranslation } from 'react-i18next';
+
 
 interface conversationListProps {
   isSelected: boolean;
@@ -27,30 +29,7 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
     ref
   ) => {
     const { typing } = useTyping();
-
-  const formatTime = (timestamp: string | number | Date) => {
-      const now = moment();
-      const time = moment(timestamp);
-    
-      const diffSeconds = now.diff(time, 'seconds');
-    
-      if (diffSeconds < 60) return 'Just now';
-    
-      const diffMinutes = now.diff(time, 'minutes');
-      if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
-    
-      const diffHours = now.diff(time, 'hours');
-      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    
-      const diffDays = now.diff(time, 'days');
-      if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    
-      const diffWeeks = now.diff(time, 'weeks');
-      if (diffWeeks < 52) return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
-    
-      const diffYears = now.diff(time, 'years');
-      return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
-    };
+    // const { t } = useTranslation();
 
     const isReceiver = typing.senderId == conversation.user_id;
 

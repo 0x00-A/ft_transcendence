@@ -18,6 +18,7 @@ import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+
 export default function Sidebar() {
   // const [open, setOpen] = useState(true);
   const loadingBarRef = useLoadingBar();
@@ -31,6 +32,7 @@ export default function Sidebar() {
   }, []);
 
   const { i18n } = useTranslation();
+  const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showLangPopup, setShowLangPopup] = useState(false);
   const [selectedLang, setSelectedLang] = useState('English');
@@ -121,7 +123,7 @@ export default function Sidebar() {
           <ThemeToggle className={css.darkMode}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
             <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
-            <p>Logout</p>
+            <p>{t('sidebar.logout')}</p>
           </div>
         </div>
       </div>

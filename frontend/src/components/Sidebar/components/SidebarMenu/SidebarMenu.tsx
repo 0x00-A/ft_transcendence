@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 export const SidebarMenu = ({ open = false }: { open?: boolean | null }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(location.pathname);
+  const MenusList = Menus();
 
   useEffect(() => {
     setActiveLink(location.pathname);
@@ -14,7 +15,7 @@ export const SidebarMenu = ({ open = false }: { open?: boolean | null }) => {
 
   return (
     <ul className={css.menu}>
-      {Menus.map((item) => (
+      {MenusList.map((item) => (
         <li
           className={`${open ? '' : ''}`}
           key={item.id}

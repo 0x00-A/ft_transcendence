@@ -46,12 +46,27 @@
         "noMutualFriends": "No mutual friends found.",
         "addUser": "Add User"
     },
-    "timeDifference": { 
-        "justNow": "Hace un momento",
-        "minutes": "Hace {{count}} minutos",
-        "hours": "Hace {{count}} horas",
-        "days": "Hace {{count}} días",
-        "weeks": "Hace {{count}} semanas",
-        "years": "Hace {{count}} años"
+    "timeDifference": {
+        "justNow": "Just now",
+        "minute": "1 minute ago",
+        "minutes": "{{count}} minutes ago",
+        "hour": "1 hour ago",
+        "hours": "{{count}} hours ago",
+        "day": "1 day ago",
+        "days": "{{count}} days ago",
+        "week": "1 week ago",
+        "weeks": "{{count}} weeks ago",
+        "year": "1 year ago",
+        "years": "{{count}} years ago"
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "game": "Game",
+        "chat": "Chat",
+        "friends": "Friends",
+        "profile": "Profile",
+        "logout": "logout",
+        "lightMode": "Light mode",
+        "darkMode": "dark mode"
     }
 }

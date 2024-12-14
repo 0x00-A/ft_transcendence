@@ -48,13 +48,27 @@
         "addUser": "Agregar usuario"
     },
     "timeDifference": {
-        "justNow": "Hace un momento",
-        "minute": "Hace {{count}} minuto",
+        "justNow": "Justo ahora",
+        "minute": "Hace 1 minuto",
         "minutes": "Hace {{count}} minutos",
+        "hour": "Hace 1 hora",
         "hours": "Hace {{count}} horas",
+        "day": "Hace 1 día",
         "days": "Hace {{count}} días",
+        "week": "Hace 1 semana",
         "weeks": "Hace {{count}} semanas",
+        "year": "Hace 1 año",
         "years": "Hace {{count}} años"
+    },
+    "sidebar": {
+        "dashboard": "Tablero",
+        "game": "Juego",
+        "chat": "charlar",
+        "friends": "Amigos",
+        "profile": "Perfil",
+        "logout": "cerrar sesión",
+        "lightMode": "Light mode",
+        "darkMode": "dark mode"
     }
 
 }
