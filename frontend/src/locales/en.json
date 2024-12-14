@@ -68,5 +68,78 @@
         "logout": "logout",
         "lightMode": "Light mode",
         "darkMode": "dark mode"
+    },
+    "sidebarFriends": {
+        "allFriends": "All Friends",
+        "onlineFriends": "Online Friends",
+        "friendRequests": "Friend Requests",
+        "sentRequests": "Sent Requests",
+        "blockedList": "Blocked List",
+        "addFriend": "Add Friend"
+    },
+    "allFriends": {
+        "title": "All Friends",
+        "placeholder": "Search friends...",
+        "online": "Online",
+        "offline": "Offline",
+        "pupMessage": "Message",
+        "pupInvite": "Invite",
+        "pupBlock": "Block",
+        "pupUnfriend": "Unfriend",
+        "noRequests": "No Friends Yet",
+        "description": "Looks like your friends list is empty. Start connecting by searching for friends or sending invites!"
+    },
+    "onlineFriends": {
+        "title": "Online Friends",
+        "online": "Online",
+        "pupMessage": "Message",
+        "pupInvite": "Invite",
+        "noRequests": "No Friends Online",
+        "description": "It seems like none of your friends are online right now. Invite some friends or check back later!"
+    },
+    "friendRequests": {
+        "title": "Friend Requests",
+        "pupAccept": "Accept",
+        "pupReject": "Reject",
+        "description": "You don't have any pending friend requests right now. Connect with more people to expand your network!",
+        "noRequests": "No Friend Requests"
+    },
+    "sentRequests": {
+        "title": "Sent Requests",
+        "pupCancel": "Cancel",
+        "description": "You don't have any sent requests right now. Connect with more people to expand your network!",
+        "noRequests": "No Sent Requests"
+    },
+    "blockedList": {
+        "title": "Blocked List",
+        "placeholder": "Search blocked users...",
+        "pupUnblock": "Unblock",
+        "description": "You haven't blocked any users. Users you block will appear here.",
+        "noRequests": "No Blocked Users"
+    },
+    "addFriend": {
+        "title": "Search & Add Friends",
+        "placeholder": "Find your friend...",
+        "pupViewProfile": "View Profile",
+        "pupFriend": "Friend",
+        "pupAccept": "Accept",
+        "pupReject": "Reject",
+        "pupCancel": "Cancel",
+        "pupPending": "Pending",
+        "pupAddFriend": "Add friend",
+        "notFound": "No User Found",
+        "Suggested": "Suggested Connections"
+    },
+    "SearchUsers": {
+        "placeholder": "Search...",
+        "pupViewProfile": "View Profile",
+        "pupFriend": "Friend",
+        "pupAccept": "Accept",
+        "pupReject": "Reject",
+        "pupMessage": "Message",
+        "pupCancel": "Cancel",
+        "pupPending": "Pending",
+        "pupAddFriend": "Add friend",
+        "notFound": "No User Found"
     }
 }

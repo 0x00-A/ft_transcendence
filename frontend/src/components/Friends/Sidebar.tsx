@@ -6,6 +6,7 @@ import { RiUserReceived2Line, RiUserShared2Line, RiUserForbidLine } from "react-
 import { LuUserPlus } from "react-icons/lu";
 import { FiUsers } from "react-icons/fi";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 
 type ViewType = 'add' | 'all' | 'online' | 'requests' | 'sent' | 'blocked';
@@ -18,6 +19,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
 
   const toggleCollapse = () => {
@@ -37,14 +39,14 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
           onClick={() => handleViewChange('all')}
         >
           <FiUsers className={css.icon}/>
-          <span className={css.buttonText}>All Friends</span>
+          <span className={css.buttonText}>{t('sidebarFriends.allFriends')}</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'online' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => handleViewChange('online')}
         >
           <CircleDot className={css.icon}/>
-          <span className={css.buttonText}>Online Friends</span>
+          <span className={css.buttonText}>{t('sidebarFriends.onlineFriends')}</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'requests' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
@@ -53,21 +55,21 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
           <div className={css.iconContainer}>
             <RiUserReceived2Line className={css.icon} />
           </div>
-          <span className={css.buttonText}>Friend Requests</span>
+          <span className={css.buttonText}>{t('sidebarFriends.friendRequests')}</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'sent' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => handleViewChange('sent')}
         >
           <RiUserShared2Line className={css.icon}/>
-          <span className={css.buttonText}>Sent Requests</span>
+          <span className={css.buttonText}>{t('sidebarFriends.sentRequests')}</span>
         </button>
         <button
           className={`${css.navButton} ${currentView === 'blocked' ? css.active : ''} ${isCollapsed ? css.close : ''}`}
           onClick={() => handleViewChange('blocked')}
         >
           <RiUserForbidLine className={css.icon}/>
-          <span className={css.buttonText}>Blocked List</span>
+          <span className={css.buttonText}>{t('sidebarFriends.blockedList')}</span>
         </button>
       </div>
       <button
@@ -75,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         onClick={() => handleViewChange('add')}
       >
         <LuUserPlus className={css.icon}/>
-        <span className={css.buttonText}>Add Friend</span>
+        <span className={css.buttonText}>{t('sidebarFriends.addFriend')}</span>
       </button>
       <button 
         className={css.collapseButton} 

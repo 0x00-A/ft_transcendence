@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import FriendSkeleton from './FriendSkeleton';
 import { useUser } from '@/contexts/UserContext';
 import { useWebSocket } from '@/contexts/WebSocketContext';
+import { useTranslation } from 'react-i18next';
+
 
 interface FriendProfile {
   avatar: string;
@@ -29,6 +31,8 @@ const AllFriends: React.FC = () => {
   const { data: friendsData, isLoading, error, refetch } = useGetData<Friend[]>('friends');
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+  const { t } = useTranslation();
+
 
 
   const handleSendInvite = (username: string) => {
@@ -89,14 +93,14 @@ const AllFriends: React.FC = () => {
 
   return (
     <div className={css.allFriends}>
-      <h1 className={css.title}>All Friends</h1>
+      <h1 className={css.title}>{t('allFriends.title')}</h1>
       
       <div className={css.searchContainer}>
         <Search className={css.searchIcon} />
         <input
           type="text"
           className={css.searchInput}
-          placeholder="Search friends..."
+          placeholder={t('allFriends.placeholder')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -118,23 +122,23 @@ const AllFriends: React.FC = () => {
               <div className={css.userInfo}>
                 <span className={css.username}>{friend.username}</span>
                 {friend.profile.is_online ? (
-                  <span className={css.Online}>Online</span>
+                  <span className={css.Online}>{t('allFriends.online')}</span>
                 ) : (
-                  <span className={css.Offline}>Offline</span>
+                  <span className={css.Offline}>{t('allFriends.offline')}</span>
                 )}
               </div>
               <div className={css.actions}>
                 <button
                   className={`${css.actionButton} ${css.messageButton}`}
                   onClick={() => handleMessageClick(friend)}
-                  title="Message"
+                  title={t('allFriends.pupMessage')}
                 >
                   <MessageSquareText size={20} />
                 </button>
                 <button
                   className={`${css.actionButton} ${isInviteDisabled ? css.disabled : ''}`}
                   onClick={ () =>  handleSendInvite(friend.username)}
-                  title='Invite'
+                  title={t('allFriends.pupInvite')}
                   >
                   
                   {isInviteDisabled ? (
@@ -144,14 +148,14 @@ const AllFriends: React.FC = () => {
                 <button
                   className={`${css.actionButton} ${css.blockButton}`}
                   onClick={() => blockRequest(friend.username)}
-                  title="Block"
+                  title={t('allFriends.pupBlock')}
                 >
                   <Ban size={20} />
                 </button>
                 <button
                   className={`${css.actionButton} ${css.removeButton}`}
                   onClick={() => removeFriend(friend.username)}
-                  title="Remove"
+                  title={t('allFriends.pupMessage')}
                 >
                   <UserX size={20} />
                 </button>
