@@ -3,6 +3,7 @@ import css from './ChatHeader.module.css';
 import { Info } from 'lucide-react';
 import { useTyping } from '@/contexts/TypingContext';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 
@@ -19,21 +20,22 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   const { selectedConversation } = useSelectedConversation();
   const isReceiver = typing.senderId == selectedConversation?.user_id;
   const navigate = useNavigate();
+  const { t } = useTranslation(); 
 
 const renderUserStatus = () => {
     if (!selectedConversation) return null;
 
     if (typing.typing && isReceiver ) {
-      return <p className={`${css.userStatus} ${css.typing}`}>Typing...</p>;
+      return <p className={`${css.userStatus} ${css.typing}`}>{t('chatHeader.typing')}</p>;
     }
 
     switch (selectedConversation.status) {
       case true:
-        return <p className={`${css.userStatus} ${css.online}`}>Active now</p>;
+        return <p className={`${css.userStatus} ${css.online}`}>{t('chatHeader.activeNow')}</p>;
       case false:
         return (
           <p className={`${css.userStatus} ${css.offline}`}>
-            Last seen at {selectedConversation.last_seen}
+            {t('chatHeader.lastSeen')} {selectedConversation.last_seen}
           </p>
         );
     }
@@ -41,19 +43,18 @@ const renderUserStatus = () => {
 
   return (
     <header className={css.chatHeader}>
-      {selectedConversation ? (
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
-            <div className={`${css.userAvatar} ${selectedConversation.status ? css.online : ''}`} onClick={() => navigate(`/profile/${selectedConversation.name}`)}>
+            <div className={`${css.userAvatar} ${selectedConversation?.status ? css.online : ''}`} onClick={() => navigate(`/profile/${selectedConversation.name}`)}>
               <img
-                src={selectedConversation.avatar}
+                src={selectedConversation?.avatar}
                 alt="User"
                 className={css.imageAvatar}
               />
             </div>
             <div className={css.userDetails}>
-              <div className={css.usernameheader} onClick={() => navigate(`/profile/${selectedConversation.name}`)}>
-                <h2 className={css.userName}>{selectedConversation.name} </h2>
+              <div className={css.usernameheader} onClick={() => navigate(`/profile/${selectedConversation?.name}`)}>
+                <h2 className={css.userName}>{selectedConversation?.name} </h2>
               </div>
               {renderUserStatus()}
             </div>
@@ -66,9 +67,6 @@ const renderUserStatus = () => {
             </button>
           </div>
         </div>
-      ) : (
-        <div className={css.placeholderHeader}>No chats selected</div>
-      )}
     </header>
   );
 };

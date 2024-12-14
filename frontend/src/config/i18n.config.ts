@@ -1,19 +1,19 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from '../locales/en.json';
-import es from '../locales/en.json';
+import es from '../locales/es.json'; 
 import tamazight from '../locales/tamazight.json';
 
 i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
-    fr: { translation: es },
-    ar: { translation: tamazight },
+    es: { translation: es }, 
+    zgh: { translation: tamazight }, 
   },
-  lng: localStorage.getItem('lang') || 'en', // Set default language (or use stored language)
-  fallbackLng: 'en', // Fallback language if selected language is not available
+  lng: localStorage.getItem('lang') || 'en', 
+  fallbackLng: 'en',
   interpolation: {
-    escapeValue: false, // React already escapes values by default
+    escapeValue: false, 
   },
 });
 

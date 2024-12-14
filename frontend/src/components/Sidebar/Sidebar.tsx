@@ -111,7 +111,7 @@ export default function Sidebar() {
               <ul>
                 <li onClick={() => changeLanguage('en')}> <Flag className={css.flags} code='US'/> English </li>
                 <li onClick={() => changeLanguage('es')}> <Flag className={css.flags} code='ES'/> Español </li>
-                <li onClick={() => changeLanguage('tamazight')}> <Flag className={css.flags} code='MA'/> Tamazight </li>
+                <li onClick={() => changeLanguage('zgh')}> <Flag className={css.flags} code='MA'/> Tamazight </li>
               </ul>
             </div>
           )}

@@ -4,6 +4,8 @@ import Message from './Message';
 import { useTyping } from '@/contexts/TypingContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { MessageProps } from '@/types/apiTypes';
+import { useTranslation } from 'react-i18next';
+
 
 interface MessageAreaProps {
   messages: MessageProps[];
@@ -15,6 +17,8 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const messageAreaRef = useRef<HTMLDivElement | null>(null);
   const [shouldScroll, setShouldScroll] = useState(true);
+  const { t } = useTranslation(); 
+
 
   const { typing } = useTyping();
   const { selectedConversation } = useSelectedConversation();
@@ -60,7 +64,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore
     <div className={css.messageArea} ref={messageAreaRef}>
       {hasMore && (
         <button className={css.loadMoreButton} onClick={handleLoadMore}>
-          Show More
+          {t('messageArea.showMoreButton')}
         </button>
       )}
       {messages.map((message, index) => (

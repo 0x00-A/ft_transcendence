@@ -1,8 +1,10 @@
 import css from './NoChatSelected.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const NoChatSelected = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleAddFriendsClick = () => {
     navigate('/friends?view=add');
@@ -15,11 +17,11 @@ const NoChatSelected = () => {
         alt="selected"
         className={css.noChatIcon}
       />
-      <h2>Welcome to Your Chat!</h2>
-      <p>Please select a conversation to start chatting.</p>
-      <p>If you don't have any friends yet</p>
+      <h2>{t('noChatSelected.title')}</h2>
+      <p>{t('noChatSelected.description1')}</p>
+      <p>{t('noChatSelected.description2')}</p>
       <button onClick={handleAddFriendsClick} className={css.addFriendsButton}>
-        Add Friend
+        {t('noChatSelected.addFriendButton')}
       </button>
     </div>
   );

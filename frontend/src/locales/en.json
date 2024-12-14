@@ -1,3 +1,27 @@
 {
-    "greeting": "Hello"
+    "welcome": {
+        "title": "FT-PONG",
+        "description": "Ready to start your next match and climb the leaderboard",
+        "playButton": "Play now"
+    },
+    "noChatSelected": {
+        "title": "Welcome to Your Chat!",
+        "description1": "Please select a conversation to start chatting.",
+        "description2": "If you don't have any friends yet",
+        "addFriendButton": "Add Friend"
+    },
+    "chatHeader": {
+        "typing": "Typing...",
+        "activeNow": "Active now",
+        "lastSeen": "Last seen at"
+    },
+    "messageInput": {
+        "placeholder": "Write a message"
+    },
+    "messageArea": {
+        "showMoreButton": "Show More"
+    },
+    "message": {
+        "sender": "YOU"
+    }
 }

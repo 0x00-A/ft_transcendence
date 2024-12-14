@@ -13,6 +13,8 @@ import { useSelectedConversation } from '@/contexts/SelectedConversationContext'
 import { CircleX, CheckCheck, User, Ban, Search, ArrowBigLeft } from 'lucide-react';
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
+import { useTranslation } from 'react-i18next';
+
 
 interface FriendProfile {
   avatar: string;
@@ -46,6 +48,7 @@ const MessageList = () => {
   const location = useLocation();
   const { setSelectedConversation, selectedConversation } = useSelectedConversation();
   const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
+  const { t } = useTranslation(); 
 
 
 
