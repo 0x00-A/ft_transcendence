@@ -20,7 +20,7 @@ services:
       - DB_PASS=$DB_PASS
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
-      - DEBUG=0
+      - DEBUG=1
       - SECRET_KEY=$SECRET_KEY
     env_file:
       - .env

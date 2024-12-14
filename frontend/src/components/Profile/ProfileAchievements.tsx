@@ -37,7 +37,7 @@ const ProfileAchievements = () => {
         }
     }
     const handleNext = () => {
-        if (end < achievements.length) {
+        if (achievements && end < achievements.length) {
             setCurrentAchiev((prevPage) => prevPage + 1);
         }
     }

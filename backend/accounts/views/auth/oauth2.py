@@ -25,9 +25,8 @@ def oauth2_authorize(request, choice):
             print('api ==> oauth2_authorize: redirecting to discord authorization')
             return redirect(conf.DISCORD_AUTHORIZATION_URL)
         if choice == 'google':
-            auth_url = f"{conf.GOOGLE_AUTHORIZATION_URL}?client_id={conf.GOOGLE_CLIENT_ID}&redirect_uri={conf.OAUTH2_REDIRECT_URI}google/&response_type=code&scope=email+profile"
             print('api ==> oauth2_authorize: redirecting to google authorization')
-            return redirect(auth_url)
+            return redirect(conf.GOOGLE_AUTHORIZATION_URL)
 
 
 @api_view()

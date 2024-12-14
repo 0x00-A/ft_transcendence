@@ -14,7 +14,7 @@ export const SignupSchema = yup.object().shape({
   password: yup
     .string()
     .min(8, 'password must be at least 8 characters!')
-    .max(50, 'password must not exceed 20 characters!')
+    .max(64, 'password must not exceed 64 characters!')
     .required('password is required!'),
   password2: yup
     .string()
