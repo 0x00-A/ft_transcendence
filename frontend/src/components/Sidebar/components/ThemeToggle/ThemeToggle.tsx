@@ -9,6 +9,7 @@ import {
   MENU_ICON_COLOR,
   MENU_ICON_SIZE,
 } from '../../../../config/constants';
+import { useTranslation } from 'react-i18next';
 
 const ThemeToggle = ({
   open = false,
@@ -18,6 +19,7 @@ const ThemeToggle = ({
   className?: string;
 }) => {
   const [theme, setTheme] = useState('light');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -46,7 +48,7 @@ const ThemeToggle = ({
             size={MENU_ICON_SIZE}
             className={css['icon sun-icon']}
           />
-          <p className={`${open ? '' : ''}`}>Light mode</p>
+          <p className={`${open ? '' : ''}`}>{t('sidebar.lightMode')}</p>
         </>
       ) : (
         <>
@@ -55,7 +57,7 @@ const ThemeToggle = ({
             size={MENU_ICON_SIZE}
             className={css['icon moon-icon']}
           />
-          <p className={`${open ? '' : ''}`}>Dark mode</p>
+          <p className={`${open ? '' : ''}`}>{t('sidebar.darkMode')}</p>
         </>
       )}
     </button>

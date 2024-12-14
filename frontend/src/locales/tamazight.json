@@ -47,13 +47,27 @@
         "addUser": "ⵔⵏⵓ ⴰⵎⵙⴻⵇⴷⴰⵛ"
     },
     "timeDifference": {
-        "justNow": "Hace un momento",
-        "minute": "Hace {{count}} minuto",
-        "minutes": "Hace {{count}} minutos",
-        "hours": "Hace {{count}} horas",
-        "days": "Hace {{count}} días",
-        "weeks": "Hace {{count}} semanas",
-        "years": "Hace {{count}} años"
+        "justNow": "ⵜⵓⵔⴰ ⴽⴰⵏ",
+        "minute": "1 ⵏ ⵜⴻⴷⵇⵉⵇⵜ ⴰⵢⴰ",
+        "minutes": "{{count}} ⵜⴻⴷⵇⵉⵇⵉⵏ ⴰⵢⴰ",
+        "hour": "ⵢⵉⵡⴻⵜ ⵏ ⵜⵙⴰⵄⴻⵜ ⴰⵢⴰ",
+        "hours": "{{count}} ⵜⵙⴰⵄⵜⵉⵏ ⴰⵢⴰ",
+        "day": "ⵢⵉⵡⴻⵏ ⵡⴰⵙⵙ ⴰⵢⴰ",
+        "days": "{{count}} ⵓⵙⵙⴰⵏ ⴰⵢⴰ",
+        "week": "ⵢⵉⵡⴻⵏ ⵏ ⴷⴷⵓⵔⵜ ⴰⵢⴰ",
+        "weeks": "{{count}} ⴷⴷⵓⵔⵜ ⴰⵢⴰ",
+        "year": "ⴰⵙⴻⴳⴳⴰⵙ ⴰⵢⴰ",
+        "years": "{{count}} ⵉⵙⴻⴳⴳⴰⵙⴻⵏ ⴰⵢⴰ"
+    },
+    "sidebar": {
+        "dashboard": "ⵜⴰⴼⴻⵍⵡⵉⵜ ⵏ ⵓⵙⴻⵍⴽⵉⵎ",
+        "game": "ⵜⵓⵔⴰⵔⴻⵜ",
+        "chat": "ⴰⵎⴻⵙⵍⴰⵢ",
+        "friends": "ⵉⵎⴷⵓⴽⴰⵍ",
+        "profile": "ⴰⵍⴻⴳⴷⵉⵙ",
+        "logout": "ⵜⵓⴼⴼⵖⴰ",
+        "lightMode": "ⴰⴷⴻⴳ ⵏ ⵜⴰⴼⴰⵜ",
+        "darkMode": "ⵜⴰⵍⵖⴰ ⵜⴰⵣⴻⴳⵣⴰⵡⵜ"
     }
 
 }
