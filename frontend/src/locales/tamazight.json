@@ -1,3 +1,30 @@
 {
-    "greeting": "Hello"
+    "welcome": {
+        "title": "FT-PONG",
+        "description": "ⴰⴽⵍⴰⵎ ⴰⵎⵏⵓ ⴷ ⵉⴷⵍⴰⴽ ⴰⵎⴰⵢⵏⵉⵙ ⵏ ⵓⴷⴰⵢⵏ ⴷ ⵉⵍⴷⴰⵡⴰⵍⴻⵏ",
+        "playButton": "ⴽⵔⵎⴰⵏ ⵉⵎⵓⴽⵉ"
+    },
+    "noChatSelected": {
+        "title": "ⴰⵏⵙⵓⴼ ⴼⴻⵍⵍⴰⴽ ⴷⴻⴳ ⴰⵎⴻⵙⵍⴰⵢⵉⴽ!",
+        "description1": "ⵜⵜⵅⵉⵍⴽ ⴼⵔⴻⵏ ⴰⵎⴻⵙⵍⴰⵢ ⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⴱⴷⵓⴹ ⴰⵎⴻⵙⵍⴰⵢ.",
+        "description2": "ⵎⴰ ⵢⴻⵍⵍⴰ ⵓⵔ ⵜⴻⵙⵄⵉⴹ ⴰⵔⴰ ⵉⵎⴷⵓⴽⴰⵍ",
+        "addFriendButton": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ"
+    },
+    "chatHeader": {
+        "typing": "ⵜⵉⵔⴰ...",
+        "activeNow": "ⵢⴻⵜⵜⵡⴰⵅⴷⴻⵎ ⵜⵓⵔⴰ",
+        "lastSeen": "ⴰⵏⴻⴳⴳⴰⵔⵓ ⵢⴻⵜⵜⵡⴰⵡⴰⵍⴰ ⴷⴻⴳ"
+    },
+    "messageInput": {
+        "placeholder": "ⴰⵔⵓⴷ ⵉⵣⴻⵏ"
+    },
+    "messageArea": {
+        "showMoreButton": "ⵙⴽⴻⵏ ⵓⴳⴰⵔ"
+    },
+    "message": {
+        "sender": "ⴽⴻⵞⵞ"
+    },
+    "message": {
+        "sender": "ⴽⴻⵞⵞ"
+    }
 }
