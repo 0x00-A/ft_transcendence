@@ -1,11 +1,11 @@
 // Styles
 import css from './ProfileGamesHistory.module.css'
-import { IoFilterSharp } from 'react-icons/io5';
+
 import { FaHistory } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { IoGameControllerOutline } from "react-icons/io5";
 import { useGetData } from '@/api/apiHooks';
-import { toast } from 'react-toastify';
+
 // Api
 import { GameHistory } from '@/types/apiTypes';
 import { API_GET_PLAYED_GAMES_URL } from '@/api/apiConfig';

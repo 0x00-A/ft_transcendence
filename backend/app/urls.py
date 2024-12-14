@@ -37,12 +37,12 @@ urlpatterns = [
     # path('api/accounts/', include('accounts.urls')),
     # path('api/', include('rest_framework.urls')),
     path('api/matchmaker/', include('matchmaker.urls')),
-    path("__debug__/", include("debug_toolbar.urls")),
+    # path("__debug__/", include("debug_toolbar.urls")),
     # path('__debug__/', include('debug_toolbar.urls')),
     path('api/', include('accounts.urls')),
     path('api/', include('relationships.urls')),
     path('api/chat/', include('chat.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + debug_toolbar_urls()
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

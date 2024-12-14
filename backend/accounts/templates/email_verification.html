@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ft-pong Email Verification</title>
+        <style>
+            body {
+                margin: 0;
+                height: 100vh;
+                background-color: #283245;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+            }
+            .email-container {
+                max-width: 600px;
+                height: 550px;
+                background-color: #0e1725;;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-radius: 25px;
+            }
+            .logo {
+                width: 200px;
+                height: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                text-align: center;
+            }
+            .logo img {
+                width: 150px;
+                height: 150px;
+                max-width: 150px;
+                max-height: 150px;
+                color: white
+            }
+            .logo h1 {
+                color: #007BFF;
+                font-size: 24px;
+            }
+            .email-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                text-align: center;
+                margin-top: 20px;
+                color: #fff;
+
+            }
+            .email-content h2 {
+                color: #007BFF;
+            }
+            .verify-button {
+                display: inline-block;
+                background-color: #007BFF;
+                color: #fff;
+                padding: 12px 25px;
+                text-decoration: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .footer {
+                text-align: center;
+                font-size: 12px;
+                color: #aaa;
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="logo">
+                <h1>ft-pong</h1>
+                <img src="{{ logo_path }}" alt="Website Logo" />
+            </div>
+            <div class="email-content">
+                <h2>Hello {{ username }}!</h2>
+                <p>Thank you for registering on our website. To complete your registration, please verify your email by clicking the button below.</p>
+                <a href="{{ verification_link }}" class="verify-button">Verify Email</a>
+            </div>
+            <div class="footer">
+                <p>If you did not register for an account, please ignore this email.</p>
+                <p>&copy; ft-pong. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+</html>
