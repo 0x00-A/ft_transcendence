@@ -7,6 +7,7 @@ import { apiCancelFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import { X } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
+import { useTranslation } from 'react-i18next';
 
 interface Profile {
   id: number;
@@ -26,6 +27,8 @@ interface SentRequest {
 
 const SentRequests: React.FC = () => {
   const { data: sentRequests, isLoading, error, refetch } = useGetData<SentRequest[]>('friend-requests/sent');
+  const { t } = useTranslation();
+
 
   const handleCancel = async (username: string) => {
     try {
@@ -43,7 +46,7 @@ const SentRequests: React.FC = () => {
 
   return (
     <div className={css.sentRequests}>
-      <h1 className={css.title}>Sent Requests</h1>
+      <h1 className={css.title}>{t('sentRequests.title')}</h1>
       {sentRequests && sentRequests.length === 0 ? (
         <NoSentRequests/>
       ) : (
@@ -66,7 +69,7 @@ const SentRequests: React.FC = () => {
               <button
                 className={css.cancelButton}
                 onClick={() => handleCancel(request.receiver.username)}
-                title="Cancel"
+                title={t('sentRequests.pupCancel')}
               >
                 <X size={20}/>
               </button>

@@ -63,11 +63,84 @@
         "dashboard": "ⵜⴰⴼⴻⵍⵡⵉⵜ ⵏ ⵓⵙⴻⵍⴽⵉⵎ",
         "game": "ⵜⵓⵔⴰⵔⴻⵜ",
         "chat": "ⴰⵎⴻⵙⵍⴰⵢ",
-        "friends": "ⵉⵎⴷⵓⴽⴰⵍ",
+        "friends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ",
         "profile": "ⴰⵍⴻⴳⴷⵉⵙ",
         "logout": "ⵜⵓⴼⴼⵖⴰ",
         "lightMode": "ⴰⴷⴻⴳ ⵏ ⵜⴰⴼⴰⵜ",
         "darkMode": "ⵜⴰⵍⵖⴰ ⵜⴰⵣⴻⴳⵣⴰⵡⵜ"
+    },
+    "sidebarFriends": {
+        "allFriends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⴰⴽⴽⵯ ",
+        "onlineFriends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵏ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "friendRequests": "ⵉⵙⵓⵜⴻⵔ ⵏ ⵉⵎⴷⵓⴽⴰⵍ",
+        "sentRequests": "ⵢⴻⵜⵜⵡⴰⵣⴻⵏ ⵉⵙⵓⵜⴻⵔ",
+        "blockedList": "ⵓⵎⵓⵖ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ",
+        "addFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ"
+    },
+    "allFriends": {
+        "title": "ⴰⴽⴽ ⵉⵎⴷⵓⴽⴰⵍ",
+        "placeholder": "ⵏⴰⴷⵉ ⵖⴻⴼ ⵉⵎⴷⵓⴽⴰⵍ...",
+        "online": "Oⵏⵍⴰⵢⵏ",
+        "offline": "ⴱⴻⵕⵕⴰ ⵉ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "pupMessage": "ⴰⵡⴰⵍ",
+        "pupInvite": "ⵄⵔⴻⴹ",
+        "pupBlock": "ⵢⴻⵔⴳⴻⵍ",
+        "pupUnfriend": "ⵓⵔ ⴷ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
+        "noRequests": "ⵎⴰⵣⴰⵍ ⵓⵍⴰⵛ ⵉⵎⴷⵓⴽⴰⵍ",
+        "description": "ⴰⵎⵣⵓⵏ ⵍⵉⵙⵜⵉ ⵏ ⵉⵎⴷⵓⴽⴰⵍⵉⴽ ⴷ ⵉⵍⴻⵎ. ⴱⴷⵓ ⵜⵓⵇⵇⵏⴰ ⵙ ⵓⵏⴰⴷⵉ ⵏ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍ ⵏⴻⵖ ⵙ ⵓⵙⵉⵡⴻⴹ ⵏ ⵜⵏⴻⵄⵔⴻⴹⵉⵏ!"
+    },
+    "onlineFriends": {
+        "title": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵏ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "online": "Oⵏⵍⴰⵢⵏ",
+        "pupMessage": "ⴰⵡⴰⵍ",
+        "pupInvite": "ⵄⵔⴻⴹ",
+        "noRequests": "ⵓⵍⴰⵛ ⵉⵎⴷⵓⴽⴰⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "description": "ⴰⵎⵣⵓⵏ ⵓⵍⴰ ⴷ ⵢⵉⵡⴻⵏ ⵙⴻⴳ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍⵉⴽ ⵓⵔ ⵢⴻⵍⵍⵉ ⴰⵔⴰ ⴷⴻⴳ Internet ⵜⵓⵔⴰ. ⵄⵔⴻⴹ ⴽⵔⴰ ⵏ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍ ⵏⴻⵖ ⵥⴻⵔⴷ ⵙⴷⴻⴼⴼⵉⵔⵙ!"
+    },
+    "friendRequests": {
+        "title": "ⵉⵙⵓⵜⴻⵔ ⵏ ⵉⵎⴷⵓⴽⴰⵍ",
+        "pupAccept": "ⵢⴻⵇⴱⴻⵍ",
+        "pupReject": "ⵓⵔ ⵜⵜⵯⵢⴻⵇⴱⵉⵍ ⴰⵔⴰ",
+        "description": "ⵓⵔ ⵜⴻⵙⵄⵉⴹ ⴰⵔⴰ ⴽⵔⴰ ⵏ ⵓⵙⵓⵜⴻⵔ ⵏ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍ ⵢⴻⵜⵜⵡⴰⵄⴻⵍⵇⴻⵏ ⵜⵓⵔⴰ. ⵇⵇⴻⵏ ⵖⴻⵔ ⵓⴳⴰⵔ ⵏ ⵢⵉⵎⴷⴰⵏⴻⵏ ⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⵙⵏⴻⵔⵏⵉⴹ ⴰⵥⴻⴹⴹⴰⵉⵏⴻⴽ!",
+        "noRequests": "ⵓⵍⴰⵛ ⵉⵙⵓⵜⴻⵔ ⵏ ⵓⵎⴷⴷⴰⴽⴽⴻⵍ"
+    },
+    "sentRequests": {
+        "title": "ⵢⴻⵜⵜⵡⴰⵣⴻⵏ ⵉⵙⵓⵜⴻⵔ",
+        "pupCancel": "ⵢⴻⴽⴽⴻⵙ",
+        "description": "ⵓⵔ ⵜⴻⵙⵄⵉⴹ ⴰⵔⴰ ⴽⵔⴰ ⵏ ⵓⵙⵓⵜⴻⵔ ⵢⴻⵜⵜⵡⴰⵣⴻⵏ ⵜⵓⵔⴰ. ⵇⵇⴻⵏ ⵖⴻⵔ ⵓⴳⴰⵔ ⵏ ⵢⵉⵎⴷⴰⵏⴻⵏ ⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⵙⵏⴻⵔⵏⵉⴹ ⴰⵥⴻⴹⴹⴰⵉⵏⴻⴽ!",
+        "noRequests": "ⵓⵍⴰⵛ ⴰⵙⵓⵜⴻⵔ ⵢⴻⵜⵜⵡⴰⵣⴻⵏ"
+    },
+    "blockedList": {
+        "title": "ⵓⵎⵓⵖ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ",
+        "placeholder": "ⵏⴰⴷⵉ ⵖⴻⴼ ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ...",
+        "pupUnblock": "ⵔⵥⴻⵎ",
+        "description": "ⵓⵔ ⵜⵃⴻⴱⵙⴻⴹ ⵓⵍⴰ ⴷ ⵢⵉⵡⴻⵏ ⵏ ⵓⵙⴻⵇⴷⴰⵛ. ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵉ ⵜⵃⴻⴱⵙⴻⴹ ⴰⴷ ⴷⴱⴰⵏⴻⵏ ⴷⴰⴳⵉ.",
+        "noRequests": "ⵓⵍⴰⵛ ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ"
+    },
+    "addFriend": {
+        "title": "ⴰⵏⴰⴷⵉ & ⵔⵏⵓ ⵉⵎⴷⵓⴽⴰⵍ",
+        "placeholder": "ⴰⴼⴷ ⴰⵎⴻⴷⴷⴰⴽⵍ ⵏⵏⴻⴽ....",
+        "pupViewProfile": "ⵡⴰⵍⵉ ⴰⴳⴱⵓⵔ",
+        "pupFriend": "ⴰⵎⴻⴷⴷⴰⴽⵍ",
+        "pupAccept": "ⵢⴻⵇⴱⴻⵍ",
+        "pupReject": "Reject",
+        "pupCancel": "ⵓⵔ ⵜⵜⵯⵢⴻⵇⴱⵉⵍ ⴰⵔⴰ",
+        "pupPending": "ⴰⵔ ⵎⴰⵔⴰ",
+        "pupAddFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
+        "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ",
+        "Suggested": "ⵜⵓⵇⵇⵏⵉⵡⵉⵏ ⵢⴻⵜⵜⵡⴰⵙⵙⵓⵎⵔⴻⵏ"
+    },
+    "SearchUsers": {
+        "placeholder": "ⴰⵏⴰⴷⵉ ...",
+        "pupViewProfile": "ⵡⴰⵍⵉ ⴰⴳⴱⵓⵔ",
+        "pupFriend": "ⴰⵎⴻⴷⴷⴰⴽⵍ",
+        "pupAccept": "ⵢⴻⵇⴱⴻⵍ",
+        "pupReject": "Reject",
+        "pupCancel": "ⵓⵔ ⵜⵜⵯⵢⴻⵇⴱⵉⵍ ⴰⵔⴰ",
+        "pupPending": "ⴰⵔ ⵎⴰⵔⴰ",
+        "pupAddFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
+        "pupMessage": "ⴰⵡⴰⵍ",
+        "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ"
     }
 
 }

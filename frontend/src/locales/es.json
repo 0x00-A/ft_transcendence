@@ -69,6 +69,78 @@
         "logout": "cerrar sesión",
         "lightMode": "Light mode",
         "darkMode": "dark mode"
+    },
+    "sidebarFriends": {
+        "allFriends": "Todos los amigos",
+        "onlineFriends": "Amigos en línea",
+        "friendRequests": "Solicitudes de amistad",
+        "sentRequests": "Solicitudes enviadas",
+        "blockedList": "Lista de bloqueados",
+        "addFriend": "Agregar amigo"
+    },
+    "allFriends": {
+        "title": "Todos los amigos",
+        "placeholder": "Buscar amigos...",
+        "online": "En línea",
+        "offline": "Desconectado",
+        "pupMessage": "Mensaje",
+        "pupInvite": "Invitar",
+        "pupBlock": "Bloquear",
+        "pupUnfriend": "Eliminar amigo",
+        "noRequests": "Aún no hay amigas",
+        "description": "Parece que tu lista de amigos está vacía. ¡Empieza a conectarte buscando amigos o enviando invitaciones!"
+    },
+    "onlineFriends": {
+        "title": "Ihya n tmutrin di tga",
+        "online": "Di tga",
+        "pupMessage": "Ameqqran",
+        "pupInvite": "Asgaddef",
+        "noRequests": "No hay amigas en linea",
+        "description": "Parece que ninguno de tus amigos está en línea en este momento. ¡Invita a algunos amigos o vuelve a visitarnos más tarde!"
+    },
+    "friendRequests": {
+        "title": "Solicitudes de Amistad",
+        "pupAccept": "Aceptar",
+        "pupReject": "Rechazar",
+        "description": "No tienes solicitudes de amistad pendientes en este momento. ¡Conéctate con más personas para expandir tu red!",
+        "noRequests": "No hay Solicitudes de Amistad"
+    },
+    "sentRequests": {
+        "title": "Solicitudes Enviadas",
+        "pupCancel": "Cancelar",
+        "description": "No tienes solicitudes enviadas en este momento. ¡Conéctate con más personas para expandir tu red!",
+        "noRequests": "No hay Solicitudes Enviadas"
+    },
+    "blockedList": {
+        "title": "Lista de bloqueados",
+        "placeholder": "Buscar usuarios bloqueados...",
+        "pupUnblock": "Desbloquear",
+        "description": "No has bloqueado a ningún usuario. Los usuarios que bloquees aparecerán aquí.",
+        "noRequests": "No hay Usuarios Bloqueados"
+    },
+    "addFriend": {
+        "title": "Buscar y Agregar Amigos",
+        "placeholder": "Encuentra a tu amigo...",
+        "pupViewProfile": "Ver Perfil",
+        "pupFriend": "Amigo",
+        "pupAccept": "Aceptar",
+        "pupReject": "Rechazar",
+        "pupCancel": "Cancelar",
+        "pupPending": "Pendiente",
+        "pupAddFriend": "Agregar amigo",
+        "notFound": "No se encontró ningún usuario",
+        "Suggested": "Conexiones Sugeridas"
+    },
+    "SearchUsers": {
+        "placeholder": "Buscar...",
+        "pupFriend": "Amigo",
+        "pupAccept": "Aceptar",
+        "pupReject": "Rechazar",
+        "pupCancel": "Cancelar",
+        "pupPending": "Pendiente",
+        "pupAddFriend": "Agregar amigo",
+        "pupMessage": "Mensaje",
+        "notFound": "No se encontró ningún usuario"
     }
-
+    
 }

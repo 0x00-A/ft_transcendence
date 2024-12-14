@@ -7,6 +7,7 @@ import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi'
 import { toast } from 'react-toastify';
 import { Check, X } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
+import { useTranslation } from 'react-i18next';
 
 
 interface Profile {
@@ -34,6 +35,8 @@ const FriendRequests: React.FC = () => {
     error,
     refetch
   } = useGetData<FriendRequest[]>('friend-requests/pending');
+  const { t } = useTranslation();
+
 
 
   const acceptFriendRequest = async (username: string) => {
@@ -62,7 +65,7 @@ const FriendRequests: React.FC = () => {
   return (
     <div className={css.friendRequests}>
       <div className={css.header}>
-        <h1 className={css.title}>Friend Requests</h1>
+        <h1 className={css.title}>{t('friendRequests.title')}</h1>
       </div>
 
       <div className={css.listContainer}>
@@ -87,7 +90,7 @@ const FriendRequests: React.FC = () => {
                   <button
                     className={css.acceptButton}
                     onClick={() => acceptFriendRequest(request.sender.username)}
-                    title='Accept'
+                    title={t('friendRequests.pupAccept')}
                     >
                     <Check size={20} />
 
@@ -95,7 +98,7 @@ const FriendRequests: React.FC = () => {
                   <button
                     onClick={() => rejectFriendRequest(request.sender.username)}
                     className={css.rejectBtn}
-                    title='Reject'
+                    title={t('friendRequests.pupReject')}
                     >
                     <X size={20} />
                   </button>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import css from './BlockedList.module.css';
-import { Search, Unlock, Ban } from 'lucide-react';
+import { Search, Ban } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
 import moment from 'moment';
 import { apiUnBlockRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import FriendSkeleton from './FriendSkeleton';
+import { useTranslation } from 'react-i18next';
+import { CgUnblock } from "react-icons/cg";
 
 
 
@@ -29,6 +31,8 @@ interface BlockedUser {
 
 const BlockedList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { t } = useTranslation();
+
 
   const { data: blockedUsers = [], isLoading, error, refetch } = useGetData<BlockedUser[]>('blocked');
 
@@ -54,10 +58,8 @@ const BlockedList: React.FC = () => {
   const renderNoBlockedUsers = () => (
     <div className={css.emptyState}>
       <Ban size={80} color='#6b7280'/>
-      <h3 className={css.emptyTitle}>No Blocked Users</h3>
-      <p className={css.emptyDescription}>
-        You haven't blocked any users. Users you block will appear here.
-      </p>
+      <h3 className={css.emptyTitle}>{t('blockedList.noRequests')}</h3>
+      <p className={css.emptyDescription}>{t('blockedList.description')}</p>
     </div>
   );
 
@@ -67,7 +69,7 @@ const BlockedList: React.FC = () => {
 
   return (
     <div className={css.blockedList}>
-      <h1 className={css.title}>Blocked List</h1>
+      <h1 className={css.title}>{t('blockedList.title')}</h1>
 
       {/* Search input */}
       <div className={css.searchContainer}>
@@ -76,7 +78,7 @@ const BlockedList: React.FC = () => {
         <input
           type="text"
           className={css.searchInput}
-          placeholder="Search blocked users..."
+          placeholder={t('blockedList.placeholder')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -103,9 +105,9 @@ const BlockedList: React.FC = () => {
               <button
                 className={css.unblockButton}
                 onClick={() => unBlockRequest(user.blocked.username)}
-                title='UnBlock'
+                title={t('blockedList.pupUnblock')}
               >
-                <Unlock size={20}/>
+                <CgUnblock size={20}/>
               </button>
             </div>
           ))

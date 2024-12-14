@@ -11,6 +11,7 @@ import {
   apiRejectFriendRequest,
 } from '../../api/friendApi';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 interface Profile {
   avatar: string;
@@ -31,6 +32,8 @@ const SearchUsers: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
+
 
   const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
   const navigate = useNavigate();
@@ -154,7 +157,7 @@ const SearchUsers: React.FC = () => {
         <input
           ref={searchInputRef}
           type="text"
-          placeholder="Search users..."
+          placeholder={t('SearchUsers.placeholder')}
           value={searchTerm}
           onChange={handleSearch}
           className={css.searchInput}
@@ -202,7 +205,7 @@ const SearchUsers: React.FC = () => {
                       navigate(`/profile/${user.username}`);
                       setShowResults(false);
                     }}
-                    title='View Profile'
+                    title={t('SearchUsers.pupViewProfile')}
                   >
                     <Eye size={20}/>
                   </button>
@@ -211,7 +214,7 @@ const SearchUsers: React.FC = () => {
                     <span
                       onClick={() => handleMessageClick(user)}
                       className={css.messageButton}
-                      title='Message'
+                      title={t('SearchUsers.pupMessage')}
                     >
                       <MessageSquareText size={20}/>
                     </span>
@@ -223,7 +226,7 @@ const SearchUsers: React.FC = () => {
                           acceptFriendRequest(user.username);
                         }}
                         className={css.acceptBtn}
-                        title='Accept'
+                        title={t('SearchUsers.pupAccept')}
                       >
                         <Check size={20} />
                       </button>
@@ -233,7 +236,7 @@ const SearchUsers: React.FC = () => {
                           rejectFriendRequest(user.username);
                         }}
                         className={css.rejectBtn}
-                        title='Reject'
+                        title={t('SearchUsers.pupReject')}
                       >
                         <X size={20} />
                       </button>
@@ -245,7 +248,7 @@ const SearchUsers: React.FC = () => {
                         handleCancel(user.username);
                       }}
                       className={css.cancelBtn}
-                      title='Cancel'
+                      title={t('SearchUsers.pupCancel')}
                     >
                       <X size={20}/>
                     </button>
@@ -256,7 +259,7 @@ const SearchUsers: React.FC = () => {
                         sendFriendRequest(user.username);
                       }}
                       className={css.addFriendBtn}
-                      title='Add friend'
+                      title={t('SearchUsers.pupAddFriend')}
                     >
                       <UserPlus size={20}/>
                     </button>
@@ -265,7 +268,7 @@ const SearchUsers: React.FC = () => {
               </div>
             ))
           ) : (
-            <p className={css.noResults}>No users found</p>
+            <p className={css.noResults}>{t('SearchUsers.notFound')}</p>
           )}
         </div>
       )}
