@@ -12,7 +12,7 @@ import css from './Auth.module.css';
 
 
 const Auth = () => {
-    const [isLogin, setIslogin] = useState(true);
+    const [isLoginBox, setIsloginBox] = useState(true);
     const {isLoggedIn, isLoading} = useAuth();
 
     if (isLoading) {
@@ -24,10 +24,10 @@ const Auth = () => {
 
     return (
       <div className={css.authContainer}>
-        <AuthPongBox isLogin={isLogin} setIslogin={setIslogin}/>
-          <div className={`${css.authFormBox} ${isLogin ? css.authFormSwitch : ''}`}>
-            {isLogin ? <Login /> : <Signup setIslogin={setIslogin} /> }
+          <div className={`${css.authFormBox} ${!isLoginBox ? css.authFormSwitch : ''}`}>
+            {isLoginBox ? <Login /> : <Signup setIslogin={setIsloginBox} /> }
           </div>
+        <AuthPongBox isLogin={isLoginBox} setIslogin={setIsloginBox}/>
       </div>
     );
 }

@@ -76,8 +76,12 @@ class RequestResetPasswordView(APIView):
         try:
             user = User.objects.get(username=request.data['username'])
         except User.DoesNotExist:
-            print('apiBackend ==> login status: User not found')
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            token = PasswordReset.objects.get(user=user)
+            token.delete()
+        except PasswordReset.DoesNotExist:
+            pass
         send_reset_password_email(user)
         return Response({'message': 'A Reset password request sent to your email!'}, status=status.HTTP_200_OK)
 

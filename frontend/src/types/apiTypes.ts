@@ -195,3 +195,23 @@ export interface ResetPasswordForm {
 export interface UsernameFormData {
   username: string;
 }
+
+export interface Achievement {
+    name: string;
+    description: string;
+    image: string;
+    condition_name: string;
+    condition: {
+        [key: string]: number;
+    };
+    progress: number;
+}
+
+export interface UserAchievements {
+    achievement: Achievement;
+    progress: {
+        [Key: string]: number;
+    };
+    is_unlocked: boolean;
+    unlocked_at: string;
+}

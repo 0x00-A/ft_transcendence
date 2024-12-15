@@ -27,11 +27,27 @@
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
     padding: 20px;
+    /* border: 1px solid white; */
     overflow: auto;
     /* overflow-x: hidden; */
     /* border-radius: inherit; */
+}
+
+.previousBtn, .nextBtn {
+    border: 1px solid white;
+    font-size: 2.5rem;
+    border-radius: 50%;
+    background-color: #283245;
+    color: #F8F3E3;
+    cursor: pointer;
+}
+
+.previousBtn:hover, .nextBtn:hover {
+    background-color: #3D4A68;
+    color: white;
 }
 
 .achievCard {
@@ -80,6 +96,7 @@
     justify-content: space-evenly;
     align-items: center;
     padding: 10px;
+    font-size: 1.4rem;
 }
 
 .achievProgress {
@@ -89,10 +106,14 @@
     padding: 10px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
     border-top: 3px solid #1e2533;
     font-size: 2.2rem;
     /* padding: 20px; */
+}
+
+.achievProgress p {
+    font-size: 1.5rem;
 }
 
 /* .unklockedAchiev, .lockedAchiev {
@@ -113,3 +134,48 @@
     font-size: small;
     font-size: 1rem;
 } */
+
+/*
+    SKeleton
+*/
+.skeletonCard {
+    background-color: #2e3a50;
+    overflow: hidden;
+    position: relative;
+}
+
+.skeletonTitle,
+.skeletonDescription,
+.skeletonProgress {
+    background: linear-gradient(90deg, #2e3a50 25%, #3a4a68 50%, #2e3a50 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 5px;
+}
+
+.skeletonTitle {
+    height: 30%;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.skeletonDescription {
+    height: 50%;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.skeletonProgress {
+    height: 20%;
+    width: 100%;
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+    from {
+        background-position: 200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}

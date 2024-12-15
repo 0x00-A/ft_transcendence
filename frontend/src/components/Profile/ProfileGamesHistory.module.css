@@ -5,8 +5,8 @@
     border-radius: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    /* justify-content: center; */
 }
 
 .gameHistoryHeader {
@@ -34,6 +34,41 @@
 .gameHistIcon {
     font-size: 3rem;
     color: #F8C25C;
+}
+
+.buttonsGrp {
+    width: 300px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2a2b36;
+    padding: 5px 15px;
+    border-radius: 12px;
+}
+
+.button {
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #9699b0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.3rem;
+}
+
+.button:hover {
+  color: #ffffff;
+}
+
+.buttonActive {
+    height: 30px;
+    background-color: #5774a1;
+    color: #ffffff;
 }
 
 .dateFilterBtn {
