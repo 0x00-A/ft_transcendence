@@ -78,6 +78,7 @@ const Login = () => {
           toast.error('Something went wrong!');
         }
       }
+      reset();
     }
   }
 
