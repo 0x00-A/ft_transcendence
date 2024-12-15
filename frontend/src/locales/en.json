@@ -145,5 +145,73 @@
     "notifications": {
         "title": "Notifications",
         "clearAll": "Clear All"
+    },
+    "game": {
+        "localGame": {
+            "title": "Local Game",
+            "description": "Play with friends",
+            "onePlayer": "One Player",
+            "twoPlayer": "Two Players",
+            "OptionsScreen": {
+                "Sound": "SOUND",
+                "SetWinningScore": "Set Winning Score",
+                "SetControllerType": "Set Controller Type",
+                "ControllerOptions": {
+                    "Mouse": "Mouse",
+                    "Keyboard": "Keyboard"
+                }
+            },
+            "DifficultyScreen": {
+                "Title": "Choose Difficulty",
+                "DifficultyOptions": {
+                    "Easy": "Easy",
+                    "Normal": "Normal",
+                    "Hard": "Hard"
+                }
+            },
+            "EndGameScreen": {
+                "Win": "You Win!",
+                "Lose": "You Lose!",
+                "PlayAgain": "Play Again",
+                "GoBack": "Go Back"
+            },
+            "paused": "paused"
+        },
+        "remoteGame": {
+            "title": "Remote Game",
+            "description": "Challenge online"
+        },
+        "remoteTournament": {
+            "title": "Remote Tournament",
+            "description": "Create Online tournament"
+        },
+        "localTournament": {
+            "title": "Local Tournament",
+            "description": "Local tournament"
+        },
+        "multipleGame": {
+            "title": "Multiple Game",
+            "description": "Play with friends"
+        },
+        "joinedTournaments": {
+            "title": "Joined Tournaments",
+            "players": "Players:",
+            "status": "Status:",
+            "started": "Started:",
+            "noTournament": "You havn't joined any tournaments yet!."
+        },
+        "openTournaments": {
+            "title": "Open Tournaments",
+            "header": {
+                "id": "ID",
+                "name": "name",
+                "creator": "Creator",
+                "creationDate": "Creation Date",
+                "players": "Players",
+                "action": "Action"
+            },
+            "joinButton": "join",
+            "noTournaments": "No tournaments available at the moment."
+        }
     }
 }

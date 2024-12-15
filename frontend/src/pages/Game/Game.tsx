@@ -29,16 +29,23 @@ import { useGameInvite } from '@/contexts/GameInviteContext';
 import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
+import { useTranslation } from 'react-i18next';
 
-  const Modes = [
-    { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
-    { id: 1, title: 'Remote Game', icon: Globe, description: 'Challenge online' },
-    { id: 2, title: 'Remote Tournament', icon: Trophy, description: 'Create Online tournament' },
-    { id: 3, title: 'Local Tournament', icon: Users, description: 'Local tournament' },
-    { id: 4, title: 'Multiple Game', icon: Users, description: '4 players on same board' },
-  ];
 
-const Game = () => {
+
+// const Modes = () => {
+//   const { t } = useTranslation();
+//   return [
+//     { id: 0, title: t('game.localGame.title'), icon: Gamepad2, description: t('game.localGame.description') },
+//     { id: 1, title: t('game.remoteGame.title'), icon: Globe, description: t('game.remoteGame.description') },
+//     { id: 2, title: t('game.remoteTournament.title'), icon: Trophy, description: t('game.remoteTournament.description') },
+//     { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
+//     { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
+//     ];
+// }
+  
+  const Game = () => {
+  const { t } = useTranslation();
   const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [gameState, setGameState] = useState<'startGame' | 'inqueue' | 'startMultiGame' | null>(null);
@@ -297,6 +304,13 @@ const Game = () => {
       />
     );
 
+  const ModesList =  [
+      { id: 0, title: t('game.localGame.title'), icon: Gamepad2, description: t('game.localGame.description') },
+      { id: 1, title: t('game.remoteGame.title'), icon: Globe, description: t('game.remoteGame.description') },
+      { id: 2, title: t('game.remoteTournament.title'), icon: Trophy, description: t('game.remoteTournament.description') },
+      { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
+      { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
+    ];
   return (
     <div className={styles.container}>
       {(gameState === 'inqueue' && !(gameAccepted && gameInvite)) &&
@@ -311,7 +325,7 @@ const Game = () => {
       }
       <div className={styles.topContainer}>
         <div className={styles.left}>
-            {Modes.map((option) => (
+            {ModesList.map((option) => (
             <Card
                 key={option.id}
                 className={`${styles.item} ${styles.cardMode} ${hoveredOption === option.id ? styles.cardHoveredMode : ''}`}
@@ -340,7 +354,7 @@ const Game = () => {
         <div className={styles.right}>
          <Card className={styles.card}>
             <CardHeader>
-                <CardTitle className={styles.title}>Joined Tournaments</CardTitle>
+                <CardTitle className={styles.title}>{t('game.joinedTournaments.title')}</CardTitle>
             </CardHeader>
             <CardContent className={styles.content}>
                 {userTournaments?.map((tournament) => (
@@ -351,18 +365,18 @@ const Game = () => {
                     }}>
                         <div>
                           <h3 className={styles.tournamentName}>{tournament.name}</h3>
-                          <p className={styles.tournamentPlayerCount}>Players: {tournament.players.length}</p>
+                          <p className={styles.tournamentPlayerCount}>{t('game.joinedTournaments.players')} {tournament.players.length}</p>
                         </div>
                         <div className={styles.rightAligned}>
-                          <p className={styles.tournamentStatus}>Status: {tournament.status}</p>
-                          <p className={styles.tournamentDate}>Started: {formatDate(tournament.created_at)}</p>
+                          <p className={styles.tournamentStatus}>{t('game.joinedTournaments.status')} {tournament.status}</p>
+                          <p className={styles.tournamentDate}>{t('game.joinedTournaments.started')} {formatDate(tournament.created_at)}</p>
                         </div>
                     </div>
                 ))}
                     {!userTournamentsError && !userTournamentsIsLoading && !userTournaments?.length && (
                     <div className={styles.noTournaments}>
                         <NoTournamentIcon size={58} />
-                        <p>You havn't joined any tournaments yet!.</p>
+                        <p>{t('game.joinedTournaments.noTournament')}</p>
                     </div>
                     )}
                     {userTournamentsError && (
@@ -383,7 +397,7 @@ const Game = () => {
       <div className={styles.bottomContainer}>
          <Card className={styles.bottomCard}>
             <CardHeader>
-                <CardTitle className={styles.title}>Open Tournaments</CardTitle>
+                <CardTitle className={styles.title}>{t('game.openTournaments.title')}</CardTitle>
             </CardHeader>
             <CardContent className={styles.bottomCardContent}>
                 <TournamentList

@@ -145,6 +145,74 @@
     "notifications": {
         "title": "ⵉⴱⴻⴷⴷⵉⵍⴻⵏ",
         "clearAll": "ⵙⴼⴻⴹ ⴰⴽⴽ"
+    },
+    "game": {
+        "localGame": {
+            "title": "ⵓⵔⴰⵔ ⴰⴷⵉⴳⴰⵏ",
+            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ",
+            "onePlayer": "ⵢⵉⵡⴻⵏ ⵏ ⵓⵎⵢⵓⵔⴰⵔ",
+            "twoPlayer": "ⵙⵉⵏ ⵏ ⵢⵉⵎⵓⵔⴰⵔⴻⵏ",
+            "OptionsScreen": {
+                "Sound": "ⵜⴰⵖⴻⵛⵜ",
+                "SetWinningScore": "ⵙⴱⴻⴷⴷ ⵉⵙⵡⵉ ⵏ ⵍⴼⴰⵢⴷⴰ",
+                "SetControllerType": "ⵙⴱⴻⴷⴷ ⵚⵚⴻⵏⴼ ⵏ ⵓⵙⴻⵍⴽⵉⵎ",
+                "ControllerOptions": {
+                    "Mouse": "ⴰⵖⴻⵔⴷⴰⵢ",
+                    "Keyboard": "ⵜⴰⵙⴰⵔⵓⵜ"
+                }
+            },
+            "DifficultyScreen": {
+                "Title": "ⴼⵔⴻⵏ ⵓⴳⵓⵔⴻⵏ",
+                "DifficultyOptions": {
+                    "Easy": "ⴰⵙⵀⴻⵍ",
+                    "Normal": "ⴰⵢⴻⵏ ⵉⵍⵀⴰⵏ",
+                    "Hard": "ⵓⵎⵓⵄⴰⵕ"
+                }
+            },
+            "EndGameScreen": {
+                "Win": "ⵜⴻⵔⴱⴻⵃⴻⴹ!",
+                "Lose": "ⵜⴻⵅⵚⴻⵔⴹ!",
+                "PlayAgain": "ⵓⵔⴰⵔ ⵜⵉⴽⴽⴻⵍⵜ ⵏⵏⵉⴹⴻⵏ",
+                "GoBack": "ⵓⵖⴰⵍ"
+            },
+            "paused": "ⵢⴻⵃⴱⴻⵙ"
+        },
+        "remoteGame": {
+            "title": "ⵓⵔⴰⵔ ⵙ ⵍⴱⴻⵄⴷ",
+            "description": "ⴰⵖⴱⴻⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+        },
+        "remoteTournament": {
+            "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵙ ⵓⴱⴻⵄⴷ",
+            "description": "ⵙⵏⵓⵍⴼⵓⴷ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+        },
+        "localTournament": {
+            "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵜⴰⴷⵉⴳⴰⵏⵜ",
+            "description": "ⵜⴰⵥⵔⵉⴳⵜ ⵜⴰⴷⵉⴳⴰⵏⵜ"
+        },
+        "multipleGame": {
+            "title": "ⴰⵟⴰⵙ ⵏ ⵓⵔⴰⵔ",
+            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ"
+        },
+        "joinedTournaments": {
+            "title": "ⵢⴻⴽⵛⴻⵎ ⵖⴻⵔ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ",
+            "players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ:",
+            "status": "ⵜⴰⵍⵖⴰ:",
+            "started": "ⵢⴻⴱⴷⴰ:",
+            "noTournament": "ⵓⵔ ⵜⴻⴽⵛⴻⵎ ⴰⵔⴰ ⴷⴻⴳ ⴽⵔⴰ ⵏ ⵜⵛⵉⵔⴹⴰⵔⵜ!"
+        },
+        "openTournaments": {
+            "title": "ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⵢⴻⵍⴷⵉⵏ",
+            "header": {
+                "id": "ⵉⴷ",
+                "name": "ⵉⵙⴻⵎ",
+                "creator": "ⴰⵅⵍⴰⵇ",
+                "creationDate": "ⴰⵣⴻⵎⵣ ⵏ ⵓⵙⵏⵓⵍⴼⵓ",
+                "players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ",
+                "action": "ⵜⵉⴳⴰⵡⵜ"
+            },
+            "joinButton": "ⵔⵏⵓ ⵖⴻⵔ",
+            "noTournaments": "ⵓⵍⴰⵛ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⵢⴻⵍⵍⴰⵏ ⵉⵎⵉⵔⴰ."
+        }
     }
 
 }

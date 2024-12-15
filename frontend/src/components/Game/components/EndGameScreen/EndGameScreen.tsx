@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import GameButton from '../GameButton/GameButton';
 import css from './EndGameScreen.module.css';
 
@@ -12,13 +13,15 @@ const EndGameScreen = ({
   handleMainMenu: () => void;
   isMatchTournament?: boolean;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className={css.endGameScreen}>
       <div className={css.winMessage}>
-        {isWinner ? 'You Win!' : 'You Lose!'}
+        {t(isWinner ? 'game.localGame.EndGameScreen.Win' : 'game.localGame.EndGameScreen.Lose')}
       </div>
-      {!isMatchTournament && <GameButton onClick={handleRetry}>Play Again</GameButton>}
-      <GameButton onClick={handleMainMenu}>{'Go Back'}</GameButton>
+      {!isMatchTournament && <GameButton onClick={handleRetry}>{t('game.localGame.EndGameScreen.PlayAgain')}</GameButton>}
+      <GameButton onClick={handleMainMenu}>{t('game.localGame.EndGameScreen.GoBack')}</GameButton>
     </div>
   );
 };

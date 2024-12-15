@@ -145,6 +145,75 @@
     "notifications": {
         "title": "Notificaciones",
         "clearAll": "Limpiar todo"
+    },
+    "game": {
+        "localGame": {
+            "title": "Juego Local",
+            "description": "Juega con amigos",
+            "onePlayer": "Una jugadora",
+            "twoPlayer": "Dos jugadoras",
+            "OptionsScreen": {
+                "Sound": "SONIDO",
+                "SetWinningScore": "Establecer puntuación ganadora",
+                "SetControllerType": "Establecer el tipo de controlador",
+                "ControllerOptions": {
+                    "Mouse": "Ratón",
+                    "Keyboard": "Teclado"
+                }
+            },
+            "DifficultyScreen": {
+                "Title": "Elija la dificultad",
+                "DifficultyOptions": {
+                    "Easy": "Fácil",
+                    "Normal": "Normal",
+                    "Hard": "Dura"
+                }
+            },
+            "EndGameScreen": {
+                "Win": "Tú ganas!",
+                "Lose": "Tu pierdes!",
+                "PlayAgain": "Jugar de nuevo",
+                "GoBack": "Volver"
+            },
+            "paused": "en pausa"
+        },
+        "remoteGame": {
+            "title": "Juego Remoto",
+            "description": "Desafía en línea"
+        },
+        "remoteTournament": {
+            "title": "Torneo Remoto",
+            "description": "Crea un torneo en línea"
+        },
+        "localTournament": {
+            "title": "Torneo Local",
+            "description": "Torneo local"
+        },
+        "multipleGame": {
+            "title": "Juego Múltiple",
+            "description": "Juega con amigos"
+        },
+        "joinedTournaments": {
+            "title": "Torneos Inscritos",
+            "players": "Jugadores:",
+            "status": "Estado:",
+            "started": "Iniciado:",
+            "noTournament": "¡No te has unido a ningún torneo todavía!"
+        },
+        "openTournaments": {
+            "title": "Torneos Abiertos",
+            "header": {
+                "id": "ID",
+                "name": "Nombre",
+                "creator": "Creador",
+                "creationDate": "Fecha de Creación",
+                "players": "Jugadores",
+                "action": "Acción"
+            },
+            "joinButton": "Unirse",
+            "noTournaments": "No hay torneos disponibles en este momento."
+        }
     }
+    
     
 }
