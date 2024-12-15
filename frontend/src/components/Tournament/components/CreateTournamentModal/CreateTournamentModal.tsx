@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import css from './CreateTournamentModal.module.css';
 import { useState } from 'react';
 
@@ -11,6 +12,8 @@ const CreateTournamentModal = ({
   onSubmit: (name: string) => void;
 }) => {
   const [tournamentName, setTournamentName] = useState('');
+  const { t } = useTranslation();
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTournamentName(e.target.value);
@@ -22,7 +25,7 @@ const CreateTournamentModal = ({
       setTournamentName('');
       onClose();
     } else {
-      alert('Please enter a tournament name.');
+      alert(t('game.remoteTournament.CreateTournamentModal.AlertMessage'));
     }
   };
 
@@ -31,16 +34,16 @@ const CreateTournamentModal = ({
   return (
     <div className={css.modalOverlay}>
       <div className={css.modalContent}>
-        <label className={css.label}>Create Tournament</label>
+        <label className={css.label}>{t('game.remoteTournament.CreateTournamentModal.Label')}</label>
         <input
           type="text"
-          placeholder="Enter tournament name"
+          placeholder={t('game.remoteTournament.CreateTournamentModal.InputPlaceholder')}
           value={tournamentName}
           onChange={handleInputChange}
           maxLength={15}
         />
-        <button className={css.submitButton} onClick={handleSubmit}>Submit</button>
-        <button onClick={onClose}>Cancel</button>
+        <button className={css.submitButton} onClick={handleSubmit}>{t('game.remoteTournament.CreateTournamentModal.SubmitButton')}</button>
+        <button onClick={onClose}>{t('game.remoteTournament.CreateTournamentModal.CancelButton')}</button>
       </div>
     </div>
   );

@@ -183,11 +183,38 @@
         },
         "remoteTournament": {
             "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵙ ⵓⴱⴻⵄⴷ",
-            "description": "ⵙⵏⵓⵍⴼⵓⴷ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+            "description": "ⵙⵏⵓⵍⴼⵓⴷ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+            "CreateTournamentModal": {
+                "Label": "ⵙⵏⵓⵍⴼⵓⴷ ⵜⴰⵍⵖⵓⵖⴰ",
+                "InputPlaceholder": "ⵙⴽⴻⵛⵎ ⵉⵙⴻⵎ ⵏ ⵜⴻⵍⵖⵓⵖⴰ",
+                "SubmitButton": "ⴰⵙⴻⴱⵜⴻⵔ",
+                "CancelButton": "ⵢⴻⴽⴽⴻⵙ",
+                "AlertMessage": "ⵜⵜⵅⵉⵍⴽ ⵙⵙⴻⴽⵛⴻⵎ ⵉⵙⴻⵎ ⵏ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ."
+            }
         },
         "localTournament": {
             "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵜⴰⴷⵉⴳⴰⵏⵜ",
-            "description": "ⵜⴰⵥⵔⵉⴳⵜ ⵜⴰⴷⵉⴳⴰⵏⵜ"
+            "description": "ⵜⴰⵥⵔⵉⴳⵜ ⵜⴰⴷⵉⴳⴰⵏⵜ",
+            "TournamentForm": {
+                "Title": "ⴰⵙⴻⴽⵍⴻⵙ ⵏ ⵜⴻⵍⵖⵓⵖⴰ",
+                "InputPlaceholder": "ⵙⴽⴻⵛⵎ ⵉⵙⴻⵎ ⵏ ⵓⵎⵢⵓⵔⴰⵔ",
+                "AddPlayerButton": "ⵔⵏⵓ Amyurar",
+                "ErrorMessages": {
+                    "EmptyPlayer": "ⵉⵙⴻⵎ ⵏ ⵓⵎⵢⵓⵔⴰⵔ ⵓⵔ ⵢⴻⵣⵎⵉⵔ ⴰⵔⴰ ⴰⴷ ⵢⵉⵍⵉ ⴷ ⵉⵍⴻⵎ",
+                    "DuplicatePlayer": "ⵉⵙⴻⵎ ⵏ ⵓⵎⵢⵓⵔⴰⵔ ⵢⴻⵙⵙⴻⴼⴽ ⴰⴷ ⵢⵉⵍⵉ ⴷ ⵓⵏⵏⵉⴳ"
+                },
+                "StartTournamentButton": "ⴱⴷⵓ ⵜⴰⵍⵖⵓⵖⴰ"
+            },
+            "TournamentHeader": {
+                "Round1": "ⵜⵓⵣⵣⵢⴰ1",
+                "Finals": "ⵜⵉⵏⴻⴳⴳⵓⵔⴰ"
+            },
+            "pong": {
+                "vs": "ⵎⴳⴰⵍ",
+                "paused": "ⵢⴻⵃⴱⴻⵙ",
+                "ClickToStart": "ⴽⵏⴻⴷ ⵉⵡⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⴱⴷⵓⴹ",
+                "start": "ⴱⴷⵓ"
+            }
         },
         "multipleGame": {
             "title": "ⴰⵟⴰⵙ ⵏ ⵓⵔⴰⵔ",

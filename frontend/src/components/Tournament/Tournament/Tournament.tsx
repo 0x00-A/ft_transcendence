@@ -11,6 +11,7 @@ import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import TournamentForm from '../components/TournamentForm/TournamentForm';
 import { FaPause, FaPlay } from 'react-icons/fa';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
+import { useTranslation } from 'react-i18next';
 
 
 const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
@@ -19,9 +20,11 @@ const pW = 20;
 const pH = 80;
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation();
+
   return (
     <button onClick={onClick} className={`${css.playButton}`}>
-      Start
+      {t('game.localTournament.pong.start')}
     </button>
   );
 }
@@ -100,6 +103,7 @@ const Pong: React.FC<GameProps> = ({
   const [isGameOver, setIsGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const { t } = useTranslation();
 
   const ballRef = useRef<Ball | null>(null);
   const paddle1Ref = useRef<Paddle | null>(null);
@@ -340,7 +344,7 @@ const Pong: React.FC<GameProps> = ({
     <div className={css.gameScreenDiv}>
       <div className={css.playerNamesWrapper}>
         <div className={css.player1}>{player1}</div>
-        <div className={css.vsDiv}>VS</div>
+        <div className={css.vsDiv}>{t('game.localTournament.pong.vs')}</div>
         <div className={css.player2}>{player2}</div>
       </div>
       <div className={css.canvasDiv}>
@@ -351,7 +355,7 @@ const Pong: React.FC<GameProps> = ({
         {!gameStarted && countdown === null && (
           <div className={css.gameOverlay} onClick={startCountdown}>
             <div className={css.gameOverlayContent}>
-              <h2>Click to Start</h2>
+              <h2>{t('game.localTournament.pong.ClickToStart')}</h2>
             </div>
           </div>
         )}
@@ -367,7 +371,7 @@ const Pong: React.FC<GameProps> = ({
       {gameStarted && (
       <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay color='black' /> : <FaPause color='black' />}</button>
       )}
-      {gameStarted && paused && <div className={css.pauseDiv}>Paused</div>}
+      {gameStarted && paused && <div className={css.pauseDiv}>{t('game.localTournament.pong.paused')}</div>}
     </div>
   );
 };

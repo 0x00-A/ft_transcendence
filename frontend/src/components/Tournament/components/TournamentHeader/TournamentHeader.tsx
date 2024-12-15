@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
 import css from './TournamentHeader.module.css';
+import { useTranslation } from 'react-i18next';
 
 function Round({ children }: PropsWithChildren) {
   return (
@@ -10,11 +11,13 @@ function Round({ children }: PropsWithChildren) {
 }
 
 const TournamentHeader = () => {
+  const { t } = useTranslation();
+
   return (
     <div className={css.rounds}>
-      <Round>Round 1</Round>
+      <Round>{t('game.localTournament.TournamentHeader.Round1')}</Round>
       {/* <Round>Semifinals</Round> */}
-      <Round>Finals</Round>
+      <Round>{t('game.localTournament.TournamentHeader.Finals')}</Round>
     </div>
   );
 };

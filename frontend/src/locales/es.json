@@ -183,11 +183,38 @@
         },
         "remoteTournament": {
             "title": "Torneo Remoto",
-            "description": "Crea un torneo en línea"
+            "description": "Crea un torneo en línea",
+            "CreateTournamentModal": {
+                "Label": "Crear torneo",
+                "InputPlaceholder": "Introduzca el nombre del torneo",
+                "SubmitButton": "Entregar",
+                "CancelButton": "Cancelar",
+                "AlertMessage": "Ingrese un nombre para el torneo."
+            }
         },
         "localTournament": {
             "title": "Torneo Local",
-            "description": "Torneo local"
+            "description": "Torneo local",
+            "TournamentForm": {
+                "Title": "Registro del Torneo",
+                "InputPlaceholder": "Ingrese el nombre del jugador",
+                "AddPlayerButton": "Agregar Jugador",
+                "ErrorMessages": {
+                    "EmptyPlayer": "El nombre del jugador no puede estar vacío",
+                    "DuplicatePlayer": "El nombre del jugador debe ser único"
+                },
+                "StartTournamentButton": "Iniciar Torneo"
+            },
+            "TournamentHeader": {
+                "Round1": "ronda 1",
+                "Finals": "Finales"
+            },
+            "pong": {
+                "vs": "CONTRA",
+                "paused": "En pausa",
+                "ClickToStart": "Haga clic para comenzar",
+                "start": "Comenzar"
+            }
         },
         "multipleGame": {
             "title": "Juego Múltiple",
