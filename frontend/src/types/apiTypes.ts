@@ -119,21 +119,7 @@ export interface conversationProps {
   block_status: string,
   block_status_display: string,
 }
-/////////////////////
-// AUTH INTERFACES //
-/////////////////////
 
-export interface SignupFormData {
-  username: string;
-  email: string;
-  password: string;
-  password2: string;
-}
-
-export interface LoginFormData {
-  username: string;
-  password: string;
-}
 
 export interface EditProfileFormData {
     username: string;
@@ -143,17 +129,6 @@ export interface EditProfileFormData {
     email: string;
     password: string;
     otp: string;
-}
-
-export interface SetPasswordForm {
-  password: string;
-  password2: string;
-}
-
-export interface ChangePasswordForm {
-  current_password: string;
-  new_password: string;
-  confirm_password: string;
 }
 
 export interface GameHistory {
@@ -184,12 +159,36 @@ export interface MutualFriend {
 }
 
 ////////////////////////
-// PROFILE INTERFACES //
-///////////////////////
+// Mahdi's interfaces //
+////////////////////////
+
+export interface SignupFormData {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
+}
+
+export interface LoginFormData {
+  username: string;
+  password: string;
+}
+
 export interface ResetPasswordForm {
   token: string;
   new_password: string;
   confirm_password: string;
+}
+
+export interface ChangePasswordForm {
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+export interface SetPasswordForm {
+  password: string;
+  password2: string;
 }
 
 export interface UsernameFormData {

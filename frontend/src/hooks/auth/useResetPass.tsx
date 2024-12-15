@@ -8,7 +8,7 @@ import { API_RESET_PASSWORD_URL } from '@/api/apiConfig';
 import axios from 'axios';
 // Types
 import { ResetPasswordForm } from '@/types/apiTypes';
-import { resetPasswordSchema } from '@/types/formSchemas';
+import { ResetPasswordSchema } from '@/types/formSchemas';
 
 
 const useResetPass = () => {
@@ -22,7 +22,7 @@ const useResetPass = () => {
     setError,
     setValue,
   } = useForm<ResetPasswordForm>({
-    resolver: yupResolver(resetPasswordSchema),
+    resolver: yupResolver(ResetPasswordSchema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
@@ -32,11 +32,16 @@ const useResetPass = () => {
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
-        errs?.new_password && setError("new_password", {type: '', message: errs?.new_password}, {shouldFocus:true})
-        errs?.confirm_password && setError("confirm_password", {type: '', message: errs?.confirm_password}, {shouldFocus:true})
-        error?.response?.data?.error && setError("root", {type: '', message: error.response.data.error});
+        if (errs?.new_password) {
+          if (Array.isArray(errs.new_password)) {
+            setError("new_password", {type: 'manual', message: errs.new_password.join("-")}, {shouldFocus:true})
+          } else {
+            setError("new_password", {type: 'manual', message: errs.new_password as string}, {shouldFocus:true})
+          }
+        }
+        errs?.error && setError("root", {type: 'manual', message: errs.error as string});
       } else {
-        setError("root", {type: '', message: 'Something went wrong!'});
+        setError("root", {type: 'manual', message: 'Something went wrong!'});
       }
     }
   });

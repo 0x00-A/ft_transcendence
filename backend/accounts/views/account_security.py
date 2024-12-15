@@ -62,6 +62,7 @@ class Disable2FAView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        print('api ==> disable 2fa: Disabling 2FA')
         user = request.user
         if not user.is2fa_active:
             return Response(
@@ -70,7 +71,7 @@ class Disable2FAView(APIView):
             )
         if 'password' not in request.data:
             return Response(
-                {'error': 'Please provide your password'},
+                {'error': 'Your password is required to disable 2FA'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         if not user.check_password(request.data['password']):

@@ -38,6 +38,14 @@ class ResetPasswordSerializer(serializers.Serializer):
         if attrs['new_password'] != attrs['confirm_password']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
+        try:
+            user = PasswordReset.objects.get(token=attrs['token']).user
+        except PasswordReset.DoesNotExist:
+            raise serializers.ValidationError({'error': 'Invalid token!'})
+        try:
+            validate_password(attrs['new_password'], user)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError({'password': exc.messages})
         return attrs
 
     # def update(self, instance, validated_data):
@@ -71,6 +79,11 @@ class SetPasswordSerializer(serializers.Serializer):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
+        try:
+            validate_password(attrs['password'], user)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError({'password': exc.messages})
+
         return attrs
 
     def update(self, instance, validated_data):

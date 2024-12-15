@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from uuid import UUID
 
 from accounts.models import User, EmailVerification
@@ -80,8 +82,6 @@ class UpdatePasswordView(APIView):
 
     def put(self, request):
         user = request.user
-        print('--->>REQUEST DATA ==>: ', request.data, '<<---')
-
         if 'current_password' not in request.data or 'new_password' not in request.data or 'confirm_password' not in request.data:
             return Response(
                 {'error': 'Please provide both current and new passwords'},
@@ -97,10 +97,13 @@ class UpdatePasswordView(APIView):
                 {'error': 'Passwords do not match'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        user.set_password(request.data['new_password'])
-        user.save()
-        print('api ==> change password: Password changed successfully')
-        return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
+        try:
+            validate_password(request.data['new_password'], user)
+            user.set_password(request.data['new_password'])
+            user.save()
+            return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
+        except ValidationError as exc:
+            return Response({'password': exc.messages}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SetPasswordView(APIView):
@@ -114,4 +117,4 @@ class SetPasswordView(APIView):
         serializer = SetPasswordSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.update(request.user, serializer.validated_data)
-        return Response({'message': 'Password updated'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Password Setted successfuly'}, status=status.HTTP_200_OK)

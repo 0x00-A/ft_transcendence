@@ -10,6 +10,7 @@ import css from './Oauth2Callback.module.css';
 import { FaRegUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { UsernameFormData } from '../../types/apiTypes';
+import { LOGO } from '@/config/constants';
 
 
 
@@ -17,7 +18,6 @@ const Oauth2Callback = () => {
 
     const navigate = useNavigate()
     const [isUsernameForm, setUsernameForm] = useState(false);
-    const [formStatus, setFormStatus] = useState<string>('')
     const {setIsLoggedIn} = useAuth();
 
     const {register, handleSubmit, errors, mutation, reset} = useOauth2Username()
@@ -26,21 +26,24 @@ const Oauth2Callback = () => {
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status')
         if (status && status === 'success') {
-          toast.success('Login successful, welcome!');
+          const message = params.get('message')
+          if (message) {
+            toast.success(message);
+          } else {
+            toast.success('Login successful, welcome!');
+          }
           setIsLoggedIn(true);
           navigate('/');
-          // apiClient.get('/oauth2/verify_login')
-          // .then(response => {
-          //   if (response.status === 200) {
-          //     setIsLoggedIn(true);
-          //     navigate('/');
-          //   }
-          // })
-          // .catch(() => navigate('/auth'));
         }
         else if (status === 'set_username') {
-          const status = params.get('message') as string;
-          setFormStatus(status)
+          const message = params.get('message')
+          if (message) {
+            toast.success(message);
+          } else {
+            toast.success('Please set a username to continue');
+          }
+          // const status = params.get('message') as string;
+          // setFormStatus(status)
           setUsernameForm(true)
         }
         else {
@@ -57,7 +60,7 @@ const Oauth2Callback = () => {
     useEffect(() => {
      if (mutation.isSuccess) {
         reset();
-        toast.success('Username set successfully, welcome!');
+        toast.success(mutation.data?.data?.message);
         setIsLoggedIn(true);
         navigate('/');
      }
@@ -76,8 +79,9 @@ const Oauth2Callback = () => {
     <div className={css.oauth2Container}>
         { isUsernameForm &&
           <form noValidate={true} className={css.usernameForm} onSubmit={ handleSubmit(handleClick) }>
-            <div className={css.usernameFormHeader}>
-              <h1>{formStatus}</h1>
+            <div className={css.FormHeader}>
+              <img src={LOGO} alt="" className={css.logo} />
+              <h1>Your provider username is already exist, please choose new one</h1>
             </div>
             <p>Select new username and continue</p>
             <div className={css.inputContainer}>

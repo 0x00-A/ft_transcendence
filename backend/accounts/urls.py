@@ -37,7 +37,7 @@ urlpatterns = [
     path('security/update-password/', views.UpdatePasswordView.as_view(), name='update_password'),
     path('security/enable-2fa-request/', views.Enable2faRequest.as_view(), name='enable_2fa_request'),
     path('security/enable-2fa/', views.Enable2faView.as_view(), name='enable_2fa'),
-    path('security/disable_2fa/', views.Disable2FAView.as_view(), name='disable_2fa'),
+    path('security/disable-2fa/', views.Disable2FAView.as_view(), name='disable_2fa'),
 
     path('users/', views.AllUsersView.as_view(), name='all_users'),
     path('users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),

@@ -8,39 +8,7 @@ import apiClient from '@/api/apiClient';
 import { API_EDIT_PROFILE_URL } from '@/api/apiConfig';
 import axios from 'axios';
 import { EditProfileFormData } from '@/types/apiTypes';
-
-const schema = yup.object().shape({
-  username: yup
-    .string()
-    .max(30, 'Username must not exceed 15 characters!'),
-  first_name: yup
-    .string()
-    .max(30, 'First name must not exceed 15 characters!'),
-  last_name: yup
-    .string()
-    .max(30, 'Last name must not exceed 15 characters!'),
-  email: yup
-    .string()
-    .email('Invalid email format!'),
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('password is required!'),
-  // avatar: yup
-  //   .mixed()
-  //   .test('fileSize', 'The fil ise too large!', (value) => {
-  //     if (!value) return true;
-  //     return value[0].size <= 2000000;
-  //   })
-  //   .test('fileType', 'The file is not supported!', (value) => {
-  //     if (!value) return true;
-  //     return (
-  //       value[0].type === 'image/png' ||
-  //       value[0].type === 'image/jpg' ||
-  //       value[0].type === 'image/jpeg'
-  //     );
-  //   }),
-});
+import { EditInfosProfileSchema } from '@/types/formSchemas';
 
 
 const useEditInfosProfile = () => {
@@ -53,7 +21,7 @@ const useEditInfosProfile = () => {
     setError,
     setValue,
   } = useForm<EditProfileFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(EditInfosProfileSchema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
