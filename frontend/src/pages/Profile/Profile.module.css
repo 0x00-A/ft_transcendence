@@ -42,9 +42,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 2rem;
     background-color: #1E2533;
     border-radius: 25px;
-    width: 400px;
+    width: 450px;
     height: 600px;
     display: flex;
     flex-direction: column;
@@ -60,12 +61,14 @@
 }
 
 .formHeader h1 {
-    font-size: 2.5rem;
-    color: #ffffff;
+    font-size: 3rem;
+    color: #F8F3E3;
 }
 
 .formHeader p {
     text-align: center;
+    font-size: 1.5rem;
+    color: #D1D3D4;
 }
 
 .exitBtn {
@@ -169,6 +172,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
     padding: 20px;
 }
@@ -221,7 +225,7 @@
 .ConfirmButtons {
     width: 80%;
     display: flex;
-    justify-content: end;
+    justify-content: center;
     gap: 4rem;
 }
 

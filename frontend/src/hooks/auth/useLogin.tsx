@@ -8,7 +8,7 @@ import { API_LOGIN_URL } from '@/api/apiConfig';
 import axios from 'axios';
 // Types
 import { LoginFormData } from '@/types/apiTypes';
-import { loginSchema } from '@/types/formSchemas';
+import { LoginSchema } from '@/types/formSchemas';
 
 
 // const loginUser = async (user: LoginData) => {
@@ -22,7 +22,7 @@ import { loginSchema } from '@/types/formSchemas';
 // };
 
 const useLogin = () => {
-  
+
   const {
     register,
     handleSubmit,
@@ -31,7 +31,7 @@ const useLogin = () => {
     reset,
     watch
   } = useForm<LoginFormData>({
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(LoginSchema),
     reValidateMode: 'onChange',
     mode: 'onChange'
   });
@@ -41,11 +41,11 @@ const useLogin = () => {
     onError(error) {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
-        errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
-        errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-        errs?.error && setError("root", {type: '', message: errs?.error});
+        errs?.username && setError("username", {type: 'manual', message: errs.username}, {shouldFocus:true})
+        errs?.password && setError("password", {type: 'manual', message: errs.password}, {shouldFocus:true})
+        errs?.error && setError("root", {type: 'manual', message: errs?.error});
       } else {
-        setError("root", {type: '', message: 'Something went wrong!'});
+        setError("root", {type: 'manual', message: 'Something went wrong!'});
       }
     },
   });

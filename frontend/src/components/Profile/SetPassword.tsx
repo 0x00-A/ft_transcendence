@@ -17,7 +17,7 @@ import { useUser } from '@/contexts/UserContext';
 
 const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-    const { register, handleSubmit, errors, mutation } = useSetPassword();
+    const { register, handleSubmit, errors, mutation, reset } = useSetPassword();
     const { refetch } = useUser();
     const [showPassword, setShowPassword] = useState({
       new_pass: false,
@@ -40,15 +40,22 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
     useEffect(() => {
     if (mutation.isSuccess) {
         refetch();
-        toast.success(mutation?.data?.data?.message);
+        if (mutation?.data?.data?.message) {
+          toast.success(mutation?.data?.data?.message);
+        } else {
+          toast.success('Password set successfully');
+        }
         setEditProfile(false);
       }
     }, [mutation.isSuccess]);
 
     useEffect(() => {
       if (mutation.isError) {
-        toast.error(mutation.error?.message);
-        toast.error(errors.root?.message);
+        if (errors?.root) {
+          toast.error(errors.root?.message);
+        } else {
+          toast.error('Something went wrong!');
+        }
       }
     }, [mutation.isError]);
 
@@ -58,10 +65,10 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
             <button className={css.exitBtn} onClick={() => setEditProfile(false)}>
               <IoMdCloseCircleOutline />
             </button>
-            <form action="submit" className={css.setPassForm} onSubmit={handleSubmit(handleSetPassword)}>
+            <form action="submit" onSubmit={handleSubmit(handleSetPassword)}>
               <div className={css.formHeader}>
-                <h1>Set a password</h1>
-                <p>Your account has no password setted because you are oauth2 user, please set a password so you can update your informations</p>
+                <h1>Set Password</h1>
+                <p>Your account has no password, Please set a password so you can login and edit your profile.</p>
               </div>
               <div className={css.inputFields}>
                 <div className={css.containerFiled}>
@@ -83,10 +90,10 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
                 { errors.password2 && <span className={css.fieldError}>{errors.password2.message}</span> }
                 </div>
                 <div className={css.ConfirmButtons}>
-                  <button type='reset' className={css.closeBtn}>Reset</button>
+                  <button type='reset' className={css.closeBtn} onClick={() => reset()}>Reset</button>
                   <button type='submit' className={css.confirmBtn}>Save</button>
                 </div>
-                </div>
+              </div>
             </form>
           </div>
         </div>
