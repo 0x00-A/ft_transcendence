@@ -1,23 +1,12 @@
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import apiClient from '@/api/apiClient';
 import { API_SET_PASSWORD } from '@/api/apiConfig';
 import axios from 'axios';
+// Types
 import { SetPasswordForm } from '@/types/apiTypes';
-
-
-const schema = yup.object().shape({
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('password is required!'),
-  password2: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+import { SetPasswordSchema } from '@/types/formSchemas';
 
 const useSetPassword = () => {
   const {
@@ -28,7 +17,7 @@ const useSetPassword = () => {
     setError,
     clearErrors,
   } = useForm<SetPasswordForm>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(SetPasswordSchema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
@@ -37,8 +26,14 @@ const useSetPassword = () => {
     onError: (error) => {
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
-          errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-          errs?.error && setError("root", {type: '', message: errs?.error});
+          if (errs?.password) {
+            if (Array.isArray(errs.password)) {
+              setError("password", {type: 'manual', message: errs.password.join("-")}, {shouldFocus:true})
+            } else {
+              setError("password", {type: 'manual', message: errs.password as string}, {shouldFocus:true})
+            }
+          }
+          errs?.error && setError("root", {type: 'manual', message: errs.error});
       } else {
         setError("root", {type: '', message: 'Something went wrong!'});
       }

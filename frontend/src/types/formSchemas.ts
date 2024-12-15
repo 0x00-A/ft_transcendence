@@ -6,7 +6,7 @@ export const SignupSchema = yup.object().shape({
     .string()
     .required('username is required!')
     .min(4, 'username must be at least 4 characters!')
-    .max(20, 'username must not exceed 20 characters!'),
+    .max(30, 'username must not exceed 30 characters!'),
   email: yup
     .string()
     .email('Invalid email format!')
@@ -22,7 +22,24 @@ export const SignupSchema = yup.object().shape({
     .required('password confirmation is required!'),
 });
 
-export const loginSchema = yup.object().shape({
+export const ChangePasswordSchema = yup.object().shape({
+  current_password: yup
+    .string()
+    .min(8, 'password must be at least 8 characters!')
+    .max(64, 'password must not exceed 64 characters!')
+    .required('current password is required!'),
+  new_password: yup
+    .string()
+    .min(8, 'password must be at least 8 characters!')
+    .max(64, 'password must not exceed 64 characters!')
+    .required('password is required!'),
+  confirm_password: yup
+    .string()
+    .oneOf([yup.ref('new_password')], 'Passwords must match')
+    .required('password confirmation is required!'),
+});
+
+export const LoginSchema = yup.object().shape({
   username: yup
     .string()
     .required('username is required!')
@@ -32,14 +49,14 @@ export const loginSchema = yup.object().shape({
     .string()
     .required('password is required!')
     .min(8, 'invalid password!')
-    .max(50, 'invalid password!'),
+    .max(64, 'invalid password!'),
 });
 
-export const resetPasswordSchema = yup.object().shape({
+export const ResetPasswordSchema = yup.object().shape({
   new_password: yup
     .string()
     .min(8, 'password must be at least 8 characters!')
-    .max(50, 'password must not exceed 20 characters!')
+    .max(64, 'password must not exceed 64 characters!')
     .required('new password is required!'),
   confirm_password: yup
     .string()
@@ -47,10 +64,68 @@ export const resetPasswordSchema = yup.object().shape({
     .required('password confirmation is required!'),
 });
 
-export const setUsernameSchema = yup.object().shape({
+export const SetPasswordSchema = yup.object().shape({
+  password: yup
+    .string()
+    .min(8, 'password must be at least 8 characters!')
+    .max(64, 'password must not exceed 64 characters!')
+    .required('password is required!'),
+  password2: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Passwords must match')
+    .required('password confirmation is required!'),
+});
+
+
+export const SetUsernameSchema = yup.object().shape({
   username: yup
     .string()
     .required('username is required!')
     .min(4, 'username must be at least 4 characters!')
-    .max(20, 'username must not exceed 20 characters!'),
+    .max(30, 'username must not exceed 30 characters!'),
+});
+
+export const otpSchema = yup.object().shape({
+  otp: yup
+    .string()
+    .required('OTP is required!')
+    .length(6, 'OTP must be 6 digits!')
+    .matches(/^[0-9]+$/, 'OTP must be a number!'),
+});
+
+export const EditInfosProfileSchema = yup.object().shape({
+  username: yup
+    .string()
+    .min(4, 'Username must be at least 4 characters!')
+    .max(30, 'Username must not exceed 15 characters!'),
+  first_name: yup
+    .string()
+    .min(3, 'First name must be at least 3 characters!')
+    .max(30, 'First name must not exceed 15 characters!'),
+  last_name: yup
+    .string()
+    .min(3, 'Last name must be at least 3 characters!')
+    .max(30, 'Last name must not exceed 15 characters!'),
+  email: yup
+    .string()
+    .email('Invalid email format!'),
+  password: yup
+    .string()
+    .min(8, 'password must be at least 8 characters!')
+    .max(64, 'password must not exceed 64 characters!')
+    .required('password is required!'),
+  avatar: yup
+    .mixed()
+    .test('fileSize', 'The file is too large!', (value) => {
+      if (!value) return true;
+      return value[0].size <= 2000000;
+    })
+    .test('fileType', 'The file is not supported!', (value) => {
+      if (!value) return true;
+      return (
+        value[0].type === 'image/png' ||
+        value[0].type === 'image/jpg' ||
+        value[0].type === 'image/jpeg'
+      );
+    }),
 });

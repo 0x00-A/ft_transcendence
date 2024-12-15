@@ -52,7 +52,7 @@ const useSignup = () => {
           }
           errs?.error && setError("root", {type: 'manual', message: errs.error as string});
         } else {
-          setError("root", {type: '', message: 'Something went wrong!'});
+          setError("root", {type: 'manual', message: 'Something went wrong!'});
         }
     }
   });

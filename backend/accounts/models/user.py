@@ -9,7 +9,7 @@ class User(AbstractUser):
     friends = models.ManyToManyField('self', blank=True, symmetrical=True)
     is2fa_active = models.BooleanField(default=False)
     otp_secret = models.CharField(max_length=32, blank=True, null=True)
-    otp_expires = models.DateTimeField(blank=True, null=True)
+    # otp_expires = models.DateTimeField(blank=True, null=True)
     last_seen = models.CharField(max_length=50, default="Never", blank=True)
     active_conversation = models.IntegerField(default=-1)
     open_chat = models.BooleanField(default=False)

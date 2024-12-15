@@ -29,13 +29,11 @@ def verify_email(request):
         verify = EmailVerification.objects.get(token=request.data.get('token'))
     except EmailVerification.DoesNotExist:
         return Response({'error': 'Invalid token, your account is not verified!'}, status=status.HTTP_400_BAD_REQUEST)
-        return redirect(f"{SERVER_URL}/auth?status=failed&error={quote('Invalid token, your account is not verified!')}")
     user = verify.user
     user.is_active = True
     user.save()
     verify.delete()
     return Response({'message': 'Your account has been verified, you can login now!'}, status=status.HTTP_200_OK)
-    return redirect(f"{SERVER_URL}/auth?status=success&message={quote('Your account has been verified, you can login now!')}")
 
 
 class SignupView(CreateAPIView):
