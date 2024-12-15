@@ -1,34 +1,15 @@
 // React
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // API
 import apiClient from '@/api/apiClient';
 import { API_UPDATE_PASSWORD_URL } from '@/api/apiConfig';
 import axios from 'axios';
+// Types
+import { ChangePasswordForm } from '@/types/apiTypes';
+import { ChangePasswordSchema } from '@/types/formSchemas';
 
-
-interface ChangePasswordForm {
-  current_password: string;
-  new_password: string;
-  confirm_password: string;
-}
-
-const schema = yup.object().shape({
-  current_password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('current password is required!'),
-  new_password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .required('new password is required!'),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('new_password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
 
 // const changePassApi = async (data: ChangePasswordForm) => {
 //   // try {
@@ -40,7 +21,6 @@ const schema = yup.object().shape({
 // }
 
 const useChangePass = () => {
-  // return useMutation<SignupFormData, Error, SignupFormData>(signupApi);
   const {
     register,
     handleSubmit,
@@ -50,7 +30,7 @@ const useChangePass = () => {
     setError,
     setValue,
   } = useForm<ChangePasswordForm>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(ChangePasswordSchema),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
@@ -59,10 +39,15 @@ const useChangePass = () => {
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
-        errs?.current_password && setError("current_password", {type: '', message: errs?.current_password}, {shouldFocus:true})
-        errs?.new_password && setError("new_password", {type: '', message: errs?.new_password}, {shouldFocus:true})
-        errs?.confirm_password && setError("confirm_password", {type: '', message: errs?.confirm_password}, {shouldFocus:true})
-        error?.response?.data?.error && setError("root", {type: '', message: error.response.data.error});
+        errs?.current_password && setError("current_password", {type: 'manual', message: errs.current_password}, {shouldFocus:true})
+        if (errs?.new_password) {
+          if (Array.isArray(errs.password)) {
+            setError("new_password", {type: 'manual', message: errs.new_password.join("-")}, {shouldFocus:true})
+          } else {
+            setError("new_password", {type: 'manual', message: errs.new_password as string}, {shouldFocus:true})
+          }
+        }
+        errs?.error && setError("root", {type: 'manual', message: errs.error as string});
       } else {
         setError("root", {type: '', message: 'Something went wrong!'});
       }

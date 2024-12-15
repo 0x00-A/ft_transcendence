@@ -8,7 +8,7 @@ import apiClient from '@/api/apiClient';
 import { API_OAUTH2_SETUSERNAME_URL } from '@/api/apiConfig';
 import axios from 'axios';
 // Types
-import { setUsernameSchema } from '@/types/formSchemas';
+import { SetUsernameSchema } from '@/types/formSchemas';
 import { UsernameFormData } from '../../types/apiTypes';
 
 
@@ -31,7 +31,7 @@ const useOauth2Username = () => {
     reset,
     setError,
   } = useForm<UsernameFormData>({
-    resolver: yupResolver(setUsernameSchema),
+    resolver: yupResolver(SetUsernameSchema),
     reValidateMode: 'onChange',
     mode: 'onChange',
   });
@@ -40,8 +40,8 @@ const useOauth2Username = () => {
     onError: (error) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
-        errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true});
-        errs?.error && setError("root", {type: '', message: errs.error});
+        errs?.username && setError("username", {type: 'manual', message: errs.username}, {shouldFocus:true});
+        errs?.error && setError("root", {type: 'manual', message: errs.error});
       } else {
         setError("root", {type: '', message: 'Something went wrong!'});
       }

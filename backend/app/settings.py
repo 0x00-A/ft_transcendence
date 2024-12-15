@@ -286,7 +286,7 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'accounts.User'
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.oauth2AuthBackend.Oauth2AuthBackend',
+    # 'accounts.oauth2AuthBackend.Oauth2AuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
