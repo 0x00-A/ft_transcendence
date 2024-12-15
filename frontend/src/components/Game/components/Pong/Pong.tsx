@@ -8,6 +8,7 @@ import {
 import css from './Pong.module.css';
 import { Controller, GameScreens } from '../../../../types/types';
 import { FaPause, FaPlay } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 
 const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
@@ -45,6 +46,8 @@ const Pong: React.FC<GameProps> = ({
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
   const [paused, setPaused] = useState(false);
+  const { t } = useTranslation();
+
 
   const ballRef = useRef<Ball | null>(null);
   const paddle1Ref = useRef<Paddle | null>(null);
@@ -369,7 +372,7 @@ const Pong: React.FC<GameProps> = ({
         <div className={css.player2Score}>{score2}</div>
       </div>
       <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
-      {paused && <div className={css.pauseDiv}>Paused</div>}
+      {paused && <div className={css.pauseDiv}>{t('game.localGame.paused')}</div>}
       <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay color='black' /> : <FaPause  color='black' />}</button>
     </div>
   );
