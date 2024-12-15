@@ -17,13 +17,14 @@ const Topbar = () => {
       </div>
       <div className={css.topbarInfo}>
         <NotificationsDropdown />
-        <div className={css.userAccount}>
+        <div 
+          className={css.userAccount}
+          onClick={() => navigate('/profile')}
+        >
           <p
-            onClick={() => navigate('/profile')}
             className={css.userName}>{user?.username}
           </p>
           <img
-            onClick={() => navigate('/profile')}
             className={css.userIcon}
             src={user?.profile.avatar} alt=""
           />

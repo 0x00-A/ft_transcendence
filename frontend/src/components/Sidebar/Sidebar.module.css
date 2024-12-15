@@ -11,7 +11,7 @@
   min-width: 300px; */
   background-color: var(--sidebar-surface-primary);
   /* transition-duration: 300ms; */
-  padding-top: 1rem;
+  /* padding-top: 1rem; */
   /* overflow: auto; */
 
   /* min-width: 200px;
@@ -19,24 +19,27 @@
   /* transition: width 0.3s ease; */
 }
 
+.logoBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+}
+
 .menuBox {
   display: flex;
   flex-direction: column;
   /* justify-content: space-between; */
   /* min-height: 100vh; */
-  height: calc(100vh - 55px);
+  /* height: calc(100vh - 55px); */
+  height: 90%;
   /* height: auto; */
 }
 
-.logoBox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .logo {
-  height: 45px;
-  scale: 1.4;
+  height: 50px;
+  scale: 1.6;
 }
 
 .controller {
@@ -127,7 +130,7 @@
 
   .logo {
     height: 26px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     /* transition-duration: 0; */
   }
 }

@@ -2,7 +2,8 @@ import Logo from '../Logo/Logo';
 import css from './Sidebar.module.css';
 import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
 import { useEffect, useState } from 'react';
-import { IoLogOut } from 'react-icons/io5';
+// import { IoLogOut } from 'react-icons/io5';
+import { TbLogout } from "react-icons/tb";
 import Flag from 'react-world-flags';
 import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
@@ -122,7 +123,7 @@ export default function Sidebar() {
 
           <ThemeToggle className={css.darkMode}></ThemeToggle>
           <div className={css.logout} onClick={handleLogoutClick}>
-            <IoLogOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
+            <TbLogout size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
             <p>{t('sidebar.logout')}</p>
           </div>
         </div>
