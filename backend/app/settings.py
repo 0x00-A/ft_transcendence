@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import socket
 from pathlib import Path
 import os
 from datetime import timedelta
@@ -45,7 +46,8 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 # DEBUG = True
 
 if DEBUG:
-    SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
+    SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')
+                           }:{os.environ.get('PORT')}"
 else:
     SERVER_URL = os.environ.get('SERVER_URL')
 
@@ -66,7 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'core',
     'relationships',
     'rest_framework',
@@ -87,7 +89,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -103,7 +105,6 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 ROOT_URLCONF = 'app.urls'
 
-import socket
 hostname = socket.gethostname()
 
 
@@ -116,9 +117,9 @@ INTERNAL_IPS = [
     socket.gethostbyname(hostname),
 ]
 
-DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
-}
+# DEBUG_TOOLBAR_CONFIG = {
+#     "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
+# }
 
 TEMPLATES = [
     {
@@ -325,15 +326,18 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:3000",
+#     'http://0.0.0.0:3000',
 # ]
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
-                        'https://wwww.ft-pong.me',
-                        'https://127.0.0.1',
-                        'https://localhost',
-                        # 'wss://yourdomain.com'
-                        ]
+# CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
+#                         'https://wwww.ft-pong.me',
+#                         'https://127.0.0.1',
+#                         'https://localhost',
+#                         'http://localhost:3000'
+#                         'http://0.0.0.0:3000',
+#                         # 'wss://yourdomain.com'
+#                         ]
 
 LOG_DIR = '/app/backend/logs'
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -359,7 +363,7 @@ LOGGING = {
         #     'formatter': 'verbose',
         # },
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(LOG_DIR, 'app.log'),
             'maxBytes': 1024 * 1024 * 1,  # 10 MB

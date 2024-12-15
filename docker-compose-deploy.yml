@@ -92,8 +92,8 @@ services:
       - react_build:/usr/share/nginx/html
       - nginx-logs:/var/log/nginx/
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000:80"
+      - "4443:443"
     networks:
       - default_network-deploy
     depends_on:
@@ -249,7 +249,6 @@ volumes:
   ls-data:
   kb-data:
   certs:
-
 
 networks:
   default_network-deploy:

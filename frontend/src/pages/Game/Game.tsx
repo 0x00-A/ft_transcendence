@@ -1,12 +1,6 @@
 import styles from './Game.module.css';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
-
 
 import { useEffect, useRef, useState } from 'react';
 // import GameMode from './components/GameMode/GameMode';
@@ -14,7 +8,10 @@ import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import TournamentList from '../../components/Tournament/components/TournamentList/TournamentList';
 import { useGetData } from '../../api/apiHooks';
-import { TournamentState, Tournament as TournmentType } from '../../types/apiTypes';
+import {
+  TournamentState,
+  Tournament as TournmentType,
+} from '../../types/apiTypes';
 import RemoteTournament from '../../components/Tournament/RemoteTournament/RemoteTournament';
 import CreateTournamentModal from '../../components/Tournament/components/CreateTournamentModal/CreateTournamentModal';
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,18 +27,40 @@ import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 
-  const Modes = [
-    { id: 0, title: 'Local Game', icon: Gamepad2, description: 'Play with friends' },
-    { id: 1, title: 'Remote Game', icon: Globe, description: 'Challenge online' },
-    { id: 2, title: 'Remote Tournament', icon: Trophy, description: 'Create Online tournament' },
-    { id: 3, title: 'Local Tournament', icon: Users, description: 'Local tournament' },
-    { id: 4, title: 'Multiple Game', icon: Users, description: '4 players on same board' },
-  ];
+const Modes = [
+  {
+    id: 0,
+    title: 'Local Game',
+    icon: Gamepad2,
+    description: 'Play with friends',
+  },
+  { id: 1, title: 'Remote Game', icon: Globe, description: 'Challenge online' },
+  {
+    id: 2,
+    title: 'Remote Tournament',
+    icon: Trophy,
+    description: 'Create Online tournament',
+  },
+  {
+    id: 3,
+    title: 'Local Tournament',
+    icon: Users,
+    description: 'Local tournament',
+  },
+  {
+    id: 4,
+    title: 'Multiple Game',
+    icon: Users,
+    description: '4 players on same board',
+  },
+];
 
 const Game = () => {
   const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
-  const [gameState, setGameState] = useState<'startGame' | 'inqueue' | 'startMultiGame' | null>(null);
+  const [gameState, setGameState] = useState<
+    'startGame' | 'inqueue' | 'startMultiGame' | null
+  >(null);
   const [gameAdrress, setGameAdrress] = useState<string | null>(null);
   const [player1_id, setPlayer1_id] = useState<number | null>(null);
   const [player2_id, setPlayer2_id] = useState<number | null>(null);
@@ -50,7 +69,9 @@ const Game = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const tournamentIdRef = useRef<number | null>(null);
   const [matchStarted, setMatchStarted] = useState(false);
-  const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(null);
+  const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(
+    null
+  );
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
   // const isUnmounting = useRef(false);
@@ -63,31 +84,30 @@ const Game = () => {
 
   const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
 
-
-
-  const {user} = useUser();
+  const { user } = useUser();
 
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
 
   const handleTournamentSubmit = (name: string) => {
-      sendMessage({
-            event: 'request_tournament',
-            tournament_name: name,
-      })
+    sendMessage({
+      event: 'request_tournament',
+      tournament_name: name,
+    });
   };
 
   const refetchData = () => {
-    refetchUserTournaments()
-    refetchTournaments()
-  }
+    refetchUserTournaments();
+    refetchTournaments();
+  };
 
-
-  const { data: userTournaments,
-          isLoading: userTournamentsIsLoading,
-          error: userTournamentsError,
-          refetch: refetchUserTournaments } = useGetData<TournmentType[]>('matchmaker/tournaments/user-tournaments');
+  const {
+    data: userTournaments,
+    isLoading: userTournamentsIsLoading,
+    error: userTournamentsError,
+    refetch: refetchUserTournaments,
+  } = useGetData<TournmentType[]>('matchmaker/tournaments/user-tournaments');
 
   const {
     data: tournaments,
@@ -124,7 +144,7 @@ const Game = () => {
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
-          if (gameState === 'startGame') return
+          if (gameState === 'startGame') return;
           setGameState('inqueue');
         }
         if (data.event === 'game_address') {
@@ -141,10 +161,10 @@ const Game = () => {
           setTournamentStat(data.tournament_stat);
         }
         if (data.event === 'opponent_ready') {
-            setOpponentReady(true);
+          setOpponentReady(true);
         }
         if (data.event === 'opponent_unready') {
-            setOpponentReady(false);
+          setOpponentReady(false);
         }
       };
       socket.onclose = () => {
@@ -193,15 +213,15 @@ const Game = () => {
   const requestRemoteGame = () => {
     // console.log('request remote game');
     sendMessage({
-        event: 'request_remote_game',
-    })
+      event: 'request_remote_game',
+    });
   };
 
   const requestMultipleGame = () => {
     // console.log('request multi game');
     sendMessage({
-        event: 'request_multiple_game',
-    })
+      event: 'request_multiple_game',
+    });
   };
 
   const requestTournament = () => {
@@ -211,16 +231,16 @@ const Game = () => {
 
   const handleJoin = (tournamentId: number) => {
     sendMessage({
-        event: 'join_tournament',
-        tournament_id: tournamentId,
-    })
+      event: 'join_tournament',
+      tournament_id: tournamentId,
+    });
   };
 
   const handleReturn = () => {
     setGameState(null);
     setSelectedMode(null);
     setShowTournamentView(false);
-  }
+  };
 
   if (selectedMode === 0) {
     return <LocalGame onReturn={handleReturn} />;
@@ -245,10 +265,12 @@ const Game = () => {
   }
 
   if (gameAccepted && gameInvite) {
-      return <RemoteGame key={gameInvite}
+    return (
+      <RemoteGame
+        key={gameInvite}
         onReturn={() => {
           setGameAccepted(false);
-          handleReturn()
+          handleReturn();
         }}
         requestRemoteGame={() => {
           setGameAccepted(false);
@@ -257,26 +279,31 @@ const Game = () => {
         game_address={gameInvite}
         p1_id={player1_id!}
         p2_id={player2_id!}
-        />;
+      />
+    );
   }
 
   if (gameState === 'startMultiGame' && gameAdrress) {
-      return <MultipleGame
+    return (
+      <MultipleGame
         requestMultipleGame={requestMultipleGame}
         game_address={gameAdrress}
         onReturn={handleReturn}
-        />
+      />
+    );
   }
 
   if (gameState === 'startGame' && gameAdrress) {
-    return <RemoteGame
+    return (
+      <RemoteGame
         key={gameAdrress}
         onReturn={handleReturn}
         requestRemoteGame={requestRemoteGame}
         game_address={gameAdrress}
         p1_id={player1_id!}
         p2_id={player2_id!}
-        />;
+      />
+    );
   }
 
   if (showTournamentView)
@@ -299,101 +326,116 @@ const Game = () => {
 
   return (
     <div className={styles.container}>
-      {(gameState === 'inqueue' && !(gameAccepted && gameInvite)) &&
-          <div className={styles.modalOverlay}>
-              <MatchmakingScreen onClick={() => {
-                sendMessage({
-                  event: 'remove_from_queue',
-                });
-                setGameState(null);
-              }} />
-          </div>
-      }
+      {gameState === 'inqueue' && !(gameAccepted && gameInvite) && (
+        <div className={styles.modalOverlay}>
+          <MatchmakingScreen
+            onClick={() => {
+              sendMessage({
+                event: 'remove_from_queue',
+              });
+              setGameState(null);
+            }}
+          />
+        </div>
+      )}
       <div className={styles.topContainer}>
         <div className={styles.left}>
-            {Modes.map((option) => (
+          {Modes.map((option) => (
             <Card
-                key={option.id}
-                className={`${styles.item} ${styles.cardMode} ${hoveredOption === option.id ? styles.cardHoveredMode : ''}`}
-                onMouseEnter={() => setHoveredOption(option.id)}
-                onMouseLeave={() => setHoveredOption(null)}
-                onClick={() => setSelectedMode(option.id)}
-
+              key={option.id}
+              className={`${styles.item} ${styles.cardMode} ${hoveredOption === option.id ? styles.cardHoveredMode : ''}`}
+              onMouseEnter={() => setHoveredOption(option.id)}
+              onMouseLeave={() => setHoveredOption(null)}
+              onClick={() => setSelectedMode(option.id)}
             >
-                <CardContent className={styles.cardContentMode}>
+              <CardContent className={styles.cardContentMode}>
                 <option.icon className={styles.iconMode} />
-                <CardTitle className={styles.titleMode}>{option.title}</CardTitle>
+                <CardTitle className={styles.titleMode}>
+                  {option.title}
+                </CardTitle>
                 <p className={styles.descriptionMode}>{option.description}</p>
                 <ArrowRight
-                    className={`${styles.arrowIconMode} ${hoveredOption === option.id ? styles.arrowIconHoveredMode : ''}`}
+                  className={`${styles.arrowIconMode} ${hoveredOption === option.id ? styles.arrowIconHoveredMode : ''}`}
                 />
-                </CardContent>
+              </CardContent>
             </Card>
-            ))}
-            <CreateTournamentModal
-                isOpen={isModalOpen}
-                onClose={handleModalClose}
-                onSubmit={handleTournamentSubmit}
-            />
+          ))}
+          <CreateTournamentModal
+            isOpen={isModalOpen}
+            onClose={handleModalClose}
+            onSubmit={handleTournamentSubmit}
+          />
         </div>
 
         <div className={styles.right}>
-         <Card className={styles.card}>
+          <Card className={styles.card}>
             <CardHeader>
-                <CardTitle className={styles.title}>Joined Tournaments</CardTitle>
+              <CardTitle className={styles.title}>Joined Tournaments</CardTitle>
             </CardHeader>
             <CardContent className={styles.content}>
-                {userTournaments?.map((tournament) => (
-                    <div key={tournament.id} className={styles.tournamentItem} onClick={() => {
-                        setTournamentStat(tournament.state);
-                        // setTournamentStatus(tournament.status);
-                        setShowTournamentView(true);
-                    }}>
-                        <div>
-                          <h3 className={styles.tournamentName}>{tournament.name}</h3>
-                          <p className={styles.tournamentPlayerCount}>Players: {tournament.players.length}</p>
-                        </div>
-                        <div className={styles.rightAligned}>
-                          <p className={styles.tournamentStatus}>Status: {tournament.status}</p>
-                          <p className={styles.tournamentDate}>Started: {formatDate(tournament.created_at)}</p>
-                        </div>
-                    </div>
-                ))}
-                    {!userTournamentsError && !userTournamentsIsLoading && !userTournaments?.length && (
-                    <div className={styles.noTournaments}>
-                        <NoTournamentIcon size={58} />
-                        <p>You havn't joined any tournaments yet!.</p>
-                    </div>
-                    )}
-                    {userTournamentsError && (
-                    <div className={styles.errorWrapper}>
-                        <ErrorMessage />
-                    </div>
-                    )}
-                    {!userTournamentsError && userTournamentsIsLoading && (
-                    <div className={styles.loaderWrapper}>
-                        <ArcadeLoader />
-                    </div>
-                    )}
+              {userTournaments?.map((tournament) => (
+                <div
+                  key={tournament.id}
+                  className={styles.tournamentItem}
+                  onClick={() => {
+                    setTournamentStat(tournament.state);
+                    // setTournamentStatus(tournament.status);
+                    setShowTournamentView(true);
+                  }}
+                >
+                  <div>
+                    <h3 className={styles.tournamentName}>{tournament.name}</h3>
+                    <p className={styles.tournamentPlayerCount}>
+                      Players: {tournament.players.length}
+                    </p>
+                  </div>
+                  <div className={styles.rightAligned}>
+                    <p className={styles.tournamentStatus}>
+                      Status: {tournament.status}
+                    </p>
+                    <p className={styles.tournamentDate}>
+                      Started: {formatDate(tournament.created_at)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {!userTournamentsError &&
+                !userTournamentsIsLoading &&
+                !userTournaments?.length && (
+                  <div className={styles.noTournaments}>
+                    <NoTournamentIcon size={58} />
+                    <p>You havn't joined any tournaments yet!.</p>
+                  </div>
+                )}
+              {userTournamentsError && (
+                <div className={styles.errorWrapper}>
+                  <ErrorMessage />
+                </div>
+              )}
+              {!userTournamentsError && userTournamentsIsLoading && (
+                <div className={styles.loaderWrapper}>
+                  <ArcadeLoader />
+                </div>
+              )}
             </CardContent>
-        </Card>
+          </Card>
         </div>
       </div>
 
       <div className={styles.bottomContainer}>
-         <Card className={styles.bottomCard}>
-            <CardHeader>
-                <CardTitle className={styles.title}>Open Tournaments</CardTitle>
-            </CardHeader>
-            <CardContent className={styles.bottomCardContent}>
-                <TournamentList
-                    handleJoin={handleJoin}
-                    // handleView={handleView}
-                    tournaments={tournaments}
-                    error={error}
-                    isLoading={isLoading}
-                ></TournamentList>
-            </CardContent>
+        <Card className={styles.bottomCard}>
+          <CardHeader>
+            <CardTitle className={styles.title}>Open Tournaments</CardTitle>
+          </CardHeader>
+          <CardContent className={styles.bottomCardContent}>
+            <TournamentList
+              handleJoin={handleJoin}
+              // handleView={handleView}
+              tournaments={tournaments}
+              error={error}
+              isLoading={isLoading}
+            ></TournamentList>
+          </CardContent>
         </Card>
       </div>
     </div>

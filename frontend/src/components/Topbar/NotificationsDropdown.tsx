@@ -10,11 +10,15 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
 import { useNavigate } from 'react-router-dom';
 
-
 const NotificationsDropdown = () => {
   const navigate = useNavigate();
-  const { unreadCount, fetchNotifications, markAllAsRead, notifications, deleteAllNotifications } =
-    useWebSocket();
+  const {
+    unreadCount,
+    fetchNotifications,
+    markAllAsRead,
+    notifications,
+    deleteAllNotifications,
+  } = useWebSocket();
 
   useEffect(() => {
     (async () => {
@@ -25,13 +29,12 @@ const NotificationsDropdown = () => {
   }, []);
 
   const handleClick = () => {
-    if (unreadCount)
-      markAllAsRead();
+    if (unreadCount) markAllAsRead();
   };
 
   const handleClearAll = () => {
     deleteAllNotifications();
-  }
+  };
 
   // // Sample notifications data
   // const notifications = [
@@ -79,9 +82,8 @@ const NotificationsDropdown = () => {
   //   },
   // ];
 
-
   return (
-    <DropdownMenu onOpenChange={handleClick}  >
+    <DropdownMenu onOpenChange={handleClick}>
       <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 rounded-full  focus:outline-none">
         <IoMdNotificationsOutline
           size={32}
@@ -99,36 +101,42 @@ const NotificationsDropdown = () => {
           <h2 className="text-lg font-semibold text-white">Notifications</h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
-            {notifications.map((notification, index) => (
-              <div
-                key={index}
-                className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
-                  notification.link && notification.link !== '#' ? 'cursor-pointer' : ''
-                }`}
-
-                onClick={() => {
-                  if (notification.link && notification.link !== '#') {
-                    navigate(notification.link);
-                  }
-                }}
-              >
-                <div className="flex justify-between items-start">
-                  <h3 className="text-lg font-bold text-white">
-                    {notification.title}
-                  </h3>
-                  <span className="text-[10px] text-gray-100">
-                    {formatDate(notification.created_at)}
-                  </span>
-                </div>
-                <p className="text-[13px] font-sans text-gray-100 mt-1">
-                  {notification.message}
-                </p>
+          {notifications.map((notification, index) => (
+            <div
+              key={index}
+              className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
+                notification.link && notification.link !== '#'
+                  ? 'cursor-pointer'
+                  : ''
+              }`}
+              onClick={() => {
+                if (notification.link && notification.link !== '#') {
+                  navigate(notification.link);
+                }
+              }}
+            >
+              <div className="flex justify-between items-start">
+                <h3 className="text-lg font-bold text-white">
+                  {notification.title}
+                </h3>
+                <span className="text-[10px] text-gray-100">
+                  {formatDate(notification.created_at)}
+                </span>
               </div>
+              <p className="text-[13px] font-sans text-gray-100 mt-1">
+                {notification.message}
+              </p>
+            </div>
           ))}
         </div>
-        {notifications.length != 0 && <DropdownMenuItem onClick={handleClearAll}  className='flex justify-center border-t border-gray-600'>
-          <span>Clear All</span>
-        </DropdownMenuItem>}
+        {notifications.length != 0 && (
+          <DropdownMenuItem
+            onClick={handleClearAll}
+            className="flex justify-center border-t border-gray-600"
+          >
+            <span>Clear All</span>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
