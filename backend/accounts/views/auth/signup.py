@@ -52,6 +52,10 @@ class SignupView(CreateAPIView):
             headers = self.get_success_headers(serializer.data)
             try:
                 user = serializer.instance
+                try:
+                    EmailVerification.objects.get(user=user).delete()
+                except EmailVerification.DoesNotExist:
+                    pass
                 send_verification_email(user)
                 message = 'Your account has been created, an activation link has been sent to your email.'
                 return Response(data={'message': message}, status=status.HTTP_201_CREATED, headers=headers)
