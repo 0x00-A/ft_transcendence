@@ -156,7 +156,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
-        'NAME': os.environ.get('DB_NAME'),
+        # 'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
         'HOST': os.environ.get('DB_HOST'),
@@ -285,6 +285,7 @@ CHANNEL_LAYERS = {
 # Allow specific origins
 CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0:3000',
+    'http://localhost:3000',
 ]
 
 CORS_ALLOW_METHODS = [

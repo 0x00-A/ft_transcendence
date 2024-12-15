@@ -4,7 +4,7 @@ import { LOGO } from '@/config/constants';
 
 const AuthPongBox = ({isLogin, setIslogin}: {isLogin: boolean, setIslogin: React.Dispatch<React.SetStateAction<boolean>>}) => {
   return (
-    <div className={`${css.authPongBox} ${isLogin ? css.switchPongBox : ''}`}>
+    <div className={`${css.authPongBox} ${!isLogin ? css.switchPongBox : ''}`}>
       <div className={css.logoHolder}>
         <img src={LOGO} alt="" />
       </div>

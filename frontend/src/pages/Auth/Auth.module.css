@@ -10,7 +10,7 @@
     background-color: var(--main-surface-tertiary);
     width: 500px;
     height: 700px;
-    /* gap: 2rem; */
+    min-width: fit-content;
     padding: 5rem;
     border-radius: 20px;
     display: flex;
@@ -24,13 +24,13 @@
 
 .authFormSwitch {
     transition: transform 1s;
-    transform-origin: left center;
+    transform-origin: right center;
     transform-style: preserve-3d;
     /* perspective: 100px; */
     /* margin: 5px; */
     /* backface-visibility: initial; */
     /* transform: translateX(-100%); */
-    transform: translateX(-102%);
+    transform: translateX(102%);
     /* margin-left: 5px; */
     /* transition: 2s;
     transform-style: preserve-3d; */

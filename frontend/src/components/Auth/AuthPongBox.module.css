@@ -9,6 +9,7 @@
     background-color: var(--main-surface-tertiary);
     width: 500px;
     height: 700px;
+    min-width: 300px;
     /* position: relative; */
     /* margin: 5px; */
     /* border-right: 1px solid aliceblue; */
@@ -17,7 +18,7 @@
     align-items: center;
     flex-direction: column;
     /* box-sizing: border-box; */
-    perspective: 700px;
+    perspective: 100px;
     transition: 1s;
 }
 
@@ -33,7 +34,7 @@
     transform-style: preserve-3d;
     transform-origin: right center;
     /* perspective: 100px; */
-    transform: translateX(102%);
+    transform: translateX(-102%);
     /* margin: 5px; */
     /* margin-right: 0; */
     /* border: none;

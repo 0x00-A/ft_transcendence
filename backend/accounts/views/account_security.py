@@ -46,16 +46,12 @@ class Enable2faView(APIView):
             )
         user = request.user
         totp = pyotp.TOTP(user.otp_secret)
-        print('request.data[otp]===>> ', request.data['otp'])
-        print('user.otp_secret===>> ', request.user.otp_secret)
         if totp.verify(request.data['otp']):
             user = request.user
             user.is2fa_active = True
             user.save()
-            print('api ==> verify otp: OTP verified successfully')
-            return Response({'message': 'OTP verified successfully'}, status=status.HTTP_200_OK)
+            return Response({'message': '2FA enabled successfully'}, status=status.HTTP_200_OK)
         else:
-            print('api ==> verify otp: OTP verification failed')
             return Response(
                 {'error': 'Invalid OTP'},
                 status=status.HTTP_400_BAD_REQUEST
