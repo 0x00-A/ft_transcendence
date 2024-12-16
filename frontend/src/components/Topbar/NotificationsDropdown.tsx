@@ -9,16 +9,14 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const NotificationsDropdown = () => {
   const navigate = useNavigate();
-  const {
-    unreadCount,
-    fetchNotifications,
-    markAllAsRead,
-    notifications,
-    deleteAllNotifications,
-  } = useWebSocket();
+  const { t } = useTranslation();
+  const { unreadCount, fetchNotifications, markAllAsRead, notifications, deleteAllNotifications } =
+    useWebSocket();
+
 
   useEffect(() => {
     (async () => {
@@ -98,7 +96,7 @@ const NotificationsDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[32rem] text-white bg-[#1e2738] border-gray-600">
         <div className="px-4 py-3 border-b border-gray-600">
-          <h2 className="text-lg font-semibold text-white">Notifications</h2>
+          <h2 className="text-lg font-semibold text-white">{t('notifications.title')}</h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
           {notifications.map((notification, index) => (
@@ -129,14 +127,9 @@ const NotificationsDropdown = () => {
             </div>
           ))}
         </div>
-        {notifications.length != 0 && (
-          <DropdownMenuItem
-            onClick={handleClearAll}
-            className="flex justify-center border-t border-gray-600"
-          >
-            <span>Clear All</span>
-          </DropdownMenuItem>
-        )}
+        {notifications.length != 0 && <DropdownMenuItem onClick={handleClearAll}  className='flex justify-center border-t border-gray-600'>
+          <span>{t('notifications.clearAll')}</span>
+        </DropdownMenuItem>}
       </DropdownMenuContent>
     </DropdownMenu>
   );

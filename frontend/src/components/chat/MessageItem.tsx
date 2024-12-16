@@ -3,6 +3,9 @@ import css from './MessageItem.module.css';
 import { CgMoreO } from 'react-icons/cg';
 import { useTyping } from '@/contexts/TypingContext';
 import { conversationProps } from '@/types/apiTypes';
+import { formatTime } from '@/utils/formatConversationTime';
+// import { useTranslation } from 'react-i18next';
+
 
 interface conversationListProps {
   isSelected: boolean;
@@ -26,6 +29,7 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
     ref
   ) => {
     const { typing } = useTyping();
+    // const { t } = useTranslation();
 
     const isReceiver = typing.senderId == conversation.user_id;
 
@@ -53,7 +57,7 @@ const MessageItem = forwardRef<HTMLDivElement, conversationListProps>(
           <div className={css.messageContent}>
             <div className={css.messageHeader}>
               <span className={css.name}>{conversation.name}</span>
-              <span className={css.time}>{conversation.time}</span>
+              <span className={css.time}>{formatTime(conversation.time)}</span>
             </div>
             <div className={css.messageBody}>
               <span className={`${css.lastMessage}`}>

@@ -26,13 +26,19 @@
 - [ ] is_password_set true or false
 MAHDI:
  - [ ] find out why when set permission to AllowAny in a view still check the authenticate
- - [ ] 2 factor authentication
  - [ ] if the user activate the 2fac in discord or google or intra
  - [ ] default avatar picture handling in backend
- - [ ] is_password_set true or false
+ - [ ] set a time for email validation and password reset requests?
+ - [ ] Tournament game shistory
+ - [ ] if a user is verified return that user is already verified
+ - [ ] Oauth2AuthBackend wach khdemti biha
+MAHDI NOTES:
+   - if a user sign up with an email and not verify his email, and next he is sign up using google (oauth2) with same email
+      i mark the account as verified because google has already verified the email, and user can login with oauth2 or with his username and password
+   - if a user sign up with an email and verify his account, and next login with oauth2
+      users can log in using either their password or oauth2 provider
 
 CHAT:
- - [ ] mark a read
  - [ ] if i user forgot the password
  - [ ]
 
@@ -40,3 +46,4 @@ CHAT:
     # grok {
     #   match => { "message" => "%{IPORHOST:client_ip} - %{DATA:remote_user} \[%{HTTPDATE:timestamp}\] \"%{WORD:method} %{DATA:request} HTTP/%{NUMBER:http_version}\" %{NUMBER:status} %{NUMBER:bytes}" }
     # }
+- [ ] date in block list you must trans

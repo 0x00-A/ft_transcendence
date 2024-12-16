@@ -27,7 +27,6 @@ class LoginView(CreateAPIView):
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
-            print('apiBackend ==> login status: Invalid data', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.is_valid(raise_exception=True)
         user = authenticate(
@@ -76,8 +75,12 @@ class RequestResetPasswordView(APIView):
         try:
             user = User.objects.get(username=request.data['username'])
         except User.DoesNotExist:
-            print('apiBackend ==> login status: User not found')
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            token = PasswordReset.objects.get(user=user)
+            token.delete()
+        except PasswordReset.DoesNotExist:
+            pass
         send_reset_password_email(user)
         return Response({'message': 'A Reset password request sent to your email!'}, status=status.HTTP_200_OK)
 
@@ -94,10 +97,11 @@ class ResetPasswordView(APIView):
         serializer.is_valid(raise_exception=True)
         try:
             token = PasswordReset.objects.get(token=serializer.validated_data['token'])
-        except PasswordReset.DoesNotExist:
-            return Response({'error': 'Invalid token, retry again!'}, status=status.HTTP_400_BAD_REQUEST)
-        user = token.user
-        user.set_password(serializer.validated_data['new_password'])
-        user.save()
-        token.delete()
-        return Response({'message': 'Password reseted succeffuly'}, status=status.HTTP_200_OK)
+            user = token.user
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            token.delete()
+            return Response({'message': 'Password reseted succeffuly'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': f'error reseting password, details: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+    

@@ -8,10 +8,10 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 import { useGetData } from "@/api/apiHooks";
 import { API_GET_FRIENDS_URL } from '@/api/apiConfig';
 // Components
-import Loading from "@/components/Friends/Loading";
 import { useNavigate } from 'react-router-dom';
 // Types
 import { Friends } from '@/types/apiTypes';
+import FriendSkeleton from '../Friends/FriendSkeleton';
 
 
 const ProfileFriends = () => {
@@ -19,9 +19,8 @@ const ProfileFriends = () => {
     const [isBtnActive, setBtnActive] = useState(true);
     const { data: friendsData, isLoading, error } = useGetData<Friends[]>(API_GET_FRIENDS_URL);
     const navigate = useNavigate();
-    const onlineFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
-    const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
-    if (isLoading) return <Loading />;
+    const onlineFriends = friendsData?.filter((friend: Friends) => friend.profile.is_online).slice(0, 5);
+    const offlineFriends = friendsData?.filter((friend: Friends) => !friend.profile.is_online).slice(0, 5);
 
   return (
     <div className={css.profileFriendsContainer}>
@@ -43,8 +42,8 @@ const ProfileFriends = () => {
                     Offline
                 </button>
             </div>
+            { isLoading ? <> <FriendSkeleton /> <FriendSkeleton /> </>:
             <div className={css.friendList}>
-                { isLoading && <Loading/> }
                 { error && <p>{error.message}</p> }
                 { friendsData?.length == 0 && <div className={css.noFriends}>
                     <span>You are lonely</span>
@@ -56,8 +55,8 @@ const ProfileFriends = () => {
                 </div> }
                 { isBtnActive && friendsData && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Online friends</span> }
                 { !isBtnActive && friendsData && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> }
-                { isBtnActive && onlineFriends && onlineFriends?.length > 0 && onlineFriends?.map((friend, index) => (
-                    <div className={css.friendItem} key={index}>
+                { isBtnActive && onlineFriends && onlineFriends?.length > 0 && onlineFriends?.map((friend: Friends) => (
+                    <div className={css.friendItem} key={friend.id}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
                              <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
@@ -69,8 +68,8 @@ const ProfileFriends = () => {
                          </div>
                      </div>
                 ))}
-                { !isBtnActive &&  offlineFriends && offlineFriends?.length > 0 && offlineFriends?.map((friend, index) => (
-                    <div className={css.friendItem} key={index}>
+                { !isBtnActive &&  offlineFriends && offlineFriends?.length > 0 && offlineFriends?.map((friend:Friends) => (
+                    <div className={css.friendItem} key={friend.id}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
                              <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
@@ -82,7 +81,7 @@ const ProfileFriends = () => {
                          </div>
                      </div>
                 ))}
-            </div>
+            </div>}
         </div>
     </div>
   )

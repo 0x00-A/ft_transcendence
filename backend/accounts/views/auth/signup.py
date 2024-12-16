@@ -11,6 +11,7 @@ from app.settings import SERVER_URL
 
 from accounts.serializers import SignupSerializer
 from accounts.models import EmailVerification
+from accounts.utils import send_verification_email
 
 
 
@@ -28,13 +29,11 @@ def verify_email(request):
         verify = EmailVerification.objects.get(token=request.data.get('token'))
     except EmailVerification.DoesNotExist:
         return Response({'error': 'Invalid token, your account is not verified!'}, status=status.HTTP_400_BAD_REQUEST)
-        return redirect(f"{SERVER_URL}/auth?status=failed&error={quote('Invalid token, your account is not verified!')}")
     user = verify.user
     user.is_active = True
     user.save()
     verify.delete()
     return Response({'message': 'Your account has been verified, you can login now!'}, status=status.HTTP_200_OK)
-    return redirect(f"{SERVER_URL}/auth?status=success&message={quote('Your account has been verified, you can login now!')}")
 
 
 class SignupView(CreateAPIView):
@@ -42,13 +41,24 @@ class SignupView(CreateAPIView):
     authentication_classes = []
     serializer_class = SignupSerializer
 
-    def post(self, request, *args, **kwargs):
-        print('api ==> signup: User account creation started')
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        message = 'Your account has been created, an activation link has been sent to your email.'
-        print('api ==> signup: User account created')
-        return Response(data={'message': message}, status=status.HTTP_201_CREATED, headers=headers)
-
+    def post(self, request):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            try:
+                user = serializer.instance
+                try:
+                    EmailVerification.objects.get(user=user).delete()
+                except EmailVerification.DoesNotExist:
+                    pass
+                send_verification_email(user)
+                message = 'Your account has been created, an activation link has been sent to your email.'
+                return Response(data={'message': message}, status=status.HTTP_201_CREATED, headers=headers)
+            except Exception as e:
+                user.delete()
+                return Response(data={'error': f"sending email verification, detail: {str(e)}"}, status=status.HTTP_503_SERVICE_UNAVAILABLE, headers=headers)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -10,17 +10,23 @@ import { API_OAUTH2_URL } from "../../api/apiConfig";
 
 const Oauth2 = () => {
 
+  const handleOauth2 = (provider: string) => {
+    const link = API_OAUTH2_URL + "/" + provider + "/"
+    // console.log('----> link==', link);
+    window.location.href = link;
+  }
+
   return (
     <div className={css.oauth2Container}>
       <div className={css.or}><div/><p>OR</p><div/></div>
       <div className={css.oauth2Buttons}>
-        <button className={css.oauthBtn} type="submit" onClick={() => window.location.href = API_OAUTH2_URL + "/intra/"}>
+        <button className={css.oauthBtn} type="submit" onClick={() => handleOauth2('intra')}>
           <img src={IntraLogo} alt="?" className={css.oauth2Icon} />
         </button>
-        <button className={css.oauthBtn} type="submit" onClick={() => window.location.href = API_OAUTH2_URL + "/google/"}>
+        <button className={css.oauthBtn} type="submit" onClick={() => handleOauth2('google')}>
           <IconContext.Provider value={{size: "2em"}}><FcGoogle className={css.oauth2Icon} /></ IconContext.Provider>
         </button>
-        <button className={css.oauthBtn}type="submit" onClick={() => window.location.href = API_OAUTH2_URL + "/discord/"}>
+        <button className={css.oauthBtn}type="submit" onClick={() => handleOauth2('discord')}>
           <img src={DiscordIcon} alt="?" className={css.oauth2Icon} />
         </button>
       </div>

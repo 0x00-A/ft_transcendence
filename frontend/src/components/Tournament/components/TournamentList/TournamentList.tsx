@@ -5,6 +5,7 @@ import ErrorMessage from '../../../Game/components/ErrorMessage/ErrorMessage';
 import { Tournament } from '../../../../types/apiTypes';
 import NoTournamentIcon from '@/components/Tournament/components/NoTournament/NoTournamnet';
 import { formatDate } from '@/utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 const TournamentList = ({
   handleJoin,
@@ -20,6 +21,7 @@ const TournamentList = ({
   isLoading: boolean;
 }) => {
   // const [tournaments, setTournaments] = useState([]);
+  const { t } = useTranslation();
 
   // useEffect(() => {
   //     const fetchTournaments = async () => {
@@ -44,12 +46,12 @@ const TournamentList = ({
     <div className={css.container}>
       {/* Header Row */}
       <div className={css.header}>
-        <div className={`${css.col} ${css.id}`}>ID</div>
-        <div className={`${css.col} ${css.name}`}>Name</div>
-        <div className={`${css.col} ${css.creator}`}>Creator</div>
-        <div className={`${css.col} ${css.date}`}>Creation Date</div>
-        <div className={`${css.col} ${css.players}`}>Players</div>
-        <div className={`${css.col} ${css.action}`}>Action</div>
+        <div className={`${css.col} ${css.id}`}>{t('game.openTournaments.header.id')}</div>
+        <div className={`${css.col} ${css.name}`}>{t('game.openTournaments.header.name')}</div>
+        <div className={`${css.col} ${css.creator}`}>{t('game.openTournaments.header.creator')}</div>
+        <div className={`${css.col} ${css.date}`}>{t('game.openTournaments.header.creationDate')}</div>
+        <div className={`${css.col} ${css.players}`}>{t('game.openTournaments.header.players')}</div>
+        <div className={`${css.col} ${css.action}`}>{t('game.openTournaments.header.action')}</div>
       </div>
 
       {/* List of Tournaments */}
@@ -74,7 +76,7 @@ const TournamentList = ({
               </div>
               <div className={`${css.col} ${css.action}`}>
                   <button onClick={() => handleJoin(tournament.id)}>
-                    Join
+                    {t('game.openTournaments.joinButton')}
                   </button>
                 {/* {!isInTournament(tournament.players, tournament.user_id) ? (
                 ) : (
@@ -86,7 +88,7 @@ const TournamentList = ({
         {!error && !isLoading && !tournaments?.length && (
           <div className={css.noTournaments}>
             <NoTournamentIcon size={58} />
-            <p>No tournaments available at the moment.</p>
+            <p>{t('game.openTournaments.noTournaments')}</p>
           </div>
         )}
         {error && (

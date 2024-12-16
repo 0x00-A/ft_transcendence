@@ -43,6 +43,12 @@ def create_user_profile(sender, instance, created, **kwargs):
                               rank=Profile.objects.count() + 1,
                               badge=Badge.objects.get(name='Bronze'))
 
+       achievements = Achievement.objects.all()
+       for achievement in achievements:
+            user_achievement, created = UserAchievement.objects.get_or_create(user=instance, achievement=achievement)
+        # Check if the achievement is already unlocked
+
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):

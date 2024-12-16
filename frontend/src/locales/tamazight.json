@@ -1,0 +1,245 @@
+{
+    "welcome": {
+        "title": "FT-PONG",
+        "description": "ⴰⴽⵍⴰⵎ ⴰⵎⵏⵓ ⴷ ⵉⴷⵍⴰⴽ ⴰⵎⴰⵢⵏⵉⵙ ⵏ ⵓⴷⴰⵢⵏ ⴷ ⵉⵍⴷⴰⵡⴰⵍⴻⵏ",
+        "playButton": "ⴽⵔⵎⴰⵏ ⵉⵎⵓⴽⵉ"
+    },
+    "noChatSelected": {
+        "title": "ⴰⵏⵙⵓⴼ ⴼⴻⵍⵍⴰⴽ ⴷⴻⴳ ⴰⵎⴻⵙⵍⴰⵢⵉⴽ!",
+        "description1": "ⵜⵜⵅⵉⵍⴽ ⴼⵔⴻⵏ ⴰⵎⴻⵙⵍⴰⵢ ⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⴱⴷⵓⴹ ⴰⵎⴻⵙⵍⴰⵢ.",
+        "description2": "ⵎⴰ ⵢⴻⵍⵍⴰ ⵓⵔ ⵜⴻⵙⵄⵉⴹ ⴰⵔⴰ ⵉⵎⴷⵓⴽⴰⵍ",
+        "addFriendButton": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ"
+    },
+    "chatHeader": {
+        "typing": "ⵜⵉⵔⴰ...",
+        "activeNow": "ⵢⴻⵜⵜⵡⴰⵅⴷⴻⵎ ⵜⵓⵔⴰ",
+        "lastSeen": "ⴰⵏⴻⴳⴳⴰⵔⵓ ⵢⴻⵜⵜⵡⴰⵡⴰⵍⴰ ⴷⴻⴳ"
+    },
+    "messageInput": {
+        "placeholder": "ⴰⵔⵓⴷ ⵉⵣⴻⵏ"
+    },
+    "messageArea": {
+        "showMoreButton": "ⵙⴽⴻⵏ ⵓⴳⴰⵔ"
+    },
+    "message": {
+        "sender": "ⴽⴻⵞⵞ"
+    },
+    "MessageList": {
+        "placeholder": "ⵏⴰⴷⵉ ⵖⴻⴼ ⵉⵎⴷⵓⴽⴰⵍ",
+        "noUserFound": "ⵓⵔ ⵓⴼⵉⵏ ⴰⵔⴰ ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵢⴻⵜⵜⴻⵎⵛⴰⴱⵉⵏ",
+        "menu": {
+            "markAsRead": "ⵙⵙⴻⴽⵏⴻⴹ ⴰⴽⴽⴻⵏ ⵢⴻⵖⵔⴰ",
+            "closeChat": "ⵖⴻⵍⵇ ⴰⵎⴻⵙⵍⴰⵢ",
+            "viewProfile": "ⵡⴰⵍⵉ ⴰⴳⴱⵓⵔ",
+            "block": "ⵢⴻⵔⴳⴻⵍ",
+            "unblock": "ⵔⵥⴻⵎ"
+        }
+    },
+    "optionsButton": "ⴰⵎⴻⵙⵍⴰⵢ",
+    "settingsSection": {
+        "profileButton": "ⴰⵍⴻⴳⴷⵉⵙ",
+        "inviteButton": "ⵄⵔⴻⴹ",
+        "privacy": "ⵜⴰⴱⴰⴷⵏⵉⵜ",
+        "mutualFriends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵉⵛⵓⴷⴷⴻⵏ",
+        "block": "ⵢⴻⵔⴳⴻⵍ",
+        "unblock": "ⵔⵥⴻⵎ",
+        "noMutualFriends": "ⵓⵔ ⴷⵓⴼⵉⵏ ⴰⵔⴰ ⵉⵎⴷⵓⴽⴰⵍ ⵉⵛⵓⴷⴷⴻⵏ.",
+        "addUser": "ⵔⵏⵓ ⴰⵎⵙⴻⵇⴷⴰⵛ"
+    },
+    "timeDifference": {
+        "justNow": "ⵜⵓⵔⴰ ⴽⴰⵏ",
+        "minute": "1 ⵏ ⵜⴻⴷⵇⵉⵇⵜ ⴰⵢⴰ",
+        "minutes": "{{count}} ⵜⴻⴷⵇⵉⵇⵉⵏ ⴰⵢⴰ",
+        "hour": "ⵢⵉⵡⴻⵜ ⵏ ⵜⵙⴰⵄⴻⵜ ⴰⵢⴰ",
+        "hours": "{{count}} ⵜⵙⴰⵄⵜⵉⵏ ⴰⵢⴰ",
+        "day": "ⵢⵉⵡⴻⵏ ⵡⴰⵙⵙ ⴰⵢⴰ",
+        "days": "{{count}} ⵓⵙⵙⴰⵏ ⴰⵢⴰ",
+        "week": "ⵢⵉⵡⴻⵏ ⵏ ⴷⴷⵓⵔⵜ ⴰⵢⴰ",
+        "weeks": "{{count}} ⴷⴷⵓⵔⵜ ⴰⵢⴰ",
+        "year": "ⴰⵙⴻⴳⴳⴰⵙ ⴰⵢⴰ",
+        "years": "{{count}} ⵉⵙⴻⴳⴳⴰⵙⴻⵏ ⴰⵢⴰ"
+    },
+    "sidebar": {
+        "dashboard": "ⵜⴰⴼⴻⵍⵡⵉⵜ ⵏ ⵓⵙⴻⵍⴽⵉⵎ",
+        "game": "ⵜⵓⵔⴰⵔⴻⵜ",
+        "chat": "ⴰⵎⴻⵙⵍⴰⵢ",
+        "friends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ",
+        "profile": "ⴰⵍⴻⴳⴷⵉⵙ",
+        "logout": "ⵜⵓⴼⴼⵖⴰ",
+        "lightMode": "ⴰⴷⴻⴳ ⵏ ⵜⴰⴼⴰⵜ",
+        "darkMode": "ⵜⴰⵍⵖⴰ ⵜⴰⵣⴻⴳⵣⴰⵡⵜ"
+    },
+    "sidebarFriends": {
+        "allFriends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⴰⴽⴽⵯ ",
+        "onlineFriends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵏ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "friendRequests": "ⵉⵙⵓⵜⴻⵔ ⵏ ⵉⵎⴷⵓⴽⴰⵍ",
+        "sentRequests": "ⵢⴻⵜⵜⵡⴰⵣⴻⵏ ⵉⵙⵓⵜⴻⵔ",
+        "blockedList": "ⵓⵎⵓⵖ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ",
+        "addFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ"
+    },
+    "allFriends": {
+        "title": "ⴰⴽⴽ ⵉⵎⴷⵓⴽⴰⵍ",
+        "placeholder": "ⵏⴰⴷⵉ ⵖⴻⴼ ⵉⵎⴷⵓⴽⴰⵍ...",
+        "online": "Oⵏⵍⴰⵢⵏ",
+        "offline": "ⴱⴻⵕⵕⴰ ⵉ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "pupMessage": "ⴰⵡⴰⵍ",
+        "pupInvite": "ⵄⵔⴻⴹ",
+        "pupBlock": "ⵢⴻⵔⴳⴻⵍ",
+        "pupUnfriend": "ⵓⵔ ⴷ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
+        "noRequests": "ⵎⴰⵣⴰⵍ ⵓⵍⴰⵛ ⵉⵎⴷⵓⴽⴰⵍ",
+        "description": "ⴰⵎⵣⵓⵏ ⵍⵉⵙⵜⵉ ⵏ ⵉⵎⴷⵓⴽⴰⵍⵉⴽ ⴷ ⵉⵍⴻⵎ. ⴱⴷⵓ ⵜⵓⵇⵇⵏⴰ ⵙ ⵓⵏⴰⴷⵉ ⵏ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍ ⵏⴻⵖ ⵙ ⵓⵙⵉⵡⴻⴹ ⵏ ⵜⵏⴻⵄⵔⴻⴹⵉⵏ!"
+    },
+    "onlineFriends": {
+        "title": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵏ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "online": "Oⵏⵍⴰⵢⵏ",
+        "pupMessage": "ⴰⵡⴰⵍ",
+        "pupInvite": "ⵄⵔⴻⴹ",
+        "noRequests": "ⵓⵍⴰⵛ ⵉⵎⴷⵓⴽⴰⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+        "description": "ⴰⵎⵣⵓⵏ ⵓⵍⴰ ⴷ ⵢⵉⵡⴻⵏ ⵙⴻⴳ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍⵉⴽ ⵓⵔ ⵢⴻⵍⵍⵉ ⴰⵔⴰ ⴷⴻⴳ Internet ⵜⵓⵔⴰ. ⵄⵔⴻⴹ ⴽⵔⴰ ⵏ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍ ⵏⴻⵖ ⵥⴻⵔⴷ ⵙⴷⴻⴼⴼⵉⵔⵙ!"
+    },
+    "friendRequests": {
+        "title": "ⵉⵙⵓⵜⴻⵔ ⵏ ⵉⵎⴷⵓⴽⴰⵍ",
+        "pupAccept": "ⵢⴻⵇⴱⴻⵍ",
+        "pupReject": "ⵓⵔ ⵜⵜⵯⵢⴻⵇⴱⵉⵍ ⴰⵔⴰ",
+        "description": "ⵓⵔ ⵜⴻⵙⵄⵉⴹ ⴰⵔⴰ ⴽⵔⴰ ⵏ ⵓⵙⵓⵜⴻⵔ ⵏ ⵢⵉⵎⴻⴷⴷⵓⴽⴰⵍ ⵢⴻⵜⵜⵡⴰⵄⴻⵍⵇⴻⵏ ⵜⵓⵔⴰ. ⵇⵇⴻⵏ ⵖⴻⵔ ⵓⴳⴰⵔ ⵏ ⵢⵉⵎⴷⴰⵏⴻⵏ ⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⵙⵏⴻⵔⵏⵉⴹ ⴰⵥⴻⴹⴹⴰⵉⵏⴻⴽ!",
+        "noRequests": "ⵓⵍⴰⵛ ⵉⵙⵓⵜⴻⵔ ⵏ ⵓⵎⴷⴷⴰⴽⴽⴻⵍ"
+    },
+    "sentRequests": {
+        "title": "ⵢⴻⵜⵜⵡⴰⵣⴻⵏ ⵉⵙⵓⵜⴻⵔ",
+        "pupCancel": "ⵢⴻⴽⴽⴻⵙ",
+        "description": "ⵓⵔ ⵜⴻⵙⵄⵉⴹ ⴰⵔⴰ ⴽⵔⴰ ⵏ ⵓⵙⵓⵜⴻⵔ ⵢⴻⵜⵜⵡⴰⵣⴻⵏ ⵜⵓⵔⴰ. ⵇⵇⴻⵏ ⵖⴻⵔ ⵓⴳⴰⵔ ⵏ ⵢⵉⵎⴷⴰⵏⴻⵏ ⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⵙⵏⴻⵔⵏⵉⴹ ⴰⵥⴻⴹⴹⴰⵉⵏⴻⴽ!",
+        "noRequests": "ⵓⵍⴰⵛ ⴰⵙⵓⵜⴻⵔ ⵢⴻⵜⵜⵡⴰⵣⴻⵏ"
+    },
+    "blockedList": {
+        "title": "ⵓⵎⵓⵖ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ",
+        "placeholder": "ⵏⴰⴷⵉ ⵖⴻⴼ ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ...",
+        "pupUnblock": "ⵔⵥⴻⵎ",
+        "description": "ⵓⵔ ⵜⵃⴻⴱⵙⴻⴹ ⵓⵍⴰ ⴷ ⵢⵉⵡⴻⵏ ⵏ ⵓⵙⴻⵇⴷⴰⵛ. ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵉ ⵜⵃⴻⴱⵙⴻⴹ ⴰⴷ ⴷⴱⴰⵏⴻⵏ ⴷⴰⴳⵉ.",
+        "noRequests": "ⵓⵍⴰⵛ ⵉⵙⴻⵇⴷⴰⵛⴻⵏ ⵢⴻⵜⵜⵡⴰⵃⴻⴱⵙⴻⵏ"
+    },
+    "addFriend": {
+        "title": "ⴰⵏⴰⴷⵉ & ⵔⵏⵓ ⵉⵎⴷⵓⴽⴰⵍ",
+        "placeholder": "ⴰⴼⴷ ⴰⵎⴻⴷⴷⴰⴽⵍ ⵏⵏⴻⴽ....",
+        "pupViewProfile": "ⵡⴰⵍⵉ ⴰⴳⴱⵓⵔ",
+        "pupFriend": "ⴰⵎⴻⴷⴷⴰⴽⵍ",
+        "pupAccept": "ⵢⴻⵇⴱⴻⵍ",
+        "pupReject": "Reject",
+        "pupCancel": "ⵓⵔ ⵜⵜⵯⵢⴻⵇⴱⵉⵍ ⴰⵔⴰ",
+        "pupPending": "ⴰⵔ ⵎⴰⵔⴰ",
+        "pupAddFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
+        "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ",
+        "Suggested": "ⵜⵓⵇⵇⵏⵉⵡⵉⵏ ⵢⴻⵜⵜⵡⴰⵙⵙⵓⵎⵔⴻⵏ"
+    },
+    "SearchUsers": {
+        "placeholder": "ⴰⵏⴰⴷⵉ ...",
+        "pupViewProfile": "ⵡⴰⵍⵉ ⴰⴳⴱⵓⵔ",
+        "pupFriend": "ⴰⵎⴻⴷⴷⴰⴽⵍ",
+        "pupAccept": "ⵢⴻⵇⴱⴻⵍ",
+        "pupReject": "Reject",
+        "pupCancel": "ⵓⵔ ⵜⵜⵯⵢⴻⵇⴱⵉⵍ ⴰⵔⴰ",
+        "pupPending": "ⴰⵔ ⵎⴰⵔⴰ",
+        "pupAddFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
+        "pupMessage": "ⴰⵡⴰⵍ",
+        "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ"
+    },
+    "notifications": {
+        "title": "ⵉⴱⴻⴷⴷⵉⵍⴻⵏ",
+        "clearAll": "ⵙⴼⴻⴹ ⴰⴽⴽ"
+    },
+    "game": {
+        "localGame": {
+            "title": "ⵓⵔⴰⵔ ⴰⴷⵉⴳⴰⵏ",
+            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ",
+            "onePlayer": "ⵢⵉⵡⴻⵏ ⵏ ⵓⵎⵢⵓⵔⴰⵔ",
+            "twoPlayer": "ⵙⵉⵏ ⵏ ⵢⵉⵎⵓⵔⴰⵔⴻⵏ",
+            "OptionsScreen": {
+                "Sound": "ⵜⴰⵖⴻⵛⵜ",
+                "SetWinningScore": "ⵙⴱⴻⴷⴷ ⵉⵙⵡⵉ ⵏ ⵍⴼⴰⵢⴷⴰ",
+                "SetControllerType": "ⵙⴱⴻⴷⴷ ⵚⵚⴻⵏⴼ ⵏ ⵓⵙⴻⵍⴽⵉⵎ",
+                "ControllerOptions": {
+                    "Mouse": "ⴰⵖⴻⵔⴷⴰⵢ",
+                    "Keyboard": "ⵜⴰⵙⴰⵔⵓⵜ"
+                }
+            },
+            "DifficultyScreen": {
+                "Title": "ⴼⵔⴻⵏ ⵓⴳⵓⵔⴻⵏ",
+                "DifficultyOptions": {
+                    "Easy": "ⴰⵙⵀⴻⵍ",
+                    "Normal": "ⴰⵢⴻⵏ ⵉⵍⵀⴰⵏ",
+                    "Hard": "ⵓⵎⵓⵄⴰⵕ"
+                }
+            },
+            "EndGameScreen": {
+                "Win": "ⵜⴻⵔⴱⴻⵃⴻⴹ!",
+                "Lose": "ⵜⴻⵅⵚⴻⵔⴹ!",
+                "PlayAgain": "ⵓⵔⴰⵔ ⵜⵉⴽⴽⴻⵍⵜ ⵏⵏⵉⴹⴻⵏ",
+                "GoBack": "ⵓⵖⴰⵍ"
+            },
+            "paused": "ⵢⴻⵃⴱⴻⵙ"
+        },
+        "remoteGame": {
+            "title": "ⵓⵔⴰⵔ ⵙ ⵍⴱⴻⵄⴷ",
+            "description": "ⴰⵖⴱⴻⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+        },
+        "remoteTournament": {
+            "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵙ ⵓⴱⴻⵄⴷ",
+            "description": "ⵙⵏⵓⵍⴼⵓⴷ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+            "CreateTournamentModal": {
+                "Label": "ⵙⵏⵓⵍⴼⵓⴷ ⵜⴰⵍⵖⵓⵖⴰ",
+                "InputPlaceholder": "ⵙⴽⴻⵛⵎ ⵉⵙⴻⵎ ⵏ ⵜⴻⵍⵖⵓⵖⴰ",
+                "SubmitButton": "ⴰⵙⴻⴱⵜⴻⵔ",
+                "CancelButton": "ⵢⴻⴽⴽⴻⵙ",
+                "AlertMessage": "ⵜⵜⵅⵉⵍⴽ ⵙⵙⴻⴽⵛⴻⵎ ⵉⵙⴻⵎ ⵏ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ."
+            }
+        },
+        "localTournament": {
+            "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵜⴰⴷⵉⴳⴰⵏⵜ",
+            "description": "ⵜⴰⵥⵔⵉⴳⵜ ⵜⴰⴷⵉⴳⴰⵏⵜ",
+            "TournamentForm": {
+                "Title": "ⴰⵙⴻⴽⵍⴻⵙ ⵏ ⵜⴻⵍⵖⵓⵖⴰ",
+                "InputPlaceholder": "ⵙⴽⴻⵛⵎ ⵉⵙⴻⵎ ⵏ ⵓⵎⵢⵓⵔⴰⵔ",
+                "AddPlayerButton": "ⵔⵏⵓ Amyurar",
+                "ErrorMessages": {
+                    "EmptyPlayer": "ⵉⵙⴻⵎ ⵏ ⵓⵎⵢⵓⵔⴰⵔ ⵓⵔ ⵢⴻⵣⵎⵉⵔ ⴰⵔⴰ ⴰⴷ ⵢⵉⵍⵉ ⴷ ⵉⵍⴻⵎ",
+                    "DuplicatePlayer": "ⵉⵙⴻⵎ ⵏ ⵓⵎⵢⵓⵔⴰⵔ ⵢⴻⵙⵙⴻⴼⴽ ⴰⴷ ⵢⵉⵍⵉ ⴷ ⵓⵏⵏⵉⴳ"
+                },
+                "StartTournamentButton": "ⴱⴷⵓ ⵜⴰⵍⵖⵓⵖⴰ"
+            },
+            "TournamentHeader": {
+                "Round1": "ⵜⵓⵣⵣⵢⴰ1",
+                "Finals": "ⵜⵉⵏⴻⴳⴳⵓⵔⴰ"
+            },
+            "pong": {
+                "vs": "ⵎⴳⴰⵍ",
+                "paused": "ⵢⴻⵃⴱⴻⵙ",
+                "ClickToStart": "ⴽⵏⴻⴷ ⵉⵡⴰⴽⴽⴻⵏ ⴰⴷ ⵜⴻⴱⴷⵓⴹ",
+                "start": "ⴱⴷⵓ"
+            }
+        },
+        "multipleGame": {
+            "title": "ⴰⵟⴰⵙ ⵏ ⵓⵔⴰⵔ",
+            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ"
+        },
+        "joinedTournaments": {
+            "title": "ⵢⴻⴽⵛⴻⵎ ⵖⴻⵔ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ",
+            "players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ:",
+            "status": "ⵜⴰⵍⵖⴰ:",
+            "started": "ⵢⴻⴱⴷⴰ:",
+            "noTournament": "ⵓⵔ ⵜⴻⴽⵛⴻⵎ ⴰⵔⴰ ⴷⴻⴳ ⴽⵔⴰ ⵏ ⵜⵛⵉⵔⴹⴰⵔⵜ!"
+        },
+        "openTournaments": {
+            "title": "ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⵢⴻⵍⴷⵉⵏ",
+            "header": {
+                "id": "ⵉⴷ",
+                "name": "ⵉⵙⴻⵎ",
+                "creator": "ⴰⵅⵍⴰⵇ",
+                "creationDate": "ⴰⵣⴻⵎⵣ ⵏ ⵓⵙⵏⵓⵍⴼⵓ",
+                "players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ",
+                "action": "ⵜⵉⴳⴰⵡⵜ"
+            },
+            "joinButton": "ⵔⵏⵓ ⵖⴻⵔ",
+            "noTournaments": "ⵓⵍⴰⵛ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⵢⴻⵍⵍⴰⵏ ⵉⵎⵉⵔⴰ."
+        }
+    }
+
+}
