@@ -11,6 +11,7 @@ import { FaRegUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { UsernameFormData } from '../../types/apiTypes';
 import { LOGO } from '@/config/constants';
+import OtpAuth from './OtpAuth';
 
 
 
@@ -19,13 +20,28 @@ const Oauth2Callback = () => {
     const navigate = useNavigate()
     const [isUsernameForm, setUsernameForm] = useState(false);
     const {setIsLoggedIn} = useAuth();
+    const [is2faRequired, set2faRequired] = useState(false);
+    const [username, setUsername] = useState('');
 
     const {register, handleSubmit, errors, mutation, reset} = useOauth2Username()
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const status = params.get('status')
-        if (status && status === 'success') {
+        if (status && status === '2fa_required') {
+          const message = params.get('message')
+          if (message) {
+            toast.info(message);
+          } else {
+            toast.info('2fa required, please enter otp');
+          }
+          set2faRequired(true);
+          const username = params.get('username');
+          if (username) {
+            setUsername(username);
+          }
+        }
+        else if (status && status === 'success') {
           const message = params.get('message')
           if (message) {
             toast.success(message);
@@ -35,12 +51,12 @@ const Oauth2Callback = () => {
           setIsLoggedIn(true);
           navigate('/');
         }
-        else if (status === 'set_username') {
+        else if (status && status === 'set_username') {
           const message = params.get('message')
           if (message) {
-            toast.success(message);
+            toast.info(message);
           } else {
-            toast.success('Please set a username to continue');
+            toast.info('Please set a username to continue');
           }
           // const status = params.get('message') as string;
           // setFormStatus(status)
@@ -77,11 +93,12 @@ const Oauth2Callback = () => {
 
   return (
     <div className={css.oauth2Container}>
+        { is2faRequired && <OtpAuth setOtpRequired={set2faRequired} username={username} />}
         { isUsernameForm &&
           <form noValidate={true} className={css.usernameForm} onSubmit={ handleSubmit(handleClick) }>
             <div className={css.FormHeader}>
               <img src={LOGO} alt="" className={css.logo} />
-              <h1>Your provider username is already exist, please choose new one</h1>
+              <h1>Your provider username is not valid, or already exist, please choose new one</h1>
             </div>
             <p>Select new username and continue</p>
             <div className={css.inputContainer}>
@@ -92,7 +109,6 @@ const Oauth2Callback = () => {
             <button type="submit" className={css.submitBtn}>
               Submit
             </button>
-            {/* {errors.root && <span className={css.fieldError}>{errors.root.message}</span>} */}
           </form>
         }
     </div>

@@ -214,3 +214,13 @@ export interface UserAchievements {
     is_unlocked: boolean;
     unlocked_at: string;
 }
+
+export interface LeaderBoard {
+    rank: number;
+    avatar: string;
+    username: string;
+    played_games: number;
+    win_rate: number;
+    lose_rate: number;
+    score: number;
+}

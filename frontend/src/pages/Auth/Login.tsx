@@ -35,9 +35,13 @@ const Login = () => {
   useEffect(() => {
     if (mutation.isSuccess) {
       if (mutation.data?.data?.status && mutation.data?.data.status === '2FA_REQUIRED') {
-        // console.log(mutation.data.data);
         reset();
         setOtpRequired(true);
+        if (mutation.data?.data?.message) {
+          toast.info(mutation.data?.data.message);
+        } else {
+          toast.info('2FA required, please enter otp');
+        }
         return ;
       }
       toast.success(mutation.data?.data?.message);

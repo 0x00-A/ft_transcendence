@@ -164,6 +164,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                 {!profileData?.is2fa_active ?
                     <div className={css.twoFacContainer}>
                         <div className={css.inputContainer}>
+                            <p>Install the app<a href=""> Google Authenticator </a>and get the QR-Code, scan it and enter the OTP. and the you </p>
                             <p>Get verification codes from an authenticator app such as Google Authenticator, It works even if your phone is offline. Scan the QR code</p>
                             <div className={css.labelIcon}>
                                 <TbDeviceMobileMessage className={css.mobileMsgIcon}/>
