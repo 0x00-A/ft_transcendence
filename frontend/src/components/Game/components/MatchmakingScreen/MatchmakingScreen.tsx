@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Crosshair, Zap, Gamepad2, RadarIcon } from 'lucide-react';
 import { useGetData } from '@/api/apiHooks';
+import { useTranslation } from 'react-i18next';
 
 
 const MatchmakingScreen = ({onClick} : {onClick: () => void;}) => {
   const [matchmakingProgress, setMatchmakingProgress] = useState(0);
   const [connectionQuality, setConnectionQuality] = useState(4);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Simulate matchmaking progress
@@ -62,9 +64,9 @@ const MatchmakingScreen = ({onClick} : {onClick: () => void;}) => {
 
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-red-400 mb-2">
-            Matchmaking in Progress
+            {t('game.remoteGame.matchmakingScreen.matchmakingInProgress')}
           </h2>
-          <p className="text-gray-400">Searching for a worthy opponent</p>
+          <p className="text-gray-400">{t('game.remoteGame.matchmakingScreen.searchingForOpponent')}</p>
         </div>
 
         <div className="w-full bg-gray-800 rounded-full h-2.5 mb-4">
@@ -77,14 +79,14 @@ const MatchmakingScreen = ({onClick} : {onClick: () => void;}) => {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-gray-800/50 rounded-lg p-4 text-center">
             <Gamepad2 className="mx-auto mb-2 text-red-400" size={32} />
-            <span className="text-xs text-gray-400">Players Online</span>
+            <span className="text-xs text-gray-400">{t('game.remoteGame.matchmakingScreen.playersOnline')}</span>
             <div className="font-bold text-lg text-red-400">{data?.online_players || 0}</div>
           </div>
 
           <div className="bg-gray-800/50 rounded-lg p-4 text-center">
             <Zap className="mx-auto mb-2 text-yellow-400" size={32} />
-            <span className="text-xs text-gray-400">Skill Match</span>
-            <div className="font-bold text-lg text-yellow-300">High</div>
+            <span className="text-xs text-gray-400">{t('game.remoteGame.matchmakingScreen.skillMatch')}</span>
+            <div className="font-bold text-lg text-yellow-300">{t('game.remoteGame.matchmakingScreen.highSkillMatch')}</div>
           </div>
         </div>
 
@@ -93,7 +95,7 @@ const MatchmakingScreen = ({onClick} : {onClick: () => void;}) => {
           className="w-full py-3 bg-red-600 hover:bg-red-700 rounded-lg
                      transition-colors text-white flex items-center justify-center space-x-2"
         >
-          <span>Cancel Matchmaking</span>
+          <span>{t('game.remoteGame.matchmakingScreen.cancelMatchmaking')}</span>
         </button>
       </div>
 

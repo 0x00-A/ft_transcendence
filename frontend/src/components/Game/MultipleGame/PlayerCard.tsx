@@ -1,12 +1,14 @@
 import { useGetData } from '@/api/apiHooks';
 import { User } from '@/types/apiTypes';
 import PlayerCardSkeleton from './PlayerCardSkeleton';
+import { useTranslation } from 'react-i18next';
 
 
 
 const PlayerCard = ({ layout = 'vertical', score, against, p_id } :
   {layout?: 'vertical' | 'horizontal', score: number, against: number, p_id: number | null}) => {
-  // const player = {
+    const { t } = useTranslation();
+    // const player = {
   //   username: "GamerPro123",
   //   score: 1250,
   //   against: 980,
@@ -52,13 +54,13 @@ const PlayerCard = ({ layout = 'vertical', score, against, p_id } :
           ${isVertical ? 'border-t pt-3 w-full' : 'border-l pl-4'}
         `}>
           <div className="text-center">
-            <p className="text-sm text-gray-500">Score</p>
+            <p className="text-sm text-gray-500">{t('game.multipleGame.PlayerCard.Score')}</p>
             <p className="text-lg font-semibold text-green-300">
               {score}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500">Against</p>
+            <p className="text-sm text-gray-500">{t('game.multipleGame.PlayerCard.Against')}</p>
             <p className="text-lg font-semibold text-red-300">
               {against}
             </p>

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import styles from './ReadyButton.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     isReady:boolean;
@@ -11,6 +12,7 @@ const ReadyButton = ({isReady, setIsReady,   handleReady, handleCancel,}: Props)
 //   const [isReady, setIsReady] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleReadyToggle = useCallback(() => {
     if (isLoading) return;
@@ -53,8 +55,8 @@ const ReadyButton = ({isReady, setIsReady,   handleReady, handleCancel,}: Props)
 
         <span className="relative z-10 flex items-center justify-center gap-2">
           {isLoading ?
-            (isReady ? 'Cancel...' : 'Loading...') :
-            (isReady ? 'READY!' : 'READY UP')
+            (isReady ? t('game.remoteTournament.sparkleEffect.cancel') : t('game.remoteTournament.sparkleEffect.loading')) :
+            (isReady ? t('game.remoteTournament.sparkleEffect.ready') : t('game.remoteTournament.sparkleEffect.readyUp'))
           }
 
           {isReady && !isLoading && (

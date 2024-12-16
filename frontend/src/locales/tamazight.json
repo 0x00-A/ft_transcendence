@@ -147,6 +147,7 @@
         "clearAll": "ⵙⴼⴻⴹ ⴰⴽⴽ"
     },
     "game": {
+        "gameArea": "ⵕⵓⵃ!",
         "localGame": {
             "title": "ⵓⵔⴰⵔ ⴰⴷⵉⴳⴰⵏ",
             "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ",
@@ -179,7 +180,15 @@
         },
         "remoteGame": {
             "title": "ⵓⵔⴰⵔ ⵙ ⵍⴱⴻⵄⴷ",
-            "description": "ⴰⵖⴱⴻⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+            "description": "ⴰⵖⴱⴻⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "ⵜⵉⵎⵍⵉⵍⵉⵜ ⴷⴻⴳ ⵓⴽⴻⵎⵎⴻⵍ",
+                "searchingForOpponent": "ⴰⵏⴰⴷⵉ ⵖⴻⴼ ⵓⵅⵚⵉⵎ ⵢⵓⴽⵍⴰⵍⴻⵏ",
+                "playersOnline": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+                "skillMatch": "ⵜⵉⵎⵍⵉⵍⵉⵜ ⵏ ⵜⴰⵎⵓⵙⵏⵉ",
+                "highSkillMatch": "ⵄⴻⵍⴰⵢ",
+                "cancelMatchmaking": "ⴱⵟⴻⵍ ⵜⵉⵎⵍⵉⵍⵉⵜ"
+            }
         },
         "remoteTournament": {
             "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵙ ⵓⴱⴻⵄⴷ",
@@ -190,6 +199,26 @@
                 "SubmitButton": "ⴰⵙⴻⴱⵜⴻⵔ",
                 "CancelButton": "ⵢⴻⴽⴽⴻⵙ",
                 "AlertMessage": "ⵜⵜⵅⵉⵍⴽ ⵙⵙⴻⴽⵛⴻⵎ ⵉⵙⴻⵎ ⵏ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ."
+            },
+            "playerReady": {
+                "Players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ",
+                "Format": "ⵜⴰⵍⵖⴰ",
+                "SingleElimination": "ⵜⵓⴽⴽⵙⴰ ⵜⴰⵢⵉⵡⴻⵏⵜ",
+                "Status": "ⵜⴰⵍⵖⴰ",
+                "Created": "ⵢⴻⵜⵜⵡⴰⵅⵍⴻⵇⴷ "
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "ⴵⴵ ⵜⴰⵍⵖⵓⵖⴰ",
+                "leaveConfirmationTitle": "ⴵⴵ ⵜⴰⵍⵖⵓⵖⴰ?",
+                "leaveConfirmationDescription": "ⵜⴻⵜⵜⵡⴰⵍⵉⴹ ⴱⴻⵍⵍⵉ ⵜⴻⴱⵖⵉⴹ ⴰⴷ ⵜⴻⴼⴼⵖⴻⴹ ⵙⴻⴳ ⵜⴻⵍⵖⵓⵖⴰ? ⵜⵉⴳⴰⵡⵜⴰ ⵓⵔ ⵜⴻⵣⵎⵉⵔ ⴰⵔⴰ ⴰⴷ ⵜⴻⵜⵜⵡⴰⴽⴽⴻⵙ ⵢⴻⵔⵏⴰ ⵜⴻⵣⵎⴻⵔ ⴰⴷ ⴷⵜⴻⵙⵙⵉⵡⴻⴹ ⵖⴻⵔ ⵓⵃⴱⴰⵙ ⵏ ⵜⴻⵍⵖⵓⵖⴰ.",
+                "stayButton": "ⵇⵇⵉⵎ",
+                "leaveButton": "ⴵⴵ ⵜⴰⵍⵖⵓⵖⴰ"
+            },
+            "sparkleEffect": {
+                "cancel": "ⵢⴻⴽⴽⴻⵙ...",
+                "loading": "ⴰⵄⴻⴱⴱⵉ...",
+                "ready": "ⵉⵀⴻⴳⴳⴰ!",
+                "readyUp": "HEJGED"
             }
         },
         "localTournament": {
@@ -218,7 +247,12 @@
         },
         "multipleGame": {
             "title": "ⴰⵟⴰⵙ ⵏ ⵓⵔⴰⵔ",
-            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ"
+            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ",
+            "PlayerCard": {
+                "Score": "ⵜⴰⵢⴰⴼⵓⵜ",
+                "Against": "ⵎⴳⴰⵍ"
+            },
+            "WaitingPJ": "ⵜⵜⵕⴰⴵⵓⵖ ⴰⴷ ⴽⴻⵛⵎⴻⵏ ⵉⵎⵢⵓⵔⴰⵔⴻⵏ..."
         },
         "joinedTournaments": {
             "title": "ⵢⴻⴽⵛⴻⵎ ⵖⴻⵔ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ",

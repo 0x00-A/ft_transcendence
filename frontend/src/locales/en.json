@@ -147,6 +147,7 @@
         "clearAll": "Clear All"
     },
     "game": {
+        "gameArea": "GO!",
         "localGame": {
             "title": "Local Game",
             "description": "Play with friends",
@@ -157,7 +158,7 @@
                 "SetWinningScore": "Set Winning Score",
                 "SetControllerType": "Set Controller Type",
                 "ControllerOptions": {
-                    "Mouse": "Mouse",
+                    "Mouse": "Mouse", 
                     "Keyboard": "Keyboard"
                 }
             },
@@ -179,7 +180,15 @@
         },
         "remoteGame": {
             "title": "Remote Game",
-            "description": "Challenge online"
+            "description": "Challenge online",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "Matchmaking in Progress",
+                "searchingForOpponent": "Searching for a worthy opponent",
+                "playersOnline": "Players Online",
+                "skillMatch": "Skill Match",
+                "highSkillMatch": "High",
+                "cancelMatchmaking": "Cancel Matchmaking"
+            }
         },
         "remoteTournament": {
             "title": "Remote Tournament",
@@ -190,6 +199,26 @@
                 "SubmitButton": "Submit",
                 "CancelButton": "Cancel",
                 "AlertMessage": "Please enter a tournament name."
+            },
+            "playerReady": {
+                "Players": "Players",
+                "Format": "Format",
+                "SingleElimination": "Single Elimination",
+                "Status": "Status",
+                "Created": "Created"
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "Leave Tournament",
+                "leaveConfirmationTitle": "Leave Tournament?",
+                "leaveConfirmationDescription": "Are you sure you want to leave the tournament? This action cannot be undone and may result in aborting the tournament.",
+                "stayButton": "Stay",
+                "leaveButton": "Leave Tournament"
+            },
+            "sparkleEffect": {
+                "cancel": "Cancel...",
+                "loading": "Loading...",
+                "ready": "READY!",
+                "readyUp": "READY UP"
             }
         },
         "localTournament": {
@@ -218,7 +247,12 @@
         },
         "multipleGame": {
             "title": "Multiple Game",
-            "description": "Play with friends"
+            "description": "Play with friends",
+            "PlayerCard": {
+                "Score": "Score",
+                "Against": "Against"
+            },
+            "WaitingPJ": "Waiting for players to join..."
         },
         "joinedTournaments": {
             "title": "Joined Tournaments",

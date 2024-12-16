@@ -147,6 +147,7 @@
         "clearAll": "Limpiar todo"
     },
     "game": {
+        "gameArea": "IR!",
         "localGame": {
             "title": "Juego Local",
             "description": "Juega con amigos",
@@ -179,7 +180,15 @@
         },
         "remoteGame": {
             "title": "Juego Remoto",
-            "description": "Desafía en línea"
+            "description": "Desafía en línea",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "Emparejamiento en progreso",
+                "searchingForOpponent": "Buscando un oponente digno",
+                "playersOnline": "Jugadores en línea",
+                "skillMatch": "Nivel de habilidad",
+                "highSkillMatch": "Alto",
+                "cancelMatchmaking": "Cancelar emparejamiento"
+            }
         },
         "remoteTournament": {
             "title": "Torneo Remoto",
@@ -190,6 +199,26 @@
                 "SubmitButton": "Entregar",
                 "CancelButton": "Cancelar",
                 "AlertMessage": "Ingrese un nombre para el torneo."
+            },
+            "playerReady": {
+                "Players": "Jugadores",
+                "Format": "Formato",
+                "SingleElimination": "Eliminación Simple",
+                "Status": "Estado",
+                "Created": "Creado"
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "Salir del Torneo",
+                "leaveConfirmationTitle": "¿Salir del Torneo?",
+                "leaveConfirmationDescription": "¿Estás seguro de que quieres salir del torneo? Esta acción no se puede deshacer y puede resultar en la cancelación del torneo.",
+                "stayButton": "Permanecer",
+                "leaveButton": "Salir del Torneo"
+            },
+            "sparkleEffect": {
+                "cancel": "Cancelar...",
+                "loading": "Cargando...",
+                "ready": "¡LISTO!",
+                "readyUp": "PREPARARSE"
             }
         },
         "localTournament": {
@@ -218,7 +247,12 @@
         },
         "multipleGame": {
             "title": "Juego Múltiple",
-            "description": "Juega con amigos"
+            "description": "Juega con amigos",
+            "PlayerCard": {
+                "Score": "Puntaje",
+                "Against": "Contra"
+            },
+            "WaitingPJ": "Esperando a que las jugadoras se unan..."
         },
         "joinedTournaments": {
             "title": "Torneos Inscritos",
