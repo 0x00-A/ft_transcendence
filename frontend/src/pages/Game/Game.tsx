@@ -69,7 +69,7 @@ import { useTranslation } from 'react-i18next';
   //   return;
   // console.log('Game component rerendered');
 
-  const { gameAccepted, gameInvite, setGameAccepted } = useGameInvite();
+  const { gameAccepted, gameInvite, setGameAccepted, player1_id: p1_id, player2_id: p2_id } = useGameInvite();
 
   const { user } = useUser();
 
@@ -264,8 +264,8 @@ import { useTranslation } from 'react-i18next';
           requestRemoteGame();
         }}
         game_address={gameInvite}
-        p1_id={player1_id!}
-        p2_id={player2_id!}
+        p1_id={p1_id!}
+        p2_id={p2_id!}
       />
     );
   }

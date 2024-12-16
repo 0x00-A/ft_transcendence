@@ -137,10 +137,10 @@ const showFriendRequestToast = (from: string) => {
       toast.error('Failed to accept friend request');
     }
   };
-  
+
   const handleRejectRequest = async (from: string) => {
     try {
-      await rejectFriendRequest(from); 
+      await rejectFriendRequest(from);
       toast.dismiss(from);
     } catch (error) {
       toast.error('Failed to reject friend request');
@@ -211,7 +211,7 @@ const showFriendRequestToast = (from: string) => {
       ws.current.onopen = () => {
         console.log('Notification WebSocket connected');
       };
-      
+
       ws.current.onmessage = (event) => {
         const data = JSON.parse(event.data);
 
@@ -247,7 +247,7 @@ const showFriendRequestToast = (from: string) => {
         }
         if (data.event === 'game_address') {
           toast.info(data.message);
-          acceptInvite(data.game_address);
+          acceptInvite(data.game_address, data.p1_id, data.p2_id);
         }
       };
 
