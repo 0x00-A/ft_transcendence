@@ -6,15 +6,7 @@ import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
-import LeaveTournamentButton from './LeaveTournamentButton';
-
-// function IconLabelButtons({ onClick }: { onClick: () => void }) {
-//   return (
-//     <button onClick={onClick} className={`${css.playButton}`}>
-//       Ready
-//     </button>
-//   );
-// }
+import LeaveTournamentButton from '../components/LeaveTournamentButton';
 
 const Match = ({
   // player1,
