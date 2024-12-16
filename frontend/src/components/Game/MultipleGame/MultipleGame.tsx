@@ -5,6 +5,7 @@ import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import PlayerCard from './PlayerCard';
 import PlayerCardSkeleton from './PlayerCardSkeleton';
+import { useTranslation } from 'react-i18next';
 
 
 const canvasWidth = 480;
@@ -23,6 +24,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const ws = useRef<WebSocket | null>(null);
   const [gameState, setGameState] = useState<GameState>('started');
   const [restart, setRestart] = useState(false);
+  const { t } = useTranslation();
   // const [player, setPlayer] = useState<string>('');
 
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('game');
@@ -457,7 +459,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
                     </div>}
                   </div> */}
                   <div className="animate-pulse text-center">
-                    <p className="text-gray-400">Waiting for players to join...</p>
+                    <p className="text-gray-400">{t('game.multipleGame.WaitingPJ')}</p>
                   </div>
               </div>
             </div>
