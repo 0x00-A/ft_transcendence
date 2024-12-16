@@ -10,4 +10,4 @@ export const formatDate = (dateString: Date) => {
       minute: 'numeric',
       hour12: true,
     });
-  };
+};
