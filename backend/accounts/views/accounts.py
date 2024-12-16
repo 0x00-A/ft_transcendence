@@ -1,10 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from accounts.models import User, UserAchievement
-from accounts.serializers import UserProfileSerializer
+from accounts.models import User, UserAchievement, Profile
+from accounts.serializers import UserProfileSerializer, LeaderBoardSerializer
 from accounts.serializers import UserSerializer, UserAchievementsSerializer
 
 
@@ -75,3 +75,36 @@ class GetMyAchievementsView(APIView):
         serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
         print('api ==> get my achievements: User achievements found')
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LeaderBoardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            query_set = Profile.objects.all().order_by('rank')
+            serializer = LeaderBoardSerializer(query_set, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Profile.DoesNotExist:
+            return Response({'error': 'Leaderboard not found'},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {'error': f'Internal server error: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class DashboardLeaderBoardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            query_set = Profile.objects.all().order_by('rank')[:5]
+            serializer = LeaderBoardSerializer(query_set, many=True, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Profile.DoesNotExist:
+            return Response({'error': 'Leaderboard not found'},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(
+                {'error': f'Internal server error: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

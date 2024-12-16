@@ -50,21 +50,32 @@ def oauth2_authentication(request, choice):
                 check_user.save()
             except EmailVerification.DoesNotExist:
                 pass
+        if check_user.is2fa_active:
+            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=2fa_required&username={check_user.username}&message={quote('2FA is required. Please enter your OTP code.')}")
     except User.DoesNotExist:
         check_user = None
     if check_user is None:
-        if User.objects.filter(username=user_data['username']).exists():
-            request.session['user_data'] = {
-                'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
-            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Please choose a username to continue!')}")
-        serializer = Oauth2Serializer(data=user_data)
-        if not serializer.is_valid():
-            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'A data in your {choice} user not compatible with our criteria!')}")
-        serializer.save()
+        try:
+            if User.objects.filter(username=user_data['username']).exists():
+                request.session['user_data'] = {'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
+                return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Username already exists, Please choose a username to continue!')}")
+            serializer = Oauth2Serializer(data=user_data)
+            if not serializer.is_valid():
+                if 'username' in serializer.errors:
+                    request.session['user_data'] = {'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
+                    return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Username not valid, Please choose a username to continue!')}")
+                return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'A data in your {choice} user not compatible with our criteria!')}")
+            check_user = serializer.save()
+            send_oauth2_welcome(check_user, choice)
+        except Exception as e:
+            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to create user, try again!')}")
+        # try:
+        #     check_user = User.objects.get(serializer.validated_data['username'])
+        # except User.DoesNotExist:
+        #     return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Failed to create a new user!')}")
         # check_user = authenticate(email=serializer.validated_data['email'])
         # if check_user is None:
         #     return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Authenticate the user failed')}")
-        send_oauth2_welcome(check_user)
     token = get_token_for_user(check_user)
     if token is None:
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Getting token for user failed')}")
@@ -88,6 +99,7 @@ def oauth2_authentication(request, choice):
 
 
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def oauth2_set_username(request):
 

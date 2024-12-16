@@ -88,7 +88,7 @@ function AppContent() {
   '/search',
   '/store',
   '/leaderboard',
-  '/auth/2factor',
+  // '/auth/2factor',
   '/profile',
   /^\/profile\/[^/]+\/?$/,
   '/auth/email-verification',
