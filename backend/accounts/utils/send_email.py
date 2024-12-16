@@ -53,9 +53,10 @@ def send_reset_password_email(user):
     email.attach_alternative(html_message, 'text/html')
     email.send(fail_silently=False)
 
-def send_oauth2_welcome(user):
+def send_oauth2_welcome(user, choice:str):
     html_message = render_to_string('oauth2_welcome.html', context={
         'username': user.username,
+        'choice': choice,
         # 'logo_path': LOGO_PATH,
         'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
         'website_link': CLIENT_URL,

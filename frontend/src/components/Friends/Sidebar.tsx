@@ -30,7 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
     setView(view);
     navigate(`/friends?view=${view}`);
   };
-
   return (
     <nav className={`${css.sidebar} ${isCollapsed ? css.collapsed : ''}`}>
       <div className={css.sidebarContent}>
@@ -79,9 +78,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setView, currentView }) => {
         <LuUserPlus className={css.icon}/>
         <span className={css.buttonText}>{t('sidebarFriends.addFriend')}</span>
       </button>
-      <button 
-        className={css.collapseButton} 
-        onClick={toggleCollapse} 
+      <button
+        className={css.collapseButton}
+        onClick={toggleCollapse}
         aria-label={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
       >
         {isCollapsed ? <FaChevronLeft size={15} /> : <FaChevronRight size={15} />}

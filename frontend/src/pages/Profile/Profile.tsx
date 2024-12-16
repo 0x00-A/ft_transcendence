@@ -1,5 +1,5 @@
 // React
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // Components
 import ProfileHeader from '../../components/Profile/ProfileHeader'
 import ProfileFriends from "@/components/Profile/ProfileFriends";
@@ -20,7 +20,12 @@ const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
-  const { user: currentUser, error, isLoading } = useUser();
+  const { user: currentUser, error, refetch, isLoading } = useUser();
+
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (error) toast.error(error.message);
 
