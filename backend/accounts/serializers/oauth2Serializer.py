@@ -14,6 +14,15 @@ class Oauth2Serializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'avatar_link']
 
+    def validate_username(self, value):
+        if any(ch.isupper() for ch in value):
+            raise serializers.ValidationError({'Username must be lowercase!'})
+        if len(value) < 4:
+            raise serializers.ValidationError({'Username must be at least 4 characters!'})
+        if len(value) > 30:
+            raise serializers.ValidationError({'Username must be at most 30 characters!'})
+        return value
+
     def validate(self, attrs):
         return attrs
 

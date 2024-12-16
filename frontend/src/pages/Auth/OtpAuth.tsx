@@ -8,6 +8,7 @@ import axios from 'axios';
 import { API_LOGIN_OTP_URL } from '@/api/apiConfig';
 import { otpSchema } from '@/types/formSchemas';
 import * as Yup from 'yup';
+import { LOGO } from '@/config/constants';
 
 
 const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<React.SetStateAction<boolean>>, username:string}) => {
@@ -48,13 +49,19 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
 
   return (
     <form action="" className={css.otpForm} onSubmit={handleVerifyOtp}>
+      <img src={LOGO} alt="" className={css.logo}/>
       <h1>2FA Required</h1>
       <p>Please enter the one-time-password in your application google authenticator, to login</p>
-      <div className={css.fieldContainer}>
-        <label htmlFor="" className={css.label}>Enter the Otp</label>
-        <input type="text" className={css.input} placeholder="Enter otp" onChange={(e) => setOtp(e.target.value)} />
-        {otpError && <span className={css.fieldError}>{otpError}</span>}
-        <button type='submit' className={css.submitBtn}>Submit</button>
+      <div className={css.inputContainer}>
+        <div className={css.fieldContainer}>
+          <label htmlFor="" className={css.label}>Enter the Otp</label>
+          <input type="text" className={css.input} placeholder="Enter otp" onChange={(e) => setOtp(e.target.value)} />
+          {otpError && <span className={css.fieldError}>{otpError}</span>}
+        </div>
+        <div className={css.otpButtons}>
+          <button type='submit' className={css.submitBtn}>Submit</button>
+          <button type='reset' className={css.cancelBtn} onClick={() => navigate('/auth')}>Cancel</button>
+        </div>
       </div>
     </form>
   )

@@ -53,8 +53,6 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
       if (mutation.isError) {
         if (errors?.root) {
           toast.error(errors.root?.message);
-        } else {
-          toast.error('Something went wrong!');
         }
       }
     }, [mutation.isError]);

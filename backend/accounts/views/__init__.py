@@ -34,3 +34,6 @@ from .profile import ProfileApiView
 from .profile import AllUsersView
 from .profile import UserDetailView
 from .profile import OnlineUsersView
+
+from .accounts import LeaderBoardView
+from .accounts import DashboardLeaderBoardView
