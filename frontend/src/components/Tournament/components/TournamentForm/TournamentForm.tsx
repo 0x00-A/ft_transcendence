@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './TournamentForm.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface FormProps {
   onSubmit: (players: string[]) => void;
@@ -9,16 +10,17 @@ interface FormProps {
 
 const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
   const [playerName, setPlayerName] = useState<string>('');
+  const { t } = useTranslation();
   const [error, setError] = useState<string>(''); // To store error messages
 
   const handleAddPlayer = () => {
     if (!playerName.trim()) {
-      setError('Player name cannot be empty');
+      setError(t('game.localTournament.TournamentForm.ErrorMessages.EmptyPlayer'));
       return;
     }
 
     if (players.includes(playerName)) {
-      setError('Player name must be unique');
+      setError(t('game.localTournament.TournamentForm.ErrorMessages.DuplicatePlayer'));
       return;
     }
 
@@ -41,13 +43,13 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
 
   return (
     <div className={styles.container}>
-      <h2 className={`${styles.heading} ${styles.label}`}>Tournament Registration</h2>
+      <h2 className={`${styles.heading} ${styles.label}`}>{t('game.localTournament.TournamentForm.Title')}</h2>
 
       <input
         type="text"
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
-        placeholder="Enter player name"
+        placeholder={t('game.localTournament.TournamentForm.InputPlaceholder')}
         maxLength={15}
         className={styles.input}
       />
@@ -57,7 +59,7 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
         disabled={!playerName || players.length >= 4}
         className={styles.addButton}
       >
-        Add Player
+        {t('game.localTournament.TournamentForm.AddPlayerButton')}
       </button>
 
       {error && <p className={styles.errorMessage}>{error}</p>}
@@ -83,7 +85,7 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
           players.length === 4 ? styles.enabled : styles.disabled
         }`}
       >
-        Start Tournament
+        {t('game.localTournament.TournamentForm.StartTournamentButton')}
       </button>
     </div>
   );

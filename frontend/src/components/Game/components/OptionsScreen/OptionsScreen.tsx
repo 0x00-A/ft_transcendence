@@ -2,6 +2,7 @@ import CloseButton from '../CloseButton/CloseButton';
 import css from './OptionsScreen.module.css';
 import GameButton from '../GameButton/GameButton';
 import { Controller } from '../../../../types/types';
+import { useTranslation } from 'react-i18next';
 
 interface OptionsScreenProps {
   onClose: () => void;
@@ -22,6 +23,8 @@ const OptionsScreen = ({
   controller,
   winningScore,
 }: OptionsScreenProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className={css.gameScreenDiv}>
       <CloseButton onClose={onClose} />
@@ -40,11 +43,11 @@ const OptionsScreen = ({
           aria-label="Toggle Sound"
         ></button>
         <label htmlFor="soundButton" className={css.soundButtonLabel}>
-          SOUND
+          {t('game.localGame.OptionsScreen.Sound')}
         </label>
       </div>
       <div className={css.winningScoreWrapper}>
-        <p className={css.title}>Set Winning Score</p>
+        <p className={css.title}>{t('game.localGame.OptionsScreen.SetWinningScore')}</p>
         <div className={css.scores}>
           <GameButton
             className={`${winningScore === 7 ? css.on : css.off} ${css.scoreButton}`}
@@ -73,19 +76,19 @@ const OptionsScreen = ({
         </div>
       </div>
       <div className={css.controllerTypeWrapper}>
-        <p className={css.title}>Set Controller Type</p>
+        <p className={css.title}>{t('game.localGame.OptionsScreen.SetControllerType')}</p>
         <div className={css.controlls}>
           <GameButton
             className={`${css.controllButtons} ${controller === 'mouse' ? css.on : css.off}`}
             onClick={() => setController('mouse')}
           >
-            Mouse
+            {t('game.localGame.OptionsScreen.ControllerOptions.Mouse')}
           </GameButton>
           <GameButton
             className={`${css.controllButtons} ${controller === 'keyboard' ? css.on : css.off}`}
             onClick={() => setController('keyboard')}
           >
-            Keyboard
+            {t('game.localGame.OptionsScreen.ControllerOptions.Keyboard')}
           </GameButton>
         </div>
       </div>

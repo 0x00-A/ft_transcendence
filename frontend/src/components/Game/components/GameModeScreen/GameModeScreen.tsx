@@ -4,6 +4,7 @@ import { Controller, GameScreens } from '../../../../types/types';
 import { useState } from 'react';
 import OptionsScreen from '../OptionsScreen/OptionsScreen';
 import GameButton from '../GameButton/GameButton';
+import { useTranslation } from 'react-i18next';
 
 const GameModeScreen = ({
   onNext,
@@ -25,6 +26,8 @@ const GameModeScreen = ({
   winningScore: number;
 }) => {
   const [options, openOptions] = useState(false);
+  const { t } = useTranslation();
+
 
   const handleClose = () => openOptions(false);
 
@@ -49,7 +52,7 @@ const GameModeScreen = ({
           SetIsOnePlayerMode(true);
         }}
       >
-        One Player
+        {t('game.localGame.onePlayer')}
       </GameButton>
       <GameButton
         onClick={() => {
@@ -57,7 +60,7 @@ const GameModeScreen = ({
           SetIsOnePlayerMode(false);
         }}
       >
-        Two Players
+        {t('game.localGame.twoPlayer')}
       </GameButton>
 
       <div

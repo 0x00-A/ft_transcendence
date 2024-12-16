@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 from datetime import datetime, timezone
 from app.settings import SERVER_URL, MEDIA_URL
+from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
 
@@ -60,7 +61,6 @@ class CreateConversationView(APIView):
 
             last_message = conversation.last_message or "Send first message"
             truncated_message = f"{last_message[:10]}..." if len(last_message) > 10 else last_message
-            updated_at = conversation.updated_at.isoformat()
 
             conversation_data = {
                 'id': conversation.id,
@@ -69,7 +69,7 @@ class CreateConversationView(APIView):
                 'avatar': f"{SERVER_URL}{MEDIA_URL}{other_user.profile.avatar}",
                 'name': other_user.username,
                 'lastMessage': truncated_message,
-                'time': format_time(conversation.updated_at),
+                'time': conversation.updated_at,
                 'unreadCount': unread_count or '',
                 'status': other_user.profile.is_online,
             }
@@ -144,7 +144,7 @@ class GetConversationsView(APIView):
                     'avatar': other_user_avatar,
                     'name': other_user_username,
                     'lastMessage': truncated_message or "Send",
-                    'time': format_time(updated_at),
+                    'time': updated_at,
                     'unreadCount': unread_count or '',
                     'status': other_status,
                     'block_status': block_status,
@@ -160,8 +160,14 @@ class GetConversationsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+class CustomMessagePagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class GetMessagesView(APIView):
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomMessagePagination
 
     def get(self, request, conversation_id):
         try:
@@ -170,9 +176,32 @@ class GetMessagesView(APIView):
                 Q(id=conversation_id),
                 Q(user1=user) | Q(user2=user)
             )
-            messages = conversation.messages.all().order_by('timestamp')
-            serializer = MessageSerializer(messages, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            messages = conversation.messages.all().order_by('-timestamp')
+            
+            paginator = self.pagination_class()
+            
+            page = request.query_params.get('page', 1)
+            
+            try:
+                page = int(str(page).rstrip('/'))
+            except (ValueError, TypeError):
+                page = 1  
+            
+            request.query_params._mutable = True
+            request.query_params['page'] = page
+            
+            try:
+                paginated_messages = paginator.paginate_queryset(messages, request)
+                serializer = MessageSerializer(paginated_messages, many=True)
+                return paginator.get_paginated_response(serializer.data)
+            
+            except Exception as pagination_error:
+                return Response(
+                    {'error': 'Pagination error', 'details': str(pagination_error)},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
         except Conversation.DoesNotExist:
             return Response(
                 {'error': 'Conversation not found or access denied'},

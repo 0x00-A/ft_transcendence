@@ -1,0 +1,246 @@
+{
+    "welcome": {
+        "title": "FT-PONG",
+        "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
+        "playButton": "Juega ahora"
+    },
+    "noChatSelected": {
+        "title": "¡Bienvenido a tu chat!",
+        "description1": "Por favor selecciona una conversación para comenzar a chatear.",
+        "description2": "Si aún no tienes amigos",
+        "addFriendButton": "Agregar amigo"
+    },
+    "chatHeader": {
+        "typing": "Escribiendo...",
+        "activeNow": "Activo ahora",
+        "lastSeen": "Última vez visto a las"
+    },
+    "messageInput": {
+        "placeholder": "Escribe un mensaje"
+    },
+    "messageArea": {
+        "showMoreButton": "Mostrar más"
+    },
+    "message": {
+        "sender": "Tú"
+    },
+    "MessageList": {
+        "placeholder": "Buscar amigas",
+        "noUserFound": "No se encontraron usuarios que coincidan",
+        "menu": {
+            "markAsRead": "Marcar como leído",
+            "closeChat": "Cerrar chat",
+            "viewProfile": "Ver perfil",
+            "block": "Bloquear",
+            "unblock": "Desbloquear"
+        }
+
+    },
+    "optionsButton": "charlar",
+    "settingsSection": {
+        "profileButton": "Perfil",
+        "inviteButton": "Invitar",
+        "privacy": "Privacidad",
+        "mutualFriends": "Amigos en común",
+        "block": "Bloquear",
+        "unblock": "Desbloquear",
+        "noMutualFriends": "No se encontraron amigos en común.",
+        "addUser": "Agregar usuario"
+    },
+    "timeDifference": {
+        "justNow": "Justo ahora",
+        "minute": "Hace 1 minuto",
+        "minutes": "Hace {{count}} minutos",
+        "hour": "Hace 1 hora",
+        "hours": "Hace {{count}} horas",
+        "day": "Hace 1 día",
+        "days": "Hace {{count}} días",
+        "week": "Hace 1 semana",
+        "weeks": "Hace {{count}} semanas",
+        "year": "Hace 1 año",
+        "years": "Hace {{count}} años"
+    },
+    "sidebar": {
+        "dashboard": "Tablero",
+        "game": "Juego",
+        "chat": "charlar",
+        "friends": "Amigos",
+        "profile": "Perfil",
+        "logout": "cerrar sesión",
+        "lightMode": "Light mode",
+        "darkMode": "dark mode"
+    },
+    "sidebarFriends": {
+        "allFriends": "Todos los amigos",
+        "onlineFriends": "Amigos en línea",
+        "friendRequests": "Solicitudes de amistad",
+        "sentRequests": "Solicitudes enviadas",
+        "blockedList": "Lista de bloqueados",
+        "addFriend": "Agregar amigo"
+    },
+    "allFriends": {
+        "title": "Todos los amigos",
+        "placeholder": "Buscar amigos...",
+        "online": "En línea",
+        "offline": "Desconectado",
+        "pupMessage": "Mensaje",
+        "pupInvite": "Invitar",
+        "pupBlock": "Bloquear",
+        "pupUnfriend": "Eliminar amigo",
+        "noRequests": "Aún no hay amigas",
+        "description": "Parece que tu lista de amigos está vacía. ¡Empieza a conectarte buscando amigos o enviando invitaciones!"
+    },
+    "onlineFriends": {
+        "title": "Ihya n tmutrin di tga",
+        "online": "Di tga",
+        "pupMessage": "Ameqqran",
+        "pupInvite": "Asgaddef",
+        "noRequests": "No hay amigas en linea",
+        "description": "Parece que ninguno de tus amigos está en línea en este momento. ¡Invita a algunos amigos o vuelve a visitarnos más tarde!"
+    },
+    "friendRequests": {
+        "title": "Solicitudes de Amistad",
+        "pupAccept": "Aceptar",
+        "pupReject": "Rechazar",
+        "description": "No tienes solicitudes de amistad pendientes en este momento. ¡Conéctate con más personas para expandir tu red!",
+        "noRequests": "No hay Solicitudes de Amistad"
+    },
+    "sentRequests": {
+        "title": "Solicitudes Enviadas",
+        "pupCancel": "Cancelar",
+        "description": "No tienes solicitudes enviadas en este momento. ¡Conéctate con más personas para expandir tu red!",
+        "noRequests": "No hay Solicitudes Enviadas"
+    },
+    "blockedList": {
+        "title": "Lista de bloqueados",
+        "placeholder": "Buscar usuarios bloqueados...",
+        "pupUnblock": "Desbloquear",
+        "description": "No has bloqueado a ningún usuario. Los usuarios que bloquees aparecerán aquí.",
+        "noRequests": "No hay Usuarios Bloqueados"
+    },
+    "addFriend": {
+        "title": "Buscar y Agregar Amigos",
+        "placeholder": "Encuentra a tu amigo...",
+        "pupViewProfile": "Ver Perfil",
+        "pupFriend": "Amigo",
+        "pupAccept": "Aceptar",
+        "pupReject": "Rechazar",
+        "pupCancel": "Cancelar",
+        "pupPending": "Pendiente",
+        "pupAddFriend": "Agregar amigo",
+        "notFound": "No se encontró ningún usuario",
+        "Suggested": "Conexiones Sugeridas"
+    },
+    "SearchUsers": {
+        "placeholder": "Buscar...",
+        "pupFriend": "Amigo",
+        "pupAccept": "Aceptar",
+        "pupReject": "Rechazar",
+        "pupCancel": "Cancelar",
+        "pupPending": "Pendiente",
+        "pupAddFriend": "Agregar amigo",
+        "pupMessage": "Mensaje",
+        "notFound": "No se encontró ningún usuario"
+    },
+    "notifications": {
+        "title": "Notificaciones",
+        "clearAll": "Limpiar todo"
+    },
+    "game": {
+        "localGame": {
+            "title": "Juego Local",
+            "description": "Juega con amigos",
+            "onePlayer": "Una jugadora",
+            "twoPlayer": "Dos jugadoras",
+            "OptionsScreen": {
+                "Sound": "SONIDO",
+                "SetWinningScore": "Establecer puntuación ganadora",
+                "SetControllerType": "Establecer el tipo de controlador",
+                "ControllerOptions": {
+                    "Mouse": "Ratón",
+                    "Keyboard": "Teclado"
+                }
+            },
+            "DifficultyScreen": {
+                "Title": "Elija la dificultad",
+                "DifficultyOptions": {
+                    "Easy": "Fácil",
+                    "Normal": "Normal",
+                    "Hard": "Dura"
+                }
+            },
+            "EndGameScreen": {
+                "Win": "Tú ganas!",
+                "Lose": "Tu pierdes!",
+                "PlayAgain": "Jugar de nuevo",
+                "GoBack": "Volver"
+            },
+            "paused": "en pausa"
+        },
+        "remoteGame": {
+            "title": "Juego Remoto",
+            "description": "Desafía en línea"
+        },
+        "remoteTournament": {
+            "title": "Torneo Remoto",
+            "description": "Crea un torneo en línea",
+            "CreateTournamentModal": {
+                "Label": "Crear torneo",
+                "InputPlaceholder": "Introduzca el nombre del torneo",
+                "SubmitButton": "Entregar",
+                "CancelButton": "Cancelar",
+                "AlertMessage": "Ingrese un nombre para el torneo."
+            }
+        },
+        "localTournament": {
+            "title": "Torneo Local",
+            "description": "Torneo local",
+            "TournamentForm": {
+                "Title": "Registro del Torneo",
+                "InputPlaceholder": "Ingrese el nombre del jugador",
+                "AddPlayerButton": "Agregar Jugador",
+                "ErrorMessages": {
+                    "EmptyPlayer": "El nombre del jugador no puede estar vacío",
+                    "DuplicatePlayer": "El nombre del jugador debe ser único"
+                },
+                "StartTournamentButton": "Iniciar Torneo"
+            },
+            "TournamentHeader": {
+                "Round1": "ronda 1",
+                "Finals": "Finales"
+            },
+            "pong": {
+                "vs": "CONTRA",
+                "paused": "En pausa",
+                "ClickToStart": "Haga clic para comenzar",
+                "start": "Comenzar"
+            }
+        },
+        "multipleGame": {
+            "title": "Juego Múltiple",
+            "description": "Juega con amigos"
+        },
+        "joinedTournaments": {
+            "title": "Torneos Inscritos",
+            "players": "Jugadores:",
+            "status": "Estado:",
+            "started": "Iniciado:",
+            "noTournament": "¡No te has unido a ningún torneo todavía!"
+        },
+        "openTournaments": {
+            "title": "Torneos Abiertos",
+            "header": {
+                "id": "ID",
+                "name": "Nombre",
+                "creator": "Creador",
+                "creationDate": "Fecha de Creación",
+                "players": "Jugadores",
+                "action": "Acción"
+            },
+            "joinButton": "Unirse",
+            "noTournaments": "No hay torneos disponibles en este momento."
+        }
+    }
+    
+    
+}

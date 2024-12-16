@@ -8,6 +8,8 @@ import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { SendHorizontal, SmilePlus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
@@ -34,6 +36,8 @@ const MessageInput = ({
   const [timeLeft, setTimeLeft] = useState(0);
   const [charCount, setCharCount] = useState(0);
   const maxChars = 200;
+  const { t } = useTranslation(); 
+
 
 
 
@@ -180,7 +184,7 @@ const MessageInput = ({
       <div className={css.messageInputContainer}>
         <textarea
           ref={textareaRef}
-          placeholder="Write a message"
+          placeholder={t('messageInput.placeholder')}
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}

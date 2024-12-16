@@ -71,7 +71,7 @@ class GetMyAchievementsView(APIView):
 
     def get(self, request):
         user = request.user
-        achievements = UserAchievement.objects.filter(user=user)
+        achievements = UserAchievement.objects.filter(user=user).order_by('-is_unlocked')
         serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
         print('api ==> get my achievements: User achievements found')
         return Response(serializer.data, status=status.HTTP_200_OK)

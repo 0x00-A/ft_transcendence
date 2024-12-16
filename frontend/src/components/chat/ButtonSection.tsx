@@ -4,18 +4,19 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
-import { User, UserX } from 'lucide-react';
-import { apiRemoveFriend } from '@/api/friendApi';
-import { toast } from 'react-toastify';
+import { User } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 
 const ButtonSection: React.FC = () => {
   const { user } = useUser();
   const { sendMessage } = useWebSocket();
   const { selectedConversation } = useSelectedConversation();
   const navigate = useNavigate();
-
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
+  const { t } = useTranslation();
+
 
   const handleSendInvite = () => {
     if (isInviteDisabled) return;
@@ -46,14 +47,6 @@ const ButtonSection: React.FC = () => {
     return () => clearInterval(timer);
   }, [isInviteDisabled, timeLeft]);
 
-  const removeFriend = async () => {
-    try {
-      await apiRemoveFriend(selectedConversation!.name);
-      // refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to remove friend')
-    }
-  };
 
   return (
     <div className={css.buttonSection}>
@@ -64,16 +57,7 @@ const ButtonSection: React.FC = () => {
         >
           <User size={30} color="#F8F3E3" />
         </div>
-        <p>Profile</p>
-      </div>
-      <div className={css.button}>
-        <div
-          className={css.icon}
-          onClick={removeFriend}
-        >
-          <UserX size={30} color="#F8F3E3" />
-        </div>
-        <p>Unfriend</p>
+        <p>{t('settingsSection.profileButton')}</p>
       </div>
       <div className={css.button}>
         <div
@@ -85,7 +69,7 @@ const ButtonSection: React.FC = () => {
             alt="Invite Button"
           />
         </div>
-        <p>Invite</p>
+        <p>{t('settingsSection.inviteButton')}</p>
         {isInviteDisabled && (
           <span className={css.cooldownTimer}>{timeLeft}s</span>
         )}

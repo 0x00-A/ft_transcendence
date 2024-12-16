@@ -14,6 +14,7 @@ import {
   Search,   
 } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
+import { useTranslation } from 'react-i18next';
 
 
 interface Profile {
@@ -48,6 +49,8 @@ const AddFriend: React.FC = () => {
   const { data: suggestedConnections, isLoading: loadingSuggested, error: suggestedError } = useGetData<SuggestedUser[]>('suggested-connections');
   const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
 
   if (suggestedError) return <p>Error loading suggested connections: {suggestedError.message}</p>;
   if (usersError) return <p>Error loading users: {usersError.message}</p>;
@@ -110,12 +113,12 @@ const AddFriend: React.FC = () => {
 
   return (
     <div className={css.addFriend}>
-      <h1 className={css.title}>Search & Add Friends</h1>
+      <h1 className={css.title}>{t('addFriend.title')}</h1>
       <div className={css.searchContainer}>
         <Search className={css.searchIcon} />
         <input
           type="text"
-          placeholder="Find your friend"
+          placeholder={t('addFriend.placeholder')}
           value={searchTerm}
           onChange={handleSearch}
           className={css.searchInput}
@@ -124,7 +127,7 @@ const AddFriend: React.FC = () => {
 
       {searchTerm === '' && suggestedConnections && suggestedConnections.length > 0 && (
         <div className={css.suggestedConnections}>
-          <h3 className={css.suggestedConnectionsTitle}>Suggested Connections</h3>
+          <h3 className={css.suggestedConnectionsTitle}>{t('addFriend.Suggested')}</h3>
           {loadingSuggested ? (
             <FriendSkeleton/>
           ) : (
@@ -139,14 +142,14 @@ const AddFriend: React.FC = () => {
                     {status === "Friends" ? (
                       <span
                         className={css.friendsBtn}
-                        title='Friend'
+                        title={t('addFriend.pupFriend')}
                         >
                           <Users size={20}/>
                         </span>
                     ) : status === "Pending" ? (
                       <span
                       className={css.pendingBtn}
-                      title='Pending'
+                      title={t('addFriend.pupPending')}
                       >
                         <Clock size={20}/>
                       </span>
@@ -154,7 +157,7 @@ const AddFriend: React.FC = () => {
                       <button
                         onClick={() => sendFriendRequest(user.username)}
                         className={css.addFriendBtn}
-                        title="Add Friend"
+                        title={t('addFriend.pupAddFriend')}
 
                         >
                           <UserPlus size={20}/>
@@ -163,7 +166,7 @@ const AddFriend: React.FC = () => {
                     <button
                       className={css.viewProfileBtn} 
                       onClick={() => navigate(`/profile/${user.username}`)}
-                      title='View Profile'
+                      title={t('addFriend.pupViewProfile')}
                       >
                         <Eye size={20}/>
                     </button>
@@ -195,7 +198,7 @@ const AddFriend: React.FC = () => {
                   <button
                     className={css.viewProfileBtn}
                     onClick={() => navigate(`/profile/${user.username}`)}
-                    title='View Profile'
+                    title={t('addFriend.pupViewProfile')}
                     >
                       <Eye size={20}/>
                     </button>
@@ -203,7 +206,7 @@ const AddFriend: React.FC = () => {
                   {user.friend_request_status === "accepted" ? (
                     <span 
                     className={css.friendsStatus}
-                    title='Friend'
+                    title={t('addFriend.pupFriend')}
                     >
                       <Users size={20}/>
                     </span>
@@ -212,14 +215,14 @@ const AddFriend: React.FC = () => {
                       <button
                         onClick={() => acceptFriendRequest(user.username)}
                         className={css.acceptBtn}
-                        title='Accept'
+                        title={t('addFriend.pupAccept')}
                       >
                         <Check size={20} />
                       </button>
                       <button
                         onClick={() => rejectFriendRequest(user.username)}
                         className={css.rejectBtn}
-                        title='Reject'
+                        title={t('addFriend.pupReject')}
                       >
                         <X size={20} />
                       </button>
@@ -228,7 +231,7 @@ const AddFriend: React.FC = () => {
                     <button
                       onClick={() => handleCancel(user.username)}
                       className={css.cancelBtn}
-                      title='Cancel'
+                      title={t('addFriend.pupCancel')}
                     >
                       <X size={20}/>
                     </button>
@@ -236,7 +239,7 @@ const AddFriend: React.FC = () => {
                     <button
                       onClick={() => sendFriendRequest(user.username)}
                       className={css.addFriendBtn}
-                      title='Add friend'
+                      title={t('addFriend.pupAddFriend')}
                       >
                         <UserPlus size={20}/>
                     </button>
@@ -246,8 +249,7 @@ const AddFriend: React.FC = () => {
             ))
           ) : (
             <div className={css.notFound}>
-              <img src="/icons/friend/notFound.svg" alt="Not Found" />
-              <p className={css.notFoundText}>No User Found</p>
+              <p className={css.notFoundText}>{t('addFriend.notFound')}</p>
             </div>
           )}
         </div>

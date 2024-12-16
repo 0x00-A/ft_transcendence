@@ -41,12 +41,18 @@ const useSignup = () => {
     onError: (error) => {
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
-          errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
-          errs?.email && setError("email", {type: '', message: errs?.email}, {shouldFocus:true})
-          errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
-          errs?.error && setError("root", {type: '', message: errs?.error});
+          errs?.username && setError("username", {type: 'manual', message: errs.username as string}, {shouldFocus:true})
+          errs?.email && setError("email", {type: 'manual', message: errs.email as string}, {shouldFocus:true})
+          if (errs?.password) {
+            if (Array.isArray(errs.password)) {
+              setError("password", {type: 'manual', message: errs.password.join("-")}, {shouldFocus:true})
+            } else {
+              setError("password", {type: 'manual', message: errs.password as string}, {shouldFocus:true})
+            }
+          }
+          errs?.error && setError("root", {type: 'manual', message: errs.error as string});
         } else {
-          setError("root", {type: '', message: 'Something went wrong!'});
+          setError("root", {type: 'manual', message: 'Something went wrong!'});
         }
     }
   });

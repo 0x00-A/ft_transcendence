@@ -9,25 +9,22 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 
 from accounts.serializers import Oauth2Serializer
-from accounts.models import User
+from accounts.models import User, EmailVerification
 from accounts.utils import get_token_for_user
 from accounts.utils import exchange_code, get_oauth2_user
 from accounts import conf
+from accounts.utils import send_oauth2_welcome
 
 
 
 def oauth2_authorize(request, choice):
     if request.method == 'GET':
         if choice == 'intra':
-            print('api ==> oauth2_authorize: redirecting to intra authorization')
             return redirect(conf.INTRA_AUTHORIZATION_URL)
         if choice == 'discord':
-            print('api ==> oauth2_authorize: redirecting to discord authorization')
             return redirect(conf.DISCORD_AUTHORIZATION_URL)
         if choice == 'google':
-            auth_url = f"{conf.GOOGLE_AUTHORIZATION_URL}?client_id={conf.GOOGLE_CLIENT_ID}&redirect_uri={conf.OAUTH2_REDIRECT_URI}google/&response_type=code&scope=email+profile"
-            print('api ==> oauth2_authorize: redirecting to google authorization')
-            return redirect(auth_url)
+            return redirect(conf.GOOGLE_AUTHORIZATION_URL)
 
 
 @api_view()
@@ -39,38 +36,40 @@ def oauth2_authentication(request, choice):
         return redirect(reverse('oauth2_authorize', kwargs={'choice': choice}))
     token = exchange_code(code, choice)
     if token is None:
-        print('api ==> oauth2_authentication: Failed to get the token')
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get the token from {choice}')}")
     user_data = get_oauth2_user(token, choice)
-    print('------------------>> User getted from oauth2_authentication <<------------------')
     if user_data is None:
-        print('api ==> oauth2_authentication: Failed to get user data')
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get user {choice} resources!')}")
     try:
         check_user = User.objects.get(email=user_data['email'])
+        if not check_user.is_active:
+            try:
+                email_verf = EmailVerification.objects.get(user=check_user)
+                email_verf.delete()
+                check_user.is_active = True
+                check_user.save()
+            except EmailVerification.DoesNotExist:
+                pass
     except User.DoesNotExist:
         check_user = None
     if check_user is None:
         if User.objects.filter(username=user_data['username']).exists():
             request.session['user_data'] = {
                 'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
-            print('api ==> oauth2_authentication: Username already exist')
-            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Your {choice} username is already exist, Please choose a new one!')}")
+            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Please choose a username to continue!')}")
         serializer = Oauth2Serializer(data=user_data)
         if not serializer.is_valid():
-            print('api ==> oauth2_authentication: User data not compatible with our criteria')
             return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'A data in your {choice} user not compatible with our criteria!')}")
         serializer.save()
-        check_user = authenticate(email=serializer.validated_data['email'])
-        if check_user is None:
-            print('api ==> oauth2_authentication: Failed to authenticate the user')
-            return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Authenticate the user failed')}")
+        # check_user = authenticate(email=serializer.validated_data['email'])
+        # if check_user is None:
+        #     return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Authenticate the user failed')}")
+        send_oauth2_welcome(check_user)
     token = get_token_for_user(check_user)
     if token is None:
-        print('api ==> oauth2_authentication: Failed to get tokens for user')
-        return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Getting tokens for user failed')}")
+        return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Getting token for user failed')}")
     response = redirect(
-        f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=success")
+        f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=success&message={quote('Login success, welcome player!')}")
     response.set_cookie(
         key='access_token',
         value=token['access'],
@@ -85,7 +84,6 @@ def oauth2_authentication(request, choice):
         secure=True,
         samesite='Strict'
     )
-    print('api ==> oauth2_authentication: Successfully authenticated')
     return response
 
 
@@ -95,11 +93,9 @@ def oauth2_set_username(request):
 
     user_data = request.session.get('user_data')
     if user_data is None:
-        print('api ==> oauth2_set_username: User data not found in the session')
-        return Response(data={'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'error': 'Bad request, user data not found'}, status=status.HTTP_400_BAD_REQUEST)
     if 'username' not in request.data:
-        print('api ==> oauth2_set_username: Missing username data')
-        return Response(data={'message': "Missing 'username' data!"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'error': "Missing 'username' data!"}, status=status.HTTP_400_BAD_REQUEST)
     serializer = Oauth2Serializer(data = {
         'username': request.data['username'],
         'email' : user_data['email'],
@@ -110,10 +106,9 @@ def oauth2_set_username(request):
     del request.session['user_data']
     user = authenticate(email=serializer.validated_data['email'])
     if user is None:
-        print('api ==> oauth2_set_username: Failed to authenticate the user')
-        return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     token = get_token_for_user(user)
-    response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)
+    response = Response(data={'message': 'login success, Welcome player'}, status=status.HTTP_200_OK)
     response.set_cookie(
         key = 'access_token',
         value = token['access'],
@@ -128,5 +123,4 @@ def oauth2_set_username(request):
         secure = True,
         samesite = 'Strict'
     )
-    print('api ==> oauth2_set_username: Successfully seting username and authenticating')
     return response

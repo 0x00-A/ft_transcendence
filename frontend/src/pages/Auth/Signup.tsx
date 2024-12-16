@@ -38,6 +38,11 @@ const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<bo
    }, [mutation.isSuccess, setIslogin]);
 
     useEffect(() => {
+      // console.log('password erros ===',errors.password);
+
+      if (errors.root) {
+        toast.error(errors.root.message);
+      }
       return () => {
         loadingBarRef.current?.complete();
       }

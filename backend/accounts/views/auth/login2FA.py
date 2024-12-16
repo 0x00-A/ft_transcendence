@@ -11,6 +11,7 @@ from accounts.utils import get_token_for_user
 
 class LoginVerifyOTPView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         if 'otp' not in request.data:
@@ -19,9 +20,12 @@ class LoginVerifyOTPView(APIView):
             return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user = User.objects.get(username=request.data['username'])
-            if not user.is2fa_active:
-                return Response({'error': '2FA is not enabled by user'}, status=status.HTTP_400_BAD_REQUEST)
-            if user.otp_secret:
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        if not user.is2fa_active:
+            return Response({'error': '2FA is not enabled by user'}, status=status.HTTP_400_BAD_REQUEST)
+        if user.otp_secret:
+            try:
                 totp = pyotp.TOTP(user.otp_secret)
                 if totp.verify(request.data['otp']):
                     token = get_token_for_user(user)
@@ -41,10 +45,9 @@ class LoginVerifyOTPView(APIView):
                             secure = False,
                             samesite = 'Strict'
                         )
-                        print('apiBackend ==> login verify otp status: login success')
                         return response
                     return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
                 return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'error': 'OTP secret not found'}, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            except Exception as e:
+                return Response({'error': f'Invalid OTP, details: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'OTP secret not found'}, status=status.HTTP_400_BAD_REQUEST)
