@@ -328,23 +328,23 @@
             "title": "Logros",
             "NoAchievementsFound": "No se encontraron logros!"
         },
-        "profileHeader": {
-            "EditProfileButton": "Editar perfil",
-            "profileStats": {
-                "games": "JUEGOS",
-                "wins": "VITORIAS",
-                "loses": "DERROTAS",
-                "score": "PUNTUACIÓN",
-                "rank": "RANGO"
+        "setPassword": {
+            "title": "Establecer contraseña",
+            "description": "Tu cuenta no tiene contraseña. Por favor, establece una contraseña para poder iniciar sesión y editar tu perfil.",
+            "fields": {
+                "newPassword": "Nueva contraseña",
+                "confirmPassword": "Confirmar nueva contraseña"
             },
-            "badge": {
-                "Bronze": "Bronce",
-                "Silver": "Plata",
-                "Gold": "Oro",
-                "Platinum": "Platino",
-                "Diamond": "Diamante",
-                "Ft-Pong": "Ft-Pong"
-            }
+            "buttons": {
+                "reset": "Reiniciar",
+                "save": "Guardar"
+            },
+            "errors": {
+                "passwordRequired": "La nueva contraseña es obligatoria.",
+                "confirmPasswordRequired": "La confirmación de la contraseña es obligatoria.",
+                "passwordMismatch": "Las contraseñas no coinciden."
+            },
+            "successMessage": "Contraseña establecida con éxito."
         }
     }
 }

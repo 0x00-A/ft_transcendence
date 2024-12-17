@@ -345,6 +345,24 @@
                 "Diamond": "Diamond",
                 "Ft-Pong": "Ft-Pong"
             }
+        },
+        "setPassword": {
+            "title": "Set Password",
+            "description": "Your account has no password. Please set a password so you can login and edit your profile.",
+            "fields": {
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm New Password"
+            },
+            "buttons": {
+                "reset": "Reset",
+                "save": "Save"
+            },
+            "errors": {
+                "passwordRequired": "New password is required.",
+                "confirmPasswordRequired": "Confirmation password is required.",
+                "passwordMismatch": "Passwords do not match."
+            },
+            "successMessage": "Password set successfully."
         }
     }
 }
