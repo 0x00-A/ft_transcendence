@@ -18,11 +18,6 @@ const Leaderboard = () => {
 
   const { data: leaderboardData, isLoading, error } = useGetData<LeaderBoard[]>(API_GET_LEADERBOARD_URL);
 
-  if (isLoading) return <p>Loading...</p>;
-  const slicedData = leaderboardData?.slice(0, 5);
-
-  // const leaderboardData = data.slice(0,5);
-
   return (
       <>
         <div className={css.header}>
@@ -40,6 +35,7 @@ const Leaderboard = () => {
               <span>lose rate</span>
               <span>Score</span>
             </div>
+            {error && <p>{error}</p>}
             { isLoading ? <div className="table w-full">
               <div className="tableRow grid grid-cols-6 items-center p-2.5 text-base bg-[#283245] mb-1 hover:bg-[#33425E] animate-pulse ">
                 <span className="flex"><div className="w-10 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div></span>
@@ -70,8 +66,8 @@ const Leaderboard = () => {
                     {player.username}
                   </span>
                   <span>{player.played_games}</span>
-                  <span>{player.win_rate}%</span>
-                  <span>{player.lose_rate}%</span>
+                  <span>{player.win_rate.toFixed(2)}%</span>
+                  <span>{player.lose_rate.toFixed(2)}%</span>
                   <span className={css.score}>{player.score}</span>
                 </div>
               ))}

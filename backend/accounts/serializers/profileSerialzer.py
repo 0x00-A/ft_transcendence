@@ -9,11 +9,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
+    win_rate = serializers.SerializerMethodField()
+    lose_rate = serializers.SerializerMethodField()
     badge = BadgeSerializer()
 
     class Meta:
         model = Profile
-        fields = ['id', 'username', 'avatar', 'level', 'score',
+        fields = ['id', 'username', 'avatar', 'level', 'score', 'played_games',
+                  'wins', 'losses', 'win_rate', 'lose_rate',
                   'rank', 'badge', 'stats', 'is_online', 'blocked_user_name']
 
     def get_avatar(self, obj):
@@ -21,6 +24,16 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.user.username
+
+    def get_win_rate(self, obj):
+        if obj.played_games == 0:
+            return 0
+        return (obj.wins / obj.played_games) * 100
+
+    def get_lose_rate(self, obj):
+        if obj.played_games == 0:
+            return 0
+        return (obj.losses / obj.played_games) * 100
 
 
 class EditProfileSerializer(serializers.ModelSerializer):

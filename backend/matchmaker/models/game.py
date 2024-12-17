@@ -82,7 +82,6 @@ class Game(models.Model):
         self.save()
 
     def update_stats(self):
-        print('----------------- Updating stats begenings -----------------')
         for player in [self.player1, self.player2]:
             # Initialize stats
             if 'wins' not in player.profile.stats:
@@ -91,6 +90,10 @@ class Game(models.Model):
                 player.profile.stats['losses'] = 0
             if 'games_played' not in player.profile.stats:
                 player.profile.stats['games_played'] = 0
+            if 'highest_score' not in player.profile.stats:
+                player.profile.stats['highest_score'] = 0
+            if 'best_rank' not in player.profile.stats:
+                player.profile.stats['best_rank'] = player.profile.rank
             player.save()
 
         self.player1.profile.stats['games_played'] += 1
@@ -106,13 +109,13 @@ class Game(models.Model):
             self.player1.profile.wins += 1
             self.player2.profile.losses += 1
             self.player1.profile.score += WIN_SCORE + self.p1_score - self.p2_score
-            if self.player1.profile.badge.xp_reward < self.player2.profile.badge.xp_reward:
+            if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
                 self.player1.profile.score += self.player1.profile.badge.xp_reward * 2
             else:
                 self.player1.profile.score += self.player1.profile.badge.xp_reward
             self.player2.profile.score += self.p2_score
-            if self.player2.profile.badge.xp_reward < self.player1.profile.badge.xp_reward:
-                self.player2.profile.score -= self.player2.profile.badge.xp_reward * 2
+            if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
+                self.player2.profile.score -= self.player1.profile.badge.xp_reward * 2
             # ----------------------------
         elif self.winner == self.player2:
             self.player2.profile.stats['wins'] += 1
@@ -121,14 +124,18 @@ class Game(models.Model):
             self.player2.profile.wins += 1
             self.player1.profile.losses += 1
             self.player2.profile.score += WIN_SCORE + self.p2_score - self.p1_score
-            if self.player2.profile.badge.xp_reward < self.player1.profile.badge.xp_reward:
+            if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
                 self.player2.profile.score += self.player2.profile.badge.xp_reward * 2
             else:
                 self.player2.profile.score += self.player2.profile.badge.xp_reward
             self.player1.profile.score += self.p1_score
-            if self.player1.profile.badge.xp_reward < self.player2.profile.badge.xp_reward:
-                self.player1.profile.score -= self.player1.profile.badge.xp_reward * 2
+            if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
+                self.player1.profile.score -= self.player2.profile.badge.xp_reward * 2
             # ----------------------------
+        if self.player1.profile.score > self.player1.profile.stats['highest_score']:
+            self.player1.profile.stats['highest_score'] = self.player1.profile.score
+        if self.player2.profile.score > self.player2.profile.stats['highest_score']:
+            self.player2.profile.stats['highest_score'] = self.player2.profile.score
         # update level
         self.player1.profile.level = self.player1.profile.score / 100
         self.player2.profile.level = self.player2.profile.score / 100
@@ -171,4 +178,17 @@ class Game(models.Model):
         profiles = list(Profile.objects.all().order_by('-score', '-wins', '-played_games'))
         for rank, profile in enumerate(profiles, 1):
             profile.rank = rank
-        Profile.objects.bulk_update(profiles, ['rank'])
+            if rank < profile.stats.get('best_rank'):
+                profile.stats['best_rank'] = rank
+        Profile.objects.bulk_update(profiles, ['rank', 'stats'])
+
+        # update my not still not saved
+        # print(f"----->befor player: {self.player1.username} - rank: {self.player1.profile.rank} - best_rank: {self.player1.profile.stats['best_rank']}")
+        # if self.player1.profile.rank < self.player1.profile.stats['best_rank']:
+        #     print(f"----->player: {self.player1.username} - new_best_rank: {self.player1.profile.rank} - old_best_rank: {self.player1.profile.stats['best_rank']}")
+        #     self.player1.profile.stats['best_rank'] = self.player1.profile.rank
+        #     self.player1.profile.save()
+        # if self.player2.profile.rank < self.player2.profile.stats['best_rank']:
+        #     print(f"----->player: {self.player2.username} - new_best_rank: {self.player2.profile.rank} - old_best_rank: {self.player2.profile.stats['best_rank']}")
+        #     self.player2.profile.stats['best_rank'] = self.player2.profile.rank
+        #     self.player2.profile.save()

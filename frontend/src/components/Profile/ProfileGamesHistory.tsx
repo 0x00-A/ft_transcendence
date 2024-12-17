@@ -93,7 +93,7 @@ const ProfileGamesHistory = () => {
                     <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{game.result}</span>
                     <span className={css.historyField}>{game.score}</span>
                     {/* <span className={css.historyField}>One to One</span> */}
-                    <span className={css.historyField}>{game.game_duration}</span>
+                    <span className={css.historyField}>{game.game_duration.toFixed(2)}</span>
                     <button className={css.inviteBtn}>Invite</button>
                 </div>
             ))}
