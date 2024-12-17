@@ -22,7 +22,7 @@ const useResetPass = () => {
     setError,
     setValue,
   } = useForm<ResetPasswordForm>({
-    resolver: yupResolver(ResetPasswordSchema),
+    resolver: yupResolver(ResetPasswordSchema()),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
