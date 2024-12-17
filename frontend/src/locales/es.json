@@ -279,137 +279,113 @@
     "Profile": {
         "errors": {
             "signup": {
-                "title": "Registrarse",
-                "errors": {
-                    "username": {
-                        "required": "¡Nombre de usuario es obligatorio!",
-                        "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
-                        "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
-                    },
-                    "email": {
-                        "required": "¡Correo electrónico es obligatorio!",
-                        "invalid": "¡Formato de correo electrónico inválido!"
-                    },
-                    "password": {
-                        "required": "¡Contraseña es obligatoria!",
-                        "min": "¡La contraseña debe tener al menos 8 caracteres!",
-                        "max": "¡La contraseña no debe exceder 64 caracteres!"
-                    },
-                    "confirmPassword": {
-                        "required": "¡Confirmación de contraseña es obligatoria!",
-                        "match": "¡Las contraseñas deben coincidir!"
-                    }
+                "username": {
+                    "required": "¡Nombre de usuario es obligatorio!",
+                    "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
+                    "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
+                },
+                "email": {
+                    "required": "¡Correo electrónico es obligatorio!",
+                    "invalid": "¡Formato de correo electrónico inválido!"
+                },
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
                 }
             },
             "login": {
-                "title": "Iniciar Sesión",
-                "errors": {
-                    "username": {
-                        "required": "¡Nombre de usuario es obligatorio!",
-                        "min": "¡Nombre de usuario inválido!",
-                        "max": "¡Nombre de usuario inválido!"
-                    },
-                    "password": {
-                        "required": "¡Contraseña es obligatoria!",
-                        "min": "¡Contraseña inválida!",
-                        "max": "¡Contraseña inválida!"
-                    }
+                "username": {
+                    "required": "¡Nombre de usuario es obligatorio!",
+                    "min": "¡Nombre de usuario inválido!",
+                    "max": "¡Nombre de usuario inválido!"
+                },
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡Contraseña inválida!",
+                    "max": "¡Contraseña inválida!"
                 }
             },
             "changePassword": {
-                "title": "Cambiar Contraseña",
-                "errors": {
-                    "currentPassword": {
-                        "required": "¡Contraseña actual es obligatoria!",
-                        "min": "¡La contraseña debe tener al menos 8 caracteres!",
-                        "max": "¡La contraseña no debe exceder 64 caracteres!"
-                    },
-                    "newPassword": {
-                        "required": "¡Nueva contraseña es obligatoria!",
-                        "min": "¡La contraseña debe tener al menos 8 caracteres!",
-                        "max": "¡La contraseña no debe exceder 64 caracteres!"
-                    },
-                    "confirmPassword": {
-                        "required": "¡Confirmación de contraseña es obligatoria!",
-                        "match": "¡Las contraseñas deben coincidir!"
-                    }
+                "currentPassword": {
+                    "required": "¡Contraseña actual es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "newPassword": {
+                    "required": "¡Nueva contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
                 }
             },
             "resetPassword": {
-                "title": "Restablecer Contraseña",
-                "errors": {
-                    "newPassword": {
-                        "required": "¡Nueva contraseña es obligatoria!",
-                        "min": "¡La contraseña debe tener al menos 8 caracteres!",
-                        "max": "¡La contraseña no debe exceder 64 caracteres!"
-                    },
-                    "confirmPassword": {
-                        "required": "¡Confirmación de contraseña es obligatoria!",
-                        "match": "¡Las contraseñas deben coincidir!"
-                    }
+                "newPassword": {
+                    "required": "¡Nueva contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
                 }
             },
             "setPassword": {
-                "title": "Establecer Contraseña",
-                "errors": {
-                    "password": {
-                        "required": "¡Contraseña es obligatoria!",
-                        "min": "¡La contraseña debe tener al menos 8 caracteres!",
-                        "max": "¡La contraseña no debe exceder 64 caracteres!"
-                    },
-                    "confirmPassword": {
-                        "required": "¡Confirmación de contraseña es obligatoria!",
-                        "match": "¡Las contraseñas deben coincidir!"
-                    }
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
                 }
             },
             "setUsername": {
-                "title": "Establecer Nombre de Usuario",
-                "errors": {
-                    "username": {
-                        "required": "¡Nombre de usuario es obligatorio!",
-                        "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
-                        "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
-                    }
+                "username": {
+                    "required": "¡Nombre de usuario es obligatorio!",
+                    "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
+                    "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
                 }
             },
             "otp": {
-                "title": "Contraseña de Un Solo Uso",
-                "errors": {
-                    "otp": {
-                        "required": "¡OTP es obligatorio!",
-                        "length": "¡OTP debe tener 6 dígitos!",
-                        "matches": "¡OTP debe ser un número!"
-                    }
+                "otp": {
+                    "required": "¡OTP es obligatorio!",
+                    "length": "¡OTP debe tener 6 dígitos!",
+                    "matches": "¡OTP debe ser un número!"
                 }
             },
             "editProfile": {
-                "title": "Editar Perfil",
-                "errors": {
-                    "username": {
-                        "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
-                        "max": "¡El nombre de usuario no debe exceder 15 caracteres!"
-                    },
-                    "firstName": {
-                        "min": "¡El nombre debe tener al menos 3 caracteres!",
-                        "max": "¡El nombre no debe exceder 15 caracteres!"
-                    },
-                    "lastName": {
-                        "min": "¡El apellido debe tener al menos 3 caracteres!",
-                        "max": "¡El apellido no debe exceder 15 caracteres!"
-                    },
-                    "email": {
-                        "invalid": "¡Formato de correo electrónico inválido!"
-                    },
-                    "password": {
-                        "required": "¡Contraseña es obligatoria!",
-                        "min": "¡La contraseña debe tener al menos 8 caracteres!",
-                        "max": "¡La contraseña no debe exceder 64 caracteres!"
-                    },
-                    "avatar": {
-                        "fileSize": "¡El archivo es demasiado grande!",
-                        "fileType": "¡El tipo de archivo no es compatible!"
-                    }
+                "username": {
+                    "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
+                    "max": "¡El nombre de usuario no debe exceder 15 caracteres!"
+                },
+                "firstName": {
+                    "min": "¡El nombre debe tener al menos 3 caracteres!",
+                    "max": "¡El nombre no debe exceder 15 caracteres!"
+                },
+                "lastName": {
+                    "min": "¡El apellido debe tener al menos 3 caracteres!",
+                    "max": "¡El apellido no debe exceder 15 caracteres!"
+                },
+                "email": {
+                    "invalid": "¡Formato de correo electrónico inválido!"
+                },
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "avatar": {
+                    "fileSize": "¡El archivo es demasiado grande!",
+                    "fileType": "¡El tipo de archivo no es compatible!"
                 }
             }
         },
