@@ -279,137 +279,113 @@
     "Profile": {
         "errors": {
             "signup": {
-                "title": "Sign Up",
-                "errors": {
-                    "username": {
-                        "required": "Username is required!",
-                        "min": "Username must be at least 4 characters!",
-                        "max": "Username must not exceed 30 characters!"
-                    },
-                    "email": {
-                        "required": "Email is required!",
-                        "invalid": "Invalid email format!"
-                    },
-                    "password": {
-                        "required": "Password is required!",
-                        "min": "Password must be at least 8 characters!",
-                        "max": "Password must not exceed 64 characters!"
-                    },
-                    "confirmPassword": {
-                        "required": "Password confirmation is required!",
-                        "match": "Passwords must match!"
-                    }
+                "username": {
+                    "required": "Username is required!",
+                    "min": "Username must be at least 4 characters!",
+                    "max": "Username must not exceed 30 characters!"
+                },
+                "email": {
+                    "required": "Email is required!",
+                    "invalid": "Invalid email format!"
+                },
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
                 }
             },
             "login": {
-                "title": "Log In",
-                "errors": {
-                    "username": {
-                        "required": "Username is required!",
-                        "min": "Invalid username!",
-                        "max": "Invalid username!"
-                    },
-                    "password": {
-                        "required": "Password is required!",
-                        "min": "Invalid password!",
-                        "max": "Invalid password!"
-                    }
+                "username": {
+                    "required": "Username is required!",
+                    "min": "Invalid username!",
+                    "max": "Invalid username!"
+                },
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Invalid password!",
+                    "max": "Invalid password!"
                 }
             },
             "changePassword": {
-                "title": "Change Password",
-                "errors": {
-                    "currentPassword": {
-                        "required": "Current password is required!",
-                        "min": "Password must be at least 8 characters!",
-                        "max": "Password must not exceed 64 characters!"
-                    },
-                    "newPassword": {
-                        "required": "New password is required!",
-                        "min": "Password must be at least 8 characters!",
-                        "max": "Password must not exceed 64 characters!"
-                    },
-                    "confirmPassword": {
-                        "required": "Password confirmation is required!",
-                        "match": "Passwords must match!"
-                    }
+                "currentPassword": {
+                    "required": "Current password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "newPassword": {
+                    "required": "New password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
                 }
             },
             "resetPassword": {
-                "title": "Reset Password",
-                "errors": {
-                    "newPassword": {
-                        "required": "New password is required!",
-                        "min": "Password must be at least 8 characters!",
-                        "max": "Password must not exceed 64 characters!"
-                    },
-                    "confirmPassword": {
-                        "required": "Password confirmation is required!",
-                        "match": "Passwords must match!"
-                    }
+                "newPassword": {
+                    "required": "New password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
                 }
             },
             "setPassword": {
-                "title": "Set Password",
-                "errors": {
-                    "password": {
-                        "required": "Password is required!",
-                        "min": "Password must be at least 8 characters!",
-                        "max": "Password must not exceed 64 characters!"
-                    },
-                    "confirmPassword": {
-                        "required": "Password confirmation is required!",
-                        "match": "Passwords must match!"
-                    }
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
                 }
             },
             "setUsername": {
-                "title": "Set Username",
-                "errors": {
-                    "username": {
-                        "required": "Username is required!",
-                        "min": "Username must be at least 4 characters!",
-                        "max": "Username must not exceed 30 characters!"
-                    }
+                "username": {
+                    "required": "Username is required!",
+                    "min": "Username must be at least 4 characters!",
+                    "max": "Username must not exceed 30 characters!"
                 }
             },
             "otp": {
-                "title": "One-Time Password",
-                "errors": {
-                    "otp": {
-                        "required": "OTP is required!",
-                        "length": "OTP must be 6 digits!",
-                        "matches": "OTP must be a number!"
-                    }
+                "otp": {
+                    "required": "OTP is required!",
+                    "length": "OTP must be 6 digits!",
+                    "matches": "OTP must be a number!"
                 }
             },
             "editProfile": {
-                "title": "Edit Profile",
-                "errors": {
-                    "username": {
-                        "min": "Username must be at least 4 characters!",
-                        "max": "Username must not exceed 15 characters!"
-                    },
-                    "firstName": {
-                        "min": "First name must be at least 3 characters!",
-                        "max": "First name must not exceed 15 characters!"
-                    },
-                    "lastName": {
-                        "min": "Last name must be at least 3 characters!",
-                        "max": "Last name must not exceed 15 characters!"
-                    },
-                    "email": {
-                        "invalid": "Invalid email format!"
-                    },
-                    "password": {
-                        "required": "Password is required!",
-                        "min": "Password must be at least 8 characters!",
-                        "max": "Password must not exceed 64 characters!"
-                    },
-                    "avatar": {
-                        "fileSize": "The file is too large!",
-                        "fileType": "The file is not supported!"
-                    }
+                "username": {
+                    "min": "Username must be at least 4 characters!",
+                    "max": "Username must not exceed 15 characters!"
+                },
+                "firstName": {
+                    "min": "First name must be at least 3 characters!",
+                    "max": "First name must not exceed 15 characters!"
+                },
+                "lastName": {
+                    "min": "Last name must be at least 3 characters!",
+                    "max": "Last name must not exceed 15 characters!"
+                },
+                "email": {
+                    "invalid": "Invalid email format!"
+                },
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "avatar": {
+                    "fileSize": "The file is too large!",
+                    "fileType": "The file is not supported!"
                 }
             }
         },

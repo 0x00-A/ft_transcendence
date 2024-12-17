@@ -108,7 +108,7 @@ export const SetUsernameSchema = () => {
   });
 };
 
-export const OTPSchema = () => {
+export const otpSchema = () => {
   const { t } = useTranslation();
 
   return yup.object().shape({
@@ -120,7 +120,7 @@ export const OTPSchema = () => {
   });
 };
 
-export const EditProfileSchema = () => {
+export const EditInfosProfileSchema = () => {
   const { t } = useTranslation();
 
   return yup.object().shape({
