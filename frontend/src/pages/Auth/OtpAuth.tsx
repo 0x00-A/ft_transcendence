@@ -20,7 +20,7 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await otpSchema.validate({otp: otp});
+      await otpSchema().validate({otp: otp});
     }
     catch (error) {
       if (error instanceof Yup.ValidationError) {

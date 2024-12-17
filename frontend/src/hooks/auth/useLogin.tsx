@@ -31,7 +31,7 @@ const useLogin = () => {
     reset,
     watch
   } = useForm<LoginFormData>({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(LoginSchema()),
     reValidateMode: 'onChange',
     mode: 'onChange'
   });

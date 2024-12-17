@@ -57,7 +57,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const handleEnable2fa = async () => {
         try {
-            await otpSchema.validate({otp: otp});
+            await otpSchema().validate({otp: otp});
         }
         catch (error) {
           if (error instanceof Yup.ValidationError) {
