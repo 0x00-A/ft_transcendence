@@ -33,6 +33,9 @@ def log_profile_changes(sender, instance, **kwargs):
             print(f"-------------Rank changed from {old_profile.rank} to {instance.rank}---------------")
         if old_profile.badge != instance.badge:
             print(f"-------------Badge changed from {old_profile.badge} to {instance.badge}-------------")
+
+        if 'best_rank' in old_profile.stats and old_profile.stats['best_rank'] != instance.stats['best_rank']:
+            print(f"-------------Stats changed from {old_profile.stats['best_rank']} to {instance.stats['best_rank']}-------------")
         # if old_profile.played_games != instance.played_games:
         #     print(f"-------------Played games {old_profile.user.username} changed from {old_profile.played_games} to {instance.played_games}-------------")
 
@@ -41,7 +44,9 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
        Profile.objects.create(user=instance,
                               rank=Profile.objects.count() + 1,
-                              badge=Badge.objects.get(name='Bronze'))
+                              badge=Badge.objects.get(name='Bronze'),
+                              stats={'wins': 0, 'losses': 0, 'games_played': 0, 'highest_score': 0, 'best_rank': Profile.objects.count() + 1}
+                              )
 
        achievements = Achievement.objects.all()
        for achievement in achievements:

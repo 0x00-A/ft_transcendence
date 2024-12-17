@@ -1,7 +1,7 @@
 import Logo from '../Logo/Logo';
 import css from './Sidebar.module.css';
 import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // import { IoLogOut } from 'react-icons/io5';
 import { TbLogout } from "react-icons/tb";
 import Flag from 'react-world-flags';
@@ -38,6 +38,28 @@ export default function Sidebar() {
   const [showLangPopup, setShowLangPopup] = useState(false);
   const [selectedLang, setSelectedLang] = useState('English');
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
+    // Ref to track the language switcher container
+    const languageSwitcherRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          languageSwitcherRef.current && 
+          !languageSwitcherRef.current.contains(event.target as Node)
+        ) {
+          setShowLangPopup(false);
+        }
+      };
+  
+      if (showLangPopup) {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
+  
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [showLangPopup]);
+    
 
   const handleLogoutClick = () => {
     setShowConfirm(true);
@@ -79,11 +101,13 @@ export default function Sidebar() {
   // }, []);
 
 
+  console.log("showlangPopup: ", showLangPopup)
   const changeLanguage = (lang: string) => {
-    setSelectedLang(lang); // Set selected language
-    i18n.changeLanguage(lang); // Change the language using i18n
-    localStorage.setItem('lang', lang); // Store selected language in localStorage
-    setShowLangPopup(false); // Close popup after language selection
+    setSelectedLang(lang);
+    i18n.changeLanguage(lang); 
+    localStorage.setItem('lang', lang);
+    console.log(">>showlangPopup: ", showLangPopup)
+    setShowLangPopup(false);
   };
 
   return (
@@ -103,6 +127,7 @@ export default function Sidebar() {
         <div
           className={css.languageSwitcher}
           onClick={() => setShowLangPopup((prevState) => !prevState)}
+          ref={languageSwitcherRef}
         >
           <Flag
             code={selectedLang === 'en' ? 'US' : selectedLang === 'es' ? 'ES' : 'MA'}
@@ -110,7 +135,10 @@ export default function Sidebar() {
             height={32}
           />
           {showLangPopup && (
-            <div className={css.languagePopup}>
+            <div
+              className={css.languagePopup}
+              onClick={(e) => e.stopPropagation()}
+            >
               <ul>
                 <li onClick={() => changeLanguage('en')}> <Flag className={css.flags} code='US'/> English </li>
                 <li onClick={() => changeLanguage('es')}> <Flag className={css.flags} code='ES'/> Español </li>
