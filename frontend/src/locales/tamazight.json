@@ -345,6 +345,24 @@
                 "Diamond": "ⴰⵍⵎⴰⵣ",
                 "Ft-Pong": "ⴼⵜⴱⵓⵏⴳ"
             }
+        },
+        "setPassword": {
+            "title": "ⴰⴷⵣⴰⵔ ⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ",
+            "description": "ⴰⴷⵔⴰⵔⴽⴰⵏ ⴰⴽ ⵉⵏⵓⵡⴰⵢⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ. ⵓⵎⴳⵎⴰⴹ ⵉⵙⴼⴰⵙ ⵜⴰⴼⵓⴷⵍⵉⵜ ⴽ ⴷⵉⵍⴰ ⴰⵔⵔⴰⴳ ⴷ ⴽⵕⵡⴰⵔ ⵜⵉⵣⵣⵍⵉⵏⵏⵓⵏⴻⵏ.",
+            "fields": {
+                "newPassword": "ⵜⴰⴼⵓⴷⵍⵉⵜ ⴰⵎⵢⴰⵡⵏⵉⵜ",
+                "confirmPassword": "ⵉⴼⵔⵉⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ"
+            },
+            "buttons": {
+                "reset": "ⵙⵏⵏⵉⵍ",
+                "save": "ⵙⵎⵓⵔ"
+            },
+            "errors": {
+                "passwordRequired": "ⵜⴰⴼⵓⴷⵍⵉⵜ ⴰⵎⵢⴰⵡⵏⵉⵜ ⴽⵓⵙⴻⵔⴻⵍ.",
+                "confirmPasswordRequired": "ⵉⴼⵔⵉⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ ⴽⵓⵙⴻⵔⴻⵍ.",
+                "passwordMismatch": "ⵜⴰⴼⵓⴷⵍⵉⵜⵏ ⴷ ⴰⵔⵔⵓⵎⵏⵏⵓⵏ."
+            },
+            "successMessage": "ⵜⴰⴼⵓⴷⵍⵉⵜ ⴽⵎⵏⵙ ⵉⵎⴹⴰⵏⴻⵍ."
         }
     }
 
