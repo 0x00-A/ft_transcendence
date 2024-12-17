@@ -1,66 +1,56 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Link } from "react-router-dom"
+
+
 import css from './Leaderboard.module.css';
-import { useRef } from 'react';
+import { Flag } from "lucide-react";
+
+const users = [
+  {
+    id: 0,
+    username: '@username',
+    score: '1400',
+    country: 'Morroco',
+  },
+]
 
 const Leaderboard = () => {
-  const { isLoggedIn } = useAuth();
-  const boxRef = useRef<HTMLDivElement | null>(null);
-  // const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
-  // useEffect(() => {
-
-  // function resizeBox() {
-
-  //   if (boxRef.current) {
-  //     const originalWidth = 1082;
-  //     // const { width, height } = boxRef.current.getBoundingClientRect();
-  //     const width = window.innerWidth;
-  //     const height = window.innerHeight;
-
-  //     console.log(width, height);
-
-  //     const scaleWidth = width / 1082; // Compare window width to the box width
-  //   const scaleHeight = height / 698; // Compare window height to the box height
-  //   const scaleFactor = Math.min(scaleWidth, scaleHeight, 1.4); // Ensure it doesn't scale up
-  //   // boxRef.current.style.transform = `scale(${scaleFactor - 0.2})`;
-  //     console.log('in');
-  //     const newWidth = originalWidth * scaleFactor;
-  //     // boxRef.current.style.marginLeft = `-${(newWidth / 2) - 300}px`;
-  //   }
-  //   // const windowWidth = window.innerWidth;
-  //   // const windowHeight = window.innerHeight;
-
-  //   // Calculate scale factor based on the window size
-  //   // const scaleWidth = windowWidth / 1082; // Compare window width to the box width
-  //   // const scaleHeight = windowHeight / 698; // Compare window height to the box height
-
-  //   // Use the smaller of the two scale values to maintain aspect ratio
-  //   // const scaleFactor = Math.min(scaleWidth, scaleHeight, 1); // Ensure it doesn't scale up
-
-  //   // Apply the scale transformation
-  //   // if (boxRef.current)
-  //   //   boxRef.current.style.transform = `scale(${scaleFactor})`;
-  // }
-
-  // // Call the function once to initialize
-  // resizeBox();
-
-  // // Add event listener to adjust scaling when the window is resized
-  // window.addEventListener('resize', resizeBox);
-
-  // return () => {
-  //   window.removeEventListener('resize', resizeBox);
-
-  // }
-  // }, [])
-
-  if (!isLoggedIn) {
-    return <Navigate to="/signup" />;
-  }
   return (
-    <main ref={boxRef} className={css.container}>
-      <p>Leaderboard</p>
+    <main className={css.container}>
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="h-20 w-[40px] text-center">#</TableHead>
+            <TableHead className="h-20 w-[200px]">Username</TableHead>
+            <TableHead className="h-20 w-[100px]">Score</TableHead>
+            <TableHead className="h-20 w-[150px]">Country</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users.map((user) => (
+              <TableRow className="hover:bg-gray-500 dark:hover:bg-gray-800 transition-colors h-20">
+                <TableCell className="text-center font-medium">{user.id}</TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    <Avatar>
+                      <AvatarImage src="/placeholder-user.jpg" alt="@username1" />
+                      <AvatarFallback>U1</AvatarFallback>
+                    </Avatar>
+                    <Link to="#" className="text-blue-500 hover:underline">
+                      {user.username}
+                    </Link>
+                  </div>
+                </TableCell>
+                <TableCell className="">{user.score}</TableCell>
+                <TableCell className="flex items-center justify-start">
+                  <span className="sr-only">{user.country}</span>
+                  <Flag />
+                </TableCell>
+              </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </main>
   );
 };

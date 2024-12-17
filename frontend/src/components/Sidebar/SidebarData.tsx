@@ -5,6 +5,7 @@ import {
   MENU_ICON_COLOR,
   MENU_ICON_SIZE,
 } from '../../config/constants';
+import { MdOutlineLeaderboard } from 'react-icons/md';
 
 const Menus = () => {
   const { t } = useTranslation();
@@ -18,14 +19,14 @@ const Menus = () => {
       activeIcon: <LayoutDashboard size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />,
     },
     {
-      id: 2,
+      id: 1,
       path: '/play',
       title: t('sidebar.game'),
       icon: <Gamepad2 size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
       activeIcon: <Gamepad2 size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />,
     },
     {
-      id: 1,
+      id: 2,
       path: '/chat',
       title: t('sidebar.chat'),
       icon: <MessageSquareText size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
@@ -39,7 +40,14 @@ const Menus = () => {
       activeIcon: <Users size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />,
     },
     {
-      id: 7,
+      id: 4,
+      path: '/leaderboard',
+      title: t('sidebar.leaderboard'),
+      icon: <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
+      activeIcon: <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />,
+    },
+    {
+      id: 5,
       path: '/profile',
       title: t('sidebar.profile'),
       icon: <User size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,

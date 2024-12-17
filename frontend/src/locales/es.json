@@ -65,6 +65,7 @@
         "game": "Juego",
         "chat": "charlar",
         "friends": "Amigos",
+        "leaderboard": "Clasificación",
         "profile": "Perfil",
         "logout": "cerrar sesión",
         "lightMode": "Light mode",
@@ -241,6 +242,6 @@
             "noTournaments": "No hay torneos disponibles en este momento."
         }
     }
-    
-    
+
+
 }
