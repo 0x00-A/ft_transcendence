@@ -1,4 +1,5 @@
 {
+    "lang": "es",
     "welcome": {
         "title": "FT-PONG",
         "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
@@ -274,7 +275,76 @@
             "joinButton": "Unirse",
             "noTournaments": "No hay torneos disponibles en este momento."
         }
+    },
+    "Profile": {
+        "friends": {
+            "title": "Amigos",
+            "viewMore": "Ver más",
+            "buttons": {
+                "online": "En línea",
+                "offline": "Desconectado"
+            },
+            "errors": {
+                "noFriends": "Estás solo",
+                "noOnlineFriends": "No hay amigos en línea",
+                "noOfflineFriends": "No hay amigos desconectados"
+            },
+            "addFriends": {
+                "button": "Agregar amigos"
+            },
+            "profile": {
+                "level": "Nivel",
+                "status": {
+                "online": "En línea",
+                "offline": "Desconectado"
+                }
+            }
+        },
+        "gameHistory": {
+            "title": "Historial de Juegos",
+            "buttons": {
+                "game": "Juego",
+                "tournament": "Torneo"
+            },
+            "noGames": {
+                "message": "No has jugado ningún juego todavía",
+                "playNow": "Jugar Ahora"
+            },
+            "fields": {
+                "dateTime": "Fecha y Hora",
+                "name": "Nombre",
+                "result": "Resultado",
+                "score": "Puntuación",
+                "duration": "Duración",
+                "rematch": "Revancha"
+            },
+            "results": {
+                "win": "Ganar",
+                "lose": "Perder"
+            },
+            "invite": "Invitar"
+        },
+        "Achievements": {
+            "title": "Logros",
+            "NoAchievementsFound": "No se encontraron logros!"
+        },
+        "profileHeader": {
+            "EditProfileButton": "Editar perfil",
+            "profileStats": {
+                "games": "JUEGOS",
+                "wins": "VITORIAS",
+                "loses": "DERROTAS",
+                "score": "PUNTUACIÓN",
+                "rank": "RANGO"
+            },
+            "badge": {
+                "Bronze": "Bronce",
+                "Silver": "Plata",
+                "Gold": "Oro",
+                "Platinum": "Platino",
+                "Diamond": "Diamante",
+                "Ft-Pong": "Ft-Pong"
+            }
+        }
     }
-    
-    
 }

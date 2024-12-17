@@ -11,6 +11,8 @@ import { HiOutlineLockOpen } from "react-icons/hi2";
 import { HiOutlineLockClosed } from "react-icons/hi2";
 // Types
 import { UserAchievements } from '@/types/apiTypes';
+import { Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -22,6 +24,8 @@ const ProfileAchievements = () => {
 
     const {data: achievements, isLoading, error} = useGetData<UserAchievements[]>(API_GET_ACHIEVEMENTS_URL);
     const [currentAchiev, setCurrentAchiev] = useState(0);
+    const { t } = useTranslation();
+
 
     const start = currentAchiev * 3;
     const end = start + 3;
@@ -45,11 +49,11 @@ const ProfileAchievements = () => {
   return (
     <div className={css.profileAchievContainer}>
         <div className={css.achievHeader}>
-          <img src="/icons/AchievIcon.svg" className={css.achievIcon}/>
-          <h3>Achievements</h3>
+          <Award size={30} color='#f8c25c'/>
+          <h3>{t('Profile.Achievements.title')}</h3>
         </div>
         <div className={css.achievsContainer}>
-            {achievements?.length == 0 && <p>No achievements found!</p>}
+            {achievements?.length == 0 && <p>{t('Profile.Achievements.NoAchievementsFound')}</p>}
             <button className={css.previousBtn} disabled={start === 0} onClick={handlePrevious} >
                 <GrFormPrevious />
             </button>

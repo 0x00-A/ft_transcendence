@@ -2,7 +2,7 @@ import styles from './Game.module.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 // import GameMode from './components/GameMode/GameMode';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
@@ -311,13 +311,14 @@ import { useTranslation } from 'react-i18next';
       />
     );
 
-  const ModesList =  [
+    const ModesList = useMemo(() => [
       { id: 0, title: t('game.localGame.title'), icon: Gamepad2, description: t('game.localGame.description') },
       { id: 1, title: t('game.remoteGame.title'), icon: Globe, description: t('game.remoteGame.description') },
       { id: 2, title: t('game.remoteTournament.title'), icon: Trophy, description: t('game.remoteTournament.description') },
       { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
       { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
-    ];
+    ], [t]);
+  
   return (
     <div className={styles.container}>
       {gameState === 'inqueue' && !(gameAccepted && gameInvite) && (
@@ -379,7 +380,7 @@ import { useTranslation } from 'react-i18next';
                         </div>
                         <div className={styles.rightAligned}>
                           <p className={styles.tournamentStatus}>{t('game.joinedTournaments.status')} {tournament.status}</p>
-                          <p className={styles.tournamentDate}>{t('game.joinedTournaments.started')} {formatDate(tournament.created_at)}</p>
+                          <p className={styles.tournamentDate}>{t('game.joinedTournaments.started')} {formatDate(tournament.created_at, t('lang'))}</p>
                         </div>
                     </div>
                 ))}
