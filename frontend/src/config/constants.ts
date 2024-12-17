@@ -8,7 +8,6 @@ export const MENU_ICON_SIZE = 32;
 export const DARK_MODE_ICON_SIZE = 26;
 export const SIDEBAR_RESIZE_WIDTH = 768;
 
-
 export const SERVER_PORT = 8000
 
 export const LOGO = "/icons/logo.svg";
