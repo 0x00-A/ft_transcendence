@@ -6,15 +6,8 @@ import WinnerOverlay from '../components/WinnerOverlay/WinnerOverlay';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
-import LeaveTournamentButton from './LeaveTournamentButton';
-
-// function IconLabelButtons({ onClick }: { onClick: () => void }) {
-//   return (
-//     <button onClick={onClick} className={`${css.playButton}`}>
-//       Ready
-//     </button>
-//   );
-// }
+import LeaveTournamentButton from '../components/LeaveTournamentButton';
+import { useTranslation } from 'react-i18next';
 
 const Match = ({
   // player1,
@@ -133,6 +126,8 @@ const RemoteTournament = ({
   );
   const [showWinner, setShowWinner] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const { t } = useTranslation();
+
 
   useEffect(() => {
     setRounds(tournamentStat.rounds);
@@ -259,19 +254,19 @@ const RemoteTournament = ({
 
       <ul className={css.infoList}>
         <li className={css.item}>
-          <div className={css.itemLabel}>Players</div>
+          <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Players')}</div>
           <div className={css.text}>{tournamentStat.players.length}/4</div>
         </li>
         <li className={css.item}>
-          <div className={css.itemLabel}>Format</div>
-          <div className={css.text}>Single Elimination</div>
+          <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Format')}</div>
+          <div className={css.text}>{t('game.remoteTournament.playerReady.SingleElimination')}</div>
         </li>
         <li className={css.item}>
-          <div className={css.itemLabel}>Status</div>
+          <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Status')}</div>
           <div className={css.text}>{tournamentStat.status}</div>
         </li>
         <li className={css.item}>
-          <div className={css.itemLabel}>Created</div>
+          <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Created')}</div>
           <div className={css.text}>{tournamentStat.created_at}</div>
         </li>
       </ul>

@@ -42,8 +42,9 @@ class Game(models.Model):
         User, related_name='games_as_winner', on_delete=models.CASCADE, null=True)
     p1_score = models.IntegerField(default=0)
     p2_score = models.IntegerField(default=0)
-    status = models.CharField(
-        max_length=20, choices=GAME_STATUS_CHOICES, default='started')
+    p1_xp = models.IntegerField(default=0)
+    p2_xp = models.IntegerField(default=0)
+    status = models.CharField(max_length=20, choices=GAME_STATUS_CHOICES, default='started')
 
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
@@ -63,38 +64,50 @@ class Game(models.Model):
         self.save()
 
     def end_game(self, winner, p1_score, p2_score):
-        print(f"--------------- Game: {self.id} ended -------------------")
-
+        print('-----------------end_game-----------------')
         self.winner = self.player1 if winner == 1 else self.player2
-        # if winner == 1:
-        #     self.player1.profile.update_score(win=True, result=p1_score - p2_score, p2_badge=self.player2.profile.badge.xp_reward)
-        #     self.player2.profile.update_score(win=False, result=p2_score, p2_badge=self.player1.profile.badge.xp_reward)
-        # else:
-        #     self.player2.profile.update_score(win=True, result=p2_score - p1_score, p2_badge=self.player1.profile.badge.xp_reward)
-        #     self.player1.profile.update_score(win=False, result=p1_score, p2_badge=self.player2.profile.badge.xp_reward)
-        # update_ranks()
-        # for profile in Profile.objects.all():
-        #     print('----->>', profile.user.username, profile.score, profile.rank)
+        p1_xp = 0
+        p2_xp = 0
+        if self.winner == self.player1:
+            p1_xp = WIN_SCORE + p1_score - p2_score
+            if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
+                p1_xp += self.player1.profile.badge.xp_reward * 2
+            else:
+                p1_xp += self.player1.profile.badge.xp_reward
+            p2_xp = p2_score
+            if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
+                p2_xp -= self.player1.profile.badge.xp_reward * 2
+        elif self.winner == self.player2:
+            p2_xp = WIN_SCORE + p2_score - p1_score
+            if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
+                p2_xp += self.player2.profile.badge.xp_reward * 2
+            else:
+                p2_xp += self.player2.profile.badge.xp_reward
+            p1_xp += p1_score
+            if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
+                p1_xp -= self.player2.profile.badge.xp_reward * 2
         self.p1_score = p1_score
         self.p2_score = p2_score
+        self.p1_xp = p1_xp
+        self.p2_xp = p2_xp
         self.status = 'ended'
         self.end_time = timezone.now()
         self.save()
 
     def update_stats(self):
-        for player in [self.player1, self.player2]:
-            # Initialize stats
-            if 'wins' not in player.profile.stats:
-                player.profile.stats['wins'] = 0
-            if 'losses' not in player.profile.stats:
-                player.profile.stats['losses'] = 0
-            if 'games_played' not in player.profile.stats:
-                player.profile.stats['games_played'] = 0
-            if 'highest_score' not in player.profile.stats:
-                player.profile.stats['highest_score'] = 0
-            if 'best_rank' not in player.profile.stats:
-                player.profile.stats['best_rank'] = player.profile.rank
-            player.save()
+        # for player in [self.player1, self.player2]:
+        #     # Initialize stats
+        #     if 'wins' not in player.profile.stats:
+        #         player.profile.stats['wins'] = 0
+        #     if 'losses' not in player.profile.stats:
+        #         player.profile.stats['losses'] = 0
+        #     if 'games_played' not in player.profile.stats:
+        #         player.profile.stats['games_played'] = 0
+        #     if 'highest_score' not in player.profile.stats:
+        #         player.profile.stats['highest_score'] = 0
+        #     if 'best_rank' not in player.profile.stats:
+        #         player.profile.stats['best_rank'] = player.profile.rank
+        #     player.save()
 
         self.player1.profile.stats['games_played'] += 1
         self.player2.profile.stats['games_played'] += 1
@@ -105,33 +118,44 @@ class Game(models.Model):
         if self.winner == self.player1:
             self.player1.profile.stats['wins'] += 1
             self.player2.profile.stats['losses'] += 1
+            self.player1.profile.stats['win_track'] += 1
+            self.player2.profile.stats['win_track'] = 0
+            if self.player1.profile.stats['win_track'] > self.player1.profile.stats['win_streak']:
+                self.player1.profile.stats['win_streak'] = self.player1.profile.stats['win_track']
             # mahdi added these lines
             self.player1.profile.wins += 1
             self.player2.profile.losses += 1
-            self.player1.profile.score += WIN_SCORE + self.p1_score - self.p2_score
-            if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
-                self.player1.profile.score += self.player1.profile.badge.xp_reward * 2
-            else:
-                self.player1.profile.score += self.player1.profile.badge.xp_reward
-            self.player2.profile.score += self.p2_score
-            if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
-                self.player2.profile.score -= self.player1.profile.badge.xp_reward * 2
+
+            # self.player1.profile.score += WIN_SCORE + self.p1_score - self.p2_score
+            # if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
+            #     self.player1.profile.score += self.player1.profile.badge.xp_reward * 2
+            # else:
+            #     self.player1.profile.score += self.player1.profile.badge.xp_reward
+            # self.player2.profile.score += self.p2_score
+            # if self.player1.profile.badge.xp_reward > self.player2.profile.badge.xp_reward:
+            #     self.player2.profile.score -= self.player1.profile.badge.xp_reward * 2
             # ----------------------------
         elif self.winner == self.player2:
             self.player2.profile.stats['wins'] += 1
             self.player1.profile.stats['losses'] += 1
+            self.player2.profile.stats['win_track'] += 1
+            self.player1.profile.stats['win_track'] = 0
+            if self.player2.profile.stats['win_track'] > self.player2.profile.stats['win_streak']:
+                self.player2.profile.stats['win_streak'] = self.player2.profile.stats['win_track']
             # mahdi added these lines
             self.player2.profile.wins += 1
             self.player1.profile.losses += 1
-            self.player2.profile.score += WIN_SCORE + self.p2_score - self.p1_score
-            if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
-                self.player2.profile.score += self.player2.profile.badge.xp_reward * 2
-            else:
-                self.player2.profile.score += self.player2.profile.badge.xp_reward
-            self.player1.profile.score += self.p1_score
-            if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
-                self.player1.profile.score -= self.player2.profile.badge.xp_reward * 2
+            # self.player2.profile.score += WIN_SCORE + self.p2_score - self.p1_score
+            # if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
+            #     self.player2.profile.score += self.player2.profile.badge.xp_reward * 2
+            # else:
+            #     self.player2.profile.score += self.player2.profile.badge.xp_reward
+            # self.player1.profile.score += self.p1_score
+            # if self.player2.profile.badge.xp_reward > self.player1.profile.badge.xp_reward:
+            #     self.player1.profile.score -= self.player2.profile.badge.xp_reward * 2
             # ----------------------------
+        self.player1.profile.score += self.p1_xp
+        self.player2.profile.score += self.p2_xp
         if self.player1.profile.score > self.player1.profile.stats['highest_score']:
             self.player1.profile.stats['highest_score'] = self.player1.profile.score
         if self.player2.profile.score > self.player2.profile.stats['highest_score']:

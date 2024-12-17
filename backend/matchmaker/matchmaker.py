@@ -109,7 +109,7 @@ class Matchmaker:
     @classmethod
     async def create_tournament(cls, creator_id, tournament_name):
         # Create a tournament, check for limits, and notify the creator
-        # if await sync_to_async(Tournament.objects.count)() >= 10:
+        # if await sync_to_async(Tournament.objects.count)() >= 100:
         #     message = {'event': 'error',
         #                'message': 'Maximum tournaments reached'}
         #     await cls.send_message_to_client(creator_id, message)
@@ -126,7 +126,6 @@ class Matchmaker:
         user = await User.objects.aget(id=creator_id)
         await new_tournament.players.aadd(user)
         await new_tournament.asave()
-        # Notify the creator that the tournament has been created
         message = {
             'event': 'success',
             'message': f'Tournament {new_tournament.name} created',

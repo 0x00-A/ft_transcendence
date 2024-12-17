@@ -36,7 +36,7 @@ const MessageInput = ({
   const [timeLeft, setTimeLeft] = useState(0);
   const [charCount, setCharCount] = useState(0);
   const maxChars = 200;
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
 
 
@@ -69,7 +69,7 @@ const MessageInput = ({
     });
 
     setIsInviteDisabled(true);
-    setTimeLeft(10);
+    setTimeLeft(1);
   };
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 {
+    "lang": "tmazight",
     "welcome": {
         "title": "FT-PONG",
         "description": "ⴰⴽⵍⴰⵎ ⴰⵎⵏⵓ ⴷ ⵉⴷⵍⴰⴽ ⴰⵎⴰⵢⵏⵉⵙ ⵏ ⵓⴷⴰⵢⵏ ⴷ ⵉⵍⴷⴰⵡⴰⵍⴻⵏ",
@@ -147,6 +148,7 @@
         "clearAll": "ⵙⴼⴻⴹ ⴰⴽⴽ"
     },
     "game": {
+        "gameArea": "ⵕⵓⵃ!",
         "localGame": {
             "title": "ⵓⵔⴰⵔ ⴰⴷⵉⴳⴰⵏ",
             "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ",
@@ -179,7 +181,15 @@
         },
         "remoteGame": {
             "title": "ⵓⵔⴰⵔ ⵙ ⵍⴱⴻⵄⴷ",
-            "description": "ⴰⵖⴱⴻⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+            "description": "ⴰⵖⴱⴻⵍ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "ⵜⵉⵎⵍⵉⵍⵉⵜ ⴷⴻⴳ ⵓⴽⴻⵎⵎⴻⵍ",
+                "searchingForOpponent": "ⴰⵏⴰⴷⵉ ⵖⴻⴼ ⵓⵅⵚⵉⵎ ⵢⵓⴽⵍⴰⵍⴻⵏ",
+                "playersOnline": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+                "skillMatch": "ⵜⵉⵎⵍⵉⵍⵉⵜ ⵏ ⵜⴰⵎⵓⵙⵏⵉ",
+                "highSkillMatch": "ⵄⴻⵍⴰⵢ",
+                "cancelMatchmaking": "ⴱⵟⴻⵍ ⵜⵉⵎⵍⵉⵍⵉⵜ"
+            }
         },
         "remoteTournament": {
             "title": "ⵜⴰⵍⵖⵓⵖⴰ ⵙ ⵓⴱⴻⵄⴷ",
@@ -190,6 +200,26 @@
                 "SubmitButton": "ⴰⵙⴻⴱⵜⴻⵔ",
                 "CancelButton": "ⵢⴻⴽⴽⴻⵙ",
                 "AlertMessage": "ⵜⵜⵅⵉⵍⴽ ⵙⵙⴻⴽⵛⴻⵎ ⵉⵙⴻⵎ ⵏ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ."
+            },
+            "playerReady": {
+                "Players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ",
+                "Format": "ⵜⴰⵍⵖⴰ",
+                "SingleElimination": "ⵜⵓⴽⴽⵙⴰ ⵜⴰⵢⵉⵡⴻⵏⵜ",
+                "Status": "ⵜⴰⵍⵖⴰ",
+                "Created": "ⵢⴻⵜⵜⵡⴰⵅⵍⴻⵇⴷ "
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "ⴵⴵ ⵜⴰⵍⵖⵓⵖⴰ",
+                "leaveConfirmationTitle": "ⴵⴵ ⵜⴰⵍⵖⵓⵖⴰ?",
+                "leaveConfirmationDescription": "ⵜⴻⵜⵜⵡⴰⵍⵉⴹ ⴱⴻⵍⵍⵉ ⵜⴻⴱⵖⵉⴹ ⴰⴷ ⵜⴻⴼⴼⵖⴻⴹ ⵙⴻⴳ ⵜⴻⵍⵖⵓⵖⴰ? ⵜⵉⴳⴰⵡⵜⴰ ⵓⵔ ⵜⴻⵣⵎⵉⵔ ⴰⵔⴰ ⴰⴷ ⵜⴻⵜⵜⵡⴰⴽⴽⴻⵙ ⵢⴻⵔⵏⴰ ⵜⴻⵣⵎⴻⵔ ⴰⴷ ⴷⵜⴻⵙⵙⵉⵡⴻⴹ ⵖⴻⵔ ⵓⵃⴱⴰⵙ ⵏ ⵜⴻⵍⵖⵓⵖⴰ.",
+                "stayButton": "ⵇⵇⵉⵎ",
+                "leaveButton": "ⴵⴵ ⵜⴰⵍⵖⵓⵖⴰ"
+            },
+            "sparkleEffect": {
+                "cancel": "ⵢⴻⴽⴽⴻⵙ...",
+                "loading": "ⴰⵄⴻⴱⴱⵉ...",
+                "ready": "ⵉⵀⴻⴳⴳⴰ!",
+                "readyUp": "HEJGED"
             }
         },
         "localTournament": {
@@ -218,7 +248,12 @@
         },
         "multipleGame": {
             "title": "ⴰⵟⴰⵙ ⵏ ⵓⵔⴰⵔ",
-            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ"
+            "description": "ⵓⵔⴰⵔ ⴷ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ",
+            "PlayerCard": {
+                "Score": "ⵜⴰⵢⴰⴼⵓⵜ",
+                "Against": "ⵎⴳⴰⵍ"
+            },
+            "WaitingPJ": "ⵜⵜⵕⴰⴵⵓⵖ ⴰⴷ ⴽⴻⵛⵎⴻⵏ ⵉⵎⵢⵓⵔⴰⵔⴻⵏ..."
         },
         "joinedTournaments": {
             "title": "ⵢⴻⴽⵛⴻⵎ ⵖⴻⵔ ⵜⴻⵎⵙⵉⵣⵣⴻⵍⵜ",
@@ -239,6 +274,95 @@
             },
             "joinButton": "ⵔⵏⵓ ⵖⴻⵔ",
             "noTournaments": "ⵓⵍⴰⵛ ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⵢⴻⵍⵍⴰⵏ ⵉⵎⵉⵔⴰ."
+        }
+    },
+    "Profile": {
+        "friends": {
+            "title": "ⵉⵎⴷⵓⴽⴰⵍ",
+            "viewMore": "ⵡⴰⵍⵉ ⵓⴳⴰⵔ",
+            "buttons": {
+                "online": "Oⵏⵍⴰⵢⵏ",
+                "offline": "ⴱⴻⵕⵕⴰ ⵉ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+            },
+            "errors": {
+                "noFriends": "ⴽⴻⵞⵞ ⴷ ⴰⵡⵃⵉⴷ",
+                "noOnlineFriends": "ⵓⵍⴰⵛ ⵉⵎⴷⵓⴽⴰⵍ ⵏ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ",
+                "noOfflineFriends": "ⵓⵍⴰⵛ ⵉⵎⴷⵓⴽⴰⵍ ⵓⵔ ⵏⴻⵍⵍⵉ ⴰⵔⴰ ⴷⴻⴳ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+            },
+            "addFriends": {
+                "button": "ⵔⵏⵓ ⵉⵎⴷⵓⴽⴰⵍ"
+            },
+            "profile": {
+                "level": "ⴰⵙⵡⵉⵔ:",
+                "status": {
+                "online": "Oⵏⵍⴰⵢⵏ",
+                "offline": "ⴱⴻⵕⵕⴰ ⵉ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
+                }
+            }   
+        },
+        "gameHistory": {
+            "title": "ⴰⵎⴻⵣⵔⵓⵢ ⵏ ⵡⵓⵔⴰⵔ",
+            "buttons": {
+                "game": "ⵜⵓⵔⴰⵔⴻⵜ",
+                "tournament": "ⵜⴰⵍⵖⵓⵖⴰ"
+            },
+            "noGames": {
+                "message": "ⵎⴰⵣⴰⵍ ⵓⵔ ⵜⴻⵜⵜⵓⵔⴰⵔⴻⴹ ⴽⵔⴰ ⵏ ⵡⵓⵔⴰⵔⴻⵏ.",
+                "playNow": "ⵓⵔⴰⵔ ⵜⵓⵔⴰ"
+            },
+            "fields": {
+                "dateTime": "ⵍⴰⵡⴰⵏ",
+                "name": "ⵉⵙⴻⵎ",
+                "result": "ⴰⴳⵎⵓⴹ",
+                "score": "ⵓⴳⵎⵓⴹ",
+                "duration": "ⵜⴰⵍⵍⵉⵜ",
+                "rematch": "ⴰⵄⴰⵡⵣⴷ"
+            },
+            "results": {
+                "win": "ⴰⴼⵔⴰⵏ",
+                "lose": "ⵢⴻⵙⵔⵓⵃ"
+            },
+            "invite": "ⵄⵔⴻⴹ"
+        },
+        "Achievements": {
+            "title": "ⵉⴳⵎⴰⴹ",
+            "NoAchievementsFound": "ⵓⵔ ⴷⵓⴼⵉⵏ ⴰⵔⴰ ⵉⴳⵎⴰⴹ!"
+        },
+        "profileHeader": {
+            "EditProfileButton": "ⴱⴻⴷⴷⴻⵍ ⴰⴳⴱⵓⵔ",
+            "profileStats": {
+                "games": "ⵓⵔⴰⵔⴻⵏ",
+                "wins": "ⵉⵔⴻⴱⵃ",
+                "loses": "ⵢⴻⵅⵚⴻⵔ",
+                "score": "ⵓⴳⵎⵓⴹ",
+                "rank": "ⴰⵙⵡⵉⵔ"
+            },
+            "badge": {
+                "Bronze": "ⵏⵏⵃⴰⵙ",
+                "Silver": "ⴰⵥⵔⴻⴼ",
+                "Gold": "ⵓⵔⴻⵖ",
+                "Platinum": "ⴰⴱⵍⴰⵟⵉⵏ",
+                "Diamond": "ⴰⵍⵎⴰⵣ",
+                "Ft-Pong": "ⴼⵜⴱⵓⵏⴳ"
+            }
+        },
+        "setPassword": {
+            "title": "ⴰⴷⵣⴰⵔ ⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ",
+            "description": "ⴰⴷⵔⴰⵔⴽⴰⵏ ⴰⴽ ⵉⵏⵓⵡⴰⵢⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ. ⵓⵎⴳⵎⴰⴹ ⵉⵙⴼⴰⵙ ⵜⴰⴼⵓⴷⵍⵉⵜ ⴽ ⴷⵉⵍⴰ ⴰⵔⵔⴰⴳ ⴷ ⴽⵕⵡⴰⵔ ⵜⵉⵣⵣⵍⵉⵏⵏⵓⵏⴻⵏ.",
+            "fields": {
+                "newPassword": "ⵜⴰⴼⵓⴷⵍⵉⵜ ⴰⵎⵢⴰⵡⵏⵉⵜ",
+                "confirmPassword": "ⵉⴼⵔⵉⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ"
+            },
+            "buttons": {
+                "reset": "ⵙⵏⵏⵉⵍ",
+                "save": "ⵙⵎⵓⵔ"
+            },
+            "errors": {
+                "passwordRequired": "ⵜⴰⴼⵓⴷⵍⵉⵜ ⴰⵎⵢⴰⵡⵏⵉⵜ ⴽⵓⵙⴻⵔⴻⵍ.",
+                "confirmPasswordRequired": "ⵉⴼⵔⵉⵏ ⵜⴰⴼⵓⴷⵍⵉⵜ ⴽⵓⵙⴻⵔⴻⵍ.",
+                "passwordMismatch": "ⵜⴰⴼⵓⴷⵍⵉⵜⵏ ⴷ ⴰⵔⵔⵓⵎⵏⵏⵓⵏ."
+            },
+            "successMessage": "ⵜⴰⴼⵓⴷⵍⵉⵜ ⴽⵎⵏⵙ ⵉⵎⴹⴰⵏⴻⵍ."
         }
     }
 

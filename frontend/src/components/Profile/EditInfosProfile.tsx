@@ -127,7 +127,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                     <div className={css.emailInput}>
                         <input required={false} type="email" className={css.input}
                         placeholder={profileData?.email ? profileData?.email : 'Enter new email'} {...register('email')}/>
-                        <button className={css.editEmailBtn} disabled={!emailValue} onClick={handleVerifyEmail}>
+                        <button type='button' className={css.editEmailBtn} disabled={!emailValue} onClick={handleVerifyEmail}>
                             Verify
                         </button>
                     </div>

@@ -45,7 +45,7 @@ def create_user_profile(sender, instance, created, **kwargs):
        Profile.objects.create(user=instance,
                               rank=Profile.objects.count() + 1,
                               badge=Badge.objects.get(name='Bronze'),
-                              stats={'wins': 0, 'losses': 0, 'games_played': 0, 'highest_score': 0, 'best_rank': Profile.objects.count() + 1}
+                              stats={'wins': 0, 'losses': 0, 'games_played': 0, 'highest_score': 0, 'best_rank': Profile.objects.count() + 1, 'win_track': 0, 'win_streak': 0}
                               )
 
        achievements = Achievement.objects.all()

@@ -78,7 +78,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 await user.asave()
             except User.DoesNotExist:
                 return
-            
+
     async def set_last_seen(self):
         if self.username:
             try:
@@ -107,7 +107,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.set_last_seen()
         return await super().disconnect(close_code)
 
-
     async def handle_accept(self, sender, recipient):
         if sender not in connected_users:
             print(f'sender not found ... {sender}')
@@ -120,6 +119,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             message = {
                 'event': 'error',
                 'message': f"{sender} is currently playing!"
+            }
+            await self.send_message(recipient, message)
+            return
+        if await self.is_already_playing(recipient):
+            message = {
+                'event': 'error',
+                'message': f"You are already in a game!"
             }
             await self.send_message(recipient, message)
             return
@@ -144,13 +150,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'event': 'game_address',
             'message': 'Game successfully created',
             'game_address': game_address,
+            'p1_id': p1.id,
+            'p2_id': p2.id,
         }
         await self.send_message(sender, message)
         await self.send_message(recipient, message)
 
     async def is_already_playing(self, sender):
         user_id = await self.get_user_id(sender)
-        print(f'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {user_id}')
         if user_id:
             if user_id in Matchmaker.games_queue:
                 Matchmaker.games_queue.remove(user_id)
@@ -247,6 +254,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'event': 'notification',
             'data': message
         }))
+
     async def user_message(self, event):
         message = event["message"]
         # print(f"Sending Message: {event["message"]}")

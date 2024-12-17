@@ -15,12 +15,9 @@
     font-size: 2.2rem;
     color: #F8F3E3;
     font-weight: bold;
+    gap: 1rem;
 }
 
-.achievIcon {
-    width: 40px;
-    height: 40px;
-}
 
 .achievsContainer {
     height: 75%;
@@ -31,7 +28,7 @@
     gap: 1rem;
     padding: 20px;
     /* border: 1px solid white; */
-    overflow: auto;
+    /* overflow: auto; */
     /* overflow-x: hidden; */
     /* border-radius: inherit; */
 }

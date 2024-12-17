@@ -3,20 +3,39 @@ import css from './ProfileHeader.module.css'
 import { MdEdit } from "react-icons/md";
 // Contexts
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 
 
 const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
   const { user: currentUser, isLoading } = useUser();
+  const { t } = useTranslation();
 
-  if (isLoading) return <div>Loading...</div>;
-
+  const translateBadgeName = (badgeName: string): string => {
+    switch (badgeName) {
+      case 'Bronze':
+        return t('Profile.profileHeader.badge.Bronze');
+      case 'Silver':
+        return t('Profile.profileHeader.badge.Silver');
+      case 'Gold':
+        return t('Profile.profileHeader.badge.Gold');
+      case 'Platinum':
+        return t('Profile.profileHeader.badge.Platinum');
+      case 'Diamond':
+        return t('Profile.profileHeader.badge.Diamond');
+      case 'Ft-Pong':
+        return t('Profile.profileHeader.badge.Ft-Pong');
+      default:
+        return badgeName;
+    }
+  };
+  
   return (
     <div className={css.profileHeaderContainer}>
       <div className={css.profileBackground}>
         <button className={css.editProfileBtn} onClick={() => setEditProfile(true)}>
           <MdEdit fontSize='2.5rem'/>
-          <span>Edit Profile</span>
+          <span>{t('Profile.profileHeader.EditProfileButton')}</span>
         </button>
       </div>
       { isLoading ?
@@ -39,34 +58,34 @@ const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.Se
           <div className={css.totalGames}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{currentUser?.profile?.stats?.games_played || 0}</span>}
-            <span className={css.statLabel}>GAMES</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.games')}</span>
           </div>
           <div className={css.wins}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{currentUser?.profile?.stats?.wins || 0}</span>}
-            <span className={css.statLabel}>WINS</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.wins')}</span>
           </div>
           <div className={css.loses}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{currentUser?.profile?.stats?.losses || 0}</span>}
-            <span className={css.statLabel}>LOSES</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.loses')}</span>
           </div>
         </div>
         <div className={css.leftStats}>
           <div className={css.badge}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <img src={currentUser?.profile?.badge?.icon} alt="" className={css.badgeIcon}/>}
-            <span className={css.statLabel}>{currentUser?.profile?.badge?.name}</span>
+            <span className={css.statLabel}>{translateBadgeName(currentUser?.profile?.badge?.name || '')}</span>
           </div>
           <div className={css.score}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{currentUser?.profile?.score || 0}</span>}
-            <span className={css.statLabel}>SCORE</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.score')}</span>
           </div>
           <div className={css.rank}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{currentUser?.profile?.rank || 0}</span>}
-            <span className={css.statLabel}>RANK</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.rank')}</span>
           </div>
         </div>
       </div>

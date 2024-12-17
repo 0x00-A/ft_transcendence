@@ -148,6 +148,9 @@
     gap: 1rem;
     display: flex
 }
+.profileBodyConatiner h3 {
+    font-size: 2rem;
+}
 
 .rightBodyContainer {
     height: 100%;

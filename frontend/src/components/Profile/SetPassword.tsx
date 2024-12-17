@@ -13,12 +13,15 @@ import { BiShow } from "react-icons/bi";
 import { toast } from 'react-toastify';
 // Contexts
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 
 
 const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
     const { register, handleSubmit, errors, mutation, reset } = useSetPassword();
     const { refetch } = useUser();
+    const { t } = useTranslation();
+
     const [showPassword, setShowPassword] = useState({
       new_pass: false,
       confirm_pass: false,
@@ -43,7 +46,7 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
         if (mutation?.data?.data?.message) {
           toast.success(mutation?.data?.data?.message);
         } else {
-          toast.success('Password set successfully');
+          toast.success(t('Profile.setPassword.successMessage'));
         }
         setEditProfile(false);
       }
@@ -65,12 +68,12 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
             </button>
             <form action="submit" onSubmit={handleSubmit(handleSetPassword)}>
               <div className={css.formHeader}>
-                <h1>Set Password</h1>
-                <p>Your account has no password, Please set a password so you can login and edit your profile.</p>
+                <h1>{t('Profile.setPassword.title')}</h1>
+                <p>{t('Profile.setPassword.description')}</p>
               </div>
               <div className={css.inputFields}>
                 <div className={css.containerFiled}>
-                  <label htmlFor="" className={css.label}>New Password</label>
+                  <label htmlFor="" className={css.label}>{t('Profile.setPassword.fields.newPassword')}</label>
                   <div className={css.inputContainer}><input type={ showPassword.new_pass ? "text" : "password"} className={css.input} {...register('password')}/>
                   {showPassword.new_pass ?
                     <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/> :
@@ -79,7 +82,7 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
                 { errors.password && <span className={css.fieldError}>{errors.password.message}</span> }
                 </div>
                 <div className={css.containerFiled}>
-                  <label htmlFor="" className={css.label}>Confirm New Password</label>
+                  <label htmlFor="" className={css.label}>{t('Profile.setPassword.fields.confirmPassword')}</label>
                   <div className={css.inputContainer}><input type={ showPassword.confirm_pass ? "text" : "password"} className={css.input} {...register('password2')}/>
                   {showPassword.confirm_pass ?
                     <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
@@ -88,8 +91,8 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
                 { errors.password2 && <span className={css.fieldError}>{errors.password2.message}</span> }
                 </div>
                 <div className={css.ConfirmButtons}>
-                  <button type='reset' className={css.closeBtn} onClick={() => reset()}>Reset</button>
-                  <button type='submit' className={css.confirmBtn}>Save</button>
+                  <button type='reset' className={css.closeBtn} onClick={() => reset()}>{t('Profile.setPassword.buttons.reset')}</button>
+                  <button type='submit' className={css.confirmBtn}>{t('Profile.setPassword.buttons.save')}</button>
                 </div>
               </div>
             </form>

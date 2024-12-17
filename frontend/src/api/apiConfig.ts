@@ -53,3 +53,5 @@ export const API_GET_ACHIEVEMENTS_URL = "/achievements";
 export const API_GET_PLAYED_GAMES_URL = "/matchmaker/played_games";
 
 export const API_GET_LEADERBOARD_URL = '/dashboard-leaderboard';
+
+export const API_GET_LAST_GAMES_URL = '/matchmaker/last-games';
