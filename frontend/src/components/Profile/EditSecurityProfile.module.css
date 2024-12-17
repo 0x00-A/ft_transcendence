@@ -22,7 +22,6 @@
     align-self: self-start;
     font-size: 2.2rem;
     font-weight: bold;
-    margin-bottom: 15px;
 }
 
 .changePassForm {
@@ -120,11 +119,13 @@
     /* border: 1px solid #F8C25C; */
     display: flex;
     flex-direction: column;
+    gap: 1rem;
     width: 100%;
     height: 45%;
     border-radius: 25px;
     background-color: #1E2533;
     padding: 2rem;
+    position: relative;
 }
 
 .twoFacContainer {
@@ -152,23 +153,23 @@
 }
 
 .labelIcon label {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #D1D3D4;
 }
 
 .mobileMsgIcon {
-    font-size: 6rem;
+    font-size: 4rem;
     color: #D1D3D4;
 }
 
 .inputContainer p {
-    margin-bottom: 1rem;
+    font-size: 1.3rem;
 }
 
 .inputBtn {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
+    justify-content: flex-start;
     gap : 1rem;
 }
 
@@ -245,3 +246,75 @@
     background-color: #1E2533;
     color: #ffffff;
 }
+
+
+.downloadBtn {
+    border: 1px solid #4CAF50;
+    padding: 8px;
+    background-color: #0E1725;
+    border-radius: 8px;
+    color: #D1D3D4;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.downloadBtn:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}
+
+.popupOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup {
+    background-color: #1E2533;
+    border: 1px solid yellow;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.popup h2 {
+    color: #ffffff;
+}
+
+.osButtons button {
+    border: 1px solid #F8C25C;
+    padding: 10px 20px;
+    background-color: #0E1725;
+    border-radius: 8px;
+    color: #D1D3D4;
+    cursor: pointer;
+    margin: 0 0.5rem;
+}
+
+.osButtons button:hover {
+    background-color: #1E2533;
+    color: #ffffff;
+}
+
+.closePopup {
+    background-color: #AA2926;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.closePopup:hover {
+    background-color: #1E2533;
+    color: #AA2926;
+}
+
