@@ -16,6 +16,7 @@ import axios from 'axios';
 import { ChangePasswordForm } from '@/types/apiTypes';
 import { API_DISABLE_2FA_URL, API_ENABLE_2FA_REQUEST_URL, API_ENABLE_2FA_URL } from '@/api/apiConfig';
 import { otpSchema } from '@/types/formSchemas';
+import { useTranslation } from 'react-i18next';
 
 type ShowPasswordFields = 'current_pass' | 'new_pass' | 'confirm_pass' | 'pass2fa';
 
@@ -30,16 +31,18 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
 
     const [showDownloadPopup, setShowDownloadPopup] = useState(false);
-    const [selectedOS, setSelectedOS] = useState(null);
+    const [selectedOS, setSelectedOS] = useState<string>('');
     const androidQrCode = "path-to-android-qr-code";
     const iosQrCode = "path-to-ios-qr-code";
+    const { t } = useTranslation();
+
 
     const handleOpenDownloadPopup = () => setShowDownloadPopup(true);
     const handleClosePopup = () => {
         setShowDownloadPopup(false);
-        setSelectedOS(null);
+        setSelectedOS('');
     };
-    const handleSelectOS = (os) => setSelectedOS(os);
+    const handleSelectOS = (os: string) => setSelectedOS(os);
 
 
 
@@ -137,11 +140,11 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     return (
         <div className={css.securityContainer}>
             <div className={css.UpdatePassContainer}>
-                <h1 className={css.title}>Change Password</h1>
+                <h1 className={css.title}>{t('Profile.EditSecurity.changePassword.title')}</h1>
                 <form action="submit" className={css.changePassForm} onSubmit={handleSubmit(handleChangePassword)}>
                     <div className={css.entryArea}>
                         <div className={css.containerFiled}>
-                            <label htmlFor="" className={css.label}>Current Password</label>
+                            <label htmlFor="" className={css.label}>{t('Profile.EditSecurity.changePassword.currentPassword')}</label>
                             <div className={css.passContainer}><input type={ showPassword.current_pass ? "text" : "password"} className={css.input} {...register('current_password')}/>
                             {showPassword.current_pass ?
                               <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("current_pass")}/> :
@@ -150,7 +153,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                             {errors.current_password && <span className={css.fieldError}>{errors.current_password.message}</span>}
                         </div>
                         <div className={css.containerFiled}>
-                            <label htmlFor="" className={css.label}>New Password</label>
+                            <label htmlFor="" className={css.label}>{t('Profile.EditSecurity.changePassword.newPassword')}</label>
                             <div className={css.passContainer}><input type={ showPassword.new_pass ? "text" : "password"} className={css.input} {...register('new_password')}/>
                             {showPassword.new_pass ?
                               <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("new_pass")}/> :
@@ -159,7 +162,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                             {errors.new_password && <span className={css.fieldError}>{errors.new_password.message}</span>}
                         </div>
                         <div className={css.containerFiled}>
-                            <label htmlFor="" className={css.label}>Confirm New Password</label>
+                            <label htmlFor="" className={css.label}>{t('Profile.EditSecurity.changePassword.confirmPassword')}</label>
                             <div className={css.passContainer}><input type={ showPassword.confirm_pass ? "text" : "password"} className={css.input} {...register('confirm_password')}/>
                             {showPassword.confirm_pass ?
                               <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
@@ -169,44 +172,46 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                         </div>
                     </div>
                     <div className={css.ConfirmButtons}>
-                        <button type='reset' className={css.closeBtn} onClick={() => reset()}>Reset</button>
-                        <button type='submit' className={css.confirmBtn}>Save</button>
+                        <button type='reset' className={css.closeBtn} onClick={() => reset()}>{t('Profile.EditSecurity.changePassword.buttons.reset')}</button>
+                        <button type='submit' className={css.confirmBtn}>{t('Profile.EditSecurity.changePassword.buttons.save')}</button>
                     </div>
                 </form>
             </div>
             <div className={css.twoFacForm}>
-                <h1 className={css.title}>Two Factor Authentication (2FA)</h1>
+                <h1 className={css.title}>{t('Profile.EditSecurity.twoFactorAuth.title')}</h1>
                 {!profileData?.is2fa_active ? (
                     <div className={css.twoFacContainer}>
                         <div className={css.inputContainer}>
-                            <p>Get verification codes from an authenticator app such as Google Authenticator. It works even if your phone is offline. Scan the QR code below.</p>
-                            <div className={css.labelIcon}>
-                                <TbDeviceMobileMessage className={css.mobileMsgIcon} />
-                                <label>Enter the 6-digit verification code generated by your authenticator app.</label>
+                            <p className={css.description}>{t('Profile.EditSecurity.twoFactorAuth.description')}</p>
+                            <div className={css.otpAndInput}>
+                                <div className={css.labelIcon}>
+                                    <TbDeviceMobileMessage className={css.mobileMsgIcon} />
+                                    <label>{t('Profile.EditSecurity.twoFactorAuth.mobileMessageLabel')}</label>
+                                </div>
+                                <div className={css.inputBtn}>
+                                    <input
+                                        type="text"
+                                        className={css.verifCode}
+                                        placeholder={t('Profile.EditSecurity.twoFactorAuth.otpPlaceholder')}
+                                        onChange={(e) => setOtp(e.target.value)}
+                                    />
+                                    <button
+                                        disabled={!qrcode}
+                                        className={css.enableBtn}
+                                        onClick={handleEnable2fa}
+                                    >
+                                        {t('Profile.EditSecurity.twoFactorAuth.enable2FA')}
+                                    </button>
+                                </div>
+                                {errorOtp && <span className={css.fieldError}>{errorOtp}</span>}
                             </div>
-                            <div className={css.inputBtn}>
-                                <input
-                                    type="text"
-                                    className={css.verifCode}
-                                    placeholder="Enter OTP"
-                                    onChange={(e) => setOtp(e.target.value)}
-                                />
-                                <button
-                                    disabled={!qrcode}
-                                    className={css.enableBtn}
-                                    onClick={handleEnable2fa}
-                                >
-                                    Enable 2FA
-                                </button>
-                            </div>
-                            {errorOtp && <span className={css.fieldError}>{errorOtp}</span>}
-                            <button className={css.downloadBtn} onClick={handleOpenDownloadPopup}>
-                                Download App
-                            </button>
                         </div>
                         <div className={css.qrCodeContainer}>
+                            <button className={css.downloadBtn} onClick={handleOpenDownloadPopup}>
+                                {t('Profile.EditSecurity.twoFactorAuth.downloadApp')}
+                            </button>
                             {!qrcode ? (
-                                <button onClick={handleGetQrcode}>Get QR Code</button>
+                                <button onClick={handleGetQrcode}>{t('Profile.EditSecurity.twoFactorAuth.getQrCode')}</button>
                             ) : (
                                 <img src={qrcode} alt="QR Code" />
                             )}
@@ -214,9 +219,9 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                     </div>
                 ) : (
                     <div className={css.disable2faContainer}>
-                        <p>Two Factor Authentication is currently enabled</p>
+                        <p>{t('Profile.EditSecurity.twoFactorAuth.enabled.status')}</p>
                         <div className={css.containerFiled}>
-                            <label htmlFor="" className={css.label}>Confirm your Password</label>
+                            <label htmlFor="" className={css.label}>{t('Profile.EditSecurity.twoFactorAuth.enabled.confirmPasswordLabel')}</label>
                             <div>
                                 <input
                                     type={showPassword.pass2fa ? "text" : "password"}
@@ -241,25 +246,25 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                             className={css.disableBtn}
                             onClick={handleDisable2fa}
                         >
-                            Disable 2FA
+                            {t('Profile.EditSecurity.twoFactorAuth.enabled.buttons.disable2FA')}
                         </button>
                     </div>
                 )}
                 {showDownloadPopup && (
                     <div className={css.popupOverlay}>
                         <div className={css.popup}>
-                            <h2>Select Your OS</h2>
+                            <h2>{t('Profile.EditSecurity.downloadAppPopup.title')}</h2>
                             <div className={css.osButtons}>
-                                <button onClick={() => handleSelectOS("android")}>Android</button>
-                                <button onClick={() => handleSelectOS("ios")}>Apple</button>
+                                <button onClick={() => handleSelectOS("android")}>{t('Profile.EditSecurity.downloadAppPopup.osButtons.android')}</button>
+                                <button onClick={() => handleSelectOS("ios")}>{t('Profile.EditSecurity.downloadAppPopup.osButtons.ios')}</button>
                             </div>
                             {selectedOS && (
                                 <div className={css.qrCodeContainer}>
-                                    <p>Scan the QR code to download the app.</p>
+                                    <p>{t('Profile.EditSecurity.downloadAppPopup.qrCodeInstructions')}</p>
                                     <img src={selectedOS === "android" ? androidQrCode : iosQrCode} alt={`${selectedOS} QR Code`} />
                                 </div>
                             )}
-                            <button className={css.closePopup} onClick={handleClosePopup}>Close</button>
+                            <button className={css.closePopup} onClick={handleClosePopup}>{t('Profile.EditSecurity.downloadAppPopup.buttons.close')}</button>
                         </div>
                     </div>
                 )}
