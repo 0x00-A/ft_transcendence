@@ -311,13 +311,13 @@ import { useTranslation } from 'react-i18next';
       />
     );
 
-    const ModesList = useMemo(() => [
+    const ModesList = [
       { id: 0, title: t('game.localGame.title'), icon: Gamepad2, description: t('game.localGame.description') },
       { id: 1, title: t('game.remoteGame.title'), icon: Globe, description: t('game.remoteGame.description') },
       { id: 2, title: t('game.remoteTournament.title'), icon: Trophy, description: t('game.remoteTournament.description') },
       { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
       { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
-    ], [t]);
+    ];
   
   return (
     <div className={styles.container}>
