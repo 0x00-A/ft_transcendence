@@ -118,7 +118,7 @@ const NotificationsDropdown = () => {
                   {notification.title}
                 </h3>
                 <span className="text-[10px] text-gray-100">
-                  {formatDate(notification.created_at)}
+                  {formatDate(notification.created_at, t('lang'))}
                 </span>
               </div>
               <p className="text-[13px] font-sans text-gray-100 mt-1">

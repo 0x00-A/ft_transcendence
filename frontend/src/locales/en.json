@@ -1,4 +1,5 @@
 {
+    "lang": "en",
     "welcome": {
         "title": "FT-PONG",
         "description": "Ready to start your next match and climb the leaderboard",
@@ -273,6 +274,77 @@
             },
             "joinButton": "join",
             "noTournaments": "No tournaments available at the moment."
+        }
+    },
+    "Profile": {
+        "friends": {
+            "title": "Friends",
+            "viewMore": "View more",
+            "buttons": {
+                "online": "Online",
+                "offline": "Offline"
+            },
+            "errors": {
+                "noFriends": "You are lonely",
+                "noOnlineFriends": "No Online friends",
+                "noOfflineFriends": "No Offline friends"
+            },
+            "addFriends": {
+                "button": "Add friends"
+            },
+            "profile": {
+                "level": "Level:",
+                "status": {
+                "online": "Online",
+                "offline": "Offline"
+                }
+            }   
+        },
+        "gameHistory": {
+            "title": "Game History",
+            "buttons": {
+                "game": "Game",
+                "tournament": "Tournament"
+            },
+            "noGames": {
+                "message": "You don't play any games yet",
+                "playNow": "Play Now"
+            },
+            "fields": {
+                "dateTime": "Date & Time",
+                "name": "Name",
+                "result": "Result",
+                "score": "Score",
+                "duration": "Duration",
+                "rematch": "Rematch"
+            },
+            "results": {
+                "win": "Win",
+                "lose": "Lose"
+            },
+            "invite": "Invite"
+        },
+        "Achievements": {
+            "title": "Achievements",
+            "NoAchievementsFound": "No achievements found!"
+        },
+        "profileHeader": {
+            "EditProfileButton": "Edit Profile",
+            "profileStats": {
+                "games": "GAMES",
+                "wins": "WINS",
+                "loses": "LOSES",
+                "score": "SCORE",
+                "rank": "RANK"
+            },
+            "badge": {
+                "Bronze": "Bronze",
+                "Silver": "Silver",
+                "Gold": "Gold",
+                "Platinum": "Platinum",
+                "Diamond": "Diamond",
+                "Ft-Pong": "Ft-Pong"
+            }
         }
     }
 }
