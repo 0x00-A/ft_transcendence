@@ -20,14 +20,16 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
 
     game_duration = serializers.SerializerMethodField()
     result = serializers.SerializerMethodField()
-    score = serializers.SerializerMethodField()
+    my_score = serializers.SerializerMethodField()
+    opponent_score = serializers.SerializerMethodField()
     opponent_avatar = serializers.SerializerMethodField()
     opponent_username = serializers.SerializerMethodField()
+    xp_gained = serializers.SerializerMethodField()
 
     class Meta:
         model = Game
-        fields = ['id', 'start_time', 'opponent_username',
-                  'opponent_avatar', 'result', 'score', 'game_duration']
+        fields = ['id', 'start_time', 'opponent_username', 'xp_gained', 'opponent_score',
+                  'opponent_avatar', 'result', 'my_score', 'game_duration']
 
     def validate(self, data):
         print(f'Validating data: {data}')
@@ -48,8 +50,20 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
             return 'Win'
         return 'Lose'
 
-    def get_score(self, obj):
-        return f'{obj.p1_score} - {obj.p2_score}'
+    def get_xp_gained(self, obj):
+        if obj.player1 == self.context['request'].user:
+            return obj.p1_xp
+        return obj.p2_xp
+
+    def get_my_score(self, obj):
+        if obj.player1 == self.context['request'].user:
+            return obj.p1_score
+        return obj.p2_score
+
+    def get_opponent_score(self, obj):
+        if obj.player1 == self.context['request'].user:
+            return obj.p2_score
+        return obj.p1_score
 
     def get_game_duration(self, obj):
         if not obj.end_time or not obj.start_time:

@@ -1,4 +1,5 @@
 {
+    "lang": "es",
     "welcome": {
         "title": "FT-PONG",
         "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
@@ -147,6 +148,7 @@
         "clearAll": "Limpiar todo"
     },
     "game": {
+        "gameArea": "IR!",
         "localGame": {
             "title": "Juego Local",
             "description": "Juega con amigos",
@@ -179,7 +181,15 @@
         },
         "remoteGame": {
             "title": "Juego Remoto",
-            "description": "Desafía en línea"
+            "description": "Desafía en línea",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "Emparejamiento en progreso",
+                "searchingForOpponent": "Buscando un oponente digno",
+                "playersOnline": "Jugadores en línea",
+                "skillMatch": "Nivel de habilidad",
+                "highSkillMatch": "Alto",
+                "cancelMatchmaking": "Cancelar emparejamiento"
+            }
         },
         "remoteTournament": {
             "title": "Torneo Remoto",
@@ -190,6 +200,26 @@
                 "SubmitButton": "Entregar",
                 "CancelButton": "Cancelar",
                 "AlertMessage": "Ingrese un nombre para el torneo."
+            },
+            "playerReady": {
+                "Players": "Jugadores",
+                "Format": "Formato",
+                "SingleElimination": "Eliminación Simple",
+                "Status": "Estado",
+                "Created": "Creado"
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "Salir del Torneo",
+                "leaveConfirmationTitle": "¿Salir del Torneo?",
+                "leaveConfirmationDescription": "¿Estás seguro de que quieres salir del torneo? Esta acción no se puede deshacer y puede resultar en la cancelación del torneo.",
+                "stayButton": "Permanecer",
+                "leaveButton": "Salir del Torneo"
+            },
+            "sparkleEffect": {
+                "cancel": "Cancelar...",
+                "loading": "Cargando...",
+                "ready": "¡LISTO!",
+                "readyUp": "PREPARARSE"
             }
         },
         "localTournament": {
@@ -218,7 +248,12 @@
         },
         "multipleGame": {
             "title": "Juego Múltiple",
-            "description": "Juega con amigos"
+            "description": "Juega con amigos",
+            "PlayerCard": {
+                "Score": "Puntaje",
+                "Against": "Contra"
+            },
+            "WaitingPJ": "Esperando a que las jugadoras se unan..."
         },
         "joinedTournaments": {
             "title": "Torneos Inscritos",
@@ -240,7 +275,76 @@
             "joinButton": "Unirse",
             "noTournaments": "No hay torneos disponibles en este momento."
         }
+    },
+    "Profile": {
+        "friends": {
+            "title": "Amigos",
+            "viewMore": "Ver más",
+            "buttons": {
+                "online": "En línea",
+                "offline": "Desconectado"
+            },
+            "errors": {
+                "noFriends": "Estás solo",
+                "noOnlineFriends": "No hay amigos en línea",
+                "noOfflineFriends": "No hay amigos desconectados"
+            },
+            "addFriends": {
+                "button": "Agregar amigos"
+            },
+            "profile": {
+                "level": "Nivel",
+                "status": {
+                "online": "En línea",
+                "offline": "Desconectado"
+                }
+            }
+        },
+        "gameHistory": {
+            "title": "Historial de Juegos",
+            "buttons": {
+                "game": "Juego",
+                "tournament": "Torneo"
+            },
+            "noGames": {
+                "message": "No has jugado ningún juego todavía",
+                "playNow": "Jugar Ahora"
+            },
+            "fields": {
+                "dateTime": "Fecha y Hora",
+                "name": "Nombre",
+                "result": "Resultado",
+                "score": "Puntuación",
+                "duration": "Duración",
+                "rematch": "Revancha"
+            },
+            "results": {
+                "win": "Ganar",
+                "lose": "Perder"
+            },
+            "invite": "Invitar"
+        },
+        "Achievements": {
+            "title": "Logros",
+            "NoAchievementsFound": "No se encontraron logros!"
+        },
+        "setPassword": {
+            "title": "Establecer contraseña",
+            "description": "Tu cuenta no tiene contraseña. Por favor, establece una contraseña para poder iniciar sesión y editar tu perfil.",
+            "fields": {
+                "newPassword": "Nueva contraseña",
+                "confirmPassword": "Confirmar nueva contraseña"
+            },
+            "buttons": {
+                "reset": "Reiniciar",
+                "save": "Guardar"
+            },
+            "errors": {
+                "passwordRequired": "La nueva contraseña es obligatoria.",
+                "confirmPasswordRequired": "La confirmación de la contraseña es obligatoria.",
+                "passwordMismatch": "Las contraseñas no coinciden."
+            },
+            "successMessage": "Contraseña establecida con éxito."
+        }
     }
-    
-    
 }

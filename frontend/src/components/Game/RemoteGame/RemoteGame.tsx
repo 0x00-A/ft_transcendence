@@ -6,6 +6,7 @@ import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
 import PlayerMatchupBanner from '../components/PlayerMatchupBanner';
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 
 
 const canvasWidth = 650;
@@ -32,6 +33,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
   const [count, setCount] = useState(3);
+  const { t } = useTranslation();
 
   const { refetch, user, isLoading } = useUser();
 
@@ -348,7 +350,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
               >
                 {count || <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-6xl font-bold animate-pulse text-yellow-400">
-                    GO!
+                    {t('game.gameArea')}
                   </div>
                 </div>}
               </div>

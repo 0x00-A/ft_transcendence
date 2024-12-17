@@ -66,8 +66,8 @@ const Leaderboard = () => {
                     {player.username}
                   </span>
                   <span>{player.played_games}</span>
-                  <span>{player.win_rate.toFixed(2)}%</span>
-                  <span>{player.lose_rate.toFixed(2)}%</span>
+                  <span>{Number.isInteger(player.win_rate) ? player.win_rate : player.win_rate.toFixed(2)}%</span>
+                  <span>{Number.isInteger(player.lose_rate) ? player.lose_rate : player.lose_rate.toFixed(2)}%</span>
                   <span className={css.score}>{player.score}</span>
                 </div>
               ))}

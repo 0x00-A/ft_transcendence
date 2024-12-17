@@ -75,7 +75,7 @@ const CompetitiveOverview = () => {
               <span className={styles.bestLabel}>Longest Streak</span>
             </div>
               {isLoading ? <span className="statValueSkeleton block w-[30px] h-[20px] bg-gray-500 rounded-md animate-pulse"></span>:
-              <span className={styles.bestValue}>...</span>}
+              <span className={styles.bestValue}>{user?.profile.stats.win_streak}</span>}
           </div>
         </div>
         <div className={styles.bestCard}>
@@ -125,7 +125,7 @@ const CompetitiveOverview = () => {
           <div className={styles.winRateContent}>
             <span className={styles.winRateLabel}>Win Rate</span>
             {isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
-            <span className={styles.winRateValue}>{user?.profile.win_rate.toFixed(2)}%</span>}
+            <span className={styles.winRateValue}>{Number.isInteger(user?.profile.win_rate) ? user?.profile.win_rate : user?.profile.win_rate.toFixed(2)}%</span>}
           </div>
         </div>
 

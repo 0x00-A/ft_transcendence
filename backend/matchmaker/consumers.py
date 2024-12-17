@@ -18,21 +18,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await self.accept()
             self.player_id = user.id
             await Matchmaker.register_client(self.player_id, self.channel_name)
-            # await self.send(text_data=json.dumps(
-            #     {'event': 'authenticated',
-            #      'username': user.username,
-            #      'id': user.id,
-            #      }
-            # ))
-
         else:
-            print(f"##################### User not found ##########################")
             await self.close()
 
     async def disconnect(self, close_code):
-        # Unregister the client when disconnected
-        # if self.player_id:
-        # Matchmaker.games_queue.remove(self.player_id)
         await Matchmaker.handle_player_unready(self.player_id)
         await Matchmaker.unregister_client(self.player_id)
         return await super().disconnect(close_code)
@@ -59,9 +48,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             await Matchmaker.remove_from_queue(self.player_id)
         elif event == 'player_left':
             await Matchmaker.leave_tournament(self.player_id)
-
-    # async def send_message(self, message):
-    #     await self.send(text_data=json.dumps(message))
 
     async def user_message(self, event):
         message = event["message"]

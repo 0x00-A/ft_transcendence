@@ -29,3 +29,17 @@ class ProfileGamesView(APIView):
         # all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
         # last_5_games = all_games[:5]
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class LastGamesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            print('==> LastGamesView')
+            user = request.user
+            last_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')[:5]
+            serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request})
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data={"error": "No games found"}, status=status.HTTP_404_NOT_FOUND)

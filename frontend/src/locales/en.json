@@ -1,4 +1,5 @@
 {
+    "lang": "en",
     "welcome": {
         "title": "FT-PONG",
         "description": "Ready to start your next match and climb the leaderboard",
@@ -147,6 +148,7 @@
         "clearAll": "Clear All"
     },
     "game": {
+        "gameArea": "GO!",
         "localGame": {
             "title": "Local Game",
             "description": "Play with friends",
@@ -157,7 +159,7 @@
                 "SetWinningScore": "Set Winning Score",
                 "SetControllerType": "Set Controller Type",
                 "ControllerOptions": {
-                    "Mouse": "Mouse",
+                    "Mouse": "Mouse", 
                     "Keyboard": "Keyboard"
                 }
             },
@@ -179,7 +181,15 @@
         },
         "remoteGame": {
             "title": "Remote Game",
-            "description": "Challenge online"
+            "description": "Challenge online",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "Matchmaking in Progress",
+                "searchingForOpponent": "Searching for a worthy opponent",
+                "playersOnline": "Players Online",
+                "skillMatch": "Skill Match",
+                "highSkillMatch": "High",
+                "cancelMatchmaking": "Cancel Matchmaking"
+            }
         },
         "remoteTournament": {
             "title": "Remote Tournament",
@@ -190,6 +200,26 @@
                 "SubmitButton": "Submit",
                 "CancelButton": "Cancel",
                 "AlertMessage": "Please enter a tournament name."
+            },
+            "playerReady": {
+                "Players": "Players",
+                "Format": "Format",
+                "SingleElimination": "Single Elimination",
+                "Status": "Status",
+                "Created": "Created"
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "Leave Tournament",
+                "leaveConfirmationTitle": "Leave Tournament?",
+                "leaveConfirmationDescription": "Are you sure you want to leave the tournament? This action cannot be undone and may result in aborting the tournament.",
+                "stayButton": "Stay",
+                "leaveButton": "Leave Tournament"
+            },
+            "sparkleEffect": {
+                "cancel": "Cancel...",
+                "loading": "Loading...",
+                "ready": "READY!",
+                "readyUp": "READY UP"
             }
         },
         "localTournament": {
@@ -218,7 +248,12 @@
         },
         "multipleGame": {
             "title": "Multiple Game",
-            "description": "Play with friends"
+            "description": "Play with friends",
+            "PlayerCard": {
+                "Score": "Score",
+                "Against": "Against"
+            },
+            "WaitingPJ": "Waiting for players to join..."
         },
         "joinedTournaments": {
             "title": "Joined Tournaments",
@@ -239,6 +274,95 @@
             },
             "joinButton": "join",
             "noTournaments": "No tournaments available at the moment."
+        }
+    },
+    "Profile": {
+        "friends": {
+            "title": "Friends",
+            "viewMore": "View more",
+            "buttons": {
+                "online": "Online",
+                "offline": "Offline"
+            },
+            "errors": {
+                "noFriends": "You are lonely",
+                "noOnlineFriends": "No Online friends",
+                "noOfflineFriends": "No Offline friends"
+            },
+            "addFriends": {
+                "button": "Add friends"
+            },
+            "profile": {
+                "level": "Level:",
+                "status": {
+                "online": "Online",
+                "offline": "Offline"
+                }
+            }   
+        },
+        "gameHistory": {
+            "title": "Game History",
+            "buttons": {
+                "game": "Game",
+                "tournament": "Tournament"
+            },
+            "noGames": {
+                "message": "You don't play any games yet",
+                "playNow": "Play Now"
+            },
+            "fields": {
+                "dateTime": "Date & Time",
+                "name": "Name",
+                "result": "Result",
+                "score": "Score",
+                "duration": "Duration",
+                "rematch": "Rematch"
+            },
+            "results": {
+                "win": "Win",
+                "lose": "Lose"
+            },
+            "invite": "Invite"
+        },
+        "Achievements": {
+            "title": "Achievements",
+            "NoAchievementsFound": "No achievements found!"
+        },
+        "profileHeader": {
+            "EditProfileButton": "Edit Profile",
+            "profileStats": {
+                "games": "GAMES",
+                "wins": "WINS",
+                "loses": "LOSES",
+                "score": "SCORE",
+                "rank": "RANK"
+            },
+            "badge": {
+                "Bronze": "Bronze",
+                "Silver": "Silver",
+                "Gold": "Gold",
+                "Platinum": "Platinum",
+                "Diamond": "Diamond",
+                "Ft-Pong": "Ft-Pong"
+            }
+        },
+        "setPassword": {
+            "title": "Set Password",
+            "description": "Your account has no password. Please set a password so you can login and edit your profile.",
+            "fields": {
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm New Password"
+            },
+            "buttons": {
+                "reset": "Reset",
+                "save": "Save"
+            },
+            "errors": {
+                "passwordRequired": "New password is required.",
+                "confirmPasswordRequired": "Confirmation password is required.",
+                "passwordMismatch": "Passwords do not match."
+            },
+            "successMessage": "Password set successfully."
         }
     }
 }

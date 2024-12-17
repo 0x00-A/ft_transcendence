@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { DoorOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const LeaveTournamentButton = ({
   onLeaveTournament,
@@ -19,6 +20,7 @@ const LeaveTournamentButton = ({
 
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { t } = useTranslation();
 
   const handleLeaveTournament = () => {
     // Add your tournament leaving logic here
@@ -47,28 +49,28 @@ const LeaveTournamentButton = ({
             className={`transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`}
             size={20}
           />
-          Leave Tournament
+          {t('game.remoteTournament.leaveTournamentButton.leaveTournament')}
         </button>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="bg-gray-900 border-gray-800">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-red-500">
-            Leave Tournament?
+          {t('game.remoteTournament.leaveTournamentButton.leaveConfirmationTitle')}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-gray-400">
-            Are you sure you want to leave the tournament? This action cannot be undone and may result in aborting the tournament.
+          {t('game.remoteTournament.leaveTournamentButton.leaveConfirmationDescription')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="bg-gray-800 text-white hover:bg-gray-700 border-gray-700">
-            Stay
+            {t('game.remoteTournament.leaveTournamentButton.stayButton')}
           </AlertDialogCancel>
           <AlertDialogAction
             className="bg-red-500 hover:bg-red-600 text-white border-0"
             onClick={handleLeaveTournament}
           >
-            Leave Tournament
+            {t('game.remoteTournament.leaveTournamentButton.leaveButton')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
