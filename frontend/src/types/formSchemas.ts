@@ -1,131 +1,162 @@
 import * as yup from 'yup';
+import { useTranslation } from 'react-i18next';
 
+export const SignupSchema = () => {
+  const { t } = useTranslation();
 
-export const SignupSchema = yup.object().shape({
-  username: yup
-    .string()
-    .required('username is required!')
-    .min(4, 'username must be at least 4 characters!')
-    .max(30, 'username must not exceed 30 characters!'),
-  email: yup
-    .string()
-    .email('Invalid email format!')
-    .required('Email is required!'),
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .max(64, 'password must not exceed 64 characters!')
-    .required('password is required!'),
-  password2: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+  return yup.object().shape({
+    username: yup
+      .string()
+      .required(t('Profile.errors.signup.username.required'))
+      .min(4, t('Profile.errors.signup.username.min'))
+      .max(30, t('Profile.errors.signup.username.max')),
+    email: yup
+      .string()
+      .email(t('Profile.errors.signup.email.invalid'))
+      .required(t('Profile.errors.signup.email.required')),
+    password: yup
+      .string()
+      .min(8, t('Profile.errors.signup.password.min'))
+      .max(64, t('Profile.errors.signup.password.max'))
+      .required(t('Profile.errors.signup.password.required')),
+    password2: yup
+      .string()
+      .oneOf([yup.ref('password')], t('Profile.errors.signup.confirmPassword.match'))
+      .required(t('Profile.errors.signup.confirmPassword.required')),
+  });
+};
 
-export const ChangePasswordSchema = yup.object().shape({
-  current_password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .max(64, 'password must not exceed 64 characters!')
-    .required('current password is required!'),
-  new_password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .max(64, 'password must not exceed 64 characters!')
-    .required('password is required!'),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('new_password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+export const ChangePasswordSchema = () => {
+  const { t } = useTranslation();
 
-export const LoginSchema = yup.object().shape({
-  username: yup
-    .string()
-    .required('username is required!')
-    .min(4, 'invalid username!')
-    .max(20, 'invalid username!'),
-  password: yup
-    .string()
-    .required('password is required!')
-    .min(8, 'invalid password!')
-    .max(64, 'invalid password!'),
-});
+  return yup.object().shape({
+    current_password: yup
+      .string()
+      .min(8, t('Profile.errors.changePassword.currentPassword.min'))
+      .max(64, t('Profile.errors.changePassword.currentPassword.max'))
+      .required(t('Profile.errors.changePassword.currentPassword.required')),
+    new_password: yup
+      .string()
+      .min(8, t('Profile.errors.changePassword.newPassword.min'))
+      .max(64, t('Profile.errors.changePassword.newPassword.max'))
+      .required(t('Profile.errors.changePassword.newPassword.required')),
+    confirm_password: yup
+      .string()
+      .oneOf([yup.ref('new_password')], t('Profile.errors.changePassword.confirmPassword.match'))
+      .required(t('Profile.errors.changePassword.confirmPassword.required')),
+  });
+};
 
-export const ResetPasswordSchema = yup.object().shape({
-  new_password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .max(64, 'password must not exceed 64 characters!')
-    .required('new password is required!'),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('new_password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+export const LoginSchema = () => {
+  const { t } = useTranslation();
 
-export const SetPasswordSchema = yup.object().shape({
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .max(64, 'password must not exceed 64 characters!')
-    .required('password is required!'),
-  password2: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Passwords must match')
-    .required('password confirmation is required!'),
-});
+  return yup.object().shape({
+    username: yup
+      .string()
+      .required(t('Profile.errors.login.username.required'))
+      .min(4, t('Profile.errors.login.username.min'))
+      .max(20, t('Profile.errors.login.username.max')),
+    password: yup
+      .string()
+      .required(t('Profile.errors.login.password.required'))
+      .min(8, t('Profile.errors.login.password.min'))
+      .max(64, t('Profile.errors.login.password.max')),
+  });
+};
 
+export const ResetPasswordSchema = () => {
+  const { t } = useTranslation();
 
-export const SetUsernameSchema = yup.object().shape({
-  username: yup
-    .string()
-    .required('username is required!')
-    .min(4, 'username must be at least 4 characters!')
-    .max(30, 'username must not exceed 30 characters!'),
-});
+  return yup.object().shape({
+    new_password: yup
+      .string()
+      .min(8, t('Profile.errors.resetPassword.newPassword.min'))
+      .max(64, t('Profile.errors.resetPassword.newPassword.max'))
+      .required(t('Profile.errors.resetPassword.newPassword.required')),
+    confirm_password: yup
+      .string()
+      .oneOf([yup.ref('new_password')], t('Profile.errors.resetPassword.confirmPassword.match'))
+      .required(t('Profile.errors.resetPassword.confirmPassword.required')),
+  });
+};
 
-export const otpSchema = yup.object().shape({
-  otp: yup
-    .string()
-    .required('OTP is required!')
-    .length(6, 'OTP must be 6 digits!')
-    .matches(/^[0-9]+$/, 'OTP must be a number!'),
-});
+export const SetPasswordSchema = () => {
+  const { t } = useTranslation();
 
-export const EditInfosProfileSchema = yup.object().shape({
-  username: yup
-    .string()
-    .min(4, 'Username must be at least 4 characters!')
-    .max(30, 'Username must not exceed 15 characters!'),
-  first_name: yup
-    .string()
-    .min(3, 'First name must be at least 3 characters!')
-    .max(30, 'First name must not exceed 15 characters!'),
-  last_name: yup
-    .string()
-    .min(3, 'Last name must be at least 3 characters!')
-    .max(30, 'Last name must not exceed 15 characters!'),
-  email: yup
-    .string()
-    .email('Invalid email format!'),
-  password: yup
-    .string()
-    .min(8, 'password must be at least 8 characters!')
-    .max(64, 'password must not exceed 64 characters!')
-    .required('password is required!'),
-  avatar: yup
-    .mixed()
-    .test('fileSize', 'The file is too large!', (value) => {
-      if (!value) return true;
-      return value[0].size <= 2000000;
-    })
-    .test('fileType', 'The file is not supported!', (value) => {
-      if (!value) return true;
-      return (
-        value[0].type === 'image/png' ||
-        value[0].type === 'image/jpg' ||
-        value[0].type === 'image/jpeg'
-      );
-    }),
-});
+  return yup.object().shape({
+    password: yup
+      .string()
+      .min(8, t('Profile.errors.setPassword.password.min'))
+      .max(64, t('Profile.errors.setPassword.password.max'))
+      .required(t('Profile.errors.setPassword.password.required')),
+    password2: yup
+      .string()
+      .oneOf([yup.ref('password')], t('Profile.errors.setPassword.confirmPassword.match'))
+      .required(t('Profile.errors.setPassword.confirmPassword.required')),
+  });
+};
+
+export const SetUsernameSchema = () => {
+  const { t } = useTranslation();
+
+  return yup.object().shape({
+    username: yup
+      .string()
+      .required(t('Profile.errors.setUsername.username.required'))
+      .min(4, t('Profile.errors.setUsername.username.min'))
+      .max(30, t('Profile.errors.setUsername.username.max')),
+  });
+};
+
+export const OTPSchema = () => {
+  const { t } = useTranslation();
+
+  return yup.object().shape({
+    otp: yup
+      .string()
+      .required(t('Profile.errors.otp.otp.required'))
+      .length(6, t('Profile.errors.otp.otp.length'))
+      .matches(/^[0-9]+$/, t('Profile.errors.otp.otp.matches')),
+  });
+};
+
+export const EditProfileSchema = () => {
+  const { t } = useTranslation();
+
+  return yup.object().shape({
+    username: yup
+      .string()
+      .min(4, t('Profile.errors.editProfile.username.min'))
+      .max(30, t('Profile.errors.editProfile.username.max')),
+    first_name: yup
+      .string()
+      .min(3, t('Profile.errors.editProfile.firstName.min'))
+      .max(30, t('Profile.errors.editProfile.firstName.max')),
+    last_name: yup
+      .string()
+      .min(3, t('Profile.errors.editProfile.lastName.min'))
+      .max(30, t('Profile.errors.editProfile.lastName.max')),
+    email: yup
+      .string()
+      .email(t('Profile.errors.editProfile.email.invalid')),
+    password: yup
+      .string()
+      .min(8, t('Profile.errors.editProfile.password.min'))
+      .max(64, t('Profile.errors.editProfile.password.max'))
+      .required(t('Profile.errors.editProfile.password.required')),
+    avatar: yup
+      .mixed()
+      .test('fileSize', t('Profile.errors.editProfile.avatar.fileSize'), (value) => {
+        if (!value) return true;
+        return value[0].size <= 2000000;
+      })
+      .test('fileType', t('Profile.errors.editProfile.avatar.fileType'), (value) => {
+        if (!value) return true;
+        return (
+          value[0].type === 'image/png' ||
+          value[0].type === 'image/jpg' ||
+          value[0].type === 'image/jpeg'
+        );
+      }),
+  });
+};
