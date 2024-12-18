@@ -39,6 +39,29 @@ export default function Sidebar() {
   const [showLangPopup, setShowLangPopup] = useState(false);
   const [selectedLang, setSelectedLang] = useState('English');
   const sideBarRef = useRef(null);
+  // const [isLoggingOut, setIsLoggingOut] = useState(false);
+    // Ref to track the language switcher container
+    const languageSwitcherRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          languageSwitcherRef.current &&
+          !languageSwitcherRef.current.contains(event.target as Node)
+        ) {
+          setShowLangPopup(false);
+        }
+      };
+
+      if (showLangPopup) {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, [showLangPopup]);
+
 
   const handleLogoutClick = () => {
     setShowConfirm(true);
@@ -78,11 +101,13 @@ export default function Sidebar() {
   }, []);
 
 
+  console.log("showlangPopup: ", showLangPopup)
   const changeLanguage = (lang: string) => {
-    setSelectedLang(lang); // Set selected language
-    i18n.changeLanguage(lang); // Change the language using i18n
-    localStorage.setItem('lang', lang); // Store selected language in localStorage
-    setShowLangPopup(false); // Close popup after language selection
+    setSelectedLang(lang);
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
+    console.log(">>showlangPopup: ", showLangPopup)
+    setShowLangPopup(false);
   };
 
   return (
@@ -97,6 +122,7 @@ export default function Sidebar() {
             className={css.languageSwitcher}
             onClick={() => setShowLangPopup((prevState) => !prevState)}
             data-tooltip-id={`${!open ? 'language-tooltip' : ''}`}
+            ref={languageSwitcherRef}
           >
             <Flag
               code={selectedLang === 'en' ? 'US' : selectedLang === 'es' ? 'ES' : 'MA'}

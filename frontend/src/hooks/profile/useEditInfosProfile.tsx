@@ -21,7 +21,7 @@ const useEditInfosProfile = () => {
     setError,
     setValue,
   } = useForm<EditProfileFormData>({
-    resolver: yupResolver(EditInfosProfileSchema),
+    resolver: yupResolver(EditInfosProfileSchema()),
     reValidateMode:'onChange',
     mode: 'onChange',
   });

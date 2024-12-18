@@ -26,12 +26,17 @@
 - [ ] is_password_set true or false
 MAHDI:
  - [ ] find out why when set permission to AllowAny in a view still check the authenticate
- - [ ] if the user activate the 2fac in discord or google or intra
+ - [X] if the user activate the 2fac in discord or google or intra
  - [ ] default avatar picture handling in backend
  - [ ] set a time for email validation and password reset requests?
  - [ ] Tournament game shistory
- - [ ] if a user is verified return that user is already verified
+ - [X] if a user is verified return that user is already verified
  - [ ] Oauth2AuthBackend wach khdemti biha
+ - [X] if username of the intra or google or discord not valid access to setusername
+ - [X] username max length and min (in serializer)
+ - [ ] editprofile in security 2fa edit the text
+ - [ ] send notification if the player unlock new level or if unlock new bage
+ - [ ] do the tournament games and solo games
 MAHDI NOTES:
    - if a user sign up with an email and not verify his email, and next he is sign up using google (oauth2) with same email
       i mark the account as verified because google has already verified the email, and user can login with oauth2 or with his username and password

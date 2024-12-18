@@ -51,3 +51,5 @@ export const API_SET_PASSWORD = "/edit/set-password/";
 export const API_GET_ACHIEVEMENTS_URL = "/achievements";
 
 export const API_GET_PLAYED_GAMES_URL = "/matchmaker/played_games";
+
+export const API_GET_LEADERBOARD_URL = '/dashboard-leaderboard';

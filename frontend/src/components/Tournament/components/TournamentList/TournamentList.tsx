@@ -69,7 +69,7 @@ const TournamentList = ({
                 {tournament.creator.username}
               </div>
               <div className={`${css.col} ${css.date}`}>
-                {formatDate(tournament.created_at)}
+                {formatDate(tournament.created_at, t('lang'))}
               </div>
               <div className={`${css.col} ${css.players}`}>
                 {tournament.participants_count}/{tournament.number_of_players}

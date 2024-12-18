@@ -1,4 +1,5 @@
 {
+    "lang": "es",
     "welcome": {
         "title": "FT-PONG",
         "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
@@ -148,6 +149,7 @@
         "clearAll": "Limpiar todo"
     },
     "game": {
+        "gameArea": "IR!",
         "localGame": {
             "title": "Juego Local",
             "description": "Juega con amigos",
@@ -180,7 +182,15 @@
         },
         "remoteGame": {
             "title": "Juego Remoto",
-            "description": "Desafía en línea"
+            "description": "Desafía en línea",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "Emparejamiento en progreso",
+                "searchingForOpponent": "Buscando un oponente digno",
+                "playersOnline": "Jugadores en línea",
+                "skillMatch": "Nivel de habilidad",
+                "highSkillMatch": "Alto",
+                "cancelMatchmaking": "Cancelar emparejamiento"
+            }
         },
         "remoteTournament": {
             "title": "Torneo Remoto",
@@ -191,6 +201,26 @@
                 "SubmitButton": "Entregar",
                 "CancelButton": "Cancelar",
                 "AlertMessage": "Ingrese un nombre para el torneo."
+            },
+            "playerReady": {
+                "Players": "Jugadores",
+                "Format": "Formato",
+                "SingleElimination": "Eliminación Simple",
+                "Status": "Estado",
+                "Created": "Creado"
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "Salir del Torneo",
+                "leaveConfirmationTitle": "¿Salir del Torneo?",
+                "leaveConfirmationDescription": "¿Estás seguro de que quieres salir del torneo? Esta acción no se puede deshacer y puede resultar en la cancelación del torneo.",
+                "stayButton": "Permanecer",
+                "leaveButton": "Salir del Torneo"
+            },
+            "sparkleEffect": {
+                "cancel": "Cancelar...",
+                "loading": "Cargando...",
+                "ready": "¡LISTO!",
+                "readyUp": "PREPARARSE"
             }
         },
         "localTournament": {
@@ -219,7 +249,12 @@
         },
         "multipleGame": {
             "title": "Juego Múltiple",
-            "description": "Juega con amigos"
+            "description": "Juega con amigos",
+            "PlayerCard": {
+                "Score": "Puntaje",
+                "Against": "Contra"
+            },
+            "WaitingPJ": "Esperando a que las jugadoras se unan..."
         },
         "joinedTournaments": {
             "title": "Torneos Inscritos",
@@ -241,7 +276,281 @@
             "joinButton": "Unirse",
             "noTournaments": "No hay torneos disponibles en este momento."
         }
+    },
+    "Profile": {
+        "informations": "Información",
+        "security": "Seguridad",
+        "errors": {
+            "signup": {
+                "username": {
+                    "required": "¡Nombre de usuario es obligatorio!",
+                    "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
+                    "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
+                },
+                "email": {
+                    "required": "¡Correo electrónico es obligatorio!",
+                    "invalid": "¡Formato de correo electrónico inválido!"
+                },
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
+                }
+            },
+            "login": {
+                "username": {
+                    "required": "¡Nombre de usuario es obligatorio!",
+                    "min": "¡Nombre de usuario inválido!",
+                    "max": "¡Nombre de usuario inválido!"
+                },
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡Contraseña inválida!",
+                    "max": "¡Contraseña inválida!"
+                }
+            },
+            "changePassword": {
+                "currentPassword": {
+                    "required": "¡Contraseña actual es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "newPassword": {
+                    "required": "¡Nueva contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
+                }
+            },
+            "resetPassword": {
+                "newPassword": {
+                    "required": "¡Nueva contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
+                }
+            },
+            "setPassword": {
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "confirmPassword": {
+                    "required": "¡Confirmación de contraseña es obligatoria!",
+                    "match": "¡Las contraseñas deben coincidir!"
+                }
+            },
+            "setUsername": {
+                "username": {
+                    "required": "¡Nombre de usuario es obligatorio!",
+                    "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
+                    "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
+                }
+            },
+            "otp": {
+                "otp": {
+                    "required": "¡OTP es obligatorio!",
+                    "length": "¡OTP debe tener 6 dígitos!",
+                    "matches": "¡OTP debe ser un número!"
+                }
+            },
+            "editProfile": {
+                "username": {
+                    "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
+                    "max": "¡El nombre de usuario no debe exceder 15 caracteres!"
+                },
+                "firstName": {
+                    "min": "¡El nombre debe tener al menos 3 caracteres!",
+                    "max": "¡El nombre no debe exceder 15 caracteres!"
+                },
+                "lastName": {
+                    "min": "¡El apellido debe tener al menos 3 caracteres!",
+                    "max": "¡El apellido no debe exceder 15 caracteres!"
+                },
+                "email": {
+                    "invalid": "¡Formato de correo electrónico inválido!"
+                },
+                "password": {
+                    "required": "¡Contraseña es obligatoria!",
+                    "min": "¡La contraseña debe tener al menos 8 caracteres!",
+                    "max": "¡La contraseña no debe exceder 64 caracteres!"
+                },
+                "avatar": {
+                    "fileSize": "¡El archivo es demasiado grande!",
+                    "fileType": "¡El tipo de archivo no es compatible!"
+                }
+            }
+        },
+        "friends": {
+            "title": "Amigos",
+            "viewMore": "Ver más",
+            "buttons": {
+                "online": "En línea",
+                "offline": "Desconectado"
+            },
+            "errors": {
+                "noFriends": "Estás solo",
+                "noOnlineFriends": "No hay amigos en línea",
+                "noOfflineFriends": "No hay amigos desconectados"
+            },
+            "addFriends": {
+                "button": "Agregar amigos"
+            },
+            "profile": {
+                "level": "Nivel",
+                "status": {
+                "online": "En línea",
+                "offline": "Desconectado"
+                }
+            }
+        },
+        "gameHistory": {
+            "title": "Historial de Juegos",
+            "buttons": {
+                "game": "Juego",
+                "tournament": "Torneo"
+            },
+            "noGames": {
+                "message": "No has jugado ningún juego todavía",
+                "playNow": "Jugar Ahora"
+            },
+            "fields": {
+                "dateTime": "Fecha y Hora",
+                "name": "Nombre",
+                "result": "Resultado",
+                "score": "Puntuación",
+                "duration": "Duración",
+                "rematch": "Revancha"
+            },
+            "results": {
+                "win": "Ganar",
+                "lose": "Perder"
+            },
+            "invite": "Invitar"
+        },
+        "Achievements": {
+            "title": "Logros",
+            "NoAchievementsFound": "No se encontraron logros!"
+        },
+        "setPassword": {
+            "title": "Establecer contraseña",
+            "description": "Tu cuenta no tiene contraseña. Por favor, establece una contraseña para poder iniciar sesión y editar tu perfil.",
+            "fields": {
+                "newPassword": "Nueva contraseña",
+                "confirmPassword": "Confirmar nueva contraseña"
+            },
+            "buttons": {
+                "reset": "Reiniciar",
+                "save": "Guardar"
+            },
+            "successMessage": "Contraseña establecida con éxito."
+        },
+        "EditSecurity": {
+            "changePassword": {
+                "title": "Cambiar Contraseña",
+                "currentPassword": "Contraseña Actual",
+                "newPassword": "Nueva Contraseña",
+                "confirmPassword": "Confirmar Nueva Contraseña",
+                "buttons": {
+                    "reset": "Reiniciar",
+                    "save": "Guardar"
+                }
+            },
+            "twoFactorAuth": {
+                "title": "Autenticación de Dos Factores (2FA)",
+                "description": "Obtenga códigos de verificación de una aplicación de autenticación como Google Authenticator. Funciona incluso sin conexión en su teléfono. Escanee el código QR a continuación.",
+                "mobileMessageLabel": "Introduzca el código de verificación de 6 dígitos generado por su aplicación de autenticación.",
+                "otpPlaceholder": "Introducir OTP",
+                "buttons": {
+                    "downloadApp": "Descargar Aplicación",
+                    "getQrCode": "Obtener Código QR",
+                    "enable2FA": "Habilitar 2FA"
+                },
+                "enabled": {
+                    "status": "La Autenticación de Dos Factores está actualmente habilitada",
+                    "confirmPasswordLabel": "Confirme su Contraseña",
+                    "buttons": {
+                        "disable2FA": "Deshabilitar 2FA"
+                    }
+                }
+            },
+            "downloadAppPopup": {
+                "title": "Seleccione su Sistema Operativo",
+                "osButtons": {
+                    "android": "Android",
+                    "ios": "Apple"
+                },
+                "qrCodeInstructions": "Escanee el código QR para descargar la aplicación.",
+                "buttons": {
+                    "close": "Cerrar"
+                }
+            },
+            "errors": {
+                "defaultError": "Ocurrió un error. Inténtelo de nuevo más tarde"
+            },
+            "toasts": {
+                "passwordChanged": "Contraseña cambiada exitosamente",
+                "twoFactorEnabled": "Autenticación de dos factores habilitada",
+                "twoFactorDisabled": "Autenticación de dos factores deshabilitada"
+            }
+        },
+        "EditInfosProfile": {
+            "title": "Editar su Información",
+            "avatar": {
+                "changeButton": "Cambiar Avatar",
+                "removeButton": "Eliminar Avatar"
+            },
+            "fields": {
+                "firstName": {
+                    "label": "Nombre",
+                    "placeholder": "Ingrese su nombre"
+                },
+                "lastName": {
+                    "label": "Apellido",
+                    "placeholder": "Ingrese su apellido"
+                },
+                "username": {
+                    "label": "Nombre de Usuario",
+                    "placeholder": "Ingrese su nombre de usuario"
+                },
+                "email": {
+                    "label": "Correo Electrónico",
+                    "placeholder": "Ingrese un nuevo correo",
+                    "verifyButton": "Verificar"
+                },
+                "password": {
+                    "label": "Ingrese su contraseña",
+                    "placeholder": "Ingrese su contraseña"
+                }
+            },
+            "saveButton": "Guardar",
+            "confirmSave": {
+                "title": "Confirme su Contraseña",
+                "description": "Por favor, ingrese su contraseña para guardar los cambios. ¡Gracias por su tiempo, todo esto es para protegerlo!",
+                "buttons": {
+                    "close": "Cerrar",
+                    "confirm": "Confirmar"
+                }
+            },
+            "errors": {
+                "emptyForm": "Por favor, complete al menos un campo para guardar los cambios",
+                "defaultError": "Ocurrió un error. Por favor, intente nuevamente más tarde"
+            },
+            "toasts": {
+                "successUpdate": "Perfil actualizado exitosamente",
+                "emailVerificationSent": "Correo de verificación enviado exitosamente"
+            }
+        }
     }
-
-
 }

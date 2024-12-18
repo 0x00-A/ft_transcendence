@@ -31,7 +31,7 @@ const useOauth2Username = () => {
     reset,
     setError,
   } = useForm<UsernameFormData>({
-    resolver: yupResolver(SetUsernameSchema),
+    resolver: yupResolver(SetUsernameSchema()),
     reValidateMode: 'onChange',
     mode: 'onChange',
   });

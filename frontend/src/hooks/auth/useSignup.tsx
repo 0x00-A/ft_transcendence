@@ -32,7 +32,7 @@ const useSignup = () => {
     setError,
     clearErrors,
   } = useForm<SignupFormData>({
-    resolver: yupResolver(SignupSchema),
+    resolver: yupResolver(SignupSchema()),
     reValidateMode:'onChange',
     mode: 'onChange',
   });
