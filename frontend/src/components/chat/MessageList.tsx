@@ -10,7 +10,7 @@ import { conversationProps } from '@/types/apiTypes';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-import { CircleX, CheckCheck, User, Ban, Search, ArrowBigLeft } from 'lucide-react';
+import { CircleX, CheckCheck, User, Ban, Search, ChevronLeft } from 'lucide-react';
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 import { useTranslation } from 'react-i18next';
@@ -304,7 +304,7 @@ const MessageList = () => {
       <div ref={searchContainerRef} className={css.searchContainer}>
         <div className={`${css.searchBar} ${isSearchActive ? css.showIcon : ''}`}>
           {isSearchActive && (
-            <ArrowBigLeft className={css.arrowIcon} onClick={handleSearchClose} />
+            <ChevronLeft className={css.arrowIcon} onClick={handleSearchClose} />
           )}
           <Search
             className={`${css.searchIcon} ${isSearchActive ? css.searchInSide : ''}`}

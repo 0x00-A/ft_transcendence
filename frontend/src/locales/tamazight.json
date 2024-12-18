@@ -544,14 +544,14 @@
                 "email": {
                     "label": "ⵜⵎⵏⴰⴹⵜ ⵏ ⵓⵎⵓⵍ",
                     "placeholder": "ⵙⵙⵏⴼⵍ ⵜⵎⵏⴰⴹⵜ ⵏ ⵓⵎⵓⵍ ⴰⴷⵓⵙⵏ",
-                    "verifyButton": "ⵙⵙⵏⵣⵣⴻⵔ"
+                    "verifyButton": "ⵜⴰⵎⵖⵓⵏⵜ"
                 },
                 "password": {
                     "label": "ⵙⵙⵏⴼⵍ ⴰⵏⴼⵍⵏ ⵏⵏⴽ",
                     "placeholder": "ⵙⵙⵏⴼⵍ ⴰⵏⴼⵍⵏ ⵏⵏⴽ"
                 }
             },
-            "saveButton": "ⵙⵙⵏⵣⵣⴻⵔ",
+            "saveButton": "ⵙⴻⵍⴽⴻⵜ",
             "confirmSave": {
                 "title": "ⵙⵙⵏⵣⵣⴻⵔ ⴰⵏⴼⵍⵏ ⵏⵏⴽ",
                 "description": "ⵙⵙⵏⴼⵍ ⴰⵏⴼⵍⵏ ⵏⵏⴽ ⴰⴷ ⵜⵙⵙⵏⵣⵣⴻⵔ ⵜⵉⵙⵓⵜⵉ. ⵜⵏⵎⵎⵍⵎ ⵜⵉⵎⴻⴷⵜ ⵏⵏⴽ ⴰⴷ ⴰⵔ ⵉⵜⵜⵓⵏⵣⵣⴻⵔ!",
