@@ -30,7 +30,6 @@ class Enable2faRequest(APIView):
         qr = qrcode.make(privisioning_uri)
         qr.show()
         qr_code = f"{MEDIA_URL}qrcodes/{user.username}_2fa.png"
-        print('=====QR_CODE=====', qr_code)
         qr.save(f"static{qr_code}")
         return Response({'qr_code': f"{SERVER_URL}{qr_code}"}, status=status.HTTP_200_OK)
 

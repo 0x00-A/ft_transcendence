@@ -65,16 +65,21 @@ class UserProfileView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-class GetMyAchievementsView(APIView):
+class GetProfileAchievementsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserAchievementsSerializer
 
-    def get(self, request):
-        user = request.user
-        achievements = UserAchievement.objects.filter(user=user).order_by('-is_unlocked')
-        serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
-        print('api ==> get my achievements: User achievements found')
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+            achievements = UserAchievement.objects.filter(user=user).order_by('-is_unlocked')
+            serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
+            print('api ==> get my achievements: User achievements found')
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': f'Internal server error: {str(e)}'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LeaderBoardView(APIView):

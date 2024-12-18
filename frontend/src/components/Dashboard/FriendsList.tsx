@@ -1,6 +1,11 @@
 import css from './FriendsList.module.css';
 import { useGetData } from '@/api/apiHooks';
 import Loading from '../Friends/Loading';
+import { Friends } from '@/types/apiTypes';
+import { API_GET_FRIENDS_URL } from '@/api/apiConfig';
+import { useTranslation } from 'react-i18next';
+import { HiOutlineUserAdd } from "react-icons/hi";
+import { useNavigate } from 'react-router-dom';
 
 // const friendsData = [
 //   { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
@@ -23,7 +28,9 @@ interface Friend {
 }
 
 const FriendsList = () => {
-  const { data: friendsData, isLoading, error } = useGetData<Friend[]>('friends');
+  const { data: friendsData, isLoading, error } = useGetData<Friends[]>(API_GET_FRIENDS_URL);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
       <>
@@ -35,7 +42,15 @@ const FriendsList = () => {
         <div className={css.friendList}>
           { isLoading && <Loading/> }
           { error && <p>{error.message}</p> }
-          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend, index) => (
+          { friendsData?.length == 0 && <div className={css.noFriends}>
+              <span>{t('Profile.friends.errors.noFriends')}</span>
+              <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
+                  {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
+                  <HiOutlineUserAdd size={"2.2rem"}/>
+                  <span>{t('Profile.friends.addFriends.button')}</span>
+              </button>
+            </div> }
+          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend: Friend, index: number) => (
             <div className={css.friendItem} key={index}>
               <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
               <div className={css.friendInfo}>
@@ -50,7 +65,7 @@ const FriendsList = () => {
           ))}
         </div>
 
-        <button className={css.inviteButton}>Invite your friends ➤</button>
+        {/* <button className={css.inviteButton}>Invite your friends ➤</button> */}
       </>
   );
 };
