@@ -26,7 +26,7 @@ export const API_RESET_PASSWORD_URL = "/auth/reset-password/";
 // OAUTH2
 export const OAUTH2_CALLBACK_URL = window.location.origin + "/oauth2/callback";
 // export const API_OAUTH2_URL = getApiUrl('/auth/oauth2');
-export const API_OAUTH2_URL = getApiUrl('/auth/oauth2');
+export const API_OAUTH2_URL = getApiUrl('/auth/oauth2/authorize');
 export const API_OAUTH2_SETUSERNAME_URL = "/auth/oauth2/set-username/";
 
 export const API_LOGOUT_URL = "/auth/logout/";
@@ -51,7 +51,7 @@ export const API_SET_PASSWORD = "/edit/set-password/";
 
 export const API_GET_ACHIEVEMENTS_URL = "/achievements";
 
-export const API_GET_PLAYED_GAMES_URL = "/matchmaker/played_games";
+export const API_GET_PLAYED_GAMES_URL = "/matchmaker/played-games";
 
 export const API_GET_LEADERBOARD_URL = '/dashboard-leaderboard';
 

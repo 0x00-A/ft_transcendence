@@ -5,12 +5,17 @@ import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
 // Styles
 import css from './Profile.module.css'
 import { useParams } from 'react-router-dom';
+import ProfileAchievements from '@/components/Profile/ProfileAchievements';
 
 
 const UsersProfile = () => {
 
   const {username} = useParams();
-  if (!username) return null;
+  if (!username) return (
+    <div className={css.profileContainer}>
+      <h1>404 Not Found</h1>
+    </div>
+  );
 
   return (
     <div className={css.profileContainer}>
@@ -18,13 +23,8 @@ const UsersProfile = () => {
       <div className={css.profileBodyConatiner}>
         <UserProfileFriends username={username} />
         <div className={css.rightBodyContainer}>
-          <div className={css.profileAchievContainer}>
-            <div className={css.achievHeader}>
-              <img src="/icons/AchievIcon.svg" className={css.achievIcon}/>
-              <h3>Achievements</h3>
-            </div>
-          </div>
-          <ProfileGamesHistory/>
+          <ProfileAchievements username={username}/>
+          <ProfileGamesHistory username={username}/>
         </div>
       </div>
     </div>

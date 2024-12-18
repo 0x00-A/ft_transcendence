@@ -30,18 +30,18 @@
     align-items: center;
     margin-bottom: 15px;
   }
-  
+
   .header h3 {
     font-size: 2.2rem;
     font-weight: bold;
   }
-  
+
   .viewMore {
     font-size: 1.2rem;
     color: #B0B9D0;
     text-decoration: none;
   }
-  
+
   .weekLabel {
     font-size: 1.5rem;
     color: #F8F3E3;
@@ -49,7 +49,7 @@
     margin-bottom: 10px;
     margin-left: 10px;
   }
-  
+
   .matchList {
     height: 100%;
     display: flex;
@@ -57,7 +57,7 @@
     justify-content: space-between;
     gap: 5px;
   }
-  
+
   .matchItem {
     display: flex;
     align-items: center;
@@ -65,7 +65,7 @@
     position: relative;
     gap: 1rem;
   }
-  
+
   .matchItem::after {
     content: '';
     position: absolute;
@@ -73,11 +73,11 @@
     width: 5px;
     right: 0;
   }
-  
+
   .green {
     background: linear-gradient(90deg, rgba(42, 43, 54, 0.5) 0%, rgba(239, 68, 68, 0.1) 100%);
   }
-  
+
   .yellow {
     background: linear-gradient(90deg, #1E2533 0%, #2B374D 37%, #384B6C 100%);
   }
@@ -85,33 +85,33 @@
   .green::after {
     background-color: #FF2047;
   }
-  
+
   .yellow::after {
     background-color: #FFB800;
   }
-  
+
   .avatar {
     width: 45px;
     height: 45px;
     border-radius: 50%;
   }
-  
+
   .matchInfo {
     flex-grow: 1;
   }
-  
+
   .name {
     display: block;
     font-weight: bold;
     font-size: 1.3rem;
   }
-  
+
   .date {
     display: block;
     font-size: 1rem;
     color: #B0B9D0;
   }
-  
+
   .score {
     flex-grow: 1;
     font-size: 2.3rem;
@@ -119,14 +119,14 @@
     color: #F8F3E3;
     text-shadow: 1px 1px 5px rgb(0, 0, 0);
   }
-  
+
   .YourGoals {
     color: #e6a700;
   }
   .opponentGoals {
     color: #ec3b59;
   }
-  
+
   .pointsContainer {
     display: flex;
     align-items: center;
@@ -137,13 +137,43 @@
     margin-right: 5px;
     font-size: 1.5rem;
   }
-  
+
   .points {
     color: #ffb902;
   }
-  
+
   .pointsContainer img {
     width: 15px;
     height: 15px;
   }
-  
+
+  .noGames {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 20px;
+    height: 100px;
+    padding: 5px 15px;
+    color: #F8F3E3;
+    background-color: #1E2A3C;
+}
+
+.playBtn {
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    width: 120px;
+    justify-content: space-between;
+    border: none;
+    background-color: var(--selected-color); ;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.3rem;
+}
+
+.playIcon {
+    font-size: 2.2rem;
+    color: #F8C25C;
+}
