@@ -12,6 +12,7 @@ import { EditProfileFormData } from '@/types/apiTypes';
 import apiClient from '@/api/apiClient';
 import axios from 'axios';
 import { API_UPDATE_EMAIL_REQUEST_URL } from '@/api/apiConfig';
+import { useTranslation } from 'react-i18next';
 
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
@@ -19,11 +20,12 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     const { register, handleSubmit, mutation, reset, errors, watch, setValue}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string>('null');
-    const [isVerifyEmail, setVerifyEmail] = useState(false);
+    // const [isVerifyEmail, setVerifyEmail] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const { user: profileData, refetch } = useUser();
     const formValues = watch(['username', 'first_name', 'last_name', 'avatar']);
     const emailValue = watch('email');
+    const { t } = useTranslation();
 
     const handleEditProfile = (data: EditProfileFormData) => {
         const formData = new FormData();
@@ -51,7 +53,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     const handleSaveBtn = () => {
         const hasValue = formValues.some((value:any) => value !== undefined || value?.trim() !== '');
         if (!hasValue) {
-            toast.error('Please fill at least one field to save the changes');
+            toast.error(t('Profile.EditInfosProfile.errors.emptyForm'));
             return;
         }
         setConfirmSave(true)
@@ -78,66 +80,66 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                 email: emailValue,
                 // redirect_url: REDIRECT_URL_UPDATE_EMAIL
             });
-            toast.success(response.data.message);
+            toast.success(t(`${response.data.message}`));
             setEditProfile(false);
         }
         catch (error) {
             if (axios.isAxiosError(error)) {
                 toast.error(error?.response?.data?.error);
             } else {
-                toast.error('An error occurred. Please try again later');
+                toast.error(t('Profile.EditInfosProfile.errors.defaultError'));
             }
         }
    }
 
     return (
         <form className={css.editInfosForm} onSubmit={ handleSubmit(handleEditProfile) } encType="multipart/form-data">
-            <h1 className={css.title}>Edit your Information</h1>
+            <h1 className={css.title}>{t('Profile.EditInfosProfile.title')}</h1>
             <div className={css.editAvatar}>
                 {selectedAvatar === 'null' ? (<div className={css.avatarContainer}> <img src={profileData?.profile.avatar} alt="" /></div>) :
                     (selectedAvatar === 'remove' ? <div className={css.avatarContainer}><img src='/icons/defaultAvatar.png' alt="" /></div> :
                     <div className={css.avatarContainer}><img src={selectedAvatar} alt="" /></div> )}
                 <div className={css.avatarButtons}>
                   <input type="file" accept='image/*' {...register('avatar')} ref={(e) => { register("avatar"); fileInputRef.current = e}} onChange={handleFileChange}/>
-                  <button className={css.avatarBtn} onClick={handleChangeAvatar}>Change Avatar</button>
-                  <button className={css.removeAvatarBtn} onClick={(e) => {e.preventDefault(); setSelectedAvatar('remove')}}>Remove Avatar</button>
+                  <button className={css.avatarBtn} onClick={handleChangeAvatar}>{t('Profile.EditInfosProfile.avatar.changeButton')}</button>
+                  <button className={css.removeAvatarBtn} onClick={(e) => {e.preventDefault(); setSelectedAvatar('remove')}}>{t('Profile.EditInfosProfile.avatar.removeButton')}</button>
                 </div>
             </div>
             <div className={css.editInfos}>
                 <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>First Name</label>
+                    <label htmlFor="" className={css.label}>{t('Profile.EditInfosProfile.fields.firstName.label')}</label>
                     <input required={false} type="text" className={css.input}
-                      placeholder={profileData?.first_name ? profileData?.first_name : 'Enter your first name'} {...register('first_name')}/>
+                      placeholder={profileData?.first_name ? profileData?.first_name : t('Profile.EditInfosProfile.fields.firstName.placeholder')} {...register('first_name')}/>
                       {errors.first_name && <span className={css.fieldError}>{errors.first_name.message}</span>}
                 </div>
                 <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>Last Name</label>
+                    <label htmlFor="" className={css.label}>{t('Profile.EditInfosProfile.fields.lastName.label')}</label>
                     <input required={false} type="text" className={css.input}
-                      placeholder={profileData?.last_name ? profileData?.last_name : 'Enter your last name'} {...register('last_name')}/>
+                      placeholder={profileData?.last_name ? profileData?.last_name : t('Profile.EditInfosProfile.fields.lastName.placeholder')} {...register('last_name')}/>
                       {errors.last_name && <span className={css.fieldError}>{errors.last_name.message}</span>}
                 </div>
                 <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>Username</label>
+                    <label htmlFor="" className={css.label}>{t('Profile.EditInfosProfile.fields.username.label')}</label>
                     <input required={false} type="text" className={css.input}
-                      placeholder={profileData?.username ? profileData?.username : 'Enter your first name'} {...register('username')}/>
+                      placeholder={profileData?.username ? profileData?.username : t('Profile.EditInfosProfile.fields.username.placeholder')} {...register('username')}/>
                       {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
                 </div>
                 <div className={css.containerFiled}>
-                    <label htmlFor="" className={css.label}>Email</label>
+                    <label htmlFor="" className={css.label}>{t('Profile.EditInfosProfile.fields.email.label')}</label>
                     <div className={css.emailInput}>
                         <input required={false} type="email" className={css.input}
-                        placeholder={profileData?.email ? profileData?.email : 'Enter new email'} {...register('email')}/>
+                        placeholder={profileData?.email ? profileData?.email : t('Profile.EditInfosProfile.fields.email.placeholder')} {...register('email')}/>
                         <button className={css.editEmailBtn} disabled={!emailValue} onClick={handleVerifyEmail}>
-                            Verify
+                            {t('Profile.EditInfosProfile.fields.email.verifyButton')}
                         </button>
                     </div>
                       { errors.email && <span className={css.fieldError}>{errors.email.message}</span> }
                 </div>
                 <div className={css.saveContainer}>
                     {errors.root && <span className={css.fieldError}>{errors.root.message}</span>}
-                    <button type='button' className={css.saveBtn} onClick={handleSaveBtn}>Save</button>
+                    <button type='button' className={css.saveBtn} onClick={handleSaveBtn}>{t('Profile.EditInfosProfile.saveButton')}</button>
                 </div>
-                <div className={`${isVerifyEmail ? css.bluredBgConfirm : ''}`}>
+                {/* <div className={`${isVerifyEmail ? css.bluredBgConfirm : ''}`}>
                     { isVerifyEmail && <div className={css.saveConfirmContainer}>
                         <h1>Confirm Your Email</h1>
                         <p>we've sent a verification code to your new email. please enter the code.</p>
@@ -155,20 +157,20 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                             <p>Didn't receive the code?</p> <span className={css.resendLink}>Resend code</span>
                         </div>
                     </div> }
-                </div>
+                </div> */}
                 <div className={`${isConfirmSave ? css.bluredBgConfirm : ''}`}>
                     { isConfirmSave && <div className={css.saveConfirmContainer}>
-                        <h1>Confirm Your Password</h1>
-                        <p>Please enter your password to save the changes. Thank you for your time all this just to protect you !</p>
+                        <h1>{t('Profile.EditInfosProfile.confirmSave.title')}</h1>
+                        <p>{t('Profile.EditInfosProfile.confirmSave.description')}</p>
                         <div className={css.containerFiled}>
-                            <label htmlFor="">Enter you password</label>
+                            <label htmlFor="">{t('Profile.EditInfosProfile.fields.password.label')}</label>
                             <input required={true} type="password" className={css.input}
-                              placeholder='Enter your password' {...register('password')}/>
+                              placeholder={t('Profile.EditInfosProfile.fields.password.placeholder')} {...register('password')}/>
                               {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
                         </div>
                         <div className={css.ConfirmButtons}>
-                          <button className={css.closeBtn} onClick={() => setConfirmSave(false)}>Close</button>
-                          <button type='submit' className={css.confirmBtn}>Confirm</button>
+                          <button className={css.closeBtn} onClick={() => setConfirmSave(false)}>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
+                          <button type='submit' className={css.confirmBtn}>{t('Profile.EditInfosProfile.confirmSave.buttons.confirm')}</button>
                         </div>
                     </div> }
                 </div>
