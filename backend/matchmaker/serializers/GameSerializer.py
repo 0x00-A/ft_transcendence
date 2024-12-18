@@ -31,9 +31,9 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
         fields = ['id', 'start_time', 'opponent_username', 'xp_gained', 'opponent_score',
                   'opponent_avatar', 'result', 'my_score', 'game_duration']
 
-    def validate(self, data):
-        print(f'Validating data: {data}')
-        return data
+    # def validate(self, data):
+    #     print(f'Validating data: {data}')
+    #     return data
 
     def get_opponent_username(self, obj):
         if obj.player1 == self.context['request'].user:
@@ -68,4 +68,5 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
     def get_game_duration(self, obj):
         if not obj.end_time or not obj.start_time:
             return None
-        return obj.end_time - obj.start_time
+        duration = obj.end_time - obj.start_time
+        return duration.total_seconds() / 60

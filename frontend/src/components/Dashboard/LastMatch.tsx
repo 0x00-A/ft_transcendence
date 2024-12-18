@@ -29,7 +29,7 @@ const LastMatch = () => {
                 <div className={css.line}></div>
                 <div className={css.containerList}>
                     {/* <div className={css.weekLabel}>TO WEEK</div> */}
-                    {error && <div className={css.error}>{error}</div>}
+                    {error && <div className={css.error}>{error.message}</div>}
                     { isLoading ? <LastGamesSkeleton />
                     :
                     <div className={css.matchList}>

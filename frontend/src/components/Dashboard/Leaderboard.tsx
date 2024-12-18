@@ -35,7 +35,7 @@ const Leaderboard = () => {
               <span>lose rate</span>
               <span>Score</span>
             </div>
-            {error && <p>{error}</p>}
+            {error && <p>{error.message}</p>}
             { isLoading ? <div className="table w-full">
               <div className="tableRow grid grid-cols-6 items-center p-2.5 text-base bg-[#283245] mb-1 hover:bg-[#33425E] animate-pulse ">
                 <span className="flex"><div className="w-10 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div></span>
@@ -58,7 +58,7 @@ const Leaderboard = () => {
               </div>
             </div> :
              leaderboardData && leaderboardData.length == 0 ? <p>No data found</p> :
-             leaderboardData.map((player: LeaderBoard, index: number) => (
+             leaderboardData && leaderboardData.length > 0 && leaderboardData.map((player: LeaderBoard, index: number) => (
                 <div className={css.tableRow} key={index}>
                   <span>{player.rank}</span>
                   <span className={css.player}>

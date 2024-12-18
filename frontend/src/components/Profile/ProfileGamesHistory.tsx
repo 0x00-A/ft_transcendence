@@ -66,7 +66,7 @@ const ProfileGamesHistory = () => {
             <IoFilterSharp />
           </button> */}
         </div>
-        {error && <div className="text-red-500">{error}</div>}
+        {error && <div className="text-red-500">{error.message}</div>}
         { isLoading ?
         <div className="flex w-[100%] h-[80px] items-center justify-between gap-4 p-5 bg-gray-800 rounded-md animate-pulse">
           <div className="flex flex-col w-1/6">
@@ -116,7 +116,7 @@ const ProfileGamesHistory = () => {
                     <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{getResultTranslation(game.result)}</span>
                     <span className={css.historyField}>{game.score}</span>
                     {/* <span className={css.historyField}>One to One</span> */}
-                    <span className={css.historyField}>{game.game_duration.toFixed(2)}</span>
+                    <span className={css.historyField}>{Number.isInteger(game.game_duration) ? game.game_duration : game.game_duration.toFixed(2)}min</span>
                     <button className={css.inviteBtn}>{t('Profile.gameHistory.invite')}</button>
                 </div>
             ))}
