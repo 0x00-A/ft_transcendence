@@ -2,6 +2,7 @@
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
 from matchmaker.models import Game
+from accounts.models import User
 from matchmaker.serializers import GameSerializer
 from matchmaker.serializers.GameSerializer import ProfileGamesSerializer
 from rest_framework.views import APIView
@@ -19,27 +20,33 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 
-class ProfileGamesView(APIView):
+class GetGamesView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        user = request.user
-        played_games = Game.objects.filter(player1=user) | Game.objects.filter(player2=user)
-        serializer = ProfileGamesSerializer(played_games, many=True, context={'request': request})
-        # all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
-        # last_5_games = all_games[:5]
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, username):
+        try:
+            user = User.objects.get(username=username)
+            played_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user))[:5]
+            serializer = ProfileGamesSerializer(played_games, many=True, context={'request': request})
+            # all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
+            # last_5_games = all_games[:5]
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response(data={"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(data={"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LastGamesView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, username):
         try:
-            print('==> LastGamesView')
-            user = request.user
+            user = User.objects.get(username=username)
             last_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')[:5]
             serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response(data={"error": "No games found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response(data={"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(data={"error": str(e)}, status=status.HTTP_404_NOT_FOUND)

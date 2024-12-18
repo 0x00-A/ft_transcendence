@@ -21,9 +21,7 @@ const UserProfileFriends = ({username}:{username:string}) => {
     const navigate = useNavigate();
     // const mutualFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
     // const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
-    if (isLoading) return <Loading />;
 
-    if (mutualIsLoading) return <Loading />;
 
   return (
     <div className={css.profileFriendsContainer}>

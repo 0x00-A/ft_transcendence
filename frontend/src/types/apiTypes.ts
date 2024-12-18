@@ -139,24 +139,16 @@ export interface EditProfileFormData {
     otp: string;
 }
 
-export interface GameHistory {
-  id: number;
-  start_time: string;
-  opponent_username: string;
-  opponent_avatar: string;
-  result: string;
-  score: string;
-  game_duration: number;
-}
-
 export interface LastGames {
   id: number;
   opponent_avatar: string;
   opponent_username: string;
   start_time: string;
+  result: string;
   my_score: number;
   opponent_score: number;
   xp_gained: number;
+  game_duration: number;
 }
 
 interface FriendProfile {

@@ -72,8 +72,8 @@ const Profile = () => {
       <div className={css.profileBodyConatiner}>
         <ProfileFriends />
         <div className={css.rightBodyContainer}>
-          <ProfileAchievements />
-          <ProfileGamesHistory />
+          <ProfileAchievements username={currentUser?.username} />
+          <ProfileGamesHistory username={currentUser?.username} />
         </div>
       </div>
 
