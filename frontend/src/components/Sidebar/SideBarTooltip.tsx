@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const SideBarTooltip = ({id, content}: {id:string, content:string}) => {

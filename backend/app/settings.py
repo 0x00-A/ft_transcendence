@@ -42,20 +42,19 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY', '#*^%y+-sq+u_yvl&^$oq=6owq-=$o2ba#f*6q(711yzx^1vm1=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = bool(int(os.environ.get('DEBUG', 1)))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+# DEBUG = True
 
 # if DEBUG:
 #     SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
 # else:
 SERVER_URL = os.environ.get('SERVER_URL')
 
-# ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
-# ALLOWED_HOST S = []
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
-if ALLOWED_HOSTS_ENV:
-    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = ['e1r9p14']
+# ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+# if ALLOWED_HOSTS_ENV:
+#     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 # Application definition
 
@@ -307,8 +306,9 @@ CHANNEL_LAYERS = {
 }
 # Allow specific origins
 CORS_ALLOWED_ORIGINS = [
-    'http://0.0.0.0:3000',
+    # 'http://0.0.0.0:3000',
     'http://localhost:3000',
+    'https://e1r9p14',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -342,118 +342,118 @@ CORS_ALLOW_CREDENTIALS = True
 #                         # 'wss://yourdomain.com'
 #                         ]
 
-LOG_DIR = '/app/backend/logs'
-os.makedirs(LOG_DIR, exist_ok=True)
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        # 'file': {
-        #     'level': 'DEBUG',
-        #     'class': 'logging.FileHandler',
-        #     'filename': os.path.join(LOG_DIR, 'django_logs.log'),
-        #     'formatter': 'verbose',
-        # },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOG_DIR, 'app.log'),
-            'maxBytes': 1024 * 1024 * 1,  # 10 MB
-            'backupCount': 5,
-            'formatter': 'verbose',
-        },
-        # 'error_file': {
-        #     'level': 'ERROR',
-        #     'class': 'logging.FileHandler',
-        #     # 'filename': '/var/log/django/error.log',
-        #     'filename': os.path.join(LOG_DIR, 'error.log'),
-        #     'formatter': 'verbose',
-        # },
-        # 'console': {
-        #     'level': 'ERROR',  # Change from DEBUG to ERROR
-        #     'class': 'logging.StreamHandler',
-        # },
-    },
-    'loggers': {
-        # '': {  # Root logger configuration
-        #     'level': 'DEBUG',
-        #     # Log messages will be written to the 'file' handler
-        #     'handlers': ['file'],
-        # },
-        # 'django.request': {
-        #     'handlers': ['error_file'],
-        #     'level': 'DEBUG',
-        #     'propagate': True,
-        # },
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        # 'django.security': {
-        #     'handlers': ['file'],
-        #     'level': 'INFO',  # You can adjust the level to capture specific events
-        #     'propagate': False,
-        # },
-        # 'daphne': {
-        #     'handlers': ['file'],
-        #     'level': 'DEBUG',
-        #     'propagate': True,
-        # },
-        # 'django.db.backends': {
-        #     'level': 'INFO',
-        #     'handlers': ['file'],
-        #     'propagate': True,
-        # },
-        # 'django.channels': {
-        #     'handlers': ['console'],
-        #     'level': 'ERROR',  # Adjust this to reduce verbosity
-        #     'propagate': True,
-        # },
-    },
-}
-
+# LOG_DIR = '/app/backend/logs'
+# os.makedirs(LOG_DIR, exist_ok=True)
 
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
-#     'handlers': {
-#         'logstash': {
-#             'level': 'INFO',
-#             'class': 'logstash.TCPLogstashHandler',
-#             'host': 'logstash',
-#             'port': 5959,  # Default value: 5959
-#             'version': 1,
-#             'message_type': 'django',
-#             'fqdn': False,
-#             'tags': ['django.request'],
+#     'formatters': {
+#         'verbose': {
+#             'format': '{levelname} {asctime} {module} {message}',
+#             'style': '{',
 #         },
-#         'console': {
-#             'level': 'INFO',
-#             'class': 'logging.StreamHandler'
+#         'simple': {
+#             'format': '{levelname} {message}',
+#             'style': '{',
 #         },
 #     },
+#     'handlers': {
+#         # 'file': {
+#         #     'level': 'DEBUG',
+#         #     'class': 'logging.FileHandler',
+#         #     'filename': os.path.join(LOG_DIR, 'django_logs.log'),
+#         #     'formatter': 'verbose',
+#         # },
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(LOG_DIR, 'app.log'),
+#             'maxBytes': 1024 * 1024 * 1,  # 10 MB
+#             'backupCount': 5,
+#             'formatter': 'verbose',
+#         },
+#         # 'error_file': {
+#         #     'level': 'ERROR',
+#         #     'class': 'logging.FileHandler',
+#         #     # 'filename': '/var/log/django/error.log',
+#         #     'filename': os.path.join(LOG_DIR, 'error.log'),
+#         #     'formatter': 'verbose',
+#         # },
+#         # 'console': {
+#         #     'level': 'ERROR',  # Change from DEBUG to ERROR
+#         #     'class': 'logging.StreamHandler',
+#         # },
+#     },
 #     'loggers': {
-#         'django.request': {
-#             'handlers': ['logstash'],
+#         # '': {  # Root logger configuration
+#         #     'level': 'DEBUG',
+#         #     # Log messages will be written to the 'file' handler
+#         #     'handlers': ['file'],
+#         # },
+#         # 'django.request': {
+#         #     'handlers': ['error_file'],
+#         #     'level': 'DEBUG',
+#         #     'propagate': True,
+#         # },
+#         'django': {
+#             'handlers': ['file'],
 #             'level': 'DEBUG',
 #             'propagate': True,
 #         },
-
-#         'django': {
-#             'handlers': ['console'],
-#             'propogate': True,
-#         },
-#     }
+#         # 'django.security': {
+#         #     'handlers': ['file'],
+#         #     'level': 'INFO',  # You can adjust the level to capture specific events
+#         #     'propagate': False,
+#         # },
+#         # 'daphne': {
+#         #     'handlers': ['file'],
+#         #     'level': 'DEBUG',
+#         #     'propagate': True,
+#         # },
+#         # 'django.db.backends': {
+#         #     'level': 'INFO',
+#         #     'handlers': ['file'],
+#         #     'propagate': True,
+#         # },
+#         # 'django.channels': {
+#         #     'handlers': ['console'],
+#         #     'level': 'ERROR',  # Adjust this to reduce verbosity
+#         #     'propagate': True,
+#         # },
+#     },
 # }
+
+
+# # LOGGING = {
+# #     'version': 1,
+# #     'disable_existing_loggers': False,
+# #     'handlers': {
+# #         'logstash': {
+# #             'level': 'INFO',
+# #             'class': 'logstash.TCPLogstashHandler',
+# #             'host': 'logstash',
+# #             'port': 5959,  # Default value: 5959
+# #             'version': 1,
+# #             'message_type': 'django',
+# #             'fqdn': False,
+# #             'tags': ['django.request'],
+# #         },
+# #         'console': {
+# #             'level': 'INFO',
+# #             'class': 'logging.StreamHandler'
+# #         },
+# #     },
+# #     'loggers': {
+# #         'django.request': {
+# #             'handlers': ['logstash'],
+# #             'level': 'DEBUG',
+# #             'propagate': True,
+# #         },
+
+# #         'django': {
+# #             'handlers': ['console'],
+# #             'propogate': True,
+# #         },
+# #     }
+# # }
