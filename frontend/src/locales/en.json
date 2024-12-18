@@ -1,6 +1,24 @@
 {
+    "toast": {
+        "fromRequest": "Friend request from",
+        "requestAccepted": "has accepted your friend request!",
+        "newMessage": " has sent you a message.",
+        "gameInvite": "Game invite from",
+        "inviteReject": "The invitation has expired or rejected.",
+        "gameAddress": "Game successfully created"
+    },
     "backend": {
-        
+        "passwordChanged": "Password changed successfully"
+    },
+    "errorsFriends": {
+        "unblock": "Failed to unblock friend try again",
+        "block": "Failed to block friend try again",
+        "request": "Failed to accept friend request try again",
+        "remove": "Failed to remove friend try again",
+        "cancel": "Failed to cancel friend request try again",
+        "send": "Failed to send friend request try again",
+        "reject": "Failed to reject friend request try again",
+        "action": "Failed to perform action try again"
     },
     "lang": "en",
     "welcome": {
@@ -145,7 +163,9 @@
         "pupCancel": "Cancel",
         "pupPending": "Pending",
         "pupAddFriend": "Add friend",
-        "notFound": "No User Found"
+        "notFound": "No User Found",
+        "loadingUsers": "Failed to load users. Please check your internet connection.",
+        "retry": "Retry"
     },
     "notifications": {
         "title": "Notifications",

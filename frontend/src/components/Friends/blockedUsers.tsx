@@ -38,12 +38,10 @@ const BlockedList: React.FC = () => {
 
   const unBlockRequest = async (username: string) => {
     try {
-      const message = await apiUnBlockRequest(username);
-      toast.success(message)
+      await apiUnBlockRequest(username);
       refetch();
-      // console.log(message);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to accept friend request')
+    } catch {
+      toast.error(t('errorsFriends.unblock'))
     }
   };
 

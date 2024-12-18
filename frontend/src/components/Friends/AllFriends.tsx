@@ -78,16 +78,16 @@ const AllFriends: React.FC = () => {
     try {
       await apiBlockRequest(username);
       refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to accept friend request')
+    } catch {
+      toast.error(t('errorsFriends.block'))
     }
   };
   const removeFriend = async (username: string) => {
     try {
       await apiRemoveFriend(username);
       refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to remove friend')
+    } catch {
+      toast.error(t('errorsFriends.remove'))
     }
   };
 

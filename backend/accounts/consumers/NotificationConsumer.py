@@ -148,7 +148,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         # Send the game address to both players
         message = {
             'event': 'game_address',
-            'message': 'Game successfully created',
+            'message': 'toast.gameAddress',
             'game_address': game_address,
             'p1_id': p1.id,
             'p2_id': p2.id,
@@ -173,7 +173,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         message = {
             "event": "invite_reject",
             "to": recipient,
-            "message": f"The invitation has expired or rejected.",
+            "message": f"toast.inviteReject",
         }
         await self.send_message(sender, message)
 
