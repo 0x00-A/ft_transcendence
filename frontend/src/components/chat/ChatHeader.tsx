@@ -20,7 +20,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   const { selectedConversation } = useSelectedConversation();
   const isReceiver = typing.senderId == selectedConversation?.user_id;
   const navigate = useNavigate();
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
 const renderUserStatus = () => {
     if (!selectedConversation) return null;
@@ -45,7 +45,7 @@ const renderUserStatus = () => {
     <header className={css.chatHeader}>
         <div className={css.chatHeaderContent}>
           <div className={css.userInfo}>
-            <div className={`${css.userAvatar} ${selectedConversation?.status ? css.online : ''}`} onClick={() => navigate(`/profile/${selectedConversation.name}`)}>
+            <div className={`${css.userAvatar} ${selectedConversation?.status ? css.online : ''}`} onClick={() => navigate(`/profile/${selectedConversation?.name}`)}>
               <img
                 src={selectedConversation?.avatar}
                 alt="User"

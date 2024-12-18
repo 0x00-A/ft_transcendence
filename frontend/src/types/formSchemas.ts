@@ -115,17 +115,17 @@ export const EditInfosProfileSchema = yup.object().shape({
     .max(64, 'password must not exceed 64 characters!')
     .required('password is required!'),
   avatar: yup
-    .mixed()
+    .mixed<File>()
     .test('fileSize', 'The file is too large!', (value) => {
       if (!value) return true;
-      return value[0].size <= 2000000;
+      return value.size <= 2000000;
     })
     .test('fileType', 'The file is not supported!', (value) => {
       if (!value) return true;
       return (
-        value[0].type === 'image/png' ||
-        value[0].type === 'image/jpg' ||
-        value[0].type === 'image/jpeg'
+        value.type === 'image/png' ||
+        value.type === 'image/jpg' ||
+        value.type === 'image/jpeg'
       );
     }),
 });

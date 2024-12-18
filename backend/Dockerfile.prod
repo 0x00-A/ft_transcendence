@@ -49,7 +49,7 @@ RUN chmod +x /scripts/*
 # USER 1000:1000
 
 
-USER django-user
+# USER django-user
 
 EXPOSE 8000
 
