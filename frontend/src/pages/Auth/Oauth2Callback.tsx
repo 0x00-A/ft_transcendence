@@ -62,6 +62,15 @@ const Oauth2Callback = () => {
           // setFormStatus(status)
           setUsernameForm(true)
         }
+        else if (status && status === 'email_exists') {
+          const message = params.get('message')
+          if (message) {
+            toast.error(message);
+          } else {
+            toast.error('Email already exists, please login');
+          }
+          navigate('/auth')
+        }
         else {
           const error = params.get('error')
           if (status === 'failed' && error) {

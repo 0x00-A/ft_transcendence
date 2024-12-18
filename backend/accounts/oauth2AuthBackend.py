@@ -8,7 +8,7 @@ class Oauth2AuthBackend(BaseBackend):
         User = get_user_model()
         try:
             user = User.objects.get(email=email)
-            if (not user.has_usable_password()) and user.is_oauth_user:
+            if (not user.has_usable_password()) and user.is_oauth2_user:
                 return user
             else:
                 return None

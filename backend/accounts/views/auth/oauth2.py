@@ -19,7 +19,6 @@ from accounts.utils import send_oauth2_welcome
 
 def oauth2_authorize(request, choice):
     if request.method == 'GET':
-
         if choice == 'intra':
             return redirect(conf.INTRA_AUTHORIZATION_URL)
         if choice == 'discord':
@@ -27,15 +26,17 @@ def oauth2_authorize(request, choice):
         if choice == 'google':
             return redirect(conf.GOOGLE_AUTHORIZATION_URL)
 
+import jwt
 
 @api_view()
 @authentication_classes([])
 @permission_classes([AllowAny])
 def oauth2_authentication(request, choice):
     # client_redirect_url = request.GET.get('redirect_url')
-    # if 
+    # if
     code = request.GET.get('code')
     if code is None:
+        return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get the code from {choice}, (go to authorize page)')}")
         return redirect(reverse('oauth2_authorize', kwargs={'choice': choice}))
     token = exchange_code(code, choice)
     if token is None:
@@ -44,7 +45,8 @@ def oauth2_authentication(request, choice):
     if user_data is None:
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get user {choice} resources!')}")
     try:
-        check_user = User.objects.get(email=user_data['email'])
+        # check_user = User.objects.get(email=user_data['email'])
+        check_user = User.objects.get(oauth2_id=user_data['id'], oauth2_provider=choice)
         if not check_user.is_active:
             try:
                 email_verf = EmailVerification.objects.get(user=check_user)
@@ -56,16 +58,24 @@ def oauth2_authentication(request, choice):
         if check_user.is2fa_active:
             return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=2fa_required&username={check_user.username}&message={quote('2FA is required. Please enter your OTP code.')}")
     except User.DoesNotExist:
+        print('---------------->', 'User not found', '<------------------')
         check_user = None
+    except Exception as e:
+        return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'error oauth2 details: {str(e)}')}")
     if check_user is None:
         try:
+            if User.objects.filter(email=user_data['email']).exists():
+                request.session['user_data'] = user_data
+                return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=email_exists&message={quote(f'Email already exists, you can login with your account!')}")
             if User.objects.filter(username=user_data['username']).exists():
-                request.session['user_data'] = {'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
+                # request.session['user_data'] = {'id': user_data['id'], 'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
+                request.session['user_data'] = user_data
                 return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Username already exists, Please choose a username to continue!')}")
             serializer = Oauth2Serializer(data=user_data)
             if not serializer.is_valid():
                 if 'username' in serializer.errors:
-                    request.session['user_data'] = {'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
+                    # request.session['user_data'] = {'id': user_data['id'], 'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
+                    request.session['user_data'] = user_data
                     return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=set_username&message={quote(f'Username not valid, Please choose a username to continue!')}")
                 return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'A data in your {choice} user not compatible with our criteria!')}")
             check_user = serializer.save()
@@ -111,11 +121,8 @@ def oauth2_set_username(request):
         return Response(data={'error': 'Bad request, user data not found'}, status=status.HTTP_400_BAD_REQUEST)
     if 'username' not in request.data:
         return Response(data={'error': "Missing 'username' data!"}, status=status.HTTP_400_BAD_REQUEST)
-    serializer = Oauth2Serializer(data = {
-        'username': request.data['username'],
-        'email' : user_data['email'],
-        'avatar_link' : user_data['avatar_link'],
-    })
+    user_data['username'] = request.data.get('username')
+    serializer = Oauth2Serializer(data = user_data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     del request.session['user_data']

@@ -73,18 +73,24 @@ def get_oauth2_user(token, choice):
         data = res.json()
         if choice == 'intra':
             user_data = {
+                'id' : data['id'],
+                'provider': choice,
                 'username': data['login'],
                 'email': data['email'],
                 'avatar_link': data['image']['link']
             }
         if choice == 'discord':
             user_data = {
+                'id': data['id'],
+                'provider': choice,
                 'username': data['username'],
                 'email': data['email'],
                 'avatar_link': f"https://cdn.discordapp.com/avatars/{data['id']}/{data['avatar']}.png"
             }
         if choice == 'google':
             user_data = {
+                'id': data['id'],
+                'provider': choice,
                 'username': data['given_name'].replace(" ", "_"),
                 'email': data['email'],
                 'avatar_link': data['picture']

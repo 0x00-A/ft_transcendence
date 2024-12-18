@@ -6,8 +6,13 @@ import Leaderboard from '../../components/Dashboard/Leaderboard';
 import FriendsList from '../../components/Dashboard/FriendsList';
 import LastMatch from '../../components/Dashboard/LastMatch';
 import LineChartComponent from '@/components/Dashboard/LineChartComponent';
+import { useUser } from '@/contexts/UserContext';
 
 const Dashboard = () => {
+
+  const  {user: currentUser, isLoading} = useUser();
+
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <main className={css.container}>
@@ -22,7 +27,7 @@ const Dashboard = () => {
         <div className={css.LineChart}> <LineChartComponent /> </div>
       </div>
       <div className={css.lastSection}>
-        <div className={css.lastMatchContainer}><LastMatch /></div>
+        <div className={css.lastMatchContainer}><LastMatch username={currentUser?.username}/></div>
         <div className={css.friendsContainer}><FriendsList /></div>
       </div>
     </main>

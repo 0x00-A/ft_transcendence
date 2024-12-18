@@ -20,9 +20,9 @@ import { useTranslation } from 'react-i18next';
 //     "image": "/icons/AchievIcon.svg", "condition": {"win": 1}, "progress": 0,
 //         "is_unlocked": true, "unlocked_at": "2021-10-10"}
 // {`${isConfirmSave ? css.bluredBgConfirm : ''}`}
-const ProfileAchievements = () => {
+const ProfileAchievements = ({username}:{username:string | undefined}) => {
 
-    const {data: achievements, isLoading, error} = useGetData<UserAchievements[]>(API_GET_ACHIEVEMENTS_URL);
+    const {data: achievements, isLoading, error} = useGetData<UserAchievements[]>(`${API_GET_ACHIEVEMENTS_URL}/${username}`);
     const [currentAchiev, setCurrentAchiev] = useState(0);
     const { t } = useTranslation();
 

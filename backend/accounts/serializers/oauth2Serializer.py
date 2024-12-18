@@ -9,10 +9,12 @@ from accounts.models import User
 class Oauth2Serializer(serializers.ModelSerializer):
 
     avatar_link = serializers.CharField()
+    id = serializers.CharField()
+    provider = serializers.CharField()
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'avatar_link']
+        fields = ['id', 'provider', 'username', 'email', 'avatar_link']
 
     def validate_username(self, value):
         if any(ch.isupper() for ch in value):
@@ -42,7 +44,9 @@ class Oauth2Serializer(serializers.ModelSerializer):
         user = User.objects.create(
             username = validated_data['username'],
             email = validated_data['email'],
-            is_oauth_user = True
+            is_oauth2_user = True,
+            oauth2_id = validated_data['id'],
+            oauth2_provider = validated_data['provider'],
         )
         user.set_unusable_password()
         user.is_password_set = False
