@@ -17,7 +17,7 @@ const useSetPassword = () => {
     setError,
     clearErrors,
   } = useForm<SetPasswordForm>({
-    resolver: yupResolver(SetPasswordSchema),
+    resolver: yupResolver(SetPasswordSchema()),
     reValidateMode:'onChange',
     mode: 'onChange',
   });

@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 // Types
 import { Friends } from '@/types/apiTypes';
 import FriendSkeleton from '../Friends/FriendSkeleton';
+import { useTranslation } from 'react-i18next';
 
 
 const ProfileFriends = () => {
@@ -21,50 +22,51 @@ const ProfileFriends = () => {
     const navigate = useNavigate();
     const onlineFriends = friendsData?.filter((friend: Friends) => friend.profile.is_online).slice(0, 5);
     const offlineFriends = friendsData?.filter((friend: Friends) => !friend.profile.is_online).slice(0, 5);
+  const { t } = useTranslation();
 
   return (
     <div className={css.profileFriendsContainer}>
         <div className={css.friendsHeader}>
             <div className={css.friendsTitle}>
                 <FaUserFriends className={css.friendsIcon}/>
-                <h3>Friends</h3>
+                <h3>{t('Profile.friends.title')}</h3>
             </div>
-            <button className={css.viewMore} onClick={() => navigate('/friends')}>View more</button>
+            <button className={css.viewMore} onClick={() => navigate('/friends')}>{t('Profile.friends.viewMore')}</button>
         </div>
         <div className={css.friendsList}>
             <div className={css.buttonsGrp}>
                 <button onClick={() => setBtnActive(true)}
                     className={`${css.button} ${isBtnActive  ? css.buttonActive : ''}`}>
-                    Online
+                    {t('Profile.friends.buttons.online')}
                 </button>
                 <button onClick={() => setBtnActive(false)}
                     className={`${css.button} ${!isBtnActive ? css.buttonActive : ''}`}>
-                    Offline
+                    {t('Profile.friends.buttons.offline')}
                 </button>
             </div>
             { isLoading ? <> <FriendSkeleton /> <FriendSkeleton /> </>:
             <div className={css.friendList}>
                 { error && <p>{error.message}</p> }
                 { friendsData?.length == 0 && <div className={css.noFriends}>
-                    <span>You are lonely</span>
+                    <span>{t('Profile.friends.errors.noFriends')}</span>
                     <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
                         {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
                         <HiOutlineUserAdd size={"2.2rem"}/>
-                        <span>Add friends</span>
+                        <span>{t('Profile.friends.addFriends.button')}</span>
                     </button>
                 </div> }
-                { isBtnActive && friendsData && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Online friends</span> }
-                { !isBtnActive && friendsData && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> }
+                { isBtnActive && friendsData && friendsData?.length > 0 && onlineFriends?.length == 0 && <span className={css.noCurrentFriend}>{t('Profile.friends.errors.noOnlineFriends')}</span> }
+                { !isBtnActive && friendsData && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>{t('Profile.friends.errors.noOfflineFriends')}</span> }
                 { isBtnActive && onlineFriends && onlineFriends?.length > 0 && onlineFriends?.map((friend: Friends) => (
                     <div className={css.friendItem} key={friend.id}>
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
                              <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
-                             <span className={css.level}>Level: {friend.profile.level}</span>
+                             <span className={css.level}>{t('Profile.friends.profile.level')} {friend.profile.level}</span>
                          </div>
                          <div className={`${css.status} ${css.online}`}>
                             <span className={css.statusIndicator}></span>
-                            Online
+                            {t('Profile.friends.profile.status.online')}
                          </div>
                      </div>
                 ))}
@@ -73,11 +75,11 @@ const ProfileFriends = () => {
                          <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
                          <div className={css.friendInfo}>
                              <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
-                             <span className={css.level}>Level: {friend.profile.level}</span>
+                             <span className={css.level}>{t('Profile.friends.profile.status.offline')} {friend.profile.level}</span>
                          </div>
                          <div className={`${css.status} ${css.offline}`}>
                             <span className={css.statusIndicator}></span>
-                            Offline
+                            {t('Profile.friends.profile.level')}
                          </div>
                      </div>
                 ))}

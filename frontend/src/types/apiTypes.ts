@@ -27,6 +27,8 @@ export interface Stats {
   games_played: number;
   wins: number;
   losses: number;
+  highest_score: number;
+  best_rank: number;
   performanceData: PerformanceDataEntry[];
 }
 
@@ -38,6 +40,11 @@ export interface Profile {
   score: number | null;
   rank: number | null;
   badge: Badge;
+  played_games: number;
+  wins: number;
+  losses: number;
+  win_rate: number;
+  lose_rate: number;
   stats: Stats;
   is_online: boolean;
 }
@@ -138,7 +145,7 @@ export interface GameHistory {
   opponent_avatar: string;
   result: string;
   score: string;
-  game_duration: string;
+  game_duration: number;
 }
 
 interface FriendProfile {
@@ -213,4 +220,14 @@ export interface UserAchievements {
     };
     is_unlocked: boolean;
     unlocked_at: string;
+}
+
+export interface LeaderBoard {
+    rank: number;
+    avatar: string;
+    username: string;
+    played_games: number;
+    win_rate: number;
+    lose_rate: number;
+    score: number;
 }

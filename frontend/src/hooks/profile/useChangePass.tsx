@@ -30,7 +30,7 @@ const useChangePass = () => {
     setError,
     setValue,
   } = useForm<ChangePasswordForm>({
-    resolver: yupResolver(ChangePasswordSchema),
+    resolver: yupResolver(ChangePasswordSchema()),
     reValidateMode:'onChange',
     mode: 'onChange',
   });

@@ -1,4 +1,5 @@
 {
+    "lang": "en",
     "welcome": {
         "title": "FT-PONG",
         "description": "Ready to start your next match and climb the leaderboard",
@@ -148,6 +149,7 @@
         "clearAll": "Clear All"
     },
     "game": {
+        "gameArea": "GO!",
         "localGame": {
             "title": "Local Game",
             "description": "Play with friends",
@@ -158,7 +160,7 @@
                 "SetWinningScore": "Set Winning Score",
                 "SetControllerType": "Set Controller Type",
                 "ControllerOptions": {
-                    "Mouse": "Mouse",
+                    "Mouse": "Mouse", 
                     "Keyboard": "Keyboard"
                 }
             },
@@ -180,7 +182,15 @@
         },
         "remoteGame": {
             "title": "Remote Game",
-            "description": "Challenge online"
+            "description": "Challenge online",
+            "matchmakingScreen": {
+                "matchmakingInProgress": "Matchmaking in Progress",
+                "searchingForOpponent": "Searching for a worthy opponent",
+                "playersOnline": "Players Online",
+                "skillMatch": "Skill Match",
+                "highSkillMatch": "High",
+                "cancelMatchmaking": "Cancel Matchmaking"
+            }
         },
         "remoteTournament": {
             "title": "Remote Tournament",
@@ -191,6 +201,26 @@
                 "SubmitButton": "Submit",
                 "CancelButton": "Cancel",
                 "AlertMessage": "Please enter a tournament name."
+            },
+            "playerReady": {
+                "Players": "Players",
+                "Format": "Format",
+                "SingleElimination": "Single Elimination",
+                "Status": "Status",
+                "Created": "Created"
+            },
+            "leaveTournamentButton": {
+                "leaveTournament": "Leave Tournament",
+                "leaveConfirmationTitle": "Leave Tournament?",
+                "leaveConfirmationDescription": "Are you sure you want to leave the tournament? This action cannot be undone and may result in aborting the tournament.",
+                "stayButton": "Stay",
+                "leaveButton": "Leave Tournament"
+            },
+            "sparkleEffect": {
+                "cancel": "Cancel...",
+                "loading": "Loading...",
+                "ready": "READY!",
+                "readyUp": "READY UP"
             }
         },
         "localTournament": {
@@ -219,7 +249,12 @@
         },
         "multipleGame": {
             "title": "Multiple Game",
-            "description": "Play with friends"
+            "description": "Play with friends",
+            "PlayerCard": {
+                "Score": "Score",
+                "Against": "Against"
+            },
+            "WaitingPJ": "Waiting for players to join..."
         },
         "joinedTournaments": {
             "title": "Joined Tournaments",
@@ -240,6 +275,300 @@
             },
             "joinButton": "join",
             "noTournaments": "No tournaments available at the moment."
+        }
+    },
+    "Profile": {
+        "informations": "Informations",
+        "security": "Security",
+        "errors": {
+            "signup": {
+                "username": {
+                    "required": "Username is required!",
+                    "min": "Username must be at least 4 characters!",
+                    "max": "Username must not exceed 30 characters!"
+                },
+                "email": {
+                    "required": "Email is required!",
+                    "invalid": "Invalid email format!"
+                },
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
+                }
+            },
+            "login": {
+                "username": {
+                    "required": "Username is required!",
+                    "min": "Invalid username!",
+                    "max": "Invalid username!"
+                },
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Invalid password!",
+                    "max": "Invalid password!"
+                }
+            },
+            "changePassword": {
+                "currentPassword": {
+                    "required": "Current password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "newPassword": {
+                    "required": "New password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
+                }
+            },
+            "resetPassword": {
+                "newPassword": {
+                    "required": "New password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
+                }
+            },
+            "setPassword": {
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "confirmPassword": {
+                    "required": "Password confirmation is required!",
+                    "match": "Passwords must match!"
+                }
+            },
+            "setUsername": {
+                "username": {
+                    "required": "Username is required!",
+                    "min": "Username must be at least 4 characters!",
+                    "max": "Username must not exceed 30 characters!"
+                }
+            },
+            "otp": {
+                "otp": {
+                    "required": "OTP is required!",
+                    "length": "OTP must be 6 digits!",
+                    "matches": "OTP must be a number!"
+                }
+            },
+            "editProfile": {
+                "username": {
+                    "min": "Username must be at least 4 characters!",
+                    "max": "Username must not exceed 15 characters!"
+                },
+                "firstName": {
+                    "min": "First name must be at least 3 characters!",
+                    "max": "First name must not exceed 15 characters!"
+                },
+                "lastName": {
+                    "min": "Last name must be at least 3 characters!",
+                    "max": "Last name must not exceed 15 characters!"
+                },
+                "email": {
+                    "invalid": "Invalid email format!"
+                },
+                "password": {
+                    "required": "Password is required!",
+                    "min": "Password must be at least 8 characters!",
+                    "max": "Password must not exceed 64 characters!"
+                },
+                "avatar": {
+                    "fileSize": "The file is too large!",
+                    "fileType": "The file is not supported!"
+                }
+            }
+        },
+        "friends": {
+            "title": "Friends",
+            "viewMore": "View more",
+            "buttons": {
+                "online": "Online",
+                "offline": "Offline"
+            },
+            "errors": {
+                "noFriends": "You are lonely",
+                "noOnlineFriends": "No Online friends",
+                "noOfflineFriends": "No Offline friends"
+            },
+            "addFriends": {
+                "button": "Add friends"
+            },
+            "profile": {
+                "level": "Level:",
+                "status": {
+                "online": "Online",
+                "offline": "Offline"
+                }
+            }   
+        },
+        "gameHistory": {
+            "title": "Game History",
+            "buttons": {
+                "game": "Game",
+                "tournament": "Tournament"
+            },
+            "noGames": {
+                "message": "You don't play any games yet",
+                "playNow": "Play Now"
+            },
+            "fields": {
+                "dateTime": "Date & Time",
+                "name": "Name",
+                "result": "Result",
+                "score": "Score",
+                "duration": "Duration",
+                "rematch": "Rematch"
+            },
+            "results": {
+                "win": "Win",
+                "lose": "Lose"
+            },
+            "invite": "Invite"
+        },
+        "Achievements": {
+            "title": "Achievements",
+            "NoAchievementsFound": "No achievements found!"
+        },
+        "profileHeader": {
+            "EditProfileButton": "Edit Profile",
+            "profileStats": {
+                "games": "GAMES",
+                "wins": "WINS",
+                "loses": "LOSES",
+                "score": "SCORE",
+                "rank": "RANK"
+            },
+            "badge": {
+                "Bronze": "Bronze",
+                "Silver": "Silver",
+                "Gold": "Gold",
+                "Platinum": "Platinum",
+                "Diamond": "Diamond",
+                "Ft-Pong": "Ft-Pong"
+            }
+        },
+        "setPassword": {
+            "title": "Set Password",
+            "description": "Your account has no password. Please set a password so you can login and edit your profile.",
+            "fields": {
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm New Password"
+            },
+            "buttons": {
+                "reset": "Reset",
+                "save": "Save"
+            },
+            "successMessage": "Password set successfully."
+        },
+        "EditSecurity": {
+            "changePassword": {
+                "title": "Change Password",
+                "currentPassword": "Current Password",
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm New Password",
+                "buttons": {
+                    "reset": "Reset",
+                    "save": "Save"
+                }
+            },
+            "twoFactorAuth": {
+                "title": "Two Factor Authentication (2FA)",
+                "description": "Get verification codes from an authenticator app such as Google Authenticator. It works even if your phone is offline. Scan the QR code below.",
+                "mobileMessageLabel": "Enter the 6-digit verification code generated by your authenticator app.",
+                "otpPlaceholder": "Enter OTP",
+                "buttons": {
+                    "downloadApp": "Download App",
+                    "getQrCode": "Get QR Code",
+                    "enable2FA": "Enable 2FA"
+                },
+                "enabled": {
+                    "status": "Two Factor Authentication is currently enabled",
+                    "confirmPasswordLabel": "Confirm your Password",
+                    "buttons": {
+                        "disable2FA": "Disable 2FA"
+                    }
+                }
+            },
+            "downloadAppPopup": {
+                "title": "Select Your OS",
+                "osButtons": {
+                    "android": "Android",
+                    "ios": "Apple"
+                },
+                "qrCodeInstructions": "Scan the QR code to download the app.",
+                "buttons": {
+                    "close": "Close"
+                }
+            },
+            "errors": {
+                "defaultError": "An error occurred. Please try again later"
+            },
+            "toasts": {
+                "passwordChanged": "Password changed successfully",
+                "twoFactorEnabled": "Two-factor authentication enabled",
+                "twoFactorDisabled": "Two-factor authentication disabled"
+            }
+        },
+        "EditInfosProfile": {
+            "title": "Edit your Information",
+            "avatar": {
+                "changeButton": "Change Avatar",
+                "removeButton": "Remove Avatar"
+            },
+            "fields": {
+                "firstName": {
+                    "label": "First Name",
+                    "placeholder": "Enter your first name"
+                },
+                "lastName": {
+                    "label": "Last Name", 
+                    "placeholder": "Enter your last name"
+                },
+                "username": {
+                    "label": "Username",
+                    "placeholder": "Enter your username"
+                },
+                "email": {
+                    "label": "Email",
+                    "placeholder": "Enter new email",
+                    "verifyButton": "Verify"
+                },
+                "password": {
+                    "label": "Enter your password",
+                    "placeholder": "Enter your password"
+                }
+            },
+            "saveButton": "Save",
+            "confirmSave": {
+                "title": "Confirm Your Password",
+                "description": "Please enter your password to save the changes. Thank you for your time all this just to protect you!",
+                "buttons": {
+                    "close": "Close",
+                    "confirm": "Confirm"
+                }
+            },
+            "errors": {
+                "emptyForm": "Please fill at least one field to save the changes",
+                "defaultError": "An error occurred. Please try again later"
+            },
+            "toasts": {
+                "successUpdate": "Profile updated successfully",
+                "emailVerificationSent": "Verification email sent successfully"
+            }
         }
     }
 }

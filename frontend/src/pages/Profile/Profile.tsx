@@ -1,5 +1,5 @@
 // React
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // Components
 import ProfileHeader from '../../components/Profile/ProfileHeader'
 import ProfileFriends from "@/components/Profile/ProfileFriends";
@@ -14,13 +14,20 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
 // Api
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 
 
 const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
-  const { user: currentUser, error, isLoading } = useUser();
+  const { user: currentUser, error, refetch, isLoading } = useUser();
+  const { t } = useTranslation();
+
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (error) toast.error(error.message);
 
@@ -48,11 +55,11 @@ const Profile = () => {
               <div className={css.buttonsGrp}>
                 <button onClick={() => setActiveBtn(true)}
                   className={`${css.button} ${activeBtn  ? css.buttonActive : ''}`}>
-                  Informations
+                  {t('Profile.informations')}
                 </button>
                 <button onClick={() => setActiveBtn(false)}
                   className={`${css.button} ${!activeBtn ? css.buttonActive : ''}`}>
-                  Security
+                  {t('Profile.security')}
                 </button>
               </div>
               { activeBtn ? <EditInfosProfile setEditProfile={setEditProfile} /> :

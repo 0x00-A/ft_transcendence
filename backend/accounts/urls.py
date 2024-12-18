@@ -44,6 +44,8 @@ urlpatterns = [
     path('users/online/', views.OnlineUsersView.as_view(), name='online_users'),
 
     path('achievements/', views.GetMyAchievementsView.as_view(), name='achievements'),
+    path('dashboard-leaderboard/', views.DashboardLeaderBoardView.as_view(), name='dashboard_leaderboard'),
+    path('leaderboard/', views.LeaderBoardView.as_view(), name='leaderboard'),
     #  path('profile/', views.ProfileApiView.as_view(), name='profile'),
 
 #     path('security/set_password/', views.SetPasswordView.as_view()),
