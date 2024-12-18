@@ -19,6 +19,7 @@ from accounts.utils import send_oauth2_welcome
 
 def oauth2_authorize(request, choice):
     if request.method == 'GET':
+
         if choice == 'intra':
             return redirect(conf.INTRA_AUTHORIZATION_URL)
         if choice == 'discord':
@@ -31,6 +32,8 @@ def oauth2_authorize(request, choice):
 @authentication_classes([])
 @permission_classes([AllowAny])
 def oauth2_authentication(request, choice):
+    # client_redirect_url = request.GET.get('redirect_url')
+    # if 
     code = request.GET.get('code')
     if code is None:
         return redirect(reverse('oauth2_authorize', kwargs={'choice': choice}))

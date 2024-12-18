@@ -7,9 +7,9 @@
 
 .authPongBox {
     background-color: var(--main-surface-tertiary);
-    width: 500px;
-    height: 700px;
-    min-width: 300px;
+    width: 450px;
+    /* width: 400px; */
+    height: 650px;
     /* position: relative; */
     /* margin: 5px; */
     /* border-right: 1px solid aliceblue; */

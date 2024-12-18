@@ -1,4 +1,6 @@
 .authContainer {
+    margin: 0;
+    padding: 0;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -6,11 +8,17 @@
     gap: 1rem;
 }
 
+@media (max-width: 1024px) {
+    .authContainer {
+        transition: 1s;
+        flex-direction: column;
+    }
+}
+
 .authFormBox {
     background-color: var(--main-surface-tertiary);
-    width: 500px;
-    height: 700px;
-    min-width: fit-content;
+    width: 450px;
+    height: 650px;
     padding: 5rem;
     border-radius: 20px;
     display: flex;

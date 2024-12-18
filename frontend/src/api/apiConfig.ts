@@ -24,6 +24,7 @@ export const API_LOGIN_OTP_URL = "auth/login/otp-verification/";
 export const API_RESET_PASSWORD_REQUEST_URL = "/auth/reset-password-request/";
 export const API_RESET_PASSWORD_URL = "/auth/reset-password/";
 // OAUTH2
+export const OAUTH2_CALLBACK_URL = window.location.origin + "/oauth2/callback";
 // export const API_OAUTH2_URL = getApiUrl('/auth/oauth2');
 export const API_OAUTH2_URL = getApiUrl('/auth/oauth2');
 export const API_OAUTH2_SETUSERNAME_URL = "/auth/oauth2/set-username/";
