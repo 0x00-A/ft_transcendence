@@ -60,7 +60,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     const handleDisable2fa = async () => {
         try{
             const response = await apiClient.post(API_DISABLE_2FA_URL, {password: confiPass2fa})
-            toast.success(response.data.message);
+            toast.success(t(`${response.data.message}`));
             setEditProfile(false);
             refetch();
         }
@@ -68,26 +68,26 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
             if (axios.isAxiosError(error)) {
                 toast.error(error?.response?.data?.error);
             } else {
-                toast.error('An error occurred. Please try again later');
+                toast.error(t('Profile.EditSecurity.errors.defaultError'));
             }
         }
     }
-
+    
     const handleEnable2fa = async () => {
         try {
             await otpSchema().validate({otp: otp});
         }
         catch (error) {
-          if (error instanceof Yup.ValidationError) {
-            setErrorOtp(error.message);
-            return;
-          } else {
-            setErrorOtp('Error otp, try again!');
-          }
+            if (error instanceof Yup.ValidationError) {
+                setErrorOtp(error.message);
+                return;
+            } else {
+                setErrorOtp('Error otp, try again!');
+            }
         }
         try{
             const response = await apiClient.post(API_ENABLE_2FA_URL, {otp: otp})
-            toast.success(response.data.message);
+            toast.success(t(`${response.data.message}`));
             setEditProfile(false);
             refetch();
         }
@@ -95,7 +95,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
             if (axios.isAxiosError(error)) {
                 toast.error(error?.response?.data?.error);
             } else {
-                toast.error('An error occurred. Please try again later');
+                toast.error(t('Profile.EditSecurity.errors.defaultError'));
             }
         }
     }
@@ -109,7 +109,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
             if (axios.isAxiosError(error)) {
                 toast.error(error?.response?.data?.error);
             } else {
-                toast.error('An error occurred. Please try again later');
+                toast.error(t('Profile.EditSecurity.errors.defaultError'));
             }
             setQrcode(null);
         }
@@ -117,21 +117,22 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const togglePasswordVisibility = (field: ShowPasswordFields) => {
         setShowPassword((prevState) => ({
-          ...prevState,
-          [field]: !prevState[field],
+            ...prevState,
+            [field]: !prevState[field],
         }));
     };
     useEffect(() => {
         if (mutation.isSuccess) {
+            console.log("Password changed successfully ..")
             toast.success(mutation.data?.data?.message);
             setEditProfile(false);
         }
-   }, [mutation.isSuccess]);
-   useEffect(() => {
+    }, [mutation.isSuccess]);
+    useEffect(() => {
         // if (mutation.isError) {
         //     toast.error(mutation.error.response.data.error);
         // }
-   }), [mutation.isError];
+    }), [mutation.isError];
 
     const handleChangePassword = (data: ChangePasswordForm) => {
         mutation.mutate(data);
@@ -200,7 +201,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                                         className={css.enableBtn}
                                         onClick={handleEnable2fa}
                                     >
-                                        {t('Profile.EditSecurity.twoFactorAuth.enable2FA')}
+                                        {t('Profile.EditSecurity.twoFactorAuth.buttons.enable2FA')}
                                     </button>
                                 </div>
                                 {errorOtp && <span className={css.fieldError}>{errorOtp}</span>}
@@ -208,10 +209,10 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                         </div>
                         <div className={css.qrCodeContainer}>
                             <button className={css.downloadBtn} onClick={handleOpenDownloadPopup}>
-                                {t('Profile.EditSecurity.twoFactorAuth.downloadApp')}
+                                {t('Profile.EditSecurity.twoFactorAuth.buttons.downloadApp')}
                             </button>
                             {!qrcode ? (
-                                <button onClick={handleGetQrcode}>{t('Profile.EditSecurity.twoFactorAuth.getQrCode')}</button>
+                                <button onClick={handleGetQrcode}>{t('Profile.EditSecurity.twoFactorAuth.buttons.getQrCode')}</button>
                             ) : (
                                 <img src={qrcode} alt="QR Code" />
                             )}
