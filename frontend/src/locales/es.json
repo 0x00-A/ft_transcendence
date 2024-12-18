@@ -277,6 +277,8 @@
         }
     },
     "Profile": {
+        "informations": "Información",
+        "security": "Seguridad",
         "errors": {
             "signup": {
                 "username": {
@@ -452,6 +454,102 @@
                 "save": "Guardar"
             },
             "successMessage": "Contraseña establecida con éxito."
+        },
+        "EditSecurity": {
+            "changePassword": {
+                "title": "Cambiar Contraseña",
+                "currentPassword": "Contraseña Actual",
+                "newPassword": "Nueva Contraseña",
+                "confirmPassword": "Confirmar Nueva Contraseña",
+                "buttons": {
+                    "reset": "Reiniciar",
+                    "save": "Guardar"
+                }
+            },
+            "twoFactorAuth": {
+                "title": "Autenticación de Dos Factores (2FA)",
+                "description": "Obtenga códigos de verificación de una aplicación de autenticación como Google Authenticator. Funciona incluso sin conexión en su teléfono. Escanee el código QR a continuación.",
+                "mobileMessageLabel": "Introduzca el código de verificación de 6 dígitos generado por su aplicación de autenticación.",
+                "otpPlaceholder": "Introducir OTP",
+                "buttons": {
+                    "downloadApp": "Descargar Aplicación",
+                    "getQrCode": "Obtener Código QR",
+                    "enable2FA": "Habilitar 2FA"
+                },
+                "enabled": {
+                    "status": "La Autenticación de Dos Factores está actualmente habilitada",
+                    "confirmPasswordLabel": "Confirme su Contraseña",
+                    "buttons": {
+                        "disable2FA": "Deshabilitar 2FA"
+                    }
+                }
+            },
+            "downloadAppPopup": {
+                "title": "Seleccione su Sistema Operativo",
+                "osButtons": {
+                    "android": "Android",
+                    "ios": "Apple"
+                },
+                "qrCodeInstructions": "Escanee el código QR para descargar la aplicación.",
+                "buttons": {
+                    "close": "Cerrar"
+                }
+            },
+            "errors": {
+                "defaultError": "Ocurrió un error. Inténtelo de nuevo más tarde"
+            },
+            "toasts": {
+                "passwordChanged": "Contraseña cambiada exitosamente",
+                "twoFactorEnabled": "Autenticación de dos factores habilitada",
+                "twoFactorDisabled": "Autenticación de dos factores deshabilitada"
+            }
+        },
+        "EditInfosProfile": {
+            "title": "Editar su Información",
+            "avatar": {
+                "changeButton": "Cambiar Avatar",
+                "removeButton": "Eliminar Avatar"
+            },
+            "fields": {
+                "firstName": {
+                    "label": "Nombre",
+                    "placeholder": "Ingrese su nombre"
+                },
+                "lastName": {
+                    "label": "Apellido",
+                    "placeholder": "Ingrese su apellido"
+                },
+                "username": {
+                    "label": "Nombre de Usuario",
+                    "placeholder": "Ingrese su nombre de usuario"
+                },
+                "email": {
+                    "label": "Correo Electrónico",
+                    "placeholder": "Ingrese un nuevo correo",
+                    "verifyButton": "Verificar"
+                },
+                "password": {
+                    "label": "Ingrese su contraseña",
+                    "placeholder": "Ingrese su contraseña"
+                }
+            },
+            "saveButton": "Guardar",
+            "confirmSave": {
+                "title": "Confirme su Contraseña",
+                "description": "Por favor, ingrese su contraseña para guardar los cambios. ¡Gracias por su tiempo, todo esto es para protegerlo!",
+                "buttons": {
+                    "close": "Cerrar",
+                    "confirm": "Confirmar"
+                }
+            },
+            "errors": {
+                "emptyForm": "Por favor, complete al menos un campo para guardar los cambios",
+                "defaultError": "Ocurrió un error. Por favor, intente nuevamente más tarde"
+            },
+            "toasts": {
+                "successUpdate": "Perfil actualizado exitosamente",
+                "emailVerificationSent": "Correo de verificación enviado exitosamente"
+            }
         }
     }
 }

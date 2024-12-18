@@ -85,7 +85,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 70%;
+    width: 80%;
     gap: 1rem;
 }
 
@@ -112,14 +112,13 @@
 }
 
 .saveContainer {
-    align-self: end;
+    width: 90%;
     display: flex;
-    align-items: center;
-    gap: 2rem;
+    justify-content: flex-end;
 }
 
 .saveBtn {
-    padding: 10px 25px;
+    padding: 10px 10px;
     border: 1px solid #F8C25C;
     background-color: #0e1725;
     border-radius: 10px;
@@ -216,8 +215,6 @@
 
 .confirmBtn, .closeBtn {
     background-color: #0E1725;
-    width: 100px;
-    height: 50px;
     padding: 10px 15px;
     font-size: 1.6rem;
     border-radius: 8px;
@@ -256,8 +253,8 @@
 
 .editEmailBtn {
     position: absolute;
-    left: calc(100% - 7rem);
-    padding: 4px;
+    left: calc(100% - 10rem);
+    padding: 5px 10px;
     border: 1px solid #F8C25C;
     border-radius: 8px;
     color: #D1D3D4;

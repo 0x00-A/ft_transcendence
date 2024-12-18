@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import css from './ButtonSection.module.css';
-// import { useWebSocket } from '@/contexts/WebSocketContext';
-// import { useUser } from '@/contexts/UserContext';
+import { useWebSocket } from '@/contexts/WebSocketContext';
+import { useUser } from '@/contexts/UserContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
@@ -9,43 +9,43 @@ import { useTranslation } from 'react-i18next';
 
 
 const ButtonSection: React.FC = () => {
-  // const { user } = useUser();
-  // const { sendMessage } = useWebSocket();
+  const { user } = useUser();
+  const { sendMessage } = useWebSocket();
   const { selectedConversation } = useSelectedConversation();
   const navigate = useNavigate();
-  // const [isInviteDisabled, setIsInviteDisabled] = useState(false);
-  // const [timeLeft, setTimeLeft] = useState(0);
+  const [isInviteDisabled, setIsInviteDisabled] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
   const { t } = useTranslation();
 
 
-  // const handleSendInvite = () => {
-  //   if (isInviteDisabled) return;
+  const handleSendInvite = () => {
+    if (isInviteDisabled) return;
 
-  //   sendMessage({
-  //     event: 'game_invite',
-  //     from: user?.username,
-  //     to: selectedConversation?.name,
-  //   });
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: selectedConversation?.name,
+    });
 
-  //   setIsInviteDisabled(true);
-  //   setTimeLeft(10);
-  // };
+    setIsInviteDisabled(true);
+    setTimeLeft(10);
+  };
 
-  // useEffect(() => {
-  //   let timer: NodeJS.Timeout;
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
 
-  //   if (isInviteDisabled && timeLeft > 0) {
-  //     timer = setInterval(() => {
-  //       setTimeLeft((prev) => prev - 1);
-  //     }, 1000);
-  //   }
+    if (isInviteDisabled && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
 
-  //   if (timeLeft === 0 && isInviteDisabled) {
-  //     setIsInviteDisabled(false);
-  //   }
+    if (timeLeft === 0 && isInviteDisabled) {
+      setIsInviteDisabled(false);
+    }
 
-  //   return () => clearInterval(timer);
-  // }, [isInviteDisabled, timeLeft]);
+    return () => clearInterval(timer);
+  }, [isInviteDisabled, timeLeft]);
 
 
   return (
@@ -59,7 +59,7 @@ const ButtonSection: React.FC = () => {
         </div>
         <p>{t('settingsSection.profileButton')}</p>
       </div>
-      {/* <div className={css.button}>
+      <div className={css.button}>
         <div
           onClick={handleSendInvite}
           className={`${css.iconInvite} ${isInviteDisabled ? css.disabled : ''}`}
@@ -73,7 +73,7 @@ const ButtonSection: React.FC = () => {
         {isInviteDisabled && (
           <span className={css.cooldownTimer}>{timeLeft}s</span>
         )}
-      </div> */}
+      </div>
     </div>
   );
 };

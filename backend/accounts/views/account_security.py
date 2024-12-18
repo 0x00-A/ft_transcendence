@@ -50,7 +50,7 @@ class Enable2faView(APIView):
             user = request.user
             user.is2fa_active = True
             user.save()
-            return Response({'message': '2FA enabled successfully'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Profile.EditSecurity.toasts.twoFactorEnabled'}, status=status.HTTP_200_OK)
         else:
             return Response(
                 {'error': 'Invalid OTP'},
@@ -83,4 +83,4 @@ class Disable2FAView(APIView):
         user.is2fa_active = False
         user.save()
         print('api ==> disable 2fa: 2FA disabled successfully')
-        return Response({'message': '2FA disabled successfully'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Profile.EditSecurity.toasts.twoFactorDisabled'}, status=status.HTTP_200_OK)

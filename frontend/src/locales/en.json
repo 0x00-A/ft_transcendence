@@ -277,6 +277,8 @@
         }
     },
     "Profile": {
+        "informations": "Informations",
+        "security": "Security",
         "errors": {
             "signup": {
                 "username": {
@@ -518,6 +520,53 @@
                 "passwordChanged": "Password changed successfully",
                 "twoFactorEnabled": "Two-factor authentication enabled",
                 "twoFactorDisabled": "Two-factor authentication disabled"
+            }
+        },
+        "EditInfosProfile": {
+            "title": "Edit your Information",
+            "avatar": {
+                "changeButton": "Change Avatar",
+                "removeButton": "Remove Avatar"
+            },
+            "fields": {
+                "firstName": {
+                    "label": "First Name",
+                    "placeholder": "Enter your first name"
+                },
+                "lastName": {
+                    "label": "Last Name", 
+                    "placeholder": "Enter your last name"
+                },
+                "username": {
+                    "label": "Username",
+                    "placeholder": "Enter your username"
+                },
+                "email": {
+                    "label": "Email",
+                    "placeholder": "Enter new email",
+                    "verifyButton": "Verify"
+                },
+                "password": {
+                    "label": "Enter your password",
+                    "placeholder": "Enter your password"
+                }
+            },
+            "saveButton": "Save",
+            "confirmSave": {
+                "title": "Confirm Your Password",
+                "description": "Please enter your password to save the changes. Thank you for your time all this just to protect you!",
+                "buttons": {
+                    "close": "Close",
+                    "confirm": "Confirm"
+                }
+            },
+            "errors": {
+                "emptyForm": "Please fill at least one field to save the changes",
+                "defaultError": "An error occurred. Please try again later"
+            },
+            "toasts": {
+                "successUpdate": "Profile updated successfully",
+                "emailVerificationSent": "Verification email sent successfully"
             }
         }
     }
