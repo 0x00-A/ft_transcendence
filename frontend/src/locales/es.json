@@ -142,7 +142,9 @@
         "pupPending": "Pendiente",
         "pupAddFriend": "Agregar amigo",
         "pupMessage": "Mensaje",
-        "notFound": "No se encontró ningún usuario"
+        "notFound": "No se encontró ningún usuario",
+        "loadingUsers": "No se pudieron cargar los usuarios. Compruebe su conexión a internet.",
+        "retry": "Rever"
     },
     "notifications": {
         "title": "Notificaciones",

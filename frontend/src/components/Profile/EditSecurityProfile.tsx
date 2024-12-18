@@ -123,8 +123,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     };
     useEffect(() => {
         if (mutation.isSuccess) {
-            console.log("Password changed successfully ..")
-            toast.success(mutation.data?.data?.message);
+            toast.success(t(`${mutation.data?.data?.message}`));
             setEditProfile(false);
         }
     }, [mutation.isSuccess]);

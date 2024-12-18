@@ -1,3 +1,4 @@
+from accounts.utils import translate_text
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -200,6 +201,7 @@ class SendFriendRequestView(APIView):
                     link='/friends?view=requests',
                     title='friend_request',
                     message=f'{sender_user.username} has sent you a friend request!')
+                
                 notification.save()
                 NotificationConsumer.send_notification_to_user(receiver.id, notification)
 
@@ -241,12 +243,21 @@ class AcceptFriendRequestView(APIView):
 
             receiver.friends.add(sender_user)
 
+            target_language = 'es'
+            try:
+                print("Before calling translate_text")
+                translated_message = translate_text(f'{receiver.username} has accepted your friend request! You are now friends.',target_language)
+                print("After calling translate_text")
+            except Exception as e:
+                translated_message = f'{receiver.username} has accepted your friend request! You are now friends.'
+                print(f"Translation Error: {e}")
             # set notification
             notification = Notification.objects.create(
                 user=receiver,
                 link=f'/profile/{receiver.username}',
                 title='friend_request_accepted',
-                message=f'{receiver.username} has accepted your friend request! You are now friends.')
+                message=translated_message
+            )
             notification.save()
             NotificationConsumer.send_notification_to_user(sender_user.id, notification)
 

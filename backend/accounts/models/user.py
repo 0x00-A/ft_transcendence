@@ -13,6 +13,7 @@ class User(AbstractUser):
     last_seen = models.CharField(max_length=50, default="Never", blank=True)
     active_conversation = models.IntegerField(default=-1)
     open_chat = models.BooleanField(default=False)
+    preferred_language = models.CharField(max_length=10, default='en')
 
 
     def __str__(self):

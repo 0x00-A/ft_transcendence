@@ -7,3 +7,4 @@ from .send_email import send_oauth2_welcome
 from .oauth2_utils import get_oauth2_user
 from .oauth2_utils import exchange_code
 from .oauth2_utils import ConfirmOauth2Login
+from .translate_text import translate_text
