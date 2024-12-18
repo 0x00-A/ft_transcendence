@@ -145,17 +145,17 @@ export const EditInfosProfileSchema = () => {
       .max(64, t('Profile.errors.editProfile.password.max'))
       .required(t('Profile.errors.editProfile.password.required')),
     avatar: yup
-      .mixed()
+      .mixed<File>()
       .test('fileSize', t('Profile.errors.editProfile.avatar.fileSize'), (value) => {
         if (!value) return true;
-        return value[0].size <= 2000000;
+        return value.size <= 2000000;
       })
       .test('fileType', t('Profile.errors.editProfile.avatar.fileType'), (value) => {
         if (!value) return true;
         return (
-          value[0].type === 'image/png' ||
-          value[0].type === 'image/jpg' ||
-          value[0].type === 'image/jpeg'
+          value.type === 'image/png' ||
+          value.type === 'image/jpg' ||
+          value.type === 'image/jpeg'
         );
       }),
   });
