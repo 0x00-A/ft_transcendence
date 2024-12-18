@@ -11,8 +11,9 @@ import { API_OAUTH2_URL } from "../../api/apiConfig";
 const Oauth2 = () => {
 
   const handleOauth2 = (provider: string) => {
-    const link = API_OAUTH2_URL + "/" + provider + "/"
-    // console.log('----> link==', link);
+    // const link = `${API_OAUTH2_URL}/${provider}&redirect_url=${OAUTH2_CALLBACK_URL}` ;
+    const link = `${API_OAUTH2_URL}/${provider}/` ;
+    console.log('----> link==', link);
     window.location.href = link;
   }
 

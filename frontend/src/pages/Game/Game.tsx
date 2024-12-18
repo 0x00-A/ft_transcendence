@@ -2,7 +2,7 @@ import styles from './Game.module.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // import GameMode from './components/GameMode/GameMode';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
@@ -318,7 +318,6 @@ import { useTranslation } from 'react-i18next';
       { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
       { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
     ];
-  
   return (
     <div className={styles.container}>
       {gameState === 'inqueue' && !(gameAccepted && gameInvite) && (

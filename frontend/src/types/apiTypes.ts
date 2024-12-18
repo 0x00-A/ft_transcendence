@@ -29,6 +29,7 @@ export interface Stats {
   losses: number;
   highest_score: number;
   best_rank: number;
+  win_streak: number;
   performanceData: PerformanceDataEntry[];
 }
 
@@ -139,13 +140,23 @@ export interface EditProfileFormData {
 }
 
 export interface GameHistory {
-  id: number
+  id: number;
   start_time: string;
   opponent_username: string;
   opponent_avatar: string;
   result: string;
   score: string;
   game_duration: number;
+}
+
+export interface LastGames {
+  id: number;
+  opponent_avatar: string;
+  opponent_username: string;
+  start_time: string;
+  my_score: number;
+  opponent_score: number;
+  xp_gained: number;
 }
 
 interface FriendProfile {

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const ProfileGamesHistory = () => {
-  
+
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isBtnActive, setBtnActive] = useState(true);
@@ -38,14 +38,12 @@ const ProfileGamesHistory = () => {
       case 'Win':
         return t('Profile.gameHistory.results.win');
       case 'Lose':
-        return t('Profile.gameHistory.results.lose'); 
+        return t('Profile.gameHistory.results.lose');
       default:
-        return result; 
+        return result;
     }
   };
 
-
-    if (error) return <div>{error.message}</div>;
 
   return (
     <div className={css.gameHistoryContainer}>
@@ -68,6 +66,7 @@ const ProfileGamesHistory = () => {
             <IoFilterSharp />
           </button> */}
         </div>
+        {error && <div className="text-red-500">{error.message}</div>}
         { isLoading ?
         <div className="flex w-[100%] h-[80px] items-center justify-between gap-4 p-5 bg-gray-800 rounded-md animate-pulse">
           <div className="flex flex-col w-1/6">
@@ -93,7 +92,7 @@ const ProfileGamesHistory = () => {
         </div> :
           <div className={css.gamesList}>
             <div className={css.tableHeader}>
-              {gameHistoryFields.map((field, index) => (
+              { gameHistoryFields.map((field, index) => (
                 <span key={index} className={css.headerField}>{field}</span>
               ))}
             </div>
@@ -117,7 +116,7 @@ const ProfileGamesHistory = () => {
                     <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{getResultTranslation(game.result)}</span>
                     <span className={css.historyField}>{game.score}</span>
                     {/* <span className={css.historyField}>One to One</span> */}
-                    <span className={css.historyField}>{game.game_duration}</span>
+                    <span className={css.historyField}>{Number.isInteger(game.game_duration) ? game.game_duration : game.game_duration.toFixed(2)}min</span>
                     <button className={css.inviteBtn}>{t('Profile.gameHistory.invite')}</button>
                 </div>
             ))}
