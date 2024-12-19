@@ -13,7 +13,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 
-const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, username:string | undefined}) => {
+
+
+const UserProfileGamesHistory = ({username}:{username:string | undefined}) => {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -96,11 +98,10 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
             </div>
             { playedGames?.length == 0 && <div className={css.noGames}>
                 <span className={css.noHistoryTitle}>{t('Profile.gameHistory.noGames.message')}</span>
-                { !isOtherUser ?
                 <button className={css.playBtn} onClick={() => navigate('/play')}>
                     <IoGameControllerOutline className={css.playIcon}/>
                     <span>{t('Profile.gameHistory.noGames.playNow')}</span>
-                </button> : null }
+                </button>
             </div>}
             { playedGames!.length > 0 && playedGames?.map((game: LastGames) => (
                 <div key={game.id} className={css.tableRow}>
@@ -124,4 +125,4 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
   )
 }
 
-export default ProfileGamesHistory
+export default UserProfileGamesHistory

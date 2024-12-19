@@ -158,3 +158,4 @@ class UserSerializer(serializers.ModelSerializer):
     #     last_5_games = all_games[:5]
 
     #     return GameSerializer(last_5_games, many=True).data
+

@@ -41,7 +41,11 @@ export const API_ENABLE_2FA_REQUEST_URL = "/security/enable-2fa-request/";
 export const API_ENABLE_2FA_URL = "/security/enable-2fa/";
 export const API_DISABLE_2FA_URL = "/security/disable-2fa/";
 
+export const API_GET_DASHBOARD_FRIENDS_URL = "/dashboard-friends/";
+export const API_GET_ONLINE_FRIENDS_URL = "/profile-online-friends"
+export const API_GET_OFFLINE_FRIENDS_URL = "/profile-offline-friends"
 export const API_GET_FRIENDS_URL = "/friends";
+export const API_GET_MUTUAL_FRIENDS_URL = "/friends/mutual";
 
 export const API_CONFIRM_LOGIN_URL = "/auth/confirm_login/";
 
@@ -53,6 +57,8 @@ export const API_GET_ACHIEVEMENTS_URL = "/achievements";
 
 export const API_GET_PLAYED_GAMES_URL = "/matchmaker/played-games";
 
-export const API_GET_LEADERBOARD_URL = '/dashboard-leaderboard';
+export const API_GET_DASHBOARD_LEADERBOARD_URL = '/dashboard-leaderboard';
 
 export const API_GET_LAST_GAMES_URL = '/matchmaker/last-games';
+
+export const API_GET_LEADER_BOARD_URL = '/leaderboard';
