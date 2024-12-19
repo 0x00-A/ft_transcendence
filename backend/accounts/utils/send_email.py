@@ -74,14 +74,14 @@ def send_oauth2_welcome(user, choice:str):
     email.attach_alternative(html_message, 'text/html')
     email.send()
 
-    target_language = 'es'
+    target_language = user.profile.preferred_language or 'en'
     # target_language = receiver.preferred_language
     try:
         translated_message = translate_text(f"Hello, {user.username}! Please set a password so you can edit your profile and sign in using your username and password (enter to your profile and click in Edit Profile in the top)." ,target_language)
         translated_title = translate_text('Welcome',target_language)
     except Exception as e:
-        translated_message = translate_text(f"Hello, {user.username}! Please set a password so you can edit your profile and sign in using your username and password (enter to your profile and click in Edit Profile in the top)." ,target_language)
-        translated_title = translate_text('Welcome',target_language)
+        translated_message = f"Hello, {user.username}! Please set a password so you can edit your profile and sign in using your username and password (enter to your profile and click in Edit Profile in the top)."
+        translated_title = "Welcome"
     notification = Notification.objects.create(user=user, title=translated_title,
                 message=translated_message)
     notification.save()
