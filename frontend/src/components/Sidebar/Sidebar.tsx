@@ -101,6 +101,25 @@ export default function Sidebar() {
   }, []);
 
 
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        const response = await apiClient.get('/get-language/');
+        console.log("Language fetched successfully:", response.data.language);
+
+        const lang = response.data.language || 'en';
+        setSelectedLang(lang);
+        i18n.changeLanguage(lang);
+      } catch (error) {
+        console.error("Error fetching language:", error);
+        setSelectedLang('en');
+        i18n.changeLanguage('en');
+      }
+    };
+
+    fetchLanguage();
+  }, [i18n]);
+
     const changeLanguage = async (lang: string) => {
       try {
         const response = await apiClient.post(`/set-language/${lang}/`);

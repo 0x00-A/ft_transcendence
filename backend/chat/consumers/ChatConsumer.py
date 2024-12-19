@@ -158,14 +158,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_user = User.objects.get(id=sender_id)
         receiver_user = User.objects.get(id=receiver_id)
 
-        target_language = 'es'
+        target_language = receiver_user.profile.preferred_language or 'en'
         # target_language = receiver.preferred_language
         try:
             translated_message = translate_text(f"{sender_user.username} sent you a message: {message}",target_language)
-            translated_title = translate_text(f"New Message",target_language)
+            translated_title = translate_text("New Message",target_language)
         except Exception as e:
-            translated_message = translate_text(f"{sender_user.username} sent you a message: {message}",target_language)
-            translated_title = translate_text(f"New Message",target_language)
+            translated_message = f"{sender_user.username} sent you a message: {message}"
+            translated_title = "New Message"
+
         notification = Notification.objects.create(
             user=receiver_user,
             link=f"/chat",

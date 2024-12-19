@@ -10,10 +10,12 @@ class TranslateResponseMiddleware(MiddlewareMixin):
 
                 # target_language = request.user.language_preference if request.user.is_authenticated else 'es'
                 if 'message' in data:
+                    # target_language = 'ar'
+                    target_language = request.user.profile.preferred_language or 'en'
                     print("/*/*/*/*/*/*/*/*/*/*")
                     print(data)
+                    print("lang: " + target_language)
                     print("/*/*/*/*/*/*/*/*/*/*")
-                    target_language = 'ar'
                     data['message'] = translate_text(data['message'], target_language)
 
                 response.content = json.dumps(data)
@@ -21,3 +23,11 @@ class TranslateResponseMiddleware(MiddlewareMixin):
                 print(f"Translation Middleware Error: {e}")
 
         return response
+    # def get_target_language(self, request):
+    #     if request.user.is_authenticated:
+    #         return getattr(request.user, 'profile', {}).get('preferred_language', 'en')
+    #     return 'en'
+    # def get_target_language(self, request):
+    #     return request.user.profile.preferred_language or 'en'
+
+
