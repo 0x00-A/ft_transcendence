@@ -4,10 +4,6 @@ from django.conf import settings
 def translate_text(text, target_language):
     api_key = settings.API_KEY
     url = "https://api-free.deepl.com/v2/translate"
-    print("******************************")
-    print(text)
-    print(target_language)
-    print("******************************")
     params = {
         "auth_key": api_key,
         "text": text,

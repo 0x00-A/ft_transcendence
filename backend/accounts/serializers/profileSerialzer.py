@@ -17,7 +17,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['id', 'username', 'avatar', 'level', 'score', 'played_games',
                   'wins', 'losses', 'win_rate', 'lose_rate',
-                  'rank', 'badge', 'stats', 'is_online', 'blocked_user_name']
+                  'rank', 'badge', 'stats', 'is_online', 'blocked_user_name', 'preferred_language']
 
     def get_avatar(self, obj):
         return f"{SERVER_URL}{MEDIA_URL}{obj.avatar}"

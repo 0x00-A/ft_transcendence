@@ -37,7 +37,7 @@ export default function Sidebar() {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showLangPopup, setShowLangPopup] = useState(false);
-  const [selectedLang, setSelectedLang] = useState('English');
+  const [selectedLang, setSelectedLang] = useState('en');
   const sideBarRef = useRef(null);
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
     // Ref to track the language switcher container
@@ -101,14 +101,21 @@ export default function Sidebar() {
   }, []);
 
 
-  console.log("showlangPopup: ", showLangPopup)
-  const changeLanguage = (lang: string) => {
-    setSelectedLang(lang);
-    i18n.changeLanguage(lang);
-    localStorage.setItem('lang', lang);
-    console.log(">>showlangPopup: ", showLangPopup)
-    setShowLangPopup(false);
-  };
+    const changeLanguage = async (lang: string) => {
+      try {
+        const response = await apiClient.post(`/set-language/${lang}/`);
+    
+        setSelectedLang(response.data.language);
+        i18n.changeLanguage(response.data.language);
+    
+        setShowLangPopup(false);
+    
+        console.log("Language updated successfully:", response.data.language);
+      } catch (error) {
+        console.error("Error updating language:", error);
+      }
+    };
+    
 
   return (
     <aside className={`${css.sidebar}`} ref={sideBarRef}>
@@ -125,7 +132,7 @@ export default function Sidebar() {
             ref={languageSwitcherRef}
           >
             <Flag
-              code={selectedLang === 'en' ? 'US' : selectedLang === 'es' ? 'ES' : 'MA'}
+              code={selectedLang === 'es' ? 'ES' : selectedLang === 'zgh' ? 'MA' : 'US'}
               width={32}
               height={32}
             />

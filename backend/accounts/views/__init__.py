@@ -34,6 +34,8 @@ from .profile import ProfileApiView
 from .profile import AllUsersView
 from .profile import UserDetailView
 from .profile import OnlineUsersView
+from .profile import SetLanguageView
+from .profile import GetLanguageView
 
 
 from .accounts import LeaderBoardView

@@ -60,7 +60,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     const handleDisable2fa = async () => {
         try{
             const response = await apiClient.post(API_DISABLE_2FA_URL, {password: confiPass2fa})
-            toast.success(t(`${response.data.message}`));
+            toast.success(response.data.message);
             setEditProfile(false);
             refetch();
         }
@@ -87,7 +87,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
         }
         try{
             const response = await apiClient.post(API_ENABLE_2FA_URL, {otp: otp})
-            toast.success(t(`${response.data.message}`));
+            toast.success(response.data.message);
             setEditProfile(false);
             refetch();
         }
@@ -123,7 +123,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
     };
     useEffect(() => {
         if (mutation.isSuccess) {
-            toast.success(t(`${mutation.data?.data?.message}`));
+            toast.success(mutation.data?.data?.message);
             setEditProfile(false);
         }
     }, [mutation.isSuccess]);

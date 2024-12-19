@@ -129,8 +129,8 @@ const SearchUsers: React.FC = () => {
       refetch();
       setShowResults(false);
       setSearchTerm('');
-    } catch  {
-      toast.error(t('errorsFriends.action'));
+    }  catch (error: any) {
+      toast.error(error.message || t('errorsFriends.action'));
     }
   };
 

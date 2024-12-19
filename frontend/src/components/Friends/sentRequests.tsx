@@ -34,8 +34,8 @@ const SentRequests: React.FC = () => {
     try {
       await apiCancelFriendRequest(username);
       refetch();
-    } catch {
-      toast.error(t('errorsFriends.cancel'));
+    } catch (error: any) {
+      toast.error(error.message || t('errorsFriends.cancel'));
     }
   };
 
