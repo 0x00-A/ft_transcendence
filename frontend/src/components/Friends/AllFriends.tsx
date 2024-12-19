@@ -78,16 +78,16 @@ const AllFriends: React.FC = () => {
     try {
       await apiBlockRequest(username);
       refetch();
-    } catch {
-      toast.error(t('errorsFriends.block'))
+    } catch (error: any) {
+      toast.error(error.message || t('errorsFriends.block'));
     }
   };
   const removeFriend = async (username: string) => {
     try {
       await apiRemoveFriend(username);
       refetch();
-    } catch {
-      toast.error(t('errorsFriends.remove'))
+    } catch (error: any) {
+      toast.error(error.message || t('errorsFriends.remove'));
     }
   };
 

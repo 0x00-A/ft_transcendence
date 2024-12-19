@@ -3,6 +3,8 @@ from django.dispatch import receiver
 from .models import Match, Tournament
 from accounts.consumers import NotificationConsumer
 from accounts.models import User, Notification
+from accounts.utils import translate_text
+
 
 # @receiver(post_save, sender=Match)
 # def check_round_completion(sender, instance, **kwargs):
@@ -32,13 +34,23 @@ def notify_players_on_match_creation(sender, instance, created, **kwargs):
         #     "content": f"You are scheduled for the next round in Tournament {instance.tournament.name}!",
         #     "match_id": instance.match_id,
         # }
+                        # set notification
+        target_language = 'es'
+        # target_language = receiver.preferred_language
+        try:
+            translated_message = translate_text(f"You are scheduled for the next round in Tournament {instance.tournament.name}!",target_language)
+            translated_title = translate_text(f"Match Notification",target_language)
+        except Exception as e:
+            translated_message = f"You are scheduled for the next round in Tournament {instance.tournament.name}!"
+            translated_title = translate_text(f"Match Notification",target_language)
         notification = Notification.objects.create(
-            user=player1, title='Match Notification', message=f"You are scheduled for the next round in Tournament {instance.tournament.name}!")
+            user=player1, title=translated_title, message=translated_message)
         notification.save()
         NotificationConsumer.send_notification_to_user(
             player1.id, notification)
+        
         notification = Notification.objects.create(
-            user=player2, title='Match Notification', message=f"You are scheduled for the next round in Tournament {instance.tournament.name}!")
+            user=player2, title=translated_title, message=translated_message)
         notification.save()
         NotificationConsumer.send_notification_to_user(
             player2.id, notification)

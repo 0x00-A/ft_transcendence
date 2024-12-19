@@ -50,7 +50,7 @@ class UpdateEmailRequest(APIView):
             pass
         send_verification_email(user, request.data['email'])
         print('api ==> change email: Email sent successfully')
-        return Response({'message': 'Profile.EditInfosProfile.toasts.emailVerificationSent'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Verification email sent successfully'}, status=status.HTTP_200_OK)
 
 
 class UpdateEmailView(APIView):
@@ -101,7 +101,7 @@ class UpdatePasswordView(APIView):
             validate_password(request.data['new_password'], user)
             user.set_password(request.data['new_password'])
             user.save()
-            return Response({'message': 'backend.passwordChanged'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
         except ValidationError as exc:
             return Response({'password': exc.messages}, status=status.HTTP_400_BAD_REQUEST)
 

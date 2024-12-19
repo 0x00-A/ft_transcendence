@@ -80,7 +80,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                 email: emailValue,
                 // redirect_url: REDIRECT_URL_UPDATE_EMAIL
             });
-            toast.success(t(`${response.data.message}`));
+            toast.success(response.data.message);
             setEditProfile(false);
         }
         catch (error) {

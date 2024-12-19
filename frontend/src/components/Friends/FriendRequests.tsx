@@ -43,18 +43,19 @@ const FriendRequests: React.FC = () => {
     try {
       await apiAcceptFriendRequest(username);
       refetch();
-    } catch  {
-      toast.error(t('errorsFriends.request'));
+    } catch (error: any) {
+      toast.error(error.message || t('errorsFriends.request'));
     }
   };
-
-
+  
+  
   const rejectFriendRequest = async (username: string) => {
     try {
-      await apiRejectFriendRequest(username);
+      const response = await apiRejectFriendRequest(username);
+      toast.success(response.message);
       refetch();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to reject friend request');
+      toast.error(error.message || t('errorsFriends.reject'));
     }
   };
 

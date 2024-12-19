@@ -38,20 +38,17 @@ const BlockedList: React.FC = () => {
 
   const unBlockRequest = async (username: string) => {
     try {
-      await apiUnBlockRequest(username);
+      const response = await apiUnBlockRequest(username);
+      toast.success(response.message);
       refetch();
-    } catch {
-      toast.error(t('errorsFriends.unblock'))
+    } catch (error: any) {
+      toast.error(error.message || t('errorsFriends.unblock'));
     }
   };
 
   const filteredUsers = blockedUsers.filter((user) =>
     user.blocked.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  if (error) {
-    return <p className={css.error}>Error fetching blocked users: {error.message}</p>;
-  }
 
   const renderNoBlockedUsers = () => (
     <div className={css.emptyState}>

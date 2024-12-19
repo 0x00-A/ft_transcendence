@@ -8,7 +8,6 @@
         "gameAddress": "Game successfully created"
     },
     "backend": {
-        "passwordChanged": "Password changed successfully"
     },
     "errorsFriends": {
         "unblock": "Failed to unblock friend try again",
