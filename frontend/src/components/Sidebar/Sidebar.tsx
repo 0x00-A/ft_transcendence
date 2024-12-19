@@ -15,7 +15,7 @@ import {
   // SIDEBAR_RESIZE_WIDTH,
 } from '../../config/constants';
 import apiClient from '../../api/apiClient';
-import { API_LOGOUT_URL } from '@/api/apiConfig';
+import { API_GET_LANGUAGE_URL, API_LOGOUT_URL, API_POST_SET_LANGUAGE_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SideBarTooltip from './SideBarTooltip';
@@ -104,7 +104,7 @@ export default function Sidebar() {
   useEffect(() => {
     const fetchLanguage = async () => {
       try {
-        const response = await apiClient.get('/get-language/');
+        const response = await apiClient.get(API_GET_LANGUAGE_URL);
         console.log("Language fetched successfully:", response.data.language);
 
         const lang = response.data.language || 'en';
@@ -122,7 +122,7 @@ export default function Sidebar() {
 
     const changeLanguage = async (lang: string) => {
       try {
-        const response = await apiClient.post(`/set-language/${lang}/`);
+        const response = await apiClient.post(`${API_POST_SET_LANGUAGE_URL}${lang}/`);
     
         setSelectedLang(response.data.language);
         i18n.changeLanguage(response.data.language);
@@ -151,6 +151,7 @@ export default function Sidebar() {
             ref={languageSwitcherRef}
           >
             <Flag
+              className={css.flagsSelected}
               code={selectedLang === 'es' ? 'ES' : selectedLang === 'zgh' ? 'MA' : 'US'}
               width={32}
               height={32}
