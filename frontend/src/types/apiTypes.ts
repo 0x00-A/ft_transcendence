@@ -234,3 +234,26 @@ export interface LeaderBoard {
     lose_rate: number;
     score: number;
 }
+
+export interface OtherProfile {
+  avatar: string;
+  level: number;
+  played_games: number;
+  wins: number;
+  loses: number;
+  badge: Badge;
+  score: number;
+  rank: number;
+}
+
+export interface OtherUser {
+  username: string;
+  first_name: string;
+  last_name: string;
+  profile: OtherProfile;
+
+  friend_status: string;
+  is_password_set: boolean;
+  is2fa_active: boolean;
+  friend_request_status?: "accepted" | "pending" | "Add Friend" | "cancel";
+}

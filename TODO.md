@@ -38,6 +38,8 @@ MAHDI:
  - [ ] send notification if the player unlock new level or if unlock new bage
  - [ ] do the tournament games and solo games
  - [ ] email verification in edit profile
+ - [ ] You don't play any games yet
+ - [ ] friends dashboard and offline
 MAHDI NOTES:
    - if a user sign up with an email and not verify his email, and next he is sign up using google (oauth2) with same email
       i mark the account as verified because google has already verified the email, and user can login with oauth2 or with his username and password

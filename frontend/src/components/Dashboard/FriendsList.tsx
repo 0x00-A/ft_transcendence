@@ -1,11 +1,11 @@
 import css from './FriendsList.module.css';
 import { useGetData } from '@/api/apiHooks';
-import Loading from '../Friends/Loading';
 import { Friends } from '@/types/apiTypes';
-import { API_GET_FRIENDS_URL } from '@/api/apiConfig';
+import { API_GET_DASHBOARD_FRIENDS_URL } from '@/api/apiConfig';
 import { useTranslation } from 'react-i18next';
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
+import FriendSkeleton from '../Friends/FriendSkeleton';
 
 // const friendsData = [
 //   { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
@@ -15,20 +15,20 @@ import { useNavigate } from 'react-router-dom';
 //   { name: 'aka', level: 5.5, status: 'offline', avatar: 'https://picsum.photos/206' },
 // ];
 
-interface FriendProfile {
-    avatar: string;
-    is_online: boolean;
-    level: number;
-}
+// interface FriendProfile {
+//     avatar: string;
+//     is_online: boolean;
+//     level: number;
+// }
 
-interface Friend {
-  id: string;
-  username: string;
-  profile: FriendProfile;
-}
+// interface Friend {
+//   id: string;
+//   username: string;
+//   profile: FriendProfile;
+// }
 
-const FriendsList = () => {
-  const { data: friendsData, isLoading, error } = useGetData<Friends[]>(API_GET_FRIENDS_URL);
+const FriendsList = ({username}:{username:string | undefined}) => {
+  const { data: friendsData, isLoading, error } = useGetData<Friends[]>(`${API_GET_DASHBOARD_FRIENDS_URL}${username}`);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -39,8 +39,8 @@ const FriendsList = () => {
           <a href="/friends" className={css.viewMore}>View more</a>
         </div>
 
+        { isLoading ? <FriendSkeleton /> :
         <div className={css.friendList}>
-          { isLoading && <Loading/> }
           { error && <p>{error.message}</p> }
           { friendsData?.length == 0 && <div className={css.noFriends}>
               <span>{t('Profile.friends.errors.noFriends')}</span>
@@ -50,7 +50,7 @@ const FriendsList = () => {
                   <span>{t('Profile.friends.addFriends.button')}</span>
               </button>
             </div> }
-          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend: Friend, index: number) => (
+          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend: Friends, index: number) => (
             <div className={css.friendItem} key={index}>
               <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
               <div className={css.friendInfo}>
@@ -63,7 +63,7 @@ const FriendsList = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div>}
 
         {/* <button className={css.inviteButton}>Invite your friends ➤</button> */}
       </>

@@ -13,3 +13,7 @@ from .friendRequest import RemoveFriendView
 from .BlockRelationship import BlockUserView
 from .BlockRelationship import BlockedUsersView
 from .BlockRelationship import UnblockUserView
+
+from .userFriends import DashboardFriendsView
+from .userFriends import GetProfileOnlineFriends
+from .userFriends import GetProfileOfflineFriends

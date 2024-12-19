@@ -1,7 +1,7 @@
 import css from './Leaderboard.module.css';
 // API
 import { useGetData } from '@/api/apiHooks';
-import { API_GET_LEADERBOARD_URL } from '@/api/apiConfig';
+import { API_GET_DASHBOARD_LEADERBOARD_URL } from '@/api/apiConfig';
 // Types
 import { LeaderBoard } from '@/types/apiTypes';
 
@@ -16,7 +16,7 @@ import { LeaderBoard } from '@/types/apiTypes';
 
 const Leaderboard = () => {
 
-  const { data: leaderboardData, isLoading, error } = useGetData<LeaderBoard[]>(API_GET_LEADERBOARD_URL);
+  const { data: leaderboardData, isLoading, error } = useGetData<LeaderBoard[]>(API_GET_DASHBOARD_LEADERBOARD_URL);
 
   return (
       <>
