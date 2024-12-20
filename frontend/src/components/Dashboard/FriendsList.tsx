@@ -4,7 +4,7 @@ import Loading from '../Friends/Loading';
 import { Friends } from '@/types/apiTypes';
 import { API_GET_FRIENDS_URL } from '@/api/apiConfig';
 import { useTranslation } from 'react-i18next';
-import { HiOutlineUserAdd } from "react-icons/hi";
+import { UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // const friendsData = [
@@ -46,11 +46,11 @@ const FriendsList = () => {
               <span>{t('Profile.friends.errors.noFriends')}</span>
               <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
                   {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
-                  <HiOutlineUserAdd size={"2.2rem"}/>
+                  <UserPlus />
                   <span>{t('Profile.friends.addFriends.button')}</span>
               </button>
             </div> }
-          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend: Friend, index: number) => (
+          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend, index) => (
             <div className={css.friendItem} key={index}>
               <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
               <div className={css.friendInfo}>

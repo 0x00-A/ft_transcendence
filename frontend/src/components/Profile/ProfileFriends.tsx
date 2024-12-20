@@ -2,7 +2,7 @@
 import { useState } from 'react';
 // Styles
 import css from './ProfileFriends.module.css';
-import { FaUserFriends } from "react-icons/fa";
+import { Users } from 'lucide-react';
 import { HiOutlineUserAdd } from "react-icons/hi";
 // API
 import { useGetData } from "@/api/apiHooks";
@@ -28,7 +28,7 @@ const ProfileFriends = () => {
     <div className={css.profileFriendsContainer}>
         <div className={css.friendsHeader}>
             <div className={css.friendsTitle}>
-                <FaUserFriends className={css.friendsIcon}/>
+                <Users size={30} color='#f8c25c'/>
                 <h3>{t('Profile.friends.title')}</h3>
             </div>
             <button className={css.viewMore} onClick={() => navigate('/friends')}>{t('Profile.friends.viewMore')}</button>
