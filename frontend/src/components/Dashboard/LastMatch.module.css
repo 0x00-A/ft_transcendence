@@ -37,10 +37,16 @@
   }
 
   .viewMore {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #B0B9D0;
     text-decoration: none;
+    transition: color 0.3s;
   }
+  
+  .viewMore:hover {
+    color: #7e8597;
+  }
+  
 
   .weekLabel {
     font-size: 1.5rem;
@@ -152,11 +158,12 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    border-radius: 20px;
     height: 100px;
-    padding: 5px 15px;
     color: #F8F3E3;
-    background-color: #1E2A3C;
+}
+
+.noGames span {
+  text-align: center;
 }
 
 .playBtn {
@@ -164,9 +171,9 @@
     border-radius: 8px;
     display: flex;
     align-items: center;
-    width: 120px;
     justify-content: space-between;
     border: none;
+    gap: 1rem;
     background-color: var(--selected-color); ;
     cursor: pointer;
     transition: all 0.2s ease;

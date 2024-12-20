@@ -19,7 +19,7 @@
 }
 
 .viewMore:hover {
-  color: #FFFFFF;
+  color: #7e8597;
 }
 
 .friendList {
@@ -163,11 +163,8 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    border-radius: 20px;
     height: 100px;
-    padding: 5px 15px;
     color: #F8F3E3;
-    background-color: #1E2A3C;
 }
 
 .addFriendsBtn {
@@ -175,8 +172,8 @@
     border-radius: 8px;
     display: flex;
     align-items: center;
-    width: 130px;
     justify-content: space-between;
+    gap: 1rem;
     border: none;
     background-color: var(--selected-color); ;
     cursor: pointer;

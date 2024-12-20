@@ -66,16 +66,13 @@ const ProfileAchievements = ({username}:{username:string | undefined}) => {
                 achievements && achievements.slice(start, end).map((achievement: UserAchievements, index: number) => (
                 <div key={index} className={`${!achievement.is_unlocked ? css.lockedAchievCard : ''} ${css.achievCard}`}>
                     <div className={css.achievTitle}>
-                        <img src={achievement.achievement.image} className={css.achievImg} alt="" />
+                        <img src="/public/pong.png" className={css.achievImg} alt="" />
+                        {/* <img src={achievement.achievement.image} className={css.achievImg} alt="" /> */}
                         <h4>{achievement.achievement.name}</h4>
                     </div>
                     <div className={css.achievDescription}>
-                        <p>{achievement.achievement.description}</p>
+                        <p className={css.description}>{achievement.achievement.description}</p>
                         <p className={css.progress}>{achievement.progress[achievement.achievement.condition_name] ?? 0} / {achievement.achievement.condition[achievement.achievement.condition_name]}</p>
-                    </div>
-                    <div className={css.achievProgress}>
-                        { achievement.is_unlocked ? <HiOutlineLockOpen /> : <HiOutlineLockClosed /> }
-                        { achievement.is_unlocked ? <p>{achievement.unlocked_at.split("T")[0]}</p> : '' }
                     </div>
                 </div>
             ))}

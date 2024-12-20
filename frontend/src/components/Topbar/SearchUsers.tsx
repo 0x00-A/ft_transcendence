@@ -170,7 +170,6 @@ const SearchUsers: React.FC = () => {
       </div>
       {showResults && (
         <div className={css.results}>
-          <div>
             {usersError ?
                 <div className={css.errorContainer}>
                   <AlertTriangle size={48} color="red" strokeWidth={1.5} />
@@ -285,7 +284,6 @@ const SearchUsers: React.FC = () => {
               )
             )
             }
-          </div>
         </div>
       )}
     </div>

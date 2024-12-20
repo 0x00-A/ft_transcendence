@@ -7,9 +7,7 @@ class TranslateResponseMiddleware(MiddlewareMixin):
         if response['Content-Type'] == 'application/json':
             try:
                 data = json.loads(response.content)
-
                 if 'message' in data:
-                    # target_language = 'ar'
                     target_language = request.user.profile.preferred_language or 'en'
                     print("/*/*/*/*/*/*/*/*/*/*")
                     print(data)
@@ -17,14 +15,8 @@ class TranslateResponseMiddleware(MiddlewareMixin):
                     print("/*/*/*/*/*/*/*/*/*/*")
                     data['message'] = translate_text(data['message'], target_language)
                 elif 'error' in data:
-                    # target_language = 'ar'
                     target_language = request.user.profile.preferred_language or 'en'
-                    print("/*/*/*/*/*/*/*/*/*/*")
-                    print(data)
-                    print("lang: " + target_language)
-                    print("/*/*/*/*/*/*/*/*/*/*")
                     data['message'] = translate_text(data['message'], target_language)
-
                 response.content = json.dumps(data)
             except Exception as e:
                 print(f"Translation Middleware Error: {e}")

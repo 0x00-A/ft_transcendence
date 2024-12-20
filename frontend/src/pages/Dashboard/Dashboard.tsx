@@ -18,12 +18,10 @@ const Dashboard = () => {
     <main className={css.container}>
       <div className={css.heroSection}>
         <div className={css.welcome}><Welcome /></div>
-        {/* <div className={css.other}></div> */}
-        <div className={css.leaderboard}><Leaderboard /></div>
+        <div className={css.competitiveOverview}><CompetitiveOverview /></div>
       </div>
       <div className={css.mainContent}>
-        <div className={css.competitiveOverview}><CompetitiveOverview /></div>
-        {/* <div className={css.achievements}><Achievements /></div> */}
+        <div className={css.leaderboard}><Leaderboard /></div>
         <div className={css.LineChart}> <LineChartComponent /> </div>
       </div>
       <div className={css.lastSection}>
