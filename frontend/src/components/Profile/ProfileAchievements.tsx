@@ -7,8 +7,6 @@ import { useGetData } from '@/api/apiHooks';
 import css from './ProfileAchievements.module.css'
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
-import { HiOutlineLockOpen } from "react-icons/hi2";
-import { HiOutlineLockClosed } from "react-icons/hi2";
 // Types
 import { UserAchievements } from '@/types/apiTypes';
 import { Award } from 'lucide-react';
