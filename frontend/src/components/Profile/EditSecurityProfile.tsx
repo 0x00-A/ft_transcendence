@@ -32,8 +32,9 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const [showDownloadPopup, setShowDownloadPopup] = useState(false);
     const [selectedOS, setSelectedOS] = useState<string>('');
-    const androidQrCode = "path-to-android-qr-code";
-    const iosQrCode = "path-to-ios-qr-code";
+    const androidQrCode = "/qrcodes/android-qr.png"; 
+    const iosQrCode = "/qrcodes/android-qr.png"; 
+
     const { t } = useTranslation();
 
 
@@ -213,7 +214,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                             {!qrcode ? (
                                 <button onClick={handleGetQrcode}>{t('Profile.EditSecurity.twoFactorAuth.buttons.getQrCode')}</button>
                             ) : (
-                                <img src={qrcode} alt="QR Code" />
+                                <img className={css.qrCode} src={qrcode} alt="QR Code" />
                             )}
                         </div>
                     </div>
@@ -255,13 +256,26 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                         <div className={css.popup}>
                             <h2>{t('Profile.EditSecurity.downloadAppPopup.title')}</h2>
                             <div className={css.osButtons}>
-                                <button onClick={() => handleSelectOS("android")}>{t('Profile.EditSecurity.downloadAppPopup.osButtons.android')}</button>
-                                <button onClick={() => handleSelectOS("ios")}>{t('Profile.EditSecurity.downloadAppPopup.osButtons.ios')}</button>
+                                <button
+                                    onClick={() => handleSelectOS("android")}
+                                    className={`${selectedOS === "android" ? css.selected : ""}`}
+                                >
+                                    {t('Profile.EditSecurity.downloadAppPopup.osButtons.android')}
+                                </button>
+                                <button
+                                    onClick={() => handleSelectOS("ios")}
+                                    className={`${selectedOS === "ios" ? css.selected : ""}`}
+                                >
+                                    {t('Profile.EditSecurity.downloadAppPopup.osButtons.ios')}
+                                </button>
                             </div>
                             {selectedOS && (
-                                <div className={css.qrCodeContainer}>
+                                <div className={css.qrCodeContainerApp}>
                                     <p>{t('Profile.EditSecurity.downloadAppPopup.qrCodeInstructions')}</p>
-                                    <img src={selectedOS === "android" ? androidQrCode : iosQrCode} alt={`${selectedOS} QR Code`} />
+                                    <img 
+                                        src={selectedOS === "android" ? androidQrCode : iosQrCode} 
+                                        alt={`${selectedOS} QR Code`} 
+                                    />
                                 </div>
                             )}
                             <button className={css.closePopup} onClick={handleClosePopup}>{t('Profile.EditSecurity.downloadAppPopup.buttons.close')}</button>
