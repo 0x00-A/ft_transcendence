@@ -165,7 +165,8 @@
 }
 
 .description {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    color: #72767d;
 }
 
 .inputBtn {
@@ -215,7 +216,7 @@
     background-color: #0E1725;
     border: 1px solid #F8C25C;
     padding: 10px 15px;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     border-radius: 8px;
     cursor: pointer;
     color: #D1D3D4;
