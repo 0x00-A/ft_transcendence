@@ -136,7 +136,7 @@
 .playButton {
   position: absolute;
   top: 0;
-  left: 100%;
+  left:  calc(100% - 30px);
   height: 100%;
   z-index: 1;
   background: #ff7f5096;
