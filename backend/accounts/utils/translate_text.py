@@ -18,4 +18,3 @@ def translate_text(text, target_language):
     else:
         raise Exception(f"Error: {response.status_code}, {response.text}")
 
-# Example usage
