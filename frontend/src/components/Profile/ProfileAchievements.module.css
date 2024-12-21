@@ -56,11 +56,12 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #F8C25C;
     border-radius: 10px;
     background-color: #283245;
     transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06);
     flex: 1;
+    color: var(--text-color);
 }
 
 .achievCard:hover {
@@ -104,8 +105,8 @@
 }
 
 .achievImg {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
 }
 
 .achievDescription {
