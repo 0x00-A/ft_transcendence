@@ -24,13 +24,14 @@
 
 .editProfileContainer {
     position: absolute;
+    padding: 10px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #0E1725;
     border-radius: 25px;
     width: 600px;
-    height: 1000px;
+    height: 800px;
     display: flex;
     flex-direction: column;
 }
@@ -44,7 +45,7 @@
     background-color: #1E2533;
     border-radius: 25px;
     width: 450px;
-    height: 600px;
+    height: 500px;
     display: flex;
     flex-direction: column;
 }
@@ -70,8 +71,8 @@
 }
 
 .exitBtn {
+    height: 40px;
     align-self: self-end;
-    padding: 20px;
     border: none;
     font-size: 4rem;
     cursor: pointer;
@@ -82,13 +83,15 @@
 }
 
 .editProfileForm {
+    padding: 3rem;
+    padding-top: 0;
     align-self: center;
-    width: 90%;
-    height: 85%;
+    width: 100%;
+    height: calc(100% - 40px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4rem;
+    gap: 2rem;
 }
 
 .buttonsGrp {
@@ -174,7 +177,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
     padding: 20px;
 }
 
