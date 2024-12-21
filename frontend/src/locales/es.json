@@ -283,7 +283,14 @@
             "players": "Jugadores:",
             "status": "Estado:",
             "started": "Iniciado:",
-            "noTournament": "¡No te has unido a ningún torneo todavía!"
+            "noTournament": "¡No te has unido a ningún torneo todavía!",
+            "statusGame": {
+                "waiting": "espera",
+                "ongoing": "en curso",
+                "ended": "terminó",
+                "aborted": "abortada",
+                "unknown": "espera"
+            }
         },
         "openTournaments": {
             "title": "Torneos Abiertos",
@@ -574,5 +581,25 @@
                 "emailVerificationSent": "Correo de verificación enviado exitosamente"
             }
         }
+    },
+    "dashboard": {
+        "overview": {
+            "title": "Resumen",
+            "buttons": {
+                "singleBtn": "Juego Individual",
+                "tournamentsBtn": "Torneos"
+            },
+            "fields": {
+                "games": "JUEGOS",
+                "score": "PUNTUACIÓN",
+                "highestScore": "Puntuación Más Alta",
+                "longestStreak": "Racha Más Larga",
+                "bestRank": "Mejor Rango",
+                "winRate": "Tasa de Victorias",
+                "wins": "VICTORIAS",
+                "loses": "DERROTAS"
+            }
+        }
     }
+    
 }

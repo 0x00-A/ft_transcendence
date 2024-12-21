@@ -283,7 +283,14 @@
             "players": "Players:",
             "status": "Status:",
             "started": "Started:",
-            "noTournament": "You havn't joined any tournaments yet!."
+            "noTournament": "You havn't joined any tournaments yet!.",
+            "statusGame": {
+                "waiting": "waiting",
+                "ongoing": "ongoing",
+                "ended": "ended",
+                "aborted": "aborted",
+                "unknown": "waiting"
+            }
         },
         "openTournaments": {
             "title": "Open Tournaments",
@@ -592,5 +599,26 @@
                 "emailVerificationSent": "Verification email sent successfully"
             }
         }
+    },
+    "dashboard": {
+        "overview": {
+            "title": "Overview",
+            "buttons": {
+                "singleBtn": "Single Game",
+                "tournamentsBtn": "Tournaments"
+            },
+            "fields": {
+                "games": "GAMES",
+                "score": "SCORE",
+                "highestScore": "Highest Score",
+                "longestStreak": "Longest Streak",
+                "bestRank": "Best Rank",
+                "winRate": "Win Rate",
+                "wins": "WINS",
+                "loses": "LOSES"
+            }
+
+        }
     }
+
 }

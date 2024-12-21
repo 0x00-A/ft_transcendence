@@ -17,4 +17,3 @@ def translate_text(text, target_language):
         return response.json()["translations"][0]["text"]
     else:
         raise Exception(f"Error: {response.status_code}, {response.text}")
-

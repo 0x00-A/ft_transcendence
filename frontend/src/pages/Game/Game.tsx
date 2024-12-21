@@ -27,6 +27,7 @@ import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
+// import { getTranslatedStatus } from '@/utils/getTranslatedStatus';
 
 
 
@@ -73,6 +74,25 @@ import { useTranslation } from 'react-i18next';
 
   const { user } = useUser();
 
+  const getTranslatedStatus = (status: string) => {
+    console.log("status: ", status);
+    
+  
+    switch (status) {
+      case 'waiting':
+        return t('game.joinedTournaments.statusGame.waiting');
+      case 'ongoing':
+        return t('game.joinedTournaments.statusGame.ongoing');
+      case 'ended':
+        return t('game.joinedTournaments.statusGame.ended');
+      case 'aborted':
+        return t('game.joinedTournaments.statusGame.aborted');
+      default:
+        return t('game.joinedTournaments.statusGame.unknown');
+    }
+  };
+
+  
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -378,7 +398,7 @@ import { useTranslation } from 'react-i18next';
                           <p className={styles.tournamentPlayerCount}>{t('game.joinedTournaments.players')} {tournament.players.length}</p>
                         </div>
                         <div className={styles.rightAligned}>
-                          <p className={styles.tournamentStatus}>{t('game.joinedTournaments.status')} {tournament.status}</p>
+                          <p className={styles.tournamentStatus}>{t('game.joinedTournaments.status')} {getTranslatedStatus(tournament.status)}</p>
                           <p className={styles.tournamentDate}>{t('game.joinedTournaments.started')} {formatDate(tournament.created_at, t('lang'))}</p>
                         </div>
                     </div>

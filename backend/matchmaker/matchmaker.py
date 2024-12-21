@@ -208,7 +208,8 @@ class Matchmaker:
                     players = await sync_to_async(list)(tournament.players.all())
                     for p in players:
                         await cls.send_message_to_client(p.id, message)
-                        target_language = p.profile.preferred_language or 'en'
+                        profile = await sync_to_async(lambda: p.profile)()
+                        target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
                         try:
                             translated_message = translate_text(f"Tournament {tournament.name} aborted because a player left!" ,target_language)
                             translated_title = translate_text("Tournament Aborted",target_language)
