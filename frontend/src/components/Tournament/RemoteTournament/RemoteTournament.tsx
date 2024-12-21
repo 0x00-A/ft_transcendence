@@ -130,6 +130,24 @@ const RemoteTournament = ({
   const { t } = useTranslation();
 
 
+  const getTranslatedStatus = (status: string) => {
+    console.log("status: ", status);
+    
+  
+    switch (status) {
+      case 'waiting':
+        return t('game.joinedTournaments.statusGame.waiting');
+      case 'ongoing':
+        return t('game.joinedTournaments.statusGame.ongoing');
+      case 'ended':
+        return t('game.joinedTournaments.statusGame.ended');
+      case 'aborted':
+        return t('game.joinedTournaments.statusGame.aborted');
+      default:
+        return t('game.joinedTournaments.statusGame.unknown');
+    }
+  };
+
   useEffect(() => {
     setRounds(tournamentStat.rounds);
     setWinnerOfMatch1(tournamentStat.rounds[1][0]?.winner);
@@ -264,7 +282,7 @@ const RemoteTournament = ({
         </li>
         <li className={css.item}>
           <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Status')}</div>
-          <div className={css.text}>{tournamentStat.status}</div>
+          <div className={css.text}>{getTranslatedStatus(tournamentStat.status)}</div>
         </li>
         <li className={css.item}>
           <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Created')}</div>
