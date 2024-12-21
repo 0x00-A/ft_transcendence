@@ -50,7 +50,6 @@ const ProfileFriends = () => {
                 { friendsData?.length == 0 && <div className={css.noFriends}>
                     <span>{t('Profile.friends.errors.noFriends')}</span>
                     <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
-                        {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
                         <HiOutlineUserAdd size={"2.2rem"}/>
                         <span>{t('Profile.friends.addFriends.button')}</span>
                     </button>
