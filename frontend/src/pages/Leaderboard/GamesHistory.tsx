@@ -8,7 +8,7 @@ import { useGetData } from '@/api/apiHooks';
 
 // Api
 import { LastGames } from '@/types/apiTypes';
-import { API_GET_LAST_GAMES_URL } from '@/api/apiConfig';
+import { API_GET_PLAYED_GAMES_URL } from '@/api/apiConfig';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
@@ -19,8 +19,7 @@ const GamesHistory = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isBtnActive, setBtnActive] = useState(true);
-  const username = 'efarhat';
-  const { data: playedGames, isLoading, error } = useGetData<LastGames[]>(`${API_GET_LAST_GAMES_URL}/${username}`);
+  const { data: playedGames, isLoading, error } = useGetData<LastGames[]>(API_GET_PLAYED_GAMES_URL);
 
   const gameHistoryFields = useMemo(
     () => [
@@ -55,7 +54,7 @@ const GamesHistory = () => {
 
   return (
     <div className={css.gameHistoryContainer}>
-        <div className={css.gameHistoryHeader}>
+        {/* <div className={css.gameHistoryHeader}>
           <div className={css.gameHistTitle}>
             <History size={30} color='#f8c25c' />
             <h3>{t('Profile.gameHistory.title')}</h3>
@@ -70,10 +69,7 @@ const GamesHistory = () => {
                 {t('Profile.gameHistory.buttons.tournament')}
             </button>
           </div>
-          {/* <button className={css.dateFilterBtn}>Game
-            <IoFilterSharp />
-          </button> */}
-        </div>
+        </div> */}
         {error && <div className="text-red-500">{error.message}</div>}
         { isLoading ?
         <div className="flex w-[100%] h-[80px] items-center justify-between gap-4 p-5 bg-gray-800 rounded-md animate-pulse">
@@ -104,14 +100,14 @@ const GamesHistory = () => {
                 <span key={index} className={css.headerField}>{field}</span>
               ))}
             </div>
-            { playedGames?.length == 0 && <div className={css.noGames}>
+            { playedGames && playedGames.length == 0 && <div className={css.noGames}>
                 <span className={css.noHistoryTitle}>{t('Profile.gameHistory.noGames.message')}</span>
                 <button className={css.playBtn} onClick={() => navigate('/play')}>
                     <IoGameControllerOutline className={css.playIcon}/>
                     <span>{t('Profile.gameHistory.noGames.playNow')}</span>
                 </button>
             </div>}
-            { playedGames!.length > 0 && playedGames?.map((game: LastGames) => (
+            { playedGames && playedGames.length > 0 && playedGames?.map((game: LastGames) => (
                 <div key={game.id} className={css.tableRow}>
                     <div className={css.dateTimeGame}>
                       <span className={css.historyField}>{formatDate(game?.start_time, t('lang'))}</span>

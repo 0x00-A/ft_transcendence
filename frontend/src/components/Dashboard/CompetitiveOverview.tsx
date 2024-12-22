@@ -2,17 +2,14 @@ import { useEffect, useState } from 'react';
 import { TrendingUp, Crown, Award } from 'lucide-react';
 import styles from './CompetitiveOverview.module.css';
 import { useUser } from '@/contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 
 const CompetitiveOverview = () => {
   const [activeGameMode, setActiveGameMode] = useState('single');
   const { user, isLoading, refetch } = useUser();
+  const { t } = useTranslation();
 
 
-  // const personalBests = [
-  //   { label: 'Highest Score', value: '835', Icon: Crown },
-  //   { label: 'Longest Streak', value: '12', Icon: TrendingUp },
-  //   { label: 'Best Rank', value: '#4', Icon: Award },
-  // ];
   useEffect(() => {
     refetch();
   }, []);
@@ -25,7 +22,7 @@ const CompetitiveOverview = () => {
   return (
       <>
         <div className={styles.header}>
-        <h3 className={styles.title}>Overview</h3>
+        <h3 className={styles.title}>{t('dashboard.overview.title')}</h3>
         <div className={styles.buttonGroup}>
           <button
             onClick={() => setActiveGameMode('single')}
@@ -33,7 +30,7 @@ const CompetitiveOverview = () => {
               activeGameMode === 'single' ? styles.buttonActive : ''
             }`}
           >
-            Single Game
+            {t('dashboard.overview.buttons.singleBtn')}
           </button>
           <button
             onClick={() => setActiveGameMode('tournaments')}
@@ -41,7 +38,7 @@ const CompetitiveOverview = () => {
               activeGameMode === 'tournaments' ? styles.buttonActive : ''
             }`}
           >
-            Tournaments
+            {t('dashboard.overview.buttons.tournamentsBtn')}
           </button>
         </div>
       </div>
@@ -49,12 +46,12 @@ const CompetitiveOverview = () => {
         <div className={styles.statCard}>
           { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
           <span className={styles.statValue}>{user?.profile.played_games}</span>}
-          <span className={styles.statLabel}>GAMES</span>
+          <span className={styles.statLabel}>{t('dashboard.overview.fields.games')}</span>
         </div>
         <div className={styles.statCard}>
           { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
           <span className={styles.statValue}>{user?.profile.score}</span>}
-          <span className={styles.statLabel}>SCORE</span>
+          <span className={styles.statLabel}>{t('dashboard.overview.fields.score')}</span>
         </div>
       </div>
       <div className={styles.personalBests}>
@@ -62,7 +59,7 @@ const CompetitiveOverview = () => {
           <div className={styles.bestContent}>
             <div className={styles.bestInfo}>
               <Crown className={styles.bestIcon} />
-              <span className={styles.bestLabel}>Highest Score</span>
+              <span className={styles.bestLabel}>{t('dashboard.overview.fields.highestScore')}</span>
             </div>
               {isLoading ? <span className="statValueSkeleton block w-[30px] h-[20px] bg-gray-500 rounded-md animate-pulse"></span>:
               <span className={styles.bestValue}>{user?.profile.stats.highest_score || 0}</span>}
@@ -72,7 +69,7 @@ const CompetitiveOverview = () => {
           <div className={styles.bestContent}>
             <div className={styles.bestInfo}>
               <TrendingUp className={styles.bestIcon} />
-              <span className={styles.bestLabel}>Longest Streak</span>
+              <span className={styles.bestLabel}>{t('dashboard.overview.fields.longestStreak')}</span>
             </div>
               {isLoading ? <span className="statValueSkeleton block w-[30px] h-[20px] bg-gray-500 rounded-md animate-pulse"></span>:
               <span className={styles.bestValue}>{user?.profile.stats.win_streak}</span>}
@@ -82,7 +79,7 @@ const CompetitiveOverview = () => {
           <div className={styles.bestContent}>
             <div className={styles.bestInfo}>
               <Award className={styles.bestIcon} />
-              <span className={styles.bestLabel}>Best Rank</span>
+              <span className={styles.bestLabel}>{t('dashboard.overview.fields.bestRank')}</span>
             </div>
               {isLoading ? <span className="statValueSkeleton block w-[30px] h-[20px] bg-gray-500 rounded-md animate-pulse"></span>:
               <span className={styles.bestValue}>#{user?.profile.stats.best_rank || user?.profile.rank}</span>}
@@ -123,7 +120,7 @@ const CompetitiveOverview = () => {
             />}
           </svg>
           <div className={styles.winRateContent}>
-            <span className={styles.winRateLabel}>Win Rate</span>
+            <span className={styles.winRateLabel}>{t('dashboard.overview.fields.winRate')}</span>
             {isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={styles.winRateValue}>{Number.isInteger(user?.profile.win_rate) ? user?.profile.win_rate : user?.profile.win_rate.toFixed(2)}%</span>}
           </div>
@@ -132,11 +129,11 @@ const CompetitiveOverview = () => {
         <div className={styles.winLoseContainer}>
           <div className={styles.winCard}>
             {isLoading ? <span className="statValueSkeleton block w-[40px] h-[30px] bg-gray-500 rounded-md animate-pulse"></span>:
-            <span className={styles.resultText}>{user?.profile.wins} WINS</span>}
+            <span className={styles.resultText}>{user?.profile.wins} {t('dashboard.overview.fields.wins')}</span>}
           </div>
           <div className={styles.loseCard}>
             {isLoading ? <span className="statValueSkeleton block w-[40px] h-[30px] bg-gray-500 rounded-md animate-pulse"></span>:
-            <span className={styles.resultText}>{user?.profile.losses} LOSES</span>}
+            <span className={styles.resultText}>{user?.profile.losses} {t('dashboard.overview.fields.loses')}</span>}
           </div>
         </div>
       </div>

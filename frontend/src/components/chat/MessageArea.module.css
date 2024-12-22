@@ -148,14 +148,14 @@
 }
 
 .loadMoreButton {
+  position: absolute;
+  left: 50%;
   background-color: #5774a1;
   color: white;
   border: none;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 50%;
   cursor: pointer;
-  margin-bottom: 10px;
-  width: 100%;
 }
 
 .loadMoreButton:hover {

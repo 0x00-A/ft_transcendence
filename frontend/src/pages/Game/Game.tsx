@@ -27,8 +27,7 @@ import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
-
-
+// import { getTranslatedStatus } from '@/utils/getTranslatedStatus';
 
 // const Modes = () => {
 //   const { t } = useTranslation();
@@ -41,7 +40,7 @@ import { useTranslation } from 'react-i18next';
 //     ];
 // }
 
-  const Game = () => {
+const Game = () => {
   const { t } = useTranslation();
   const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
@@ -69,9 +68,32 @@ import { useTranslation } from 'react-i18next';
   //   return;
   // console.log('Game component rerendered');
 
-  const { gameAccepted, gameInvite, setGameAccepted, player1_id: p1_id, player2_id: p2_id } = useGameInvite();
+  const {
+    gameAccepted,
+    gameInvite,
+    setGameAccepted,
+    player1_id: p1_id,
+    player2_id: p2_id,
+  } = useGameInvite();
 
   const { user } = useUser();
+
+  const getTranslatedStatus = (status: string) => {
+    console.log('status: ', status);
+
+    switch (status) {
+      case 'waiting':
+        return t('game.joinedTournaments.statusGame.waiting');
+      case 'ongoing':
+        return t('game.joinedTournaments.statusGame.ongoing');
+      case 'ended':
+        return t('game.joinedTournaments.statusGame.ended');
+      case 'aborted':
+        return t('game.joinedTournaments.statusGame.aborted');
+      default:
+        return t('game.joinedTournaments.statusGame.unknown');
+    }
+  };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -311,13 +333,38 @@ import { useTranslation } from 'react-i18next';
       />
     );
 
-    const ModesList = [
-      { id: 0, title: t('game.localGame.title'), icon: Gamepad2, description: t('game.localGame.description') },
-      { id: 1, title: t('game.remoteGame.title'), icon: Globe, description: t('game.remoteGame.description') },
-      { id: 2, title: t('game.remoteTournament.title'), icon: Trophy, description: t('game.remoteTournament.description') },
-      { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
-      { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
-    ];
+  const ModesList = [
+    {
+      id: 0,
+      title: t('game.localGame.title'),
+      icon: Gamepad2,
+      description: t('game.localGame.description'),
+    },
+    {
+      id: 1,
+      title: t('game.remoteGame.title'),
+      icon: Globe,
+      description: t('game.remoteGame.description'),
+    },
+    {
+      id: 2,
+      title: t('game.remoteTournament.title'),
+      icon: Trophy,
+      description: t('game.remoteTournament.description'),
+    },
+    {
+      id: 3,
+      title: t('game.localTournament.title'),
+      icon: Users,
+      description: t('game.localTournament.description'),
+    },
+    {
+      id: 4,
+      title: t('game.multipleGame.title'),
+      icon: Users,
+      description: t('game.multipleGame.description'),
+    },
+  ];
   return (
     <div className={styles.container}>
       {gameState === 'inqueue' && !(gameAccepted && gameInvite) && (
@@ -334,7 +381,7 @@ import { useTranslation } from 'react-i18next';
       )}
       <div className={styles.topContainer}>
         <div className={styles.left}>
-            {ModesList.map((option) => (
+          {ModesList.map((option) => (
             <Card
               key={option.id}
               className={`${styles.item} ${styles.cardMode} ${hoveredOption === option.id ? styles.cardHoveredMode : ''}`}
@@ -364,60 +411,79 @@ import { useTranslation } from 'react-i18next';
         <div className={styles.right}>
           <Card className={styles.card}>
             <CardHeader>
-                <CardTitle className={styles.title}>{t('game.joinedTournaments.title')}</CardTitle>
+              <CardTitle className={styles.title}>
+                {t('game.joinedTournaments.title')}
+              </CardTitle>
             </CardHeader>
             <CardContent className={styles.content}>
-                {userTournaments?.map((tournament) => (
-                    <div key={tournament.id} className={styles.tournamentItem} onClick={() => {
-                        setTournamentStat(tournament.state);
-                        // setTournamentStatus(tournament.status);
-                        setShowTournamentView(true);
-                    }}>
-                        <div>
-                          <h3 className={styles.tournamentName}>{tournament.name}</h3>
-                          <p className={styles.tournamentPlayerCount}>{t('game.joinedTournaments.players')} {tournament.players.length}</p>
-                        </div>
-                        <div className={styles.rightAligned}>
-                          <p className={styles.tournamentStatus}>{t('game.joinedTournaments.status')} {tournament.status}</p>
-                          <p className={styles.tournamentDate}>{t('game.joinedTournaments.started')} {formatDate(tournament.created_at, t('lang'))}</p>
-                        </div>
-                    </div>
-                ))}
-                    {!userTournamentsError && !userTournamentsIsLoading && !userTournaments?.length && (
-                    <div className={styles.noTournaments}>
-                        <NoTournamentIcon size={58} />
-                        <p>{t('game.joinedTournaments.noTournament')}</p>
-                    </div>
-                    )}
-                    {userTournamentsError && (
-                    <div className={styles.errorWrapper}>
-                        <ErrorMessage />
-                    </div>
-                    )}
-                    {!userTournamentsError && userTournamentsIsLoading && (
-                    <div className={styles.loaderWrapper}>
-                        <ArcadeLoader />
-                    </div>
-                    )}
+              {userTournaments?.map((tournament) => (
+                <div
+                  key={tournament.id}
+                  className={styles.tournamentItem}
+                  onClick={() => {
+                    setTournamentStat(tournament.state);
+                    // setTournamentStatus(tournament.status);
+                    setShowTournamentView(true);
+                  }}
+                >
+                  <div>
+                    <h3 className={styles.tournamentName}>{tournament.name}</h3>
+                    <p className={styles.tournamentPlayerCount}>
+                      {t('game.joinedTournaments.players')}{' '}
+                      {tournament.players.length}
+                    </p>
+                  </div>
+                  <div className={styles.rightAligned}>
+                    <p className={styles.tournamentStatus}>
+                      {t('game.joinedTournaments.status')}{' '}
+                      {getTranslatedStatus(tournament.status)}
+                    </p>
+                    <p className={styles.tournamentDate}>
+                      {t('game.joinedTournaments.started')}{' '}
+                      {formatDate(tournament.created_at, t('lang'))}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {!userTournamentsError &&
+                !userTournamentsIsLoading &&
+                !userTournaments?.length && (
+                  <div className={styles.noTournaments}>
+                    <NoTournamentIcon size={58} />
+                    <p>{t('game.joinedTournaments.noTournament')}</p>
+                  </div>
+                )}
+              {userTournamentsError && (
+                <div className={styles.errorWrapper}>
+                  <ErrorMessage />
+                </div>
+              )}
+              {!userTournamentsError && userTournamentsIsLoading && (
+                <div className={styles.loaderWrapper}>
+                  <ArcadeLoader />
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
 
       <div className={styles.bottomContainer}>
-         <Card className={styles.bottomCard}>
-            <CardHeader>
-                <CardTitle className={styles.title}>{t('game.openTournaments.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className={styles.bottomCardContent}>
-                <TournamentList
-                    handleJoin={handleJoin}
-                    // handleView={handleView}
-                    tournaments={tournaments}
-                    error={error}
-                    isLoading={isLoading}
-                ></TournamentList>
-            </CardContent>
+        <Card className={styles.bottomCard}>
+          <CardHeader>
+            <CardTitle className={styles.title}>
+              {t('game.openTournaments.title')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className={styles.bottomCardContent}>
+            <TournamentList
+              handleJoin={handleJoin}
+              // handleView={handleView}
+              tournaments={tournaments}
+              error={error}
+              isLoading={isLoading}
+            ></TournamentList>
+          </CardContent>
         </Card>
       </div>
     </div>

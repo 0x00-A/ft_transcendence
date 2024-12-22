@@ -25,9 +25,12 @@ function doLineSegmentsIntersect(
 
 // Function to check if the ball collides with the paddle (even at high speed)
 export function isCollidingWithPaddle(ball: Ball, paddle: Paddle): boolean {
+  const ballFromTop = ball.y < paddle.y;
+  const ballFromBottom = ball.y > paddle.y + paddle.height;
+
   // Previous and current position of the ball
   const nextX = ball.x + ball.dx;
-  const nextY = ball.y + ball.dy;
+  const nextY = (ballFromTop? ball.y + ball.radius : (ballFromBottom? ball.y - ball.radius : ball.y)) + ball.dy;
 
   // Paddle edges as line segments
   const paddleLeft = paddle.x;
@@ -35,50 +38,57 @@ export function isCollidingWithPaddle(ball: Ball, paddle: Paddle): boolean {
   const paddleTop = paddle.y;
   const paddleBottom = paddle.y + paddle.height;
 
-  // Check for intersection with paddle's vertical sides (left and right)
+
+  // const ballLeft = ball.x - ball.radius;
+  // const ballRight = ball.x + ball.radius;
+  // const ballTop = ball.y - ball.radius;
+  // const ballBottom = ball.y + ball.radius;
+
+  // return ballLeft <= paddleRight && ballRight >= paddleLeft && ballTop <= paddleBottom && ballBottom >= paddleTop;
+
   const intersectsLeft = doLineSegmentsIntersect(
     ball.x,
     ball.y,
     nextX,
-    nextY, // Ball's movement path
+    nextY,
     paddleLeft,
     paddleTop,
     paddleLeft,
-    paddleBottom // Left side of the paddle
+    paddleBottom
   );
 
   const intersectsRight = doLineSegmentsIntersect(
     ball.x,
     ball.y,
     nextX,
-    nextY, // Ball's movement path
+    nextY,
     paddleRight,
     paddleTop,
     paddleRight,
-    paddleBottom // Right side of the paddle
+    paddleBottom
   );
 
-  // Check for intersection with paddle's horizontal sides (top and bottom)
+
   const intersectsTop = doLineSegmentsIntersect(
     ball.x,
     ball.y,
     nextX,
-    nextY, // Ball's movement path
+    nextY,
     paddleLeft,
     paddleTop,
     paddleRight,
-    paddleTop // Top side of the paddle
+    paddleTop
   );
 
   const intersectsBottom = doLineSegmentsIntersect(
     ball.x,
     ball.y,
     nextX,
-    nextY, // Ball's movement path
+    nextY,
     paddleLeft,
     paddleBottom,
     paddleRight,
-    paddleBottom // Bottom side of the paddle
+    paddleBottom
   );
 
   // Return true if any of the paddle's edges intersect with the ball's path
@@ -96,11 +106,11 @@ export const handlePaddleCollision = (ball: Ball, paddle: Paddle) => {
   // Handle side collision
   if (ballFromLeft || ballFromRight) {
     // Correct the position so the ball doesn't get stuck inside the paddle
-    if (ballFromLeft) {
-      ball.x = paddle.x - ball.radius;
-    } else if (ballFromRight) {
-      ball.x = paddle.x + paddle.width + ball.radius;
-    }
+    // if (ballFromLeft) {
+    //   ball.x = paddle.x - ball.radius;
+    // } else if (ballFromRight) {
+    //   ball.x = paddle.x + paddle.width + ball.radius;
+    // }
 
     ball.dx *= -1; // Reverse the horizontal velocity
 
@@ -113,7 +123,7 @@ export const handlePaddleCollision = (ball: Ball, paddle: Paddle) => {
 
     // Update ball's velocity (dx, dy) based on the new angle
     const direction = ball.dx > 0 ? 1 : -1;
-    ball.speed += 0.1;
+    // ball.speed += 0.1;
     ball.dx = direction * ball.speed * Math.cos(newAngle);
     ball.dy = ball.speed * Math.sin(newAngle);
   }

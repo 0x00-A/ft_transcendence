@@ -69,7 +69,7 @@ const MessageInput = ({
     });
 
     setIsInviteDisabled(true);
-    setTimeLeft(1);
+    setTimeLeft(10);
   };
 
   useEffect(() => {
@@ -159,14 +159,18 @@ const MessageInput = ({
   if (conversationData?.block_status) {
     return (
       <div className={css.messageBlock}>
-        <h2>{conversationData?.block_status_display}</h2>
-        <p>You can't send messages to this user, and you won't receive their messages.</p>
+        {conversationData?.block_status === 'blocker' 
+          ? <h2>{t('messageInput.block.blocker')}</h2> 
+          : <h2>{t('messageInput.block.blocked')}</h2>
+        }
+        
+        <p>{t('messageInput.block.description')}</p>
         {conversationData?.block_status === 'blocker' && (
           <button
             className={css.buttonUnblock}
             onClick={() => handleBlock(conversationData)}
           >
-            Unblock
+            {t('messageInput.block.unblockBtn')}
           </button>
         )}
       </div>

@@ -4,12 +4,12 @@
   flex-direction: column-reverse;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 3%;
 
   background-color: var(--color-game-screen-bg);
-  height:  calc(100vh - var(--header-height) - var(--footer-height));
+  height: calc(100vh - var(--header-height) - var(--footer-height));
   border-radius: 10px;
-  min-height: 600px;
+  min-height: 700px;
   position: relative;
 }
 html {
@@ -72,7 +72,12 @@ body {
   border-color: #dc563f;
 }
 
-.round .winners > div.matchups .matchup .participants .participant:not(:last-child) {
+.round
+  .winners
+  > div.matchups
+  .matchup
+  .participants
+  .participant:not(:last-child) {
   /* border-bottom: thin solid #f0f2f2; */
 }
 
@@ -80,7 +85,7 @@ body {
   margin: 0 1.25rem;
   line-height: 4;
   font-size: 1.4rem;
-  font-family: "Roboto Slab", serif;
+  font-family: 'Roboto Slab', serif;
 }
 
 .round .winners > div.connector.filled .line,
@@ -100,19 +105,16 @@ body {
 .round .winners > div.connector .line {
   border-bottom: thin solid #c0c0c8;
   height: 9rem;
-
-
 }
 
 .round .winners > div.connector .merger {
   position: relative;
   height: 18rem;
-
 }
 
 .round .winners > div.connector .merger:before,
 .round .winners > div.connector .merger:after {
-  content: "";
+  content: '';
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -153,7 +155,6 @@ body {
   height: 9rem;
 } */
 
-
 .matchup {
   position: relative;
 }
@@ -190,9 +191,7 @@ body {
   /* margin-bottom: 80px; */
 }
 
-
 /*****************************/
-
 
 .infoList {
   display: flex;
@@ -207,36 +206,35 @@ body {
   box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.6),
     0 2px 5px rgba(0, 0, 0, 0.4) inset;
-    padding: 20px;
+  padding: 20px;
   width: 50%;
   max-width: 500px;
 }
 
-.infoList>.item {
-    display: inline-block;
-    vertical-align: middle;
-    text-align: left;
-    /* margin: 0; */
-    /* width: auto; */
+.infoList > .item {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  /* margin: 0; */
+  /* width: auto; */
   /* width: 200px; */
 
-    line-height: 32px;
-    padding: 0 0 0 20px
+  line-height: 32px;
+  padding: 0 0 0 20px;
 }
 
-.infoList>.item>.itemLabel {
-    width: 100px;
-    display: inline-block
+.infoList > .item > .itemLabel {
+  width: 100px;
+  display: inline-block;
 }
 
-.infoList>.item>.itemLabel {
-    color: #8B8D91
+.infoList > .item > .itemLabel {
+  color: #8b8d91;
 }
 
-.infoList>.item>.text {
-    display: inline-block
+.infoList > .item > .text {
+  display: inline-block;
 }
-
 
 .participant {
   display: flex;
