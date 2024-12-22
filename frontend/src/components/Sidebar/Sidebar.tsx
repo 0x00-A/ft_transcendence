@@ -153,6 +153,7 @@ export default function Sidebar() {
             ref={languageSwitcherRef}
           >
             <Flag
+              style={{ borderRadius: '50%', objectFit: 'cover' }}
               className={css.flagsSelected}
               code={
                 selectedLang === 'es'
@@ -169,15 +170,45 @@ export default function Sidebar() {
                 <ul>
                   <li onClick={() => changeLanguage('en')}>
                     {' '}
-                    <Flag className={css.flags} code="US" /> English{' '}
+                    <Flag
+                      style={{
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        width: '26px',
+                        height: '26px',
+                      }}
+                      className={css.flags}
+                      code="US"
+                    />{' '}
+                    English{' '}
                   </li>
                   <li onClick={() => changeLanguage('es')}>
                     {' '}
-                    <Flag className={css.flags} code="ES" /> Español{' '}
+                    <Flag
+                      style={{
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        width: '26px',
+                        height: '26px',
+                      }}
+                      className={css.flags}
+                      code="ES"
+                    />{' '}
+                    Español{' '}
                   </li>
                   <li onClick={() => changeLanguage('zgh')}>
                     {' '}
-                    <Flag className={css.flags} code="MA" /> Tamazight{' '}
+                    <Flag
+                      style={{
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        width: '26px',
+                        height: '26px',
+                      }}
+                      className={css.flags}
+                      code="MA"
+                    />{' '}
+                    Tamazight{' '}
                   </li>
                 </ul>
               </div>

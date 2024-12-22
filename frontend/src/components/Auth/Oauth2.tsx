@@ -1,11 +1,10 @@
 // Styles
 import css from './Oauth2.module.css';
 // Logos
-// import IntraLogo from '../../assets/42Logo.svg';
-import IntraLogo from '@/assets/42Logo.svg';
+// import IntraLogo from '/assets/42Logo.svg';
 import { IconContext } from 'react-icons';
 import { FcGoogle } from 'react-icons/fc';
-import DiscordIcon from '../../assets/discordIcon.svg';
+// import DiscordIcon from '/assets/discordIcon.svg';
 // API URL
 import { API_OAUTH2_URL } from '../../api/apiConfig';
 
@@ -30,7 +29,7 @@ const Oauth2 = () => {
           type="submit"
           onClick={() => handleOauth2('intra')}
         >
-          <img src={IntraLogo} alt="?" className={css.oauth2Icon} />
+          <img src="/assets/42Logo.svg" alt="?" className={css.oauth2Icon} />
         </button>
         <button
           className={css.oauthBtn}
@@ -46,7 +45,11 @@ const Oauth2 = () => {
           type="submit"
           onClick={() => handleOauth2('discord')}
         >
-          <img src={DiscordIcon} alt="?" className={css.oauth2Icon} />
+          <img
+            src="/assets/discordIcon.svg"
+            alt="?"
+            className={css.oauth2Icon}
+          />
         </button>
       </div>
     </div>
