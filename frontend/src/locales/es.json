@@ -20,6 +20,7 @@
         "action": "No se pudo realizar la acción, intenta nuevamente"
     },
     "lang": "es",
+    "footer": "ft_transcendence. reservados todos los derechos.",
     "welcome": {
         "title": "FT-PONG",
         "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
@@ -37,7 +38,13 @@
         "lastSeen": "Última vez visto a las"
     },
     "messageInput": {
-        "placeholder": "Escribe un mensaje"
+        "placeholder": "Escribe un mensaje",
+        "block": {
+            "unblockBtn": "Desatascar",
+            "blocker": "Has bloqueado a esta usuario",
+            "blocked": "Estas bloqueada por esta usuario",
+            "description": "No puedes enviar mensajes a este usuario y no recibirás sus mensajes."
+        }
     },
     "messageArea": {
         "showMoreButton": "Mostrar más"
