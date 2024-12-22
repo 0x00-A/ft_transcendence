@@ -7,8 +7,6 @@ import { useGetData } from '@/api/apiHooks';
 import css from './ProfileAchievements.module.css'
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
-import { HiOutlineLockOpen } from "react-icons/hi2";
-import { HiOutlineLockClosed } from "react-icons/hi2";
 // Types
 import { UserAchievements } from '@/types/apiTypes';
 import { Award } from 'lucide-react';
@@ -20,9 +18,9 @@ import { useTranslation } from 'react-i18next';
 //     "image": "/icons/AchievIcon.svg", "condition": {"win": 1}, "progress": 0,
 //         "is_unlocked": true, "unlocked_at": "2021-10-10"}
 // {`${isConfirmSave ? css.bluredBgConfirm : ''}`}
-const ProfileAchievements = () => {
+const ProfileAchievements = ({username}:{username:string | undefined}) => {
 
-    const {data: achievements, isLoading, error} = useGetData<UserAchievements[]>(API_GET_ACHIEVEMENTS_URL);
+    const {data: achievements, isLoading, error} = useGetData<UserAchievements[]>(`${API_GET_ACHIEVEMENTS_URL}/${username}`);
     const [currentAchiev, setCurrentAchiev] = useState(0);
     const { t } = useTranslation();
 
@@ -66,16 +64,13 @@ const ProfileAchievements = () => {
                 achievements && achievements.slice(start, end).map((achievement: UserAchievements, index: number) => (
                 <div key={index} className={`${!achievement.is_unlocked ? css.lockedAchievCard : ''} ${css.achievCard}`}>
                     <div className={css.achievTitle}>
-                        <img src={achievement.achievement.image} className={css.achievImg} alt="" />
+                        <img src="/public/pong.png" className={css.achievImg} alt="" />
+                        {/* <img src={achievement.achievement.image} className={css.achievImg} alt="" /> */}
                         <h4>{achievement.achievement.name}</h4>
                     </div>
                     <div className={css.achievDescription}>
-                        <p>{achievement.achievement.description}</p>
+                        <p className={css.description}>{achievement.achievement.description}</p>
                         <p className={css.progress}>{achievement.progress[achievement.achievement.condition_name] ?? 0} / {achievement.achievement.condition[achievement.achievement.condition_name]}</p>
-                    </div>
-                    <div className={css.achievProgress}>
-                        { achievement.is_unlocked ? <HiOutlineLockOpen /> : <HiOutlineLockClosed /> }
-                        { achievement.is_unlocked ? <p>{achievement.unlocked_at.split("T")[0]}</p> : '' }
                     </div>
                 </div>
             ))}

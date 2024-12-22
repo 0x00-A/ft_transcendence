@@ -73,7 +73,7 @@ class SetPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {'error': 'Request is required'})
         user = self.context['request'].user
-        if not user.is_oauth_user:
+        if not user.is_oauth2_user:
             raise serializers.ValidationError(
                 {'error': 'Only oauth2 users can set password'})
         if attrs['password'] != attrs['password2']:

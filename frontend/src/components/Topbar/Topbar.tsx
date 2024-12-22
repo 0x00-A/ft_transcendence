@@ -6,27 +6,23 @@ import SearchUsers from './SearchUsers';
 
 
 const Topbar = () => {
-
   const { user } = useUser();
-
   const navigate = useNavigate();
+
   return (
     <div className={css.topbar}>
-      <div className={css.searchUsers}>
-        <SearchUsers />
-      </div>
       <div className={css.topbarInfo}>
+        <SearchUsers />
         <NotificationsDropdown />
         <div 
           className={css.userAccount}
           onClick={() => navigate('/profile')}
         >
-          <p
-            className={css.userName}>{user?.username}
-          </p>
+          <p className={css.userName}>{user?.username}</p>
           <img
             className={css.userIcon}
-            src={user?.profile.avatar} alt=""
+            src={user?.profile.avatar} 
+            alt=""
           />
         </div>
       </div>

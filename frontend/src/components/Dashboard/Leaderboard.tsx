@@ -16,6 +16,7 @@ import { LeaderBoard } from '@/types/apiTypes';
 
 const Leaderboard = () => {
 
+  // const { t } = useTranslation();
   const { data: leaderboardData, isLoading, error } = useGetData<LeaderBoard[]>(API_GET_LEADERBOARD_URL);
 
   return (

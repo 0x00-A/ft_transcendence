@@ -23,6 +23,7 @@ class Profile(models.Model):
     losses = models.PositiveIntegerField(default=0)
     is_online = models.BooleanField(default=False)
     blocked_user_name = models.CharField(max_length=150, default="none", blank=True)
+    preferred_language = models.CharField(max_length=10, default='en')
 
     # def update_score(self, win:False, result, p2_badge):
     #     if win:

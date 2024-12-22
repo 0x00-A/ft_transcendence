@@ -7,6 +7,7 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import styles from './GameInviteCard.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface GameInviteCardProps {
   from?: string;
@@ -26,6 +27,8 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
   onReject,
 }) => {
   const [seconds, setSeconds] = useState(duration);
+  const { t } = useTranslation();
+
   // const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -76,7 +79,7 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
         >
           {/* <CardTitle className={styles.cardTitle}>Game Invitation</CardTitle> */}
           <div className="">
-            <p className={styles.playerName}>Game invite from {from}</p>
+            <p className={styles.playerName}>{t('toast.gameInvite')} {from}</p>
           </div>
         </CardContent>
 

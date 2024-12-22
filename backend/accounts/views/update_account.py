@@ -50,7 +50,7 @@ class UpdateEmailRequest(APIView):
             pass
         send_verification_email(user, request.data['email'])
         print('api ==> change email: Email sent successfully')
-        return Response({'message': 'Profile.EditInfosProfile.toasts.emailVerificationSent'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Verification email sent successfully'}, status=status.HTTP_200_OK)
 
 
 class UpdateEmailView(APIView):

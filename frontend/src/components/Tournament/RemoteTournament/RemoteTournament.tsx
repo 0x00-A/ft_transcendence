@@ -8,6 +8,7 @@ import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
 import LeaveTournamentButton from '../components/LeaveTournamentButton';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/helpers';
 
 const Match = ({
   // player1,
@@ -135,6 +136,23 @@ const RemoteTournament = ({
   const [showWinner, setShowWinner] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const { t } = useTranslation();
+
+  const getTranslatedStatus = (status: string) => {
+    console.log('status: ', status);
+
+    switch (status) {
+      case 'waiting':
+        return t('game.joinedTournaments.statusGame.waiting');
+      case 'ongoing':
+        return t('game.joinedTournaments.statusGame.ongoing');
+      case 'ended':
+        return t('game.joinedTournaments.statusGame.ended');
+      case 'aborted':
+        return t('game.joinedTournaments.statusGame.aborted');
+      default:
+        return t('game.joinedTournaments.statusGame.unknown');
+    }
+  };
 
   useEffect(() => {
     setRounds(tournamentStat.rounds);
@@ -277,13 +295,17 @@ const RemoteTournament = ({
           <div className={css.itemLabel}>
             {t('game.remoteTournament.playerReady.Status')}
           </div>
-          <div className={css.text}>{tournamentStat.status}</div>
+          <div className={css.text}>
+            {getTranslatedStatus(tournamentStat.status)}
+          </div>
         </li>
         <li className={css.item}>
           <div className={css.itemLabel}>
             {t('game.remoteTournament.playerReady.Created')}
           </div>
-          <div className={css.text}>{tournamentStat.created_at}</div>
+          <div className={css.text}>
+            {formatDate(tournamentStat.created_at, t('lang'))}
+          </div>
         </li>
       </ul>
 

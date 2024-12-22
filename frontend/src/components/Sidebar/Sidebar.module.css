@@ -4,19 +4,7 @@
   height: 100dvh;
   top: 0;
   z-index: 10;
-  /* position: fixed; */
-  /* width: 300px; */
-  /* width: var(--nav-medium-width); */
-  /* max-width: 300px;
-  min-width: 300px; */
   background-color: var(--sidebar-surface-primary);
-  /* transition-duration: 300ms; */
-  /* padding-top: 1rem; */
-  /* overflow: auto; */
-
-  /* min-width: 200px;
-  max-width: 300px; */
-  /* transition: width 0.3s ease; */
 }
 
 .logoBox {
@@ -29,11 +17,7 @@
 .menuBox {
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  /* min-height: 100vh; */
-  /* height: calc(100vh - 55px); */
-  height: 90%;
-  /* height: auto; */
+  height: 90%
 }
 
 
@@ -161,8 +145,8 @@
 
 .languagePopup {
   position: absolute;
-  top: 35px;
-  left: 15px;
+  top: 30px;
+  left: 60px;
   background-color: var(--sidebar-surface-primary);
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -176,21 +160,26 @@
   padding: 0;
   margin: 0;
 }
+.flagsSelected {
+  width: 32px;
+  height: 32px;
+}
 
 .languagePopup .flags {
   width: 32px;
+  height: 32px;
 }
 .languagePopup li {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 8px 15px;
+  padding: 5px 15px;
   cursor: pointer;
   font-size: 1rem;
   color: var(--text-color);
 }
 
 .languagePopup li:hover {
-  background-color: var(--sidebar-tab-hover);
+  background-color: #4b5563;
   /* border-radius: 4px; */
 }

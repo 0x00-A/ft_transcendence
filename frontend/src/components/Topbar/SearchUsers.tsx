@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import css from './SearchUsers.module.css';
 import { useGetData } from '../../api/apiHooks';
 import { useNavigate } from 'react-router-dom';
-import { Search, Eye, UserPlus, Check, X, MessageSquareText } from 'lucide-react';
+import { ScanSearch, Eye, UserPlus, Check, X, MessageSquareText, AlertTriangle } from 'lucide-react';
 import FriendSkeleton from '../Friends/FriendSkeleton';
 import {
   apiSendFriendRequest,
@@ -30,6 +30,7 @@ const SearchUsers: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [isExpanded, setIsExpanded] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
@@ -44,6 +45,20 @@ const SearchUsers: React.FC = () => {
     setSearchTerm('');
   };
 
+  const handleSearchIconClick = () => {
+    setIsExpanded(!isExpanded);
+    if (!isExpanded) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    } else {
+      setSearchTerm('');
+      setShowResults(false);
+      refetch();
+    }
+  };
+  
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -51,6 +66,7 @@ const SearchUsers: React.FC = () => {
         !searchContainerRef.current.contains(event.target as Node)
       ) {
         setShowResults(false);
+        setIsExpanded(false);
         setSelectedIndex(-1);
       }
     };
@@ -129,8 +145,8 @@ const SearchUsers: React.FC = () => {
       refetch();
       setShowResults(false);
       setSearchTerm('');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to perform action');
+    }  catch (error: any) {
+      toast.error(error.message || t('errorsFriends.action'));
     }
   };
 
@@ -152,124 +168,143 @@ const SearchUsers: React.FC = () => {
 
   return (
     <div className={css.searchUsers} ref={searchContainerRef}>
-      <div className={css.searchContainer}>
-        <Search className={css.searchIcon} />
-        <input
-          ref={searchInputRef}
-          type="text"
-          placeholder={t('SearchUsers.placeholder')}
-          value={searchTerm}
-          onChange={handleSearch}
-          className={css.searchInput}
-          onFocus={() => {
-            if (searchResults.length > 0) {
-              setShowResults(true);
-            }
-          }}
+      <div className={`${css.searchContainer} ${isExpanded ? css.expanded : ''}`}>
+        <ScanSearch
+          className={css.searchIcon}
+          onClick={handleSearchIconClick}
         />
+        {isExpanded && (
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder={t('SearchUsers.placeholder')}
+            value={searchTerm}
+            onChange={handleSearch}
+            className={css.searchInput}
+            onFocus={() => {
+              if (searchResults.length > 0) {
+                setShowResults(true);
+              }
+            }}
+          />
+        )}
       </div>
-      {showResults && (
+      {showResults && isExpanded && (
         <div className={css.results}>
-          {loadingUsers ? (
-            <FriendSkeleton />
-          ) : searchResults.length > 0 ? (
-            searchResults.map((user, index) => (
-              <div 
-                key={user.username} 
-                className={`${css.userCard} ${index === selectedIndex ? css.selected : ''}`}
-                >
-                <img
-                  onClick={() => {
-                    navigate(`/profile/${user.username}`);
-                    setShowResults(false);
-                  }}
-                  src={user.profile.avatar}
-                  alt={user.username}
-                  className={css.avatar}
-                  />
-                <div
-                  onClick={() => {
-                    navigate(`/profile/${user.username}`);
-                    setShowResults(false);
-                  }}
-                  className={css.userInfo}
-                >
-                  <span className={css.username}>{user.username}</span>
-                  <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
-                </div>
-                <div className={css.actions}>
-                  <button
-                    className={css.viewProfileBtn}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/profile/${user.username}`);
-                      setShowResults(false);
-                    }}
-                    title={t('SearchUsers.pupViewProfile')}
+            {usersError ?
+                <div className={css.errorContainer}>
+                  <AlertTriangle size={48} color="red" strokeWidth={1.5} />
+                  <p className={css.errorMessage}>{t('SearchUsers.loadingUsers')}</p>
+                  <button 
+                    onClick={() => setSearchTerm('')} 
+                    className={css.retryButton}
                   >
-                    <Eye size={20}/>
+                    {t('SearchUsers.retry')}
                   </button>
-
-                  {user.friend_request_status === "accepted" ? (
-                    <span
-                      onClick={() => handleMessageClick(user)}
-                      className={css.messageButton}
-                      title={t('SearchUsers.pupMessage')}
-                    >
-                      <MessageSquareText size={20}/>
-                    </span>
-                  ) : user.friend_request_status === "pending" ? (
-                    <>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          acceptFriendRequest(user.username);
-                        }}
-                        className={css.acceptBtn}
-                        title={t('SearchUsers.pupAccept')}
-                      >
-                        <Check size={20} />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          rejectFriendRequest(user.username);
-                        }}
-                        className={css.rejectBtn}
-                        title={t('SearchUsers.pupReject')}
-                      >
-                        <X size={20} />
-                      </button>
-                    </>
-                  ) : user.friend_request_status === "cancel" ? (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCancel(user.username);
-                      }}
-                      className={css.cancelBtn}
-                      title={t('SearchUsers.pupCancel')}
-                    >
-                      <X size={20}/>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        sendFriendRequest(user.username);
-                      }}
-                      className={css.addFriendBtn}
-                      title={t('SearchUsers.pupAddFriend')}
-                    >
-                      <UserPlus size={20}/>
-                    </button>
-                  )}
-                </div>
               </div>
-            ))
-          ) : (
-            <p className={css.noResults}>{t('SearchUsers.notFound')}</p>
-          )}
+            : (
+              loadingUsers ? (
+                <FriendSkeleton />
+              ) : searchResults.length > 0 ? (
+                searchResults.map((user, index) => (
+                  <div 
+                    key={user.username} 
+                    className={`${css.userCard} ${index === selectedIndex ? css.selected : ''}`}
+                    >
+                    <img
+                      onClick={() => {
+                        navigate(`/profile/${user.username}`);
+                        setShowResults(false);
+                      }}
+                      src={user.profile.avatar}
+                      alt={user.username}
+                      className={css.avatar}
+                      />
+                    <div
+                      onClick={() => {
+                        navigate(`/profile/${user.username}`);
+                        setShowResults(false);
+                      }}
+                      className={css.userInfo}
+                    >
+                      <span className={css.username}>{user.username}</span>
+                      <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
+                    </div>
+                    <div className={css.actions}>
+                      <button
+                        className={css.viewProfileBtn}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/profile/${user.username}`);
+                          setShowResults(false);
+                        }}
+                        title={t('SearchUsers.pupViewProfile')}
+                      >
+                        <Eye size={20}/>
+                      </button>
+    
+                      {user.friend_request_status === "accepted" ? (
+                        <span
+                          onClick={() => handleMessageClick(user)}
+                          className={css.messageButton}
+                          title={t('SearchUsers.pupMessage')}
+                        >
+                          <MessageSquareText size={20}/>
+                        </span>
+                      ) : user.friend_request_status === "pending" ? (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              acceptFriendRequest(user.username);
+                            }}
+                            className={css.acceptBtn}
+                            title={t('SearchUsers.pupAccept')}
+                          >
+                            <Check size={20} />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              rejectFriendRequest(user.username);
+                            }}
+                            className={css.rejectBtn}
+                            title={t('SearchUsers.pupReject')}
+                          >
+                            <X size={20} />
+                          </button>
+                        </>
+                      ) : user.friend_request_status === "cancel" ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancel(user.username);
+                          }}
+                          className={css.cancelBtn}
+                          title={t('SearchUsers.pupCancel')}
+                        >
+                          <X size={20}/>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            sendFriendRequest(user.username);
+                          }}
+                          className={css.addFriendBtn}
+                          title={t('SearchUsers.pupAddFriend')}
+                        >
+                          <UserPlus size={20}/>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className={css.noResults}>{t('SearchUsers.notFound')}</p>
+              )
+            )
+            }
         </div>
       )}
     </div>

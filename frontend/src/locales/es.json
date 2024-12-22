@@ -1,5 +1,26 @@
 {
+    "toast": {
+        "fromRequest": "Solicitud de amistad de",
+        "requestAccepted": "¡ha aceptado tu solicitud de amistad!",
+        "newMessage": "te ha enviado un mensaje.",
+        "gameInvite": "Invitación al juego de",
+        "inviteReject": "La invitación ha expirado o fue rechazada.",
+        "gameAddress": "Juego creado con éxito"
+    },
+    "backend": {
+    },
+    "errorsFriends": {
+        "unblock": "No se pudo desbloquear al amigo, intenta nuevamente",
+        "block": "No se pudo bloquear al amigo, intenta nuevamente",
+        "request": "No se pudo aceptar la solicitud de amistad, intenta nuevamente",
+        "remove": "No se pudo eliminar al amigo, intenta nuevamente",
+        "cancel": "No se pudo cancelar la solicitud de amistad, intenta nuevamente",
+        "send": "No se pudo enviar la solicitud de amistad, intenta nuevamente",
+        "reject": "No se pudo rechazar la solicitud de amistad, intenta nuevamente",
+        "action": "No se pudo realizar la acción, intenta nuevamente"
+    },
     "lang": "es",
+    "footer": "ft_transcendence. reservados todos los derechos.",
     "welcome": {
         "title": "FT-PONG",
         "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
@@ -17,7 +38,13 @@
         "lastSeen": "Última vez visto a las"
     },
     "messageInput": {
-        "placeholder": "Escribe un mensaje"
+        "placeholder": "Escribe un mensaje",
+        "block": {
+            "unblockBtn": "Desatascar",
+            "blocker": "Has bloqueado a esta usuario",
+            "blocked": "Estas bloqueada por esta usuario",
+            "description": "No puedes enviar mensajes a este usuario y no recibirás sus mensajes."
+        }
     },
     "messageArea": {
         "showMoreButton": "Mostrar más"
@@ -142,7 +169,9 @@
         "pupPending": "Pendiente",
         "pupAddFriend": "Agregar amigo",
         "pupMessage": "Mensaje",
-        "notFound": "No se encontró ningún usuario"
+        "notFound": "No se encontró ningún usuario",
+        "loadingUsers": "No se pudieron cargar los usuarios. Compruebe su conexión a internet.",
+        "retry": "Rever"
     },
     "notifications": {
         "title": "Notificaciones",
@@ -261,7 +290,14 @@
             "players": "Jugadores:",
             "status": "Estado:",
             "started": "Iniciado:",
-            "noTournament": "¡No te has unido a ningún torneo todavía!"
+            "noTournament": "¡No te has unido a ningún torneo todavía!",
+            "statusGame": {
+                "waiting": "espera",
+                "ongoing": "en curso",
+                "ended": "terminó",
+                "aborted": "abortada",
+                "unknown": "espera"
+            }
         },
         "openTournaments": {
             "title": "Torneos Abiertos",
@@ -552,5 +588,25 @@
                 "emailVerificationSent": "Correo de verificación enviado exitosamente"
             }
         }
+    },
+    "dashboard": {
+        "overview": {
+            "title": "Resumen",
+            "buttons": {
+                "singleBtn": "Juego Individual",
+                "tournamentsBtn": "Torneos"
+            },
+            "fields": {
+                "games": "JUEGOS",
+                "score": "PUNTUACIÓN",
+                "highestScore": "Puntuación Más Alta",
+                "longestStreak": "Racha Más Larga",
+                "bestRank": "Mejor Rango",
+                "winRate": "Tasa de Victorias",
+                "wins": "VICTORIAS",
+                "loses": "DERROTAS"
+            }
+        }
     }
+    
 }
