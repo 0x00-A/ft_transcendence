@@ -44,3 +44,8 @@
   /* min-width: 778px; */
   /* margin: auto; */
 }
+
+.gamesHistoryContainer {
+  border: 1px solid white;
+  display: flex;
+}

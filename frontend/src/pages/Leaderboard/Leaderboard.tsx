@@ -8,6 +8,7 @@ import { Flag } from "lucide-react";
 import {  API_GET_LEADER_BOARD_URL } from "@/api/apiConfig";
 import { useGetData } from "@/api/apiHooks";
 import { LeaderBoard } from "@/types/apiTypes";
+import GamesHistory from "./GamesHistory";
 
 const users = [
   {
@@ -69,6 +70,7 @@ const Leaderboard = () => {
           ))}
         </TableBody>
       </Table>
+      <GamesHistory />
       {/* <div className="text-center mt-4">
         <Link to="/leaderboard" className="text-blue-500 hover:underline">View All Leaderboard</Link>
       </div> */}
