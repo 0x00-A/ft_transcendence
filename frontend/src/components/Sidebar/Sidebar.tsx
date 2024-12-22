@@ -3,7 +3,7 @@ import css from './Sidebar.module.css';
 import { SidebarMenu } from './components/SidebarMenu/SidebarMenu';
 import { useEffect, useRef, useState } from 'react';
 // import { IoLogOut } from 'react-icons/io5';
-import { TbLogout } from "react-icons/tb";
+import { TbLogout } from 'react-icons/tb';
 import Flag from 'react-world-flags';
 import { useAuth } from '../../contexts/AuthContext';
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
@@ -19,7 +19,6 @@ import { API_LOGOUT_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SideBarTooltip from './SideBarTooltip';
-
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -40,28 +39,27 @@ export default function Sidebar() {
   const [selectedLang, setSelectedLang] = useState('English');
   const sideBarRef = useRef(null);
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
-    // Ref to track the language switcher container
-    const languageSwitcherRef = useRef<HTMLDivElement>(null);
+  // Ref to track the language switcher container
+  const languageSwitcherRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          languageSwitcherRef.current &&
-          !languageSwitcherRef.current.contains(event.target as Node)
-        ) {
-          setShowLangPopup(false);
-        }
-      };
-
-      if (showLangPopup) {
-        document.addEventListener('mousedown', handleClickOutside);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        languageSwitcherRef.current &&
+        !languageSwitcherRef.current.contains(event.target as Node)
+      ) {
+        setShowLangPopup(false);
       }
+    };
 
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, [showLangPopup]);
+    if (showLangPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
 
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLangPopup]);
 
   const handleLogoutClick = () => {
     setShowConfirm(true);
@@ -84,7 +82,7 @@ export default function Sidebar() {
     setShowConfirm(false);
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const checkWidth = () => {
       if (sideBarRef.current) {
         const computedWidth = parseFloat(
@@ -100,13 +98,12 @@ export default function Sidebar() {
     return () => window.removeEventListener('resize', checkWidth);
   }, []);
 
-
-  console.log("showlangPopup: ", showLangPopup)
+  console.log('showlangPopup: ', showLangPopup);
   const changeLanguage = (lang: string) => {
     setSelectedLang(lang);
     i18n.changeLanguage(lang);
     localStorage.setItem('lang', lang);
-    console.log(">>showlangPopup: ", showLangPopup)
+    console.log('>>showlangPopup: ', showLangPopup);
     setShowLangPopup(false);
   };
 
@@ -125,31 +122,50 @@ export default function Sidebar() {
             ref={languageSwitcherRef}
           >
             <Flag
-              code={selectedLang === 'en' ? 'US' : selectedLang === 'es' ? 'ES' : 'MA'}
+              code={
+                selectedLang === 'en'
+                  ? 'US'
+                  : selectedLang === 'es'
+                    ? 'ES'
+                    : 'MA'
+              }
               width={32}
               height={32}
             />
             {showLangPopup && (
               <div className={css.languagePopup}>
                 <ul>
-                  <li onClick={() => changeLanguage('en')}> <Flag className={css.flags} code='US'/> English </li>
-                  <li onClick={() => changeLanguage('es')}> <Flag className={css.flags} code='ES'/> Español </li>
-                  <li onClick={() => changeLanguage('zgh')}> <Flag className={css.flags} code='MA'/> Tamazight </li>
+                  <li onClick={() => changeLanguage('en')}>
+                    {' '}
+                    <Flag className={css.flags} code="US" /> English{' '}
+                  </li>
+                  <li onClick={() => changeLanguage('es')}>
+                    {' '}
+                    <Flag className={css.flags} code="ES" /> Español{' '}
+                  </li>
+                  <li onClick={() => changeLanguage('zgh')}>
+                    {' '}
+                    <Flag className={css.flags} code="MA" /> Tamazight{' '}
+                  </li>
                 </ul>
               </div>
             )}
             <p>{selectedLang}</p>
           </div>
-          {!open && <SideBarTooltip id='language-tooltip' content='Language'/>}
+          {!open && <SideBarTooltip id="language-tooltip" content="Language" />}
           <div data-tooltip-id={`${!open ? 'theme-tooltip' : ''}`}>
             <ThemeToggle className={css.darkMode}></ThemeToggle>
           </div>
-          <div className={css.logout} onClick={handleLogoutClick} data-tooltip-id={`${!open ? 'logout-tooltip' : ''}`}>
+          <div
+            className={css.logout}
+            onClick={handleLogoutClick}
+            data-tooltip-id={`${!open ? 'logout-tooltip' : ''}`}
+          >
             <TbLogout size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />
             <p>{t('sidebar.logout')}</p>
           </div>
-          {!open && <SideBarTooltip id='theme-tooltip' content='Theme'/>}
-          {!open && <SideBarTooltip id='logout-tooltip' content='Logout'/>}
+          {!open && <SideBarTooltip id="theme-tooltip" content="Theme" />}
+          {!open && <SideBarTooltip id="logout-tooltip" content="Logout" />}
         </div>
       </div>
       {showConfirm && (

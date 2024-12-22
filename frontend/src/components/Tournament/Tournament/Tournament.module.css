@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700');
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;

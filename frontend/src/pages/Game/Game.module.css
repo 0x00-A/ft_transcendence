@@ -1,6 +1,5 @@
-
 .container {
-  height:  calc(100vh - var(--header-height) - var(--footer-height));
+  height: calc(100vh - var(--header-height) - var(--footer-height));
   /* width: 100vw; */
   width: 100%;
   display: flex;
@@ -16,7 +15,6 @@
   /* padding: 30px; */
   color: var(--text-color);
   /* max-width: 1920px; */
-  min-width: 778px;
   /* margin: auto; */
 }
 
@@ -34,7 +32,7 @@
   border-radius: 10px 0 0 0;
   padding: 20px;
 
-    flex-wrap: wrap;
+  flex-wrap: wrap;
   justify-content: space-around;
   align-items: stretch;
   /* width: 100%; */
@@ -49,7 +47,6 @@
   justify-content: center;
   border-radius: 0 10px 0 0;
   padding: 20px 20px 20px 0;
-
 }
 
 .bottomContainer {
@@ -58,7 +55,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0 0 10px 10px;
+  /* border-radius: 0 0 10px 10px; */
   padding: 0 20px 20px 20px;
   /* border: 1px solid #3b82f6 ; */
 }
@@ -67,7 +64,6 @@
   /* background-color: white; */
   padding: 0.5rem 2rem;
 }
-
 
 /* Card  */
 
@@ -86,13 +82,12 @@
 }
 
 .bottomCard {
-    background-color: transparent !important;
+  background-color: transparent !important;
   border: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   height: 100%;
   width: 100%;
   /* border: 1px solid red ; */
-
 }
 
 .header {
@@ -114,7 +109,7 @@
 .bottomCardContent {
   padding: 1rem;
   width: 100%;
-  height: calc(100% - 4rem);
+  height: calc(100% - 50px);
   overflow: auto;
   padding: 0 !important;
   margin: auto;
@@ -163,11 +158,10 @@
   border-radius: 0.5rem;
 }
 
-
 /********* Modes *********/
 
 .cardMode {
-    background-color: transparent !important;
+  background-color: transparent !important;
   border: 0;
   overflow: hidden;
   height: 100%;
@@ -179,7 +173,9 @@
   overflow: hidden;
   background-color: #1f2937; /* Equivalent to bg-gray-800 */
   border: 0;
-  transition: transform 0.3s ease, all 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    all 0.3s ease;
 }
 
 .cardHoveredMode {
@@ -230,7 +226,9 @@
   width: 1.25rem;
   height: 1.25rem;
   margin-top: 0.5rem;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   opacity: 0;
 }
 
@@ -238,11 +236,6 @@
   opacity: 1;
   transform: translateX(0.5rem);
 }
-
-
-
-
-
 
 .matchmakingLoader {
   width: 150px;
@@ -252,22 +245,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height:  calc(100vh - var(--header-height) - var(--footer-height));
+  height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
-
-
 .tournamentItem {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #374151;
-    min-width: 400px;
-    cursor: pointer;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #374151;
+  min-width: 400px;
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
 }
 
 .tournamentItem:not(:last-child) {
@@ -278,64 +269,62 @@
   font-size: 1.2rem;
 }
 
-
 .rightAligned {
   text-align: right;
 }
 
-.tournamentDate, .tournamentPlayerCount {
+.tournamentDate,
+.tournamentPlayerCount {
   color: #9ca3af;
 }
 .tournamentStatus {
   text-transform: capitalize;
   color: #f87171;
   font-size: 1.8rem;
-
 }
 .tournamentName {
   font-weight: 600;
   color: black;
   text-transform: capitalize;
   font-size: 2rem;
-
 }
 
-.loaderWrapper, .errorWrapper {
-    height: 100%;
-    width: 100%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.loaderWrapper,
+.errorWrapper {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .noTournaments {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #999999;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999999;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
 
-    /* border: 2px dashed #ddd; */
-    /* border-radius: 8px; */
+  /* border: 2px dashed #ddd; */
+  /* border-radius: 8px; */
 }
 
-
 .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
