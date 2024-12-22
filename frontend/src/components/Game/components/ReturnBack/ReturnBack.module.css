@@ -1,8 +1,8 @@
 .returnIcon {
   position: absolute;
-  right: 5%;
+  right: 3%;
   bottom: 5%;
-  size: 50px;;
+  size: 50px;
 }
 
 .returnIcon:hover {

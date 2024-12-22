@@ -5,6 +5,7 @@ import { useTyping } from '@/contexts/TypingContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { MessageProps } from '@/types/apiTypes';
 import { useTranslation } from 'react-i18next';
+import { RefreshCcw } from 'lucide-react';
 
 
 interface MessageAreaProps {
@@ -49,22 +50,18 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore
   };
 
   useEffect(() => {
-    if (shouldScroll && messageEndRef.current) {
+    if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
-      
-      const timer = setTimeout(() => {
-        setShouldScroll(false);
-      }, 100);
-
-      return () => clearTimeout(timer);
+    
     }
-  }, [messages, typing.typing, shouldScroll]);
+  }, [messages, typing.typing]);
 
   return (
     <div className={css.messageArea} ref={messageAreaRef}>
       {hasMore && (
         <button className={css.loadMoreButton} onClick={handleLoadMore}>
-          {t('messageArea.showMoreButton')}
+          {/* {t('messageArea.showMoreButton')} */}
+          <RefreshCcw />
         </button>
       )}
       {messages.map((message, index) => (

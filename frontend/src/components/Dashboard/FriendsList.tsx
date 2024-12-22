@@ -27,46 +27,70 @@ import FriendSkeleton from '../Friends/FriendSkeleton';
 //   profile: FriendProfile;
 // }
 
-const FriendsList = ({username}:{username:string | undefined}) => {
-  const { data: friendsData, isLoading, error } = useGetData<Friends[]>(`${API_GET_DASHBOARD_FRIENDS_URL}${username}`);
+const FriendsList = ({ username }: { username: string | undefined }) => {
+  const {
+    data: friendsData,
+    isLoading,
+    error,
+  } = useGetData<Friends[]>(`${API_GET_DASHBOARD_FRIENDS_URL}${username}`);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-      <>
-        <div className={css.header}>
-          <h3 className={css.title}>YOUR FRIENDS</h3>
-          <a href="/friends" className={css.viewMore}>View more</a>
-        </div>
+    <>
+      <div className={css.header}>
+        <h3 className={css.title}>YOUR FRIENDS</h3>
+        <a href="/friends" className={css.viewMore}>
+          View more
+        </a>
+      </div>
 
-        { isLoading ? <FriendSkeleton /> :
+      {isLoading ? (
+        <FriendSkeleton />
+      ) : (
         <div className={css.friendList}>
-          { error && <p>{error.message}</p> }
-          { friendsData?.length == 0 && <div className={css.noFriends}>
+          {error && <p>{error.message}</p>}
+          {friendsData?.length == 0 && (
+            <div className={css.noFriends}>
               <span>{t('Profile.friends.errors.noFriends')}</span>
-              <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
-                  {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
-                  <UserPlus />
-                  <span>{t('Profile.friends.addFriends.button')}</span>
+              <button
+                className={css.addFriendsBtn}
+                onClick={() => navigate('/friends')}
+              >
+                {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
+                <UserPlus />
+                <span>{t('Profile.friends.addFriends.button')}</span>
               </button>
-            </div> }
-          {friendsData && friendsData?.length > 0 &&  friendsData?.map((friend: Friends, index: number) => (
-            <div className={css.friendItem} key={index}>
-              <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-              <div className={css.friendInfo}>
-                <span className={css.name}>{friend.username}</span>
-                <span className={css.level}>Level: {friend.profile.level}</span>
-              </div>
-              <div className={`${css.status} ${friend.profile.is_online ? css.online : css.offline}`}>
-                  <span className={css.statusIndicator}></span>
-                {friend.profile.is_online ? 'Online' : 'Offline'}
-              </div>
             </div>
-          ))}
-        </div>}
+          )}
+          {friendsData &&
+            friendsData?.length > 0 &&
+            friendsData?.map((friend: Friends, index: number) => (
+              <div className={css.friendItem} key={index}>
+                <img
+                  src={friend.profile.avatar}
+                  alt={friend.username}
+                  className={css.avatar}
+                />
+                <div className={css.friendInfo}>
+                  <span className={css.name}>{friend.username}</span>
+                  <span className={css.level}>
+                    Level: {friend.profile.level}
+                  </span>
+                </div>
+                <div
+                  className={`${css.status} ${friend.profile.is_online ? css.online : css.offline}`}
+                >
+                  <span className={css.statusIndicator}></span>
+                  {friend.profile.is_online ? 'Online' : 'Offline'}
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
 
-        {/* <button className={css.inviteButton}>Invite your friends ➤</button> */}
-      </>
+      {/* <button className={css.inviteButton}>Invite your friends ➤</button> */}
+    </>
   );
 };
 

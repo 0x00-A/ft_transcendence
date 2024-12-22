@@ -1,12 +1,14 @@
 from accounts.models import User, Notification
 from accounts.models import Profile, User
-from accounts.utils import translate_text
+from accounts.utils.translate_text import translate_text
 from .models import Game, Tournament, Match, MultiGame
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from datetime import datetime
 from django.utils import timezone
 from django.utils.timezone import now
+import asyncio
+
 
 
 import json
@@ -206,7 +208,8 @@ class Matchmaker:
                     players = await sync_to_async(list)(tournament.players.all())
                     for p in players:
                         await cls.send_message_to_client(p.id, message)
-                        target_language = p.profile.preferred_language or 'en'
+                        profile = await sync_to_async(lambda: p.profile)()
+                        target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
                         try:
                             translated_message = translate_text(f"Tournament {tournament.name} aborted because a player left!" ,target_language)
                             translated_title = translate_text("Tournament Aborted",target_language)
@@ -229,6 +232,20 @@ class Matchmaker:
         channel_name = cls.connected_clients.get(player_id)
 
         if channel_name:
+            # Retrieve the user's preferred language
+            try:
+                user = await User.objects.aget(id=player_id)
+                profile = await sync_to_async(lambda: user.profile)()
+                target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
+            except Exception:
+                target_language = 'en'
+
+            if isinstance(message, dict) and 'message' in message:
+                try:
+                    message_text = message['message']
+                    message['message'] =  translate_text(message_text, target_language)
+                except Exception as e:
+                    print(f"Translation failed: {e}")
             await channel_layer.send(
                 channel_name,
                 {

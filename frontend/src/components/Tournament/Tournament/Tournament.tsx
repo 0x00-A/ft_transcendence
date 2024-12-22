@@ -242,6 +242,7 @@ const Pong: React.FC<GameProps> = ({
       ctx.beginPath();
       ctx.moveTo(canvas.width / 2, 10);
       ctx.lineTo(canvas.width / 2, canvas.height - 10);
+      ctx.closePath();
       ctx.stroke();
       ctx.setLineDash([]);
     };

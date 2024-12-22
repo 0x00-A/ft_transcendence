@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700');
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -136,7 +137,7 @@
 .playButton {
   position: absolute;
   top: 0;
-  left: 100%;
+  left:  calc(100% - 30px);
   height: 100%;
   z-index: 1;
   background: #ff7f5096;

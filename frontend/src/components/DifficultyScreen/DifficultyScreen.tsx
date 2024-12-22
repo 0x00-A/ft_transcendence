@@ -29,16 +29,16 @@ const DifficultyScreen = ({
       <GameButton
         onClick={() => {
           onNext('game');
-          setBallSpeed(5);
+          setBallSpeed(4);
           setPaddleSpeed(8);
         }}
       >
-{t('game.localGame.DifficultyScreen.DifficultyOptions.Normal')}        
+{t('game.localGame.DifficultyScreen.DifficultyOptions.Normal')}
       </GameButton>
       <GameButton
         onClick={() => {
           onNext('game');
-          setBallSpeed(7);
+          setBallSpeed(5);
           setPaddleSpeed(10);
         }}
       >

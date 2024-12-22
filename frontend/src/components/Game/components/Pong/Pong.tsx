@@ -11,7 +11,8 @@ import { FaPause, FaPlay } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 
-const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
+// const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
+const initialAngle = Math.PI;
 const ballRaduis = 8;
 const pW = 20;
 const pH = 80;

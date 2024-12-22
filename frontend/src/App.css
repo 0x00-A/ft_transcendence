@@ -5,6 +5,7 @@
   padding: 0;
   /* height: 100vh; */
   /* flex: 1; */
+  min-width: 778px;
 }
 
 .main-content {
@@ -30,8 +31,6 @@
   /* width: calc(100% - var(--nav-medium-width)); */
   margin-left: auto;
 }
-
-
 
 .page-content {
   /* background-color: red; */
@@ -113,7 +112,7 @@
 }
 
 /* Wide Navigation (Desktop/Expanded View) */
-@media screen and (min-width: 1920px)  {
+@media screen and (min-width: 1920px) {
   .main-content {
     width: calc(100% - var(--nav-wide-width));
   }

@@ -12,7 +12,7 @@
 
 .LineChart {
   height: 50%;
-  background-color: #1E2533;
+  background-color: #1e2533;
   padding: 30px;
   border-radius: 5rem;
 }
@@ -30,7 +30,7 @@
   border-radius: 5rem;
   display: flex;
   align-items: center;
-  background-image: url('/public/rachid.png');
+  background-image: url('/rachid.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -39,7 +39,7 @@
 
 .other {
   height: 20%;
-  background-color: #1E2533;
+  background-color: #1e2533;
   padding: 30px;
   border-radius: 30px;
 }
@@ -47,7 +47,7 @@
 .leaderboard {
   width: 100%;
   height: 50%;
-  background-color: #1E2533;
+  background-color: #1e2533;
   padding: 30px;
   border-radius: 5rem;
   color: #ffffff;
@@ -62,10 +62,10 @@
 
 .competitiveOverview {
   height: 50%;
-  background-color: #1E2533;
+  background-color: #1e2533;
   padding: 30px;
   border-radius: 5rem;
-  background-color: #1E2533;
+  background-color: #1e2533;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -90,10 +90,10 @@
 
 .lastMatchContainer {
   height: 50%;
-  background-color: #1E2533;
+  background-color: #1e2533;
   border-radius: 5rem;
   padding: 30px;
-  color: #F8F3E3;
+  color: #f8f3e3;
   display: flex;
   flex-direction: column;
   border-bottom: 2px solid #283246;
@@ -101,10 +101,10 @@
 
 .friendsContainer {
   height: 50%;
-  background-color: #1E2533;
+  background-color: #1e2533;
   border-radius: 5rem;
   padding: 30px;
-  color: #F8F3E3;
+  color: #f8f3e3;
   display: flex;
   flex-direction: column;
 }
@@ -120,7 +120,9 @@
     border-radius: 5rem 5rem 0 0;
   }
 
-  .heroSection, .mainContent, .lastSection {
+  .heroSection,
+  .mainContent,
+  .lastSection {
     flex-direction: column;
   }
 
@@ -145,13 +147,21 @@
     width: 100%;
   }
 
-  .heroSection, .mainContent, .lastSection {
+  .heroSection,
+  .mainContent,
+  .lastSection {
     flex-direction: row;
     width: 100%;
     gap: 1rem;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
+  .welcome,
+  .other,
+  .leaderboard,
+  .competitiveOverview,
+  .LineChart,
+  .lastMatchContainer,
+  .friendsContainer {
     height: auto;
     width: 100%;
     padding: 30px;
@@ -165,11 +175,19 @@
     padding: 0.5rem;
   }
 
-  .heroSection, .mainContent, .lastSection {
+  .heroSection,
+  .mainContent,
+  .lastSection {
     width: 100%;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
+  .welcome,
+  .other,
+  .leaderboard,
+  .competitiveOverview,
+  .LineChart,
+  .lastMatchContainer,
+  .friendsContainer {
     padding: 15px;
     height: auto;
   }
@@ -181,12 +199,20 @@
     padding: 1rem;
   }
 
-  .heroSection, .mainContent, .lastSection {
+  .heroSection,
+  .mainContent,
+  .lastSection {
     width: 100%;
     gap: 1rem;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
+  .welcome,
+  .other,
+  .leaderboard,
+  .competitiveOverview,
+  .LineChart,
+  .lastMatchContainer,
+  .friendsContainer {
     height: auto;
     padding: 30px;
   }
@@ -199,11 +225,19 @@
     padding: 0.5rem;
   }
 
-  .heroSection, .mainContent, .lastSection {
+  .heroSection,
+  .mainContent,
+  .lastSection {
     width: 100%;
   }
 
-  .welcome, .other, .leaderboard, .competitiveOverview, .LineChart, .lastMatchContainer, .friendsContainer {
+  .welcome,
+  .other,
+  .leaderboard,
+  .competitiveOverview,
+  .LineChart,
+  .lastMatchContainer,
+  .friendsContainer {
     padding: 30px;
     height: auto;
   }

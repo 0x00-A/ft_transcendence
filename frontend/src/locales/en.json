@@ -20,6 +20,7 @@
         "action": "Failed to perform action try again"
     },
     "lang": "en",
+    "footer": "ft_transcendence. All rights reserved.",
     "welcome": {
         "title": "FT-PONG",
         "description": "Ready to start your next match and climb the leaderboard",
@@ -37,7 +38,13 @@
         "lastSeen": "Last seen at"
     },
     "messageInput": {
-        "placeholder": "Write a message"
+        "placeholder": "Write a message",
+        "block": {
+            "unblockBtn": "Unblock",
+            "blocker": "You have blocked this user",
+            "blocked": "You are blocked by this user",
+            "description": "You can't send messages to this user, and you won't receive their messages."
+        }
     },
     "messageArea": {
         "showMoreButton": "Show More"
@@ -283,7 +290,14 @@
             "players": "Players:",
             "status": "Status:",
             "started": "Started:",
-            "noTournament": "You havn't joined any tournaments yet!."
+            "noTournament": "You havn't joined any tournaments yet!.",
+            "statusGame": {
+                "waiting": "waiting",
+                "ongoing": "ongoing",
+                "ended": "ended",
+                "aborted": "aborted",
+                "unknown": "waiting"
+            }
         },
         "openTournaments": {
             "title": "Open Tournaments",
@@ -594,5 +608,26 @@
                 "emailVerificationSent": "Verification email sent successfully"
             }
         }
+    },
+    "dashboard": {
+        "overview": {
+            "title": "Overview",
+            "buttons": {
+                "singleBtn": "Single Game",
+                "tournamentsBtn": "Tournaments"
+            },
+            "fields": {
+                "games": "GAMES",
+                "score": "SCORE",
+                "highestScore": "Highest Score",
+                "longestStreak": "Longest Streak",
+                "bestRank": "Best Rank",
+                "winRate": "Win Rate",
+                "wins": "WINS",
+                "loses": "LOSES"
+            }
+
+        }
     }
+
 }
