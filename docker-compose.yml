@@ -65,8 +65,8 @@ services:
       - ./frontend/src:/app/frontend/src
       - ./frontend/package.json:/app/frontend/package.json
       - ./frontend/public:/app/frontend/public
-    # environment:
-    #   - CHOKIDAR_USEPOLLING=true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     # volumes:
     #   - ./frontend:/app/frontend
 
