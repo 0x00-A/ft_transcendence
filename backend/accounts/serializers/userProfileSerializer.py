@@ -34,10 +34,55 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class OtherUserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
+    friend_status = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'profile']
+        fields = ['id', 'username', 'friend_status', 'first_name', 'last_name', 'last_seen', 'profile']
+
+    def get_friend_status(self, obj):
+        if 'request' not in self.context or self.context['request'].user == obj:
+            return 'self'
+        try:
+            BlockRelationship.objects.get(
+                blocker=self.context['request'].user, blocked=obj)
+            print('-->>>-you are the blocker-<<--------')
+            return 'Blocker'
+        except BlockRelationship.DoesNotExist:
+            try:
+                BlockRelationship.objects.get(
+                    blocker=obj, blocked=self.context['request'].user)
+                print('-->>>-you are the blocked-<<--------')
+                return 'Blocked'
+            except BlockRelationship.DoesNotExist:
+                pass
+        try:
+            as_sender = FriendRequest.objects.get(
+                sender=self.context['request'].user, receiver=obj)
+            print('---as sender-->>', as_sender.status, '<<--------')
+            if as_sender.status == 'accepted':
+                return 'Friends'
+            if as_sender.status == 'pending':
+                return 'Cancel'
+            if as_sender.status == 'rejected':
+                return 'Add'
+            return as_sender.status
+        except FriendRequest.DoesNotExist:
+            try:
+                as_reciever = FriendRequest.objects.get(
+                    sender=obj, receiver=self.context['request'].user)
+                print('---as reciever-->>', as_reciever.status, '<<--------')
+                if as_reciever.status == 'accepted':
+                    return 'Friends'
+                if as_reciever.status == 'pending':
+                    return 'Accept'
+                if as_reciever.status == 'rejected':
+                    return 'Add'
+                return as_reciever.status
+            except FriendRequest.DoesNotExist:
+                return 'Add'
+            # print('---as reciever-->>', as_reciever.status, '<<--------')
+        return None
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

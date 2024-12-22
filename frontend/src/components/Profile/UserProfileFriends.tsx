@@ -6,21 +6,19 @@ import { FaUserFriends } from "react-icons/fa";
 // API
 import { useGetData } from "@/api/apiHooks";
 // Components
-import Loading from "@/components/Friends/Loading";
 import { useNavigate } from 'react-router-dom';
 // Types
 import { MutualFriend, Friends } from '@/types/apiTypes';
+import { API_GET_FRIENDS_URL, API_GET_MUTUAL_FRIENDS_URL } from '@/api/apiConfig';
+import FriendSkeleton from '../Friends/FriendSkeleton';
 
 
 const UserProfileFriends = ({username}:{username:string}) => {
 
     const [isBtnActive, setBtnActive] = useState(true);
-    // const endPoint = `${username ? '/friends/${username}' : '/friends'}`;
-    const { data: friendsData, isLoading, error } = useGetData<Friends[]>(`/friends/${username}`);
-    const { data: mutualFriends, isLoading : mutualIsLoading} = useGetData<MutualFriend>(`/friends/mutual/${username}`);
+    const { data: friendsData, isLoading, error } = useGetData<Friends[]>(`${API_GET_FRIENDS_URL}/${username}`);
+    const { data: mutualFriends, isLoading : mutualIsLoading, error: mutualError} = useGetData<MutualFriend>(`${API_GET_MUTUAL_FRIENDS_URL}/${username}`);
     const navigate = useNavigate();
-    // const mutualFriends = friendsData?.filter(friend => friend.profile.is_online).slice(0, 5);
-    // const offlineFriends = friendsData?.filter(friend => !friend.profile.is_online).slice(0, 5);
 
 
   return (
@@ -43,46 +41,35 @@ const UserProfileFriends = ({username}:{username:string}) => {
                     All Friends
                 </button>
             </div>
-            <div className={css.friendList}>
-                { isLoading && <Loading /> }
-                { error && <p>{error.message}</p> }
-                { friendsData?.length == 0 && <div className={css.noFriends}>
-                    <span>This Player is Lonely</span>
-                    {/* <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
-                        <img src="/icons/friend/addFriend.svg" alt="Add" />
-                        <span>Add friends</span>
-                    </button> */}
-                </div> }
-                { isBtnActive && mutualIsLoading && <Loading /> }
-                { isBtnActive && friendsData!.length > 0 && mutualFriends!.mutual_friends?.length == 0 && <span className={css.noCurrentFriend}>No Mutual friends</span> }
-                {/* { !isBtnActive && friendsData?.length > 0 && offlineFriends?.length == 0 && <span className={css.noCurrentFriend}>No Offline friends</span> } */}
-                { isBtnActive && mutualFriends?.mutual_friends && mutualFriends.mutual_friends?.length > 0 && mutualFriends?.mutual_friends?.map((friend, index) => (
-                    <div className={css.friendItem} key={index}>
-                         <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-                         <div className={css.friendInfo}>
-                             <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
-                             <span className={css.level}>Level: {friend.profile.level}</span>
-                         </div>
-                         {/* <div className={`${css.status} ${css.online}`}>
-                            <span className={css.statusIndicator}></span>
-                            Online
-                         </div> */}
-                     </div>
-                ))}
-                { !isBtnActive &&  friendsData && friendsData?.length > 0 && friendsData?.map((friend, index) => (
-                    <div className={css.friendItem} key={index}>
-                         <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
-                         <div className={css.friendInfo}>
-                             <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
-                             <span className={css.level}>Level: {friend.profile.level}</span>
-                         </div>
-                         {/* <div className={`${css.status} ${css.offline}`}>
-                            <span className={css.statusIndicator}></span>
-                            Offline
-                         </div> */}
-                     </div>
-                ))}
-            </div>
+            { isBtnActive ? (mutualIsLoading ? <FriendSkeleton /> :
+                <div className={css.friendList}>
+                    { mutualError && <p>{mutualError.message}</p> }
+                    { mutualFriends && mutualFriends.mutual_friends_count == 0 && <span className={css.noCurrentFriend}>No Mutual friends</span> }
+                    { mutualFriends && mutualFriends.mutual_friends_count > 0 && mutualFriends.mutual_friends?.map((friend: Friends) => (
+                        <div className={css.friendItem} key={friend.id}>
+                            <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
+                            <div className={css.friendInfo}>
+                                <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
+                                <span className={css.level}>Level: {friend.profile.level}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div> )
+            : ( isLoading ? <FriendSkeleton /> :
+                <div className={css.friendList}>
+                    { error && <p>{error.message}</p> }
+                    { friendsData && friendsData?.length == 0 && <span className={css.noCurrentFriend}>This Player is Lonely</span> }
+                    { friendsData && friendsData?.length > 0 && friendsData?.map((friend: Friends) => (
+                        <div className={css.friendItem} key={friend.id}>
+                            <img src={friend.profile.avatar} alt={friend.username} className={css.avatar} />
+                            <div className={css.friendInfo}>
+                                <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
+                                <span className={css.level}>Level: {friend.profile.level}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>)
+            }
         </div>
     </div>
   )

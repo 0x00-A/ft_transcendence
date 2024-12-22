@@ -15,6 +15,8 @@ import { toast } from 'react-toastify';
 // Api
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 const Profile = () => {
@@ -23,15 +25,23 @@ const Profile = () => {
   const [activeBtn, setActiveBtn] = useState(true);
   const { user: currentUser, error, refetch, isLoading } = useUser();
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     refetch();
   }, []);
 
-  if (error) toast.error(error.message);
+  useEffect(() => {
+    if (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || 'Something went wrong, try again!');
+      } else {
+        toast.error('Something went wrong, try again!');
+      }
+      navigate('/');
+    }
+  }, [error]);
 
-  if (isLoading) return <div>Loading...</div>
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     // if (isConfirmSave) {
@@ -42,10 +52,17 @@ const Profile = () => {
     }
   };
 
+  if (isLoading) {
+    return <div className={css.profileContainer}>
+      <h1>Loading...</h1>
+    </div>
+  }
+
   return (
     <div className={css.profileContainer}>
-      { isEditProfile && !currentUser?.is_password_set && <SetPassword setEditProfile={setEditProfile}/> }
-      { isEditProfile && currentUser?.is_password_set &&
+      { isEditProfile &&
+        (!currentUser?.is_password_set ? <SetPassword setEditProfile={setEditProfile}/>
+        :
         <div className={css.bluredBg} onClick={handleOutsideClick}>
           <div className={css.editProfileContainer}>
             <button className={css.exitBtn} onClick={() => setEditProfile(false)}>
@@ -66,14 +83,14 @@ const Profile = () => {
                 <EditSecurityProfile setEditProfile={setEditProfile} /> }
             </div>
           </div>
-        </div>
+        </div>)
       }
       <ProfileHeader setEditProfile={setEditProfile} />
       <div className={css.profileBodyConatiner}>
         <ProfileFriends />
         <div className={css.rightBodyContainer}>
           <ProfileAchievements username={currentUser?.username} />
-          <ProfileGamesHistory username={currentUser?.username} />
+          <ProfileGamesHistory isOtherUser={false} username={currentUser?.username} />
         </div>
       </div>
 
