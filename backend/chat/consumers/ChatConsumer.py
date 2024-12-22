@@ -1,4 +1,5 @@
 import json
+from accounts.utils import translate_text
 from channels.generic.websocket import AsyncWebsocketConsumer
 from ..models import User, Message, Conversation
 from asgiref.sync import sync_to_async
@@ -157,11 +158,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_user = User.objects.get(id=sender_id)
         receiver_user = User.objects.get(id=receiver_id)
 
+        target_language = receiver_user.profile.preferred_language or 'en'
+        # target_language = receiver.preferred_language
+        try:
+            translated_message = translate_text(f"{sender_user.username} sent you a message: {message}",target_language)
+            translated_title = translate_text("New Message",target_language)
+        except Exception as e:
+            translated_message = f"{sender_user.username} sent you a message: {message}"
+            translated_title = "New Message"
+
         notification = Notification.objects.create(
             user=receiver_user,
             link=f"/chat",
-            title="New Message",
-            message=f"{sender_user.username} sent you a message: {message}",
+            title=translated_title,
+            message=translated_message,
         )
         notification.save()
         NotificationConsumer.send_notification_to_user(receiver_id, notification)

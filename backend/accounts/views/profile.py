@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
+from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 from accounts.models import User
@@ -117,6 +118,38 @@ class OnlineUsersView(APIView):
             online_count = User.objects.filter(profile__is_online=True).count()
             return Response(
                 {'online_players': online_count},
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'Internal server error: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class GetLanguageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            preferred_language = request.user.profile.preferred_language
+            return Response({'language': preferred_language}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {'error': f'Internal server error: {str(e)}'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class SetLanguageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, lang):
+        try:
+            profile = request.user.profile
+            profile.preferred_language = lang
+            profile.save()
+
+            return Response(
+                {'message': 'Language updated successfully.', 'language': profile.preferred_language},
                 status=status.HTTP_200_OK
             )
         except Exception as e:

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Check, X } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import styles from './FriendRequestCard.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface FriendRequestCardProps {
   from?: string;
@@ -15,6 +16,8 @@ const FriendRequestCard: React.FC<FriendRequestCardProps> = ({
   onReject,
 }) => {
   const [seconds, setSeconds] = useState(10);
+  const { t } = useTranslation();
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -50,7 +53,7 @@ const FriendRequestCard: React.FC<FriendRequestCardProps> = ({
 
         <CardContent className={`${styles.cardContent} 'flex flex-col items-center p-0 m-0 px-5'`}>
           <div className="">
-            <p className={styles.playerName}>Friend request from {from}</p>
+            <p className={styles.playerName}>{t('toast.fromRequest')} {from}</p>
           </div>
         </CardContent>
 

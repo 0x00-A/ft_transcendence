@@ -11,10 +11,9 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 55%;
     border-radius: 25px;
     background-color: #1E2533;
-    padding: 3.5rem;
+    padding: 2.5rem;
     gap: 1rem;
 }
 
@@ -93,9 +92,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 120px;
-    height: 40px;
-    padding: 20px;
+    padding: 8px 15px;
     font-size: 1.6rem;
     border-radius: 8px;
     cursor: pointer;
@@ -141,7 +138,7 @@
     /* border: 1px solid #F8C25C; */
     display: flex;
     flex-direction: column;
-    gap: 8rem;
+    gap: 3rem;
     width: 70%;
     height: 100%;
 }
@@ -168,7 +165,8 @@
 }
 
 .description {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    color: #72767d;
 }
 
 .inputBtn {
@@ -211,14 +209,14 @@
     flex-direction: column;
     gap: 2rem;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .qrCodeContainer button {
     background-color: #0E1725;
     border: 1px solid #F8C25C;
     padding: 10px 15px;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     border-radius: 8px;
     cursor: pointer;
     color: #D1D3D4;
@@ -229,6 +227,19 @@
     color: #ffffff;
 }
 
+.qrCodeContainerApp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.qrCodeContainerApp img {
+    border-radius: 10px;
+    border: 2px solid #f8c25c;
+    width: 150px;
+    height: 150px;
+}
 .fieldError {
     color: #AA2926;
     font-size: 1.2rem;
@@ -263,7 +274,6 @@
     border-radius: 8px;
     color: #D1D3D4;
     cursor: pointer;
-    margin-top: 1rem;
 }
 
 .downloadBtn:hover {
@@ -288,7 +298,7 @@
 
 .popup {
     background-color: #1E2533;
-    border: 1px solid yellow;
+    border: 1px solid #f8c25c;
     padding: 2rem;
     border-radius: 10px;
     display: flex;
@@ -307,7 +317,7 @@
     padding: 10px 20px;
     background-color: #0E1725;
     border-radius: 8px;
-    color: #D1D3D4;
+    color: var(--text-color);
     cursor: pointer;
     margin: 0 0.5rem;
 }
@@ -327,7 +337,17 @@
 }
 
 .closePopup:hover {
-    background-color: #1E2533;
+    background-color: #394056;
     color: #AA2926;
 }
 
+.qrCode {
+    border-radius: 10px;
+    border: 2px solid #f8c25c;
+    width: 120px;
+    height: 120px;
+}
+
+.osButtons .selected {
+    background-color: #5774a1;
+}

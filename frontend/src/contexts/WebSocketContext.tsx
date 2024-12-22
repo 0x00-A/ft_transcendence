@@ -15,6 +15,8 @@ import { useAuth } from './AuthContext';
 import { useUser } from '@/contexts/UserContext';
 import FriendRequestCard from '@/components/Friends/FriendRequestCard';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
+import { useTranslation } from 'react-i18next';
+import { Form } from 'react-router-dom';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
@@ -57,6 +59,8 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const { isLoggedIn } = useAuth();
   const {user} = useUser()
+  const { t } = useTranslation();
+
 
 
 
@@ -131,35 +135,19 @@ const showFriendRequestToast = (from: string) => {
 
   const handleAcceptRequest = async (from: string) => {
     try {
-      await acceptFriendRequest(from);
+      await apiAcceptFriendRequest(from);
       toast.dismiss(from);
     } catch (error) {
-      toast.error('Failed to accept friend request');
+      toast.error(t('errorsFriends.request'));
     }
   };
-
+  
   const handleRejectRequest = async (from: string) => {
     try {
-      await rejectFriendRequest(from);
+      await apiRejectFriendRequest(from)
       toast.dismiss(from);
     } catch (error) {
-      toast.error('Failed to reject friend request');
-    }
-  };
-
-  const acceptFriendRequest = async (username: string) => {
-    try {
-      await apiAcceptFriendRequest(username);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to accept friend request');
-    }
-  };
-
-  const rejectFriendRequest = async (username: string) => {
-    try {
-      await apiRejectFriendRequest(username);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to reject friend request');
+      toast.error(t('errorsFriends.reject'));
     }
   };
 
@@ -218,10 +206,10 @@ const showFriendRequestToast = (from: string) => {
         console.log(data);
 
         if (data.event === 'friend_request_accepted') {
-          toast.success(`${data.from} has accepted your friend request!`);
+          toast.success(`${data.from} ${t('toast.requestAccepted')}`);
         }
         if (data.event === 'new_message') {
-          toast(`${data.from} has sent you a message.`);
+          toast(`${data.from} ${t('toast.newMessage')}`);
         }
         if (
           data.event === 'friend_request' ||
@@ -232,6 +220,7 @@ const showFriendRequestToast = (from: string) => {
         if (
           data.event === 'notification'
         ) {
+          console.log("dataNotification: ", data)
           handleIncomingNotification(data.data);
         }
 
@@ -243,10 +232,10 @@ const showFriendRequestToast = (from: string) => {
           toast.error(data.message);
         }
         if (data.event === 'invite_reject') {
-          toast.info(data.message);
+          toast.info(t(`${data.message}`));
         }
         if (data.event === 'game_address') {
-          toast.info(data.message);
+          toast.info(t(`${data.message}`));
           acceptInvite(data.game_address, data.p1_id, data.p2_id);
         }
       };

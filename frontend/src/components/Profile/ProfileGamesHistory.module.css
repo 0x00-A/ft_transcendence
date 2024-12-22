@@ -10,7 +10,7 @@
 }
 
 .gameHistoryHeader {
-    height: 20%;
+    height: 65px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -20,28 +20,22 @@
 }
 
 .gameHistTitle {
+    height: calc(100% -65px);
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 5px 10px;
-    width: 40%;
-    height: 100%;
     font-size: 2.2rem;
     color: #F8F3E3;
     font-weight: bold;
 }
 
-.gameHistIcon {
-    font-size: 3rem;
-    color: #F8C25C;
-}
 
 .buttonsGrp {
-    width: 300px;
-    height: 50px;
+    height: 40px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 0.5rem;
     background-color: #2a2b36;
     padding: 5px 15px;
     border-radius: 12px;
@@ -163,11 +157,9 @@
     align-items: center;
 }
 
-.dateTimeGame {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
+/* .dateTimeGame {
+  font-size: 12px;
+} */
 
 .win {
     color: #F8C25C;
@@ -196,3 +188,18 @@
 .inviteBtn:hover {
     background-color: #F8C25C;
 }
+
+.tableHeader span {
+  font-size: 12px; 
+}
+@media screen and (min-width: 768px) {
+    .tableHeader span {
+      font-size: 8px; 
+    }
+  }
+  
+  @media screen and (min-width: 950px) {
+    .tableHeader span {
+      font-size: 9px; 
+    }
+  }

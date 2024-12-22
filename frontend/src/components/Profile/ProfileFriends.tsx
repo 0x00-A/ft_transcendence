@@ -2,7 +2,9 @@
 import { useState } from 'react';
 // Styles
 import css from './ProfileFriends.module.css';
-import { FaUserFriends } from "react-icons/fa";
+// import { FaUserFriends } from "react-icons/fa";
+import { Users } from 'lucide-react';
+import { HiOutlineUserAdd } from "react-icons/hi";
 // API
 import { useGetData } from "@/api/apiHooks";
 import { API_GET_OFFLINE_FRIENDS_URL, API_GET_ONLINE_FRIENDS_URL } from '@/api/apiConfig';
@@ -30,7 +32,7 @@ const ProfileFriends = () => {
     <div className={css.profileFriendsContainer}>
         <div className={css.friendsHeader}>
             <div className={css.friendsTitle}>
-                <FaUserFriends className={css.friendsIcon}/>
+                <Users size={30} color='#f8c25c'/>
                 <h3>{t('Profile.friends.title')}</h3>
             </div>
             <button className={css.viewMore} onClick={() => navigate('/friends')}>{t('Profile.friends.viewMore')}</button>
@@ -49,6 +51,13 @@ const ProfileFriends = () => {
             { isBtnActive ?
                 (isOnlineLoading ? <> <FriendSkeleton /> <FriendSkeleton /> </> :
                     <div className={css.friendList}>
+                        { onlineFriends?.length == 0 && offlineError?.length == 0 && <div className={css.noFriends}>
+                            <span>{t('Profile.friends.errors.noFriends')}</span>
+                            <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
+                                <HiOutlineUserAdd size={"2.2rem"}/>
+                                <span>{t('Profile.friends.addFriends.button')}</span>
+                            </button>
+                        </div> }
                         { onlineFriends && onlineFriends.length == 0 && <span className={css.noCurrentFriend}>{t('Profile.friends.errors.noOnlineFriends')}</span> }
                         { onlineFriends && onlineFriends.length > 0 &&  onlineFriends?.map((friend: Friends) => (
                             <div className={css.friendItem} key={friend.id}>
