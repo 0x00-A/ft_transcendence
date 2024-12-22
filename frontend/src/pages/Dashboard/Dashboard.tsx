@@ -26,7 +26,7 @@ const Dashboard = () => {
       </div>
       <div className={css.lastSection}>
         <div className={css.lastMatchContainer}><LastMatch username={currentUser?.username}/></div>
-        <div className={css.friendsContainer}><FriendsList /></div>
+        <div className={css.friendsContainer}><FriendsList username={currentUser?.username}/></div>
       </div>
     </main>
   );

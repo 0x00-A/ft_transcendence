@@ -17,3 +17,5 @@ from .badgeSerializer import BadgeSerializer
 from .achievementsSerializer import AchievementSerializer, UserAchievementsSerializer
 
 from .LeaderBoardSerializer import LeaderBoardSerializer
+
+from .userProfileSerializer import OtherUserSerializer

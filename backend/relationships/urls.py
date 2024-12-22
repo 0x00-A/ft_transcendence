@@ -7,6 +7,11 @@ from relationships import views
 
 urlpatterns = [
 
+     path('dashboard-friends/<str:username>/', views.DashboardFriendsView.as_view(), name='dashboard-friends'),
+     path('profile-online-friends/', views.GetProfileOnlineFriends.as_view(), name='profile-online-friends'),
+     path('profile-offline-friends/', views.GetProfileOfflineFriends.as_view(), name='profile-offline-friends'),
+
+
     path('friends/', views.UserFriendsView.as_view(), name='current-user-friends'),
     path('friends/<str:username>/', views.UserFriendsView.as_view(), name='specific-user-friends'),
     path('friends/mutual/<str:username>/', views.MutualFriendsView.as_view(), name='mutual-friends'),

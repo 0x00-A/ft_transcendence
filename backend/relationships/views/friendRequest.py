@@ -91,7 +91,6 @@ class UserFriendsView(APIView):
 
     def get(self, request, username=None):
         if username:
-
             try:
                 user = User.objects.get(username=username)
                 friends = user.friends.all()
@@ -408,7 +407,7 @@ class RemoveFriendView(APIView):
 
             user.friends.remove(friend_to_remove)
             FriendRequest.objects.filter(
-                    Q(sender=user, receiver=friend_to_remove) | 
+                    Q(sender=user, receiver=friend_to_remove) |
                     Q(sender=friend_to_remove, receiver=user)
                 ).delete()
 
@@ -427,5 +426,3 @@ class RemoveFriendView(APIView):
                 {'error': 'Internal server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-

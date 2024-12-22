@@ -186,8 +186,9 @@
     justify-content: space-around;
     align-items: center;
     border-radius: 20px;
-    height: 100px;
-    padding: 5px 15px;
+    /* height: 100px; */
+    padding: 15px;
+    gap: 10px;
     color: #F8F3E3;
     background-color: #1E2A3C;
 }
@@ -197,7 +198,7 @@
     color: #F8F3E3;
     background-color: #1E2A3C;
     text-align: center;
-    padding: 1rem 2rem;
+    padding: 15px;
     border-radius: 10px;
 }
 
