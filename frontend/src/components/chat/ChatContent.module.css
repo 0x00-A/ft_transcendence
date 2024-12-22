@@ -6,6 +6,7 @@
     padding-bottom: 0;
     overflow-y: auto;
     scrollbar-width: none;
+    position: relative;
 }
 .messageArea::-webkit-scrollbar {
     display: none;

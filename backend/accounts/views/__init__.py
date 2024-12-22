@@ -16,7 +16,7 @@ from .auth.logout import LogoutView
 
 from .accounts import MyProfileView
 from .accounts import UserProfileView
-from .accounts import GetMyAchievementsView
+from .accounts import GetProfileAchievementsView
 
 from .update_account import EditProfileView
 from .update_account import UpdateEmailRequest
@@ -34,6 +34,9 @@ from .profile import ProfileApiView
 from .profile import AllUsersView
 from .profile import UserDetailView
 from .profile import OnlineUsersView
+from .profile import SetLanguageView
+from .profile import GetLanguageView
+
 
 from .accounts import LeaderBoardView
 from .accounts import DashboardLeaderBoardView

@@ -1,5 +1,6 @@
 {
     "lang": "tmazight",
+    "footer": "ft_transcendence. ⵉⵣⴻⵔⴼⴰⵏ ⴰⴽⴽ ⵜⵜⵡⴰⵃⴻⵔⵣⴻⵏ.",
     "welcome": {
         "title": "FT-PONG",
         "description": "ⴰⴽⵍⴰⵎ ⴰⵎⵏⵓ ⴷ ⵉⴷⵍⴰⴽ ⴰⵎⴰⵢⵏⵉⵙ ⵏ ⵓⴷⴰⵢⵏ ⴷ ⵉⵍⴷⴰⵡⴰⵍⴻⵏ",
@@ -17,7 +18,13 @@
         "lastSeen": "ⴰⵏⴻⴳⴳⴰⵔⵓ ⵢⴻⵜⵜⵡⴰⵡⴰⵍⴰ ⴷⴻⴳ"
     },
     "messageInput": {
-        "placeholder": "ⴰⵔⵓⴷ ⵉⵣⴻⵏ"
+        "placeholder": "ⴰⵔⵓⴷ ⵉⵣⴻⵏ",
+        "block": {
+            "unblockBtn": "ⵔⵥⴻⵎ",
+            "blocker": "ⵜⵃⴻⴱⵙⴻⴹ ⴰⵙⴻⵇⴷⴰⵛⴰ",
+            "blocked": "ⵜⴻⵜⵜⵡⴰⵃⴱⴻⵙ ⵙⵖⵓⵔ ⴰⵙⴻⵇⴷⴰⵛⴰ",
+            "description": "ⵓⵔ ⵜⴻⵣⵎⵉⵔⴻⴹ ⴰⵔⴰ ⴰⴷ ⵜⴻⵙⵙⵉⵡⴹⴻⴹ ⵉⵣⵏⴰⵏ ⵉ ⵓⵙⴻⵇⴷⴰⵛⴰ, ⵢⴻⵔⵏⴰ ⵓⵔ ⴽⵉⴷⵜⵜⴰⵡⵉⵏ ⴰⵔⴰ ⵉⵣⵏⴰⵏⵏⵙⴻⵏ."
+        }
     },
     "messageArea": {
         "showMoreButton": "ⵙⴽⴻⵏ ⵓⴳⴰⵔ"
@@ -61,7 +68,7 @@
         "years": "{{count}} ⵉⵙⴻⴳⴳⴰⵙⴻⵏ ⴰⵢⴰ"
     },
     "sidebar": {
-        "dashboard": "ⵜⴰⴼⴻⵍⵡⵉⵜ ⵏ ⵓⵙⴻⵍⴽⵉⵎ",
+        "dashboard": "ⵜⴰⴼⴻⵍⵡⵉⵜ",
         "game": "ⵜⵓⵔⴰⵔⴻⵜ",
         "chat": "ⴰⵎⴻⵙⵍⴰⵢ",
         "friends": "ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ",
@@ -142,7 +149,9 @@
         "pupPending": "ⴰⵔ ⵎⴰⵔⴰ",
         "pupAddFriend": "ⵔⵏⵓ ⴰⵎⴻⴷⴷⴰⴽⴻⵍ",
         "pupMessage": "ⴰⵡⴰⵍ",
-        "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ"
+        "notFound": "ⵓⵔ ⵢⴻⵜⵜⵡⴰⴼ ⴰⵔⴰ ⵓⵙⴻⵇⴷⴰⵛ",
+        "loadingUsers": "ⵓⵍⴰⵛ ⴰⵖⴻⵔⵙⵉⵡ ⵏ ⵜⴽⴻⵔⵔⵓⵙⵉⵏ ⵉⵅⵓⵚⵚⴻⵏ ⵏ ⵜⵎⴻⵚⴽⵉⵡⵜ. ⵙⵙⴻⵅⴷⴻⵎ ⵜⵓⵇⵇⵏⴰ ⵏ ⵉⵏⵜⴻⵔⵏⴻⵜ.",
+        "retry": "ⵄⵔⴻⴹ ⵄⴰⵡⴻⴷ"
     },
     "notifications": {
         "title": "ⵉⴱⴻⴷⴷⵉⵍⴻⵏ",
@@ -220,7 +229,7 @@
                 "cancel": "ⵢⴻⴽⴽⴻⵙ...",
                 "loading": "ⴰⵄⴻⴱⴱⵉ...",
                 "ready": "ⵉⵀⴻⴳⴳⴰ!",
-                "readyUp": "HEJGED"
+                "readyUp": "ⵉⵀⴻⴳⴳⴰ"
             }
         },
         "localTournament": {
@@ -261,7 +270,14 @@
             "players": "ⵉⵎⵢⵓⵔⴰⵔⴻⵏ:",
             "status": "ⵜⴰⵍⵖⴰ:",
             "started": "ⵢⴻⴱⴷⴰ:",
-            "noTournament": "ⵓⵔ ⵜⴻⴽⵛⴻⵎ ⴰⵔⴰ ⴷⴻⴳ ⴽⵔⴰ ⵏ ⵜⵛⵉⵔⴹⴰⵔⵜ!"
+            "noTournament": "ⵓⵔ ⵜⴻⴽⵛⴻⵎ ⴰⵔⴰ ⴷⴻⴳ ⴽⵔⴰ ⵏ ⵜⵛⵉⵔⴹⴰⵔⵜ!",
+            "statusGame": {
+                "waiting": "ⵢⴻⵜⵜⵔⴰⵊⵓ",
+                "ongoing": "ⵢⴻⵜⵜⴽⴻⵎⵎⵉⵍ",
+                "ended": "ⵢⴻⴽⴼⴰ",
+                "aborted": "ⵢⴻⵖⵍⵉⴷ",
+                "unknown": "ⵢⴻⵜⵜⵔⴰⵊⵓ"
+            }
         },
         "openTournaments": {
             "title": "ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ ⵢⴻⵍⴷⵉⵏ",
@@ -569,6 +585,26 @@
                 "successUpdate": "ⵜⵉⵏⵙⵓⵜ ⵉⵜⵜⵓⵙⵏⴼⵍ ⵙ ⵜⵎⴻⴷ",
                 "emailVerificationSent": "ⵜⵎⵏⴰⴹⵜ ⵏ ⵜⵙⵏⵣⵣⴻⵔ ⵉⵜⵜⵓⵙⵉⴼⵍ ⵙ ⵜⵎⴻⴷ"
             }
+        }
+    },
+    "dashboard": {
+        "overview": {
+            "title": "ⴰⵥⴰⵔ",
+            "buttons": {
+                "singleBtn": "ⵓⵔⴰⵔ ⵢⵉⵡⴻⵏ",
+                "tournamentsBtn": "ⵜⵉⵎⵙⵉⵣⵣⴻⵍⵜ"
+            },
+            "fields": {
+                "games": "ⵓⵔⴰⵔⴻⵏ",
+                "score": "ⵓⴳⵎⵓⴹ",
+                "highestScore": "ⴰⵙⵡⵉⵔ ⵢⵓⴳⴰⵔ ⴰⴽⴽ",
+                "longestStreak": "ⵜⴰⵖⴻⵣⴼⴰⵏⵜ ⴰⴽⴽ",
+                "bestRank": "ⴰⵎⴹⵉⵇ ⵉⴳⴻⵔⵔⵣⴻⵏ",
+                "winRate": "ⴰⵣⴰⵍ ⵏ ⵔⵔⴱⴻⵃ",
+                "wins": "ⵉⵔⴻⴱⵃ",
+                "loses": "ⵢⴻⵅⵚⴻⵔ"
+            }
+
         }
     }
 

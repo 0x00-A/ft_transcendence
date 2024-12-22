@@ -19,7 +19,7 @@
 }
 
 .viewMore:hover {
-  color: #FFFFFF;
+  color: #7e8597;
 }
 
 .friendList {
@@ -156,4 +156,27 @@
   .friendItem {
     padding: 5px;
   }
+}
+
+.noFriends {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100px;
+    color: #F8F3E3;
+}
+
+.addFriendsBtn {
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: none;
+    background-color: var(--selected-color); ;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.3rem;
 }

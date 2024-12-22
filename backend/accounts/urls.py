@@ -27,6 +27,8 @@ urlpatterns = [
     path('auth/logout/', views.LogoutView.as_view(), name='logout'),
 
     path('profile/', views.MyProfileView.as_view(), name='my_profile'),
+    path('set-language/<str:lang>/', views.SetLanguageView.as_view(), name='set-language'),
+    path('get-language/', views.GetLanguageView.as_view(), name='get-language'),
     path('profile/<str:username>/', views.UserProfileView.as_view(), name='user_profile'),
 
     path('edit/profile/', views.EditProfileView.as_view(), name='edit_profile'),
@@ -43,7 +45,7 @@ urlpatterns = [
     path('users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
     path('users/online/', views.OnlineUsersView.as_view(), name='online_users'),
 
-    path('achievements/', views.GetMyAchievementsView.as_view(), name='achievements'),
+    path('achievements/<str:username>/', views.GetProfileAchievementsView.as_view(), name='profile_achievements'),
     path('dashboard-leaderboard/', views.DashboardLeaderBoardView.as_view(), name='dashboard_leaderboard'),
     path('leaderboard/', views.LeaderBoardView.as_view(), name='leaderboard'),
     #  path('profile/', views.ProfileApiView.as_view(), name='profile'),

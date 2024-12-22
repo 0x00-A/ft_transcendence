@@ -1,5 +1,26 @@
 {
+    "toast": {
+        "fromRequest": "Friend request from",
+        "requestAccepted": "has accepted your friend request!",
+        "newMessage": " has sent you a message.",
+        "gameInvite": "Game invite from",
+        "inviteReject": "The invitation has expired or rejected.",
+        "gameAddress": "Game successfully created"
+    },
+    "backend": {
+    },
+    "errorsFriends": {
+        "unblock": "Failed to unblock friend try again",
+        "block": "Failed to block friend try again",
+        "request": "Failed to accept friend request try again",
+        "remove": "Failed to remove friend try again",
+        "cancel": "Failed to cancel friend request try again",
+        "send": "Failed to send friend request try again",
+        "reject": "Failed to reject friend request try again",
+        "action": "Failed to perform action try again"
+    },
     "lang": "en",
+    "footer": "ft_transcendence. All rights reserved.",
     "welcome": {
         "title": "FT-PONG",
         "description": "Ready to start your next match and climb the leaderboard",
@@ -17,7 +38,13 @@
         "lastSeen": "Last seen at"
     },
     "messageInput": {
-        "placeholder": "Write a message"
+        "placeholder": "Write a message",
+        "block": {
+            "unblockBtn": "Unblock",
+            "blocker": "You have blocked this user",
+            "blocked": "You are blocked by this user",
+            "description": "You can't send messages to this user, and you won't receive their messages."
+        }
     },
     "messageArea": {
         "showMoreButton": "Show More"
@@ -142,7 +169,9 @@
         "pupCancel": "Cancel",
         "pupPending": "Pending",
         "pupAddFriend": "Add friend",
-        "notFound": "No User Found"
+        "notFound": "No User Found",
+        "loadingUsers": "Failed to load users. Please check your internet connection.",
+        "retry": "Retry"
     },
     "notifications": {
         "title": "Notifications",
@@ -261,7 +290,14 @@
             "players": "Players:",
             "status": "Status:",
             "started": "Started:",
-            "noTournament": "You havn't joined any tournaments yet!."
+            "noTournament": "You havn't joined any tournaments yet!.",
+            "statusGame": {
+                "waiting": "waiting",
+                "ongoing": "ongoing",
+                "ended": "ended",
+                "aborted": "aborted",
+                "unknown": "waiting"
+            }
         },
         "openTournaments": {
             "title": "Open Tournaments",
@@ -570,5 +606,26 @@
                 "emailVerificationSent": "Verification email sent successfully"
             }
         }
+    },
+    "dashboard": {
+        "overview": {
+            "title": "Overview",
+            "buttons": {
+                "singleBtn": "Single Game",
+                "tournamentsBtn": "Tournaments"
+            },
+            "fields": {
+                "games": "GAMES",
+                "score": "SCORE",
+                "highestScore": "Highest Score",
+                "longestStreak": "Longest Streak",
+                "bestRank": "Best Rank",
+                "winRate": "Win Rate",
+                "wins": "WINS",
+                "loses": "LOSES"
+            }
+
+        }
     }
+
 }

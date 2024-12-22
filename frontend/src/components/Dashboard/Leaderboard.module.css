@@ -35,6 +35,10 @@
     font-size: 1.3rem;
   }
 
+  .tableHeader span {
+    font-size: 10px;
+  }
+
   .tableHeader {
     background-color: #3D4A68;
     font-weight: bold;
@@ -70,4 +74,16 @@
   .score {
     color: #ffb902;
     font-weight: bold;
+  }
+
+  @media screen and (min-width: 768px) {
+    .tableHeader span {
+      font-size: 10px; 
+    }
+  }
+  
+  @media screen and (min-width: 950px) {
+    .tableHeader span {
+      font-size: 10px; 
+    }
   }
