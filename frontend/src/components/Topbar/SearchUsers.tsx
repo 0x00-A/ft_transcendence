@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import css from './SearchUsers.module.css';
 import { useGetData } from '../../api/apiHooks';
 import { useNavigate } from 'react-router-dom';
-import { Search, Eye, UserPlus, Check, X, MessageSquareText, AlertTriangle } from 'lucide-react';
+import { ScanSearch, Eye, UserPlus, Check, X, MessageSquareText, AlertTriangle } from 'lucide-react';
 import FriendSkeleton from '../Friends/FriendSkeleton';
 import {
   apiSendFriendRequest,
@@ -30,6 +30,7 @@ const SearchUsers: React.FC = () => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [isExpanded, setIsExpanded] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
@@ -44,6 +45,20 @@ const SearchUsers: React.FC = () => {
     setSearchTerm('');
   };
 
+  const handleSearchIconClick = () => {
+    setIsExpanded(!isExpanded);
+    if (!isExpanded) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    } else {
+      setSearchTerm('');
+      setShowResults(false);
+      refetch();
+    }
+  };
+  
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -51,6 +66,7 @@ const SearchUsers: React.FC = () => {
         !searchContainerRef.current.contains(event.target as Node)
       ) {
         setShowResults(false);
+        setIsExpanded(false);
         setSelectedIndex(-1);
       }
     };
@@ -152,23 +168,28 @@ const SearchUsers: React.FC = () => {
 
   return (
     <div className={css.searchUsers} ref={searchContainerRef}>
-      <div className={css.searchContainer}>
-        <Search className={css.searchIcon} />
-        <input
-          ref={searchInputRef}
-          type="text"
-          placeholder={t('SearchUsers.placeholder')}
-          value={searchTerm}
-          onChange={handleSearch}
-          className={css.searchInput}
-          onFocus={() => {
-            if (searchResults.length > 0) {
-              setShowResults(true);
-            }
-          }}
+      <div className={`${css.searchContainer} ${isExpanded ? css.expanded : ''}`}>
+        <ScanSearch
+          className={css.searchIcon}
+          onClick={handleSearchIconClick}
         />
+        {isExpanded && (
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder={t('SearchUsers.placeholder')}
+            value={searchTerm}
+            onChange={handleSearch}
+            className={css.searchInput}
+            onFocus={() => {
+              if (searchResults.length > 0) {
+                setShowResults(true);
+              }
+            }}
+          />
+        )}
       </div>
-      {showResults && (
+      {showResults && isExpanded && (
         <div className={css.results}>
             {usersError ?
                 <div className={css.errorContainer}>

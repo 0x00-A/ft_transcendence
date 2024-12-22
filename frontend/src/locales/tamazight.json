@@ -1,5 +1,6 @@
 {
     "lang": "tmazight",
+    "footer": "ft_transcendence. ⵉⵣⴻⵔⴼⴰⵏ ⴰⴽⴽ ⵜⵜⵡⴰⵃⴻⵔⵣⴻⵏ.",
     "welcome": {
         "title": "FT-PONG",
         "description": "ⴰⴽⵍⴰⵎ ⴰⵎⵏⵓ ⴷ ⵉⴷⵍⴰⴽ ⴰⵎⴰⵢⵏⵉⵙ ⵏ ⵓⴷⴰⵢⵏ ⴷ ⵉⵍⴷⴰⵡⴰⵍⴻⵏ",
@@ -17,7 +18,13 @@
         "lastSeen": "ⴰⵏⴻⴳⴳⴰⵔⵓ ⵢⴻⵜⵜⵡⴰⵡⴰⵍⴰ ⴷⴻⴳ"
     },
     "messageInput": {
-        "placeholder": "ⴰⵔⵓⴷ ⵉⵣⴻⵏ"
+        "placeholder": "ⴰⵔⵓⴷ ⵉⵣⴻⵏ",
+        "block": {
+            "unblockBtn": "ⵔⵥⴻⵎ",
+            "blocker": "ⵜⵃⴻⴱⵙⴻⴹ ⴰⵙⴻⵇⴷⴰⵛⴰ",
+            "blocked": "ⵜⴻⵜⵜⵡⴰⵃⴱⴻⵙ ⵙⵖⵓⵔ ⴰⵙⴻⵇⴷⴰⵛⴰ",
+            "description": "ⵓⵔ ⵜⴻⵣⵎⵉⵔⴻⴹ ⴰⵔⴰ ⴰⴷ ⵜⴻⵙⵙⵉⵡⴹⴻⴹ ⵉⵣⵏⴰⵏ ⵉ ⵓⵙⴻⵇⴷⴰⵛⴰ, ⵢⴻⵔⵏⴰ ⵓⵔ ⴽⵉⴷⵜⵜⴰⵡⵉⵏ ⴰⵔⴰ ⵉⵣⵏⴰⵏⵏⵙⴻⵏ."
+        }
     },
     "messageArea": {
         "showMoreButton": "ⵙⴽⴻⵏ ⵓⴳⴰⵔ"
