@@ -3,7 +3,7 @@ import { useGetData } from '@/api/apiHooks';
 import { Friends } from '@/types/apiTypes';
 import { API_GET_DASHBOARD_FRIENDS_URL } from '@/api/apiConfig';
 import { useTranslation } from 'react-i18next';
-import { HiOutlineUserAdd } from "react-icons/hi";
+import { UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FriendSkeleton from '../Friends/FriendSkeleton';
 
@@ -46,7 +46,7 @@ const FriendsList = ({username}:{username:string | undefined}) => {
               <span>{t('Profile.friends.errors.noFriends')}</span>
               <button className={css.addFriendsBtn} onClick={() => navigate('/friends')}>
                   {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
-                  <HiOutlineUserAdd size={"2.2rem"}/>
+                  <UserPlus />
                   <span>{t('Profile.friends.addFriends.button')}</span>
               </button>
             </div> }

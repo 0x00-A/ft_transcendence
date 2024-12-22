@@ -130,13 +130,11 @@ export interface conversationProps {
 
 
 export interface EditProfileFormData {
+    avatar: File | null;
     username: string;
-    avatar: FileList | null;
     first_name: string;
     last_name: string;
-    email: string;
     password: string;
-    otp: string;
 }
 
 export interface LastGames {

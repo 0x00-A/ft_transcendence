@@ -8,6 +8,7 @@ import CheckBox from '../../Game/CkeckBox/CheckBox';
 import ReadyButton from '../components/ReadyButton/ReadyButton';
 import LeaveTournamentButton from '../components/LeaveTournamentButton';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/helpers';
 
 const Match = ({
   // player1,
@@ -267,7 +268,7 @@ const RemoteTournament = ({
         </li>
         <li className={css.item}>
           <div className={css.itemLabel}>{t('game.remoteTournament.playerReady.Created')}</div>
-          <div className={css.text}>{tournamentStat.created_at}</div>
+          <div className={css.text}>{formatDate(tournamentStat.created_at, t('lang'))}</div>
         </li>
       </ul>
 

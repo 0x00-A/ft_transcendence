@@ -13,7 +13,7 @@
     padding: 10px 10px 10px 40px;
     background-color: #A7B8D2;
     border: none;
-    border-radius: 15px;
+    border-radius: 20px;
     color: #283245;
     font-size: 16px;
   }
@@ -161,4 +161,33 @@
 .cancelBtn:focus {
   outline: none;            
   box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); 
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.errorMessage {
+  margin-top: 10px;
+  color: red;
+  font-size: 16px;
+}
+
+.retryButton {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #1e2533;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: #e0e0e0;
 }

@@ -15,7 +15,7 @@ import {
   // SIDEBAR_RESIZE_WIDTH,
 } from '../../config/constants';
 import apiClient from '../../api/apiClient';
-import { API_LOGOUT_URL } from '@/api/apiConfig';
+import { API_GET_LANGUAGE_URL, API_LOGOUT_URL, API_POST_SET_LANGUAGE_URL } from '@/api/apiConfig';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SideBarTooltip from './SideBarTooltip';
@@ -37,7 +37,7 @@ export default function Sidebar() {
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showLangPopup, setShowLangPopup] = useState(false);
-  const [selectedLang, setSelectedLang] = useState('English');
+  const [selectedLang, setSelectedLang] = useState('en');
   const sideBarRef = useRef(null);
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
     // Ref to track the language switcher container
@@ -101,14 +101,40 @@ export default function Sidebar() {
   }, []);
 
 
-  console.log("showlangPopup: ", showLangPopup)
-  const changeLanguage = (lang: string) => {
-    setSelectedLang(lang);
-    i18n.changeLanguage(lang);
-    localStorage.setItem('lang', lang);
-    console.log(">>showlangPopup: ", showLangPopup)
-    setShowLangPopup(false);
-  };
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        const response = await apiClient.get(API_GET_LANGUAGE_URL);
+        console.log("Language fetched successfully:", response.data.language);
+
+        const lang = response.data.language || 'en';
+        setSelectedLang(lang);
+        i18n.changeLanguage(lang);
+      } catch (error) {
+        console.error("Error fetching language:", error);
+        setSelectedLang('en');
+        i18n.changeLanguage('en');
+      }
+    };
+
+    fetchLanguage();
+  }, [i18n]);
+
+    const changeLanguage = async (lang: string) => {
+      try {
+        const response = await apiClient.post(`${API_POST_SET_LANGUAGE_URL}${lang}/`);
+    
+        setSelectedLang(response.data.language);
+        i18n.changeLanguage(response.data.language);
+    
+        setShowLangPopup(false);
+    
+        console.log("Language updated successfully:", response.data.language);
+      } catch (error) {
+        console.error("Error updating language:", error);
+      }
+    };
+    
 
   return (
     <aside className={`${css.sidebar}`} ref={sideBarRef}>
@@ -125,7 +151,8 @@ export default function Sidebar() {
             ref={languageSwitcherRef}
           >
             <Flag
-              code={selectedLang === 'en' ? 'US' : selectedLang === 'es' ? 'ES' : 'MA'}
+              className={css.flagsSelected}
+              code={selectedLang === 'es' ? 'ES' : selectedLang === 'zgh' ? 'MA' : 'US'}
               width={32}
               height={32}
             />

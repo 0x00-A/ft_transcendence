@@ -8,6 +8,7 @@ import os
     the following parameter is used for the email verification link sent to the user (frontend)
 """
 CLIENT_EMAIL_VERIFICATION_URL = os.getenv("CLIENT_EMAIL_VERIFICATION_URL", "https://localhost/auth/verify-email")
+CLIENT_EMAIL_UPDATE_URL = os.getenv("CLIENT_EMAIL_UPDATE_URL", "https://localhost/profile/update-email")
 CLIENT_RESET_PASSWORD_URL = os.getenv("CLIENT_RESET_PASSWORD_URL", "https://localhost/auth/reset-password")
 CLIENT_URL = os.getenv("CLIENT_URL", "http://localhost:3000/")
 

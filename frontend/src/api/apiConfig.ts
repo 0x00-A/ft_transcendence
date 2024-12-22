@@ -62,3 +62,6 @@ export const API_GET_DASHBOARD_LEADERBOARD_URL = '/dashboard-leaderboard';
 export const API_GET_LAST_GAMES_URL = '/matchmaker/last-games';
 
 export const API_GET_LEADER_BOARD_URL = '/leaderboard';
+
+export const API_GET_LANGUAGE_URL = "/get-language/";
+export const API_POST_SET_LANGUAGE_URL = "/set-language/";

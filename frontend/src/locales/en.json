@@ -1,4 +1,24 @@
 {
+    "toast": {
+        "fromRequest": "Friend request from",
+        "requestAccepted": "has accepted your friend request!",
+        "newMessage": " has sent you a message.",
+        "gameInvite": "Game invite from",
+        "inviteReject": "The invitation has expired or rejected.",
+        "gameAddress": "Game successfully created"
+    },
+    "backend": {
+    },
+    "errorsFriends": {
+        "unblock": "Failed to unblock friend try again",
+        "block": "Failed to block friend try again",
+        "request": "Failed to accept friend request try again",
+        "remove": "Failed to remove friend try again",
+        "cancel": "Failed to cancel friend request try again",
+        "send": "Failed to send friend request try again",
+        "reject": "Failed to reject friend request try again",
+        "action": "Failed to perform action try again"
+    },
     "lang": "en",
     "welcome": {
         "title": "FT-PONG",
@@ -142,7 +162,9 @@
         "pupCancel": "Cancel",
         "pupPending": "Pending",
         "pupAddFriend": "Add friend",
-        "notFound": "No User Found"
+        "notFound": "No User Found",
+        "loadingUsers": "Failed to load users. Please check your internet connection.",
+        "retry": "Retry"
     },
     "notifications": {
         "title": "Notifications",
@@ -160,7 +182,7 @@
                 "SetWinningScore": "Set Winning Score",
                 "SetControllerType": "Set Controller Type",
                 "ControllerOptions": {
-                    "Mouse": "Mouse", 
+                    "Mouse": "Mouse",
                     "Keyboard": "Keyboard"
                 }
             },
@@ -367,8 +389,9 @@
             },
             "editProfile": {
                 "username": {
+                    "required": "Username is required!",
                     "min": "Username must be at least 4 characters!",
-                    "max": "Username must not exceed 15 characters!"
+                    "max": "Username must not exceed 30 characters!"
                 },
                 "firstName": {
                     "min": "First name must be at least 3 characters!",
@@ -387,9 +410,10 @@
                     "max": "Password must not exceed 64 characters!"
                 },
                 "avatar": {
-                    "fileSize": "The file is too large!",
+                    "fileSize": "The file should be less than 5MB !",
                     "fileType": "The file is not supported!"
-                }
+                },
+                "atLeastOneField": "Please fill at least one field to save the changes"
             }
         },
         "friends": {
@@ -413,7 +437,7 @@
                 "online": "Online",
                 "offline": "Offline"
                 }
-            }   
+            }
         },
         "gameHistory": {
             "title": "Game History",
@@ -535,7 +559,7 @@
                     "placeholder": "Enter your first name"
                 },
                 "lastName": {
-                    "label": "Last Name", 
+                    "label": "Last Name",
                     "placeholder": "Enter your last name"
                 },
                 "username": {

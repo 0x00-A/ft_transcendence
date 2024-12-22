@@ -4,8 +4,9 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from accounts.models import EmailVerification, PasswordReset, Notification
-from accounts.conf import CLIENT_EMAIL_VERIFICATION_URL, CLIENT_RESET_PASSWORD_URL, LOGO_PATH, CLIENT_URL
+from accounts.conf import CLIENT_EMAIL_VERIFICATION_URL, CLIENT_RESET_PASSWORD_URL, LOGO_PATH, CLIENT_URL, CLIENT_EMAIL_UPDATE_URL
 from accounts.consumers import NotificationConsumer
+from accounts.utils import translate_text
 
 
 def send_verification_email(user):
@@ -29,6 +30,29 @@ def send_verification_email(user):
     email.content_subtype = 'html'
     email.attach_alternative(html_message, 'text/html')
     email.send(fail_silently=False)
+
+def send_update_email_email(user, email):
+    token = EmailVerification.objects.create(user=user, new_email=email)
+    verification_link = f'{CLIENT_EMAIL_UPDATE_URL}/{token.token}/'
+
+    html_message = render_to_string('email_update.html', context={
+        'username': user.username,
+        # 'logo_path': LOGO_PATH,
+        'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
+        'verification_link': verification_link,
+    })
+
+    plain_text = strip_tags(html_message)
+    email = EmailMultiAlternatives(
+        subject='-ft-pong- Email Verification',
+        body=plain_text,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[email],
+    )
+    email.content_subtype = 'html'
+    email.attach_alternative(html_message, 'text/html')
+    email.send(fail_silently=False)
+
 
 
 def send_reset_password_email(user):
@@ -73,10 +97,19 @@ def send_oauth2_welcome(user, choice:str):
     email.attach_alternative(html_message, 'text/html')
     email.send()
 
-    notification = Notification.objects.create(user=user, title='Welcome',
-                message=f"Hello, {user.username}! Please set a password so you can edit your profile and sign in using your username and password (enter to your profile and click in Edit Profile in the top).")
+    target_language = user.profile.preferred_language or 'en'
+    # target_language = receiver.preferred_language
+    try:
+        translated_message = translate_text(f"Hello, {user.username}! Please set a password so you can edit your profile and sign in using your username and password (enter to your profile and click in Edit Profile in the top)." ,target_language)
+        translated_title = translate_text('Welcome',target_language)
+    except Exception as e:
+        translated_message = f"Hello, {user.username}! Please set a password so you can edit your profile and sign in using your username and password (enter to your profile and click in Edit Profile in the top)."
+        translated_title = "Welcome"
+    notification = Notification.objects.create(user=user, title=translated_title,
+                message=translated_message)
     notification.save()
     NotificationConsumer.send_notification_to_user(user.id, notification)
+
 
 # def send_otp_email(user):
 #     send_mail(

@@ -79,8 +79,8 @@ const AddFriend: React.FC = () => {
     try {
       await apiSendFriendRequest(username);
       refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to send friend request' );
+    } catch  {
+      toast.error(t('errorsFriends.send'));
     }
   };
 
@@ -88,8 +88,8 @@ const AddFriend: React.FC = () => {
     try {
       await apiRejectFriendRequest(username);
       refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to reject friend request' );
+    } catch  {
+      toast.error(t('errorsFriends.reject'));
     }
   };
 
@@ -97,8 +97,8 @@ const AddFriend: React.FC = () => {
     try {
       await apiAcceptFriendRequest(username);
       refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to accept friend request' );
+    } catch {
+      toast.error(t('errorsFriends.request'));
     }
   };
 
@@ -106,8 +106,8 @@ const AddFriend: React.FC = () => {
     try {
       await apiCancelFriendRequest(username);
       refetch();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to cancel friend request' );
+    } catch {
+      toast.error(t('errorsFriends.cancel'));
     }
   };
 

@@ -1,6 +1,6 @@
 .profileHeaderContainer {
     width: 100%;
-    height: 40%;
+    height: 30%;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -170,24 +170,21 @@
 }
 
 .profileCard {
-    width: 150px;
-    height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 130px;
+    height: 178px;
     position: absolute;
     left: 50%;
     top: 45%;
     transform: translateX(-50%);
     text-align: center;
-    /* border: 1px solid white; */
 }
 
 .avatarContainer {
-    width: 150px;
-    height: 150px;
-    /* border: 1px solid white; */
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* margin-top: -50px; */
+    width: 130px;
+    height: 130px;
     position: relative;
     display: inline-block;
 }
@@ -195,12 +192,34 @@
 .profileAvatar {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     /* width: 150px; */
     /* height: 150px; */
     border-radius: 25px;
     border: 5px solid #f0a500;
     /* background-color: #1a1a2e; */
 }
+
+@media screen and (max-height: 1000px) {
+    .avatarContainer {
+        width: 100px;
+        height: 100px;
+    }
+    .badgeIcon {
+        width: 30px;
+        height: 30px;
+    }
+    .profileCard {
+        width: 100px;
+        height: 150px;
+        left: 50%;
+        top: 25%;
+    }
+    .profileAvatar {
+        border-radius: 20px;
+        border: 3px solid #f0a500;
+    }
+  }
 
 .profileLevel {
     position: absolute;
@@ -216,7 +235,6 @@
 }
 
 .profileCard h2 {
-    margin-top: 15px;
     font-size: 2rem;
     font-weight: bold;
 }
@@ -250,16 +268,18 @@
 
 .statValue {
   display: block;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-color);
   margin-bottom: 0.5rem;
 }
 
 .badgeIcon {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 }
+
+
 
 .statLabel {
   color: #9699b0;
@@ -268,10 +288,10 @@
 }
 
 .totalGames, .wins, .loses, .score, .rank, .badge {
-    height: 100px;
-    width: 140px;
+    height: 80px;
+    width: 80px;
     text-align: center;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 16px;
     transition: transform 0.2s ease;
     display: flex;
@@ -279,6 +299,25 @@
     align-items: center;
     justify-content: space-between;
 }
+
+@media screen and (max-height: 1000px) {
+    .badgeIcon {
+        width: 30px;
+        height: 30px;
+    }
+    .totalGames, .wins, .loses, .score, .rank, .badge {
+        height: 70px;
+        width: 80px;
+        padding: 0.5rem;
+    }
+    .statValue {
+        display: block;
+        font-size: 1.8rem;
+    }
+    .profileCard h2 {
+        font-size: 1.5rem;
+    }
+  }
 
 .badge {
     padding: 1rem;

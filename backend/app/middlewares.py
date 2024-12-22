@@ -19,7 +19,6 @@ from http.cookies import SimpleCookie
 #     except (InvalidToken, TokenError, User.DoesNotExist):
 #         return AnonymousUser()
 
-
 class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         headers = dict(scope['headers'])

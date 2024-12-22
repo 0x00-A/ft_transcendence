@@ -1,4 +1,24 @@
 {
+    "toast": {
+        "fromRequest": "Solicitud de amistad de",
+        "requestAccepted": "¡ha aceptado tu solicitud de amistad!",
+        "newMessage": "te ha enviado un mensaje.",
+        "gameInvite": "Invitación al juego de",
+        "inviteReject": "La invitación ha expirado o fue rechazada.",
+        "gameAddress": "Juego creado con éxito"
+    },
+    "backend": {
+    },
+    "errorsFriends": {
+        "unblock": "No se pudo desbloquear al amigo, intenta nuevamente",
+        "block": "No se pudo bloquear al amigo, intenta nuevamente",
+        "request": "No se pudo aceptar la solicitud de amistad, intenta nuevamente",
+        "remove": "No se pudo eliminar al amigo, intenta nuevamente",
+        "cancel": "No se pudo cancelar la solicitud de amistad, intenta nuevamente",
+        "send": "No se pudo enviar la solicitud de amistad, intenta nuevamente",
+        "reject": "No se pudo rechazar la solicitud de amistad, intenta nuevamente",
+        "action": "No se pudo realizar la acción, intenta nuevamente"
+    },
     "lang": "es",
     "welcome": {
         "title": "FT-PONG",
@@ -142,7 +162,9 @@
         "pupPending": "Pendiente",
         "pupAddFriend": "Agregar amigo",
         "pupMessage": "Mensaje",
-        "notFound": "No se encontró ningún usuario"
+        "notFound": "No se encontró ningún usuario",
+        "loadingUsers": "No se pudieron cargar los usuarios. Compruebe su conexión a internet.",
+        "retry": "Rever"
     },
     "notifications": {
         "title": "Notificaciones",
