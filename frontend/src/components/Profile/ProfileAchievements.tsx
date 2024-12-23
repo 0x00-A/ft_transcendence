@@ -29,7 +29,7 @@ const ProfileAchievements = ({
   const [currentAchiev, setCurrentAchiev] = useState(0);
   const { t } = useTranslation();
 
-  const start = currentAchiev * 3;
+  const start = currentAchiev * 1;
   const end = start + 3;
 
   console.log('achievements===>>', achievements);
