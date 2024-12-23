@@ -13,34 +13,70 @@ import { OtherUser } from '@/types/apiTypes';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
+import PreLoader from '@/components/PreLoader/PreLoader';
 
 const UsersProfile = () => {
 
-  const {username} = useParams();
-  if (!username) return (
-    <div className={css.profileContainer}>
-      <h1>404 Not Found</h1>
-    </div>
-  );
-
-  const {data: user, isLoading, error, refetch} = useGetData<OtherUser>(`${API_GET_PROFILE_URL}${username}`);
+  const { username } = useParams();
+  const { data: user, isLoading, error, isError, refetch } = useGetData<OtherUser>(`${API_GET_PROFILE_URL}${username}`);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.data.status === 'me') {
-          navigate('/profile');
-        }
-        else {
-          toast.error(error.response?.data.message || 'Something went wrong, try again!');
-        }
-      } else {
-        toast.error('Something went wrong, try again!');
+    if (isError) {
+      if (error.status === 404) {
+        toast.error('User not found');
+        navigate('/profile');
+      } else if (error.response.data.status === 'me') {
+        navigate('/profile');
       }
-      navigate('/');
+      else {
+        toast.error(error.response.data.message || 'Something went wrong, try again!');
+        navigate('/');
+      }
     }
-  }, [error, navigate])
+  }, [isError, error]);
+
+  if (isLoading) return (
+    <div className={css.profileContainer}>
+      <PreLoader />;
+    </div>
+
+  )
+  if (isError) return navigate('/profile');
+  // if (!username) return (
+    //   <div className={css.profileContainer}>
+    //     <h1>404 Not Found</h1>
+    //   </div>
+    // );
+
+    // const navigate = useNavigate();
+
+
+
+  // if (isError) {
+  //   console.log('error = ', error);
+
+  // }
+
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log('error = ', error);
+  //     if (axios.isAxiosError(error)) {
+
+  //       if (error.response?.data.status === 'me') {
+  //         console.log('Redirecting to /profile');
+
+  //         navigate('/profile');
+  //       }
+  //       else {
+  //         toast.error(error.response?.data.message || 'Something went wrong, try again!');
+  //       }
+  //     } else {
+  //       toast.error('Something went wrong, try again!');
+  //     }
+  //     navigate('/');
+  //   }
+  // }, [error])
 
   return (
     <div className={css.profileContainer}>
