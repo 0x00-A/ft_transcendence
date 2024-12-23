@@ -55,6 +55,7 @@
     "MessageList": {
         "placeholder": "Search Friends",
         "noUserFound": "No users found matching",
+        "noConversationFound": "You do not have any conversations currently use search above for search is friend and add conversation.",
         "menu": {
             "markAsRead": "Mark as read",
             "closeChat": "Close Chat",

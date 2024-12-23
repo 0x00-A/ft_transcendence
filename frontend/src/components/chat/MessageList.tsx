@@ -331,13 +331,17 @@ const MessageList = () => {
               <div className={css.statusMessage}>
                 <SearchFriendsSkeleton />
                 <SearchFriendsSkeleton />
+                <SearchFriendsSkeleton />
+                <SearchFriendsSkeleton />
+                <SearchFriendsSkeleton />
+                <SearchFriendsSkeleton />
               </div>
             )
           ) : (
             <>
               {searchQuery && filteredFriends.length === 0 ? (
                 <div className={css.statusMessage}>
-                  <span>{t('MessageList.noUserFound')} {searchQuery}</span>
+                  <span className={css.notFoundUser} >{t('MessageList.noUserFound')} {searchQuery}</span>
                 </div>
               ) : (
                 filteredFriends.map((friend, index) => (
@@ -361,25 +365,37 @@ const MessageList = () => {
               <div className={css.statusMessage}>
                 <ConversationSkeleton />
                 <ConversationSkeleton />
+                <ConversationSkeleton />
+                <ConversationSkeleton />
+                <ConversationSkeleton />
+                <ConversationSkeleton />
               </div>
             )
           ) : (
-                ConversationList?.map((conversation, index) => (
-                  <MessageItem
-                    key={index}
-                    conversation={conversation}
-                    isSelected={selectedConversation?.id === conversation.id}
-                    onClick={() => handleConversationClick(conversation)}
-                    onMoreClick={(e) => handleMoreClick(e, index)}
-                    showMoreIcon={true}
-                    isActive={menuState.activeIndex === index}
-                    ref={(el) => (buttonRefs.current[index] = el)}
-                  />
-                ))
+              <>
+                  {ConversationList?.length === 0 
+                    ? (
+                    <div className={css.statusMessage}>
+                      <span className={css.notFoundConversation}>{t('MessageList.noConversationFound')}</span>
+                    </div>
+                  ) : (
+                    ConversationList?.map((conversation, index) => (
+                      <MessageItem
+                        key={index}
+                        conversation={conversation}
+                        isSelected={selectedConversation?.id === conversation.id}
+                        onClick={() => handleConversationClick(conversation)}
+                        onMoreClick={(e) => handleMoreClick(e, index)}
+                        showMoreIcon={true}
+                        isActive={menuState.activeIndex === index}
+                        ref={(el) => (buttonRefs.current[index] = el)}
+                      />
+                    ))
+                  )}
+              </>
           )
         )}
       </div>
-
 
 
         {menuState.isOpen && menuState.position  && ConversationList && menuState.activeIndex !== null && (
@@ -420,7 +436,6 @@ const MessageList = () => {
           </div>
         )}
       </div>
-    </div>
   );
 };
 

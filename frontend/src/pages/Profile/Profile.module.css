@@ -6,7 +6,7 @@
     width: 100%;
     max-width: 3000px;
     height:  calc(100vh - var(--header-height) - var(--footer-height));
-    min-height: 700px;
+    min-height: 800px;
     min-width: 900px;
     margin: 0 auto;
 }

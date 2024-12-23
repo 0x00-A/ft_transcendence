@@ -55,6 +55,7 @@
     "MessageList": {
         "placeholder": "Buscar amigas",
         "noUserFound": "No se encontraron usuarios que coincidan",
+        "noConversationFound": "No tienes ninguna conversación actualmente usa la búsqueda arriba para buscar es amigo y agregar conversación.",
         "menu": {
             "markAsRead": "Marcar como leído",
             "closeChat": "Cerrar chat",
