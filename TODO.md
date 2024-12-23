@@ -57,27 +57,4 @@ CHAT:
 - [ ] date in block list you must trans
 
 
-
-(conversationsLoading || friendsLoading) ? (
-          <div className={css.statusMessage}>
-              {friendsLoading
-                ? <> 
-                    <SearchFriendsSkeleton />
-                    <SearchFriendsSkeleton />
-                  </>
-                : <>
-                    <ConversationSkeleton />
-                    <ConversationSkeleton />
-                  </>
-                }
-          </div>
-        ) : friendsError || conversationsError ? (
-          <div className={css.statusMessage}>
-            <span className={css.error}>
-              {friendsError
-                ? "Failed to load friends. "
-                : "Failed to load conversations. "}
-            </span>
-          </div>
-        ) :
         
