@@ -4,15 +4,7 @@ import { useGetData } from '@/api/apiHooks';
 import { API_GET_DASHBOARD_LEADERBOARD_URL } from '@/api/apiConfig';
 // Types
 import { LeaderBoard } from '@/types/apiTypes';
-
-// const leaderboardData = [
-//   { rank: 1, name: 'essam', games: 586, winRate: '70%', loseRate: '30%', score: 6305, avatar: 'https://picsum.photos/200' },
-//   { rank: 2, name: 'rel-sima', games: 586, winRate: '65%', loseRate: '35%', score: 1135, avatar: 'https://picsum.photos/201' },
-//   { rank: 3, name: 'nel-baz', games: 586, winRate: '53%', loseRate: '35%', score: 935, avatar: 'https://picsum.photos/202' },
-//   { rank: 4, name: 'aigounad', games: 586, winRate: '40%', loseRate: '35%', score: 835, avatar: 'https://picsum.photos/203' },
-//   { rank: 5, name: 'ezz-ghba', games: 586, winRate: '30%', loseRate: '35%', score: 535, avatar: 'https://picsum.photos/204' },
-//   // Repeat similar items to match the layout shown in your screenshot
-// ];
+import { useTranslation } from 'react-i18next';
 
 const Leaderboard = () => {
   const {
@@ -20,25 +12,26 @@ const Leaderboard = () => {
     isLoading,
     error,
   } = useGetData<LeaderBoard[]>(API_GET_DASHBOARD_LEADERBOARD_URL);
+  const { t } = useTranslation();
 
   return (
     <>
       <div className={css.header}>
-        <h3>Leaderboard</h3>
+        <h3>{t('dashboard.Leaderboard.headerTitle')}</h3>
         <a href="/leaderboard" className={css.viewAll}>
-          view all leaderboard
+          {t('dashboard.Leaderboard.viewAll')}
         </a>
       </div>
 
       <div className={css.tables}>
         <div className={css.table}>
           <div className={css.tableHeader}>
-            <span>rank</span>
-            <span>name</span>
-            <span>games</span>
-            <span>Win rate</span>
-            <span>lose rate</span>
-            <span>Score</span>
+            <span>{t('dashboard.Leaderboard.tableHeaders.rank')}</span>
+            <span>{t('dashboard.Leaderboard.tableHeaders.name')}</span>
+            <span>{t('dashboard.Leaderboard.tableHeaders.games')}</span>
+            <span>{t('dashboard.Leaderboard.tableHeaders.winRate')}</span>
+            <span>{t('dashboard.Leaderboard.tableHeaders.loseRate')}</span>
+            <span>{t('dashboard.Leaderboard.tableHeaders.score')}</span>
           </div>
           {error && <p>{error.message}</p>}
           {isLoading ? (
@@ -66,7 +59,7 @@ const Leaderboard = () => {
               </div>
             </div>
           ) : leaderboardData && leaderboardData.length == 0 ? (
-            <p>No data found</p>
+            <p>{t('dashboard.Leaderboard.noDataFound')}</p>
           ) : (
             leaderboardData &&
             leaderboardData.length > 0 &&

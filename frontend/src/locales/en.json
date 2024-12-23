@@ -627,7 +627,64 @@
                 "loses": "LOSES"
             }
 
+        },
+        "LineChartComponent": {
+            "title": "Weekly Gaming Duration",
+            "totalPlayTime": "Total Play Time",
+            "avgDailyTime": "Avg. Daily Time",
+            "tooltipHours": "hrs",
+            "yAxisLabel": "Hours",
+            "days": {
+                "Mon": "Mon",
+                "Tue": "Tue",
+                "Wed": "Wed",
+                "Thu": "Thu",
+                "Fri": "Fri",
+                "Sat": "Sat",
+                "Sun": "Sun"
+            }
+        },
+        "Leaderboard": {
+            "headerTitle": "Leaderboard",
+            "viewAll": "View All Leaderboard",
+            "tableHeaders": {
+                "rank": "Rank",
+                "name": "Name",
+                "games": "Games",
+                "winRate": "Win Rate",
+                "loseRate": "Lose Rate",
+                "score": "Score"
+            },
+            "noDataFound": "No data found"
+        },
+        "FriendsList": {
+            "headerTitle": "Your Friends",
+            "viewMore": "View More",
+            "noFriends": {
+                "message": "You have no friends yet.",
+                "addFriendsButton": "Add Friends"
+            },
+            "friendItem": {
+                "levelLabel": "Level:",
+                "status": {
+                    "online": "Online",
+                    "offline": "Offline"
+                }
+            }
+        },
+        "LastMatch": {
+            "headerTitle": "Last Games",
+            "viewMore": "View More",
+            "noGames": {
+                "message": "No games found in your history.",
+                "playNow": "Play Now"
+            },
+            "matchItem": {
+                "opponentLabel": "Opponent:",
+                "dateLabel": "Date:",
+                "scoreLabel": "Score:",
+                "xpGainedLabel": "XP Gained:"
+            }
         }
     }
-
 }

@@ -3,20 +3,12 @@ import { Target, Clock } from 'lucide-react';
 import css from './LineChartComponent.module.css';
 import { useUser } from '@/contexts/UserContext';
 import { Stats } from '@/types/apiTypes';
+import { useTranslation } from 'react-i18next';
 
 const LineChartComponent = () => {
   const {user} = useUser()
-  // console.log(user);
+  const { t } = useTranslation();
 
-  // const performanceData = [
-  //   { day: 'Mon', duration: 2.5 },
-  //   { day: 'Tue', duration: 3 },
-  //   { day: 'Wed', duration: 1.8 },
-  //   { day: 'Thu', duration: 2.2 },
-  //   { day: 'Fri', duration: 2.9 },
-  //   { day: 'Sat', duration: 3.5 },
-  //   { day: 'Sun', duration: 4 },
-  // ];
 
   const get_duration = (stats: Stats | undefined, day: string) => {
     if (!stats) return 0;
@@ -36,17 +28,17 @@ const LineChartComponent = () => {
     averageDailyTime = 0;
 
   const performanceData = [
-    { day: 'Mon', duration: get_duration(user?.profile.stats, 'Mon') },
-    { day: 'Tue', duration: get_duration(user?.profile.stats, 'Tue') },
-    { day: 'Wed', duration: get_duration(user?.profile.stats, 'Wed') },
-    { day: 'Thu', duration: get_duration(user?.profile.stats, 'Thu') },
-    { day: 'Fri', duration: get_duration(user?.profile.stats, 'Fri') },
-    { day: 'Sat', duration: get_duration(user?.profile.stats, 'Sat') },
-    { day: 'Sun', duration: get_duration(user?.profile.stats, 'Sun') },
+    { day: t('dashboard.LineChartComponent.days.Mon'), duration: get_duration(user?.profile.stats, 'Mon') },
+    { day: t('dashboard.LineChartComponent.days.Tue'), duration: get_duration(user?.profile.stats, 'Tue') },
+    { day: t('dashboard.LineChartComponent.days.Wed'), duration: get_duration(user?.profile.stats, 'Wed') },
+    { day: t('dashboard.LineChartComponent.days.Thu'), duration: get_duration(user?.profile.stats, 'Thu') },
+    { day: t('dashboard.LineChartComponent.days.Fri'), duration: get_duration(user?.profile.stats, 'Fri') },
+    { day: t('dashboard.LineChartComponent.days.Sat'), duration: get_duration(user?.profile.stats, 'Sat') },
+    { day: t('dashboard.LineChartComponent.days.Sun'), duration: get_duration(user?.profile.stats, 'Sun') },
   ];
   return (
     <div className={css.container}>
-      <h3 className={css.title}>Weekly Gaming Duration</h3>
+      <h3 className={css.title}>{t('dashboard.LineChartComponent.title')}</h3>
 
       <div className={css.statsContainer}>
         {/* <div className={css.statCard}>
@@ -60,17 +52,17 @@ const LineChartComponent = () => {
         <div className={css.statCard}>
           <div className={css.statTitle}>
             <Target className={css.totalPlayIcon} size={20} />
-            <span className={css.statText}>Total Play Time</span>
+            <span className={css.statText}>{t('dashboard.LineChartComponent.totalPlayTime')}</span>
           </div>
-          <p className={css.statValue}>{totalPlayTime?.toFixed(2) || 0} hrs</p>
+          <p className={css.statValue}>{totalPlayTime?.toFixed(2) || 0} {t('dashboard.LineChartComponent.tooltipHours')}</p>
         </div>
 
         <div className={css.statCard}>
           <div className={css.statTitle}>
             <Clock className={css.avgDailyIcon} size={20} />
-            <span className={css.statText}>Avg. Daily Time</span>
+            <span className={css.statText}>{t('dashboard.LineChartComponent.avgDailyTime')}</span>
           </div>
-          <p className={css.statValue}>{averageDailyTime.toFixed(2)} hrs</p>
+          <p className={css.statValue}>{averageDailyTime.toFixed(2)} {t('dashboard.LineChartComponent.tooltipHours')}</p>
         </div>
       </div>
 
@@ -86,7 +78,6 @@ const LineChartComponent = () => {
               stroke="#94a3b8"
               tick={{ fill: '#94a3b8' }}
               label={{
-                value: "Hours",
                 angle: -90,
                 position: "insideLeft",
                 fill: "#94a3b8"

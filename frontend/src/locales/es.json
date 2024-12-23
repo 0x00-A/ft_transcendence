@@ -606,6 +606,64 @@
                 "wins": "VICTORIAS",
                 "loses": "DERROTAS"
             }
+        },
+        "LineChartComponent": {
+            "title": "Duración Semanal de Juego",
+            "totalPlayTime": "Tiempo Total de Juego",
+            "avgDailyTime": "Prom. Diario de Tiempo",
+            "tooltipHours": "hrs",
+            "yAxisLabel": "Horas",
+            "days": {
+                "Mon": "Lun",
+                "Tue": "Mar",
+                "Wed": "Mié",
+                "Thu": "Jue",
+                "Fri": "Vie",
+                "Sat": "Sáb",
+                "Sun": "Dom"
+            }
+        },
+        "Leaderboard": {
+            "headerTitle": "Clasificación",
+            "viewAll": "Ver toda la clasificación",
+            "tableHeaders": {
+                "rank": "Rango",
+                "name": "Nombre",
+                "games": "Juegos",
+                "winRate": "Tasa de victorias",
+                "loseRate": "Tasa de derrotas",
+                "score": "Puntuación"
+            },
+            "noDataFound": "No se encontraron datos"
+        },
+        "FriendsList": {
+            "headerTitle": "Tus Amigos",
+            "viewMore": "Ver Más",
+            "noFriends": {
+                "message": "Aún no tienes amigos.",
+                "addFriendsButton": "Agregar Amigos"
+            },
+            "friendItem": {
+                "levelLabel": "Nivel:",
+                "status": {
+                    "online": "En línea",
+                    "offline": "Desconectado"
+                }
+            }
+        },
+        "LastMatch": {
+            "headerTitle": "Últimos Juegos",
+            "viewMore": "Ver Más",
+            "noGames": {
+                "message": "No se encontraron juegos en tu historial.",
+                "playNow": "Jugar Ahora"
+            },
+            "matchItem": {
+                "opponentLabel": "Oponente:",
+                "dateLabel": "Fecha:",
+                "scoreLabel": "Puntuación:",
+                "xpGainedLabel": "XP Ganada:"
+            }
         }
     }
     

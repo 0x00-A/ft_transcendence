@@ -55,3 +55,29 @@ CHAT:
     #   match => { "message" => "%{IPORHOST:client_ip} - %{DATA:remote_user} \[%{HTTPDATE:timestamp}\] \"%{WORD:method} %{DATA:request} HTTP/%{NUMBER:http_version}\" %{NUMBER:status} %{NUMBER:bytes}" }
     # }
 - [ ] date in block list you must trans
+
+
+
+(conversationsLoading || friendsLoading) ? (
+          <div className={css.statusMessage}>
+              {friendsLoading
+                ? <> 
+                    <SearchFriendsSkeleton />
+                    <SearchFriendsSkeleton />
+                  </>
+                : <>
+                    <ConversationSkeleton />
+                    <ConversationSkeleton />
+                  </>
+                }
+          </div>
+        ) : friendsError || conversationsError ? (
+          <div className={css.statusMessage}>
+            <span className={css.error}>
+              {friendsError
+                ? "Failed to load friends. "
+                : "Failed to load conversations. "}
+            </span>
+          </div>
+        ) :
+        
