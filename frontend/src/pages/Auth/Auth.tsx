@@ -26,6 +26,12 @@ const Auth = () => {
       <div className={css.authContainer}>
           <div className={`${css.authFormBox} ${!isLoginBox ? css.authFormSwitch : ''}`}>
             {isLoginBox ? <Login /> : <Signup setIslogin={setIsloginBox} /> }
+            <div className={css.authFooter}>
+              <p>{isLoginBox ? "Don't have an account?" : 'Already have an account?'}</p>
+              <button onClick={() => { setIsloginBox(!isLoginBox);}}>
+                {isLoginBox ? 'Signup' : 'Login'}
+              </button>
+            </div>
           </div>
         <AuthPongBox isLogin={isLoginBox} setIslogin={setIsloginBox}/>
       </div>
