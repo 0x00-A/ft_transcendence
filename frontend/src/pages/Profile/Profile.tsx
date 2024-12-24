@@ -24,28 +24,29 @@ import { PasswordForm } from '@/types/apiTypes';
 
 const Profile = () => {
 
-  const { register, handleSubmit, errors, mutation, reset } = useDeleteAccount();
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
   const [isDeleteAcc, setDeleteAcc] = useState(false);
   const { user: currentUser, error, refetch, isLoading } = useUser();
+  const { register, handleSubmit, errors, mutation, reset } = useDeleteAccount();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     refetch();
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || 'Something went wrong, try again!');
-      } else {
-        toast.error('Something went wrong, try again!');
-      }
-      navigate('/');
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       toast.error(error.response?.data?.message || 'Something went wrong, try again!');
+  //     } else {
+  //       toast.error('Something went wrong, try again!');
+  //     }
+  //     navigate('/');
+  //   }
+  // }, [error]);
 
 
   const handleOutsideClick = (event: React.MouseEvent) => {
@@ -56,12 +57,6 @@ const Profile = () => {
       setEditProfile(false);
     }
   };
-
-  if (isLoading) {
-    return <div className={css.profileContainer}>
-      <h1>Loading...</h1>
-    </div>
-  }
 
   useEffect(() => {
     if (mutation.isSuccess) {
@@ -78,6 +73,21 @@ const Profile = () => {
       }
     }
   }, [mutation.isError]);
+
+  if (isLoading) {
+    return <div className={css.profileContainer}>
+      <h1>Loading...</h1>
+    </div>
+  }
+
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.response?.data?.message || 'Something went wrong, try again!');
+    } else {
+      toast.error('Something went wrong, try again!');
+    }
+    navigate('/');
+  }
 
   return (
     <div className={css.profileContainer}>

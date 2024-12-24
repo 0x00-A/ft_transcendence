@@ -44,7 +44,7 @@ class LastGamesView(APIView):
         try:
             user = User.objects.get(username=username)
             last_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')[:5]
-            serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request})
+            serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request, 'user': user})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response(data={"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

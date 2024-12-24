@@ -19,6 +19,7 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isBtnActive, setBtnActive] = useState(true);
+  console.log('username', username);
   const { data: playedGames, isLoading, error } = useGetData<LastGames[]>(`${API_GET_LAST_GAMES_URL}/${username}`);
 
   const gameHistoryFields = useMemo(
@@ -117,8 +118,8 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
                       <span className={css.historyField}>{formatDate(game?.start_time, t('lang'))}</span>
                     </div>
                     <div className={css.player}>
-                        <img src={game.opponent_avatar} alt={game?.opponent_username} className={css.avatar} />
-                        <span className={css.name}>{game.opponent_username}</span>
+                        <img src={game.opponent_avatar} alt={game?.opponent_username} className={css.avatar} onClick={() => navigate(`/profile/${game.opponent_username}`)} />
+                        <span className={css.name} onClick={() => navigate(`/profile/${game.opponent_username}`)}>{game.opponent_username}</span>
                     </div>
                     <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{getResultTranslation(game.result)}</span>
                     <span className={css.historyField}>{game.my_score} - {game.opponent_score}</span>
