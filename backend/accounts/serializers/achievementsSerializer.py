@@ -9,8 +9,8 @@ class AchievementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Achievement
-        fields = ['name', 'description', 'condition_name', 'condition', 'reward_points', 'image',
-                  'progress_percentage', 'is_unlocked']
+        fields = ['name', 'description', 'condition_name', 'name_trans', 'condition', 'reward_points', 'image',
+                    'progress_percentage', 'is_unlocked']
 
     def get_image(self, obj):
         return f'{settings.SERVER_URL}{obj.image}'
@@ -22,7 +22,6 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
         model = UserAchievement
         fields = ['achievement', 'progress', 'is_unlocked', 'unlocked_at']
         # depth = 1
-
 
     # def validate(self, attrs):
     #     try:

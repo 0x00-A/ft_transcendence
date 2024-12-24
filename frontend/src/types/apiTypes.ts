@@ -208,6 +208,7 @@ export interface Achievement {
     description: string;
     image: string;
     condition_name: string;
+    name_trans: string;
     condition: {
         [key: string]: number;
     };

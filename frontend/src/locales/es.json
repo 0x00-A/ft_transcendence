@@ -478,7 +478,24 @@
         },
         "Achievements": {
             "title": "Logros",
-            "NoAchievementsFound": "No se encontraron logros!"
+            "locked": "Bloqueada",
+            "NoAchievementsFound": "No se encontraron logros!",
+            "achievements": {
+                "first_paddle_name": "Primera Paleta",
+                "first_paddle_description": "Gana tu primer partido.",
+                "persistent_player_name": "Jugador Persistente",
+                "persistent_player_description": "¡Inicia sesión 7 días seguidos!",
+                "bronze_champ_name": "Campeón de Bronce",
+                "bronze_champ_description": "Gana 5 partidos.",
+                "silver_smash_name": "Aplastador de Plata",
+                "silver_smash_description": "Gana 10 partidos.",
+                "gold_ace_name": "As de Oro",
+                "gold_ace_description": "Gana 20 partidos.",
+                "marathon_match_name": "Partido de Maratón",
+                "marathon_match_description": "Juega un partido que dure más de 5 minutos.",
+                "ft_pong_legend_name": "Leyenda de FT-PONG",
+                "ft_pong_legend_description": "Gana 50 partidos."
+            }
         },
         "setPassword": {
             "title": "Establecer contraseña",

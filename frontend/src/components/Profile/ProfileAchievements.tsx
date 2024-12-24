@@ -11,11 +11,8 @@ import { GrFormNext } from 'react-icons/gr';
 import { UserAchievements } from '@/types/apiTypes';
 import { Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Content } from '@radix-ui/react-alert-dialog';
 
-// const achievements = {"name": "First Paddle", "description": "Win your first game",
-//     "image": "/icons/AchievIcon.svg", "condition": {"win": 1}, "progress": 0,
-//         "is_unlocked": true, "unlocked_at": "2021-10-10"}
-// {`${isConfirmSave ? css.bluredBgConfirm : ''}`}
 const ProfileAchievements = ({
   username,
 }: {
@@ -86,21 +83,22 @@ const ProfileAchievements = ({
               .map((achievement: UserAchievements, index: number) => (
                 <div
                   key={index}
-                  className={`${!achievement.is_unlocked ? css.lockedAchievCard : ''} ${css.achievCard}`}
+                  className={css.achievCard}
                 >
+                  {!achievement.is_unlocked && <p className={css.lockedAchievCard}>{t(`Profile.Achievements.locked`)}</p>}
                   <div className={css.achievTitle}>
                     <img src="/pong.png" className={css.achievImg} alt="" />
                     {/* <img src={achievement.achievement.image} className={css.achievImg} alt="" /> */}
-                    <h4>{achievement.achievement.name}</h4>
+                    <h4>{t(`Profile.Achievements.achievements.${achievement.achievement.name_trans}_name`)}</h4>
                   </div>
                   <div className={css.achievDescription}>
                     <p className={css.description}>
-                      {achievement.achievement.description}
+                        {t(
+                          `Profile.Achievements.achievements.${achievement.achievement.name_trans}_description`
+                        )}
                     </p>
                     <p className={css.progress}>
-                      {achievement.progress[
-                        achievement.achievement.condition_name
-                      ] ?? 0}{' '}
+                      {achievement.progress[achievement.achievement.condition_name] ?? 0}{' '}
                       /{' '}
                       {
                         achievement.achievement.condition[
