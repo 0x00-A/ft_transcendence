@@ -8,7 +8,7 @@ import EndGameScreen from '../components/EndGameScreen/EndGameScreen';
 import DifficultyScreen from '../../DifficultyScreen/DifficultyScreen';
 import ReturnBack from '../components/ReturnBack/ReturnBack';
 
-const LocalGame = ({onReturn}:{onReturn?: ()=>void}) => {
+const LocalGame = ({ onReturn }: { onReturn?: () => void }) => {
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('mode'); // Starting screen is 'mode'
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
@@ -60,7 +60,7 @@ const LocalGame = ({onReturn}:{onReturn?: ()=>void}) => {
             setIsWinner={setIsWinner}
             isOnePlayerMode={isOnePlayerMode}
             sound={sound}
-            ballSpeed={ballSpeed}
+            ballSpeed={1}
             paddleSpeed={paddleSpeed}
             controller={controller}
             winningScore={winningScore}

@@ -126,11 +126,17 @@ class GameInstance:
         return 0 <= t <= 1 and 0 <= u <= 1
 
     def is_colliding_with_paddle(self, paddle):
+        ball_from_top = self.ball.y < self.state[f"{paddle}_y"]
+        ball_from_bottom = self.ball.y > self.state[f"{
+            paddle}_y"] + self.paddle_height
+
         # Previous and current position of the ball
         next_x = self.ball.x + self.ball.dx + \
             (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
         next_y = self.ball.y + self.ball.dy + \
             (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
+
+        # next_y = (ballFromTop? ball.y + ball.radius: (ballFromBottom? ball.y - ball.radius: ball.y)) + ball.dy
 
         # Paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
