@@ -1,6 +1,8 @@
 import { Swords, Shield } from 'lucide-react';
 import { useGetData } from '@/api/apiHooks';
 import { User } from '@/types/apiTypes';
+import { useEffect, useState } from 'react';
+import { GameState } from '@/types/types';
 
 const PlayerMatchupBannerSkeleton = () => {
   return (
@@ -34,7 +36,32 @@ const PlayerMatchupBannerSkeleton = () => {
   );
 };
 
-const PlayerMatchupBanner = ({p1_id, p2_id, player}: {p1_id:number, p2_id:number, player:string}) => {
+const MatchTimer = ({gameState}: {gameState:GameState}) => {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    if (gameState != 'started') return
+    const intervalId = setInterval(() => {
+      setSeconds(prevSeconds => prevSeconds + 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [gameState]);
+
+  const formatTime = (totalSeconds: number) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const remainingSeconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="font-mono text-2xl">
+      {formatTime(seconds)}
+    </div>
+  );
+};
+
+const PlayerMatchupBanner = ({p1_id, p2_id, player, gameState}: {p1_id:number, p2_id:number, player:string, gameState:GameState} ) => {
   const players = {
     player1: {
       username: "CyberPaddler87",
@@ -78,11 +105,12 @@ const PlayerMatchupBanner = ({p1_id, p2_id, player}: {p1_id:number, p2_id:number
       </div>
 
       {/* VS Section */}
-      <div className="flex items-center">
+      <div className="flex items-center justify-center flex-col gap-1">
         <Swords
           className="text-red-500/50 animate-pulse"
           size={24}
         />
+        <MatchTimer gameState={gameState}/>
       </div>
 
       {/* Player 2 Section */}

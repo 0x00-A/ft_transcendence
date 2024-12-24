@@ -87,6 +87,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       setGameState(null);
       let gameSocket: WebSocket | null = null;
       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}`;
+      // ws?.current?.close();
       if (!ws.current) gameSocket = new WebSocket(wsUrl);
       if (!gameSocket) return;
       ws.current = gameSocket;
@@ -310,7 +311,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
               size={120}
             />
         } */}
-      <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} player={player} />
+      <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} player={player} gameState={gameState} />
       {gameState === 'started' || gameState === 'ended' ? (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (

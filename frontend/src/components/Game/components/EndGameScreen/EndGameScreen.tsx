@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import GameButton from '../GameButton/GameButton';
 import css from './EndGameScreen.module.css';
+import { useEffect } from 'react';
 
 const EndGameScreen = ({
   isWinner,
@@ -14,6 +15,17 @@ const EndGameScreen = ({
   isMatchTournament?: boolean;
 }) => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      handleMainMenu();
+    }, 3000);
+
+    return () => {
+      clearTimeout(t);
+    }
+  }, [])
+
 
   return (
     <div className={css.endGameScreen}>
