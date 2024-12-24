@@ -20,10 +20,11 @@ channel_layer = get_channel_layer()
 
 canvas_width: int = 650
 canvas_height: int = 480
-winning_score: int = 3
+winning_score: int = 1
 
 ball_raduis: int = 8
 initial_ball_speed = 4
+ball_max_speed = 8
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 games = {}
@@ -59,7 +60,7 @@ class GameInstance:
         self.player2_score = 0
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 4
+        self.paddle_speed = 2
         self.paddle_width: int = 20
         self.paddle_height: int = 80
         self.state = {
@@ -133,10 +134,11 @@ class GameInstance:
         # Previous and current position of the ball
         next_x = self.ball.x + self.ball.dx + \
             (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
-        next_y = self.ball.y + self.ball.dy + \
-            (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
+        next_y = self.ball.y + self.ball.dy
 
         # next_y = (ballFromTop? ball.y + ball.radius: (ballFromBottom? ball.y - ball.radius: ball.y)) + ball.dy
+        next_y += self.ball.radius if ball_from_top else - \
+            self.ball.radius if ball_from_bottom else 0
 
         # Paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
@@ -172,7 +174,6 @@ class GameInstance:
         return check
 
     def handle_paddle_collision(self, paddle):
-        # Check if the ball is hitting the top/bottom or the sides
         ball_from_left = self.ball.x < self.state[f"{paddle}_x"]
         ball_from_right = self.ball.x > self.state[f"{paddle}_x"] + \
             self.paddle_width
@@ -181,38 +182,39 @@ class GameInstance:
         ball_from_bottom = self.ball.y > self.state[f"{paddle}_y"] + \
             self.paddle_height
 
-        # Handle side collision
+        # side collision
         if ball_from_left or ball_from_right:
             self.ball.dx *= -1  # Reverse the horizontal velocity
-            if ball_from_left:
-                self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
-            elif ball_from_right:
-                self.ball.x = self.state[f"{paddle}_x"] + \
-                    self.paddle_width + self.ball.radius
+            # if ball_from_left:
+            #     self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
+            # elif ball_from_right:
+            #     self.ball.x = self.state[f"{paddle}_x"] + \
+            #         self.paddle_width + self.ball.radius
 
             relative_impact = (
                 self.ball.y - (self.state[f"{paddle}_y"] + self.paddle_height / 2)) / (self.paddle_height / 2)
             max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
 
-            # Calculate new angle based on relative impact
+            # new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
 
-            # Update ball's velocity (dx, dy) based on the new angle
+            # Update ball dx, dy based on the new angle
             direction = 1 if self.ball.dx > 0 else -1
-            self.ball.speed += 0.1
+            if self.ball.speed < ball_max_speed:
+                self.ball.speed += 0.1
             self.ball.dx = direction * self.ball.speed * \
                 math.cos(new_angle)  # Horizontal velocity
             self.ball.dy = self.ball.speed * \
                 math.sin(new_angle)  # Vertical velocity
 
-        # Handle top/bottom collision
+        # top/bottom collision
         if ball_from_top or ball_from_bottom:
             self.ball.dy *= -1
-            if ball_from_top:
-                self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
-            elif ball_from_bottom:
-                self.ball.y = self.state[f"{paddle}_y"] + \
-                    self.paddle_height + self.ball.radius
+            # if ball_from_top:
+            #     self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
+            # elif ball_from_bottom:
+            #     self.ball.y = self.state[f"{paddle}_y"] + \
+            #         self.paddle_height + self.ball.radius
 
 
 def create_game(game_id):
