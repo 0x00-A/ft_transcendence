@@ -176,4 +176,16 @@ export const EmailSchema = () => {
   });
 }
 
+export const PasswordSchema = () => {
+  const { t } = useTranslation();
+
+  return yup.object().shape({
+    password: yup
+      .string()
+      .min(8, t('Profile.errors.editProfile.password.min'))
+      .max(64, t('Profile.errors.editProfile.password.max'))
+      .required(t('Profile.errors.editProfile.password.required')),
+  });
+}
+
 // !formValues.some((value:any) => value !== undefined && value !== null && value?.trim() !== '')

@@ -239,8 +239,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70px;
-    height: 40px;
+    /* width: 70px;
+    height: 40px; */
     padding: 10px 15px;
     font-size: 1.6rem;
     border-radius: 8px;
@@ -260,3 +260,89 @@
 .closeBtn {
     border: 1px solid #AA2926;
 }
+
+.deleteAccBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #AA2926;
+}
+
+.deleteAccBtn span {
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.bluredBgConfirm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.confirmDelAccContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E2533;
+    border-radius: 25px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    gap: 2.5rem;
+}
+
+.confirmDelAccContainer h1{
+    font-size: 2.2rem;
+    color: #AA2926;
+}
+
+.confirmDelAccContainer p{
+    color: #D1D3D4;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+}
+
+.confirmDelAccContainer label{
+    font-size: 1.4rem;
+    color: #D1D3D4;
+}
+
+.confirmDelAccContainer input {
+    width: 100%;
+    height: 45px;
+    background-color: #0E1725;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 1.2rem;
+    color: #D1D3D4;
+}
+
+.fieldError {
+    color: #AA2926;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+/* .ConfirmButtons {
+    display: flex;
+    gap: 4rem;
+} */
+
+/* .confirmBtn, .closeBtn {
+    background-color: #0E1725;
+    padding: 10px 15px;
+    font-size: 1.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #D1D3D4;
+} */
