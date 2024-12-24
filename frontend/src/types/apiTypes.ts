@@ -255,3 +255,7 @@ export interface OtherUser {
   is2fa_active: boolean;
   friend_request_status?: "accepted" | "pending" | "Add Friend" | "cancel";
 }
+
+export interface PasswordForm {
+  password: string;
+}

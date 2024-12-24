@@ -12,17 +12,22 @@ import ProfileAchievements from '@/components/Profile/ProfileAchievements';
 import css from './Profile.module.css';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
+import { RiDeleteBin6Line } from "react-icons/ri";
 // Api
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import useDeleteAccount from '@/hooks/profile/useDeleteAccount';
+import { PasswordForm } from '@/types/apiTypes';
 
 
 const Profile = () => {
 
+  const { register, handleSubmit, errors, mutation, reset } = useDeleteAccount();
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
+  const [isDeleteAcc, setDeleteAcc] = useState(false);
   const { user: currentUser, error, refetch, isLoading } = useUser();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -58,6 +63,22 @@ const Profile = () => {
     </div>
   }
 
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      toast.success('Account deleted successfully!');
+      reset();
+      navigate('/auth');
+    }
+  }, [mutation.isSuccess]);
+
+  useEffect(() => {
+    if (mutation.isError) {
+      if (errors.root) {
+        toast.error(errors.root.message);
+      }
+    }
+  }, [mutation.isError]);
+
   return (
     <div className={css.profileContainer}>
       { isEditProfile &&
@@ -81,6 +102,28 @@ const Profile = () => {
               </div>
               { activeBtn ? <EditInfosProfile setEditProfile={setEditProfile} /> :
                 <EditSecurityProfile setEditProfile={setEditProfile} /> }
+              { !activeBtn &&
+                <button className={css.deleteAccBtn} onClick={() => setDeleteAcc(true)}>
+                  <RiDeleteBin6Line size='2.2rem' />
+                  <span>Delete Account</span>
+                </button> }
+                { isDeleteAcc && <div className={css.bluredBgConfirm}>
+                  <form className={css.confirmDelAccContainer} onSubmit={ handleSubmit((data: PasswordForm) => mutation.mutate(data)) }>
+                    <h1>Account Deletion Request</h1>
+                    <p>By requesting to delete your account, all data  associated with your account will be erased from our system.</p>
+                    <p>Are you sure, you want to delete your account ?</p>
+                    <div className={css.containerFiled}>
+                        <label htmlFor="">{t('Profile.EditInfosProfile.fields.password.label')}</label>
+                        <input type="password" className={css.input} {...register('password')}
+                        placeholder={t('Profile.EditInfosProfile.fields.password.placeholder')} />
+                        {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
+                    </div>
+                    <div className={css.ConfirmButtons}>
+                        <button type='reset' className={css.closeBtn} onClick={() => { reset(); setDeleteAcc(false)} }>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
+                        <button type='submit' className={css.confirmBtn}>{t('Profile.EditInfosProfile.confirmSave.buttons.confirm')}</button>
+                    </div>
+                  </form>
+                </div>}
             </div>
           </div>
         </div>)
