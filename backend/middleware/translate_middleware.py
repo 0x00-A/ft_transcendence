@@ -6,6 +6,10 @@ class TranslateResponseMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         content_type = response.headers.get('Content-Type', '').lower()
 
+        # print("---------------------")
+        # print(response)
+        # print(response.data)
+        # print("---------------------")
         if content_type == 'application/json':
             try:
                 data = json.loads(response.content)

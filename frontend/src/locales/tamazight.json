@@ -458,7 +458,24 @@
         },
         "Achievements": {
             "title": "ⵉⴳⵎⴰⴹ",
-            "NoAchievementsFound": "ⵓⵔ ⴷⵓⴼⵉⵏ ⴰⵔⴰ ⵉⴳⵎⴰⴹ!"
+            "locked": "ⵢⴻⵜⵜⵡⴰⵇⵇⴻⵏ",
+            "NoAchievementsFound": "ⵓⵔ ⴷⵓⴼⵉⵏ ⴰⵔⴰ ⵉⴳⵎⴰⴹ!",
+            "achievements": {
+                "first_paddle_name": "ⵜⴰⵖⴻⵔⵖⴻⵔⵜ ⵜⴰⵎⴻⵣⵡⴰⵔⵓⵜ",
+                "first_paddle_description": "ⵔⴱⴻⵃ ⵜⵉⵎⵍⵉⵍⵉⵜⵉⴽ ⵜⴰⵎⴻⵣⵡⴰⵔⵓⵜ.",
+                "persistent_player_name": "ⴰⵎⵢⵓⵔⴰⵔ ⵉⵎⴻⵣⵡⵓⵔⴰ",
+                "persistent_player_description": "ⴽⴻⵛⵎ 7 ⵡⵓⵙⵙⴰⵏ ⵙ ⵜⵎⴻⵔⵏⴰ!",
+                "bronze_champ_name": "ⴰⵙⴻⵍⵡⴰⵢ ⵏ ⵓⴱⵕⵓⵏⵣ",
+                "bronze_champ_description": "ⵔⴻⴱⵃ 5 ⵏ ⵜⴻⵎⵍⵉⵍⵉⵢⵉⵏ.",
+                "silver_smash_name": "ⵙⵎⴰⵙⵀ ⵏ ⵍⴼⴻⵟⵟⴰ",
+                "silver_smash_description": "ⵔⴻⴱⵃ 10 ⵏ ⵜⴻⵎⵍⵉⵍⵉⵢⵉⵏ.",
+                "gold_ace_name": "ⴰⵙ ⵏ ⵡⵓⵔⴻⵖ",
+                "gold_ace_description": "ⵔⴻⴱⵃ 20 ⵏ ⵜⴻⵎⵍⵉⵍⵉⵢⵉⵏ.",
+                "marathon_match_name": "ⵜⵉⵎⵍⵉⵍⵉⵜ ⵏ ⵓⵎⴰⵔⴰⵟⵓⵏ",
+                "marathon_match_description": "ⵓⵔⴰⵔ ⵜⵉⵎⵍⵉⵍⵉⵜ ⴰⵔⴰ ⵢⴻⵇⵇⵉⵎⴻⵏ ⵓⴳⴰⵔ ⵏ 5 ⵏ ⵜⴻⴷⵇⵉⵇⵉⵏ.",
+                "ft_pong_legend_name": "ⴰⵏⴻⴳⴳⴰⵔⵓ ⵏ FT-PONG",
+                "ft_pong_legend_description": "ⵔⴻⴱⵃ 50 ⵏ ⵜⴻⵎⵍⵉⵍⵉⵢⵉⵏ."        
+            }
         },
         "profileHeader": {
             "EditProfileButton": "ⴱⴻⴷⴷⴻⵍ ⴰⴳⴱⵓⵔ",

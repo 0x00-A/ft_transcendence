@@ -480,7 +480,24 @@
         },
         "Achievements": {
             "title": "Achievements",
-            "NoAchievementsFound": "No achievements found!"
+            "locked": "Locked",
+            "NoAchievementsFound": "No achievements found!",
+            "achievements": {
+                "first_paddle_name": "First Paddle",
+                "first_paddle_description": "Win your first match.",
+                "persistent_player_name": "Persistent Player",
+                "persistent_player_description": "Log in 7 days in a row!",
+                "bronze_champ_name": "Bronze Champ",
+                "bronze_champ_description": "Win 5 matches.",
+                "silver_smash_name": "Silver Smash",
+                "silver_smash_description": "Win 10 matches.",
+                "gold_ace_name": "Gold Ace",
+                "gold_ace_description": "Win 20 matches.",
+                "marathon_match_name": "Marathon Match",
+                "marathon_match_description": "Play a match lasting more than 5 minutes.",
+                "ft_pong_legend_name": "FT-PONG Legend",
+                "ft_pong_legend_description": "Win 50 matches."        
+            }
         },
         "profileHeader": {
             "EditProfileButton": "Edit Profile",
