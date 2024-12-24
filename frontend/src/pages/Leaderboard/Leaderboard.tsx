@@ -1,13 +1,19 @@
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Link } from "react-router-dom"
-
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from '@/components/ui/table';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Link } from 'react-router-dom';
 
 import css from './Leaderboard.module.css';
-import { Flag } from "lucide-react";
-import {  API_GET_LEADER_BOARD_URL } from "@/api/apiConfig";
-import { useGetData } from "@/api/apiHooks";
-import { LeaderBoard } from "@/types/apiTypes";
+import { Flag } from 'lucide-react';
+import { API_GET_LEADER_BOARD_URL } from '@/api/apiConfig';
+import { useGetData } from '@/api/apiHooks';
+import { LeaderBoard } from '@/types/apiTypes';
 
 const users = [
   {
@@ -16,16 +22,21 @@ const users = [
     score: '1400',
     country: 'Morroco',
   },
-]
+];
 
 const Leaderboard = () => {
-
-  const {data: leaderboardData, isLoading, error} = useGetData<LeaderBoard[]>(API_GET_LEADER_BOARD_URL);
+  const {
+    data: leaderboardData,
+    isLoading,
+    error,
+  } = useGetData<LeaderBoard[]>(API_GET_LEADER_BOARD_URL);
 
   if (isLoading) {
-    return <div className={css.container}>
-      <h1>Loading...</h1>
-    </div>
+    return (
+      <div className={css.container}>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   return (
@@ -43,9 +54,16 @@ const Leaderboard = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leaderboardData.length > 0 && leaderboardData.map((data: LeaderBoard) => (
-              <TableRow className="hover:bg-gray-500 dark:hover:bg-gray-800 transition-colors h-20">
-                <TableCell className="text-center font-medium">{data.rank}</TableCell>
+          {leaderboardData &&
+            leaderboardData?.length > 0 &&
+            leaderboardData?.map((data: LeaderBoard, index: number) => (
+              <TableRow
+                key={index}
+                className="hover:bg-gray-500 dark:hover:bg-gray-800 transition-colors h-20"
+              >
+                <TableCell className="text-center font-medium">
+                  {data.rank}
+                </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
                     <Avatar>
@@ -58,15 +76,25 @@ const Leaderboard = () => {
                   </div>
                 </TableCell>
                 <TableCell className="">{data.played_games}</TableCell>
-                <TableCell className="">{Number.isInteger(data.win_rate) ? data.win_rate : data.win_rate.toFixed(2)}%</TableCell>
-                <TableCell className="">{Number.isInteger(data.lose_rate) ? data.lose_rate : data.lose_rate.toFixed(2)}%</TableCell>
+                <TableCell className="">
+                  {Number.isInteger(data.win_rate)
+                    ? data.win_rate
+                    : data.win_rate.toFixed(2)}
+                  %
+                </TableCell>
+                <TableCell className="">
+                  {Number.isInteger(data.lose_rate)
+                    ? data.lose_rate
+                    : data.lose_rate.toFixed(2)}
+                  %
+                </TableCell>
                 <TableCell className="">{data.score}</TableCell>
                 {/* <TableCell className="flex items-center justify-start">
                   <span className="sr-only">{data.country}</span>
                   <Flag />
                 </TableCell> */}
               </TableRow>
-          ))}
+            ))}
         </TableBody>
       </Table>
       {/* <div className="text-center mt-4">
