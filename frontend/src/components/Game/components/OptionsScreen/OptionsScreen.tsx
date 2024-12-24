@@ -30,11 +30,11 @@ const OptionsScreen = ({
       <CloseButton onClose={onClose} />
       <div className={css.soundButtonWrapper}>
         <button
-          // style={
-          //   sound
-          //     ? { backgroundColor: 'lightgray' }
-          //     : { backgroundColor: 'transparent' }
-          // }
+          style={
+            sound
+              ? { backgroundColor: 'darkgray' }
+              : { backgroundColor: 'transparent' }
+          }
           id="soundButton"
           className={`${css.soundButton} ${sound ? css.soundOn : css.soundOff}`}
           onClick={() => {

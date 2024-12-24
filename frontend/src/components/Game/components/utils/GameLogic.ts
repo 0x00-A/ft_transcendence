@@ -29,7 +29,7 @@ export function isCollidingWithPaddle(ball: Ball, paddle: Paddle): boolean {
   const ballFromBottom = ball.y > paddle.y + paddle.height;
 
   // Previous and current position of the ball
-  const nextX = ball.x + ball.dx;
+  const nextX = ball.x + ball.dx + (ball.dx > 0 ? ball.radius : -ball.radius);
   const nextY = (ballFromTop? ball.y + ball.radius : (ballFromBottom? ball.y - ball.radius : ball.y)) + ball.dy;
 
   // Paddle edges as line segments

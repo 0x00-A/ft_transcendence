@@ -23,7 +23,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         await Matchmaker.handle_player_unready(self.player_id)
-        await Matchmaker.unregister_client(self.player_id)
+        await Matchmaker.unregister_client(self.player_id, self.channel_name)
         return await super().disconnect(close_code)
 
     async def receive(self, text_data):

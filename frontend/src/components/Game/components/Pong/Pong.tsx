@@ -54,10 +54,10 @@ const Pong: React.FC<GameProps> = ({
   const paddle1Ref = useRef<Paddle | null>(null);
   const paddle2Ref = useRef<Paddle | null>(null);
   const hitWallSound = useRef(
-    new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
+    new Audio('/sounds/wall-hit.mp3')
   );
   const paddleHitSound = useRef(
-    new Audio('https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3')
+    new Audio('/sounds/paddle-hit.mp3')
   );
 
   useEffect(() => {
