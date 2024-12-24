@@ -20,7 +20,7 @@ const DifficultyScreen = ({
       <GameButton
         onClick={() => {
           onNext('game');
-          setBallSpeed(3);
+          setBallSpeed(4);
           setPaddleSpeed(5);
         }}
       >
@@ -29,7 +29,7 @@ const DifficultyScreen = ({
       <GameButton
         onClick={() => {
           onNext('game');
-          setBallSpeed(4);
+          setBallSpeed(6);
           setPaddleSpeed(8);
         }}
       >
@@ -38,7 +38,7 @@ const DifficultyScreen = ({
       <GameButton
         onClick={() => {
           onNext('game');
-          setBallSpeed(5);
+          setBallSpeed(8);
           setPaddleSpeed(10);
         }}
       >

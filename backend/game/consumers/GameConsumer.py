@@ -16,11 +16,13 @@ from asgiref.sync import async_to_sync
 
 import asyncio
 
+from collections import defaultdict
+
 channel_layer = get_channel_layer()
 
 canvas_width: int = 650
 canvas_height: int = 480
-winning_score: int = 1
+winning_score: int = 7
 
 ball_raduis: int = 8
 initial_ball_speed = 4
@@ -28,6 +30,7 @@ ball_max_speed = 8
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 games = {}
+connected_players = defaultdict(set)
 
 
 class Ball:
@@ -60,7 +63,7 @@ class GameInstance:
         self.player2_score = 0
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 2
+        self.paddle_speed = 6
         self.paddle_width: int = 20
         self.paddle_height: int = 80
         self.state = {
@@ -236,12 +239,23 @@ def remove_game(game_id):
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
+        global connected_players
         user = self.scope['user']
         self.game_id = None
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
 
         if user.is_authenticated:
             await self.accept()
-            self.game_id = self.scope['url_route']['kwargs']['game_id']
+            if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
+                await self.send(text_data=json.dumps(
+                    {
+                        'type': 'go_home',
+                    }
+                ))
+                self.close()
+                return
+            connected_players[self.game_id].add(user.id)
+            print(f">>>>> Player {user.username} connected to {self.game_id}")
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
             if not get_game(self.game_id):
@@ -253,6 +267,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.broadcast_initial_state()
                 # await self.set_game_started()
                 # Start the game loop
+
                 asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
@@ -344,7 +359,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_id = self.game_id
         print(
             f"------------ player {self.scope['user'].username} disconnected ------------")
-        if game_id:
+        if game_id and hasattr(self, 'player_id'):
             game: GameInstance = get_game(game_id)
             game.winner = 1 if self.player_id == 'player2' else 2
             game.is_over = True

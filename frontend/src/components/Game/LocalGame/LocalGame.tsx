@@ -60,7 +60,7 @@ const LocalGame = ({ onReturn }: { onReturn?: () => void }) => {
             setIsWinner={setIsWinner}
             isOnePlayerMode={isOnePlayerMode}
             sound={sound}
-            ballSpeed={1}
+            ballSpeed={ballSpeed}
             paddleSpeed={paddleSpeed}
             controller={controller}
             winningScore={winningScore}
