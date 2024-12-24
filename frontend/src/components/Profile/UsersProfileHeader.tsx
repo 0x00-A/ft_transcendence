@@ -45,7 +45,7 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
         toast.success(message);
         refetch();
       } catch (error: any) {
-        toast.error(error.message || 'Failed to cancel friend request');
+        toast.error(error.message);
       }
     };
 
@@ -55,7 +55,7 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
       toast.success(message);
       refetch();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to send friend request' );
+      toast.error(error.message);
     }
   };
 
@@ -65,7 +65,7 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
       toast.success(message);
       refetch();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to accept friend request');
+      toast.error(error.message);
     }
   };
 
