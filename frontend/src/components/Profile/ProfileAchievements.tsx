@@ -11,7 +11,6 @@ import { GrFormNext } from 'react-icons/gr';
 import { UserAchievements } from '@/types/apiTypes';
 import { Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Content } from '@radix-ui/react-alert-dialog';
 
 const ProfileAchievements = ({
   username,
@@ -83,7 +82,7 @@ const ProfileAchievements = ({
               .map((achievement: UserAchievements, index: number) => (
                 <div
                   key={index}
-                  className={css.achievCard}
+                  className={`${css.achievCard} ${!achievement.is_unlocked  ? css.unlocked : ''}`}
                 >
                   {!achievement.is_unlocked && <p className={css.lockedAchievCard}>{t(`Profile.Achievements.locked`)}</p>}
                   <div className={css.achievTitle}>

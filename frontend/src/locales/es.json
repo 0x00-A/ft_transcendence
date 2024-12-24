@@ -1,26 +1,37 @@
 {
+    "deleteAccount": {
+        "btnDelete": "Eliminar cuenta",
+        "title": "Solicitud de supresión de cuenta",
+        "description": "Al solicitar la eliminación de su cuenta, todos los datos asociados a ella serán borrados de nuestro sistema.",
+        "warning": "¿Está seguro de que desea eliminar su cuenta?"
+    },
+    "ConfirmationModal": {
+        "message": "¡Confirmar cierre de sesión!",
+        "Confirm": "Confirmar",
+        "Cancel": "Cancelar"
+    },
     "toast": {
         "fromRequest": "Solicitud de amistad de",
         "requestAccepted": "¡ha aceptado tu solicitud de amistad!",
         "newMessage": "te ha enviado un mensaje.",
-        "gameInvite": "Invitación al juego de",
-        "inviteReject": "La invitación ha expirado o fue rechazada.",
+        "gameInvite": "Invitación de juego de",
+        "inviteReject": "La invitación ha expirado o ha sido rechazada.",
         "gameAddress": "Juego creado con éxito"
     },
     "backend": {
     },
     "errorsFriends": {
-        "unblock": "No se pudo desbloquear al amigo, intenta nuevamente",
-        "block": "No se pudo bloquear al amigo, intenta nuevamente",
-        "request": "No se pudo aceptar la solicitud de amistad, intenta nuevamente",
-        "remove": "No se pudo eliminar al amigo, intenta nuevamente",
-        "cancel": "No se pudo cancelar la solicitud de amistad, intenta nuevamente",
-        "send": "No se pudo enviar la solicitud de amistad, intenta nuevamente",
-        "reject": "No se pudo rechazar la solicitud de amistad, intenta nuevamente",
-        "action": "No se pudo realizar la acción, intenta nuevamente"
+        "unblock": "Error al desbloquear al amigo, inténtalo de nuevo",
+        "block": "Error al bloquear al amigo, inténtalo de nuevo",
+        "request": "Error al aceptar la solicitud de amistad, inténtalo de nuevo",
+        "remove": "Error al eliminar al amigo, inténtalo de nuevo",
+        "cancel": "Error al cancelar la solicitud de amistad, inténtalo de nuevo",
+        "send": "Error al enviar la solicitud de amistad, inténtalo de nuevo",
+        "reject": "Error al rechazar la solicitud de amistad, inténtalo de nuevo",
+        "action": "Error al realizar la acción, inténtalo de nuevo"
     },
     "lang": "es",
-    "footer": "ft_transcendence. reservados todos los derechos.",
+    "footer": "ft_transcendence. Todos los derechos reservados.",
     "welcome": {
         "title": "FT-PONG",
         "description": "¿Listo para comenzar tu próximo partido y subir en la clasificación?",
@@ -97,8 +108,8 @@
         "leaderboard": "Clasificación",
         "profile": "Perfil",
         "logout": "cerrar sesión",
-        "lightMode": "Light mode",
-        "darkMode": "dark mode"
+        "lightMode": "Modo claro",
+        "darkMode": "modo oscuro"
     },
     "sidebarFriends": {
         "allFriends": "Todos los amigos",
@@ -121,8 +132,8 @@
         "description": "Parece que tu lista de amigos está vacía. ¡Empieza a conectarte buscando amigos o enviando invitaciones!"
     },
     "onlineFriends": {
-        "title": "Ihya n tmutrin di tga",
-        "online": "Di tga",
+        "title": "Amigas en linea",
+        "online": "en línea",
         "pupMessage": "Ameqqran",
         "pupInvite": "Asgaddef",
         "noRequests": "No hay amigas en linea",
@@ -315,6 +326,14 @@
         }
     },
     "Profile": {
+        "FriendsOther": {
+            "title": "Amigos",
+            "mutualFriends": "Amigos en común",
+            "allFriends": "Todos los amigos",
+            "noMutualFriends": "Sin amigos en común",
+            "playerLonely": "Este jugador está solo",
+            "Level": "Nivel:"
+        },        
         "informations": "Información",
         "security": "Seguridad",
         "errors": {
@@ -495,6 +514,30 @@
                 "marathon_match_description": "Juega un partido que dure más de 5 minutos.",
                 "ft_pong_legend_name": "Leyenda de FT-PONG",
                 "ft_pong_legend_description": "Gana 50 partidos."
+            }
+        },
+        "profileHeader": {
+            "EditProfileButton": "Editar perfil",
+            "profileStats": {
+                "games": "JUEGOS",
+                "wins": "VICTORIAS",
+                "loses": "PIERDE",
+                "score": "PUNTAJE",
+                "rank": "RANGO"
+            },
+            "badge": {
+                "Bronze": "Bronce",
+                "Silver": "Plata",
+                "Gold": "Oro",
+                "Platinum": "Platino",
+                "Diamond": "Diamante",
+                "Ft-Pong": "Ft-Pong"
+            },
+            "buttons": {
+                "friendsBtn": "Amigas",
+                "cancelBtn": "Cancelar",
+                "acceptBtn": "Aceptar",
+                "addBtn": "Agregar"
             }
         },
         "setPassword": {
