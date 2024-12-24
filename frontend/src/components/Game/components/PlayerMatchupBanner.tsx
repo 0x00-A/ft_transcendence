@@ -62,18 +62,18 @@ const MatchTimer = ({gameState}: {gameState:GameState}) => {
 };
 
 const PlayerMatchupBanner = ({p1_id, p2_id, player, gameState}: {p1_id:number, p2_id:number, player:string, gameState:GameState} ) => {
-  const players = {
-    player1: {
-      username: "CyberPaddler87",
-      rank: "Gold",
-      avatar: "https://picsum.photos/200"
-    },
-    player2: {
-      username: "QuantumPong",
-      rank: "Platinum",
-      avatar: "https://picsum.photos/200"
-    }
-  };
+  // const players = {
+  //   player1: {
+  //     username: "CyberPaddler87",
+  //     rank: "Gold",
+  //     avatar: "https://picsum.photos/200"
+  //   },
+  //   player2: {
+  //     username: "QuantumPong",
+  //     rank: "Platinum",
+  //     avatar: "https://picsum.photos/200"
+  //   }
+  // };
 
   const {data: player1, isLoading: p1_isLoading, error: p1_error} = useGetData<User>(`users/${p1_id}`);
   const {data: player2, isLoading: p2_isLoading, error: p2_error} = useGetData<User>(`users/${p2_id}`);
@@ -98,8 +98,9 @@ const PlayerMatchupBanner = ({p1_id, p2_id, player, gameState}: {p1_id:number, p
           <span className="font-semibold text-lg">{player === 'player1' ? player1?.username : player2?.username}</span>
           <div className="flex items-center space-x-1 mt-0.5">
             {/* <Trophy className="text-yellow-400" size={14} /> */}
-            <Shield size={16} className="text-green-500" />
-            <span className="text-base text-gray-400">{player === 'player1' ? players.player1.rank : players.player2.rank}</span>
+            {/* <Shield size={16} className="text-green-500" /> */}
+            <img src={player === 'player1' ? player1?.profile.badge.icon : player2?.profile.badge.icon} className="h-8 w-8" alt="" />
+            <span className="text-base text-gray-400">{player === 'player1' ? player1?.profile.badge.name : player2?.profile.badge.name}</span>
           </div>
         </div>
       </div>
@@ -125,9 +126,10 @@ const PlayerMatchupBanner = ({p1_id, p2_id, player, gameState}: {p1_id:number, p
         <div className="flex flex-col items-end">
           <span className="font-semibold text-lg">{player === 'player2' ? player1?.username : player2?.username}</span>
           <div className="flex items-center space-x-1 mt-0.5">
-            <span className="text-base text-gray-400">{player === 'player2' ? players.player1.rank : players.player2.rank}</span>
+            <span className="text-base text-gray-400">{player === 'player2' ?  player1?.profile.badge.name : player2?.profile.badge.name}</span>
             {/* <Trophy className="text-yellow-400" size={14} /> */}
-            <Shield size={16} className="text-red-500" />
+            {/* <Shield size={16} className="text-red-500" /> */}
+            <img src={player === 'player1' ? player1?.profile.badge.icon : player2?.profile.badge.icon} className="h-8 w-8" alt="" />
           </div>
         </div>
       </div>
