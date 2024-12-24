@@ -20,6 +20,31 @@
     /* box-sizing: border-box; */
     perspective: 100px;
     transition: 1s;
+  }
+
+.switchPongBox {
+    transition: 1s;
+    transform-style: preserve-3d;
+    transform-origin: right center;
+    /* perspective: 100px; */
+    transform: translateX(-102%);
+    perspective: 100px;
+    /* margin: 5px; */
+    /* margin-right: 0; */
+    /* border: none;
+    border-left: 1px solid aliceblue; */
+    /* margin: 0; */
+    /* margin-right: 5px; */
+    /* transform: rotate3d(0, 1, 0, 180deg);  */
+  }
+
+  @media (max-width: 1024px) {
+    .authPongBox {
+        display: none;
+    }
+    .switchPongBox {
+        transform: none;
+    }
 }
 
 .logoHolder {
@@ -29,20 +54,6 @@
   top: 5rem;
 }
 
-.switchPongBox {
-    transition: 1s;
-    transform-style: preserve-3d;
-    transform-origin: right center;
-    /* perspective: 100px; */
-    transform: translateX(-102%);
-    /* margin: 5px; */
-    /* margin-right: 0; */
-    /* border: none;
-    border-left: 1px solid aliceblue; */
-    /* margin: 0; */
-    /* margin-right: 5px; */
-    /* transform: rotate3d(0, 1, 0, 180deg);  */
-}
 
 .authFooter {
     /* border: 1px solid white; */
