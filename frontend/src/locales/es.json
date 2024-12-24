@@ -1,4 +1,12 @@
 {
+    "editEmail": {
+        "btnEdit": "Editar",
+        "editEmail": "Editar su correo electrónico",
+        "description": "Le enviaremos un enlace de verificación a su nuevo correo electrónico. (verificación requerida para guardar el nuevo correo electrónico).",
+        "label": "Nuevo correo electrónico",
+        "btnCancel": "Cancelar",
+        "btnSubmit": "Entregar"
+    },
     "deleteAccount": {
         "btnDelete": "Eliminar cuenta",
         "title": "Solicitud de supresión de cuenta",
