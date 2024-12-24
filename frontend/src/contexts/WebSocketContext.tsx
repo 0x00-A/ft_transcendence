@@ -16,7 +16,6 @@ import { useUser } from '@/contexts/UserContext';
 import FriendRequestCard from '@/components/Friends/FriendRequestCard';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 import { useTranslation } from 'react-i18next';
-import { Form } from 'react-router-dom';
 // import { WebSocketContextType, Notification } from './types';
 
 // types.ts
@@ -69,6 +68,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { data } = await apiClient.get("/notifications/");
       setNotifications(data);
+      console.log("notification data: ", data)
       setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
     } catch (error) {
       console.error("Error fetching notifications:", error);
