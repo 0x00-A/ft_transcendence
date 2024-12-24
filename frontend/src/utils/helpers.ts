@@ -16,7 +16,7 @@ export const formatDateTamazight = (dateString: Date) => {
   return `${month} ${day}, ${hour}:${minute} ${period}`;
 };
 
-export const formatDate = (dateString: Date, locale: string) => {
+export const formatDate = (dateString: Date, locale: string = 'en') => {
   const date = new Date(dateString);
   if (locale === "tmazight") return formatDateTamazight(dateString);
   return date.toLocaleString(locale, {

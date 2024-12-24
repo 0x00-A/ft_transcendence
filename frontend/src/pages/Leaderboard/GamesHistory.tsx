@@ -110,7 +110,7 @@ const GamesHistory = () => {
             { playedGames && playedGames.length > 0 && playedGames?.map((game: LastGames) => (
                 <div key={game.id} className={css.tableRow}>
                     <div className={css.dateTimeGame}>
-                      <span className={css.historyField}>{formatDate(game?.start_time, t('lang'))}</span>
+                      <span className={css.historyField}>{formatDate(new Date(game?.start_time), t('lang'))}</span>
                     </div>
                     <div className={css.player}>
                         <img src={game.opponent_avatar} alt={game?.opponent_username} className={css.avatar} />

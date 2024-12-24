@@ -1,4 +1,15 @@
 {
+    "deleteAccount": {
+        "btnDelete": "Delete Account",
+        "title": "Account Deletion Request",
+        "description": "By requesting to delete your account, all data  associated with your account will be erased from our system.",
+        "warning": "Are you sure, you want to delete your account ?"
+    },
+    "ConfirmationModal": {
+        "message": "Confirm Logout!",
+        "Confirm": "Confirm",
+        "Cancel": "Cancel"
+    },
     "toast": {
         "fromRequest": "Friend request from",
         "requestAccepted": "has accepted your friend request!",
@@ -315,6 +326,14 @@
         }
     },
     "Profile": {
+        "FriendsOther": {
+            "title": "Friends",
+            "mutualFriends": "Mutual Friends",
+            "allFriends": "All Friends",
+            "noMutualFriends": "No Mutual friends",
+            "playerLonely": "This Player is Lonely",
+            "Level": "Level:"
+        },
         "informations": "Informations",
         "security": "Security",
         "errors": {
@@ -515,6 +534,12 @@
                 "Platinum": "Platinum",
                 "Diamond": "Diamond",
                 "Ft-Pong": "Ft-Pong"
+            },
+            "buttons": {
+                "friendsBtn": "Friends",
+                "cancelBtn": "Cancel",
+                "acceptBtn": "Accept",
+                "addBtn": "Add"
             }
         },
         "setPassword": {

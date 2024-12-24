@@ -190,7 +190,7 @@ const showFriendRequestToast = (from: string) => {
     toast.dismiss(from);
   };
 
-  console.log(user);
+  // console.log(user);
   useEffect(() => {
       if (!isLoggedIn)
         return;

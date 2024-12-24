@@ -3,13 +3,11 @@
 import { apiAcceptFriendRequest, apiCancelFriendRequest, apiSendFriendRequest } from '@/api/friendApi';
 // Styles
 import css from './ProfileHeader.module.css'
-import { LiaUserFriendsSolid } from "react-icons/lia";
-import { TbUserCancel } from "react-icons/tb";
-import { FaUserCheck } from "react-icons/fa6";
-import { HiOutlineUserAdd } from "react-icons/hi";
+import { UserCheck, UserPlus, UserX, Users } from 'lucide-react';
 
 import { toast } from 'react-toastify';
 import { OtherUser } from '@/types/apiTypes';
+import { useTranslation } from 'react-i18next';
 
 // const getProfile = async (username:string) => {
 
@@ -32,12 +30,34 @@ interface UsersProfileHeaderProps {
 const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) => {
 
     const {user, isLoading, refetch} = getUserData;
+    const { t } = useTranslation();
+
     // const [isMore, setMore] = useState(false);
 
     // const {data: user, isLoading, refetch} = useQuery({
     //     queryKey: ["myquerykey1"],
     //     queryFn: () => getProfile(username),
     // });
+
+
+    const translateBadgeName = (badgeName: string): string => {
+      switch (badgeName) {
+        case 'Bronze':
+          return t('Profile.profileHeader.badge.Bronze');
+        case 'Silver':
+          return t('Profile.profileHeader.badge.Silver');
+        case 'Gold':
+          return t('Profile.profileHeader.badge.Gold');
+        case 'Platinum':
+          return t('Profile.profileHeader.badge.Platinum');
+        case 'Diamond':
+          return t('Profile.profileHeader.badge.Diamond');
+        case 'Ft-Pong':
+          return t('Profile.profileHeader.badge.Ft-Pong');
+        default:
+          return badgeName;
+      }
+    };
 
     const handleCancel = async () => {
       try {
@@ -86,24 +106,24 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
           {isLoading ? <div className='h-10 w-44 bg-gray-700 animate-pulse flex-center'></div> :
             <div className={css.friendState}>
               {user?.friend_status === 'Friends' &&
-              <div className={css.friendsStat}>
-                <LiaUserFriendsSolid className={css.friendsStateIcon}/>
-                <span>{user?.friend_status}</span>
-              </div>}
+              <button className={css.friendStatBtn}>
+                <Users color='#f8c35c'/>
+                <span>{t('Profile.profileHeader.buttons.friendsBtn')}</span>
+              </button>}
               {user?.friend_status === 'Cancel' &&
               <button className={css.friendStatBtn} onClick={handleCancel}>
-                <TbUserCancel className={css.friendsStateIcon}/>
-                <span>{user?.friend_status}</span>
+                <UserX color='#f8c35c'/>
+                <span>{t('Profile.profileHeader.buttons.cancelBtn')}</span>
               </button>}
               {user?.friend_status === 'Accept' &&
               <button className={css.friendStatBtn} onClick={acceptFriendRequest}>
-                <FaUserCheck className={css.friendsStateIcon}/>
-                <span>{user?.friend_status}</span>
+                <UserCheck color='#f8c35c'/>
+                <span>{t('Profile.profileHeader.buttons.acceptBtn')}</span>
               </button>}
               {user?.friend_status === 'Add' &&
               <button className={css.friendStatBtn} onClick={sendFriendRequest}>
-                <HiOutlineUserAdd className={css.friendsStateIcon}/>
-                <span>{user?.friend_status}</span>
+                <UserPlus color='#f8c35c'/>
+                <span>{t('Profile.profileHeader.buttons.addBtn')}</span>
               </button>}
               </div>}
             {/* <IoIosMore className={css.moreIcon} onClick={() => setMore(!isMore)}/>
@@ -139,17 +159,17 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
           <div className={css.totalGames}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{user?.profile?.played_games || 0}</span>}
-            <span className={css.statLabel}>GAMES</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.games')}</span>
           </div>
           <div className={css.wins}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{user?.profile?.wins || 0}</span>}
-            <span className={css.statLabel}>WINS</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.wins')}</span>
           </div>
           <div className={css.loses}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{user?.profile?.loses || 0}</span>}
-            <span className={css.statLabel}>LOSES</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.loses')}</span>
           </div>
         </div>
         <div className={css.leftStats}>
@@ -157,17 +177,17 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <img src={user?.profile?.badge?.icon} alt="" className={css.badgeIcon}/>}
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[10px] bg-gray-500 rounded-md animate-pulse"></span>:
-            <span className={css.statLabel}>{user?.profile?.badge?.name}</span>}
+            <span className={css.statLabel}>{translateBadgeName(user?.profile?.badge?.name || '')}</span>}
           </div>
           <div className={css.score}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{user?.profile?.score || 0}</span>}
-            <span className={css.statLabel}>SCORE</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.score')}</span>
           </div>
           <div className={css.rank}>
             { isLoading ? <span className="statValueSkeleton block w-[40px] h-[40px] bg-gray-500 rounded-md animate-pulse"></span>:
             <span className={css.statValue}>{user?.profile?.rank || '?'}</span>}
-            <span className={css.statLabel}>RANK</span>
+            <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.rank')}</span>
           </div>
           {/* <div className={css.more} onClick={() => setMore(!isMore)}>
             <IoMdMore className={css.moreIcon}/>

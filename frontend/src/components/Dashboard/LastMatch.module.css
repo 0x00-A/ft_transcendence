@@ -94,7 +94,7 @@
   }
 
   .yellow::after {
-    background-color: #FFB800;
+    background-color: #5774a1;
   }
 
   .avatar {
@@ -121,7 +121,7 @@
 
   .score {
     flex-grow: 1;
-    font-size: 2.3rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #F8F3E3;
     text-shadow: 1px 1px 5px rgb(0, 0, 0);
@@ -147,6 +147,7 @@
 
   .points {
     color: #ffb902;
+    font-size: 1.5rem;
   }
 
   .noGames {

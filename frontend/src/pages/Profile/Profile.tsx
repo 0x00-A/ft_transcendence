@@ -105,13 +105,13 @@ const Profile = () => {
               { !activeBtn &&
                 <button className={css.deleteAccBtn} onClick={() => setDeleteAcc(true)}>
                   <RiDeleteBin6Line size='2.2rem' />
-                  <span>Delete Account</span>
+                  <span>{t('deleteAccount.btnDelete')}</span>
                 </button> }
                 { isDeleteAcc && <div className={css.bluredBgConfirm}>
                   <form className={css.confirmDelAccContainer} onSubmit={ handleSubmit((data: PasswordForm) => mutation.mutate(data)) }>
-                    <h1>Account Deletion Request</h1>
-                    <p>By requesting to delete your account, all data  associated with your account will be erased from our system.</p>
-                    <p>Are you sure, you want to delete your account ?</p>
+                    <h1>{t('deleteAccount.title')}</h1>
+                    <p>{t('deleteAccount.description')}</p>
+                    <p>{t('deleteAccount.warning')}</p>
                     <div className={css.containerFiled}>
                         <label htmlFor="">{t('Profile.EditInfosProfile.fields.password.label')}</label>
                         <input type="password" className={css.input} {...register('password')}

@@ -10,7 +10,6 @@ import { useGetData } from '@/api/apiHooks';
 import { API_GET_PROFILE_URL } from '@/api/apiConfig';
 import { useEffect } from 'react';
 import { OtherUser } from '@/types/apiTypes';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
 import PreLoader from '@/components/PreLoader/PreLoader';
