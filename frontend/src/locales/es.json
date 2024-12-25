@@ -333,7 +333,7 @@
             "noMutualFriends": "Sin amigos en común",
             "playerLonely": "Este jugador está solo",
             "Level": "Nivel:"
-        },        
+        },
         "informations": "Información",
         "security": "Seguridad",
         "errors": {
@@ -580,7 +580,8 @@
                     "buttons": {
                         "disable2FA": "Deshabilitar 2FA"
                     }
-                }
+                },
+                "ask_disable": "Está seguro de que desea deshabilitar la autenticación de dos factores?"
             },
             "downloadAppPopup": {
                 "title": "Seleccione su Sistema Operativo",
@@ -727,5 +728,5 @@
             }
         }
     }
-    
+
 }

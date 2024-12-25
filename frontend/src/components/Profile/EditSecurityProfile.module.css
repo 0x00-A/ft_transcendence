@@ -54,7 +54,7 @@
 }
 
 .passContainer {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     align-items: center;
     position: relative;
@@ -62,7 +62,7 @@
 
 .input {
     background-color: #0E1725;
-    width: 100%;
+    width: 280px;
     border: none;
     border-radius: 10px;
     padding: 12px;
@@ -73,7 +73,7 @@
 
 .showPassIcon {
     position: absolute;
-    left: calc(100% - 40px);
+    left: calc(280px - 40px);
     font-size: 2.5rem;
     cursor: pointer;
 }

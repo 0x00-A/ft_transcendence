@@ -515,7 +515,7 @@
                 "marathon_match_name": "Marathon Match",
                 "marathon_match_description": "Play a match lasting more than 5 minutes.",
                 "ft_pong_legend_name": "FT-PONG Legend",
-                "ft_pong_legend_description": "Win 50 matches."        
+                "ft_pong_legend_description": "Win 50 matches."
             }
         },
         "profileHeader": {
@@ -582,7 +582,8 @@
                     "buttons": {
                         "disable2FA": "Disable 2FA"
                     }
-                }
+                },
+                "ask_disable": "Are you sure you want to disable two-factor authentication?"
             },
             "downloadAppPopup": {
                 "title": "Select Your OS",
