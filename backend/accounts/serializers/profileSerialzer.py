@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from accounts.models import Profile, User
 from accounts.serializers.badgeSerializer import BadgeSerializer
-from app.settings import SERVER_URL, MEDIA_URL
+from app.settings import SERVER_URL, MEDIA_URL, DEFAULT_AVATAR
+
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -55,6 +56,13 @@ class EditProfileSerializer(serializers.ModelSerializer):
                 {'Username must be at least 4 characters!'})
         return value
 
+    def validate_avatar(self, value):
+        print('---value----->>', value, '<<--------')
+        if value.size > 5 * 1024 * 1024:
+            raise serializers.ValidationError(
+                {'avatar': 'Image size is too large!'})
+        return value
+
     def validate(self, attrs):
         print('----attr---->', attrs, '<--------')
         password = attrs.get('password')
@@ -69,8 +77,6 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def update(self, instance, validated_data):
-        print('-------->', validated_data, '<--------')
-        print('-------->', instance, '<--------')
         if 'username' in validated_data:
             instance.username = validated_data.get('username')
         if 'first_name' in validated_data:
@@ -78,11 +84,11 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if 'last_name' in validated_data:
             instance.last_name = validated_data.get('last_name')
         if 'avatar' in validated_data:
-            print('-------->>', validated_data.get('avatar'), '<<--------')
+            print('---avatar----->>', validated_data.get('avatar'), '<<--------')
             instance.profile.avatar = validated_data.get('avatar')
         if 'removeAvatar' in validated_data:
-            print('-------->>', validated_data.get('removeAvatar'), '<<--------')
+            print('---remove_avatar----->>', validated_data.get('removeAvatar'), '<<--------')
             if validated_data.get('removeAvatar') == 'true':
-                instance.profile.avatar = 'avatars/avatar.jpeg'
+                instance.profile.avatar = f'avatars/{DEFAULT_AVATAR}'
         instance.save()
         return instance

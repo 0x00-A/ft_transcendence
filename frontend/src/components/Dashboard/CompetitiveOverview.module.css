@@ -13,33 +13,11 @@
   color: #F8F3E3;
 }
 
-.buttonGroup {
-  display: flex;
-  gap: 0.5rem;
-  background-color: #2a2b36;
-  padding: 4px;
-  border-radius: 12px;
-}
-
-.button {
-  padding: 0.8rem 1.2rem;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  color: #9699b0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 1rem;
-}
-
 .button:hover {
   color: #ffffff;
 }
 
-.buttonActive {
-  background-color: #5774a1;
-  color: #ffffff;
-}
+
 
 .statsGrid {
   display: grid;
@@ -187,6 +165,8 @@
 }
 
 .winCard {
+  display: flex;
+  gap: 1rem;
   background: linear-gradient(90deg, rgba(245, 158, 11, 0.1) 0%, rgba(42, 43, 54, 0.5) 100%);
   padding: 1rem;
   border-radius: 12px;
@@ -198,6 +178,8 @@
 }
 
 .loseCard {
+  display: flex;
+  gap: 1rem;
   background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(42, 43, 54, 0.5) 100%);
   padding: 1rem;
   border-radius: 12px;
@@ -208,6 +190,11 @@
   transform: translateY(-2px);
 }
 .resultText {
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.resultNumber {
   color: #ffffff;
   font-size: 1.125rem;
   font-weight: 600;

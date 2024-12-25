@@ -67,7 +67,7 @@
   color: #9699b0;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 
 .button:hover {
@@ -208,7 +208,7 @@
     border-radius: 8px;
     display: flex;
     align-items: center;
-    width: 130px;
+    gap: 1rem;
     justify-content: space-between;
     border: none;
     background-color: var(--selected-color); ;

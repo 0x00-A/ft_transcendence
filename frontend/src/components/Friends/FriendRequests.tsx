@@ -1,13 +1,13 @@
 import React from 'react';
 import css from './FriendRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
-import moment from 'moment';
 import NoFriendRequests from './NoFriendRequests';
 import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import { Check, X } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/helpers';
 
 
 interface Profile {
@@ -59,9 +59,6 @@ const FriendRequests: React.FC = () => {
     }
   };
 
-  const formatTimestamp = (timestamp: string) => {
-    return moment(timestamp).calendar();
-  };
 
   return (
     <div className={css.friendRequests}>
@@ -85,7 +82,7 @@ const FriendRequests: React.FC = () => {
                 />
                 <div className={css.userInfo}>
                   <span className={css.username}>{request.sender.username}</span>
-                  <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
+                  <span className={css.timestamp}>{formatDate(new Date(request.timestamp), t('lang'))}</span>
                 </div>
                 <div className={css.actions}>
                   <button

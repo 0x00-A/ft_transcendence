@@ -213,7 +213,7 @@ export default function Sidebar() {
                 </ul>
               </div>
             )}
-            <p>{selectedLang}</p>
+            {selectedLang == 'es' ?  <p>Español</p> : selectedLang == 'en' ? <p>English</p> : <p>Tamazight</p>}
           </div>
           {!open && <SideBarTooltip id="language-tooltip" content="Language" />}
           <div data-tooltip-id={`${!open ? 'theme-tooltip' : ''}`}>
@@ -233,7 +233,7 @@ export default function Sidebar() {
       </div>
       {showConfirm && (
         <ConfirmationModal
-          message="Confirm Logout!"
+          message={t('ConfirmationModal.message')}
           onConfirm={confirmLogout}
           onCancel={cancelLogout}
           show={showConfirm}

@@ -10,10 +10,11 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Link } from 'react-router-dom';
 
 import css from './Leaderboard.module.css';
-import { Flag } from 'lucide-react';
-import { API_GET_LEADER_BOARD_URL } from '@/api/apiConfig';
-import { useGetData } from '@/api/apiHooks';
-import { LeaderBoard } from '@/types/apiTypes';
+import { Flag } from "lucide-react";
+import {  API_GET_LEADER_BOARD_URL } from "@/api/apiConfig";
+import { useGetData } from "@/api/apiHooks";
+import { LeaderBoard } from "@/types/apiTypes";
+import GamesHistory from "./GamesHistory";
 
 const users = [
   {
