@@ -9,6 +9,7 @@ import { API_LOGIN_OTP_URL } from '@/api/apiConfig';
 import { otpSchema } from '@/types/formSchemas';
 import * as Yup from 'yup';
 import { LOGO } from '@/config/constants';
+import { useTranslation } from 'react-i18next';
 
 
 const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<React.SetStateAction<boolean>>, username:string}) => {
@@ -16,19 +17,20 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
   const { setIsLoggedIn } = useAuth();
   const [otpError, setOptError] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await otpSchema().validate({otp: otp});
+      await otpSchema(t).validate({otp: otp});
     }
     catch (error) {
       if (error instanceof Yup.ValidationError) {
         setOptError(error.message);
-        return;
       } else {
         setOptError('Error otp, try again!');
       }
+      return ;
     }
     try {
         const response = await apiClient.post(API_LOGIN_OTP_URL, {otp: otp, username: username});

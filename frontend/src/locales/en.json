@@ -452,7 +452,7 @@
                     "max": "Password must not exceed 64 characters!"
                 },
                 "avatar": {
-                    "fileSize": "The file should be less than 5MB !",
+                    "fileSize": "The file should be less than 5MB!",
                     "fileType": "The file is not supported!"
                 },
                 "atLeastOneField": "Please fill at least one field to save the changes"

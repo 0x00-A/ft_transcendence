@@ -111,8 +111,7 @@ export const SetUsernameSchema = () => {
   });
 };
 
-export const otpSchema = () => {
-  const { t } = useTranslation();
+export const otpSchema = (t) => {
 
   return yup.object().shape({
     otp: yup
