@@ -187,7 +187,7 @@ const Pong: React.FC<GameProps> = ({
       // left and right collision
       // ball.dx *= -1;
       isPlayer ? setScore1((s) => s + 1) : setScore2((s) => s + 1);
-      if (score1 + 1 >= winningScore || score2 + 1 >= winningScore) {
+      if (isPlayer ? score1 + 1 >= winningScore : score2 + 1 >= winningScore) {
         setIsGameOver(true);
         isPlayer ? setIsWinner(true) : setIsWinner(false);
         onNext('end');
