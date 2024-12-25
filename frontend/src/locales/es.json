@@ -451,7 +451,7 @@
                     "max": "¡La contraseña no debe exceder 64 caracteres!"
                 },
                 "avatar": {
-                    "fileSize": "¡El archivo es demasiado grande!",
+                    "fileSize": "El archivo debe ser menor de 5MB!",
                     "fileType": "¡El tipo de archivo no es compatible!"
                 }
             }
