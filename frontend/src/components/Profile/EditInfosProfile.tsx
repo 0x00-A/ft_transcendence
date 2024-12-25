@@ -229,7 +229,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                         <p>{profileData?.email}</p>
                         <button className={css.editEmailBtn} type='button' onClick={() => setEditEmail(true)}>
                             {/* {t('Profile.EditInfosProfile.fields.email.verifyButton')} */}
-                            Edit
+                            {t('editEmail.btnEdit')}
                         </button>
                     </div>
                 { errors.email && <span className={css.fieldError}>{errors.email.message}</span> }
@@ -237,17 +237,17 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
 
             <div className={`${isEditEmail ? css.bluredBgConfirm : ''}`}>
                 { isEditEmail && <div className={css.editEmailContainer}>
-                    <h1>Edit Your Email</h1>
-                    <p>We will send a verification link to your new email. (verification required to save new email)</p>
+                    <h1>{t('editEmail.editEmail')}</h1>
+                    <p>{t('editEmail.description')}</p>
                     <div className={css.field}>
-                        <label className={css.label}>New Email</label>
+                        <label className={css.label}>{t('editEmail.label')}</label>
                         <input type="email" className={css.emailInput}
                         placeholder={t('Profile.EditInfosProfile.fields.email.placeholder')} onChange={(e) => setEmailValue(e.target.value)} />
                         { emailError && <span className={css.fieldError}>{emailError}</span> }
                     </div>
                     <div className={css.ConfirmButtons}>
-                      <button className={css.closeBtn} type='reset' onClick={() => setEditEmail(false)}>Cancel</button>
-                      <button type='button' className={css.confirmBtn} onClick={handleVerifyEmail}>Submit</button>
+                      <button className={css.closeBtn} type='reset' onClick={() => setEditEmail(false)}>{t('editEmail.btnCancel')}</button>
+                      <button type='button' className={css.confirmBtn} onClick={handleVerifyEmail}>{t('editEmail.btnSubmit')}</button>
                     </div>
                     {/* <div className={css.resendOtp}>
                         <p>Didn't receive the code?</p> <span className={css.resendLink}>Resend code</span>
