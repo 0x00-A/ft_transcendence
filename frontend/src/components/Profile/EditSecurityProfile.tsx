@@ -32,8 +32,8 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const [showDownloadPopup, setShowDownloadPopup] = useState(false);
     const [selectedOS, setSelectedOS] = useState<string>('');
-    const androidQrCode = "/qrcodes/android-qr.png"; 
-    const iosQrCode = "/qrcodes/android-qr.png"; 
+    const androidQrCode = "/qrcodes/android-qr.png";
+    const iosQrCode = "/qrcodes/android-qr.png";
 
     const { t } = useTranslation();
 
@@ -73,7 +73,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
             }
         }
     }
-    
+
     const handleEnable2fa = async () => {
         try {
             await otpSchema().validate({otp: otp});
@@ -221,9 +221,10 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                 ) : (
                     <div className={css.disable2faContainer}>
                         <p>{t('Profile.EditSecurity.twoFactorAuth.enabled.status')}</p>
+                        <p>{t('Profile.EditSecurity.twoFactorAuth.ask_disable')}</p>
                         <div className={css.containerFiled}>
                             <label htmlFor="" className={css.label}>{t('Profile.EditSecurity.twoFactorAuth.enabled.confirmPasswordLabel')}</label>
-                            <div>
+                            <div className={css.passContainer}>
                                 <input
                                     type={showPassword.pass2fa ? "text" : "password"}
                                     className={css.input}
@@ -272,9 +273,9 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                             {selectedOS && (
                                 <div className={css.qrCodeContainerApp}>
                                     <p>{t('Profile.EditSecurity.downloadAppPopup.qrCodeInstructions')}</p>
-                                    <img 
-                                        src={selectedOS === "android" ? androidQrCode : iosQrCode} 
-                                        alt={`${selectedOS} QR Code`} 
+                                    <img
+                                        src={selectedOS === "android" ? androidQrCode : iosQrCode}
+                                        alt={`${selectedOS} QR Code`}
                                     />
                                 </div>
                             )}
