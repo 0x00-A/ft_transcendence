@@ -158,8 +158,8 @@ export default function Sidebar() {
               code={
                 selectedLang === 'es'
                   ? 'ES'
-                  : selectedLang === 'zgh'
-                    ? 'MA'
+                  : selectedLang === 'nl'
+                    ? 'NL'
                     : 'US'
               }
               width={32}
@@ -196,7 +196,7 @@ export default function Sidebar() {
                     />{' '}
                     Español{' '}
                   </li>
-                  <li onClick={() => changeLanguage('zgh')}>
+                  <li onClick={() => changeLanguage('nl')}>
                     {' '}
                     <Flag
                       style={{
@@ -206,9 +206,9 @@ export default function Sidebar() {
                         height: '26px',
                       }}
                       className={css.flags}
-                      code="MA"
+                      code="NL"
                     />{' '}
-                    Tamazight{' '}
+                    Dutch{' '}
                   </li>
                 </ul>
               </div>
