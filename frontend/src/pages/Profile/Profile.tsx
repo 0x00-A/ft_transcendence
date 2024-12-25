@@ -12,35 +12,41 @@ import ProfileAchievements from '@/components/Profile/ProfileAchievements';
 import css from './Profile.module.css';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
+import { RiDeleteBin6Line } from "react-icons/ri";
 // Api
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import useDeleteAccount from '@/hooks/profile/useDeleteAccount';
+import { PasswordForm } from '@/types/apiTypes';
 
 
 const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
+  const [isDeleteAcc, setDeleteAcc] = useState(false);
   const { user: currentUser, error, refetch, isLoading } = useUser();
+  const { register, handleSubmit, errors, mutation, reset } = useDeleteAccount();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
 
   useEffect(() => {
     refetch();
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || 'Something went wrong, try again!');
-      } else {
-        toast.error('Something went wrong, try again!');
-      }
-      navigate('/');
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       toast.error(error.response?.data?.message || 'Something went wrong, try again!');
+  //     } else {
+  //       toast.error('Something went wrong, try again!');
+  //     }
+  //     navigate('/');
+  //   }
+  // }, [error]);
 
 
   const handleOutsideClick = (event: React.MouseEvent) => {
@@ -52,10 +58,35 @@ const Profile = () => {
     }
   };
 
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      toast.success('Account deleted successfully!');
+      reset();
+      navigate('/auth');
+    }
+  }, [mutation.isSuccess]);
+
+  useEffect(() => {
+    if (mutation.isError) {
+      if (errors.root) {
+        toast.error(errors.root.message);
+      }
+    }
+  }, [mutation.isError]);
+
   if (isLoading) {
     return <div className={css.profileContainer}>
       <h1>Loading...</h1>
     </div>
+  }
+
+  if (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(error.response?.data?.message || 'Something went wrong, try again!');
+    } else {
+      toast.error('Something went wrong, try again!');
+    }
+    navigate('/');
   }
 
   return (
@@ -81,6 +112,28 @@ const Profile = () => {
               </div>
               { activeBtn ? <EditInfosProfile setEditProfile={setEditProfile} /> :
                 <EditSecurityProfile setEditProfile={setEditProfile} /> }
+              { !activeBtn &&
+                <button className={css.deleteAccBtn} onClick={() => setDeleteAcc(true)}>
+                  <RiDeleteBin6Line size='2.2rem' />
+                  <span>{t('deleteAccount.btnDelete')}</span>
+                </button> }
+                { isDeleteAcc && <div className={css.bluredBgConfirm}>
+                  <form className={css.confirmDelAccContainer} onSubmit={ handleSubmit((data: PasswordForm) => mutation.mutate(data)) }>
+                    <h1>{t('deleteAccount.title')}</h1>
+                    <p>{t('deleteAccount.description')}</p>
+                    <p>{t('deleteAccount.warning')}</p>
+                    <div className={css.containerFiled}>
+                        <label htmlFor="">{t('Profile.EditInfosProfile.fields.password.label')}</label>
+                        <input type="password" className={css.input} {...register('password')}
+                        placeholder={t('Profile.EditInfosProfile.fields.password.placeholder')} />
+                        {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
+                    </div>
+                    <div className={css.ConfirmButtons}>
+                        <button type='reset' className={css.closeBtn} onClick={() => { reset(); setDeleteAcc(false)} }>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
+                        <button type='submit' className={css.confirmBtn}>{t('Profile.EditInfosProfile.confirmSave.buttons.confirm')}</button>
+                    </div>
+                  </form>
+                </div>}
             </div>
           </div>
         </div>)

@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md";
 // Contexts
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
-
+import { UserPen } from 'lucide-react';
 
 const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
@@ -34,7 +34,7 @@ const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.Se
     <div className={css.profileHeaderContainer}>
       <div className={css.profileBackground}>
         <button className={css.editProfileBtn} onClick={() => setEditProfile(true)}>
-          <MdEdit fontSize='2.5rem'/>
+          <UserPen color='#F8C25C'/>
           <span>{t('Profile.profileHeader.EditProfileButton')}</span>
         </button>
       </div>

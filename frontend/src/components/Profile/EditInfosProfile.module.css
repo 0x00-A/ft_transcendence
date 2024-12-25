@@ -1,43 +1,75 @@
-.editInfosForm {
+.editInfosContainer {
     background-color: #1E2533;
-    height: calc(100% - 55px);
+    /* height: calc(100% - 55px); */
     width: 100%;
     border-radius: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* border: 1px solid white; */
-    gap: 3rem;
-    padding: 2rem;
+    gap: 1rem;
+    padding: 3rem;
 }
 
 .title {
-    align-self: center;
-    width: 90%;
+    align-self: flex-start;
+    /* width: 90%; */
     font-size: 2.2rem;
     font-weight: bold;
 }
 
+.editInfosBody {
+    /* border: 1px solid #F8C25C; */
+    /* background-color: #1E2533; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* gap: 2rem; */
+    /* padding: 2rem; */
+}
+
+.editInfosForm {
+    /* border: 1px solid #F8C25C; */
+    /* background-color: #1E2533; */
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border: 1px solid white; */
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.emailContainer {
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: #394056;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-color);
+
+}
+
 .editAvatar {
-    width: 80%;
+    /* border: 1px solid #F8C25C; */
+    /* width: 80%; */
     /* height: 20%; */
     display: flex;
     align-items: center;
-    gap: 3rem;
+    gap: 5rem;
 }
 
 .avatarContainer {
     border: 2px solid #F8C25C;
     border-radius: 50%;
     overflow: hidden;
-    width: 120px;
-    height: 120px;
+    /* width: 120px; */
+    /* height: 120px; */
 }
 
 .avatarContainer img {
     object-fit: cover;
-    width: 100%;
-    height: 100%;
+    width: 120px;
+    height: 120px;
 }
 
 .defaultAvatar {
@@ -56,7 +88,7 @@
 
 .avatarBtn, .removeAvatarBtn {
     background-color: #0E1725;
-    padding: 8px;
+    padding: 10px;
     font-size: 1.3rem;
     border-radius: 10px;
     cursor: pointer;
@@ -78,28 +110,39 @@
 
 .editInfos {
     /* align-self: center; */
+    width: 100%;
     /* border: 1px solid #F8C25C; */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 80%;
+    /* align-items: center; */
+    /* width: 80%; */
+    padding: 0 1rem;
     gap: 1rem;
 }
 
-.containerFiled {
+.containerField {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: start; */
+    /* align-items: center; */
+    /* gap: 0.5rem; */
+}
+
+.field {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
+
 .label {
+    /* align-self: start; */
     font-size: 1.5rem;
     color: #D1D3D4;
 }
 
-.input {
+.input, .emailInput {
     width: 100%;
-    height: 50px;
     background-color: #0E1725;
     border: none;
     border-radius: 10px;
@@ -108,13 +151,21 @@
     color: #D1D3D4;
 }
 
-.saveContainer {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+.emailInput {
+    width: 270px;
 }
 
+/* .saveContainer {
+    width: 100%;
+    display: flex;
+    align-self: flex-end;
+    border: 1px solid white;
+    justify-content: flex-end;
+} */
+
 .saveBtn {
+    /* align-self: flex-end; */
+    width: fit-content;
     padding: 8px 15px;
     border: 1px solid #F8C25C;
     background-color: #0e1725;
@@ -177,12 +228,12 @@
     gap: 2.5rem;
 }
 
-.saveConfirmContainer h1 {
+.saveConfirmContainer h1, .editEmailContainer h1 {
     font-size: 2.2rem;
     color: #ffffff;
 }
 
-.saveConfirmContainer p {
+.saveConfirmContainer p, .editEmailContainer p {
     color: #D1D3D4;
     font-size: 1.5rem;
     text-align: center;
@@ -238,20 +289,27 @@
     border: 1px solid #AA2926;
 }
 
-.emailInput {
+.emailField {
     display: flex;
-    position: relative;
+    /* position: relative; */
     align-items: center;
+    gap: 1.5rem;
 }
 
-.emailInput input {
-    padding-right: 8rem;
+.emailField p {
+    font-size: 1.5rem;
+    color: #D1D3D4;
+    background-color: #0E1725;
+    /* width: 250px; */
+    padding: 1.2rem;
+    border-radius: 10px;
 }
 
 .editEmailBtn {
-    position: absolute;
-    right: 10px;
-    padding: 5px 10px;
+    /* position: absolute; */
+    /* right: 10px; */
+    background-color: #0E1725;
+    padding: 5px 12px;
     border: 1px solid #F8C25C;
     border-radius: 8px;
     color: #D1D3D4;
@@ -261,4 +319,20 @@
 .editEmailBtn:hover {
     background-color: #1E2533;
     color: #ffffff;
+}
+
+.editEmailContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E2533;
+    border-radius: 25px;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    gap: 2.5rem;
 }

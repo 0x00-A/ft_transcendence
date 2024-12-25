@@ -20,13 +20,13 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 
-class GetGamesView(APIView):
+class GetPlayedGamesView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, username):
+    def get(self, request):
         try:
-            user = User.objects.get(username=username)
-            played_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user))[:5]
+            user = request.user
+            played_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')
             serializer = ProfileGamesSerializer(played_games, many=True, context={'request': request})
             # all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
             # last_5_games = all_games[:5]
@@ -44,7 +44,7 @@ class LastGamesView(APIView):
         try:
             user = User.objects.get(username=username)
             last_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')[:5]
-            serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request})
+            serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request, 'user': user})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response(data={"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

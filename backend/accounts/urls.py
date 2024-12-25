@@ -48,6 +48,8 @@ urlpatterns = [
     path('achievements/<str:username>/', views.GetProfileAchievementsView.as_view(), name='profile_achievements'),
     path('dashboard-leaderboard/', views.DashboardLeaderBoardView.as_view(), name='dashboard_leaderboard'),
     path('leaderboard/', views.LeaderBoardView.as_view(), name='leaderboard'),
+
+    path ('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
     #  path('profile/', views.ProfileApiView.as_view(), name='profile'),
 
 #     path('security/set_password/', views.SetPasswordView.as_view()),

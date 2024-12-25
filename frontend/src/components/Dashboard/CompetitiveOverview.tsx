@@ -23,24 +23,6 @@ const CompetitiveOverview = () => {
       <>
         <div className={styles.header}>
         <h3 className={styles.title}>{t('dashboard.overview.title')}</h3>
-        <div className={styles.buttonGroup}>
-          <button
-            onClick={() => setActiveGameMode('single')}
-            className={`${styles.button} ${
-              activeGameMode === 'single' ? styles.buttonActive : ''
-            }`}
-          >
-            {t('dashboard.overview.buttons.singleBtn')}
-          </button>
-          <button
-            onClick={() => setActiveGameMode('tournaments')}
-            className={`${styles.button} ${
-              activeGameMode === 'tournaments' ? styles.buttonActive : ''
-            }`}
-          >
-            {t('dashboard.overview.buttons.tournamentsBtn')}
-          </button>
-        </div>
       </div>
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
@@ -127,14 +109,21 @@ const CompetitiveOverview = () => {
         </div>
 
         <div className={styles.winLoseContainer}>
-          <div className={styles.winCard}>
-            {isLoading ? <span className="statValueSkeleton block w-[40px] h-[30px] bg-gray-500 rounded-md animate-pulse"></span>:
-            <span className={styles.resultText}>{user?.profile.wins} {t('dashboard.overview.fields.wins')}</span>}
-          </div>
-          <div className={styles.loseCard}>
-            {isLoading ? <span className="statValueSkeleton block w-[40px] h-[30px] bg-gray-500 rounded-md animate-pulse"></span>:
-            <span className={styles.resultText}>{user?.profile.losses} {t('dashboard.overview.fields.loses')}</span>}
-          </div>
+          {
+            isLoading ? <span className="statValueSkeleton block w-[40px] h-[30px] bg-gray-500 rounded-md animate-pulse"></span>:
+            <div className={styles.winCard}>
+              <span className={styles.resultNumber}>{user?.profile.wins} </span>
+              <span className={styles.resultText}>{t('dashboard.overview.fields.wins')}</span>
+            </div>
+          }
+          {
+            isLoading ? <span className="statValueSkeleton block w-[40px] h-[30px] bg-gray-500 rounded-md animate-pulse"></span>:
+            <div className={styles.loseCard}>
+              <span className={styles.resultNumber}>{user?.profile.losses}</span>
+              <span className={styles.resultText}>{t('dashboard.overview.fields.loses')}</span>
+            </div>
+            
+          }
         </div>
       </div>
       </>

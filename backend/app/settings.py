@@ -33,6 +33,8 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
+DEFAULT_AVATAR = 'defaultAvatar.jpeg'
+
 
 API_KEY = os.environ.get("API_KEY")
 # Quick-start development settings - unsuitable for production
@@ -84,9 +86,9 @@ if DEBUG:
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -332,14 +334,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 # ]
 CORS_ALLOW_CREDENTIALS = True
 
-# CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
-#                         'https://wwww.ft-pong.me',
-#                         'https://127.0.0.1',
-#                         'https://localhost',
-#                         'http://localhost:3000'
-#                         'http://0.0.0.0:3000',
-#                         # 'wss://yourdomain.com'
-#                         ]
+CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
+                        'https://wwww.ft-pong.me',
+                        'https://127.0.0.1',
+                        'https://localhost',
+                        'http://localhost:3000'
+                        'http://0.0.0.0:3000',
+                        # 'wss://yourdomain.com'
+                        ]
 
 # LOG_DIR = '/app/backend/logs'
 # os.makedirs(LOG_DIR, exist_ok=True)

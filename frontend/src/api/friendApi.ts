@@ -4,7 +4,7 @@ import apiClient from './apiClient';
 export const  apiSendFriendRequest = async (username: string) => {
     try {
     const response = await apiClient.post(`/friend-request/send/${username}/`);
-    return response.data.message || 'Friend request sent';
+    return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
@@ -17,7 +17,7 @@ export const  apiSendFriendRequest = async (username: string) => {
 export const apiAcceptFriendRequest = async (username: string) => {
     try {
         const response = await apiClient.post(`/friend-request/accept/${username}/`);
-        return response.data.message || 'Friend request accepted';
+        return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
@@ -30,7 +30,7 @@ export const apiAcceptFriendRequest = async (username: string) => {
 export const apiRejectFriendRequest = async (username: string) => {
     try {
         const response = await apiClient.post(`/friend-request/reject/${username}/`);
-        return response.data.message || 'Friend request rejected';
+        return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
@@ -43,7 +43,7 @@ export const apiRejectFriendRequest = async (username: string) => {
 export const apiRemoveFriend = async (username: string) => {
     try {
         const response = await apiClient.delete(`/friend/remove/${username}/`);
-        return response.data.message || 'Friend removed';
+        return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
@@ -57,7 +57,7 @@ export const apiRemoveFriend = async (username: string) => {
 export const apiCancelFriendRequest = async (username: string) => {
     try {
         const response = await apiClient.delete(`/friend-request/cancel/${username}/`);
-        return response.data.message || 'Friend request cancel';
+        return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
@@ -70,7 +70,7 @@ export const apiCancelFriendRequest = async (username: string) => {
 export const apiBlockRequest = async (username : string) => {
     try {
         const response = await apiClient.post(`/block/${username}/`);
-        return response.data.message || 'blocking user';
+        return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
@@ -83,7 +83,7 @@ export const apiBlockRequest = async (username : string) => {
 export const apiUnBlockRequest = async (username : string) => {
     try {
         const response = await apiClient.post(`/unblock/${username}/`);
-        return response.data.message || 'Unblocked user';
+        return response.data.message;
     } catch (error: any) {
         if (error.response && error.response.data && error.response.data.error) {
             throw new Error(error.response.data.error);
