@@ -7,26 +7,6 @@ import { UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FriendSkeleton from '../Friends/FriendSkeleton';
 
-// const friendsData = [
-//   { name: 'essam', level: 12.5, status: 'offline', avatar: 'https://picsum.photos/201' },
-//   { name: 'rel-isma', level: 11.5, status: 'online', avatar: 'https://picsum.photos/203' },
-//   { name: 'aigounad', level: 8.5, status: 'offline', avatar: 'https://picsum.photos/204' },
-//   { name: 'l9ra3', level: 8.2, status: 'online', avatar: 'https://picsum.photos/202' },
-//   { name: 'aka', level: 5.5, status: 'offline', avatar: 'https://picsum.photos/206' },
-// ];
-
-// interface FriendProfile {
-//     avatar: string;
-//     is_online: boolean;
-//     level: number;
-// }
-
-// interface Friend {
-//   id: string;
-//   username: string;
-//   profile: FriendProfile;
-// }
-
 const FriendsList = ({ username }: { username: string | undefined }) => {
   const {
     data: friendsData,
@@ -39,10 +19,13 @@ const FriendsList = ({ username }: { username: string | undefined }) => {
   return (
     <>
       <div className={css.header}>
-        <h3 className={css.title}>YOUR FRIENDS</h3>
-        <a href="/friends" className={css.viewMore}>
-          View more
-        </a>
+        <h3 className={css.title}>{t('dashboard.FriendsList.headerTitle')}</h3>
+        <button
+          className={css.viewMore}
+          onClick={() => navigate('/friends?view=all')}
+        >
+          {t('dashboard.FriendsList.viewMore')}
+        </button>
       </div>
 
       {isLoading ? (
@@ -52,14 +35,13 @@ const FriendsList = ({ username }: { username: string | undefined }) => {
           {error && <p>{error.message}</p>}
           {friendsData?.length == 0 && (
             <div className={css.noFriends}>
-              <span>{t('Profile.friends.errors.noFriends')}</span>
+              <span>{t('dashboard.FriendsList.noFriends.message')}</span>
               <button
                 className={css.addFriendsBtn}
-                onClick={() => navigate('/friends')}
+                onClick={() => navigate('/friends?view=add')}
               >
-                {/* <img src="/icons/friend/addFriend.svg" alt="Add" /> */}
                 <UserPlus />
-                <span>{t('Profile.friends.addFriends.button')}</span>
+                <span>{t('dashboard.FriendsList.noFriends.addFriendsButton')}</span>
               </button>
             </div>
           )}
@@ -75,21 +57,20 @@ const FriendsList = ({ username }: { username: string | undefined }) => {
                 <div className={css.friendInfo}>
                   <span className={css.name}>{friend.username}</span>
                   <span className={css.level}>
-                    Level: {friend.profile.level}
+                    {t('dashboard.FriendsList.friendItem.levelLabel')} {friend.profile.level}
                   </span>
                 </div>
                 <div
                   className={`${css.status} ${friend.profile.is_online ? css.online : css.offline}`}
                 >
                   <span className={css.statusIndicator}></span>
-                  {friend.profile.is_online ? 'Online' : 'Offline'}
+                  {friend.profile.is_online ? t('dashboard.FriendsList.friendItem.status.online') : t('dashboard.FriendsList.friendItem.status.offline')}
                 </div>
               </div>
             ))}
         </div>
       )}
 
-      {/* <button className={css.inviteButton}>Invite your friends ➤</button> */}
     </>
   );
 };

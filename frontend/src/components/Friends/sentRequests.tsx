@@ -1,13 +1,13 @@
 import React from 'react';
 import css from './SentRequests.module.css';
 import { useGetData } from '../../api/apiHooks';
-import moment from 'moment';
 import NoSentRequests from './NoSentRequests';
 import { apiCancelFriendRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import { X } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/helpers';
 
 interface Profile {
   id: number;
@@ -39,10 +39,6 @@ const SentRequests: React.FC = () => {
     }
   };
 
-  const formatTimestamp = (timestamp: string) => {
-    return moment(timestamp).calendar();
-  };
-
 
   return (
     <div className={css.sentRequests}>
@@ -64,7 +60,7 @@ const SentRequests: React.FC = () => {
               />
               <div className={css.userInfo}>
                 <span className={css.username}>{request.receiver.username}</span>
-                <span className={css.timestamp}>{formatTimestamp(request.timestamp)}</span>
+                <span className={css.timestamp}>{formatDate(new Date(request.timestamp), t('lang'))}</span>
               </div>
               <button
                 className={css.cancelButton}

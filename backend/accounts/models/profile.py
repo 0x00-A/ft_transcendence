@@ -3,6 +3,8 @@ from django.db import models
 from .user import User
 from .badge import Badge
 
+from django.conf import settings
+
 
 # Profile.objects.bulk_update(profiles, ['rank'])
 
@@ -10,7 +12,7 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(
-        upload_to='avatars/', default='avatars/avatar.jpeg')
+        upload_to='avatars/', default=f'avatars/{settings.DEFAULT_AVATAR}')
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     score = models.PositiveIntegerField(default=0)
     level = models.PositiveSmallIntegerField(default=0)

@@ -41,6 +41,7 @@ import { SelectedConversationProvider } from './contexts/SelectedConversationCon
 import VerifyEmail from './pages/Auth/VerifyEmail';
 import ResetPassword from './pages/Auth/ResetPassword';
 import EditEmailVerification from './components/Profile/EditEmailVerification';
+import Leaderboard_History from './pages/Leaderboard/Leaderboard_History';
 
 
 function App() {
@@ -87,7 +88,7 @@ function AppContent() {
   '/friends',
   '/search',
   '/store',
-  '/leaderboard',
+  '/leaderboard-history',
   // '/auth/2factor',
   '/profile',
   /^\/profile\/[^/]+\/?$/,
@@ -138,7 +139,8 @@ function AppContent() {
               <Route path="/friends" element={<Friends />} />
               <Route path="/search" element={<Search />} />
               <Route path="/store" element={<Store />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
+              {/* <Route path="/leaderboard" element={<Leaderboard />} /> */}
+              <Route path="/leaderboard-history" element={<Leaderboard_History />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/:username" element={<UsersProfile />} />

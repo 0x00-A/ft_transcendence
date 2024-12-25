@@ -41,7 +41,7 @@ const Menus = () => {
     },
     {
       id: 4,
-      path: '/leaderboard',
+      path: '/leaderboard-history',
       title: t('sidebar.leaderboard'),
       icon: <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} />,
       activeIcon: <MdOutlineLeaderboard size={MENU_ICON_SIZE} color={MENU_ACTIVE_ICON_COLOR} />,

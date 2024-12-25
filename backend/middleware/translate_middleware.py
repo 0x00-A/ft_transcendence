@@ -4,7 +4,13 @@ from accounts.utils import translate_text
 
 class TranslateResponseMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
-        if response['Content-Type'] == 'application/json':
+        content_type = response.headers.get('Content-Type', '').lower()
+
+        # print("---------------------")
+        # print(response)
+        # print(response.data)
+        # print("---------------------")
+        if content_type == 'application/json':
             try:
                 data = json.loads(response.content)
                 if 'message' in data:

@@ -61,6 +61,7 @@
 
 .userIcon {
   width: 40px;
+  object-fit: cover;
   height: 40px;
   border-radius: 50%;
   border: 1px solid var(--text-color);

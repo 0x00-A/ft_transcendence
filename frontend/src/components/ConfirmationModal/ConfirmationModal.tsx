@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import styles from './ConfirmationModal.module.css';
 
 const ConfirmationModal = ({ message, onConfirm, onCancel, show } :
   { message: string, onConfirm: ()=>void, onCancel: ()=>void, show: boolean }
 ) => {
   if (!show) return null;
+  const { t } = useTranslation();
 
   return (
     <div className={styles.overlay}>
@@ -18,10 +20,10 @@ const ConfirmationModal = ({ message, onConfirm, onCancel, show } :
           </div>
           <div className={styles.buttonContainer}>
             <button className={styles.confirmButton} onClick={onConfirm}>
-              Confirm
+              {t('ConfirmationModal.Confirm')}
             </button>
             <button className={styles.cancelButton} onClick={onCancel}>
-              Cancel
+              {t('ConfirmationModal.Cancel')}
             </button>
           </div>
         </div>
