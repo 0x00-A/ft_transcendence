@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import css from './BlockedList.module.css';
 import { Search, Ban } from 'lucide-react';
 import { useGetData } from '../../api/apiHooks';
-import moment from 'moment';
 import { apiUnBlockRequest } from '@/api/friendApi';
 import { toast } from 'react-toastify';
 import FriendSkeleton from './FriendSkeleton';
 import { useTranslation } from 'react-i18next';
 import { CgUnblock } from "react-icons/cg";
+import { formatDate } from '@/utils/helpers';
 
 
 
@@ -58,10 +58,6 @@ const BlockedList: React.FC = () => {
     </div>
   );
 
-  const formatTimestamp = (timestamp: string) => {
-    return moment(timestamp).calendar();
-  };
-
   return (
     <div className={css.blockedList}>
       <h1 className={css.title}>{t('blockedList.title')}</h1>
@@ -95,7 +91,7 @@ const BlockedList: React.FC = () => {
               />
               <div className={css.userInfo}>
               <span className={css.username}>{user.blocked.username}</span>
-                <span className={css.timestamp}>{formatTimestamp(user.date_blocked)}</span>
+                <span className={css.timestamp}> {formatDate(new Date(user.date_blocked), t('lang'))} </span>
               </div>
               <button
                 className={css.unblockButton}

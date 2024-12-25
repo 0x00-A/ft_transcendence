@@ -9,7 +9,7 @@ from uuid import UUID
 
 from accounts.models import User, EmailVerification
 from accounts.serializers import EditProfileSerializer, SetPasswordSerializer
-from accounts.utils import send_verification_email
+from accounts.utils import send_update_email_email
 
 
 class EditProfileView(APIView):
@@ -18,10 +18,9 @@ class EditProfileView(APIView):
     def put(self, request):
         user = request.user
         print('--->>REQUEST DATA ==>: ', request.data, '<<---')
-
         serializer = EditProfileSerializer(user, context={'request': request}, data=request.data, partial=True)
         if request.FILES:
-            print('FILES:', request.FILES)
+            print('---------->>> FILES: ', request.FILES)
             serializer.files = request.FILES
         if serializer.is_valid():
             serializer.save()
@@ -48,7 +47,15 @@ class UpdateEmailRequest(APIView):
             )
         except User.DoesNotExist:
             pass
-        send_verification_email(user, request.data['email'])
+        try:
+            already = EmailVerification.objects.get(user=user)
+            already.delete()
+        except EmailVerification.DoesNotExist:
+            pass
+        try:
+            send_update_email_email(user, request.data['email'])
+        except Exception as e:
+            return Response({'error': f'Something went wrong, please try again!, detalails: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
         print('api ==> change email: Email sent successfully')
         return Response({'message': 'Verification email sent successfully'}, status=status.HTTP_200_OK)
 
@@ -68,13 +75,15 @@ class UpdateEmailView(APIView):
             return Response({'error': 'Invalid token!'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             verify = EmailVerification.objects.get(token=request.data.get('token'))
+            user = verify.user
+            user.email = verify.new_email
+            user.save()
+            verify.delete()
+            return Response({'message': 'Your email has been verified successfully'}, status=status.HTTP_200_OK)
         except EmailVerification.DoesNotExist:
             return Response({'error': 'Invalid token, your email is not verified!'}, status=status.HTTP_400_BAD_REQUEST)
-        user = verify.user
-        user.email = verify.new_email
-        user.save()
-        verify.delete()
-        return Response({'message': 'Your email has been verified successfully'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': f'Something went wrong, please try again!, detalails: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdatePasswordView(APIView):

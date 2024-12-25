@@ -36,32 +36,32 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
     #     return data
 
     def get_opponent_username(self, obj):
-        if obj.player1 == self.context['request'].user:
+        if obj.player1 == self.context['user']:
             return obj.player2.username
         return obj.player1.username
 
     def get_opponent_avatar(self, obj):
-        if obj.player1 == self.context['request'].user:
+        if obj.player1 == self.context['user']:
             return f"{SERVER_URL}{MEDIA_URL}{obj.player2.profile.avatar}"
         return f"{SERVER_URL}{MEDIA_URL}{obj.player1.profile.avatar}"
 
     def get_result(self, obj):
-        if obj.winner == self.context['request'].user:
+        if obj.winner == self.context['user']:
             return 'Win'
         return 'Lose'
 
     def get_xp_gained(self, obj):
-        if obj.player1 == self.context['request'].user:
+        if obj.player1 == self.context['user']:
             return obj.p1_xp
         return obj.p2_xp
 
     def get_my_score(self, obj):
-        if obj.player1 == self.context['request'].user:
+        if obj.player1 == self.context['user']:
             return obj.p1_score
         return obj.p2_score
 
     def get_opponent_score(self, obj):
-        if obj.player1 == self.context['request'].user:
+        if obj.player1 == self.context['user']:
             return obj.p2_score
         return obj.p1_score
 

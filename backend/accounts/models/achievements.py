@@ -9,6 +9,7 @@ class Achievement(models.Model):
     # category = models.CharField(max_length=50)  # e.g., 'Milestone', 'Skill'
     # Rules for unlocking, e.g., {"games_won": 10}
     condition_name = models.CharField(max_length=255, default="")
+    name_trans = models.CharField(max_length=255, default="")
     condition = models.JSONField()
     reward_points = models.IntegerField(default=0)
     # icon = models.ImageField(

@@ -1,5 +1,8 @@
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { at } from 'lodash';
+import { use } from 'i18next';
+import ReturnBack from '@/components/Game/components/ReturnBack/ReturnBack';
 
 export const SignupSchema = () => {
   const { t } = useTranslation();
@@ -126,19 +129,25 @@ export const EditInfosProfileSchema = () => {
   return yup.object().shape({
     username: yup
       .string()
+      .required(t('Profile.errors.editProfile.username.required'))
       .min(4, t('Profile.errors.editProfile.username.min'))
       .max(30, t('Profile.errors.editProfile.username.max')),
     first_name: yup
       .string()
-      .min(3, t('Profile.errors.editProfile.firstName.min'))
+      .nullable()
+      .test('min-length', t('Profile.errors.editProfile.firstName.min'), value => {
+        if (!value) return true;
+        return value.length >= 3;
+      })
       .max(30, t('Profile.errors.editProfile.firstName.max')),
     last_name: yup
       .string()
-      .min(3, t('Profile.errors.editProfile.lastName.min'))
+      .nullable()
+      .test('min-length', t('Profile.errors.editProfile.lastName.min'), value => {
+        if (!value) return true;
+        return value.length >= 3;
+      })
       .max(30, t('Profile.errors.editProfile.lastName.max')),
-    email: yup
-      .string()
-      .email(t('Profile.errors.editProfile.email.invalid')),
     password: yup
       .string()
       .min(8, t('Profile.errors.editProfile.password.min'))
@@ -146,17 +155,37 @@ export const EditInfosProfileSchema = () => {
       .required(t('Profile.errors.editProfile.password.required')),
     avatar: yup
       .mixed<File>()
-      .test('fileSize', t('Profile.errors.editProfile.avatar.fileSize'), (value) => {
-        if (!value) return true;
-        return value.size <= 2000000;
-      })
+      .nullable()
+      .test('fileSize', t('Profile.errors.editProfile.avatar.fileSize'),
+        (value) => {
+          if (!value) return true;
+          return value.size <= (5 * 1024 * 1024);
+        }
+      )
       .test('fileType', t('Profile.errors.editProfile.avatar.fileType'), (value) => {
         if (!value) return true;
-        return (
-          value.type === 'image/png' ||
-          value.type === 'image/jpg' ||
-          value.type === 'image/jpeg'
-        );
+        return ['image/png', 'image/jpg', 'image/jpeg'].includes(value.type);
       }),
   });
 };
+
+export const EmailSchema = () => {
+
+  return yup.object().shape({
+    email: yup.string().email().required(),
+  });
+}
+
+export const PasswordSchema = () => {
+  const { t } = useTranslation();
+
+  return yup.object().shape({
+    password: yup
+      .string()
+      .min(8, t('Profile.errors.editProfile.password.min'))
+      .max(64, t('Profile.errors.editProfile.password.max'))
+      .required(t('Profile.errors.editProfile.password.required')),
+  });
+}
+
+// !formValues.some((value:any) => value !== undefined && value !== null && value?.trim() !== '')

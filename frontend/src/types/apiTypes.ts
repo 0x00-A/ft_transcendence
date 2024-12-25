@@ -130,13 +130,11 @@ export interface conversationProps {
 
 
 export interface EditProfileFormData {
+    avatar: File | null;
     username: string;
-    avatar: FileList | null;
     first_name: string;
     last_name: string;
-    email: string;
     password: string;
-    otp: string;
 }
 
 export interface LastGames {
@@ -210,6 +208,7 @@ export interface Achievement {
     description: string;
     image: string;
     condition_name: string;
+    name_trans: string;
     condition: {
         [key: string]: number;
     };
@@ -256,4 +255,8 @@ export interface OtherUser {
   is_password_set: boolean;
   is2fa_active: boolean;
   friend_request_status?: "accepted" | "pending" | "Add Friend" | "cancel";
+}
+
+export interface PasswordForm {
+  password: string;
 }

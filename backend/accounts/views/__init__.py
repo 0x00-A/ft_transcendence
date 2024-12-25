@@ -17,6 +17,7 @@ from .auth.logout import LogoutView
 from .accounts import MyProfileView
 from .accounts import UserProfileView
 from .accounts import GetProfileAchievementsView
+from .accounts import DeleteAccountView
 
 from .update_account import EditProfileView
 from .update_account import UpdateEmailRequest

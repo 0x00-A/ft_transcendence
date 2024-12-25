@@ -21,8 +21,8 @@ const useEditInfosProfile = () => {
     setValue,
   } = useForm<EditProfileFormData>({
     resolver: yupResolver(EditInfosProfileSchema()),
-    reValidateMode:'onChange',
-    mode: 'onChange',
+    // reValidateMode:'onChange',
+    mode: 'onSubmit',
   });
   const mutation = useMutation({
     mutationFn: async (data: FormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
@@ -32,10 +32,8 @@ const useEditInfosProfile = () => {
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
         errs?.first_name && setError("first_name", {type: '', message: errs?.first_name}, {shouldFocus:true})
         errs?.last_name && setError("last_name", {type: '', message: errs?.last_name}, {shouldFocus:true})
-        errs?.email && setError("email", {type: '', message: errs?.email}, {shouldFocus:true})
         errs?.password && setError("password", {type: '', message: errs?.password}, {shouldFocus:true})
         errs?.avatar && setError("avatar", {type: '', message: errs?.avatar}, {shouldFocus:true})
-        errs?.otp && setError("otp", {type: '', message: errs?.otp}, {shouldFocus:true})
         errs?.error && setError("root", {type: '', message: errs?.error});
       } else {
         setError("root", {type: '', message: 'Something went wrong!'});
