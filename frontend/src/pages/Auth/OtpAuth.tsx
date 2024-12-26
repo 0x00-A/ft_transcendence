@@ -10,9 +10,10 @@ import { otpSchema } from '@/types/formSchemas';
 import * as Yup from 'yup';
 import { LOGO } from '@/config/constants';
 import { useTranslation } from 'react-i18next';
+import { LoadingBarContextType } from '@/contexts/LoadingBarContext';
 
 
-const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<React.SetStateAction<boolean>>, username:string}) => {
+const OtpAuth = ({setOtpRequired, username, loadingBarRef}: {setOtpRequired:React.Dispatch<React.SetStateAction<boolean>>, username:string, loadingBarRef:LoadingBarContextType}) => {
   const [otp, setOtp] = useState('');
   const { setIsLoggedIn } = useAuth();
   const [otpError, setOptError] = useState('');
@@ -51,7 +52,7 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
 
   return (
     <form action="" className={css.otpForm} onSubmit={handleVerifyOtp}>
-      <img src={LOGO} alt="" className={css.logo}/>
+      {/* <img src={LOGO} alt="" className={css.logo}/> */}
       <h1>2FA Required</h1>
       <p>Please enter the one-time-password in your application google authenticator, to login</p>
       <div className={css.inputContainer}>
@@ -62,7 +63,7 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
         </div>
         <div className={css.otpButtons}>
           <button type='submit' className={css.submitBtn}>Submit</button>
-          <button type='reset' className={css.cancelBtn} onClick={() => navigate('/auth')}>Cancel</button>
+          <button type='reset' className={css.cancelBtn} onClick={() => { loadingBarRef.current?.complete(); setOtpRequired(false); } }>Cancel</button>
         </div>
       </div>
     </form>

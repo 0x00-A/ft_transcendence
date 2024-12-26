@@ -153,6 +153,8 @@ const Game = () => {
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
+          console.log(data);
+
           if (gameState === 'startGame') return;
           setGameState('inqueue');
         }
@@ -221,6 +223,7 @@ const Game = () => {
 
   const requestRemoteGame = () => {
     // console.log('request remote game');
+    // setGameState('inqueue');
     sendMessage({
       event: 'request_remote_game',
     });

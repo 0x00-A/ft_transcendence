@@ -1,4 +1,5 @@
 from django.db import models
+import os
 
 from .user import User
 from .badge import Badge
@@ -26,6 +27,13 @@ class Profile(models.Model):
     is_online = models.BooleanField(default=False)
     blocked_user_name = models.CharField(max_length=150, default="none", blank=True)
     preferred_language = models.CharField(max_length=10, default='en')
+
+    # def delete(self, *args, **kwargs):
+    #     if self.avatar:
+    #         if os.path.isfile(self.avatar.path):
+    #             print('-------deleting avatar file--------')
+    #             os.remove(self.avatar.path)
+    #     super().delete(*args, **kwargs)
 
     # def update_score(self, win:False, result, p2_badge):
     #     if win:

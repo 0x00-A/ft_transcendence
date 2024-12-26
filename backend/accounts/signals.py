@@ -3,6 +3,8 @@ from django.db.models.signals import post_delete, pre_save
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.signals import user_logged_out
 import logging
+import os
+from django.conf import settings
 
 from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
@@ -49,6 +51,8 @@ def log_profile_changes(sender, instance, **kwargs):
         # if old_profile.played_games != instance.played_games:
         #     print(f"-------------Played games {old_profile.user.username} changed from {old_profile.played_games} to {instance.played_games}-------------")
 
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -74,6 +78,27 @@ def save_user_profile(sender, instance, **kwargs):
 def delete_user_with_profile(sender, instance, **kwargs):
     if instance.user:
         instance.user.delete()
+    print('-------+++++++++++++=-in the signal--------')
+    if instance.avatar and instance.avatar != f'avatars/{settings.DEFAULT_AVATAR}':
+        print('---------avatar------->', instance.avatar)
+        if os.path.isfile(instance.avatar.path):
+            print('-------deleting avatar file in delete_user_with_profile--------')
+            os.remove(instance.avatar.path)
+
+# @receiver(pre_save, sender=Profile)
+# def delete_old_avatar(sender, instance, **kwargs):
+#     if instance.pk:
+#         try:
+#             print('-----+++++-----delete_old_avatar--------')
+#             old_profile = Profile.objects.get(pk=instance.pk)
+#             if old_profile.avatar:
+#                 print('---------old_avatar------->', old_profile.avatar)
+#                 print('---------new_avatar------->', instance.avatar)
+#                 # if os.path.isfile(old_profile.avatar.path):
+#                 #     print('-------deleting avatar file in delete_old_avatar--------')
+#                 #     os.remove(old_profile.avatar.path)
+#         except Profile.DoesNotExist:
+#             pass
 
 # @receiver(post_save, sender=User)
 # def create_profile_badge(sender, instance, created, **kwargs):

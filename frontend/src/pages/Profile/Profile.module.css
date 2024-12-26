@@ -45,7 +45,7 @@
     background-color: #1E2533;
     border-radius: 25px;
     width: 450px;
-    height: 500px;
+    /* height: 500px; */
     display: flex;
     flex-direction: column;
 }

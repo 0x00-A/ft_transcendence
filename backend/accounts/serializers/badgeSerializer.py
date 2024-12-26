@@ -11,4 +11,4 @@ class BadgeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'icon', 'xp_reward', 'level_required']
 
     def get_icon(self, obj):
-        return f"{SERVER_URL}{MEDIA_URL}{obj.icon}"
+        return SERVER_URL + obj.icon.url

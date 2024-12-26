@@ -10,26 +10,32 @@ from django.utils.timezone import now
 import asyncio
 
 
-
 import json
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 
+from collections import defaultdict
+
 
 class Matchmaker:
 
-    connected_clients = {}
+    # connected_clients = {}
+    connected_clients = defaultdict(set)
     games_queue = []
     multi_games_queue = []
 
     @classmethod
     async def register_client(cls, player_id, channel_name):
-        cls.connected_clients[player_id] = channel_name
+        # cls.connected_clients[player_id] = channel_name
+        cls.connected_clients[player_id].add(channel_name)
 
     @classmethod
-    async def unregister_client(cls, player_id):
+    async def unregister_client(cls, player_id, channel_name):
         if player_id in cls.connected_clients:
-            del cls.connected_clients[player_id]
+            # del cls.connected_clients[player_id]
+            cls.connected_clients[player_id].remove(channel_name)
+            if not cls.connected_clients[player_id]:  # Clean up empty sets
+                del cls.connected_clients[player_id]
         if player_id in cls.games_queue:
             cls.games_queue.remove(player_id)
 
@@ -211,8 +217,10 @@ class Matchmaker:
                         profile = await sync_to_async(lambda: p.profile)()
                         target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
                         try:
-                            translated_message = translate_text(f"Tournament {tournament.name} aborted because a player left!" ,target_language)
-                            translated_title = translate_text("Tournament Aborted",target_language)
+                            translated_message = translate_text(
+                                f"Tournament {tournament.name} aborted because a player left!", target_language)
+                            translated_title = translate_text(
+                                "Tournament Aborted", target_language)
                         except Exception as e:
                             translated_message = f"Tournament {tournament.name} aborted because a player left!"
                             translated_title = "Tournament Aborted"
@@ -243,16 +251,19 @@ class Matchmaker:
             if isinstance(message, dict) and 'message' in message:
                 try:
                     message_text = message['message']
-                    message['message'] =  translate_text(message_text, target_language)
+                    message['message'] = translate_text(
+                        message_text, target_language)
                 except Exception as e:
                     print(f"Translation failed: {e}")
-            await channel_layer.send(
-                channel_name,
-                {
-                    "type": "user.message",
-                    "message": message,
-                }
-            )
+            for channel in cls.connected_clients.get(player_id, []):
+                await channel_layer.send(
+                    channel,
+                    {
+                        "type": "user.message",
+                        "message": message,
+                    }
+                )
+                # await send_message_to_channel(channel, message)
         else:
             print("MatchmakerConsumer: User is not connected.")
 

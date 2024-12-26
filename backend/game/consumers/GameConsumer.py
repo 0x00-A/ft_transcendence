@@ -16,17 +16,21 @@ from asgiref.sync import async_to_sync
 
 import asyncio
 
+from collections import defaultdict
+
 channel_layer = get_channel_layer()
 
 canvas_width: int = 650
 canvas_height: int = 480
-winning_score: int = 3
+winning_score: int = 7
 
 ball_raduis: int = 8
 initial_ball_speed = 4
+ball_max_speed = 8
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 games = {}
+connected_players = defaultdict(set)
 
 
 class Ball:
@@ -59,7 +63,7 @@ class GameInstance:
         self.player2_score = 0
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 4
+        self.paddle_speed = 6
         self.paddle_width: int = 20
         self.paddle_height: int = 80
         self.state = {
@@ -126,11 +130,18 @@ class GameInstance:
         return 0 <= t <= 1 and 0 <= u <= 1
 
     def is_colliding_with_paddle(self, paddle):
+        ball_from_top = self.ball.y < self.state[f"{paddle}_y"]
+        ball_from_bottom = self.ball.y > self.state[f"{
+            paddle}_y"] + self.paddle_height
+
         # Previous and current position of the ball
         next_x = self.ball.x + self.ball.dx + \
             (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
-        next_y = self.ball.y + self.ball.dy + \
-            (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
+        next_y = self.ball.y + self.ball.dy
+
+        # next_y = (ballFromTop? ball.y + ball.radius: (ballFromBottom? ball.y - ball.radius: ball.y)) + ball.dy
+        next_y += self.ball.radius if ball_from_top else - \
+            self.ball.radius if ball_from_bottom else 0
 
         # Paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
@@ -166,7 +177,6 @@ class GameInstance:
         return check
 
     def handle_paddle_collision(self, paddle):
-        # Check if the ball is hitting the top/bottom or the sides
         ball_from_left = self.ball.x < self.state[f"{paddle}_x"]
         ball_from_right = self.ball.x > self.state[f"{paddle}_x"] + \
             self.paddle_width
@@ -175,38 +185,39 @@ class GameInstance:
         ball_from_bottom = self.ball.y > self.state[f"{paddle}_y"] + \
             self.paddle_height
 
-        # Handle side collision
+        # side collision
         if ball_from_left or ball_from_right:
             self.ball.dx *= -1  # Reverse the horizontal velocity
-            if ball_from_left:
-                self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
-            elif ball_from_right:
-                self.ball.x = self.state[f"{paddle}_x"] + \
-                    self.paddle_width + self.ball.radius
+            # if ball_from_left:
+            #     self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
+            # elif ball_from_right:
+            #     self.ball.x = self.state[f"{paddle}_x"] + \
+            #         self.paddle_width + self.ball.radius
 
             relative_impact = (
                 self.ball.y - (self.state[f"{paddle}_y"] + self.paddle_height / 2)) / (self.paddle_height / 2)
             max_bounce_angle = math.pi / 4  # 45 degrees maximum bounce angle
 
-            # Calculate new angle based on relative impact
+            # new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
 
-            # Update ball's velocity (dx, dy) based on the new angle
+            # Update ball dx, dy based on the new angle
             direction = 1 if self.ball.dx > 0 else -1
-            self.ball.speed += 0.1
+            if self.ball.speed < ball_max_speed:
+                self.ball.speed += 0.1
             self.ball.dx = direction * self.ball.speed * \
                 math.cos(new_angle)  # Horizontal velocity
             self.ball.dy = self.ball.speed * \
                 math.sin(new_angle)  # Vertical velocity
 
-        # Handle top/bottom collision
+        # top/bottom collision
         if ball_from_top or ball_from_bottom:
             self.ball.dy *= -1
-            if ball_from_top:
-                self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
-            elif ball_from_bottom:
-                self.ball.y = self.state[f"{paddle}_y"] + \
-                    self.paddle_height + self.ball.radius
+            # if ball_from_top:
+            #     self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
+            # elif ball_from_bottom:
+            #     self.ball.y = self.state[f"{paddle}_y"] + \
+            #         self.paddle_height + self.ball.radius
 
 
 def create_game(game_id):
@@ -228,12 +239,23 @@ def remove_game(game_id):
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
+        global connected_players
         user = self.scope['user']
         self.game_id = None
+        self.game_id = self.scope['url_route']['kwargs']['game_id']
 
         if user.is_authenticated:
             await self.accept()
-            self.game_id = self.scope['url_route']['kwargs']['game_id']
+            if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
+                await self.send(text_data=json.dumps(
+                    {
+                        'type': 'go_home',
+                    }
+                ))
+                self.close()
+                return
+            connected_players[self.game_id].add(user.id)
+            print(f">>>>> Player {user.username} connected to {self.game_id}")
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
             if not get_game(self.game_id):
@@ -245,6 +267,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.broadcast_initial_state()
                 # await self.set_game_started()
                 # Start the game loop
+
                 asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
@@ -336,7 +359,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         game_id = self.game_id
         print(
             f"------------ player {self.scope['user'].username} disconnected ------------")
-        if game_id:
+        if game_id and hasattr(self, 'player_id'):
             game: GameInstance = get_game(game_id)
             game.winner = 1 if self.player_id == 'player2' else 2
             game.is_over = True

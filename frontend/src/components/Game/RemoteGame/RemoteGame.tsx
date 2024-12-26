@@ -45,10 +45,11 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   const [score2, setScore2] = useState(0);
 
   const hitWallSound = useRef(
-    new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
+    new Audio('/sounds/wall-hit.mp3')
+
   );
   const paddleHitSound = useRef(
-    new Audio('https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3')
+    new Audio('/sounds/paddle-hit.mp3')
   );
 
   const ballRef = useRef({
@@ -87,10 +88,17 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
       setGameState(null);
       let gameSocket: WebSocket | null = null;
       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}`;
+      // ws?.current?.close();
       if (!ws.current) gameSocket = new WebSocket(wsUrl);
       if (!gameSocket) return;
       ws.current = gameSocket;
 
+      gameSocket.onerror = (error) => {
+          console.error('WebSocket error:', error);
+          // Handle the error (e.g., show a message to the user)
+          // alert('Failed to connect to the WebSocket server. Please try again.');
+          handleMainMenu();
+      };
       gameSocket.onopen = () => {
         // console.log('Game WebSocket connected');
         setGameState('waiting');
@@ -111,6 +119,9 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
           paddle1Ref.current.x = data.state[`player1_paddle_x`];
           paddle2Ref.current.x = data.state[`player2_paddle_x`];
           setGameState('started');
+        }
+        if (data.type === 'go_home') {
+          handleMainMenu();
         }
         if (data.type === 'player_id') {
           setPlayer(data.player)
@@ -310,7 +321,7 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
               size={120}
             />
         } */}
-      <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} player={player} />
+      <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} player={player} gameState={gameState} />
       {gameState === 'started' || gameState === 'ended' ? (
         <div className={css.gameArea}>
           {currentScreen === 'game' && (

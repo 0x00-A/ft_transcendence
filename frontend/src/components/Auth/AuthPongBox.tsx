@@ -13,12 +13,12 @@ const AuthPongBox = ({isLogin, setIslogin}: {isLogin: boolean, setIslogin: React
         <div></div>
         <div></div>
       </div>
-      <div className={css.authFooter}>
+      {/* <div className={css.authFooter}>
         <p>{isLogin ? "Don't have an account?" : 'Already have an account?'}</p>
         <button onClick={() => { setIslogin(!isLogin);}}>
           {isLogin ? 'Signup' : 'Login'}
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }
