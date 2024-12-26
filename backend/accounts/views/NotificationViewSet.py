@@ -14,7 +14,6 @@ class NotificationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Fetch only the current user's notifications
         return Notification.objects.filter(user=self.request.user).order_by('-created_at')
 
     def get_user_language(self, user):
@@ -35,10 +34,9 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         language = self.get_user_language(request.user)
         
-        # Get all notifications for the user
         notifications = self.get_queryset()
         
-        # Translate notifications to the user's preferred language
+        print("--trans notification one to one")
         translated_notifications = [
             self.translate_notification(notification, language) for notification in notifications
         ]
