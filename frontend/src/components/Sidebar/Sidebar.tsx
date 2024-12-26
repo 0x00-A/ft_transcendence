@@ -23,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SideBarTooltip from './SideBarTooltip';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -45,6 +46,9 @@ export default function Sidebar() {
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   // Ref to track the language switcher container
   const languageSwitcherRef = useRef<HTMLDivElement>(null);
+  const {
+    fetchNotifications
+  } = useWebSocket();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -131,6 +135,8 @@ export default function Sidebar() {
       i18n.changeLanguage(response.data.language);
 
       setShowLangPopup(false);
+
+      fetchNotifications()
 
       console.log('Language updated successfully:', response.data.language);
     } catch (error) {
