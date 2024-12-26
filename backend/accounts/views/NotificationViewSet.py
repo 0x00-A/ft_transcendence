@@ -36,11 +36,9 @@ class NotificationViewSet(viewsets.ModelViewSet):
         
         notifications = self.get_queryset()
         
-        print("--trans notification one to one")
         translated_notifications = [
             self.translate_notification(notification, language) for notification in notifications
         ]
-        
         return Response(translated_notifications)
 
     @action(detail=False, methods=['patch'], url_path='mark-all-read')

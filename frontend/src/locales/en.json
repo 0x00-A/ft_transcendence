@@ -730,6 +730,9 @@
       "LastMatch": {
           "headerTitle": "Last Games",
           "viewMore": "View More",
+          "winMessage": "Great job, Keep playing to maintain your streak!",
+          "loseMessage": "Don't worry, try again and improve your skills!",
+          "defaultMessage": "Play to climb the leaderboard!",
           "noGames": {
               "message": "No games found in your history.",
               "playNow": "Play Now"
