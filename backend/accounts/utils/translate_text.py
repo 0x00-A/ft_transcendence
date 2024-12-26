@@ -11,9 +11,11 @@ def translate_text(text, target_language):
     }
     response = requests.post(url, data=params)
     
+    print("====== translate ======")
     if response.status_code == 200:
-        print("=========================================================")
-        print("response=" + response.json()["translations"][0]["text"])
+        # print("==================================")
+        # print("response=" + response.json()["translations"][0]["text"])
+        # print("===================================")
         return response.json()["translations"][0]["text"]
     else:
         raise Exception(f"Error: {response.status_code}, {response.text}")

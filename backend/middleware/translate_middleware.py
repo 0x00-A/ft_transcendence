@@ -6,14 +6,19 @@ class TranslateResponseMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         content_type = response.headers.get('Content-Type', '').lower()
 
-        # print("---------------------")
-        # print(response)
+        # print("--------- Middleware ------------")
         # print(response.data)
         # print("---------------------")
         if content_type == 'application/json':
             try:
                 data = json.loads(response.content)
+                print("--------- d a t a--------")
+                # print(data)
                 if 'message' in data:
+                    if request.user.is_authenticated:
+                        target_language = request.user.profile.preferred_language or 'en'
+                    else:
+                        target_language = 'en'
                     target_language = request.user.profile.preferred_language or 'en'
                     print("/*/*/*/*/*/*/*/*/*/*")
                     print(data)
