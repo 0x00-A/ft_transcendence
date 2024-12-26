@@ -23,36 +23,41 @@ class ResetPasswordSerializer(serializers.Serializer):
                                       'input_type': 'password'})
     token = serializers.CharField(write_only=True, required=True)
 
-    def validate_password(self, value):
+    def validate_new_password(self, value):
+        if value != value.strip():
+            raise serializers.ValidationError(
+                {'Password cannot start or end with whitespace!'})
+        return value.strip()
+
+    def validate_token(self, value):
         try:
-            validate_password(value)
-        except DjangoValidationError as exc:
-            raise serializers.ValidationError(str(exc))
+            UUID(value, version=4)
+        except ValueError:
+            raise serializers.ValidationError({'error': 'Invalid token!'})
         return value
 
     def validate(self, attrs):
-        try:
-            UUID(attrs['token'], version=4)
-        except ValueError:
-            raise serializers.ValidationError({'error': 'Invalid token!'})
         if attrs['new_password'] != attrs['confirm_password']:
             raise serializers.ValidationError(
-                {'password': 'Passwords do not match'})
+                {'new_password': 'Passwords do not match'})
         try:
             user = PasswordReset.objects.get(token=attrs['token']).user
-        except PasswordReset.DoesNotExist:
-            raise serializers.ValidationError({'error': 'Invalid token!'})
-        try:
+            print('---user-->>', user)
+            print('---new_password-->>', attrs['new_password'])
             validate_password(attrs['new_password'], user)
+        except PasswordReset.DoesNotExist:
+            print('------------password reset does not exist-----------')
+            raise serializers.ValidationError({'error': 'Invalid token!'})
         except DjangoValidationError as exc:
-            raise serializers.ValidationError({'password': exc.messages})
+            print('------------password validation error-----------')
+            raise serializers.ValidationError({'new_password': exc.messages})
         return attrs
 
-    # def update(self, instance, validated_data):
-    #     user = instance.user
-    #     user.set_password(validated_data['password'])
-    #     user.save()
-    #     return user
+    def update(self, instance, validated_data):
+        user = instance.user
+        user.set_password(validated_data['new_password'])
+        user.save()
+        return user
 
 
 class SetPasswordSerializer(serializers.Serializer):
@@ -62,24 +67,25 @@ class SetPasswordSerializer(serializers.Serializer):
                                       'input_type': 'password'})
 
     def validate_password(self, value):
-        try:
-            validate_password(value)
-        except DjangoValidationError as exc:
-            raise serializers.ValidationError(str(exc))
-        return value
+        if value != value.strip():
+            raise serializers.ValidationError(
+                {'Password cannot start or end with whitespace!'})
+        return value.strip()
+        # try:
+        #     validate_password(value)
+        # except DjangoValidationError as exc:
+        #     raise serializers.ValidationError(str(exc))
+        # return value
 
     def validate(self, attrs):
-        if not self.context['request']:
-            raise serializers.ValidationError(
-                {'error': 'Request is required'})
-        user = self.context['request'].user
-        if not user.is_oauth2_user:
-            raise serializers.ValidationError(
-                {'error': 'Only oauth2 users can set password'})
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
                 {'password': 'Passwords do not match'})
         try:
+            user = self.context['request'].user
+            if not user.is_oauth2_user:
+                raise serializers.ValidationError(
+                    {'error': 'Only oauth2 users can set password'})
             validate_password(attrs['password'], user)
         except DjangoValidationError as exc:
             raise serializers.ValidationError({'password': exc.messages})
@@ -158,4 +164,3 @@ class UserSerializer(serializers.ModelSerializer):
     #     last_5_games = all_games[:5]
 
     #     return GameSerializer(last_5_games, many=True).data
-

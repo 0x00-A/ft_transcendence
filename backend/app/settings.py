@@ -33,8 +33,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
-DEFAULT_AVATAR = 'defaultAvatar.jpeg'
-
+DEFAULT_AVATAR = 'DEFAULT.jpeg'
 
 API_KEY = os.environ.get("API_KEY")
 # Quick-start development settings - unsuitable for production

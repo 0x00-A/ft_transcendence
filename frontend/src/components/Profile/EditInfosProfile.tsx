@@ -75,10 +75,14 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     //     setConfirmSave(true)
     // }
     useEffect(() => {
+        const handle_refetch = async () => {
+            const result = await refetch();
+            console.log("refetch result == ", result);
+        }
         if (mutation.isSuccess) {
+            handle_refetch();
             toast.success(mutation.data?.data?.message);
             reset();
-            refetch();
             setEditProfile(false);
         }
    }, [mutation.isSuccess]);

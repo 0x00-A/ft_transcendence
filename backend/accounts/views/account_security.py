@@ -3,9 +3,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+from datetime import datetime
 import pyotp
 import qrcode
 import os
+import base64
+from io import BytesIO
 
 from app.settings import MEDIA_URL
 from app.settings import SERVER_URL, MEDIA_ROOT
@@ -23,16 +26,19 @@ class Enable2faRequest(APIView):
             )
         user.otp_secret = pyotp.random_base32()
         user.save()
-        print('--------- >> user otp secret: ', user.otp_secret)
         privisioning_uri = pyotp.TOTP(user.otp_secret).provisioning_uri(
             name=user.username,
             issuer_name='ft_transcendence_2FA'
         )
-
         qr = qrcode.make(privisioning_uri)
-        qr_code = f"{MEDIA_URL}qrcodes/{user.username}_2fa.png"
-        qr.save(f"static{qr_code}")
-        return Response({'qr_code': f"{SERVER_URL}{qr_code}"}, status=status.HTTP_200_OK)
+        buffer = BytesIO()
+        qr.save(buffer, format='PNG')
+        encoded = base64.b64encode(buffer.getvalue()).decode()
+        # qr_code = f"{MEDIA_URL}qrcodes/{user.username}_{datetime.now()}.png"
+        # qr.save(f"static{qr_code}")
+        return Response({'qr_code': f"data:image/png;base64,{encoded}",
+                         'content_type': 'image/png'}, status=status.HTTP_200_OK)
+        # return Response({'qr_code': f"{SERVER_URL}{qr_code}"}, status=status.HTTP_200_OK)
 
 
 class Enable2faView(APIView):
@@ -61,9 +67,9 @@ class Enable2faView(APIView):
             user = request.user
             user.is2fa_active = True
             user.save()
-            qrcode_path = f"{MEDIA_ROOT}/qrcodes/{user.username}_2fa.png"
-            if os.path.exists(qrcode_path):
-                os.remove(qrcode_path)
+            # qrcode_path = f"{MEDIA_ROOT}/qrcodes/{user.username}_2fa.png"
+            # if os.path.exists(qrcode_path):
+                # os.remove(qrcode_path)
             return Response({'message': 'Two-factor authentication enabled'}, status=status.HTTP_200_OK)
         else:
             return Response(

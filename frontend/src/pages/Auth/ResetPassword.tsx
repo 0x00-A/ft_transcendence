@@ -42,11 +42,12 @@ const ResetPassword = () => {
             navigate('/auth');
         }
    }, [mutation.isSuccess]);
-//    useEffect(() => {
-//         if (mutation.isError) {
-//             toast.error(mutation.error?.response?.data.error);
-//         }
-//    }), [mutation.isError];
+
+   useEffect(() => {
+        if (mutation.isError) {
+            toast.error(mutation.error?.response?.data.error);
+        }
+   }), [mutation.isError, errors];
 
   return (
     <div className={css.resetPassContainer}>

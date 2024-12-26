@@ -88,7 +88,7 @@ const Login = () => {
 
   return (
     <div className={css.loginContainer}>
-      { isOtpRequired ? <OtpAuth setOtpRequired={setOtpRequired} username={mutation.data?.data.username} /> :
+      { isOtpRequired ? <OtpAuth setOtpRequired={setOtpRequired} username={mutation.data?.data.username} loadingBarRef={loadingBarRef} /> :
         <>
           <div className={css.authFormHeader}>
             <h1>Welcome back</h1>

@@ -1,4 +1,6 @@
 from rest_framework import serializers
+import os
+from datetime import datetime
 
 from accounts.models import Profile, User
 from accounts.serializers.badgeSerializer import BadgeSerializer
@@ -21,7 +23,7 @@ class ProfileSerializer(serializers.ModelSerializer):
                   'rank', 'badge', 'stats', 'is_online', 'blocked_user_name', 'preferred_language']
 
     def get_avatar(self, obj):
-        return f"{SERVER_URL}{MEDIA_URL}{obj.avatar}"
+        return SERVER_URL + obj.avatar.url
 
     def get_username(self, obj):
         return obj.user.username
@@ -57,10 +59,13 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_avatar(self, value):
-        print('---value----->>', value, '<<--------')
-        if value.size > 5 * 1024 * 1024:
+        if value.size >= 5 * 1024 * 1024:
             raise serializers.ValidationError(
-                {'avatar': 'Image size is too large!'})
+                {'avatar': 'Image size should be less than 5MB!'})
+        if value.content_type not in ['image/jpeg', 'image/png', 'image/jpg']:
+            raise serializers.ValidationError(
+                {'avatar': 'Image format should be jpeg or png or jpg!'})
+        value.name = f"{self.context['request'].user.username}_{datetime.now()}.png"
         return value
 
     def validate(self, attrs):
@@ -84,10 +89,13 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if 'last_name' in validated_data:
             instance.last_name = validated_data.get('last_name')
         if 'avatar' in validated_data:
-            print('---avatar----->>', validated_data.get('avatar'), '<<--------')
+            if instance.profile.avatar != f'avatars/{DEFAULT_AVATAR}':
+                instance.profile.avatar.delete()
             instance.profile.avatar = validated_data.get('avatar')
         if 'removeAvatar' in validated_data:
-            print('---remove_avatar----->>', validated_data.get('removeAvatar'), '<<--------')
+            if instance.profile.avatar != f'avatars/{DEFAULT_AVATAR}':
+                if os.path.isfile(instance.profile.avatar.path):
+                    os.remove(instance.profile.avatar.path)
             if validated_data.get('removeAvatar') == 'true':
                 instance.profile.avatar = f'avatars/{DEFAULT_AVATAR}'
         instance.save()
