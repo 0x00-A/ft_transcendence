@@ -14,7 +14,6 @@ const LastMatch = ({username}:{username:string | undefined}) => {
 
     const {data: matchesData, isLoading, error} = useGetData<LastGames[]>(`${API_GET_LAST_GAMES_URL}/${username}`);
     const navigate = useNavigate();
-
     const { t } = useTranslation();
 
     return (
@@ -26,6 +25,18 @@ const LastMatch = ({username}:{username:string | undefined}) => {
             <div className={css.containerBody}>
                 { matchesData?.length != 0 && <div className={css.line}></div>}
                 <div className={css.containerList}>
+                    <div className={css.mtv}>
+                        {matchesData && matchesData.length > 0 ? (
+                            matchesData[0].result === 'Win' ? (
+                                <span>{t('dashboard.LastMatch.winMessage')}</span>
+                            ) : (
+                                <span>{t('dashboard.LastMatch.loseMessage')}</span>
+                            )
+                        ) : (
+                            <span>{t('dashboard.LastMatch.defaultMessage')}</span>
+                        )}
+                    </div>
+
                     {error && <div className={css.error}>{error.message}</div>}
                     { isLoading ? <LastGamesSkeleton />
                     :

@@ -19,7 +19,6 @@ class TranslateResponseMiddleware(MiddlewareMixin):
                         target_language = request.user.profile.preferred_language or 'en'
                     else:
                         target_language = 'en'
-                    target_language = request.user.profile.preferred_language or 'en'
                     print("/*/*/*/*/*/*/*/*/*/*")
                     print(data)
                     print("lang: " + target_language)

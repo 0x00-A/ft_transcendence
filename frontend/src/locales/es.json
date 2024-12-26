@@ -727,6 +727,9 @@
       "LastMatch": {
           "headerTitle": "Últimos Juegos",
           "viewMore": "Ver Más",
+          "winMessage": "Gran trabajo, ¡sigue jugando para mantener tu racha!",
+          "loseMessage": "No te preocupes, ¡inténtalo de nuevo y mejora tus habilidades!",
+          "defaultMessage": "¡Juega para subir en la clasificación!",
           "noGames": {
               "message": "No se encontraron juegos en tu historial.",
               "playNow": "Jugar Ahora"

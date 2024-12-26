@@ -3,12 +3,17 @@
     display: flex;
   }
   .containerList {
-    margin-top: 20px;
     width: 100%;
     display: flex;
     flex-direction: column;
   }
-
+.mtv {
+  color: var(--text-color);
+  margin-left: 20px;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
   .line {
     width: 2px;
     height: 100%;
