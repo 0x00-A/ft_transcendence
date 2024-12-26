@@ -94,7 +94,6 @@ class Disable2FAView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         qrcode_path = f"{MEDIA_ROOT}/qrcodes/{user.username}_2fa.png"
-        # print('api ==> disable 2fa: QR code path: ', qrcode_path)
         if os.path.exists(qrcode_path):
             os.remove(qrcode_path)
         user.otp_secret = None
