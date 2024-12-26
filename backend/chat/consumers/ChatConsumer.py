@@ -159,7 +159,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_user = User.objects.get(id=receiver_id)
 
         target_language = receiver_user.profile.preferred_language or 'en'
-        # target_language = receiver.preferred_language
+
         try:
             translated_message = translate_text(f"{sender_user.username} sent you a message: {message}",target_language)
             translated_title = translate_text("New Message",target_language)
@@ -173,7 +173,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             title=translated_title,
             message=translated_message,
         )
-        notification.save()
         NotificationConsumer.send_notification_to_user(receiver_id, notification)
         notification_data = {
             "event": "new_message",
@@ -196,10 +195,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if await self.is_conversation_blocked(conversation, sender_id):
             raise ValueError("Cannot send message. Conversation is blocked.")
-
-        is_open_chat = await self.get_user_open_chat_status(receiver_id)
-        if not is_open_chat:
-            await self.send_notification_to_receiver(receiver_id, sender_id, message)
         saved_conversation = await self.save_message(sender_id, receiver_id, message)
 
         await self.channel_layer.group_send(
@@ -222,6 +217,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "conversation_id": saved_conversation.id,
             }
         )
+        is_open_chat = await self.get_user_open_chat_status(receiver_id)
+        if not is_open_chat:
+            await self.send_notification_to_receiver(receiver_id, sender_id, message)
 
     async def get_or_create_conversation(self, sender_id, receiver_id):
         return await sync_to_async(Conversation.objects.get)(
@@ -303,11 +301,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         conversation.last_message = message
         is_active =  receiver.active_conversation == conversation.id
-        print("**** ==== ****")
-        print(is_active)
-        print(receiver.active_conversation)
-        print(conversation.id)
-        print("**** ==== ****")
         if not is_active:
             if receiver == conversation.user1:
                 conversation.unread_messages_user1 += 1

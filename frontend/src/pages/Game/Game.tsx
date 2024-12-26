@@ -79,7 +79,6 @@ const Game = () => {
   const { user } = useUser();
 
   const getTranslatedStatus = (status: string) => {
-    console.log('status: ', status);
 
     switch (status) {
       case 'waiting':
