@@ -202,8 +202,8 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
 
     const keysPressed: boolean[] = [false];
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'w' || event.key === 'W') keysPressed[0] = true;
-      if (event.key === 's' || event.key === 'S') keysPressed[1] = true;
+      if (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp') keysPressed[0] = true;
+      if (event.key === 's' || event.key === 'S' || event.key === 'ArrowDown') keysPressed[1] = true;
       // if (event.key === 'w' || event.key === 's') {
       //   const direction = event.key === 'w' ? 'up' : 'down';
       //   console.log('moving...');
@@ -216,7 +216,9 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
         event.key === 'w' ||
         event.key === 's' ||
         event.key === 'W' ||
-        event.key === 'S'
+        event.key === 'S' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown'
       ) {
         keysPressed[0] = false;
         keysPressed[1] = false;

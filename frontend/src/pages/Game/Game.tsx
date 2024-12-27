@@ -2,7 +2,7 @@ import styles from './Game.module.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 // import GameMode from './components/GameMode/GameMode';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
@@ -27,6 +27,8 @@ import { formatDate } from '@/utils/helpers';
 import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
+import RefreshButton from './RefreshButton';
+import i18n from '@/config/i18n.config';
 // import { getTranslatedStatus } from '@/utils/getTranslatedStatus';
 
 // const Modes = () => {
@@ -60,7 +62,42 @@ const Game = () => {
   );
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
-  // const isUnmounting = useRef(false);
+
+  const ModesList = useMemo(() => {
+      return [
+        {
+          id: 0,
+          title: t('game.localGame.title'),
+          icon: Gamepad2,
+          description: t('game.localGame.description'),
+        },
+        {
+          id: 1,
+          title: t('game.remoteGame.title'),
+          icon: Globe,
+          description: t('game.remoteGame.description'),
+        },
+        {
+          id: 2,
+          title: t('game.remoteTournament.title'),
+          icon: Trophy,
+          description: t('game.remoteTournament.description'),
+        },
+        {
+          id: 3,
+          title: t('game.localTournament.title'),
+          icon: Users,
+          description: t('game.localTournament.description'),
+        },
+        {
+          id: 4,
+          title: t('game.multipleGame.title'),
+          icon: Users,
+          description: t('game.multipleGame.description'),
+        },
+      ]
+  }, [t])
+
 
   // const { isLoggedIn } = useAuth();
 
@@ -79,7 +116,6 @@ const Game = () => {
   const { user } = useUser();
 
   const getTranslatedStatus = (status: string) => {
-    console.log('status: ', status);
 
     switch (status) {
       case 'waiting':
@@ -230,7 +266,6 @@ const Game = () => {
   };
 
   const requestMultipleGame = () => {
-    // console.log('request multi game');
     sendMessage({
       event: 'request_multiple_game',
     });
@@ -238,7 +273,6 @@ const Game = () => {
 
   const requestTournament = () => {
     setIsModalOpen(true);
-    // console.log('request tournament');
   };
 
   const handleJoin = (tournamentId: number) => {
@@ -336,38 +370,6 @@ const Game = () => {
       />
     );
 
-  const ModesList = [
-    {
-      id: 0,
-      title: t('game.localGame.title'),
-      icon: Gamepad2,
-      description: t('game.localGame.description'),
-    },
-    {
-      id: 1,
-      title: t('game.remoteGame.title'),
-      icon: Globe,
-      description: t('game.remoteGame.description'),
-    },
-    {
-      id: 2,
-      title: t('game.remoteTournament.title'),
-      icon: Trophy,
-      description: t('game.remoteTournament.description'),
-    },
-    {
-      id: 3,
-      title: t('game.localTournament.title'),
-      icon: Users,
-      description: t('game.localTournament.description'),
-    },
-    {
-      id: 4,
-      title: t('game.multipleGame.title'),
-      icon: Users,
-      description: t('game.multipleGame.description'),
-    },
-  ];
   return (
     <div className={styles.container}>
       {gameState === 'inqueue' && !(gameAccepted && gameInvite) && (
@@ -415,7 +417,8 @@ const Game = () => {
           <Card className={styles.card}>
             <CardHeader>
               <CardTitle className={styles.title}>
-                {t('game.joinedTournaments.title')}
+                <p>{t('game.joinedTournaments.title')}</p>
+                <RefreshButton onClick={() => refetchUserTournaments()} isLoading={userTournamentsIsLoading}/>
               </CardTitle>
             </CardHeader>
             <CardContent className={styles.content}>
@@ -475,7 +478,8 @@ const Game = () => {
         <Card className={styles.bottomCard}>
           <CardHeader>
             <CardTitle className={styles.title}>
-              {t('game.openTournaments.title')}
+              <p>{t('game.openTournaments.title')}</p>
+              <RefreshButton onClick={() => refetchTournaments()} isLoading={isLoading}/>
             </CardTitle>
           </CardHeader>
           <CardContent className={styles.bottomCardContent}>

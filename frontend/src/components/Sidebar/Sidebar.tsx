@@ -169,7 +169,6 @@ export default function Sidebar() {
               <div className={css.languagePopup}>
                 <ul>
                   <li onClick={() => changeLanguage('en')}>
-                    {' '}
                     <Flag
                       style={{
                         borderRadius: '50%',
@@ -179,11 +178,10 @@ export default function Sidebar() {
                       }}
                       className={css.flags}
                       code="US"
-                    />{' '}
-                    English{' '}
+                    />
+                    English
                   </li>
                   <li onClick={() => changeLanguage('es')}>
-                    {' '}
                     <Flag
                       style={{
                         borderRadius: '50%',
@@ -193,11 +191,10 @@ export default function Sidebar() {
                       }}
                       className={css.flags}
                       code="ES"
-                    />{' '}
-                    Español{' '}
+                    />
+                    Español
                   </li>
                   <li onClick={() => changeLanguage('nl')}>
-                    {' '}
                     <Flag
                       style={{
                         borderRadius: '50%',
@@ -207,15 +204,15 @@ export default function Sidebar() {
                       }}
                       className={css.flags}
                       code="NL"
-                    />{' '}
-                    Dutch{' '}
+                    />
+                    Dutch
                   </li>
                 </ul>
               </div>
             )}
             {selectedLang == 'es' ?  <p>Español</p> : selectedLang == 'en' ? <p>English</p> : <p>Tamazight</p>}
           </div>
-          {!open && <SideBarTooltip id="language-tooltip" content="Language" />}
+          {!open && !showLangPopup && <SideBarTooltip id="language-tooltip" content="Language" />}
           <div data-tooltip-id={`${!open ? 'theme-tooltip' : ''}`}>
             <ThemeToggle className={css.darkMode}></ThemeToggle>
           </div>
