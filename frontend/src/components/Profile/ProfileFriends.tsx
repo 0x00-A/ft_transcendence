@@ -22,8 +22,8 @@ const ProfileFriends = () => {
 
     const [isBtnActive, setBtnActive] = useState(true);
     const navigate = useNavigate();
-    const {data: onlineFriends, isLoading: isOnlineLoading, error: onlineError} = useGetData<Friends[]>(API_GET_ONLINE_FRIENDS_URL);
-    const {data: offlineFriends, isLoading: isOfflineLoading, error: offlineError} = useGetData<Friends[]>(API_GET_OFFLINE_FRIENDS_URL);
+    const {data: onlineFriends, isLoading: isOnlineLoading, error: onlineError, refetch: onlineRefetch} = useGetData<Friends[]>(API_GET_ONLINE_FRIENDS_URL);
+    const {data: offlineFriends, isLoading: isOfflineLoading, error: offlineError, refetch: offlineRefetch} = useGetData<Friends[]>(API_GET_OFFLINE_FRIENDS_URL);
     const { t } = useTranslation();
 
   return (
