@@ -1,3 +1,4 @@
+from accounts.utils import translate_text
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -13,8 +14,32 @@ class NotificationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Fetch only the current user's notifications
         return Notification.objects.filter(user=self.request.user).order_by('-created_at')
+
+    def get_user_language(self, user):
+        return user.profile.preferred_language or 'en'
+
+    def translate_notification(self, notification, language):
+
+        translated_title = translate_text(notification.title, language)
+        translated_message = translate_text(notification.message, language)
+        return {
+            "title": translated_title,
+            "link": notification.link,
+            "message": translated_message,
+            "created_at": notification.created_at.isoformat(),
+            "user": notification.user.username,
+        }
+
+    def list(self, request, *args, **kwargs):
+        language = self.get_user_language(request.user)
+        
+        notifications = self.get_queryset()
+        
+        translated_notifications = [
+            self.translate_notification(notification, language) for notification in notifications
+        ]
+        return Response(translated_notifications)
 
     @action(detail=False, methods=['patch'], url_path='mark-all-read')
     def mark_all_read(self, request):

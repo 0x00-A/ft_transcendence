@@ -26,7 +26,6 @@ def oauth2_authorize(request, choice):
         if choice == 'google':
             return redirect(conf.GOOGLE_AUTHORIZATION_URL)
 
-import jwt
 
 @api_view()
 @authentication_classes([])
@@ -58,7 +57,6 @@ def oauth2_authentication(request, choice):
         if check_user.is2fa_active:
             return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=2fa_required&username={check_user.username}&message={quote('2FA is required. Please enter your OTP code.')}")
     except User.DoesNotExist:
-        print('---------------->', 'User not found', '<------------------')
         check_user = None
     except Exception as e:
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'error oauth2 details: {str(e)}')}")
@@ -124,11 +122,12 @@ def oauth2_set_username(request):
     user_data['username'] = request.data.get('username')
     serializer = Oauth2Serializer(data = user_data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
-    del request.session['user_data']
-    user = authenticate(email=serializer.validated_data['email'])
-    if user is None:
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    user = serializer.save()
+    send_oauth2_welcome(user, serializer.validated_data['provider'])
+    # del request.session['user_data']
+    # user = authenticate(email=serializer.validated_data['email'])
+    # if user is None:
+        # return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     token = get_token_for_user(user)
     response = Response(data={'message': 'login success, Welcome player'}, status=status.HTTP_200_OK)
     response.set_cookie(

@@ -52,7 +52,7 @@ const OtpAuth = ({setOtpRequired, username, loadingBarRef}: {setOtpRequired:Reac
 
   return (
     <form action="" className={css.otpForm} onSubmit={handleVerifyOtp}>
-      {/* <img src={LOGO} alt="" className={css.logo}/> */}
+      <img src={LOGO} alt="" className={css.logo}/>
       <h1>2FA Required</h1>
       <p>Please enter the one-time-password in your application google authenticator, to login</p>
       <div className={css.inputContainer}>

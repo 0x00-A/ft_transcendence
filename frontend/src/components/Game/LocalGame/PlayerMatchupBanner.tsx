@@ -4,16 +4,17 @@ import { User } from '@/types/apiTypes';
 import { useEffect, useState } from 'react';
 import { GameState } from '@/types/types';
 
-const MatchTimer = () => {
+const MatchTimer = ({paused}: {paused: boolean}) => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
+    if (paused) return;
     const intervalId = setInterval(() => {
       setSeconds((prevSeconds) => prevSeconds + 1);
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [paused]);
 
   const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -24,7 +25,7 @@ const MatchTimer = () => {
   return <div className="font-mono text-2xl">{formatTime(seconds)}</div>;
 };
 
-const PlayerMatchupBanner = ({isOnePlayerMode}: {isOnePlayerMode: boalean}) => {
+const PlayerMatchupBanner = ({isOnePlayerMode, paused}: {isOnePlayerMode: boolean, paused: boolean}) => {
   const players = {
     player1: {
       username: isOnePlayerMode ? 'You' : 'Player 1',
@@ -57,7 +58,7 @@ const PlayerMatchupBanner = ({isOnePlayerMode}: {isOnePlayerMode: boalean}) => {
       {/* VS Section */}
       <div className="flex items-center justify-center flex-col gap-1">
         <Swords className="text-red-500/50 animate-pulse" size={24} />
-        <MatchTimer />
+        <MatchTimer paused={paused} />
       </div>
 
       {/* Player 2 Section */}
