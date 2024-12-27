@@ -1,4 +1,23 @@
 {
+  "editEmail": {
+    "btnEdit": "Bewerken",
+    "editEmail": "E-mail Bewerken",
+    "description": "We sturen een verificatielink naar je nieuwe e-mail. (verificatie vereist om nieuwe e-mail op te slaan).",
+    "label": "Nieuwe E-mail",
+    "btnCancel": "Annuleren",
+    "btnSubmit": "Verzenden"
+  },
+  "deleteAccount": {
+    "btnDelete": "Account Verwijderen",
+    "title": "Account Verwijderingsverzoek",
+    "description": "Bij het verzoek om je account te verwijderen, worden alle gegevens gekoppeld aan je account uit ons systeem gewist.",
+    "warning": "Weet je zeker dat je je account wilt verwijderen?"
+  },
+  "ConfirmationModal": {
+    "message": "Uitloggen Bevestigen!",
+    "Confirm": "Bevestigen",
+    "Cancel": "Annuleren"
+  },
   "toast": {
     "fromRequest": "Vriendschapsverzoek van",
     "requestAccepted": "heeft je vriendschapsverzoek geaccepteerd!",
@@ -54,6 +73,7 @@
   "MessageList": {
     "placeholder": "Zoek vrienden",
     "noUserFound": "Geen gebruikers gevonden die overeenkomen met",
+    "noConversationFound": "Je hebt momenteel geen gesprekken, gebruik de zoekbalk hierboven om vrienden te zoeken en een gesprek te starten.",
     "menu": {
       "markAsRead": "Markeer als gelezen",
       "closeChat": "Chat sluiten",
@@ -317,6 +337,14 @@
     }
   },
   "Profile": {
+    "FriendsOther": {
+      "title": "Vrienden",
+      "mutualFriends": "Gemeenschappelijke Vrienden",
+      "allFriends": "Alle Vrienden",
+      "noMutualFriends": "Geen Gemeenschappelijke Vrienden",
+      "playerLonely": "Deze Speler is Eenzaam",
+      "Level": "Niveau:"
+    },    
     "informations": "Informatie",
     "security": "Beveiliging",
     "errors": {
@@ -406,6 +434,7 @@
       },
       "editProfile": {
         "username": {
+          "required": "Gebruikersnaam is verplicht!",
           "min": "Gebruikersnaam moet minimaal 4 tekens bevatten!",
           "max": "Gebruikersnaam mag niet langer zijn dan 15 tekens!"
         },
@@ -428,7 +457,8 @@
         "avatar": {
           "fileSize": "Het bestand is te groot!",
           "fileType": "Het bestandstype wordt niet ondersteund!"
-        }
+        },
+        "atLeastOneField": "Vul ten minste één veld in om de wijzigingen op te slaan"
       }
     },
     "friends": {
@@ -480,7 +510,24 @@
     },
     "Achievements": {
       "title": "Prestaties",
-      "NoAchievementsFound": "Geen prestaties gevonden!"
+      "NoAchievementsFound": "Geen prestaties gevonden!",
+      "locked": "Vergrendeld",
+      "achievements": {
+        "first_paddle_name": "Eerste Paddle",
+        "first_paddle_description": "Win je eerste wedstrijd.",
+        "persistent_player_name": "Vasthoudende Speler",
+        "persistent_player_description": "Log 7 dagen achter elkaar in!",
+        "bronze_champ_name": "Bronzen Kampioen",
+        "bronze_champ_description": "Win 5 wedstrijden.",
+        "silver_smash_name": "Zilveren Smash",
+        "silver_smash_description": "Win 10 wedstrijden.",
+        "gold_ace_name": "Gouden Ace",
+        "gold_ace_description": "Win 20 wedstrijden.",
+        "marathon_match_name": "Marathonwedstrijd",
+        "marathon_match_description": "Speel een wedstrijd die langer dan 5 minuten duurt.",
+        "ft_pong_legend_name": "FT-PONG Legende",
+        "ft_pong_legend_description": "Win 50 wedstrijden."
+      }      
     },
     "profileHeader": {
       "EditProfileButton": "Profiel bewerken",
@@ -498,7 +545,13 @@
         "Platinum": "Platina",
         "Diamond": "Diamant",
         "Ft-Pong": "Ft-Pong"
-      }
+      },
+      "buttons": {
+        "friendsBtn": "Vrienden",
+        "cancelBtn": "Annuleren",
+        "acceptBtn": "Accepteren",
+        "addBtn": "Toevoegen"
+      }      
     },
     "setPassword": {
       "title": "Wachtwoord instellen",
@@ -614,18 +667,79 @@
     "overview": {
       "title": "Overzicht",
       "buttons": {
-        "singleBtn": "Enkele wedstrijd",
+        "singleBtn": "Enkele Wedstrijd",
         "tournamentsBtn": "Toernooien"
       },
       "fields": {
         "games": "SPELLEN",
         "score": "SCORE",
-        "highestScore": "Hoogste score",
-        "longestStreak": "Langste reeks",
-        "bestRank": "Beste rang",
+        "highestScore": "Hoogste Score",
+        "longestStreak": "Langste Reeks",
+        "bestRank": "Beste Rang",
         "winRate": "Winstpercentage",
         "wins": "GEWONNEN",
         "loses": "VERLOREN"
+      }
+    },
+    "LineChartComponent": {
+      "title": "Wekelijkse Speelduur",
+      "totalPlayTime": "Totale Speeltijd",
+      "avgDailyTime": "Gem. Dagelijkse Tijd",
+      "tooltipHours": "uur",
+      "yAxisLabel": "Uren",
+      "days": {
+        "Mon": "Ma",
+        "Tue": "Di",
+        "Wed": "Wo",
+        "Thu": "Do",
+        "Fri": "Vr",
+        "Sat": "Za",
+        "Sun": "Zo"
+      }
+    },
+    "Leaderboard": {
+      "headerTitle": "Ranglijst",
+      "viewAll": "Bekijk Alle Ranglijsten",
+      "tableHeaders": {
+        "rank": "Rang",
+        "name": "Naam",
+        "games": "Spellen",
+        "winRate": "Winstpercentage",
+        "loseRate": "Verliespercentage",
+        "score": "Score"
+      },
+      "noDataFound": "Geen gegevens gevonden"
+    },
+    "FriendsList": {
+      "headerTitle": "Je Vrienden",
+      "viewMore": "Bekijk Meer",
+      "noFriends": {
+        "message": "Je hebt nog geen vrienden.",
+        "addFriendsButton": "Vrienden Toevoegen"
+      },
+      "friendItem": {
+        "levelLabel": "Niveau:",
+        "status": {
+          "online": "Online",
+          "offline": "Offline"
+        }
+      }
+    },
+    "LastMatch": {
+      "headerTitle": "Laatste Wedstrijden",
+      "viewMore": "Bekijk Meer",
+      "winMessage": "Goed gedaan, blijf spelen om je reeks vast te houden!",
+      "loseMessage": "Geen zorgen, probeer het opnieuw en verbeter je vaardigheden!",
+      "defaultMessage": "Speel om hoger op de ranglijst te komen!",
+      "noGames": {
+        "message": "Geen wedstrijden gevonden in je geschiedenis.",
+        "playNow": "Speel Nu"
+      },
+      "matchItem": {
+        "opponentLabel": "Tegenstander:",
+        "dateLabel": "Datum:",
+        "scoreLabel": "Score:",
+        "xpGainedLabel": "XP Verdiend:"
       }
     }
   }

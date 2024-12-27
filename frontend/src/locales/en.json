@@ -26,8 +26,7 @@
       "inviteReject": "The invitation has expired or rejected.",
       "gameAddress": "Game successfully created"
   },
-  "backend": {
-  },
+  "backend": {},
   "errorsFriends": {
       "unblock": "Failed to unblock friend try again",
       "block": "Failed to block friend try again",
@@ -511,8 +510,8 @@
       },
       "Achievements": {
           "title": "Achievements",
-          "locked": "Locked",
           "NoAchievementsFound": "No achievements found!",
+          "locked": "Locked",
           "achievements": {
               "first_paddle_name": "First Paddle",
               "first_paddle_description": "Win your first match.",
@@ -681,7 +680,6 @@
               "wins": "WINS",
               "loses": "LOSES"
           }
-
       },
       "LineChartComponent": {
           "title": "Weekly Gaming Duration",
