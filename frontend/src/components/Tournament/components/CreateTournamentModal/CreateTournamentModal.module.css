@@ -21,11 +21,11 @@
 }
 
 .modalContent input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   background-color: var(--text-color);
   color: #4b5563;
   padding: 0.5rem 1rem;
@@ -33,13 +33,22 @@
   outline: none;
 }
 
+.modalContent .buttonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 5px;
+}
+
 .modalContent button {
-    margin: 5px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  /* margin: 5px; */
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   background-color: #36435f;
+  width: 50%;
 }
 
 .submitButton {
