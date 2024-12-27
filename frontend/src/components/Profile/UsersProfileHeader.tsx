@@ -8,6 +8,7 @@ import { UserCheck, UserPlus, UserX, Users } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { OtherUser } from '@/types/apiTypes';
 import { useTranslation } from 'react-i18next';
+import MoreMenu from './MoreMenu';
 
 // const getProfile = async (username:string) => {
 
@@ -108,36 +109,21 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
               {user?.friend_status === 'Friends' &&
               <button className={css.friendStatBtn}>
                 <Users color='#f8c35c'/>
-                <span>{t('Profile.profileHeader.buttons.friendsBtn')}</span>
               </button>}
               {user?.friend_status === 'Cancel' &&
               <button className={css.friendStatBtn} onClick={handleCancel}>
                 <UserX color='#f8c35c'/>
-                <span>{t('Profile.profileHeader.buttons.cancelBtn')}</span>
               </button>}
               {user?.friend_status === 'Accept' &&
               <button className={css.friendStatBtn} onClick={acceptFriendRequest}>
                 <UserCheck color='#f8c35c'/>
-                <span>{t('Profile.profileHeader.buttons.acceptBtn')}</span>
               </button>}
               {user?.friend_status === 'Add' &&
               <button className={css.friendStatBtn} onClick={sendFriendRequest}>
                 <UserPlus color='#f8c35c'/>
-                <span>{t('Profile.profileHeader.buttons.addBtn')}</span>
               </button>}
               </div>}
-            {/* <IoIosMore className={css.moreIcon} onClick={() => setMore(!isMore)}/>
-            {isMore &&
-              <div className={css.showMore}>
-                <button className={css.messageBtn}>
-                  <MdOutlineMessage className={css.messageIcon}/>
-                  <span>Message</span>
-                </button>
-                <button className={css.blockBtn}>
-                  <MdBlock className={css.blockIcon}/>
-                  <span>Block</span>
-                </button>
-              </div>} */}
+              <div className={css.moreBtn}><MoreMenu /></div>
           </div>
         </div>
       { isLoading ?
