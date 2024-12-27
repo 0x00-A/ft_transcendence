@@ -19,6 +19,7 @@ const LocalGame = ({ onReturn }: { onReturn?: () => void }) => {
   const [sound, SwitchSound] = useState(true);
   const [controller, setController] = useState<Controller>('mouse');
   const [winningScore, setWinningScore] = useState(7);
+  const [paused, setPaused] = useState(false);
 
   const handleNextScreen = (nextScreen: GameScreens) => {
     setCurrentScreen(nextScreen);
@@ -34,7 +35,7 @@ const LocalGame = ({ onReturn }: { onReturn?: () => void }) => {
   return (
     <div className={css.container}>
       {currentScreen === 'game' && (
-        <PlayerMatchupBanner isOnePlayerMode={isOnePlayerMode} />
+        <PlayerMatchupBanner isOnePlayerMode={isOnePlayerMode} paused={paused} />
       )}
       <div className={css.gameArea}>
         {currentScreen === 'mode' && (
@@ -68,6 +69,8 @@ const LocalGame = ({ onReturn }: { onReturn?: () => void }) => {
             paddleSpeed={paddleSpeed}
             controller={controller}
             winningScore={winningScore}
+            paused={paused}
+            setPaused={setPaused}
           />
         )}
         {currentScreen === 'end' && (
