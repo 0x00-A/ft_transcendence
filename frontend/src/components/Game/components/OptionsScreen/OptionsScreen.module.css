@@ -13,8 +13,9 @@
 }
 
 .controllButtons {
-    width: 140px;
+    min-width: 140px;
     margin: 0;
+    width: auto;
 }
 
 .scores, .controlls {

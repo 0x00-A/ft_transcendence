@@ -219,7 +219,7 @@ export default function Sidebar() {
                 </ul>
               </div>
             )}
-            {selectedLang == 'es' ?  <p>Español</p> : selectedLang == 'en' ? <p>English</p> : <p>Tamazight</p>}
+            {selectedLang == 'es' ?  <p>Español</p> : selectedLang == 'en' ? <p>English</p> : <p>Dutch</p>}
           </div>
           {!open && <SideBarTooltip id="language-tooltip" content="Language" />}
           <div data-tooltip-id={`${!open ? 'theme-tooltip' : ''}`}>
