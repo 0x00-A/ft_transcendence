@@ -105,6 +105,7 @@ const ProfileAchievements = ({
                         ]
                       }
                     </p>
+                    <p>+{achievement.achievement.reward_points}xp</p>
                   </div>
                 </div>
               ))}

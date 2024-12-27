@@ -61,7 +61,6 @@ def create_user_profile(sender, instance, created, **kwargs):
                               badge=Badge.objects.get(name='Bronze'),
                               stats={'wins': 0, 'losses': 0, 'games_played': 0, 'highest_score': 0, 'best_rank': Profile.objects.count() + 1, 'win_track': 0, 'win_streak': 0}
                               )
-
        achievements = Achievement.objects.all()
        for achievement in achievements:
             user_achievement, created = UserAchievement.objects.get_or_create(user=instance, achievement=achievement)
@@ -145,6 +144,9 @@ def unlock_achievements_on_game(sender, instance, **kwargs):
                 "games_won", 0) + 1
             if user_achievement.progress["games_won"] >= achievement.condition["games_won"]:
                 user_achievement.is_unlocked = True
+                print(f"------------------Achievement {achievement.name} unlocked------------------")
+                print("--------------------+ ", achievement.reward_points, ' points to ', user.username, ' +-------------------')
+                user_achievement.user.profile.score += achievement.reward_points
 
                 target_language = user.profile.preferred_language or 'en'
                 try:
