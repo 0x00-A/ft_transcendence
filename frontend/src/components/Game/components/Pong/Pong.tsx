@@ -29,6 +29,8 @@ interface GameProps {
   ballSpeed: number;
   controller: Controller;
   winningScore: number;
+  paused: boolean;
+  setPaused: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Pong: React.FC<GameProps> = ({
@@ -42,11 +44,12 @@ const Pong: React.FC<GameProps> = ({
   ballSpeed,
   controller,
   winningScore,
+  paused,
+  setPaused,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
-  const [paused, setPaused] = useState(false);
   const { t } = useTranslation();
 
 
