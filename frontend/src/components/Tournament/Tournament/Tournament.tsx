@@ -24,7 +24,7 @@ function IconLabelButtons({ onClick }: { onClick: () => void }) {
 
   return (
     <button onClick={onClick} className={`${css.playButton}`}>
-      {t('game.localTournament.pong.start')}
+      start
     </button>
   );
 }
@@ -345,7 +345,7 @@ const Pong: React.FC<GameProps> = ({
     <div className={css.gameScreenDiv}>
       <div className={css.playerNamesWrapper}>
         <div className={css.player1}>{player1}</div>
-        <div className={css.vsDiv}>{t('game.localTournament.pong.vs')}</div>
+        <div className={css.vsDiv}>VS</div>
         <div className={css.player2}>{player2}</div>
       </div>
       <div className={css.canvasDiv}>

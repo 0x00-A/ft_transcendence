@@ -142,7 +142,7 @@
   }
 }
 
-@media (min-width: 950px) and (max-width: 1800px) {
+@media (min-width: 1180px) and (max-width: 1800px) {
   .container {
     flex-direction: column;
     padding: 1rem;
@@ -154,6 +154,33 @@
     flex-direction: row;
     width: 100%;
     gap: 1rem;
+  }
+
+  .welcome,
+  .other,
+  .leaderboard,
+  .competitiveOverview,
+  .LineChart,
+  .lastMatchContainer,
+  .friendsContainer {
+    height: auto;
+    width: 100%;
+    padding: 30px;
+  }
+}
+@media (min-width: 950px) and (max-width: 1180px) {
+  .container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .heroSection,
+  .mainContent,
+  .lastSection {
+    /* flex-direction: row; */
+    width: 90%;
+    gap: 1rem;
+    margin: 0 auto;
   }
 
   .welcome,

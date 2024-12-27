@@ -23,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SideBarTooltip from './SideBarTooltip';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true);
@@ -45,6 +46,9 @@ export default function Sidebar() {
   // const [isLoggingOut, setIsLoggingOut] = useState(false);
   // Ref to track the language switcher container
   const languageSwitcherRef = useRef<HTMLDivElement>(null);
+  const {
+    fetchNotifications
+  } = useWebSocket();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -132,6 +136,8 @@ export default function Sidebar() {
 
       setShowLangPopup(false);
 
+      fetchNotifications()
+
       console.log('Language updated successfully:', response.data.language);
     } catch (error) {
       console.error('Error updating language:', error);
@@ -158,8 +164,8 @@ export default function Sidebar() {
               code={
                 selectedLang === 'es'
                   ? 'ES'
-                  : selectedLang === 'zgh'
-                    ? 'MA'
+                  : selectedLang === 'nl'
+                    ? 'NL'
                     : 'US'
               }
               width={32}
@@ -196,7 +202,7 @@ export default function Sidebar() {
                     />{' '}
                     Español{' '}
                   </li>
-                  <li onClick={() => changeLanguage('zgh')}>
+                  <li onClick={() => changeLanguage('nl')}>
                     {' '}
                     <Flag
                       style={{
@@ -206,14 +212,14 @@ export default function Sidebar() {
                         height: '26px',
                       }}
                       className={css.flags}
-                      code="MA"
+                      code="NL"
                     />{' '}
-                    Tamazight{' '}
+                    Dutch{' '}
                   </li>
                 </ul>
               </div>
             )}
-            {selectedLang == 'es' ?  <p>Español</p> : selectedLang == 'en' ? <p>English</p> : <p>Tamazight</p>}
+            {selectedLang == 'es' ?  <p>Español</p> : selectedLang == 'en' ? <p>English</p> : <p>Dutch</p>}
           </div>
           {!open && <SideBarTooltip id="language-tooltip" content="Language" />}
           <div data-tooltip-id={`${!open ? 'theme-tooltip' : ''}`}>
