@@ -124,11 +124,11 @@ def oauth2_set_username(request):
     user_data['username'] = request.data.get('username')
     serializer = Oauth2Serializer(data = user_data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    user = serializer.save()
     del request.session['user_data']
-    user = authenticate(email=serializer.validated_data['email'])
-    if user is None:
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+    # user = authenticate(email=serializer.validated_data['email'])
+    # if user is None:
+        # return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     token = get_token_for_user(user)
     response = Response(data={'message': 'login success, Welcome player'}, status=status.HTTP_200_OK)
     response.set_cookie(
