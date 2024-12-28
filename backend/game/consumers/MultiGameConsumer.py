@@ -26,7 +26,7 @@ canvas_height: int = 480
 losing_score: int = 10
 
 ball_raduis: int = 8
-initial_ball_speed = 4
+initial_ball_speed = 2
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -247,11 +247,18 @@ class GameInstance:
         return 0 <= t <= 1 and 0 <= u <= 1
 
     def is_colliding_with_paddle(self, paddle):
+        ball_from_top = self.ball.y < self.state[f"{paddle}_y"]
+        ball_from_bottom = self.ball.y > self.state[f"{
+            paddle}_y"] + self.paddle_height
+
         # Previous and current position of the ball
         next_x = self.ball.x + self.ball.dx + \
             (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
         next_y = self.ball.y + self.ball.dy + \
             (self.ball.radius if self.ball.dy > 0 else -self.ball.radius)
+
+        next_y += self.ball.radius if ball_from_top else - \
+            self.ball.radius if ball_from_bottom else 0
 
         # Paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
@@ -303,20 +310,20 @@ class GameInstance:
         # Handle side collision
         if ball_from_left or ball_from_right:
             self.ball.dx *= -1  # Reverse the horizontal velocity
-            if ball_from_left:
-                self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
-            elif ball_from_right:
-                self.ball.x = self.state[f"{paddle}_x"] + \
-                    self.state[f"{paddle}_w"] + self.ball.radius
+            # if ball_from_left:
+            #     self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
+            # elif ball_from_right:
+            #     self.ball.x = self.state[f"{paddle}_x"] + \
+            #         self.state[f"{paddle}_w"] + self.ball.radius
 
         # Handle top/bottom collision
         if ball_from_top or ball_from_bottom:
             self.ball.dy *= -1
-            if ball_from_top:
-                self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
-            elif ball_from_bottom:
-                self.ball.y = self.state[f"{paddle}_y"] + \
-                    self.state[f"{paddle}_h"] + self.ball.radius
+            # if ball_from_top:
+            #     self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
+            # elif ball_from_bottom:
+            #     self.ball.y = self.state[f"{paddle}_y"] + \
+            #         self.state[f"{paddle}_h"] + self.ball.radius
 
         if paddle == 'player1_paddle' or paddle == 'player3_paddle':
             relative_impact = (

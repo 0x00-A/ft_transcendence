@@ -35,8 +35,8 @@ services:
     depends_on:
       db:
         condition: service_started
-      redis:
-        condition: service_started
+      # redis:
+      #   condition: service_started
     restart: on-failure
     # develop:
     #   watch:
@@ -100,18 +100,18 @@ services:
     networks:
       - default_network
 
-  redis:
-    image: "redis:latest"
-    # ports:
-    #   - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - default_network
+  # redis:
+  #   image: "redis:latest"
+  #   # ports:
+  #   #   - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - default_network
 
 volumes:
   dev-db-data:
-  redis_data:
+  # redis_data:
 
 networks:
   default_network:
