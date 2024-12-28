@@ -16,6 +16,8 @@ from asgiref.sync import async_to_sync
 
 import asyncio
 
+from collections import defaultdict
+
 channel_layer = get_channel_layer()
 
 canvas_size: int = 480
@@ -29,6 +31,7 @@ initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
 games = {}
+connected_players = defaultdict(set)
 
 
 class Ball:

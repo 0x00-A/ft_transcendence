@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './TournamentForm.module.css';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +12,17 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
   const [playerName, setPlayerName] = useState<string>('');
   const { t } = useTranslation();
   const [error, setError] = useState<string>(''); // To store error messages
+  const inputRef = useRef<null | HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [playerName]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && document.activeElement === inputRef.current) {
+      handleAddPlayer();
+    }
+  };
 
   const handleAddPlayer = () => {
     if (!playerName.trim()) {
@@ -46,9 +57,12 @@ const TournamentForm = ({ onSubmit, players, setPlayers }: FormProps) => {
       <h2 className={`${styles.heading} ${styles.label}`}>{t('game.localTournament.TournamentForm.Title')}</h2>
 
       <input
+        disabled={players.length === 4}
+        ref={inputRef}
         type="text"
         value={playerName}
         onChange={(e) => setPlayerName(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={t('game.localTournament.TournamentForm.InputPlaceholder')}
         maxLength={15}
         className={styles.input}

@@ -255,7 +255,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.close()
                 return
             connected_players[self.game_id].add(user.id)
-            print(f">>>>> Player {user.username} connected to {self.game_id}")
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
             if not get_game(self.game_id):
