@@ -8,6 +8,8 @@
     position: relative;
 }
 
+
+  
 .profileBackground {
     background-image: url('/rachid.png');
     width: 95%;
@@ -16,43 +18,23 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    position: relative;
-}
-
-.othersProfile {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    /* width: 200px;
-    height: 50px; */
-    background-color: #283245;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    /* padding: 10px 15px; */
-    border-radius: 5px;
-    /* cursor: pointer; */
-    /* font-size: 17px; */
 }
 
 
 .friendState {
+    padding: 1rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: #1e2533;
+    justify-content: flex-end;
+    gap: 1rem;
     color: #f8f3e3;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     transition: background-color 0.2s, transform 0.2s;
     font-size: 2rem;
     border-radius: 8px;
+    position: relative;
 }
 
 .friendStatBtn {
-    position: absolute;
-    top: 10px;
-    right: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,13 +47,8 @@
     border-radius: 50%;
     cursor: pointer;
     font-size: 17px;
-    gap: 1rem;
 }
-
 .moreBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,37 +61,46 @@
     border-radius: 50%;
     cursor: pointer;
     font-size: 17px;
-    gap: 1rem;
 }
-
-.showMore {
-    background: #1e2533;
-    height: 100px;
-    width: 100px;
+  
+  .btnLabelMore {
     position: absolute;
-    right: 10%;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    top: -28px;
+    right: -15px;
+    transform: translateX(-50%);
+    background-color: #0e1725;
+    color: var(--text-color);
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 15px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .btnLabel {
+    position: absolute;
+    top: -28px;
+    right: 20px;
+    transform: translateX(-50%);
+    background-color: #0e1725;
+    color: var(--text-color);
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 15px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+.friendStatBtn:hover .btnLabel {
+    opacity: 1;
+    visibility: visible;
 }
-
-.blockBtn, .messageBtn {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 90%;
-    height: 30px;
-    border-radius: 8px;
-}
-
-.blockBtn {
-    background-color: #ef4444;
-}
-
-.messageBtn {
-    background-color: #517abc;
+.moreBtn:hover .btnLabelMore {
+    opacity: 1;
+    visibility: visible;
 }
 
 .editProfileBtn {

@@ -550,7 +550,11 @@
         "friendsBtn": "Vrienden",
         "cancelBtn": "Annuleren",
         "acceptBtn": "Accepteren",
-        "addBtn": "Toevoegen"
+        "addBtn": "Toevoegen",
+        "moreBtn": "Meer",
+        "messageBtn": "Bericht",
+        "blockBtn": "Blok",
+        "challengeBtn": "Uitdaging"
       }      
     },
     "setPassword": {

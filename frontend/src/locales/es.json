@@ -549,8 +549,12 @@
               "friendsBtn": "Amigas",
               "cancelBtn": "Cancelar",
               "acceptBtn": "Aceptar",
-              "addBtn": "Agregar"
-          }
+              "addBtn": "Agregar",
+              "moreBtn": "Más",
+              "messageBtn": "Mensaje",
+              "blockBtn": "Bloque",
+              "challengeBtn": "Desafío"
+            }
       },
       "setPassword": {
           "title": "Establecer contraseña",

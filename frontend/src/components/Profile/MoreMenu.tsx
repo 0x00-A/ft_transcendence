@@ -1,32 +1,133 @@
-import  { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import css from './MoreMenu.module.css';
 import { EllipsisVertical, MessageSquareMore, ShieldMinus, Swords } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { OtherUser } from '@/types/apiTypes';
+import { useNavigate } from 'react-router-dom';
+import { apiBlockRequest } from '@/api/friendApi';
+import { toast } from 'react-toastify';
+import { useWebSocket } from '@/contexts/WebSocketContext';
 
-const MoreMenu = () => {
+interface GetUserData {
+  user: OtherUser;
+  refetch: () => void;
+}
+
+interface UsersProfileHeaderProps {
+  userData: GetUserData;
+}
+
+const MoreMenu: React.FC<UsersProfileHeaderProps> = ({ userData }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user, refetch } = userData;
+  const [isInviteDisabled, setIsInviteDisabled] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const { sendMessage } = useWebSocket();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen((prev) => !prev);
   };
+
+  const handleMessageClick = (friend: OtherUser) => {
+    navigate('/chat', { state: { selectedFriend: friend } });
+    setIsMenuOpen(false);
+  };
+
+  const blockRequest = async (username: string) => {
+    try {
+      await apiBlockRequest(username);
+      setIsMenuOpen(false);
+      refetch();
+    } catch (error: any) {
+      toast.error(error.message || t('errorsFriends.block'));
+    }
+  };
+
+  const handleSendInvite = (username: string) => {
+    if (isInviteDisabled) return;
+    sendMessage({
+      event: 'game_invite',
+      from: user?.username,
+      to: username,
+    });
+
+    setIsMenuOpen(false);
+    setIsInviteDisabled(true);
+    setTimeLeft(10);
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isInviteDisabled && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timeLeft === 0 && isInviteDisabled) {
+      setIsInviteDisabled(false);
+    }
+
+    return () => clearInterval(timer);
+  }, [isInviteDisabled, timeLeft]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      // Check if the click is outside both the menu and button
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Attach event listener when menu is open
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Clean up the event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   return (
     <div className={css.moreMenu}>
-
-      <EllipsisVertical color='#f8c35c' onClick={toggleMenu}/>
+      <div ref={buttonRef} onClick={toggleMenu} className={css.moreButton}>
+        <EllipsisVertical color="#f8c35c" />
+      </div>
 
       {isMenuOpen && (
-        <div className={css.menu}>
-          <div className={css.menuItem}>
-            <MessageSquareMore color='#f8c35c' className={css.menuIcon} />
-            <span>Message</span>
+        <div ref={menuRef} className={css.menu}>
+          <div className={css.menuItem} onClick={() => handleMessageClick(user)}>
+            <MessageSquareMore color="#f8c35c" className={css.menuIcon} />
+            <span>{t('Profile.profileHeader.buttons.messageBtn')}</span>
           </div>
-          <div className={css.menuItem}>
-            <ShieldMinus color='#f8c35c' className={css.menuIcon} />
-            <span>Block</span>
+          <div className={css.menuItem} onClick={() => blockRequest(user.username)}>
+            <ShieldMinus color="#f8c35c" className={css.menuIcon} />
+            <span>{t('Profile.profileHeader.buttons.blockBtn')}</span>
           </div>
-          <div className={css.menuItem}>
-            <Swords color='#f8c35c' className={css.menuIcon} />
-            <span>challenge</span>
+          <div
+            className={`${css.menuItem} ${isInviteDisabled ? css.disabled : ''}`}
+            onClick={() => handleSendInvite(user.username)}
+          >
+            <Swords color="#f8c35c" className={`${css.menuIcon}`} />
+            {isInviteDisabled ? (
+              <span className={css.cooldownTimer}>{timeLeft}s</span>
+            ) : (
+              <span>{t('Profile.profileHeader.buttons.challengeBtn')}</span>
+            )}
           </div>
         </div>
       )}
