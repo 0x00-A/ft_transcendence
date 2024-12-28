@@ -122,11 +122,11 @@ const MessageList = () => {
 //  }, []);
 
   useEffect(() => {
-    const selectedFriend = location.state?.selectedFriend;
+    const username = location.state?.selectedFriend;
 
-    if (selectedFriend) {
+    if (username) {
       const matchedConversation = ConversationList?.find(
-        conversation => conversation.name === selectedFriend.username
+        conversation => conversation.name === username
       );
 
       console.log("matchedConversation; ", matchedConversation);
@@ -142,16 +142,13 @@ const MessageList = () => {
         }));
       } else {
         const friendToStart = friendsData?.find(
-          friend => friend.username === selectedFriend.username
+          friend => friend.username === username
         );
         
         console.log("friendToStart; ", friendToStart);
         if (friendToStart) {
           handleSearchItemClick(friendToStart);
         }
-        // else {
-        //   addConversation(selectedFriend.id);
-        // }
       }
     }
   }, [location.state]);

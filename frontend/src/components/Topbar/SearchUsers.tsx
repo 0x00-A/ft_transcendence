@@ -39,8 +39,8 @@ const SearchUsers: React.FC = () => {
   const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
   const navigate = useNavigate();
 
-  const handleMessageClick = (friend: User) => {
-    navigate('/chat', { state: { selectedFriend: friend } });
+  const handleMessageClick = (username: string) => {
+    navigate('/chat', { state: { selectedFriend: username } });
     setShowResults(false);
     setSearchTerm('');
   };
@@ -245,7 +245,7 @@ const SearchUsers: React.FC = () => {
     
                       {user.friend_request_status === "accepted" ? (
                         <span
-                          onClick={() => handleMessageClick(user)}
+                          onClick={() => handleMessageClick(user.username)}
                           className={css.messageButton}
                           title={t('SearchUsers.pupMessage')}
                         >
