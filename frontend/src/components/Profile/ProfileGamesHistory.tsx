@@ -8,7 +8,7 @@ import { useGetData } from '@/api/apiHooks';
 
 // Api
 import { LastGames } from '@/types/apiTypes';
-import { API_GET_LAST_GAMES_URL } from '@/api/apiConfig';
+import { API_GET_LAST_GAMES_URL, API_GET_PLAYED_GAMES_URL } from '@/api/apiConfig';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
@@ -19,8 +19,12 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isBtnActive, setBtnActive] = useState(true);
-  console.log('username', username);
-  const { data: playedGames, isLoading, error } = useGetData<LastGames[]>(`${API_GET_LAST_GAMES_URL}/${username}`);
+  if (isOtherUser) {
+    var { data: playedGames, isLoading, error } = useGetData<LastGames[]>(`${API_GET_LAST_GAMES_URL}/${username}`);
+  }
+  else {
+    var { data: playedGames, isLoading, error } = useGetData<LastGames[]>(API_GET_PLAYED_GAMES_URL);
+  }
 
   const gameHistoryFields = useMemo(
     () => [
@@ -112,22 +116,24 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
                     <span>{t('Profile.gameHistory.noGames.playNow')}</span>
                 </button> : null }
             </div>}
-            { playedGames!.length > 0 && playedGames?.map((game: LastGames) => (
-                <div key={game.id} className={css.tableRow}>
-                    <div className={css.dateTimeGame}>
-                      <span className={css.historyField}>{formatDate(new Date(game?.start_time), t('lang'))}</span>
-                    </div>
-                    <div className={css.player}>
-                        <img src={game.opponent_avatar} alt={game?.opponent_username} className={css.avatar} onClick={() => navigate(`/profile/${game.opponent_username}`)} />
-                        <span className={css.name} onClick={() => navigate(`/profile/${game.opponent_username}`)}>{game.opponent_username}</span>
-                    </div>
-                    <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{getResultTranslation(game.result)}</span>
-                    <span className={css.historyField}>{game.my_score} - {game.opponent_score}</span>
-                    {/* <span className={css.historyField}>One to One</span> */}
-                    <span className={css.historyField}>{formatGameDuration(game.game_duration)}</span>
-                    <button className={css.inviteBtn}>{t('Profile.gameHistory.invite')}</button>
-                </div>
-            ))}
+            <div className={css.tables}>
+              { playedGames!.length > 0 && playedGames?.map((game: LastGames) => (
+                  <div key={game.id} className={css.tableRow}>
+                      <div className={css.dateTimeGame}>
+                        <span className={css.historyField}>{formatDate(new Date(game?.start_time), t('lang'))}</span>
+                      </div>
+                      <div className={css.player}>
+                          <img src={game.opponent_avatar} alt={game?.opponent_username} className={css.avatar} onClick={() => navigate(`/profile/${game.opponent_username}`)} />
+                          <span className={css.name} onClick={() => navigate(`/profile/${game.opponent_username}`)}>{game.opponent_username}</span>
+                      </div>
+                      <span className={`${game.result === 'Win' ? css.win : css.lose}`}>{getResultTranslation(game.result)}</span>
+                      <span className={css.historyField}>{game.my_score} - {game.opponent_score}</span>
+                      {/* <span className={css.historyField}>One to One</span> */}
+                      <span className={css.historyField}>{formatGameDuration(game.game_duration)}</span>
+                      <button className={css.inviteBtn}>{t('Profile.gameHistory.invite')}</button>
+                  </div>
+              ))}
+            </div>
           </div>}
     </div>
   )

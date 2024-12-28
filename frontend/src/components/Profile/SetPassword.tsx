@@ -6,7 +6,7 @@ import useSetPassword from '@/hooks/auth/useSetPassword';
 import { SetPasswordForm } from '@/types/apiTypes';
 type PasswordFields = "new_pass" | "confirm_pass";
 // Styles
-import css from '@/pages/Profile/Profile.module.css';
+import css from '/src/pages/Profile/Profile.module.css';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";

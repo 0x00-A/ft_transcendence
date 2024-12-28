@@ -40,6 +40,7 @@ MAHDI:
  - [ ] email verification in edit profile
  - [ ] You don't play any games yet
  - [ ] friends dashboard and offline
+ - [ ] delete signals log
 MAHDI NOTES:
    - if a user sign up with an email and not verify his email, and next he is sign up using google (oauth2) with same email
       i mark the account as verified because google has already verified the email, and user can login with oauth2 or with his username and password
@@ -55,6 +56,3 @@ CHAT:
     #   match => { "message" => "%{IPORHOST:client_ip} - %{DATA:remote_user} \[%{HTTPDATE:timestamp}\] \"%{WORD:method} %{DATA:request} HTTP/%{NUMBER:http_version}\" %{NUMBER:status} %{NUMBER:bytes}" }
     # }
 - [ ] date in block list you must trans
-
-
-        

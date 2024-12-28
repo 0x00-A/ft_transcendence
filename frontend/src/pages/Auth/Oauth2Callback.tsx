@@ -102,7 +102,7 @@ const Oauth2Callback = () => {
 
   return (
     <div className={css.oauth2Container}>
-        { is2faRequired && <OtpAuth setOtpRequired={set2faRequired} username={username} />}
+        { is2faRequired && <OtpAuth setOtpRequired={set2faRequired} username={username}  />}
         { isUsernameForm &&
           <form noValidate={true} className={css.usernameForm} onSubmit={ handleSubmit(handleClick) }>
             <div className={css.FormHeader}>

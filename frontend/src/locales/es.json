@@ -345,7 +345,7 @@
           "noMutualFriends": "Sin amigos en común",
           "playerLonely": "Este jugador está solo",
           "Level": "Nivel:"
-      },        
+      },
       "informations": "Información",
       "security": "Seguridad",
       "errors": {
@@ -742,5 +742,5 @@
           }
       }
   }
-  
+
 }
