@@ -137,3 +137,109 @@
   outline: none;
   box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5);
 }
+
+/* Original CSS remains the same */
+
+/* Media Query for Laptop Screens */
+@media screen and (max-width: 1366px) {
+  .container {
+    min-width: 500px;
+  }
+
+  .header,
+  .row {
+    padding: 10px;
+  }
+
+  .header {
+    font-size: 12px;
+    height: 40px;
+  }
+
+  .tournamentList {
+    height: calc(100% - 40px);
+  }
+
+  .noTournaments {
+    font-size: 1em;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .action button {
+    padding: 6px 24px;
+    font-size: 0.9em;
+  }
+}
+
+/* Media Query for Smaller Laptops */
+@media screen and (max-width: 1024px) {
+  .container {
+    min-width: 400px;
+  }
+
+  .header,
+  .row {
+    padding: 8px;
+  }
+
+  .header {
+    font-size: 11px;
+    height: 35px;
+  }
+
+  .tournamentList {
+    height: calc(100% - 35px);
+  }
+
+  /* Adjust column sizes for smaller screens */
+  .id {
+    flex: 0.3;
+  }
+
+  .name {
+    flex: 1.5;
+  }
+
+  .creator,
+  .date,
+  .players {
+    flex: 0.8;
+  }
+
+  .action {
+    flex: 0.6;
+  }
+
+  .action button {
+    padding: 5px 20px;
+    font-size: 0.85em;
+  }
+
+  .noTournaments {
+    font-size: 0.9em;
+    padding: 12px;
+    gap: 12px;
+  }
+}
+
+/* Additional Media Query for Very Small Screens */
+@media screen and (max-width: 768px) {
+  .container {
+    min-width: 350px;
+  }
+
+  .header,
+  .row {
+    font-size: 0.9em;
+  }
+
+  .date {
+    display: none; /* Hide date on very small screens if needed */
+  }
+
+  .action button {
+    padding: 4px 16px;
+    font-size: 0.8em;
+  }
+}
