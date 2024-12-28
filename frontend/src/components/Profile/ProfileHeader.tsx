@@ -33,10 +33,12 @@ const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.Se
   return (
     <div className={css.profileHeaderContainer}>
       <div className={css.profileBackground}>
-        <button className={css.editProfileBtn} onClick={() => setEditProfile(true)}>
-          <UserPen color='#F8C25C'/>
-          <span>{t('Profile.profileHeader.EditProfileButton')}</span>
-        </button>
+        <div className={css.friendState}>
+          <button className={css.editProfileBtn} onClick={() => setEditProfile(true)}>
+            <UserPen color='#F8C25C'/>
+            <span>{t('Profile.profileHeader.EditProfileButton')}</span>
+          </button>
+        </div>
       </div>
       { isLoading ?
       <div className="w-[150px] h-[200px] absolute left-1/2 top-[45%] transform -translate-x-1/2 text-center rounded-lg animate-pulse flex flex-col items-center">

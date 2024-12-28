@@ -16,6 +16,7 @@ import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
 import PreLoader from '@/components/PreLoader/PreLoader';
 import { useUser } from '@/contexts/UserContext';
 import apiClient, { getData } from '@/api/apiClient';
+import axios from 'axios';
 
 const UsersProfile = () => {
 
@@ -32,14 +33,26 @@ const UsersProfile = () => {
 
   useEffect(() => {
     if (isError) {
-      if (error.status === 404) {
-        toast.error(error.response?.data.error);
-        navigate('/profile');
-      } else if (error.response.data.status === 'me') {
-        navigate('/profile');
-      }
-      else {
-        toast.error(error.response.data.message || 'Something went wrong, try again!');
+      if (axios.isAxiosError(error)) {
+        if (error.status === 404) {
+          toast.error(error.response?.data.error);
+          navigate('/profile');
+        } else if (error.response?.data.status === 'me') {
+          navigate('/profile');
+        } else if (error.response?.data.status === 'Blocker') {
+          toast.error(error.response?.data.message || "Can't view this profile");
+          navigate('/friends?view=blocked');
+        } else if (error.response?.data.status === 'Blocked') {
+          toast.error(error.response?.data.message || "Can't view this profile");
+          // navigate('/friends?view=blocked');
+          navigate(-1);
+        }
+        else {
+          toast.error(error.response?.data.message || 'Something went wrong, try again!');
+          navigate('/');
+        }
+      } else {
+        toast.error('Something went wrong, try again!');
         navigate('/');
       }
     }
@@ -81,7 +94,7 @@ const UsersProfile = () => {
     </div>
 
   )
-  if (isError) return navigate('/profile');
+  if (isError) return null;
   // if (!username) return (
     //   <div className={css.profileContainer}>
     //     <h1>404 Not Found</h1>
