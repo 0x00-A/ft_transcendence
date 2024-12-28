@@ -126,4 +126,4 @@ class SetPasswordView(APIView):
         serializer = SetPasswordSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.update(request.user, serializer.validated_data)
-        return Response({'message': 'Password Setted successfuly'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Password set successfully'}, status=status.HTTP_200_OK)

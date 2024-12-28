@@ -351,3 +351,13 @@
 .osButtons .selected {
     background-color: #5774a1;
 }
+
+.appLink {
+    color: #f8c25c;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+.appLink:hover {
+    text-decoration: underline;
+}

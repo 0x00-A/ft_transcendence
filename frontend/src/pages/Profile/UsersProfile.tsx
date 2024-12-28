@@ -37,6 +37,12 @@ const UsersProfile = () => {
         navigate('/profile');
       } else if (error.response.data.status === 'me') {
         navigate('/profile');
+      } else if (error.response.data.status === 'Blocker') {
+        toast.error(error.response.data.message || "Can't view this profile");
+        navigate('/profile');
+      } else if (error.response.data.status === 'Blocked') {
+        toast.error(error.response.data.message || "Can't view this profile");
+        navigate('/profile');
       }
       else {
         toast.error(error.response.data.message || 'Something went wrong, try again!');

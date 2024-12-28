@@ -44,13 +44,13 @@ class UserProfileView(APIView):
             serializer = OtherUserSerializer(user, context={'request': request})
             if serializer.data['friend_status'] == 'Blocker':
                 return Response(
-                    {'message': 'You blocked this user, you cannot see his profile', 'status': 'Blocker'},
-                    status=status.HTTP_200_OK
+                    {'message': 'You have blocked this user. To view their profile, unblock them first.', 'status': 'Blocker'},
+                    status=status.HTTP_400_BAD_REQUEST
                 )
             if serializer.data['friend_status'] == 'Blocked':
                 return Response(
-                    {'message': 'This user blocked you, you cannot see his profile', 'status': 'Blocked'},
-                    status=status.HTTP_200_OK
+                    {'message': 'You have been blocked by this user, you cannot see his profile', 'status': 'Blocked'},
+                    status=status.HTTP_400_BAD_REQUEST
                 )
             print('api ==> get user profile: User profile found')
             return Response(serializer.data, status=status.HTTP_200_OK)

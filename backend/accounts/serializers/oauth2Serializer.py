@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from django.core.files.base import ContentFile
 import requests
+from datetime import datetime
 
 from accounts.models import User
 
@@ -52,6 +53,6 @@ class Oauth2Serializer(serializers.ModelSerializer):
         user.is_password_set = False
         avatarContent = self.get_avatar_content(validated_data['avatar_link'])
         if avatarContent is not None:
-            user.profile.avatar.save(name=f"{user.username}_avatar.png", content=ContentFile(avatarContent), save=True)
+            user.profile.avatar.save(name=f"{user.username}_{datetime.now()}.png", content=ContentFile(avatarContent), save=True)
         user.save()
         return user
