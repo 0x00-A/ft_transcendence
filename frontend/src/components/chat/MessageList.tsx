@@ -98,6 +98,28 @@ const MessageList = () => {
     ) || [];
   }, [friendsData, searchQuery]);
 
+//   const addConversation = useCallback(async (id: string) => {
+//     try {
+//       const newConversation = await apiCreateConversation(id);
+      
+//       if (newConversation && newConversation.id) {
+//         await refetch();
+//         console.log("new => Conversation: ", newConversation);
+//         setSelectedConversation(newConversation);
+//         setIsSearchActive(false);
+//         setSearchQuery('');
+//         setMenuState(prev => ({
+//           ...prev,
+//           isOpen: false,
+//           activeIndex: null,
+//         }));
+//       } else {
+//         console.error('Invalid conversation created');
+//       }
+//     } catch (error) {
+//       console.error('Failed to create conversation:', error);
+//     }
+//  }, []);
 
   useEffect(() => {
     const selectedFriend = location.state?.selectedFriend;
@@ -110,7 +132,7 @@ const MessageList = () => {
       console.log("matchedConversation; ", matchedConversation);
       if (matchedConversation) {
         setSelectedConversation(matchedConversation);
-
+        
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState((prevState) => ({
@@ -122,10 +144,14 @@ const MessageList = () => {
         const friendToStart = friendsData?.find(
           friend => friend.username === selectedFriend.username
         );
-
+        
+        console.log("friendToStart; ", friendToStart);
         if (friendToStart) {
           handleSearchItemClick(friendToStart);
         }
+        // else {
+        //   addConversation(selectedFriend.id);
+        // }
       }
     }
   }, [location.state]);

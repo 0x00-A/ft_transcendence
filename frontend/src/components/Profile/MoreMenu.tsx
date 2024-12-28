@@ -80,7 +80,6 @@ const MoreMenu: React.FC<UsersProfileHeaderProps> = ({ userData }) => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
 
-      // Check if the click is outside both the menu and button
       if (
         menuRef.current &&
         !menuRef.current.contains(target) &&
@@ -91,12 +90,10 @@ const MoreMenu: React.FC<UsersProfileHeaderProps> = ({ userData }) => {
       }
     };
 
-    // Attach event listener when menu is open
     if (isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
-    // Clean up the event listener
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };

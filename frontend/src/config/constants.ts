@@ -13,3 +13,9 @@ export const SERVER_PORT = 8000
 export const LOGO = "/icons/logo.svg";
 
 export const DEFAULT_AVATAR = "/icons/defaultAvatar.jpeg";
+
+export const APP_ANDROID_QRCODE = "/qrcodes/GA-android.png";
+export const APP_ANDROID_URL = "https://qrco.de/bfesUH"
+
+export const APP_IOS_QRCODE = "/qrcodes/GA-ios.png";
+export const APP_IOS_URL = "https://qrco.de/bfesV7"
