@@ -106,7 +106,7 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
           {isLoading ? <div className='h-10 w-44 bg-gray-700 animate-pulse flex-center'></div> :
             <div className={css.friendState}>
               {user?.friend_status === 'Friends' &&
-              <button className={css.friendStatBtn}>
+              <button className={css.friendStatBtn} disabled={true}>
                 <Users color='#f8c35c'/>
                 <span>{t('Profile.profileHeader.buttons.friendsBtn')}</span>
               </button>}
