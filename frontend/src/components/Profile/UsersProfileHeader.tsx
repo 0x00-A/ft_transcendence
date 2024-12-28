@@ -10,14 +10,6 @@ import { OtherUser } from '@/types/apiTypes';
 import { useTranslation } from 'react-i18next';
 import MoreMenu from './MoreMenu';
 
-// const getProfile = async (username:string) => {
-
-//     const response = await apiClient.get(
-//       `${API_GET_PROFILE_URL}${username}/`
-//     );
-//     return response.data
-// }
-
 interface GetUserData {
   user: OtherUser;
   isLoading: boolean;
@@ -32,13 +24,6 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
 
     const {user, isLoading, refetch} = getUserData;
     const { t } = useTranslation();
-
-    // const [isMore, setMore] = useState(false);
-
-    // const {data: user, isLoading, refetch} = useQuery({
-    //     queryKey: ["myquerykey1"],
-    //     queryFn: () => getProfile(username),
-    // });
 
 
     const translateBadgeName = (badgeName: string): string => {
@@ -90,41 +75,42 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
     }
   };
 
-    // const {data: user, isLoading} = useGetData(`${API_GET_PROFILE_URL}/${username}`);
-
-  // if (isLoading) {
-  //   return (
-  //       <div className={css.loaderWrapper}>
-  //       <ArcadeLoader className={css.loader} />
-  //     </div>
-  //   )
-  // }
 
   return (
     <div className={css.profileHeaderContainer}>
       <div className={css.profileBackground}>
-        <div className={css.othersProfile}>
           {isLoading ? <div className='h-10 w-44 bg-gray-700 animate-pulse flex-center'></div> :
             <div className={css.friendState}>
-              {user?.friend_status === 'Friends' &&
-              <button className={css.friendStatBtn}>
-                <Users color='#f8c35c'/>
-              </button>}
-              {user?.friend_status === 'Cancel' &&
-              <button className={css.friendStatBtn} onClick={handleCancel}>
-                <UserX color='#f8c35c'/>
-              </button>}
-              {user?.friend_status === 'Accept' &&
-              <button className={css.friendStatBtn} onClick={acceptFriendRequest}>
-                <UserCheck color='#f8c35c'/>
-              </button>}
-              {user?.friend_status === 'Add' &&
-              <button className={css.friendStatBtn} onClick={sendFriendRequest}>
-                <UserPlus color='#f8c35c'/>
-              </button>}
-              </div>}
-              <div className={css.moreBtn}><MoreMenu /></div>
-          </div>
+                {user?.friend_status === 'Friends' &&
+                  <div className={css.friendStatBtn}>
+                    <div className={css.btnLabel}>{t('Profile.profileHeader.buttons.friendsBtn')}</div>
+                    <Users color='#f8c35c'/>
+                  </div>
+                }
+                {user?.friend_status === 'Cancel' &&
+                  <div className={css.friendStatBtn} onClick={handleCancel}>
+                    <div className={css.btnLabel}>{t('Profile.profileHeader.buttons.cancelBtn')}</div>
+                    <UserX color='#f8c35c'/>
+                  </div>
+                }
+                {user?.friend_status === 'Accept' &&
+                  <div className={css.friendStatBtn} onClick={acceptFriendRequest}>
+                    <div className={css.btnLabel}>{t('Profile.profileHeader.buttons.acceptBtn')}</div>
+                    <UserCheck color='#f8c35c'/>
+                  </div>
+                }
+                {user?.friend_status === 'Add' &&
+                  <div className={css.friendStatBtn} onClick={sendFriendRequest}>
+                    <div className={css.btnLabel}>{t('Profile.profileHeader.buttons.addBtn')}</div>
+                    <UserPlus color='#f8c35c'/>
+                  </div>
+                }
+                <div className={css.moreBtn}>
+                  <div className={css.btnLabelMore}>{t('Profile.profileHeader.buttons.moreBtn')}</div>
+                    <MoreMenu userData={{user, refetch}}/>
+                </div>
+            </div>
+          }
         </div>
       { isLoading ?
         <div className="w-[150px] h-[200px] absolute left-1/2 top-[45%] transform -translate-x-1/2 text-center rounded-lg animate-pulse flex flex-col items-center">
@@ -175,12 +161,6 @@ const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) =>
             <span className={css.statValue}>{user?.profile?.rank || '?'}</span>}
             <span className={css.statLabel}>{t('Profile.profileHeader.profileStats.rank')}</span>
           </div>
-          {/* <div className={css.more} onClick={() => setMore(!isMore)}>
-            <IoMdMore className={css.moreIcon}/>
-            {isMore &&
-            <div className={css.showMore}>
-            </div>} */}
-          {/* </div> */}
         </div>
       </div>
     </div>

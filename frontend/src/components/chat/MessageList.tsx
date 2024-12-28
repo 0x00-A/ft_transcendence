@@ -15,7 +15,6 @@ import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 import { useTranslation } from 'react-i18next';
 
-
 interface FriendProfile {
   avatar: string;
 }
@@ -108,6 +107,7 @@ const MessageList = () => {
         conversation => conversation.name === selectedFriend.username
       );
 
+      console.log("matchedConversation; ", matchedConversation);
       if (matchedConversation) {
         setSelectedConversation(matchedConversation);
 

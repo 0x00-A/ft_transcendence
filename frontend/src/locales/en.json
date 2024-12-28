@@ -550,7 +550,11 @@
               "friendsBtn": "Friends",
               "cancelBtn": "Cancel",
               "acceptBtn": "Accept",
-              "addBtn": "Add"
+              "addBtn": "Add Friend",
+              "moreBtn": "More",
+              "messageBtn": "Message",
+              "blockBtn": "Block",
+              "challengeBtn": "Challenge"
           }
       },
       "setPassword": {

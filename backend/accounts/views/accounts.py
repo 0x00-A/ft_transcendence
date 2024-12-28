@@ -37,7 +37,6 @@ class UserProfileView(APIView):
 
     def get(self, request, username):
         if username == request.user.username:
-            print('api ==> my profile')
             return Response({'status': 'me'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user = User.objects.get(username=username)

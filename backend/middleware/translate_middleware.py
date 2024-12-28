@@ -13,20 +13,19 @@ class TranslateResponseMiddleware(MiddlewareMixin):
             try:
                 data = json.loads(response.content)
                 print("--------- d a t a--------")
-                # print(data)
+                print(data)
+                if request.user.is_authenticated:
+                    target_language = request.user.profile.preferred_language or 'en'
+                else:
+                    target_language = 'en'
                 if 'message' in data:
-                    if request.user.is_authenticated:
-                        target_language = request.user.profile.preferred_language or 'en'
-                    else:
-                        target_language = 'en'
                     print("/*/*/*/*/*/*/*/*/*/*")
                     print(data)
                     print("lang: " + target_language)
                     print("/*/*/*/*/*/*/*/*/*/*")
                     data['message'] = translate_text(data['message'], target_language)
                 elif 'error' in data:
-                    target_language = request.user.profile.preferred_language or 'en'
-                    data['message'] = translate_text(data['message'], target_language)
+                    data['error'] = translate_text(data['error'], target_language)
                 response.content = json.dumps(data)
             except Exception as e:
                 print(f"Translation Middleware Error: {e}")

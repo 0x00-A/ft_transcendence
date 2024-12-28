@@ -33,7 +33,7 @@ const UsersProfile = () => {
   useEffect(() => {
     if (isError) {
       if (error.status === 404) {
-        toast.error('User not found');
+        toast.error(error.response?.data.error);
         navigate('/profile');
       } else if (error.response.data.status === 'me') {
         navigate('/profile');
