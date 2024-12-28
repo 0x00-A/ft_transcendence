@@ -213,6 +213,7 @@ export interface Achievement {
         [key: string]: number;
     };
     progress: number;
+    reward_points: number;
 }
 
 export interface UserAchievements {

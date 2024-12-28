@@ -9,26 +9,29 @@ import { API_LOGIN_OTP_URL } from '@/api/apiConfig';
 import { otpSchema } from '@/types/formSchemas';
 import * as Yup from 'yup';
 import { LOGO } from '@/config/constants';
+import { useTranslation } from 'react-i18next';
+import { LoadingBarContextType } from '@/contexts/LoadingBarContext';
 
 
-const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<React.SetStateAction<boolean>>, username:string}) => {
+const OtpAuth = ({setOtpRequired, username, loadingBarRef}: {setOtpRequired:React.Dispatch<React.SetStateAction<boolean>>, username:string, loadingBarRef:LoadingBarContextType}) => {
   const [otp, setOtp] = useState('');
   const { setIsLoggedIn } = useAuth();
   const [otpError, setOptError] = useState('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await otpSchema().validate({otp: otp});
+      await otpSchema(t).validate({otp: otp});
     }
     catch (error) {
       if (error instanceof Yup.ValidationError) {
         setOptError(error.message);
-        return;
       } else {
         setOptError('Error otp, try again!');
       }
+      return ;
     }
     try {
         const response = await apiClient.post(API_LOGIN_OTP_URL, {otp: otp, username: username});
@@ -60,7 +63,7 @@ const OtpAuth = ({setOtpRequired, username}: {setOtpRequired:React.Dispatch<Reac
         </div>
         <div className={css.otpButtons}>
           <button type='submit' className={css.submitBtn}>Submit</button>
-          <button type='reset' className={css.cancelBtn} onClick={() => navigate('/auth')}>Cancel</button>
+          <button type='reset' className={css.cancelBtn} onClick={() => { loadingBarRef.current?.complete(); setOtpRequired(false); } }>Cancel</button>
         </div>
       </div>
     </form>

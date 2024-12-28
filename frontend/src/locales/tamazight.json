@@ -341,7 +341,7 @@
           "noMutualFriends": "ⵓⵍⴰⵛ ⵉⵎⴷⴷⵓⴽⴽⴰⵍ ⵉⵛⵓⴷⴷⴻⵏ.",
           "playerLonely": "ⴰⵎⵢⵓⵔⴰⵔⴰ ⴷ ⴰⵡⵃⵉⴷ",
           "Level": "ⴰⵙⵡⵉⵔ:"
-      },       
+      },
       "informations": "ⵉⵙⴰⵍⵍⴻⵏ",
       "security": "ⵍⴰⵎⴰⵏ",
       "errors": {
@@ -477,7 +477,7 @@
               "online": "Oⵏⵍⴰⵢⵏ",
               "offline": "ⴱⴻⵕⵕⴰ ⵉ ⵍⴰⵏⵜⵉⵔⵏⴰⵜ"
               }
-          }   
+          }
       },
       "gameHistory": {
           "title": "ⴰⵎⴻⵣⵔⵓⵢ ⵏ ⵡⵓⵔⴰⵔ",
@@ -521,7 +521,7 @@
               "marathon_match_name": "ⵜⵉⵎⵍⵉⵍⵉⵜ ⵏ ⵓⵎⴰⵔⴰⵟⵓⵏ",
               "marathon_match_description": "ⵓⵔⴰⵔ ⵜⵉⵎⵍⵉⵍⵉⵜ ⴰⵔⴰ ⵢⴻⵇⵇⵉⵎⴻⵏ ⵓⴳⴰⵔ ⵏ 5 ⵏ ⵜⴻⴷⵇⵉⵇⵉⵏ.",
               "ft_pong_legend_name": "ⴰⵏⴻⴳⴳⴰⵔⵓ ⵏ FT-PONG",
-              "ft_pong_legend_description": "ⵔⴻⴱⵃ 50 ⵏ ⵜⴻⵎⵍⵉⵍⵉⵢⵉⵏ."        
+              "ft_pong_legend_description": "ⵔⴻⴱⵃ 50 ⵏ ⵜⴻⵎⵍⵉⵍⵉⵢⵉⵏ."
           }
       },
       "profileHeader": {
@@ -675,9 +675,7 @@
               "wins": "ⵉⵔⴻⴱⵃ",
               "loses": "ⵢⴻⵅⵚⴻⵔ"
           }
-
       }
   }
 
 }
-

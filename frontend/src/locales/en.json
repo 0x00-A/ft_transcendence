@@ -526,7 +526,7 @@
               "marathon_match_name": "Marathon Match",
               "marathon_match_description": "Play a match lasting more than 5 minutes.",
               "ft_pong_legend_name": "FT-PONG Legend",
-              "ft_pong_legend_description": "Win 50 matches."        
+              "ft_pong_legend_description": "Win 50 matches."
           }
       },
       "profileHeader": {
