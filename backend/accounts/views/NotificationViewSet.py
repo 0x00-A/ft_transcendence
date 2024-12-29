@@ -29,6 +29,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
             "message": translated_message,
             "created_at": notification.created_at.isoformat(),
             "user": notification.user.username,
+            "is_read": notification.is_read,
+            "state": notification.state
         }
 
     def list(self, request, *args, **kwargs):

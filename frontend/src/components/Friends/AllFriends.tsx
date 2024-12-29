@@ -70,8 +70,8 @@ const AllFriends: React.FC = () => {
       )
     : [];
 
-  const handleMessageClick = (friend: Friend) => {
-    navigate('/chat', { state: { selectedFriend: friend } });
+  const handleMessageClick = (username: string) => {
+    navigate('/chat', { state: { selectedFriend: username } });
   };
 
   const blockRequest = async (username: string) => {
@@ -130,7 +130,7 @@ const AllFriends: React.FC = () => {
               <div className={css.actions}>
                 <button
                   className={`${css.actionButton} ${css.messageButton}`}
-                  onClick={() => handleMessageClick(friend)}
+                  onClick={() => handleMessageClick(friend.username)}
                   title={t('allFriends.pupMessage')}
                 >
                   <MessageSquareText size={20} />

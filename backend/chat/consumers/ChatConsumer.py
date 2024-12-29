@@ -170,6 +170,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         notification = Notification.objects.create(
             user=receiver_user,
             link=f"/chat",
+            state=receiver_user.username,
             title=translated_title,
             message=translated_message,
         )
