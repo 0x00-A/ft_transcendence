@@ -59,8 +59,8 @@ const OnlineFriends: React.FC = () => {
     return () => clearInterval(timer);
   }, [isInviteDisabled, timeLeft]);
 
-  const handleMessageClick = (friend: Friend) => {
-    navigate('/chat', { state: { selectedFriend: friend } });
+  const handleMessageClick = (username: string) => {
+    navigate('/chat', { state: { selectedFriend: username } });
   };
 
 
@@ -87,7 +87,7 @@ const OnlineFriends: React.FC = () => {
               <div className={css.actions}>
               <button
                   className={`${css.actionButton} ${css.messageButton}`}
-                  onClick={() => handleMessageClick(friend)}
+                  onClick={() => handleMessageClick(friend.username)}
                   title={t('allFriends.pupMessage')}
                 >
                   <MessageSquareText size={20} />

@@ -104,7 +104,6 @@
 .icon {
   display: none;
   cursor: pointer;
-  margin-left: 15px;
   font-size: 20px;
   color: var(--icons-color);
   transform: scale(0.5);

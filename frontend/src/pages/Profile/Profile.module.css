@@ -7,7 +7,7 @@
     height:  calc(100vh - var(--header-height) - var(--footer-height));
     min-height: 1024px;
     min-width: 900px;
-    max-width: 1240px;
+    max-width: 1500px;
     margin: 0 auto;
 }
 

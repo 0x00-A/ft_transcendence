@@ -32,8 +32,8 @@ const MoreMenu: React.FC<UsersProfileHeaderProps> = ({ userData }) => {
     setIsMenuOpen((prev) => !prev);
   };
 
-  const handleMessageClick = (friend: OtherUser) => {
-    navigate('/chat', { state: { selectedFriend: friend } });
+  const handleMessageClick = (username: string) => {
+    navigate('/chat', { state: { selectedFriend: username } });
     setIsMenuOpen(false);
   };
 
@@ -107,7 +107,7 @@ const MoreMenu: React.FC<UsersProfileHeaderProps> = ({ userData }) => {
 
       {isMenuOpen && (
         <div ref={menuRef} className={css.menu}>
-          <div className={css.menuItem} onClick={() => handleMessageClick(user)}>
+          <div className={css.menuItem} onClick={() => handleMessageClick(user.username)}>
             <MessageSquareMore color="#f8c35c" className={css.menuIcon} />
             <span>{t('Profile.profileHeader.buttons.messageBtn')}</span>
           </div>

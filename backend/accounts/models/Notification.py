@@ -7,6 +7,7 @@ class Notification(models.Model):
         User, related_name='notifications', on_delete=models.CASCADE)
     title = models.TextField()
     link = models.TextField(default='#')
+    state = models.TextField(default='')
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

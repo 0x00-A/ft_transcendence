@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +21,7 @@ const NotificationsDropdown = () => {
     notifications,
     deleteAllNotifications,
   } = useWebSocket();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -85,7 +86,7 @@ const NotificationsDropdown = () => {
   // ];
 
   return (
-    <DropdownMenu onOpenChange={handleClick}>
+    <DropdownMenu open={isOpen} onOpenChange={() => {handleClick(); setIsOpen((open)=> !open)}}>
       <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 rounded-full  focus:outline-none">
         <IoMdNotificationsOutline
           size={32}
@@ -118,9 +119,12 @@ const NotificationsDropdown = () => {
                   : ''
               }`}
               onClick={() => {
-                if (notification.link && notification.link !== '#') {
+                if (notification.link && notification.state) {
+                  navigate(notification.link, { state: { selectedFriend: notification.state } });
+                } else if (notification.link && notification.link !== '#') {
                   navigate(notification.link);
                 }
+                setIsOpen(false);
               }}
             >
               <div className="flex justify-between items-start">
