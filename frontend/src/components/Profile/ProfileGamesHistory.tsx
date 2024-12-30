@@ -33,7 +33,7 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
       t('Profile.gameHistory.fields.result'),
       t('Profile.gameHistory.fields.score'),
       t('Profile.gameHistory.fields.duration'),
-      t('Profile.gameHistory.fields.rematch')
+      t('Profile.gameHistory.fields.XP')
     ],
     [t]
   );
@@ -49,10 +49,13 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
   };
 
   const formatGameDuration = (rawTime: number) => {
-    if (rawTime < 1) {
-        return `${rawTime.toFixed(2)}s`;
+    if (rawTime < 0 || rawTime === null || rawTime === undefined || rawTime === 0) {
+        return '-';
+    }
+    else if (rawTime < 1) {
+        return `${rawTime?.toFixed(2)}s`;
     } else {
-        return `${rawTime.toFixed(2)}m`;
+        return `${rawTime?.toFixed(2)}m`;
     }
 }
 
@@ -108,7 +111,7 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
                 <span key={index} className={css.headerField}>{field}</span>
               ))}
             </div>
-            { playedGames?.length == 0 && <div className={css.noGames}>
+            { playedGames?.length === 0 && <div className={css.noGames}>
                 <span className={css.noHistoryTitle}>{t('Profile.gameHistory.noGames.message')}</span>
                 { !isOtherUser ?
                 <button className={css.playBtn} onClick={() => navigate('/play')}>
@@ -116,7 +119,7 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
                     <span>{t('Profile.gameHistory.noGames.playNow')}</span>
                 </button> : null }
             </div>}
-            <div className={css.tables}>
+            {playedGames?.length !== 0 && <div className={css.tables}>
               { playedGames!.length > 0 && playedGames?.map((game: LastGames) => (
                   <div key={game.id} className={css.tableRow}>
                       <div className={css.dateTimeGame}>
@@ -130,10 +133,11 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
                       <span className={css.historyField}>{game.my_score} - {game.opponent_score}</span>
                       {/* <span className={css.historyField}>One to One</span> */}
                       <span className={css.historyField}>{formatGameDuration(game.game_duration)}</span>
-                      <button className={css.inviteBtn}>{t('Profile.gameHistory.invite')}</button>
+                      <span className={css.score}>{game.xp_gained >= 0 ? '+ ' + game.xp_gained : '- ' + game.xp_gained}</span>
+                      {/* <button className={css.inviteBtn}>{t('Profile.gameHistory.invite')}</button> */}
                   </div>
               ))}
-            </div>
+            </div>}
           </div>}
     </div>
   )

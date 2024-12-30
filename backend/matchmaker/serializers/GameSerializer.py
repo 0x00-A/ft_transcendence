@@ -67,6 +67,6 @@ class ProfileGamesSerializer(serializers.ModelSerializer):
 
     def get_game_duration(self, obj):
         if not obj.end_time or not obj.start_time:
-            return None
+            return 0
         duration = obj.end_time - obj.start_time
         return duration.total_seconds() / 60

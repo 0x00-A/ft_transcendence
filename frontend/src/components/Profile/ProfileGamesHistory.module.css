@@ -86,7 +86,7 @@
 .tableHeader,
 .tableRow {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 0.5fr;
     align-items: center;
     padding: 10px;
     font-size: 1.3rem;
@@ -222,7 +222,6 @@
   .tables {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     width: 100%;
     height: 100%;
     overflow-y: auto;

@@ -52,7 +52,7 @@ def notify_players_on_match_creation(sender, instance, created, **kwargs):
         except Exception as e:
             translated_message2 = f"You are scheduled for the next round in Tournament {instance.tournament.name}!"
             translated_title2 = "Match Notification"
-        
+
         notification = Notification.objects.create(
             user=player1,
             title=translated_title1,
@@ -61,7 +61,7 @@ def notify_players_on_match_creation(sender, instance, created, **kwargs):
         notification.save()
         NotificationConsumer.send_notification_to_user(
             player1.id, notification)
-        
+
         notification = Notification.objects.create(
             user=player2,
             title=translated_title2,

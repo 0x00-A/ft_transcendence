@@ -4,7 +4,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from ..models import User, Message, Conversation
 from asgiref.sync import sync_to_async
 from django.db.models import Q
-from accounts.models import  Notification
+from accounts.models import Notification
 from accounts.consumers import NotificationConsumer
 
 
@@ -13,11 +13,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = self.scope["user"]
         if self.user.is_authenticated:
             self.user_group_name = f"user_{self.user.id}"
-            
+
             await self.update_open_chat_status(self.user.id, True)
             await self.channel_layer.group_add(self.user_group_name, self.channel_name)
             await self.accept()
-            
+
         else:
             await self.close()
 
@@ -32,9 +32,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=user_id)
         user.open_chat = status
         user.save()
-    
 
     async def receive(self, text_data):
+        print("Received data: ", text_data, "-----------------")
         data = json.loads(text_data)
         action = data.get("action")
 
@@ -84,7 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     conversation.user1_block_status = "blocked"
         else:
             if blocker_id == conversation.user1_id:
-                if conversation.user2_block_status == "blocker": 
+                if conversation.user2_block_status == "blocker":
                     conversation.user1_block_status = "blocked"
                 else:
                     conversation.user1_block_status = None
@@ -97,7 +97,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     conversation.user1_block_status = None
                     conversation.user2_block_status = None
         conversation.save()
-
 
     async def send_block_status_update(self, conversation_id, blocker_id, blocked_id):
         await self.channel_layer.group_send(
@@ -121,7 +120,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "block_status": "success"
             }
         )
-    
+
     async def block_status_update(self, event):
         await self.send(text_data=json.dumps({
             "type": "block_status_update",
@@ -136,6 +135,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=user_id)
         user.active_conversation = conversation_id
         user.save()
+
     @sync_to_async
     def dis_active_conversation(self, user_id, conversation_id):
         user = User.objects.get(id=user_id)
@@ -162,8 +162,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         target_language = receiver_user.profile.preferred_language or 'en'
 
         try:
-            translated_message = translate_text(f"{sender_user.username} sent you a message: {message}",target_language)
-            translated_title = translate_text("New Message",target_language)
+            translated_message = translate_text(
+                f"{sender_user.username} sent you a message: {message}", target_language)
+            translated_title = translate_text("New Message", target_language)
         except Exception as e:
             translated_message = f"{sender_user.username} sent you a message: {message}"
             translated_title = "New Message"
@@ -176,22 +177,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
             title=translated_title,
             message=translated_message,
         )
-        NotificationConsumer.send_notification_to_user(receiver_id, notification)
+        NotificationConsumer.send_notification_to_user(
+            receiver_id, notification)
         notification_data = {
             "event": "new_message",
             "from": self.user.username,
             "message": f"{self.user.username} sent you a message.",
         }
-        NotificationConsumer.send_notification_to_user(receiver_id, notification_data)
+        NotificationConsumer.send_notification_to_user(
+            receiver_id, notification_data)
 
     async def handle_send_message(self, data):
         message = data.get("message")
-        receiver_id = data.get("receiver_id") 
+        receiver_id = data.get("receiver_id")
         sender_id = self.user.id
 
         if not receiver_id or not message:
             return
-        
+
         message = message[:300]
 
         conversation = await self.get_or_create_conversation(sender_id, receiver_id)
@@ -232,7 +235,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def is_conversation_blocked(self, conversation, sender_id):
         conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
-        
+
         if sender_id == conversation.user1_id and conversation.user1_block_status == "blocker" or sender_id == conversation.user1_id and conversation.user1_block_status == "blocked":
             return True
         if sender_id == conversation.user2_id and conversation.user2_block_status == "blocker" or sender_id == conversation.user2_id and conversation.user2_block_status == "blocker":
@@ -245,7 +248,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = self.user.id
 
         if not receiver_id:
-            return 
+            return
 
         await self.channel_layer.group_send(
             f"user_{receiver_id}",
@@ -303,7 +306,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=message
         )
         conversation.last_message = message
-        is_active =  receiver.active_conversation == conversation.id
+        is_active = receiver.active_conversation == conversation.id
         if not is_active:
             if receiver == conversation.user1:
                 conversation.unread_messages_user1 += 1
@@ -311,7 +314,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 conversation.unread_messages_user2 += 1
         conversation.save()
         return conversation
-    
+
     @sync_to_async
     def mark_conversation_as_read(self, conversation_id, user):
         conversation = Conversation.objects.get(id=conversation_id)

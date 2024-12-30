@@ -500,7 +500,7 @@
               "result": "Result",
               "score": "Score",
               "duration": "Duration",
-              "rematch": "Rematch"
+              "XP": "XP"
           },
           "results": {
               "win": "Win",
