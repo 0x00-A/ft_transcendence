@@ -75,9 +75,10 @@ const Profile = () => {
   }, [mutation.isError]);
 
   if (isLoading) {
-    return <div className={css.profileContainer}>
-      <h1>Loading...</h1>
-    </div>
+    return
+    // return <div className={css.profileContainer}>
+    //   <h1>Loading...</h1>
+    // </div>
   }
 
   if (error) {

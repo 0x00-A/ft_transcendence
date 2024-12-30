@@ -31,11 +31,11 @@ const Leaderboard = () => {
   } = useGetData<LeaderBoard[]>(API_GET_LEADER_BOARD_URL);
 
   if (isLoading || error) {
-    return (
-      <div className={css.container}>
-        <h1>Loading...</h1>
-      </div>
-    );
+    // return (
+    //   <div className={css.container}>
+    //     <h1>Loading...</h1>
+    //   </div>
+    // );
   }
 
   return (

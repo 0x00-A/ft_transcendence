@@ -22,11 +22,14 @@ import {
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
-import Sidebar from './components/Sidebar/Sidebar';
-// const Sidebar = React.lazy(() => import('./components/Sidebar/Sidebar'));
+// import Sidebar from './components/Sidebar/Sidebar';
+// import Topbar from './components/Topbar/Topbar';
+// import Footer from './components/Footer';
+const Sidebar = React.lazy(() => import('./components/Sidebar/Sidebar'));
+const Topbar = React.lazy(() => import('./components/Topbar/Topbar'));
+const Footer = React.lazy(() => import('./components/Footer'));
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
-import Topbar from './components/Topbar/Topbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Suspense, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -38,9 +41,9 @@ import {
   useGameInvite,
 } from './contexts/GameInviteContext';
 import ConnectionStatus from './components/ConnectionStatus';
-import Footer from './components/Footer';
 import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
 import EditEmailVerification from './components/Profile/EditEmailVerification';
+import Spinner from './components/Spinner/Spinner';
 
 const PageNotFound = React.lazy(
   () => import('./pages/PageNotFound/PageNotFound')
@@ -163,7 +166,7 @@ function AppContent() {
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
-        <Footer />
+        {shouldShowSidebar && isLoggedIn && <Footer />}
       </div>
     </div>
   );

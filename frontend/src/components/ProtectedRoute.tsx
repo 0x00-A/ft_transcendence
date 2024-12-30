@@ -7,7 +7,7 @@ const ProtectedRoute = () => {
   const { isLoggedIn, isLoading } = useAuth();
 
   if (isLoading) {
-    return <PreLoader />;
+    // return <PreLoader />;
   }
   return isLoggedIn ? <Outlet /> : <Navigate to={'/auth'}/>;
 };
