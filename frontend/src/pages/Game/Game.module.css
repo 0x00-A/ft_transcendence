@@ -419,7 +419,7 @@
 /* Additional Media Query for Smaller Laptops */
 @media screen and (max-width: 1024px) {
   .container {
-    height: auto;
+    /* height: auto; */
     min-height: 500px;
   }
   .topContainer {

@@ -271,7 +271,7 @@ class Matchmaker:
         if player_id in cls.games_queue or player_id in cls.multi_games_queue:
             message = {
                 'event': 'error',
-                'message': 'Already in queue!'
+                'message': 'Already in queue!!!'
             }
             await cls.send_message_to_client(player_id, message)
             return True
@@ -285,7 +285,7 @@ class Matchmaker:
         ).aexists():
             message = {
                 'event': 'error',
-                'message': 'Already in a game!'
+                'message': 'Already in a game!..'
 
             }
             await cls.send_message_to_client(player_id, message)
