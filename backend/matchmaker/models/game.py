@@ -1,7 +1,9 @@
 from django.db import connection
 from django.utils import timezone
 from django.db import models
-from accounts.models import User, Profile, Badge
+from accounts.models import User, Profile, Badge, Achievement, UserAchievement
+# from accounts.consumers.NotificationConsumer import NotificationConsumer
+# from accounts.models import Notification
 
 # User = get_user_model()
 WIN_SCORE = 10
@@ -97,6 +99,8 @@ class Game(models.Model):
         self.save()
 
     def update_stats(self):
+        # from accounts.utils import translate_text
+
         # for player in [self.player1, self.player2]:
         #     # Initialize stats
         #     if 'wins' not in player.profile.stats:
@@ -176,8 +180,6 @@ class Game(models.Model):
         current_day = self.end_time.strftime('%a')
         duration = (self.end_time -
                     self.start_time).total_seconds() / 3600.0
-        print(
-            f'start: {self.start_time} - end: {self.end_time} - DURATION: {duration}')
 
         for player in [self.player1, self.player2]:
             stats = player.profile.stats.get('performanceData', [])
@@ -219,3 +221,53 @@ class Game(models.Model):
         #     print(f"----->player: {self.player2.username} - new_best_rank: {self.player2.profile.rank} - old_best_rank: {self.player2.profile.stats['best_rank']}")
         #     self.player2.profile.stats['best_rank'] = self.player2.profile.rank
         #     self.player2.profile.save()
+
+
+        achievement = Achievement.objects.get(condition__has_key="play_time")
+
+        p1_achievement, created = UserAchievement.objects.get_or_create(
+                user=self.player1, achievement=achievement)
+        p2_achievement, created = UserAchievement.objects.get_or_create(
+                user=self.player2, achievement=achievement)
+
+        if not p1_achievement.is_unlocked:
+            if duration * 3600  > achievement.condition["play_time"]:
+                p1_achievement.progress["play_time"] = p1_achievement.progress.get(
+                    "play_time", 0) + 300
+                p1_achievement.is_unlocked = True
+                p1_achievement.user.profile.score += achievement.reward_points
+
+                # target_language = self.player1.profile.preferred_language or 'en'
+                # try:
+                #     translated_message = translate_text(f"Achievement {achievement.name} unlocked" ,target_language)
+                #     translated_title = translate_text('Achievement unlocked',target_language)
+                # except Exception as e:
+                #     translated_message = f"Achievement {achievement.name} unlocked"
+                #     translated_title = "Achievement unlocked"
+                # notification = Notification.objects.create(
+                #     user=self.player1, title=translated_title , message=translated_message)
+                # notification.save()
+                # NotificationConsumer.send_notification_to_user(
+                #     self.player1.id, notification)
+                p1_achievement.save()
+
+        if not p2_achievement.is_unlocked:
+            if duration * 3600  > achievement.condition["play_time"]:
+                p2_achievement.progress["play_time"] = p2_achievement.progress.get(
+                    "play_time", 0) + duration * 3600
+                p2_achievement.is_unlocked = True
+                p2_achievement.user.profile.score += achievement.reward_points
+
+                # target_language = self.player2.profile.preferred_language or 'en'
+                # try:
+                #     translated_message = translate_text(f"Achievement {achievement.name} unlocked" ,target_language)
+                #     translated_title = translate_text('Achievement unlocked',target_language)
+                # except Exception as e:
+                #     translated_message = f"Achievement {achievement.name} unlocked"
+                #     translated_title = "Achievement unlocked"
+                # notification = Notification.objects.create(
+                #     user=self.player2, title=translated_title , message=translated_message)
+                # notification.save()
+                # NotificationConsumer.send_notification_to_user(
+                #     self.player2.id, notification)
+                p2_achievement.save()

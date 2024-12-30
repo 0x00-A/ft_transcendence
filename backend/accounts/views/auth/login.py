@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 
 from accounts.models import User, PasswordReset
 from accounts.serializers import LoginSerializer, ResetPasswordSerializer
@@ -39,6 +39,7 @@ class LoginView(CreateAPIView):
                                  "message": "2FA is required. Please enter your OTP code.",
                                  "username": user.username}, status=status.HTTP_200_OK)
             token = get_token_for_user(user)
+            login(request, user)
             if token:
                 response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)
                 response.set_cookie(

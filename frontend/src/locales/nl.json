@@ -344,7 +344,7 @@
       "noMutualFriends": "Geen Gemeenschappelijke Vrienden",
       "playerLonely": "Deze Speler is Eenzaam",
       "Level": "Niveau:"
-    },    
+    },
     "informations": "Informatie",
     "security": "Beveiliging",
     "errors": {
@@ -500,7 +500,7 @@
         "result": "Resultaat",
         "score": "Score",
         "duration": "Duur",
-        "rematch": "Revanche"
+        "XP": "XP"
       },
       "results": {
         "win": "Gewonnen",
@@ -527,7 +527,7 @@
         "marathon_match_description": "Speel een wedstrijd die langer dan 5 minuten duurt.",
         "ft_pong_legend_name": "FT-PONG Legende",
         "ft_pong_legend_description": "Win 50 wedstrijden."
-      }      
+      }
     },
     "profileHeader": {
       "EditProfileButton": "Profiel bewerken",
@@ -555,7 +555,7 @@
         "messageBtn": "Bericht",
         "blockBtn": "Blok",
         "challengeBtn": "Uitdaging"
-      }      
+      }
     },
     "setPassword": {
       "title": "Wachtwoord instellen",

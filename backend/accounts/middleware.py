@@ -6,7 +6,6 @@ class RefreshTokenMiddleware(MiddlewareMixin):
             new_access_token = request.session.get('new_access_token')
             del request.session['new_access_token']
             request.session.save()
-            print('api ==> RefreshTokenMiddleware: Setting new access token')
             response.set_cookie(
                 'access_token',
                 new_access_token,
