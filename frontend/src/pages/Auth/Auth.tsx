@@ -16,7 +16,8 @@ const Auth = () => {
     const {isLoggedIn, isLoading} = useAuth();
 
     if (isLoading) {
-      return <p>Loadding...</p>;
+      return
+      // return <p>Loadding...</p>;
     }
     if (isLoggedIn) {
       return <Navigate to={'/'}/>

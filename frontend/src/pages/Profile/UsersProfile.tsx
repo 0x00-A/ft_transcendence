@@ -90,7 +90,7 @@ const UsersProfile = () => {
 
   if (isLoading) return (
     <div className={css.profileContainer}>
-      <PreLoader />
+      {/* <PreLoader /> */}
     </div>
 
   )
