@@ -17,6 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.update_open_chat_status(self.user.id, True)
             await self.channel_layer.group_add(self.user_group_name, self.channel_name)
             await self.accept()
+            
         else:
             await self.close()
 
@@ -167,10 +168,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             translated_message = f"{sender_user.username} sent you a message: {message}"
             translated_title = "New Message"
 
+        print("receiver message" + self.user.username)
         notification = Notification.objects.create(
             user=receiver_user,
             link=f"/chat",
-            state=receiver_user.username,
+            state=self.user.username,
             title=translated_title,
             message=translated_message,
         )
@@ -231,9 +233,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def is_conversation_blocked(self, conversation, sender_id):
         conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
         
-        if sender_id == conversation.user1_id and conversation.user1_block_status == "blocked":
+        if sender_id == conversation.user1_id and conversation.user1_block_status == "blocker" or sender_id == conversation.user1_id and conversation.user1_block_status == "blocked":
             return True
-        if sender_id == conversation.user2_id and conversation.user2_block_status == "blocked":
+        if sender_id == conversation.user2_id and conversation.user2_block_status == "blocker" or sender_id == conversation.user2_id and conversation.user2_block_status == "blocker":
             return True
         return False
 
