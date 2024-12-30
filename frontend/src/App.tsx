@@ -20,7 +20,6 @@ import {
 // import VerifyEmail from './pages/Auth/VerifyEmail';
 // import ResetPassword from './pages/Auth/ResetPassword';
 
-
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -34,13 +33,18 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { UserProvider } from './contexts/UserContext';
-import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
+import {
+  GameInviteProvider,
+  useGameInvite,
+} from './contexts/GameInviteContext';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
 import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
 import EditEmailVerification from './components/Profile/EditEmailVerification';
 
-const PageNotFound = React.lazy(() => import('./pages/PageNotFound/PageNotFound'));
+const PageNotFound = React.lazy(
+  () => import('./pages/PageNotFound/PageNotFound')
+);
 const Auth = React.lazy(() => import('./pages/Auth/Auth'));
 const Profile = React.lazy(() => import('./pages/Profile/Profile'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -53,8 +57,6 @@ const UsersProfile = React.lazy(() => import('./pages/Profile/UsersProfile'));
 const VerifyEmail = React.lazy(() => import('./pages/Auth/VerifyEmail'));
 const ResetPassword = React.lazy(() => import('./pages/Auth/ResetPassword'));
 
-const Loader = () => <div>Loading...</div>;
-
 function App() {
   return (
     <Router>
@@ -64,26 +66,26 @@ function App() {
             <GameInviteProvider>
               <WebSocketProvider>
                 <SelectedConversationProvider>
-                <ConnectionStatus />
-                <ToastContainer
-                  position="top-center"
-                  autoClose={2000}
-                  hideProgressBar={true}
-                  // newestOnTop={true}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  // draggable
-                  // pauseOnHover
-                  // theme="colored"
-                  toastClassName='toastStyle'
+                  <ConnectionStatus />
+                  <ToastContainer
+                    position="top-center"
+                    autoClose={2000}
+                    hideProgressBar={true}
+                    // newestOnTop={true}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    // draggable
+                    // pauseOnHover
+                    // theme="colored"
+                    toastClassName="toastStyle"
                   />
-                <Suspense fallback={<PreLoader />}>
-                  <AppContent />
-                </Suspense>
+                  <Suspense fallback={<PreLoader />}>
+                    <AppContent />
+                  </Suspense>
                 </SelectedConversationProvider>
               </WebSocketProvider>
-            </ GameInviteProvider>
+            </GameInviteProvider>
           </UserProvider>
         </AuthProvider>
       </LoadingBarProvider>
@@ -92,28 +94,27 @@ function App() {
 }
 
 function AppContent() {
-
   const showSidebarRoutes = [
-  '/',
-  '/test',
-  '/play',
-  '/chat',
-  '/friends',
-  '/search',
-  '/store',
-  '/leaderboard',
-  // '/auth/2factor',
-  '/profile',
-  /^\/profile\/[^/]+\/?$/,
-  '/auth/email-verification',
-  '/auth/reset-password',
+    '/',
+    '/test',
+    '/play',
+    '/chat',
+    '/friends',
+    '/search',
+    '/store',
+    '/leaderboard',
+    // '/auth/2factor',
+    '/profile',
+    /^\/profile\/[^/]+\/?$/,
+    '/auth/email-verification',
+    '/auth/reset-password',
   ];
   const location = useLocation();
   const shouldShowSidebar = showSidebarRoutes.some((route) => {
-  return typeof route === 'string'
-    ? route === location.pathname || route + '/' === location.pathname
-    : route.test(location.pathname);
-});
+    return typeof route === 'string'
+      ? route === location.pathname || route + '/' === location.pathname
+      : route.test(location.pathname);
+  });
   const { isLoggedIn } = useAuth();
   // const loading = usePreLoader();
 
@@ -132,29 +133,34 @@ function AppContent() {
   return (
     <div className="app-container ">
       {/* <PreLoader /> */}
-      {shouldShowSidebar && isLoggedIn && (
-        <Sidebar />
-      )}
-      <div className={`main-content ${shouldShowSidebar? '' : 'w-full'}`}>
-        {shouldShowSidebar && isLoggedIn && (
-          <Topbar />
-        )}
+      {shouldShowSidebar && isLoggedIn && <Sidebar />}
+      <div className={`main-content ${shouldShowSidebar ? '' : 'w-full'}`}>
+        {shouldShowSidebar && isLoggedIn && <Topbar />}
         <Routes>
-            <Route path="/auth" element={<Auth />}/>
-            <Route path="/oauth2/callback" element={<Oauth2Callback />} />
-            <Route path='/auth/email-verification/:token' element={<VerifyEmail />} />
-            <Route path='/auth/reset-password/:token' element={<ResetPassword />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/oauth2/callback" element={<Oauth2Callback />} />
+          <Route
+            path="/auth/email-verification/:token"
+            element={<VerifyEmail />}
+          />
+          <Route
+            path="/auth/reset-password/:token"
+            element={<ResetPassword />}
+          />
+          <Route path="*" element={<PageNotFound />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/play" element={<Game />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:username" element={<UsersProfile />} />
+            <Route
+              path="/profile/update-email/:token"
+              element={<EditEmailVerification />}
+            />
             <Route path="*" element={<PageNotFound />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/play" element={<Game />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/friends" element={<Friends />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/:username" element={<UsersProfile />} />
-              <Route path="/profile/update-email/:token" element={<EditEmailVerification />} />
-              <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
         <Footer />

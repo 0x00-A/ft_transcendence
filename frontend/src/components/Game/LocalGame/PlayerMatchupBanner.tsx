@@ -1,10 +1,7 @@
-import { Swords, Shield } from 'lucide-react';
-import { useGetData } from '@/api/apiHooks';
-import { User } from '@/types/apiTypes';
+import { Swords } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { GameState } from '@/types/types';
 
-const MatchTimer = ({paused}: {paused: boolean}) => {
+const MatchTimer = ({ paused }: { paused: boolean }) => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
@@ -25,15 +22,21 @@ const MatchTimer = ({paused}: {paused: boolean}) => {
   return <div className="font-mono text-2xl">{formatTime(seconds)}</div>;
 };
 
-const PlayerMatchupBanner = ({isOnePlayerMode, paused}: {isOnePlayerMode: boolean, paused: boolean}) => {
+const PlayerMatchupBanner = ({
+  isOnePlayerMode,
+  paused,
+}: {
+  isOnePlayerMode: boolean;
+  paused: boolean;
+}) => {
   const players = {
     player1: {
       username: isOnePlayerMode ? 'You' : 'Player 1',
-      avatar: 'https://picsum.photos/200',
+      avatar: '/assets/frieren.png',
     },
     player2: {
       username: isOnePlayerMode ? 'Computer' : 'Player 2',
-      avatar: 'https://picsum.photos/200',
+      avatar: '/assets/fern.png',
     },
   };
 

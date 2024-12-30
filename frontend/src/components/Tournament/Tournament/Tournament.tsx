@@ -19,7 +19,7 @@ const pW = 20;
 const pH = 80;
 
 function IconLabelButtons({ onClick }: { onClick: () => void }) {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   return (
     <button onClick={onClick} className={`${css.playButton}`}>

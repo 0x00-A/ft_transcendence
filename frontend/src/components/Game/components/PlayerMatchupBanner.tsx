@@ -1,4 +1,4 @@
-import { Swords, Shield } from 'lucide-react';
+import { Swords } from 'lucide-react';
 import { useGetData } from '@/api/apiHooks';
 import { User } from '@/types/apiTypes';
 import { useEffect, useState } from 'react';

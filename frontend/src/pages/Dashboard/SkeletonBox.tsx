@@ -1,15 +1,15 @@
-import React from 'react';
-
 const SkeletonBox = ({
   width = '',
   height = '',
   title = true,
   rows = 3,
   header = true,
-  className = ''
+  className = '',
 }) => {
   return (
-    <div className={`bg-slate-800 rounded-xl p-6 ${width} ${height} ${className}`}>
+    <div
+      className={`bg-slate-800 rounded-xl p-6 ${width} ${height} ${className}`}
+    >
       {/* Header with title and action button */}
       {header && (
         <div className="w-60 flex justify-between items-center mb-4">

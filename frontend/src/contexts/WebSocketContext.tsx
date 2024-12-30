@@ -14,7 +14,10 @@ import apiClient from '@/api/apiClient';
 import { useAuth } from './AuthContext';
 import { useUser } from '@/contexts/UserContext';
 import FriendRequestCard from '@/components/Friends/FriendRequestCard';
-import { apiAcceptFriendRequest, apiRejectFriendRequest } from '@/api/friendApi';
+import {
+  apiAcceptFriendRequest,
+  apiRejectFriendRequest,
+} from '@/api/friendApi';
 import { useTranslation } from 'react-i18next';
 // import { WebSocketContextType, Notification } from './types';
 
@@ -58,25 +61,19 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const ws = useRef<WebSocket | null>(null);
 
   const { isLoggedIn } = useAuth();
-  const {user} = useUser()
   const { t } = useTranslation();
 
-
-
-
-  // Fetch notifications from the API
   const fetchNotifications = async () => {
     try {
-      const { data } = await apiClient.get("/notifications/");
+      const { data } = await apiClient.get('/notifications/');
       setNotifications(data);
-      console.log("notification data: ", data)
+      console.log('notification data: ', data);
       setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      console.error('Error fetching notifications:', error);
     }
   };
 
-  // Mark a notification as read
   const markAsRead = async (notificationId: number) => {
     try {
       await apiClient.patch(`/notifications/${notificationId}/mark-read/`);
@@ -85,20 +82,17 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       setUnreadCount((prev) => prev - 1);
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      console.error('Error marking notification as read:', error);
     }
   };
 
-  // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      await apiClient.patch("/notifications/mark-all-read/");
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, is_read: true }))
-      );
+      await apiClient.patch('/notifications/mark-all-read/');
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch (error) {
-      console.error("Error marking all notifications as read:", error);
+      console.error('Error marking all notifications as read:', error);
     }
   };
 
@@ -108,31 +102,31 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       setNotifications([]);
       setUnreadCount(0);
     } catch (error) {
-      console.error('Error deleting all notifications:', error)
+      console.error('Error deleting all notifications:', error);
     }
-  }
+  };
 
-  const {acceptInvite} = useGameInvite()
+  const { acceptInvite } = useGameInvite();
 
-const showFriendRequestToast = (from: string) => {
-  toast(
-    <FriendRequestCard
-      from={from}
-      onAccept={() => handleAcceptRequest(from)}
-      onReject={() => handleRejectRequest(from)}
-    />,
-    {
-      toastId: from,
-      autoClose: 10000,
-      closeOnClick: false,
-      closeButton: true,
-      style: {
-        padding: '0',
-        margin: '0',
-      },
-    }
-  );
-};
+  const showFriendRequestToast = (from: string) => {
+    toast(
+      <FriendRequestCard
+        from={from}
+        onAccept={() => handleAcceptRequest(from)}
+        onReject={() => handleRejectRequest(from)}
+      />,
+      {
+        toastId: from,
+        autoClose: 10000,
+        closeOnClick: false,
+        closeButton: true,
+        style: {
+          padding: '0',
+          margin: '0',
+        },
+      }
+    );
+  };
 
   const handleAcceptRequest = async (from: string) => {
     try {
@@ -142,16 +136,15 @@ const showFriendRequestToast = (from: string) => {
       toast.error(t('errorsFriends.request'));
     }
   };
-  
+
   const handleRejectRequest = async (from: string) => {
     try {
-      await apiRejectFriendRequest(from)
+      await apiRejectFriendRequest(from);
       toast.dismiss(from);
     } catch (error) {
       toast.error(t('errorsFriends.reject'));
     }
   };
-
 
   const showGameInviteToast = (from: string) => {
     toast(
@@ -193,64 +186,54 @@ const showFriendRequestToast = (from: string) => {
 
   // console.log(user);
   useEffect(() => {
-      if (!isLoggedIn)
-        return;
-      ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
+    if (!isLoggedIn) return;
+    ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
 
-      ws.current.onopen = () => {
-        console.log('Notification WebSocket connected');
-      };
+    ws.current.onopen = () => {
+      console.log('Notification WebSocket connected');
+    };
 
-      ws.current.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+    ws.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
 
-        console.log(data);
+      console.log(data);
 
-        if (data.event === 'friend_request_accepted') {
-          toast.success(`${data.from} ${t('toast.requestAccepted')}`);
-        }
-        if (data.event === 'new_message') {
-          toast(`${data.from} ${t('toast.newMessage')}`);
-        }
-        if (
-          data.event === 'friend_request' ||
-          data.event === 'status_update'
-        ) {
-          showFriendRequestToast(data.from);
-        }
-        if (
-          data.event === 'notification'
-        ) {
-          console.log("dataNotification: ", data)
-          handleIncomingNotification(data.data);
-        }
+      if (data.event === 'friend_request_accepted') {
+        toast.success(`${data.from} ${t('toast.requestAccepted')}`);
+      }
+      if (data.event === 'new_message') {
+        toast(`${data.from} ${t('toast.newMessage')}`);
+      }
+      if (data.event === 'friend_request' || data.event === 'status_update') {
+        showFriendRequestToast(data.from);
+      }
+      if (data.event === 'notification') {
+        console.log('dataNotification: ', data);
+        handleIncomingNotification(data.data);
+      }
 
-        if (data.event === 'game_invite') {
-          // toast.info(data.message)
-          showGameInviteToast(data.from);
-        }
-        if (data.event === 'error') {
-          toast.error(data.message);
-        }
-        if (data.event === 'invite_reject') {
-          toast.info(t(`${data.message}`));
-        }
-        if (data.event === 'game_address') {
-          toast.info(t(`${data.message}`));
-          acceptInvite(data.game_address, data.p1_id, data.p2_id);
-        }
-      };
+      if (data.event === 'game_invite') {
+        // toast.info(data.message)
+        showGameInviteToast(data.from);
+      }
+      if (data.event === 'error') {
+        toast.error(data.message);
+      }
+      if (data.event === 'invite_reject') {
+        toast.info(t(`${data.message}`));
+      }
+      if (data.event === 'game_address') {
+        toast.info(t(`${data.message}`));
+        acceptInvite(data.game_address, data.p1_id, data.p2_id);
+      }
+    };
 
-      ws.current.onclose = () => {
-        // console.log('Notification WebSocket disconnected');
-        // Reconnect logic
-      };
+    ws.current.onclose = () => {};
 
-      return () => {
-        ws.current?.close();
-      };
+    return () => {
+      ws.current?.close();
+    };
   }, [isLoggedIn]);
-
 
   const handleIncomingNotification = (data: Notification) => {
     // const newNotification: Notification = {
@@ -272,15 +255,17 @@ const showFriendRequestToast = (from: string) => {
   };
 
   return (
-    <WebSocketContext.Provider value={{
-      notifications,
-      sendMessage,
-      fetchNotifications,
-      markAllAsRead,
-      markAsRead,
-      deleteAllNotifications,
-      unreadCount,
-      }}>
+    <WebSocketContext.Provider
+      value={{
+        notifications,
+        sendMessage,
+        fetchNotifications,
+        markAllAsRead,
+        markAsRead,
+        deleteAllNotifications,
+        unreadCount,
+      }}
+    >
       {children}
     </WebSocketContext.Provider>
   );

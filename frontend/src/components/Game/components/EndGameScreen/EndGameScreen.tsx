@@ -16,7 +16,7 @@ const EndGameScreen = ({
   handleMainMenu: () => void;
   isMatchTournament?: boolean;
   isLocalGame?: boolean;
-  isOnePlayerMode?: boalean;
+  isOnePlayerMode?: boolean;
 }) => {
   const { t } = useTranslation();
 
