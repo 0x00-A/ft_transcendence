@@ -13,7 +13,6 @@ import { FaPause, FaPlay } from 'react-icons/fa';
 import ReturnBack from '../../Game/components/ReturnBack/ReturnBack';
 import { useTranslation } from 'react-i18next';
 
-
 const initialAngle = (Math.random() * Math.PI) / 2 - Math.PI / 4;
 const ballRaduis = 8;
 const pW = 20;
@@ -108,12 +107,9 @@ const Pong: React.FC<GameProps> = ({
   const ballRef = useRef<Ball | null>(null);
   const paddle1Ref = useRef<Paddle | null>(null);
   const paddle2Ref = useRef<Paddle | null>(null);
-  const hitWallSound = useRef(
-    new Audio('https://dl.sndup.net/ckxyx/wall-hit-1_[cut_0sec]%20(1).mp3')
-  );
-  const paddleHitSound = useRef(
-    new Audio('https://dl.sndup.net/7vg3z/paddle-hit-1_[cut_0sec].mp3')
-  );
+
+  const hitWallSound = useRef(new Audio('/sounds/wall-hit.mp3'));
+  const paddleHitSound = useRef(new Audio('/sounds/paddle-hit.mp3'));
 
   useEffect(() => {
     ballRef.current = new Ball(
@@ -168,14 +164,6 @@ const Pong: React.FC<GameProps> = ({
     };
 
     const updateScore = (player: number) => {
-      // left and right collision
-      // ball.dx *= -1;
-      // player === 1 ? setScore1((s) => s + 1) : setScore2((s) => s + 1);
-      // if (score1 + 1 >= winningScore || score2 + 1 >= winningScore) {
-      //   setIsGameOver(true);
-      //   // isPlayer1 ? setIsWinner(true) : setIsWinner(false);
-      //   updateWinner(roundIndex, matchIndex, player === 1 ? 1 : 2);
-      // }
       if (player === 1) {
         setScore1((prevScore) => prevScore + 1);
         if (score1 + 1 >= winningScore) {
@@ -370,9 +358,15 @@ const Pong: React.FC<GameProps> = ({
         <canvas width="650" height="480" id={css.gameCanvas} ref={canvasRef} />
       </div>
       {gameStarted && (
-      <button className={css.pauseButton} onClick={togglePause}>{paused ? <FaPlay color='black' /> : <FaPause color='black' />}</button>
+        <button className={css.pauseButton} onClick={togglePause}>
+          {paused ? <FaPlay color="black" /> : <FaPause color="black" />}
+        </button>
       )}
-      {gameStarted && paused && <div className={css.pauseDiv}>{t('game.localTournament.pong.paused')}</div>}
+      {gameStarted && paused && (
+        <div className={css.pauseDiv}>
+          {t('game.localTournament.pong.paused')}
+        </div>
+      )}
     </div>
   );
 };
@@ -393,7 +387,7 @@ type Rounds = {
   [key: number]: Match[];
 };
 
-const Tournament = ({onReturn}: {onReturn: ()=>void}) => {
+const Tournament = ({ onReturn }: { onReturn: () => void }) => {
   const [players, setPlayers] = useState<string[]>([]);
   const [activeMatch, setActiveMatch] = useState(1);
   const [showForm, setShowForm] = useState(true);
