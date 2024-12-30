@@ -3,7 +3,6 @@ from rest_framework import serializers
 from accounts.models import User
 
 
-
 class LoginSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(write_only=True, required=True)

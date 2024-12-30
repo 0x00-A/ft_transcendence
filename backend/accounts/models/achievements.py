@@ -22,6 +22,9 @@ class Achievement(models.Model):
     def is_unlocked(self):
         return self.progress_percentage >= 100
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class UserAchievement(models.Model):
     user = models.ForeignKey(
@@ -30,3 +33,6 @@ class UserAchievement(models.Model):
     unlocked_at = models.DateTimeField(auto_now_add=True)
     progress = models.JSONField(default=dict)  # e.g., {"games_won": 7}
     is_unlocked = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.achievement.name}-{self.user.username}"

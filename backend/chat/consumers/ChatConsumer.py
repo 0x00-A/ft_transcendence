@@ -13,7 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = self.scope["user"]
         if self.user.is_authenticated:
             self.user_group_name = f"user_{self.user.id}"
-            
+
             await self.update_open_chat_status(self.user.id, True)
             await self.channel_layer.group_add(self.user_group_name, self.channel_name)
             await self.accept()
@@ -31,9 +31,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=user_id)
         user.open_chat = status
         user.save()
-    
+
 
     async def receive(self, text_data):
+        print("Received data: ", text_data, "-----------------")
         data = json.loads(text_data)
         action = data.get("action")
 
@@ -83,7 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     conversation.user1_block_status = "blocked"
         else:
             if blocker_id == conversation.user1_id:
-                if conversation.user2_block_status == "blocker": 
+                if conversation.user2_block_status == "blocker":
                     conversation.user1_block_status = "blocked"
                 else:
                     conversation.user1_block_status = None
@@ -120,7 +121,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "block_status": "success"
             }
         )
-    
+
     async def block_status_update(self, event):
         await self.send(text_data=json.dumps({
             "type": "block_status_update",
@@ -184,12 +185,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def handle_send_message(self, data):
         message = data.get("message")
-        receiver_id = data.get("receiver_id") 
+        receiver_id = data.get("receiver_id")
         sender_id = self.user.id
 
         if not receiver_id or not message:
             return
-        
+
         message = message[:300]
 
         conversation = await self.get_or_create_conversation(sender_id, receiver_id)
@@ -230,7 +231,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def is_conversation_blocked(self, conversation, sender_id):
         conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
-        
+
         if sender_id == conversation.user1_id and conversation.user1_block_status == "blocked":
             return True
         if sender_id == conversation.user2_id and conversation.user2_block_status == "blocked":
@@ -243,7 +244,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = self.user.id
 
         if not receiver_id:
-            return 
+            return
 
         await self.channel_layer.group_send(
             f"user_{receiver_id}",
@@ -309,7 +310,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 conversation.unread_messages_user2 += 1
         conversation.save()
         return conversation
-    
+
     @sync_to_async
     def mark_conversation_as_read(self, conversation_id, user):
         conversation = Conversation.objects.get(id=conversation_id)

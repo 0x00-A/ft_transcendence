@@ -5,6 +5,8 @@ from django.contrib.auth.signals import user_logged_out
 import logging
 import os
 from django.conf import settings
+from datetime import timedelta
+from django.utils.timezone import now
 
 from django.dispatch import receiver
 from accounts.models import User, Achievement, UserAchievement, Notification
@@ -51,6 +53,24 @@ def log_profile_changes(sender, instance, **kwargs):
         # if old_profile.played_games != instance.played_games:
         #     print(f"-------------Played games {old_profile.user.username} changed from {old_profile.played_games} to {instance.played_games}-------------")
 
+
+
+@receiver(post_save, sender=UserAchievement)
+def achievement_unlocked(sender, instance, **kwargs):
+
+    if instance.is_unlocked:
+        target_language = instance.user.profile.preferred_language or 'en'
+        try:
+            translated_message = translate_text(f"Achievement {instance.achievement.name} unlocked" ,target_language)
+            translated_title = translate_text('Achievement unlocked',target_language)
+        except Exception as e:
+            translated_message = f"Achievement {instance.achievement.name} unlocked"
+            translated_title = "Achievement unlocked"
+        notification = Notification.objects.create(
+            user=instance.user, title=translated_title , message=translated_message)
+        notification.save()
+        NotificationConsumer.send_notification_to_user(
+            instance.user.id, notification)
 
 
 @receiver(post_save, sender=User)
@@ -148,18 +168,18 @@ def unlock_achievements_on_game(sender, instance, **kwargs):
                 print("--------------------+ ", achievement.reward_points, ' points to ', user.username, ' +-------------------')
                 user_achievement.user.profile.score += achievement.reward_points
 
-                target_language = user.profile.preferred_language or 'en'
-                try:
-                    translated_message = translate_text(f"Achievement {achievement.name} unlocked" ,target_language)
-                    translated_title = translate_text('Achievement unlocked',target_language)
-                except Exception as e:
-                    translated_message = f"Achievement {achievement.name} unlocked"
-                    translated_title = "Achievement unlocked"
-                notification = Notification.objects.create(
-                    user=user, title=translated_title , message=translated_message)
-                notification.save()
-                NotificationConsumer.send_notification_to_user(
-                    user.id, notification)
+                # target_language = user.profile.preferred_language or 'en'
+                # try:
+                #     translated_message = translate_text(f"Achievement {achievement.name} unlocked" ,target_language)
+                #     translated_title = translate_text('Achievement unlocked',target_language)
+                # except Exception as e:
+                #     translated_message = f"Achievement {achievement.name} unlocked"
+                #     translated_title = "Achievement unlocked"
+                # notification = Notification.objects.create(
+                #     user=user, title=translated_title , message=translated_message)
+                # notification.save()
+                # NotificationConsumer.send_notification_to_user(
+                #     user.id, notification)
             user_achievement.save()
 
 
@@ -182,41 +202,37 @@ logger = logging.getLogger('django')
 
 @receiver(user_logged_in)
 def track_login_streak(sender, request, user, **kwargs):
+    today = now().date()
+    if user.last_login == today:
+        return
 
-    target_language = user.profile.preferred_language or 'en'
-    # target_language = receiver.preferred_language
-    try:
-        translated_message = translate_text(f"Hello, {user.username}! Welcome back." ,target_language)
-        translated_title = translate_text('Welcome',target_language)
-    except Exception as e:
-        translated_message = f"Hello, {user.username}! Welcome back."
-        translated_title = "Welcome"
-    notification = Notification.objects.create(
-        user=user, title=translated_title , message=translated_message)
-    notification.save()
-    NotificationConsumer.send_notification_to_user(
-        user.id, notification)
-    # profile, created = UserProfile.objects.get_or_create(user=user)
+    user.last_login = today
+    user.save()
 
-    # today = now().date()
-    # if profile.last_login_date == today:  # User already logged in today
-    #     return
+    achievement = Achievement.objects.get(condition__has_key="logins")
 
-    # # Consecutive day login
-    # if profile.last_login_date == today - timedelta(days=1):
-    #     profile.login_streak += 1
-    # else:  # Break in streak
-    #     profile.login_streak = 1
+    user_achievement, created = UserAchievement.objects.get_or_create(
+            user=user, achievement=achievement)
 
-    # profile.last_login_date = today
-    # profile.save()
-
-    # # Check if the user qualifies for the achievement
-    # if profile.login_streak == 7:
-    #     # Award the achievement if not already awarded
-    #     if not Achievement.objects.filter(user=user, name="Persistent Player").exists():
-    #         Achievement.objects.create(
-    #             user=user,
-    #             name="Persistent Player",
-    #             description="Log in 7 days in a row!"
-    #         )
+    if not user_achievement.is_unlocked:
+        if user.last_login == today - timedelta(days=1):
+            user_achievement.progress["logins"] = user_achievement.progress.get(
+                "logins", 0) + 1
+        else:
+            user_achievement.progress["logins"] = 1
+        if user_achievement.progress["logins"] >= achievement.condition["logins"]:
+            user_achievement.is_unlocked = True
+            user_achievement.user.profile.score += achievement.reward_points
+            # target_language = user.profile.preferred_language or 'en'
+            # try:
+            #     translated_message = translate_text(f"Achievement {achievement.name} unlocked" ,target_language)
+            #     translated_title = translate_text('Achievement unlocked',target_language)
+            # except Exception as e:
+            #     translated_message = f"Achievement {achievement.name} unlocked"
+            #     translated_title = "Achievement unlocked"
+            # notification = Notification.objects.create(
+            #     user=user, title=translated_title , message=translated_message)
+            # notification.save()
+            # NotificationConsumer.send_notification_to_user(
+            #     user.id, notification)
+        user_achievement.save()

@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
 
             {"name": "Marathon Match", "description": "Play a match lasting more than 5 minutes.", "reward_points": 15,
-                "image": "/icons/marathon_match.png", "threshold": 300, "condition_name": "play_time", "name_trans": "marathon_match", "condition": {"play_time": 300}},
+                "image": "/icons/marathon_match.png", "threshold": 300, "condition_name": "play_time", "name_trans": "marathon_match", "condition": {"play_time": 60}},
 
 
             {"name": "FT-PONG Legend", "description": "Win 50 matches", "reward_points": 50,
