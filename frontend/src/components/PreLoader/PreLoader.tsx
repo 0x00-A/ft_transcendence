@@ -27,7 +27,7 @@ const PreLoader = () => {
 
   return (
     <>
-      {!hidden || isLoading && (
+      {/* {!hidden || isLoading && ( */}
         <div
           className={css.preloader}
           // style={{ display: hidden ? 'flex' : 'flex' }}
@@ -38,7 +38,7 @@ const PreLoader = () => {
             <div className="bg-white"></div>
           </div>
         </div>
-      )}
+      {/* )} */}
     </>
   );
 };

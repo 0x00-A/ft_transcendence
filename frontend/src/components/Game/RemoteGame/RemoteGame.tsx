@@ -7,6 +7,7 @@ import ReturnBack from '../components/ReturnBack/ReturnBack';
 import PlayerMatchupBanner from '../components/PlayerMatchupBanner';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 
 const canvasWidth = 650;
@@ -81,35 +82,40 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
   }, [sound]);
 
 
+  useEffect(() => {
+    const f = (gameState: GameState) => {
+      if (gameState !== 'started')
+      {
+        toast.info("Sorry the other player didn't make it");
+        ws?.current?.close();
+        handleMainMenu();
+      }
+    }
+    const timeout = setTimeout(() => {
+      f(gameState);
+    }, 6000);
+
+    return () => {
+      clearTimeout(timeout);
+    }
+  }, [gameState])
 
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
       setGameState(null);
+
       let gameSocket: WebSocket | null = null;
       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}`;
-      // ws?.current?.close();
       if (!ws.current) gameSocket = new WebSocket(wsUrl);
       if (!gameSocket) return;
       ws.current = gameSocket;
 
       gameSocket.onerror = (error) => {
           console.error('WebSocket error:', error);
-          // Handle the error (e.g., show a message to the user)
-          // alert('Failed to connect to the WebSocket server. Please try again.');
           handleMainMenu();
       };
       gameSocket.onopen = () => {
-        // console.log('Game WebSocket connected');
         setGameState('waiting');
-
-        // Send the canvas dimensions
-        // const message = {
-        //   type: 'CONNECT',
-        //   canvasWidth: canvasWidth,
-        //   canvasHeight: canvasHeight,
-        // };
-        // gameSocket.send(JSON.stringify(message));
       };
 
       gameSocket.onmessage = (e) => {
@@ -151,19 +157,18 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
             ws.current = null;
 
             refetch();
-            console.log('--------user refetched-------');
-            if (isLoading) {
-              return <div>Loading...</div>;
-            }
-            console.log('----user----', user);
+            // console.log('--------user refetched-------');
+            // if (isLoading) {
+            //   return <div>Loading...</div>;
+            // }
+            // console.log('----user----', user);
 
             // setGameAccepted(false)
           }
         }
-        // if (data.type === 'game_countdown') {
-        //   console.log(data);
-        //   setCount(data.count)
-        // }
+        if (data.type === 'game_countdown') {
+          setCount(data.count)
+        }
       };
 
       gameSocket.onclose = () => {
@@ -171,14 +176,13 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
         // setGameState('ended');
         // setCurrentScreen('end');
       };
-    }, 500);
 
     return () => {
       if (ws.current) {
         // console.log('Closing game websocket ....');
         ws.current.close();
       }
-      clearTimeout(timeout);
+      // clearTimeout(timeout);
     };
   }, [restart]);
 
@@ -204,12 +208,6 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'w' || event.key === 'W' || event.key === 'ArrowUp') keysPressed[0] = true;
       if (event.key === 's' || event.key === 'S' || event.key === 'ArrowDown') keysPressed[1] = true;
-      // if (event.key === 'w' || event.key === 's') {
-      //   const direction = event.key === 'w' ? 'up' : 'down';
-      //   console.log('moving...');
-
-      //   ws.current?.send(JSON.stringify({ type: 'keydown', direction }));
-      // }
     };
     const handleKeyUp = (event: KeyboardEvent) => {
       if (
@@ -283,46 +281,20 @@ const RemoteGame: React.FC<GameProps> = ({ game_address,requestRemoteGame=()=>{}
     };
   }, [isGameOver, gameState]);
 
-
   const handleRetry = () => {
     requestRemoteGame()
     setGameState(null);
     setIsGameOver(false);
     setRestart((s) => !s);
   };
+
   const handleMainMenu = () => {
     onReturn();
   };
 
-  // if (!gameState) {
-  //   return (
-  //     <div className={css.matchmakingLoaderWrapper}>
-  //       <ArcadeLoader className={css.matchmakingLoader} />
-  //     </div>
-  //   );
-  // }
-
-  useEffect(() => {
-    if (gameState === 'started') return;
-
-    if (count > 0) {
-      const timer = setTimeout(() => {
-        setCount((c) => c - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [count]);
-
-
   return (
     <div className={css.container}>
 
-      {/* {!gameState &&
-            <RadarIcon
-              className="text-red-500 animate-ping absolute m-auto  flex justify-center items-center inset-0 opacity-50"
-              size={120}
-            />
-        } */}
       <PlayerMatchupBanner p1_id={p1_id} p2_id={p2_id} player={player} gameState={gameState} />
       {gameState === 'started' || gameState === 'ended' ? (
         <div className={css.gameArea}>
