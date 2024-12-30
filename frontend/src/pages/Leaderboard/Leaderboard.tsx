@@ -10,20 +10,18 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Link } from 'react-router-dom';
 
 import css from './Leaderboard.module.css';
-import { Flag } from "lucide-react";
-import {  API_GET_LEADER_BOARD_URL } from "@/api/apiConfig";
-import { useGetData } from "@/api/apiHooks";
-import { LeaderBoard } from "@/types/apiTypes";
-import GamesHistory from "./GamesHistory";
+import { API_GET_LEADER_BOARD_URL } from '@/api/apiConfig';
+import { useGetData } from '@/api/apiHooks';
+import { LeaderBoard } from '@/types/apiTypes';
 
-const users = [
-  {
-    id: 0,
-    username: '@username',
-    score: '1400',
-    country: 'Morroco',
-  },
-];
+// const users = [
+//   {
+//     id: 0,
+//     username: '@username',
+//     score: '1400',
+//     country: 'Morroco',
+//   },
+// ];
 
 const Leaderboard = () => {
   const {
@@ -32,7 +30,7 @@ const Leaderboard = () => {
     error,
   } = useGetData<LeaderBoard[]>(API_GET_LEADER_BOARD_URL);
 
-  if (isLoading) {
+  if (isLoading || error) {
     return (
       <div className={css.container}>
         <h1>Loading...</h1>
