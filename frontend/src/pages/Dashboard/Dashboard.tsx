@@ -7,12 +7,54 @@ import FriendsList from '../../components/Dashboard/FriendsList';
 import LastMatch from '../../components/Dashboard/LastMatch';
 import LineChartComponent from '@/components/Dashboard/LineChartComponent';
 import { useUser } from '@/contexts/UserContext';
+import SkeletonBox from './SkeletonBox';
 
 const Dashboard = () => {
 
   const  {user: currentUser, isLoading} = useUser();
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return (
+    <main className={css.container}>
+      <div className={css.heroSection}>
+        <SkeletonBox
+          className={`${css.welcome} flex  flex-col`}
+          title={false}
+          header={false}
+          rows={0}
+        />
+        <SkeletonBox
+          className={css.competitiveOverview}
+          title={false}
+          rows={12}
+        />
+      </div>
+      <div className={css.mainContent}>
+        <SkeletonBox
+          className={css.leaderboard}
+          title={false}
+          rows={12}
+        />
+        <SkeletonBox
+          className={css.LineChart}
+          title={false}
+          rows={12}
+        />
+      </div>
+      <div className={css.lastSection}>
+        <SkeletonBox
+          className={css.lastMatchContainer}
+          title={false}
+          rows={12}
+        />
+        <SkeletonBox
+          className={css.friendsContainer}
+          title={false}
+          rows={12}
+        />
+      </div>
+    </main>
+
+  );
 
   return (
     <main className={css.container}>

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -5,29 +6,30 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
-import PageNotFound from './pages/PageNotFound/PageNotFound';
+
+// import PageNotFound from './pages/PageNotFound/PageNotFound';
+// import Auth from './pages/Auth/Auth';
+// import Profile from './pages/Profile/Profile';
+// import Dashboard from './pages/Dashboard/Dashboard';
+// import Chat from './pages/Chat/Chat';
+// import Friends from './pages/Friends/Friends';
+// import Leaderboard from './pages/Leaderboard/Leaderboard';
+// import Game from './pages/Game/Game';
+// import Oauth2Callback from './pages/Auth/Oauth2Callback';
+// import UsersProfile from './pages/Profile/UsersProfile';
+// import VerifyEmail from './pages/Auth/VerifyEmail';
+// import ResetPassword from './pages/Auth/ResetPassword';
+
 
 import { LoadingBarProvider } from './contexts/LoadingBarContext';
 import PreLoader from './components/PreLoader/PreLoader';
-// import Login from './pages/Login';
-// import Login from './pages/Auth/Login';
-import Auth from './pages/Auth/Auth';
-import Profile from './pages/Profile/Profile';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Chat from './pages/Chat/Chat';
-import Friends from './pages/Friends/Friends';
-import Search from './pages/Search/Search';
-import Leaderboard from './pages/Leaderboard/Leaderboard';
-import Store from './pages/Store/Store';
-import Settings from './pages/Settings/Settings';
 import Sidebar from './components/Sidebar/Sidebar';
+// const Sidebar = React.lazy(() => import('./components/Sidebar/Sidebar'));
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
 import Topbar from './components/Topbar/Topbar';
 import ProtectedRoute from './components/ProtectedRoute';
-import { useEffect } from 'react';
-import Game from './pages/Game/Game';
-import Oauth2Callback from './pages/Auth/Oauth2Callback';
+import { Suspense, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from './contexts/WebSocketContext';
@@ -35,14 +37,23 @@ import { UserProvider } from './contexts/UserContext';
 import { GameInviteProvider, useGameInvite } from './contexts/GameInviteContext';
 import ConnectionStatus from './components/ConnectionStatus';
 import Footer from './components/Footer';
-import UsersProfile from './pages/Profile/UsersProfile';
 import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
-
-import VerifyEmail from './pages/Auth/VerifyEmail';
-import ResetPassword from './pages/Auth/ResetPassword';
 import EditEmailVerification from './components/Profile/EditEmailVerification';
-import Leaderboard_History from './pages/Leaderboard/Leaderboard_History';
 
+const PageNotFound = React.lazy(() => import('./pages/PageNotFound/PageNotFound'));
+const Auth = React.lazy(() => import('./pages/Auth/Auth'));
+const Profile = React.lazy(() => import('./pages/Profile/Profile'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
+const Chat = React.lazy(() => import('./pages/Chat/Chat'));
+const Friends = React.lazy(() => import('./pages/Friends/Friends'));
+const Leaderboard = React.lazy(() => import('./pages/Leaderboard/Leaderboard'));
+const Game = React.lazy(() => import('./pages/Game/Game'));
+const Oauth2Callback = React.lazy(() => import('./pages/Auth/Oauth2Callback'));
+const UsersProfile = React.lazy(() => import('./pages/Profile/UsersProfile'));
+const VerifyEmail = React.lazy(() => import('./pages/Auth/VerifyEmail'));
+const ResetPassword = React.lazy(() => import('./pages/Auth/ResetPassword'));
+
+const Loader = () => <div>Loading...</div>;
 
 function App() {
   return (
@@ -67,7 +78,9 @@ function App() {
                   // theme="colored"
                   toastClassName='toastStyle'
                   />
-                <AppContent />
+                <Suspense fallback={<PreLoader />}>
+                  <AppContent />
+                </Suspense>
                 </SelectedConversationProvider>
               </WebSocketProvider>
             </ GameInviteProvider>
@@ -99,7 +112,7 @@ function AppContent() {
   const shouldShowSidebar = showSidebarRoutes.some((route) => {
   return typeof route === 'string'
     ? route === location.pathname || route + '/' === location.pathname
-    : route.test(location.pathname); // Test against regex
+    : route.test(location.pathname);
 });
   const { isLoggedIn } = useAuth();
   // const loading = usePreLoader();
@@ -118,7 +131,7 @@ function AppContent() {
 
   return (
     <div className="app-container ">
-      <PreLoader />
+      {/* <PreLoader /> */}
       {shouldShowSidebar && isLoggedIn && (
         <Sidebar />
       )}
@@ -137,11 +150,7 @@ function AppContent() {
               <Route path="/play" element={<Game />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/friends" element={<Friends />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/store" element={<Store />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
-              {/* <Route path="/leaderboard-history" element={<Leaderboard_History />} /> */}
-              <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/:username" element={<UsersProfile />} />
               <Route path="/profile/update-email/:token" element={<EditEmailVerification />} />

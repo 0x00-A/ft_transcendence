@@ -6,6 +6,7 @@ import getWebSocketUrl from '../../../utils/getWebSocketUrl';
 import PlayerCard from './PlayerCard';
 import PlayerCardSkeleton from './PlayerCardSkeleton';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 
 const canvasWidth = 480;
@@ -32,8 +33,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
   // const [count, setCount] = useState(3);
-
-  // console.log('MultipleGame component rerendered', `stat: ${gameState}`);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -101,11 +100,25 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     paddleHitSound.current.load();
   }, []);
 
+  useEffect(() => {
+    const f = (gameState: GameState) => {
+      if (gameState !== 'started')
+      {
+        toast.info("Sorry some player didn't make it to the game.");
+        ws?.current?.close();
+        handleMainMenu();
+      }
+    }
+    const timeout = setTimeout(() => {
+      f(gameState);
+    }, 6000);
 
-
+    return () => {
+      clearTimeout(timeout);
+    }
+  }, [gameState])
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
       setGameState(null);
       let gameSocket: WebSocket | null = null;
       const wsUrl = `${getWebSocketUrl(`${game_address}/`)}`;
@@ -114,16 +127,8 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       ws.current = gameSocket;
 
       gameSocket.onopen = () => {
-        console.log('Game WebSocket connected');
+        // console.log('Game WebSocket connected');
         setGameState('waiting');
-
-        // Send the canvas dimensions
-        // const message = {
-        //   type: 'CONNECT',
-        //   canvasWidth: canvasWidth,
-        //   canvasHeight: canvasHeight,
-        // };
-        // gameSocket.send(JSON.stringify(message));
       };
 
       gameSocket.onmessage = (e) => {
@@ -146,6 +151,9 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           setPlayer4_id(data.state[`player4_id`])
           setGameState('started');
         }
+        if (data.type === 'go_home') {
+          handleMainMenu();
+        }
         if (data.type === 'player_lost') {
           // console.log(data);
           lost.current[0] = data.state[`player1_lost`]
@@ -153,10 +161,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           lost.current[2] = data.state[`player3_lost`]
           lost.current[3] = data.state[`player4_lost`]
         }
-        // if (data.type === 'player_id') {
-        //   // console.log(data);
-        //   setPlayer(data.player)
-        // }
         if (data.type === 'game_update') {
           ballRef.current.x = data.state.ball.x;
           ballRef.current.y = data.state.ball.y;
@@ -200,14 +204,12 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
         // setGameState('ended');
         // setCurrentScreen('end');
       };
-    }, 500);
 
     return () => {
       if (ws.current) {
         // console.log('Closing game websocket ....');
         ws.current.close();
       }
-      clearTimeout(timeout);
     };
   }, [restart]);
 
@@ -217,28 +219,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
 
-    // const drawDashedLine = () => {
-    //   ctx.setLineDash([15, 7.1]); // [dash length, gap length]
-    //   ctx.strokeStyle = '#f8f3e3';
-    //   ctx.lineWidth = 3;
-
-    //   ctx.beginPath();
-    //   ctx.moveTo(canvas.width / 2, 10);
-    //   ctx.lineTo(canvas.width / 2, canvas.height - 10);
-    //   ctx.stroke();
-    //   ctx.setLineDash([]);
-    // };
-
     const keysPressed: boolean[] = [false];
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'w' || event.key === 'W') keysPressed[0] = true;
       if (event.key === 's' || event.key === 'S') keysPressed[1] = true;
-      // if (event.key === 'w' || event.key === 's') {
-      //   const direction = event.key === 'w' ? 'up' : 'down';
-      //   console.log('moving...');
-
-      //   ws.current?.send(JSON.stringify({ type: 'keydown', direction }));
-      // }
     };
     const handleKeyUp = (event: KeyboardEvent) => {
       if (
@@ -339,7 +323,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     };
 
     const animate = () => {
-      if (isGameOver) return;
+      if (isGameOver || gameState !== 'started') return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       update();
@@ -369,25 +353,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const handleMainMenu = () => {
     onReturn();
   };
-
-  // if (!gameState) {
-  //   return (
-  //     <div className={css.matchmakingLoaderWrapper}>
-  //       <ArcadeLoader className={css.matchmakingLoader} />
-  //     </div>
-  //   );
-  // }
-
-  // useEffect(() => {
-  //   // if (gameState === 'started') return;
-
-  //   if (count > 0) {
-  //     const timer = setTimeout(() => {
-  //       setCount((c) => c - 1);
-  //     }, 1000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [count]);
 
   return (
     <div className={css.container}>
@@ -446,19 +411,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
                 }}
               >
               <div className="relative flex items-center justify-center">
-                  {/* <div
-                    className="text-9xl font-bold mb-8 transition-all duration-500"
-                    style={{
-                      opacity: count === 1 ? 0 : 1,
-                      transform: `scale(${count === 1 ? 1.5 : 1})`
-                    }}
-                  >
-                    {count || <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-6xl font-bold animate-pulse text-yellow-400">
-                        GO!
-                      </div>
-                    </div>}
-                  </div> */}
                   <div className="animate-pulse text-center">
                     <p className="text-gray-400">{t('game.multipleGame.WaitingPJ')}</p>
                   </div>

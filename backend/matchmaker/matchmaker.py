@@ -28,6 +28,7 @@ class Matchmaker:
     async def register_client(cls, player_id, channel_name):
         # cls.connected_clients[player_id] = channel_name
         cls.connected_clients[player_id].add(channel_name)
+        print(f"channel names: {cls.connected_clients[player_id]}")
 
     @classmethod
     async def unregister_client(cls, player_id, channel_name):
@@ -51,7 +52,6 @@ class Matchmaker:
         players = await cls.find_two_players()
         if players:
             await cls.create_remote_game(*players)
-        print(f"########## Queue: {cls.games_queue}")
 
     @classmethod
     async def request_multi_game(cls, player_id):
@@ -65,7 +65,6 @@ class Matchmaker:
         players = await cls.find_four_players()
         if players:
             await cls.create_multi_game(*players)
-        print(f"########## Queue: {cls.games_queue}")
 
     @classmethod
     async def remove_from_queue(cls, player_id):
@@ -279,10 +278,10 @@ class Matchmaker:
 
         if await Game.objects.filter(
             (Q(player1=player_id) | Q(player2=player_id)) & Q(
-                status="started")
+                status="started") & Q(players_connected=True)
         ).aexists() or await MultiGame.objects.filter(
             (Q(player1=player_id) | Q(player2=player_id) | Q(player3=player_id) | Q(player4=player_id)) & Q(
-                status="started")
+                status="started") & Q(players_connected=True)
         ).aexists():
             message = {
                 'event': 'error',

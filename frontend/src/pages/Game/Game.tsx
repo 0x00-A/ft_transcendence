@@ -1,9 +1,7 @@
 import styles from './Game.module.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
-
 import { useEffect, useMemo, useRef, useState } from 'react';
-// import GameMode from './components/GameMode/GameMode';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import TournamentList from '../../components/Tournament/components/TournamentList/TournamentList';
@@ -28,19 +26,7 @@ import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/Ma
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
 import RefreshButton from './RefreshButton';
-import i18n from '@/config/i18n.config';
-// import { getTranslatedStatus } from '@/utils/getTranslatedStatus';
 
-// const Modes = () => {
-//   const { t } = useTranslation();
-//   return [
-//     { id: 0, title: t('game.localGame.title'), icon: Gamepad2, description: t('game.localGame.description') },
-//     { id: 1, title: t('game.remoteGame.title'), icon: Globe, description: t('game.remoteGame.description') },
-//     { id: 2, title: t('game.remoteTournament.title'), icon: Trophy, description: t('game.remoteTournament.description') },
-//     { id: 3, title: t('game.localTournament.title'), icon: Users, description: t('game.localTournament.description') },
-//     { id: 4, title: t('game.multipleGame.title'), icon: Users, description: t('game.multipleGame.description') },
-//     ];
-// }
 
 const Game = () => {
   const { t } = useTranslation();
@@ -98,13 +84,6 @@ const Game = () => {
       ]
   }, [t])
 
-
-  // const { isLoggedIn } = useAuth();
-
-  // if (!isLoggedIn)
-  //   return;
-  // console.log('Game component rerendered');
-
   const {
     gameAccepted,
     gameInvite,
@@ -161,14 +140,13 @@ const Game = () => {
     refetch: refetchTournaments,
   } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
+
   useEffect(() => {
-    const timeout = setTimeout(() => {
       const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
       const socket = new WebSocket(wsUrl);
       ws.current = socket;
 
       socket.onopen = () => {
-        // console.log('Matchmaker Socket connected');
       };
 
       socket.onmessage = (e) => {
@@ -189,8 +167,6 @@ const Game = () => {
           setMatchStarted(true);
         }
         if (data.event === 'in_queue') {
-          console.log(data);
-
           if (gameState === 'startGame') return;
           setGameState('inqueue');
         }
@@ -217,7 +193,6 @@ const Game = () => {
       socket.onclose = () => {
         // console.log('Matchmaker Socket disconnected');
       };
-    }, 500);
 
     return () => {
       if (ws.current) {
@@ -228,26 +203,9 @@ const Game = () => {
         setGameState(null);
         ws.current.close();
       }
-      clearTimeout(timeout);
       setGameAccepted(false);
     };
   }, []);
-
-  //   useEffect(() => {
-  //   return () => {
-  //     // if (isUnmounting.current) {
-  //       console.log("Component unmounted, resetting global state.");
-  //       setGameAccepted(false); // Update global state only on unmount
-  //     // }
-  //   };
-  // }, [setGameAccepted]);
-
-  // useEffect(() => {
-  //   isUnmounting.current = true; // Flag component as ready to unmount
-  //   return () => {
-  //     isUnmounting.current = false; // Reset flag for dependency changes
-  //   };
-  // }, []);
 
   const sendMessage = (message: Record<string, any>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {

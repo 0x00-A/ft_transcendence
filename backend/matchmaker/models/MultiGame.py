@@ -46,6 +46,7 @@ class MultiGame(models.Model):
     p4_score = models.IntegerField(default=0)
     status = models.CharField(
         max_length=20, choices=GAME_STATUS_CHOICES, default='started')
+    players_connected = models.BooleanField(default=False)
 
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)

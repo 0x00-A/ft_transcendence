@@ -63,7 +63,7 @@ class GameInstance:
         self.player2_score = 0
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 6
+        self.paddle_speed = 3
         self.paddle_width: int = 20
         self.paddle_height: int = 80
         self.state = {
@@ -187,12 +187,7 @@ class GameInstance:
 
         # side collision
         if ball_from_left or ball_from_right:
-            self.ball.dx *= -1  # Reverse the horizontal velocity
-            # if ball_from_left:
-            #     self.ball.x = self.state[f"{paddle}_x"] - self.ball.radius
-            # elif ball_from_right:
-            #     self.ball.x = self.state[f"{paddle}_x"] + \
-            #         self.paddle_width + self.ball.radius
+            self.ball.dx *= -1
 
             relative_impact = (
                 self.ball.y - (self.state[f"{paddle}_y"] + self.paddle_height / 2)) / (self.paddle_height / 2)
@@ -213,11 +208,6 @@ class GameInstance:
         # top/bottom collision
         if ball_from_top or ball_from_bottom:
             self.ball.dy *= -1
-            # if ball_from_top:
-            #     self.ball.y = self.state[f"{paddle}_y"] - self.ball.radius
-            # elif ball_from_bottom:
-            #     self.ball.y = self.state[f"{paddle}_y"] + \
-            #         self.paddle_height + self.ball.radius
 
 
 def create_game(game_id):
@@ -232,8 +222,11 @@ def get_game(game_id):
 
 
 def remove_game(game_id):
+    global connected_players
     if game_id in games:
         del games[game_id]
+    if game_id in connected_players:
+        del connected_players[game_id]
 
 
 class GameConsumer(AsyncWebsocketConsumer):
@@ -242,10 +235,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         global connected_players
         user = self.scope['user']
         self.game_id = None
-        self.game_id = self.scope['url_route']['kwargs']['game_id']
 
         if user.is_authenticated:
             await self.accept()
+            self.game_id = self.scope['url_route']['kwargs']['game_id']
             if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
                 await self.send(text_data=json.dumps(
                     {
@@ -266,35 +259,35 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.broadcast_initial_state()
                 # await self.set_game_started()
                 # Start the game loop
-
+                await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
                 asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
 
     async def send_countdown_to_clients(self):
         for count in range(3, -1, -1):
-            # await self.channel_layer.group_send(
-            #     self.game_id,
-            #     {
-            #         "type": "game.countdown",
-            #         "count": count,
-            #     },
-            # )
+            await self.channel_layer.group_send(
+                self.game_id,
+                {
+                    "type": "game.countdown",
+                    "count": count,
+                },
+            )
+            await self.send(text_data=json.dumps(
+                {
+                    "type": "game_countdown",
+                    "count": count,
+                },
+            ))
             await asyncio.sleep(1)
 
-    # async def game_countdown(self, event):
-    #     await self.send(text_data=json.dumps(
-    #         {
-    #             'type': 'game_countdown',
-    #             'count': event['count']
-    #         }
-    #     ))
-
-    async def set_game_started(self):
-        if await Game.objects.filter(game_id=self.game_id).aexists():
-            await Game.objects.filter(game_id=self.game_id).aupdate(status='started')
-        elif await Match.objects.filter(match_id=self.game_id).aexists():
-            await Match.objects.filter(match_id=self.game_id).aupdate(status='started')
+    async def game_countdown(self, event):
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'game_countdown',
+                'count': event['count']
+            }
+        ))
 
     async def set_player_id_name(self):
         user = self.scope['user']
@@ -356,8 +349,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         game_id = self.game_id
-        print(
-            f"------------ player {self.scope['user'].username} disconnected ------------")
         if game_id and hasattr(self, 'player_id'):
             game: GameInstance = get_game(game_id)
             game.winner = 1 if self.player_id == 'player2' else 2
@@ -378,6 +369,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             if game.winner:
                 await Matchmaker.process_result(game_id, game.winner, game.player1_score, game.player2_score)
+                remove_game(self.game_id)
                 break
 
             await asyncio.sleep(1 / 60)  # Run at 60 FPS

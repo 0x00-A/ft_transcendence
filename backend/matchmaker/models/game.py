@@ -1,3 +1,4 @@
+from django.db import connection
 from django.utils import timezone
 from django.db import models
 from accounts.models import User, Profile, Badge
@@ -5,10 +6,10 @@ from accounts.models import User, Profile, Badge
 # User = get_user_model()
 WIN_SCORE = 10
 
-from django.db import connection
 
 for query in connection.queries:
     print(f"-----------SQL: {query['sql']} | Time: {query['time']}")
+
 
 class GameManager(models.Manager):
     def create_game(self, player1, player2):
@@ -23,7 +24,6 @@ class GameManager(models.Manager):
 
     def get_completed_games(self):
         return self.filter(game_status='ended')
-
 
 
 class Game(models.Model):
@@ -44,7 +44,9 @@ class Game(models.Model):
     p2_score = models.IntegerField(default=0)
     p1_xp = models.IntegerField(default=0)
     p2_xp = models.IntegerField(default=0)
-    status = models.CharField(max_length=20, choices=GAME_STATUS_CHOICES, default='started')
+    status = models.CharField(
+        max_length=20, choices=GAME_STATUS_CHOICES, default='started')
+    players_connected = models.BooleanField(default=False)
 
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(blank=True, null=True)
@@ -198,8 +200,9 @@ class Game(models.Model):
         self.player2.profile.save()
         # self.player1.save()
         # self.player2.save()
-        #update ranks
-        profiles = list(Profile.objects.all().order_by('-score', '-wins', '-played_games'))
+        # update ranks
+        profiles = list(Profile.objects.all().order_by(
+            '-score', '-wins', '-played_games'))
         for rank, profile in enumerate(profiles, 1):
             profile.rank = rank
             if rank < profile.stats.get('best_rank'):
