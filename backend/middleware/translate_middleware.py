@@ -13,16 +13,11 @@ class TranslateResponseMiddleware(MiddlewareMixin):
             try:
                 data = json.loads(response.content)
                 print("--------- d a t a--------")
-                print(data)
                 if request.user.is_authenticated:
                     target_language = request.user.profile.preferred_language or 'en'
                 else:
                     target_language = 'en'
                 if 'message' in data:
-                    print("/*/*/*/*/*/*/*/*/*/*")
-                    print(data)
-                    print("lang: " + target_language)
-                    print("/*/*/*/*/*/*/*/*/*/*")
                     data['message'] = translate_text(data['message'], target_language)
                 elif 'error' in data:
                     data['error'] = translate_text(data['error'], target_language)

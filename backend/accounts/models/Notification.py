@@ -20,6 +20,7 @@ class Notification(models.Model):
         return {
             "title": self.title,
             "link": self.link,
+            "state": self.state,
             "message": self.message,
             "created_at": self.created_at.isoformat(),
             "user": self.user.username,

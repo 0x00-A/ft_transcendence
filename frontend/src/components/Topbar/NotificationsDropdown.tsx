@@ -119,6 +119,8 @@ const NotificationsDropdown = () => {
                   : ''
               }`}
               onClick={() => {
+                console.log("click item notification");
+                console.log(notification);
                 if (notification.link && notification.state) {
                   navigate(notification.link, { state: { selectedFriend: notification.state } });
                 } else if (notification.link && notification.link !== '#') {
