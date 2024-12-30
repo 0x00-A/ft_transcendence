@@ -236,12 +236,6 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [isLoggedIn]);
 
   const handleIncomingNotification = (data: Notification) => {
-    // const newNotification: Notification = {
-    //   type: data.type,
-    //   from: data.from,
-    //   content: data.content || '',
-    //   timestamp: new Date(),
-    // };
     setNotifications((prev) => [data, ...prev]);
     setUnreadCount((prev) => prev + 1);
   };
