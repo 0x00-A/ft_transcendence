@@ -26,7 +26,7 @@ const useEditInfosProfile = () => {
   });
   const mutation = useMutation({
     mutationFn: async (data: FormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
-    onError: (error) => {
+    onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})

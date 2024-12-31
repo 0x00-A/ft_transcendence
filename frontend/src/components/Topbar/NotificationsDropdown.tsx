@@ -10,6 +10,7 @@ import { useWebSocket } from '@/contexts/WebSocketContext';
 import { formatDate } from '@/utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Bell } from "lucide-react";
 
 const NotificationsDropdown = () => {
   const navigate = useNavigate();
@@ -39,52 +40,6 @@ const NotificationsDropdown = () => {
     deleteAllNotifications();
   };
 
-  // // Sample notifications data
-  // const notifications = [
-  //   {
-  //     id: 1,
-  //     title: 'Achievement unlocked',
-  //     message: 'You just unlocked a new achievement: FT-PONG LENGEND',
-  //     created_at: '2024-11-16T10:30:00',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Meeting Reminder',
-  //     message: 'Team meeting starts in 15 minutes',
-  //     created_at: '2024-11-16T09:45:00',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Task Update',
-  //     message: 'Project X deadline has been extended',
-  //     created_at: '2024-11-15T16:20:00',
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'System Alert',
-  //     message: 'Successfully deployed latest changes',
-  //     created_at: '2024-11-15T14:15:00',
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'New Comment',
-  //     message: 'Sarah commented on your post',
-  //     created_at: '2024-11-15T11:30:00',
-  //   },
-  //   {
-  //     id: 6,
-  //     title: 'New Comment',
-  //     message: 'Sarah commented on your post',
-  //     created_at: '2024-11-15T11:30:00',
-  //   },
-  //   {
-  //     id: 7,
-  //     title: 'New Comment',
-  //     message: 'Sarah commented on your post',
-  //     created_at: '2024-11-15T11:30:00',
-  //   },
-  // ];
-
   return (
     <DropdownMenu open={isOpen} onOpenChange={() => {handleClick(); setIsOpen((open)=> !open)}}>
       <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 rounded-full  focus:outline-none">
@@ -110,7 +65,50 @@ const NotificationsDropdown = () => {
           </h2>
         </div>
         <div className="max-h-96 overflow-y-auto">
-          {notifications.map((notification, index) => (
+          {notifications.length === 0 ? (
+            <div className="p-4 text-center">
+              <div className="flex justify-center mb-3">
+                <Bell className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <p className="text-base text-muted-foreground">No new notifications</p>
+            </div>
+          ) : (
+            notifications.map((notification, index) => (
+              // <DropdownMenuItem key={notification.id}>
+                <div
+                  key={index}
+                  className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
+                    notification.link && notification.link !== '#'
+                      ? 'cursor-pointer'
+                      : ''
+                  }`}
+                  onClick={() => {
+                    console.log("click item notification");
+                    console.log(notification);
+                    if (notification.link && notification.state) {
+                      navigate(notification.link, { state: { selectedFriend: notification.state } });
+                    } else if (notification.link && notification.link !== '#') {
+                      navigate(notification.link);
+                    }
+                    setIsOpen(false);
+                  }}
+                >
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-bold text-white">
+                      {notification.title}
+                    </h3>
+                    <span className="text-[10px] text-gray-100">
+                      {formatDate(notification.created_at, t('lang'))}
+                    </span>
+                  </div>
+                  <p className="text-[13px] font-sans text-gray-100 mt-1">
+                    {notification.message}
+                  </p>
+                </div>
+              // </DropdownMenuItem>
+            ))
+          )}
+          {/* {notifications.map((notification, index) => (
             <div
               key={index}
               className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
@@ -119,6 +117,8 @@ const NotificationsDropdown = () => {
                   : ''
               }`}
               onClick={() => {
+                console.log("click item notification");
+                console.log(notification);
                 if (notification.link && notification.state) {
                   navigate(notification.link, { state: { selectedFriend: notification.state } });
                 } else if (notification.link && notification.link !== '#') {
@@ -139,7 +139,7 @@ const NotificationsDropdown = () => {
                 {notification.message}
               </p>
             </div>
-          ))}
+          ))} */}
         </div>
         {notifications.length != 0 && (
           <DropdownMenuItem

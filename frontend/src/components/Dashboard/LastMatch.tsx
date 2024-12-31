@@ -20,7 +20,7 @@ const LastMatch = ({username}:{username:string | undefined}) => {
         <>
             <div className={css.header}>
                 <h3>{t('dashboard.LastMatch.headerTitle')}</h3>
-                <a href="/view-more" className={css.viewMore}>{t('dashboard.LastMatch.viewMore')}</a>
+                {/* <a href="/view-more" className={css.viewMore}>{t('dashboard.LastMatch.viewMore')}</a> */}
             </div>
             <div className={css.containerBody}>
                 { matchesData?.length != 0 && <div className={css.line}></div>}

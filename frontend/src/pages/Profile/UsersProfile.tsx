@@ -7,16 +7,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ProfileAchievements from '@/components/Profile/ProfileAchievements';
 // API
 import { useQuery } from '@tanstack/react-query';
-import { useGetData } from '@/api/apiHooks';
 import { API_GET_PROFILE_URL } from '@/api/apiConfig';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { OtherUser } from '@/types/apiTypes';
 import { toast } from 'react-toastify';
 import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
-import PreLoader from '@/components/PreLoader/PreLoader';
-import { useUser } from '@/contexts/UserContext';
-import apiClient, { getData } from '@/api/apiClient';
 import axios from 'axios';
+import { getData } from '@/api/apiClient';
 
 const UsersProfile = () => {
 
@@ -95,6 +92,10 @@ const UsersProfile = () => {
 
   )
   if (isError) return null;
+  if (!user) return (
+    <div className={css.profileContainer}>
+      <h1>404 Not Found</h1>
+    </div>)
   // if (!username) return (
     //   <div className={css.profileContainer}>
     //     <h1>404 Not Found</h1>
@@ -138,9 +139,9 @@ const UsersProfile = () => {
         <UserProfileFriends username={user?.username} />}
         <div className={css.rightBodyContainer}>
           { isLoading ? <div className='w-[100%] h-[40%] bg-gray-700 animate-pulse rounded-lg'></div>:
-          <ProfileAchievements username={user.username}/>}
+          <ProfileAchievements username={user?.username}/>}
           { isLoading ? <div className='w-[100%] h-[60%] bg-gray-700 animate-pulse rounded-lg'></div>:
-          <ProfileGamesHistory isOtherUser={true} username={user.username}/>}
+          <ProfileGamesHistory isOtherUser={true} username={user?.username}/>}
         </div>
       </div>
     </div>
