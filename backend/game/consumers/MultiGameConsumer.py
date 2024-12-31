@@ -25,7 +25,7 @@ canvas_height: int = 480
 losing_score: int = 7
 
 ball_raduis: int = 8
-initial_ball_speed = 4
+initial_ball_speed = 3
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -72,7 +72,7 @@ class GameInstance:
         self.connected_players = 1
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 4
+        self.paddle_speed = 2
         self.paddle_width: int = 15
         self.paddle_height: int = 70
         self.corner_size = 10
