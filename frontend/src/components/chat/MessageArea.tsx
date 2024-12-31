@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import css from './MessageArea.module.css';
 import Message from './Message';
 import { useTyping } from '@/contexts/TypingContext';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import { MessageProps } from '@/types/apiTypes';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { RefreshCcw } from 'lucide-react';
 
 
@@ -17,8 +17,8 @@ interface MessageAreaProps {
 const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore }) => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const messageAreaRef = useRef<HTMLDivElement | null>(null);
-  const [shouldScroll, setShouldScroll] = useState(true);
-  const { t } = useTranslation(); 
+  // const [shouldScroll, setShouldScroll] = useState(true);
+  // const { t } = useTranslation(); 
 
 
   const { typing } = useTyping();
@@ -32,7 +32,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore
                                 messageAreaRef.current.scrollTop - 
                                 messageAreaRef.current.clientHeight;
 
-      setShouldScroll(false);
+      // setShouldScroll(false);
 
       if (onLoadMore) {
         onLoadMore();
