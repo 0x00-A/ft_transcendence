@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
+import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {
   id: number;
@@ -62,6 +63,8 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   const [blockStatusUpdate, setBlockStatusUpdate] = useState<BlockStatusUpdate | null>(null);
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
+  const { selectedConversation } = useSelectedConversation();
+
 
   useEffect(() => {
     const wsUrl = `${getWebSocketUrl(`chat/`)}`;
@@ -84,9 +87,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           timestamp: moment().format('HH:mm'),
           seen: false,
         };
-
         setMessages((prev) => [...prev, newMessage]);
-
         setLastMessage({
           conversationId: data.conversation_id,
           content: data.message,

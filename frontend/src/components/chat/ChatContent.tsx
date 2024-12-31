@@ -57,19 +57,24 @@ const ChatContent = () => {
   useEffect(() => {
     if (!selectedConversation) return;
     
-    console.log(" i here ")
+    console.log("websocket: ", websocketMessages);
     if (websocketMessages.length === 0) {
-      console.log(" i here for set just fetched ")
+      console.log(" i here for set just fetched ");
       setReversedFetchedMessages([...fetchedChatMessages].reverse());
       return;
     }
-    const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
-    if (lastMessageSocket?.conversation === selectedConversation.id) {
-      setWebsocketChatMessages(websocketMessages);
+
+    const filteredMessages = websocketMessages.filter(
+      (message) => message.conversation === selectedConversation.id
+    );
+
+    if (filteredMessages.length > 0) {
+      setWebsocketChatMessages(filteredMessages);
     } else {
       setReversedFetchedMessages([...fetchedChatMessages].reverse());
     }
-  }, [websocketMessages, selectedConversation]);
+  }, [websocketMessages, selectedConversation, fetchedChatMessages]);
+  
   
   useEffect(() => {
     if (selectedConversation?.id) {
@@ -105,18 +110,13 @@ const ChatContent = () => {
   const loadMoreMessages = () => {
     setPage((prevPage) => prevPage + 1);
   };
-  
-  // useEffect(() => {
-    //   if (fetchedChatMessages.length > 0) {
-      //     setReversedFetchedMessages([...fetchedChatMessages].reverse());
-      //   }
-      // }, [page, fetchedChatMessages]);
       
-      const combinedMessages = useMemo(() => {
-        
-        console.log(" i here for set combinedMessages ")
-        return [...reversedFetchedMessages, ...websocketChatMessages];
-      }, [reversedFetchedMessages, websocketChatMessages]);
+  const combinedMessages = useMemo(() => {
+    
+    console.log(" i here for set combinedMessages ")
+    
+    return [...reversedFetchedMessages, ...websocketChatMessages];
+  }, [reversedFetchedMessages, websocketChatMessages]);
 
   return (
     <>
