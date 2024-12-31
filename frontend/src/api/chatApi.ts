@@ -12,3 +12,13 @@ export const apiCreateConversation = async (user2Id: string) => {
         }
     }
 };
+export const apiGetUser = async (username: string) => {
+    try {
+        const response = await apiClient.get(`/profile/${username}/`);
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.error) {
+            throw new Error(error.response.data.error);
+        }
+    }
+};

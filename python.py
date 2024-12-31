@@ -28,8 +28,8 @@ async def send_messages(ws_url, session_id, access_token, interval=5):
                 # Example message payload
                 message_payload = {
                     "action": "send_message",
-                    "receiver_id": 3,
-                    "message": "block"
+                    "receiver_id": 7,
+                    "message": "bloock"
                 }
 
                 # Send the message

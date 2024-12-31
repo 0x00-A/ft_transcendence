@@ -5,7 +5,7 @@ import SearchResultItem from './SearchResultItem';
 import { useLocation } from 'react-router-dom';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
-import { apiCreateConversation } from '@/api/chatApi';
+import { apiCreateConversation, apiGetUser } from '@/api/chatApi';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +66,6 @@ const MessageList = () => {
 
 
   
-  // console.log(" >> << ConversationList: ", ConversationList)
   useEffect(() => {
     if (blockStatusUpdate) {
       const selectedConversationId = blockStatusUpdate.conversationId;
@@ -98,29 +97,6 @@ const MessageList = () => {
     ) || [];
   }, [friendsData, searchQuery]);
 
-//   const addConversation = useCallback(async (id: string) => {
-//     try {
-//       const newConversation = await apiCreateConversation(id);
-      
-//       if (newConversation && newConversation.id) {
-//         await refetch();
-//         console.log("new => Conversation: ", newConversation);
-//         setSelectedConversation(newConversation);
-//         setIsSearchActive(false);
-//         setSearchQuery('');
-//         setMenuState(prev => ({
-//           ...prev,
-//           isOpen: false,
-//           activeIndex: null,
-//         }));
-//       } else {
-//         console.error('Invalid conversation created');
-//       }
-//     } catch (error) {
-//       console.error('Failed to create conversation:', error);
-//     }
-//  }, []);
-
   useEffect(() => {
     const username = location.state?.selectedFriend;
 
@@ -142,14 +118,20 @@ const MessageList = () => {
           activeIndex: null,
         }));
       } else {
-        const friendToStart = friendsData?.find(
-          friend => friend.username === username
-        );
-        
-        console.log("friendToStart; ", friendToStart);
-        if (friendToStart) {
-          handleSearchItemClick(friendToStart);
-        }
+        const fetchUser = async () => {
+          try {
+            const user = await apiGetUser(username);
+            console.log("Fetched user: ", user);
+  
+            if (user) {
+              handleSearchItemClick(user);
+            }
+          } catch (error) {
+            console.error("Error fetching user: ");
+          }
+        };
+  
+        fetchUser();
       }
     }
   }, [location.state]);
