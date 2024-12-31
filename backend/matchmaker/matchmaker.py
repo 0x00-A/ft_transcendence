@@ -45,10 +45,10 @@ class Matchmaker:
         if await cls.is_client_already_playing(player_id):
             return
         cls.games_queue.append(player_id)
-        message = {
-            'event': 'in_queue'
-        }
-        await cls.send_message_to_client(player_id, message)
+        # message = {
+        #     'event': 'in_queue'
+        # }
+        # await cls.send_message_to_client(player_id, message)
         players = await cls.find_two_players()
         if players:
             await cls.create_remote_game(*players)
@@ -57,11 +57,11 @@ class Matchmaker:
     async def request_multi_game(cls, player_id):
         if await cls.is_client_already_playing(player_id):
             return
-        cls.multi_games_queue.append(player_id)
-        message = {
-            'event': 'in_queue'
-        }
-        await cls.send_message_to_client(player_id, message)
+        # cls.multi_games_queue.append(player_id)
+        # message = {
+        #     'event': 'in_queue'
+        # }
+        # await cls.send_message_to_client(player_id, message)
         players = await cls.find_four_players()
         if players:
             await cls.create_multi_game(*players)
@@ -271,7 +271,7 @@ class Matchmaker:
         if player_id in cls.games_queue or player_id in cls.multi_games_queue:
             message = {
                 'event': 'error',
-                'message': 'Already in queue!!!'
+                'message': 'Already in queue!'
             }
             await cls.send_message_to_client(player_id, message)
             return True
@@ -285,7 +285,7 @@ class Matchmaker:
         ).aexists():
             message = {
                 'event': 'error',
-                'message': 'Already in a game!..'
+                'message': 'Already in a game!'
 
             }
             await cls.send_message_to_client(player_id, message)
