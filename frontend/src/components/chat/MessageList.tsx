@@ -72,11 +72,12 @@ const MessageList = () => {
       refetch();
       if (selectedConversation)
         {
+          console.log
           const foundConversation = ConversationList?.find(convo => convo.id === selectedConversationId);
           setSelectedConversation(foundConversation!);
         }
     }
-  }, [blockStatusUpdate, ConversationList]);
+  }, [blockStatusUpdate]);
 
   useEffect(() => {
     if (markAsReadData?.status) {
