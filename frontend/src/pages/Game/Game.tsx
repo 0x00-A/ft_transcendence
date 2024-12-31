@@ -152,7 +152,7 @@ const Game = () => {
       socket.onmessage = (e) => {
         refetchData();
         const data = JSON.parse(e.data);
-        // console.log(data);
+        console.log(data);
 
         if (data.event === 'error') {
           toast.error(data.message);

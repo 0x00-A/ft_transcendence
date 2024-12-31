@@ -125,7 +125,7 @@ const RemoteGame: React.FC<GameProps> = ({
 
     gameSocket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      // console.log(data);
+      console.log(data);
 
       if (data.type === 'game_started') {
         paddle1Ref.current.x = data.state[`player1_paddle_x`];
