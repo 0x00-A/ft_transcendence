@@ -35,7 +35,6 @@ export const apiGetConversationMessages = async (conversationId: number, page: n
     }
 };
 
-
 export const apiGetConversations = async () => {
     try {
       const response = await apiClient.get('/chat/conversations');

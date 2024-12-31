@@ -14,6 +14,7 @@ import { CircleX, CheckCheck, User, Ban, Search, ChevronLeft } from 'lucide-reac
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 import { useTranslation } from 'react-i18next';
+import apiClient from '@/api/apiClient';
 
 interface FriendProfile {
   avatar: string;
@@ -65,18 +66,29 @@ const MessageList = () => {
   } = useGetData<conversationProps[]>('chat/conversations');
 
 
-  
   useEffect(() => {
-    if (blockStatusUpdate) {
-      const selectedConversationId = blockStatusUpdate.conversationId;
-      refetch();
-      if (selectedConversation)
-        {
-          console.log
-          const foundConversation = ConversationList?.find(convo => convo.id === selectedConversationId);
-          setSelectedConversation(foundConversation!);
+    const handleBlockStatusUpdate = async () => {
+      if (blockStatusUpdate) {
+        const selectedConversationId = blockStatusUpdate.conversationId;
+  
+      try {
+          const response = await apiClient.get('/chat/conversations');
+          if (selectedConversation) {
+            const foundConversation = response.data?.find(
+              (convo: conversationProps) => convo.id === selectedConversationId
+            );
+            console.log("conversationData?.block_status: ", foundConversation?.block_status)
+            setSelectedConversation(foundConversation!);
+          }
+      } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.error) {
+          throw new Error(error.response.data.error);
         }
-    }
+        throw new Error('An error occurred while fetching conversations.');
+      }
+      }
+    };
+    handleBlockStatusUpdate();
   }, [blockStatusUpdate]);
 
   useEffect(() => {
