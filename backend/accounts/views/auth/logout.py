@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
+from django.contrib.auth import logout
+
 
 class LogoutView(APIView):
     permission_classes = [AllowAny]
@@ -12,5 +14,5 @@ class LogoutView(APIView):
         response = Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
-        print('api ==> logout status: Logged out successfully')
+        logout(request)
         return response

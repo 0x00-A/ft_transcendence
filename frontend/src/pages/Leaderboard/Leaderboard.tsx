@@ -70,7 +70,7 @@ const Leaderboard = () => {
                       <AvatarImage src={data.avatar} alt="@username1" />
                       <AvatarFallback>U1</AvatarFallback>
                     </Avatar>
-                    <Link to="#" className="text-blue-500 hover:underline">
+                    <Link to={`/profile/${data.username}`} className="text-blue-500 hover:underline">
                       {data.username}
                     </Link>
                   </div>

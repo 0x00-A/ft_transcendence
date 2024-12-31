@@ -104,7 +104,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 ROOT_URLCONF = 'app.urls'
 
-hostname = socket.gethostname() 
+hostname = socket.gethostname()
 
 
 # INTERNAL_IPS = [
@@ -313,7 +313,7 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    'http://e2r6p15:3000',
     'https://ft-pong.me',
 ]
 
@@ -335,12 +335,13 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ['https://ft-pong.me',
-                        'https://wwww.ft-pong.me',
-                        'https://127.0.0.1',
-                        'https://localhost',
-                        'http://localhost:3000'
-                        'http://0.0.0.0:3000',
+CSRF_TRUSTED_ORIGINS = [
+    # 'https://ft-pong.me',
+    #                     'https://wwww.ft-pong.me',
+    #                     'https://127.0.0.1',
+    #                     'https://localhost',
+                        'http://e2r6p15:3000'
+                        # 'http://0.0.0.0:3000',
                         # 'wss://yourdomain.com'
                         ]
 
