@@ -157,7 +157,6 @@ const MessageInput = ({
   }, [handleTypingDebounced]);
 
   if (conversationData?.block_status == 'blocker' || conversationData?.block_status == 'blocked') {
-    console.log("conversationData?.block_status: ", conversationData?.block_status)
     return (
       <div className={css.messageBlock}>
         {conversationData?.block_status === 'blocker' 
