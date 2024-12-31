@@ -1,3 +1,4 @@
+from django.utils import timezone
 from matchmaker.matchmaker import Matchmaker
 from matchmaker.models import Game, Match
 from asgiref.sync import sync_to_async
@@ -57,6 +58,7 @@ class GameInstance:
     def __init__(self, game_id):
         # self.update_lock = asyncio.Lock()
         self.game_id = game_id
+        self.status = 'waiting'
         self.ball = Ball(x=canvas_width / 2, y=canvas_height / 2,
                          radius=ball_raduis, angle=initial_ball_angle)
         self.player1_score = 0
@@ -236,6 +238,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         self.game_id = None
 
+        print(f"connected: {connected_players}")
         if user.is_authenticated:
             await self.accept()
             self.game_id = self.scope['url_route']['kwargs']['game_id']
@@ -259,10 +262,28 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await self.broadcast_initial_state()
                 # await self.set_game_started()
                 # Start the game loop
-                await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+                if await Game.objects.filter(game_id=self.game_id).aexists():
+                    await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+                elif await Match.objects.filter(match_id=self.game_id).aexists():
+                    await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
+                # match.status = 'started'
+                # match.start_time = timezone.now()
+                # await match.asave()
                 asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
+
+    async def disconnect(self, close_code):
+        if self.game_id and hasattr(self, 'player_id'):
+            game: GameInstance = get_game(self.game_id)
+            if game:
+                if game.status == 'waiting':
+                    remove_game(self.game_id)
+                else:
+                    game.winner = 1 if self.player_id == 'player2' else 2
+                    game.is_over = True
+                    await self.broadcast_score_state()
+        return await super().disconnect(close_code)
 
     async def send_countdown_to_clients(self):
         for count in range(3, -1, -1):
@@ -336,6 +357,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if data['type'] == 'keydown':
             await self.handle_keydown(data['direction'])
+        if data['type'] == 'player_left':
+            await self.handle_player_left()
 
     async def handle_keydown(self, direction):
         game: GameInstance = get_game(self.game_id)
@@ -347,18 +370,13 @@ class GameConsumer(AsyncWebsocketConsumer):
                                game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
         game.state[f"{self.player_id}_paddle_y"] = new_position
 
-    async def disconnect(self, close_code):
-        game_id = self.game_id
-        if game_id and hasattr(self, 'player_id'):
-            game: GameInstance = get_game(game_id)
-            game.winner = 1 if self.player_id == 'player2' else 2
-            game.is_over = True
-            await self.broadcast_score_state()
-        return await super().disconnect(close_code)
+    async def handle_player_left(self):
+        if self.game_id:
+            remove_game(self.game_id)
 
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
-
+        game.status = 'started'
         # Game loop
         while True:
             await self.broadcast_game_state(game_id)

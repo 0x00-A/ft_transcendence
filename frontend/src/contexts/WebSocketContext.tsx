@@ -196,7 +196,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-      console.log(data);
+      // console.log(data);
 
       if (data.event === 'friend_request_accepted') {
         toast.success(`${data.from} ${t('toast.requestAccepted')}`);
@@ -208,7 +208,6 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         showFriendRequestToast(data.from);
       }
       if (data.event === 'notification') {
-        console.log('dataNotification: ', data);
         handleIncomingNotification(data.data);
       }
 
@@ -236,12 +235,6 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [isLoggedIn]);
 
   const handleIncomingNotification = (data: Notification) => {
-    // const newNotification: Notification = {
-    //   type: data.type,
-    //   from: data.from,
-    //   content: data.content || '',
-    //   timestamp: new Date(),
-    // };
     setNotifications((prev) => [data, ...prev]);
     setUnreadCount((prev) => prev + 1);
   };

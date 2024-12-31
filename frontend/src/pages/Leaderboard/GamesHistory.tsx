@@ -1,7 +1,6 @@
 // Styles
 import css from './GamesHistory.module.css'
 
-import { History } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { IoGameControllerOutline } from "react-icons/io5";
 import { useGetData } from '@/api/apiHooks';
@@ -9,7 +8,7 @@ import { useGetData } from '@/api/apiHooks';
 // Api
 import { LastGames } from '@/types/apiTypes';
 import { API_GET_PLAYED_GAMES_URL } from '@/api/apiConfig';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
 
@@ -18,7 +17,7 @@ const GamesHistory = () => {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [isBtnActive, setBtnActive] = useState(true);
+  // const [isBtnActive, setBtnActive] = useState(true);
   const { data: playedGames, isLoading, error } = useGetData<LastGames[]>(API_GET_PLAYED_GAMES_URL);
 
   const gameHistoryFields = useMemo(

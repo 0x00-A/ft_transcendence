@@ -22,7 +22,7 @@
 
 
 .logo {
-  height: 50px;
+  height: 80px;
   scale: 1.6;
 }
 
@@ -113,7 +113,7 @@
   }
 
   .logo {
-    height: 26px;
+    height: 30px;
     /* margin-bottom: 10px; */
     /* transition-duration: 0; */
   }
@@ -123,6 +123,12 @@
 @media screen and (min-width: 1264px) and (max-width: 1919px) {
   .sidebar {
     width: var(--nav-medium-width);
+  }
+
+  .logo {
+    height: 50px;
+    /* margin-bottom: 10px; */
+    /* transition-duration: 0; */
   }
 }
 

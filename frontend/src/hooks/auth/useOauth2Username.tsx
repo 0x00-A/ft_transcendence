@@ -37,7 +37,7 @@ const useOauth2Username = () => {
   });
   const mutation = useMutation({
     mutationFn: async (username: UsernameFormData) => { return await apiClient.post(API_OAUTH2_SETUSERNAME_URL, username) },
-    onError: (error) => {
+    onError: (error: unknown) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: 'manual', message: errs.username}, {shouldFocus:true});

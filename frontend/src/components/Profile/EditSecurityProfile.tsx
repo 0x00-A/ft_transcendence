@@ -282,7 +282,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                                         src={selectedOS === "android" ? APP_ANDROID_QRCODE : APP_IOS_QRCODE }
                                         alt={`${selectedOS} QR Code`}
                                     />
-                                    <a className={css.appLink} href={selectedOS === "android" ? APP_ANDROID_URL : APP_IOS_URL} target='_blank'>{"android" ? APP_ANDROID_URL : APP_IOS_URL}</a>
+                                    <a className={css.appLink} href={selectedOS === "android" ? APP_ANDROID_URL : APP_IOS_URL} target='_blank'>{selectedOS === "android" ? APP_ANDROID_URL : APP_IOS_URL}</a>
                                 </div>
                             )}
                             <button className={css.closePopup} onClick={handleClosePopup}>{t('Profile.EditSecurity.downloadAppPopup.buttons.close')}</button>

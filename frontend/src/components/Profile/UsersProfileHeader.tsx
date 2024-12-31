@@ -16,11 +16,11 @@ interface GetUserData {
   refetch: () => void;
 }
 
-interface UsersProfileHeaderProps {
-  getUserData: GetUserData;
-}
+// interface UsersProfileHeaderProps {
+//   getUserData: GetUserData;
+// }
 
-const UsersProfileHeader: React.FC<UsersProfileHeaderProps> = ({getUserData}) => {
+const UsersProfileHeader = ({getUserData}:{getUserData:GetUserData}) => {
 
     const {user, isLoading, refetch} = getUserData;
     const { t } = useTranslation();

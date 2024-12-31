@@ -8,7 +8,7 @@ function Logo({ style }: { style: string }) {
   //     <img className={style} src={LogoSVG} alt="logo" />
   //   </NavLink>
   // );
-  return <img className={style} src="/icons/logo.svg" alt="logo" />;
+  return <img className={style} src="/new-logo.png" alt="logo" />;
 }
 
 export default Logo;
