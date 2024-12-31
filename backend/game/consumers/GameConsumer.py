@@ -58,6 +58,7 @@ class GameInstance:
     def __init__(self, game_id):
         # self.update_lock = asyncio.Lock()
         self.game_id = game_id
+        self.status = 'waiting'
         self.ball = Ball(x=canvas_width / 2, y=canvas_height / 2,
                          radius=ball_raduis, angle=initial_ball_angle)
         self.player1_score = 0
@@ -272,6 +273,18 @@ class GameConsumer(AsyncWebsocketConsumer):
         else:
             await self.close()
 
+    async def disconnect(self, close_code):
+        if self.game_id and hasattr(self, 'player_id'):
+            game: GameInstance = get_game(self.game_id)
+            if game:
+                if game.status == 'waiting':
+                    remove_game(self.game_id)
+                else:
+                    game.winner = 1 if self.player_id == 'player2' else 2
+                    game.is_over = True
+                    await self.broadcast_score_state()
+        return await super().disconnect(close_code)
+
     async def send_countdown_to_clients(self):
         for count in range(3, -1, -1):
             await self.channel_layer.group_send(
@@ -361,19 +374,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.game_id:
             remove_game(self.game_id)
 
-    async def disconnect(self, close_code):
-        game_id = self.game_id
-        if game_id and hasattr(self, 'player_id'):
-            game: GameInstance = get_game(game_id)
-            if game:
-                game.winner = 1 if self.player_id == 'player2' else 2
-                game.is_over = True
-                await self.broadcast_score_state()
-        return await super().disconnect(close_code)
-
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
-
+        game.status = 'started'
         # Game loop
         while True:
             await self.broadcast_game_state(game_id)

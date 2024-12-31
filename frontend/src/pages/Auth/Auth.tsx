@@ -34,7 +34,7 @@ const Auth = () => {
               </button>
             </div>
           </div>
-        <AuthPongBox isLogin={isLoginBox} setIslogin={setIsloginBox}/>
+        <AuthPongBox isLogin={isLoginBox} />
       </div>
     );
 }

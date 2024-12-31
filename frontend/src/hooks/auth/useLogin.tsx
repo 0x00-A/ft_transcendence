@@ -38,7 +38,7 @@ const useLogin = () => {
 
   const mutation = useMutation({
     mutationFn: async (user: LoginFormData) => await apiClient.post(API_LOGIN_URL, user),
-    onError(error) {
+    onError(error: unknown) {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: 'manual', message: errs.username}, {shouldFocus:true})

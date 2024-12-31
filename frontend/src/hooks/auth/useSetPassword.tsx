@@ -23,7 +23,7 @@ const useSetPassword = () => {
   });
   const mutation = useMutation({
     mutationFn: async (data: SetPasswordForm) => await apiClient.post(API_SET_PASSWORD, data),
-    onError: (error) => {
+    onError: (error: unknown) => {
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
           if (errs?.password) {

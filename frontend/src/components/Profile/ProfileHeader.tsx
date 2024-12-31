@@ -1,7 +1,6 @@
 // Styles
 import css from './ProfileHeader.module.css'
-import { MdEdit } from "react-icons/md";
-// Contexts
+
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 import { UserPen } from 'lucide-react';
@@ -29,7 +28,7 @@ const profileHeader = ({setEditProfile}: {setEditProfile:React.Dispatch<React.Se
         return badgeName;
     }
   };
-  
+
   return (
     <div className={css.profileHeaderContainer}>
       <div className={css.profileBackground}>

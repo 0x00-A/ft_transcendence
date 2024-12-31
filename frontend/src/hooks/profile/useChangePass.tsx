@@ -36,7 +36,7 @@ const useChangePass = () => {
   });
   const mutation = useMutation({
     mutationFn: async (data: ChangePasswordForm) => await apiClient.put( API_UPDATE_PASSWORD_URL, data),
-    onError: (error) => {
+    onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         errs?.current_password && setError("current_password", {type: 'manual', message: errs.current_password}, {shouldFocus:true})
