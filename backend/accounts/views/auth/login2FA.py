@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.contrib.auth import login
 import pyotp
 
 from accounts.models import User
@@ -45,6 +46,7 @@ class LoginVerifyOTPView(APIView):
                             secure = False,
                             samesite = 'Strict'
                         )
+                        login(request, user)
                         return response
                     return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
                 return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)

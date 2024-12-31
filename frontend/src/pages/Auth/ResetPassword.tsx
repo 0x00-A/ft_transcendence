@@ -8,6 +8,7 @@ import useResetPass from '@/hooks/auth/useResetPass';
 import { ResetPasswordForm } from '@/types/apiTypes';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 
 type ShowPasswordFields = 'new_pass' | 'confirm_pass';
@@ -45,7 +46,9 @@ const ResetPassword = () => {
 
    useEffect(() => {
         if (mutation.isError) {
-            toast.error(mutation.error?.response?.data.error);
+            if (axios.isAxiosError(mutation.error)) {
+                toast.error(mutation.error?.response?.data.error);
+            }
         }
    }), [mutation.isError, errors];
 

@@ -38,7 +38,7 @@ const useSignup = () => {
   });
   const mutation = useMutation({
     mutationFn: async (data: SignupFormData) => await apiClient.post(API_SIGNUP_URL, data),
-    onError: (error) => {
+    onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
           errs?.username && setError("username", {type: 'manual', message: errs.username as string}, {shouldFocus:true})

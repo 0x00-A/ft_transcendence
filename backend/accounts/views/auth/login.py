@@ -39,7 +39,6 @@ class LoginView(CreateAPIView):
                                  "message": "2FA is required. Please enter your OTP code.",
                                  "username": user.username}, status=status.HTTP_200_OK)
             token = get_token_for_user(user)
-            login(request, user)
             if token:
                 response = Response(data={'message': 'login success'}, status=status.HTTP_200_OK)
                 response.set_cookie(
@@ -57,6 +56,7 @@ class LoginView(CreateAPIView):
                     samesite = 'Strict'
                 )
                 print('apiBackend ==> login status: login success')
+                login(request, user)
                 return response
             else:
                 print('apiBackend ==> login status: Getting tokens for user failed')

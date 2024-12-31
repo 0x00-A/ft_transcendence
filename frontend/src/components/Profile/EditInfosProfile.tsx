@@ -1,5 +1,5 @@
 // React
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // Styles
 import css from './EditInfosProfile.module.css'
 import { toast } from 'react-toastify';
@@ -236,7 +236,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                             {t('editEmail.btnEdit')}
                         </button>
                     </div>
-                { errors.email && <span className={css.fieldError}>{errors.email.message}</span> }
+                { emailError && <span className={css.fieldError}>{emailError}</span> }
                 </div>
 
             <div className={`${isEditEmail ? css.bluredBgConfirm : ''}`}>

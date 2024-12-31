@@ -29,7 +29,7 @@ const useResetPass = () => {
 
   const mutation = useMutation({
     mutationFn: async (data: ResetPasswordForm) => await apiClient.post( API_RESET_PASSWORD_URL, data),
-    onError: (error) => {
+    onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
         const errs = error?.response?.data;
         if (errs?.new_password) {

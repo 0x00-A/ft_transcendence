@@ -1,8 +1,6 @@
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { at } from 'lodash';
-import { use } from 'i18next';
-import ReturnBack from '@/components/Game/components/ReturnBack/ReturnBack';
+import { TFunction } from 'i18next';
 
 export const SignupSchema = () => {
   const { t } = useTranslation();
@@ -111,7 +109,7 @@ export const SetUsernameSchema = () => {
   });
 };
 
-export const otpSchema = (t) => {
+export const otpSchema = (t:TFunction) => {
 
   return yup.object().shape({
     otp: yup

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { TrendingUp, Crown, Award } from 'lucide-react';
 import styles from './CompetitiveOverview.module.css';
 import { useUser } from '@/contexts/UserContext';

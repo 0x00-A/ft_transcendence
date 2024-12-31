@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { UsernameFormData } from '../../types/apiTypes';
 import { LOGO } from '@/config/constants';
 import OtpAuth from './OtpAuth';
+import { useLoadingBar } from '@/contexts/LoadingBarContext';
 
 
 
@@ -22,6 +23,7 @@ const Oauth2Callback = () => {
     const {setIsLoggedIn} = useAuth();
     const [is2faRequired, set2faRequired] = useState(false);
     const [username, setUsername] = useState('');
+    const loadingBarRef = useLoadingBar();
 
     const {register, handleSubmit, errors, mutation, reset} = useOauth2Username()
 
@@ -102,7 +104,7 @@ const Oauth2Callback = () => {
 
   return (
     <div className={css.oauth2Container}>
-        { is2faRequired && <OtpAuth setOtpRequired={set2faRequired} username={username}  />}
+        { is2faRequired && <OtpAuth setOtpRequired={set2faRequired} username={username} loadingBarRef={loadingBarRef} />}
         { isUsernameForm &&
           <form noValidate={true} className={css.usernameForm} onSubmit={ handleSubmit(handleClick) }>
             <div className={css.FormHeader}>

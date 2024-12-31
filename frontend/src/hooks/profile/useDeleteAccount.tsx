@@ -26,7 +26,7 @@ const useDeleteAccount = () => {
   });
   const mutation = useMutation({
     mutationFn: async (data: PasswordForm) => await apiClient.post(API_DELETE_ACCOUNT_URL, data),
-    onError: (error) => {
+    onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
           const errs = error?.response?.data;
           errs?.password && setError("password", {type: 'manual', message: errs.password as string}, {shouldFocus:true})

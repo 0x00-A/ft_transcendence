@@ -152,7 +152,7 @@ const Game = () => {
       socket.onmessage = (e) => {
         refetchData();
         const data = JSON.parse(e.data);
-        // console.log(data);
+        console.log(data);
 
         if (data.event === 'error') {
           toast.error(data.message);
@@ -166,14 +166,15 @@ const Game = () => {
           setPlayer2_id(data.player2_id);
           setMatchStarted(true);
         }
-        if (data.event === 'in_queue') {
-          if (gameState === 'startGame') return;
-          setGameState('inqueue');
-        }
+        // if (data.event === 'in_queue') {
+        //   setGameState('inqueue');
+        // }
         if (data.event === 'game_address') {
           setGameAdrress(data.game_address);
           setPlayer1_id(data.player1_id);
           setPlayer2_id(data.player2_id);
+          console.log("setting game address..");
+
           setGameState('startGame');
         }
         if (data.event === 'multigame_address') {
@@ -209,15 +210,12 @@ const Game = () => {
 
   const sendMessage = (message: Record<string, any>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
-      // console.log(`sending message: ${message}`);
-
       ws.current.send(JSON.stringify(message));
     }
   };
 
   const requestRemoteGame = () => {
-    // console.log('request remote game');
-    // setGameState('inqueue');
+    setGameState('inqueue');
     sendMessage({
       event: 'request_remote_game',
     });
