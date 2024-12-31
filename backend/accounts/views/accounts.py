@@ -14,6 +14,7 @@ class MyProfileView(APIView):
 
     def get(self, request):
         try:
+            print('____________api ==> get profile_____________')
             user = request.user
             serializer = UserProfileSerializer(user, context={'request': request})
             print('api ==> get profile: User profile found')

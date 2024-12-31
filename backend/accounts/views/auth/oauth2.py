@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from django.contrib.auth import login
 
 from accounts.serializers import Oauth2Serializer
 from accounts.models import User, EmailVerification
@@ -106,6 +107,7 @@ def oauth2_authentication(request, choice):
         secure=True,
         samesite='Strict'
     )
+    login(request, check_user)
     return response
 
 
@@ -144,4 +146,5 @@ def oauth2_set_username(request):
         secure = True,
         samesite = 'Strict'
     )
+    login(request, user)
     return response
