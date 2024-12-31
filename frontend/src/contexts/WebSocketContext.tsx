@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import { useGameInvite } from './GameInviteContext';
 import apiClient from '@/api/apiClient';
 import { useAuth } from './AuthContext';
-import { useUser } from '@/contexts/UserContext';
+// import { useUser } from '@/contexts/UserContext';
 import FriendRequestCard from '@/components/Friends/FriendRequestCard';
 import {
   apiAcceptFriendRequest,

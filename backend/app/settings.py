@@ -313,7 +313,7 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    'http://e2r6p15:3000',
+    'http://localhost:3000',
     'https://ft-pong.me',
 ]
 
@@ -340,7 +340,7 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-                        'http://e2r6p15:3000'
+                        'http://localhost:3000'
                         # 'http://0.0.0.0:3000',
                         # 'wss://yourdomain.com'
                         ]
