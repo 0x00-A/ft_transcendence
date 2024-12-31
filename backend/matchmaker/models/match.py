@@ -30,6 +30,7 @@ class Match(models.Model):
     end_time = models.DateTimeField(blank=True, null=True)
     player1_ready = models.BooleanField(default=False)
     player2_ready = models.BooleanField(default=False)
+    players_connected = models.BooleanField(default=False)
 
     def ready(self):
         return self.player1_ready and self.player2_ready

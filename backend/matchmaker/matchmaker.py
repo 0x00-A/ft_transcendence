@@ -368,7 +368,7 @@ class Matchmaker:
 
     @classmethod
     async def process_multi_game_result(cls, game_id, winner, p1_score, p2_score, p3_score, p4_score):
-        """Process a single game result and update the database"""
+        """Process a multi game result and update the database"""
         game = await MultiGame.objects.aget(game_id=game_id)
 
         await sync_to_async(game.end_game)(winner, p1_score, p2_score, p3_score, p4_score)
@@ -403,7 +403,7 @@ class Matchmaker:
         try:
             match = await sync_to_async(Match.objects.get)(
                 (Q(player1_id=player_id) | Q(
-                    player2_id=player_id)) & ~Q(status='ended')
+                    player2_id=player_id)) & Q(status='waiting')
             )
             if match.player1_id == player_id:
                 match.player1_ready = False
@@ -446,9 +446,12 @@ class Matchmaker:
         await sync_to_async(match.save)()
 
         if match.ready():
-            match.status = 'started'
-            match.start_time = timezone.now()
-            await match.asave()
+
+            # move this to game_comsumer and add connected_players to match
+            # match.status = 'started'
+            # match.start_time = timezone.now()
+            # await match.asave()
+
             match_address = f"game/match_{match.id}"
 
             message = {
@@ -460,3 +463,6 @@ class Matchmaker:
             }
             await cls.send_message_to_client(match.player1_id, message)
             await cls.send_message_to_client(match.player2_id, message)
+            match.player1_ready = False
+            match.player2_ready = False
+            await sync_to_async(match.save)()

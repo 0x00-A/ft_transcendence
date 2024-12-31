@@ -87,7 +87,13 @@ const RemoteGame: React.FC<GameProps> = ({
     const f = (gameState: GameState) => {
       if (gameState !== 'started') {
         toast.info("Sorry the other player didn't make it");
-        ws?.current?.close();
+        if (
+          ws.current &&
+          ws.current.readyState === WebSocket.OPEN
+        ) {
+          ws.current.send(JSON.stringify({ type: 'player_left' }));
+          ws.current.close();
+        }
         handleMainMenu();
       }
     };
@@ -119,6 +125,8 @@ const RemoteGame: React.FC<GameProps> = ({
 
     gameSocket.onmessage = (e) => {
       const data = JSON.parse(e.data);
+      // console.log(data);
+
       if (data.type === 'game_started') {
         paddle1Ref.current.x = data.state[`player1_paddle_x`];
         paddle2Ref.current.x = data.state[`player2_paddle_x`];

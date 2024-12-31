@@ -74,7 +74,7 @@ const NotificationsDropdown = () => {
             </div>
           ) : (
             notifications.map((notification, index) => (
-              <DropdownMenuItem key={notification.id}>
+              // <DropdownMenuItem key={notification.id}>
                 <div
                   key={index}
                   className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
@@ -105,7 +105,7 @@ const NotificationsDropdown = () => {
                     {notification.message}
                   </p>
                 </div>
-              </DropdownMenuItem>
+              // </DropdownMenuItem>
             ))
           )}
           {/* {notifications.map((notification, index) => (
