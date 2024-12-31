@@ -135,12 +135,12 @@ class Tournament(models.Model):
             start_time=timezone.now()
         )
 
-        matches = {
-            "1": [round1_match1, round1_match2],
-            "2": []
-        }
+        # matches = {
+        #     "1": [round1_match1, round1_match2],
+        #     "2": []
+        # }
 
-        return matches
+        # return matches
 
     def start_tournament(self):
         if not self.is_full:
@@ -149,7 +149,7 @@ class Tournament(models.Model):
         self.status = 'ongoing'
         self.save()
 
-        matches = self.generate_matches_for_tournament()
+        self.generate_matches_for_tournament()
 
         return True
 

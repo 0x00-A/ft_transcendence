@@ -138,8 +138,6 @@ const RemoteTournament = ({
   const { t } = useTranslation();
 
   const getTranslatedStatus = (status: string) => {
-    console.log('status: ', status);
-
     switch (status) {
       case 'waiting':
         return t('game.joinedTournaments.statusGame.waiting');
