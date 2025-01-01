@@ -316,7 +316,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://ft-pong.me',
 ]
-
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
