@@ -1,9 +1,11 @@
 from django.utils.deprecation import MiddlewareMixin
 
+
 class RefreshTokenMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        print('+++++++++++request.headers++++++++++++', request.headers, '+++++++++++request.headers++++++++++++')
-        print('-----------request.user-----------', request.user, '-----------request.user-----------')
+        # print('+++++++++++request.headers++++++++++++', request.headers, '+++++++++++request.headers++++++++++++')
+        # print('-----------request.user-----------', request.user, '-----------request.user-----------')
+        pass
 
     def process_response(self, request, response):
         # print('+++++++++++request.headers++++++++++++', request.headers, '+++++++++++request.headers++++++++++++')
@@ -15,7 +17,7 @@ class RefreshTokenMiddleware(MiddlewareMixin):
                 'access_token',
                 new_access_token,
                 httponly=True,
-                secure=False,  
+                secure=False,
                 samesite='Strict'
             )
         return response

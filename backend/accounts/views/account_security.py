@@ -62,14 +62,14 @@ class Enable2faView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         totp = pyotp.TOTP(user.otp_secret)
-        print('api ==> enable 2fa: Verifying OTP : ', request.data['otp'])
+        # print('api ==> enable 2fa: Verifying OTP : ', request.data['otp'])
         if totp.verify(request.data['otp']):
             user = request.user
             user.is2fa_active = True
             user.save()
             # qrcode_path = f"{MEDIA_ROOT}/qrcodes/{user.username}_2fa.png"
             # if os.path.exists(qrcode_path):
-                # os.remove(qrcode_path)
+            # os.remove(qrcode_path)
             return Response({'message': 'Two-factor authentication enabled'}, status=status.HTTP_200_OK)
         else:
             return Response(
