@@ -14,7 +14,6 @@ import { CircleX, CheckCheck, User, Ban, Search, ChevronLeft } from 'lucide-reac
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 import { useTranslation } from 'react-i18next';
-import apiClient from '@/api/apiClient';
 
 interface FriendProfile {
   avatar: string;
@@ -50,8 +49,6 @@ const MessageList = () => {
   const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
   const { t } = useTranslation();
 
-
-
   const {
     data: friendsData,
     isLoading: friendsLoading,
@@ -77,7 +74,6 @@ const MessageList = () => {
             const foundConversation = response?.find(
               (convo: conversationProps) => convo.id === selectedConversationId
             );
-            console.log("conversationData?.block_status: ", foundConversation?.block_status)
             setSelectedConversation(foundConversation!);
             refetch();
           }
@@ -116,8 +112,6 @@ const MessageList = () => {
         conversation => conversation.name === username
       );
 
-      // console.log("matchedConversation; ", matchedConversation);
-      // console.log("username; ", username);
       if (matchedConversation) {
         setSelectedConversation(matchedConversation);
 
@@ -132,7 +126,6 @@ const MessageList = () => {
         const fetchUser = async () => {
           try {
             const user = await apiGetUser(username);
-            // console.log("Fetched user: ", user);
 
             if (user) {
               handleSearchItemClick(user);
@@ -195,7 +188,6 @@ const MessageList = () => {
 
   const handleClose = () => {
     if (selectedConversation !== null) {
-      // console.log("selectedConversation: ", selectedConversation)
       updateActiveConversation(-1);
       setSelectedConversation(null);
     }
@@ -282,7 +274,6 @@ const MessageList = () => {
 
   const handleConversationClick = useCallback((conversation: conversationProps | null) => {
 
-    // console.log(" ..... selectedConversation: ", conversation)
     setSelectedConversation(conversation);
     setIsSearchActive(false);
     setSearchQuery('');
@@ -299,7 +290,6 @@ const MessageList = () => {
 
       if (newConversation && newConversation.id) {
         await refetch();
-        // console.log("new => Conversation: ", newConversation);
         setSelectedConversation(newConversation);
         setIsSearchActive(false);
         setSearchQuery('');

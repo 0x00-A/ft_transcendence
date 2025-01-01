@@ -1,8 +1,7 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
-// import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 interface MessageProps {
   id: number;
@@ -63,7 +62,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   const [blockStatusUpdate, setBlockStatusUpdate] = useState<BlockStatusUpdate | null>(null);
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
-  // const { selectedConversation } = useSelectedConversation();
 
 
   useEffect(() => {
@@ -71,7 +69,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
-      // console.log('WebSocket connection opened');
     };
 
     socket.onmessage = (event) => {
@@ -105,13 +102,11 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           blockedId: data.blocked_id,
           blockStatus: data.block_status,
         };
-        // console.log('>>>>>>>>>>>>>>>>>Sending toggle block status:', blockStatusData);
         setBlockStatusUpdate(blockStatusData);
       }
     };
 
     socket.onclose = () => {
-      // console.log('WebSocket connection closed');
     };
 
     socket.onerror = (error) => {
