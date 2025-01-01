@@ -49,3 +49,39 @@
   margin-right: 15px;
   font-size: 1.7rem;
 }
+
+
+.newMessage {
+  padding: 8px;
+  margin-right: 10px;
+  position: relative;
+}
+
+.btnLabel {
+  position: absolute;
+  top: -40px;
+  right: -100px;
+  transform: translateX(-50%);
+  background-color: #384b6c;
+  color: var(--text-color);
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 15px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 100;
+}
+
+
+.newMessage:hover {
+  border-radius: 50%;
+  background-color: #283246;
+  cursor: pointer;
+}
+
+.newMessage:hover .btnLabel {
+  opacity: 1;
+  visibility: visible;
+}
