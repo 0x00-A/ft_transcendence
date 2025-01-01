@@ -35,10 +35,8 @@ const MessageInput = ({
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [charCount, setCharCount] = useState(0);
-  const maxChars = 200;
+  const maxChars = 500;
   const { t } = useTranslation();
-
-
 
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -134,6 +132,9 @@ const MessageInput = ({
     setIsFlying(true);
     setShowEmojiPicker(false);
     setCharCount(0);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
     setTimeout(() => setIsFlying(false), 500);
   };
 
