@@ -37,11 +37,9 @@ class ProfileApiView(APIView):
         try:
             user = request.user
             serializer = UserSerializer(user, context={'request': request})
-            print('api ==> get profile: User profile found')
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
-            print('api ==> get profile: User profile not found')
             return Response(
                 {'error': 'User profile not found'},
                 status=status.HTTP_404_NOT_FOUND

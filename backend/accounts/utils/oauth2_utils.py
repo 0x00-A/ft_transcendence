@@ -51,10 +51,10 @@ def exchange_code(code:str, choice:str):
         res.raise_for_status()
         return res.json()
     except requests.exceptions.HTTPError as err:
-        print('-->', err)
+        # print('-->', err)
         return None
     except Exception as err:
-        print('-->', err)
+        # print('-->', err)
         return None
 
 
@@ -97,10 +97,10 @@ def get_oauth2_user(token, choice):
             }
         return user_data
     except requests.exceptions.HTTPError as e:
-        print('-->', e)
+        # print('-->', e)
         return None
     except Exception as e:
-        print('-->', e)
+        # print('-->', e)
         return None
 
 # def get_oauth2_user(token, user_url):

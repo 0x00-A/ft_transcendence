@@ -35,10 +35,10 @@ class Oauth2Serializer(serializers.ModelSerializer):
             res.raise_for_status()
             return res.content
         except requests.exceptions.HTTPError as err:
-            print('-->', err)
+            # print('-->', err)
             return None
         except Exception as err:
-            print('-->', err)
+            # print('-->', err)
             return None
 
     def create(self, validated_data):

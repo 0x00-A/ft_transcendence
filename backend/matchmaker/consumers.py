@@ -29,7 +29,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         event = data['event']
-        print(f'Websocket Message Recieved: {event}')
+        # print(f'Websocket Message Recieved: {event}')
         if event == 'request_remote_game':
             await Matchmaker.request_remote_game(self.player_id)
         elif event == 'request_multiple_game':

@@ -86,10 +86,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'app.middlewares.LogOriginMiddleware',
@@ -105,17 +105,17 @@ hostname = socket.gethostname()
 """
         SecurityMiddleware SETTINGS
 """
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
 
-C_FRAME_OPTIONS = 'DENY'
+# CSRF_COOKIE_SECURE = True
+
+# C_FRAME_OPTIONS = 'DENY'
 
 """
         SessionMiddleware SETTINGS
@@ -123,9 +123,29 @@ C_FRAME_OPTIONS = 'DENY'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db' #default
 SESSION_COOKIE_NAME = 'ft_pong_sessionid'
 SESSION_COOKIE_HTTPONLY = True #efault
-SESSION_COOKIE_AGE = 3600 # 1 hour
+# SESSION_COOKIE_AGE = 3600 # 1 hour
 SESSION_SAVE_EVERY_REQUEST = True
 
+SESSION_COOKIE_SECURE = True
+
+
+"""
+        CsrfViewMiddleware SETTINGS
+"""
+# CSRF_COOKIE_NAME = 'ft_pong_csrftoken'
+# CSRF_COOKIE_HTTPONLY = False #default
+CSRF_COOKIE_SAMESITE = 'Lax'
+# CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    # 'https://ft-pong.me',
+    #                     'https://wwww.ft-pong.me',
+    #                     'https://127.0.0.1',
+    #                     'https://localhost',
+                        'http://e2r6p15:3000'
+                        # 'http://0.0.0.0:3000',
+                        # 'wss://yourdomain.com'
+                        ]
+# CSRF_COOKIE_AGE = 3600 # 1 hour
 
 # INTERNAL_IPS = [
 #     "127.0.0.1",
@@ -358,15 +378,26 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = [
-    # 'https://ft-pong.me',
-    #                     'https://wwww.ft-pong.me',
-    #                     'https://127.0.0.1',
-    #                     'https://localhost',
-                        'http://e2r6p15:3000'
-                        # 'http://0.0.0.0:3000',
-                        # 'wss://yourdomain.com'
-                        ]
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.security.csrf': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 # LOG_DIR = '/app/backend/logs'
 # os.makedirs(LOG_DIR, exist_ok=True)

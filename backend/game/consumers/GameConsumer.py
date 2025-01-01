@@ -238,7 +238,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         self.game_id = None
 
-        print(f"connected: {connected_players}")
+        # print(f"connected: {connected_players}")
         if user.is_authenticated:
             await self.accept()
             self.game_id = self.scope['url_route']['kwargs']['game_id']

@@ -57,7 +57,6 @@ class SignupSerializer(serializers.ModelSerializer):
             tmp_user = User(username=attrs['username'], email=attrs['email'])
             validate_password(password=attrs['password'], user=tmp_user)
         except ValidationError as exc:
-            print('------------password validation error-----------')
             raise serializers.ValidationError({'password': exc.messages})
         return attrs
 

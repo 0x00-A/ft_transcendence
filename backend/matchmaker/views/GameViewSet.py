@@ -26,7 +26,6 @@ class GetPlayedGamesView(APIView):
     def get(self, request):
         try:
             user = request.user
-            print('------>', user, '-----------')
             played_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')
             serializer = ProfileGamesSerializer(played_games, many=True, context={'request': request, 'user': user})
             # all_games = (games_as_player1 | games_as_player2).order_by('-start_time')
