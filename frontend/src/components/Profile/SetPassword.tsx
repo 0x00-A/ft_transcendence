@@ -44,10 +44,10 @@ const SetPassword = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetSt
     if (mutation.isSuccess) {
         refetch();
         if (mutation?.data?.data?.message) {
-          console.log("message:>: ", mutation?.data?.data?.message)
+          // console.log("message:>: ", mutation?.data?.data?.message)
           toast.success(t('Profile.setPassword.successMessage'));
         } else {
-          console.log("else message:>: ", mutation?.data?.data?.message)
+          // console.log("else message:>: ", mutation?.data?.data?.message)
           toast.success(t('Profile.setPassword.successMessage'));
         }
         setEditProfile(false);

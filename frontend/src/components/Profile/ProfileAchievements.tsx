@@ -28,7 +28,7 @@ const ProfileAchievements = ({
   const start = currentAchiev * 1;
   const end = start + 3;
 
-  console.log('achievements===>>', achievements);
+  // console.log('achievements===>>', achievements);
   if (error) {
     return <div>{error.message}</div>;
   }
