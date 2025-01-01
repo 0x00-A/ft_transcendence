@@ -6,6 +6,7 @@ import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import ChatSkeleton from './ChatSkeleton';
 import { apiGetConversationMessages } from '@/api/chatApi';
+import { OctagonAlert } from 'lucide-react';
 
 interface MessageProps {
   id: number;
@@ -17,13 +18,6 @@ interface MessageProps {
   seen?: boolean;
 }
 
-// interface PaginatedMessagesResponse {
-//   results: MessageProps[];
-//   next: string | null;
-//   previous: string | null;
-//   count: number;
-// }
-
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
@@ -34,8 +28,6 @@ const ChatContent = () => {
   const [reversedFetchedMessages, setReversedFetchedMessages] = useState<MessageProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-
 
   useEffect(() => {
     if (!selectedConversation) return;
@@ -58,9 +50,8 @@ const ChatContent = () => {
           }
           setHasMore(!!data.next);
         }
-        // console.log("fetching goood >>>>>>>");
+        console.log("fetching goood >>>>>>>");
       } catch (error) {
-        console.error('Error fetching messages:', error);
         setError('Failed to load messages. Please try again later.');
       } finally {
         setIsLoading(false);
@@ -68,27 +59,22 @@ const ChatContent = () => {
     };
 
     fetchMessages();
-  }, [selectedConversation, page]);
+  }, [page]);
 
 
   useEffect(() => {
     if (!selectedConversation) return;
 
-    // console.log("websocket: ", websocketMessages);
-    // console.log("Checking WebSocket messages for selectedConversation:", selectedConversation?.id);
     if (websocketMessages.length === 0) {
-      // console.log("No websocket messages, using fetched messages");
       setReversedFetchedMessages([...fetchedChatMessages].reverse());
     } else {
       const filteredMessages = websocketMessages.filter(
         (message) => message.conversation === selectedConversation.id
       );
-      // console.log("Filtered WebSocket messages:", filteredMessages);
 
       if (filteredMessages.length > 0) {
         setWebsocketChatMessages(filteredMessages);
       } else {
-        // console.log("No messages found for selected conversation, using reversed fetched messages");
         setReversedFetchedMessages([...fetchedChatMessages].reverse());
       }
     }
@@ -97,7 +83,6 @@ const ChatContent = () => {
 
   useEffect(() => {
     if (selectedConversation?.id) {
-      // console.log("avtive ***********");
       updateActiveConversation(selectedConversation.id);
       if (selectedConversation.unreadCount) {
         markAsRead(selectedConversation.id);
@@ -132,12 +117,8 @@ const ChatContent = () => {
   };
 
   const combinedMessages = useMemo(() => {
-
-    // console.log(" i here for set combinedMessages ")
-
     return [...reversedFetchedMessages, ...websocketChatMessages];
   }, [reversedFetchedMessages, websocketChatMessages]);
-  // console.log(" combinedMessages: ", combinedMessages);
 
   return (
     <>
@@ -145,7 +126,7 @@ const ChatContent = () => {
         {isLoading && page === 1 ? (
           <ChatSkeleton />
         ) : error ? (
-          <div>Error loading messages</div>
+          <OctagonAlert />
         ) : (
           <MessageArea
             messages={combinedMessages}

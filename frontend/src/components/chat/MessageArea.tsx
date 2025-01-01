@@ -60,7 +60,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onLoadMore, hasMore
     <div className={css.messageArea} ref={messageAreaRef}>
       {hasMore && (
         <button className={css.loadMoreButton} onClick={handleLoadMore}>
-          {/* {t('messageArea.showMoreButton')} */}
           <RefreshCcw />
         </button>
       )}
