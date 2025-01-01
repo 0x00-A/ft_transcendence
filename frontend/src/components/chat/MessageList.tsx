@@ -5,7 +5,7 @@ import SearchResultItem from './SearchResultItem';
 import { useLocation } from 'react-router-dom';
 import { useGetData } from '@/api/apiHooks';
 import { useUser } from '@/contexts/UserContext';
-import { apiCreateConversation, apiGetUser } from '@/api/chatApi';
+import { apiCreateConversation, apiGetConversations, apiGetUser } from '@/api/chatApi';
 import { conversationProps } from '@/types/apiTypes';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useNavigate } from 'react-router-dom';
@@ -72,20 +72,18 @@ const MessageList = () => {
         const selectedConversationId = blockStatusUpdate.conversationId;
 
       try {
-          const response = await apiClient.get('/chat/conversations');
+          const response = await apiGetConversations();
           if (selectedConversation) {
-            const foundConversation = response.data?.find(
+            const foundConversation = response?.find(
               (convo: conversationProps) => convo.id === selectedConversationId
             );
-            // console.log("conversationData?.block_status: ", foundConversation?.block_status)
+            console.log("conversationData?.block_status: ", foundConversation?.block_status)
             setSelectedConversation(foundConversation!);
+            refetch();
           }
       } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.error) {
-          throw new Error(error.response.data.error);
+          console.log('An error occurred while fetching conversations.');
         }
-        throw new Error('An error occurred while fetching conversations.');
-      }
       }
     };
     handleBlockStatusUpdate();
