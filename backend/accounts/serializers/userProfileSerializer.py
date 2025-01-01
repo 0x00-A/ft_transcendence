@@ -14,7 +14,6 @@ class BadgeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'icon', 'xp_reward', 'level_required']
 
     def get_icon(self, obj):
-        print('----------BADGE--===>>', f"{SERVER_URL}{MEDIA_URL}{obj.icon}", '<<---BADGE--')
         return f"{SERVER_URL}{MEDIA_URL}{obj.icon}"
 
 
@@ -46,20 +45,17 @@ class OtherUserSerializer(serializers.ModelSerializer):
         try:
             BlockRelationship.objects.get(
                 blocker=self.context['request'].user, blocked=obj)
-            print('-->>>-you are the blocker-<<--------')
             return 'Blocker'
         except BlockRelationship.DoesNotExist:
             try:
                 BlockRelationship.objects.get(
                     blocker=obj, blocked=self.context['request'].user)
-                print('-->>>-you are the blocked-<<--------')
                 return 'Blocked'
             except BlockRelationship.DoesNotExist:
                 pass
         try:
             as_sender = FriendRequest.objects.get(
                 sender=self.context['request'].user, receiver=obj)
-            print('---as sender-->>', as_sender.status, '<<--------')
             if as_sender.status == 'accepted':
                 return 'Friends'
             if as_sender.status == 'pending':
@@ -71,7 +67,6 @@ class OtherUserSerializer(serializers.ModelSerializer):
             try:
                 as_reciever = FriendRequest.objects.get(
                     sender=obj, receiver=self.context['request'].user)
-                print('---as reciever-->>', as_reciever.status, '<<--------')
                 if as_reciever.status == 'accepted':
                     return 'Friends'
                 if as_reciever.status == 'pending':
@@ -99,20 +94,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
         try:
             BlockRelationship.objects.get(
                 blocker=self.context['request'].user, blocked=obj)
-            print('-->>>-you are the blocker-<<--------')
             return 'Blocker'
         except BlockRelationship.DoesNotExist:
             try:
                 BlockRelationship.objects.get(
                     blocker=obj, blocked=self.context['request'].user)
-                print('-->>>-you are the blocked-<<--------')
                 return 'Blocked'
             except BlockRelationship.DoesNotExist:
                 pass
         try:
             as_sender = FriendRequest.objects.get(
                 sender=self.context['request'].user, receiver=obj)
-            print('---as sender-->>', as_sender.status, '<<--------')
             if as_sender.status == 'accepted':
                 return 'Friends'
             if as_sender.status == 'pending':
@@ -124,7 +116,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             try:
                 as_reciever = FriendRequest.objects.get(
                     sender=obj, receiver=self.context['request'].user)
-                print('---as reciever-->>', as_reciever.status, '<<--------')
                 if as_reciever.status == 'accepted':
                     return 'Friends'
                 if as_reciever.status == 'pending':

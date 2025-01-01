@@ -21,7 +21,7 @@ class JwtAuthMiddleware(BaseMiddleware):
             return event
 
         headers = dict(scope['headers'])
-        cookie = headers.get(b'cookie', b'').decode('utf-8')        
+        cookie = headers.get(b'cookie', b'').decode('utf-8')
         # print('api ==> JwtAuthMiddleware: Cookie--++:', cookie)
         cookies = SimpleCookie()
         cookies.load(cookie)
@@ -32,12 +32,9 @@ class JwtAuthMiddleware(BaseMiddleware):
                 validated_token = JWTAuthentication().get_validated_token(raw_token=access_token)
                 user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
                 scope['user'] = user
-                print('api ==> JwtAuthMiddleware: User authenticated')
             except (InvalidToken, TokenError, AuthenticationFailed):
-                print('api ==> JwtAuthMiddleware: User not authenticated (Anonynous)')
                 scope['user'] = AnonymousUser()
         else:
-            print('api ==> JwtAuthMiddleware: No token found in the request')
             scope['user'] = AnonymousUser()
         return await super().__call__(scope, receive, send)
 

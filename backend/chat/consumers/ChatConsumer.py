@@ -34,11 +34,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user.save()
 
     async def receive(self, text_data):
-        print("Received data: ", text_data, "-----------------")
+        # print("Received data: ", text_data, "-----------------")
         data = json.loads(text_data)
         action = data.get("action")
 
-        print(f"Action: {action}, Data: {data}")
+        # print(f"Action: {action}, Data: {data}")
         try:
             if action == "update_active_conversation":
                 await self.update_active_conversation(data)
@@ -51,7 +51,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif action == "toggle_block_status":
                 await self.handle_block_status(data)
         except Exception as e:
-            print(f"Error handling action {action}: {str(e)}")
+            # print(f"Error handling action {action}: {str(e)}")
             await self.send(text_data=json.dumps({
                 "type": "error",
                 "message": str(e)
@@ -169,7 +169,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             translated_message = f"{sender_user.username} sent you a message: {message}"
             translated_title = "New Message"
 
-        print("receiver message" + self.user.username)
+        # print("receiver message" + self.user.username)
         notification = Notification.objects.create(
             user=receiver_user,
             link=f"/chat",

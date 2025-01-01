@@ -15,7 +15,6 @@ class ConfirmLoginView(APIView):
     permission_calsses = [IsAuthenticated]
 
     def get(self, request):
-        print('apiBackend ==> login status: User is authenticated')
         return Response({'message': 'User is authenticated'}, status=status.HTTP_200_OK)
 
 
@@ -55,13 +54,10 @@ class LoginView(CreateAPIView):
                     secure = False,
                     samesite = 'Strict'
                 )
-                print('apiBackend ==> login status: login success')
                 login(request, user)
                 return response
             else:
-                print('apiBackend ==> login status: Getting tokens for user failed')
                 return Response({'error': 'Getting tokens for user failed'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-        print('apiBackend ==> login status: Invalid credentials')
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 

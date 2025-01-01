@@ -28,7 +28,7 @@ class Matchmaker:
     async def register_client(cls, player_id, channel_name):
         # cls.connected_clients[player_id] = channel_name
         cls.connected_clients[player_id].add(channel_name)
-        print(f"channel names: {cls.connected_clients[player_id]}")
+        # print(f"channel names: {cls.connected_clients[player_id]}")
 
     @classmethod
     async def unregister_client(cls, player_id, channel_name):
@@ -75,7 +75,7 @@ class Matchmaker:
 
     @classmethod
     async def create_remote_game(cls, player1_id, player2_id):
-        print(f"creating game... p1: {player1_id} | p2: {player2_id}")
+        # print(f"creating game... p1: {player1_id} | p2: {player2_id}")
         p1 = await User.objects.aget(id=player1_id)
         p2 = await User.objects.aget(id=player2_id)
         game = await Game.objects.acreate(
@@ -356,7 +356,7 @@ class Matchmaker:
             await cls.process_tournament_match(game_id, winner, p1_score, p2_score)
             return
 
-        print(f"Game ID {game_id} not found.")
+        # print(f"Game ID {game_id} not found.")
 
     @classmethod
     async def process_game_result(cls, game_id, winner, p1_score, p2_score):

@@ -14,14 +14,11 @@ class MyProfileView(APIView):
 
     def get(self, request):
         try:
-            print('____________api ==> get profile_____________')
             user = request.user
             serializer = UserProfileSerializer(user, context={'request': request})
-            print('api ==> get profile: User profile found')
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
-            print('api ==> get profile: User profile not found')
             return Response(
                 {'error': 'User profile not found'},
                 status=status.HTTP_404_NOT_FOUND
@@ -52,11 +49,9 @@ class UserProfileView(APIView):
                     {'message': 'You have been blocked by this user, you cannot see his profile', 'status': 'Blocked'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            print('api ==> get user profile: User profile found')
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
-            print('api hh ==> get user profile: User profile not found')
             return Response({'error': 'User profile not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response(
@@ -73,7 +68,6 @@ class GetProfileAchievementsView(APIView):
             user = User.objects.get(username=username)
             achievements = UserAchievement.objects.filter(user=user).order_by('-is_unlocked', 'achievement__reward_points')
             serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
-            print('api ==> get my achievements: User achievements found')
             return Response(serializer.data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)

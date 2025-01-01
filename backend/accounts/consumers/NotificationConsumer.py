@@ -21,10 +21,10 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
         self.username = None
-        print('------------Notification Consumer Connected------------')
+        # print('------------Notification Consumer Connected------------')
 
         if user.is_authenticated:
-            print(f"------------>>User is Authenticated: {user.username}")
+            print(f"==> {user.username} is connected to the websocket NotificationConsumer")
             await self.accept()
             self.username = user.username
             self.id = user.id
@@ -66,7 +66,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         event = data['event']
         print(f'Notication Websocket Message Recieved: {event}')
-        print(f'data Websocket Message Recieved: {data}')
         if event == 'game_invite':
             await self.handle_invite(self.username, data.get('to'))
         if event == 'invite_accept':
@@ -83,7 +82,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def handle_accept(self, sender, recipient):
         if sender not in connected_users:
-            print(f'sender not found ... {sender}')
+            # print(f'sender not found ... {sender}')
             await self.send_message(recipient, {
                 "event": "error",
                 "message": f"{sender} is currently offline.",
@@ -160,7 +159,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         }
 
         if recipient in connected_users:
-            print(f'Recipient found sending invite...')
+            # print(f'Recipient found sending invite...')
             if await self.is_already_playing(recipient):
                 await self.send_message(sender, {
                     "event": "error",
@@ -169,7 +168,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             else:
                 await self.send_message(recipient, invite_message)
         else:
-            print(f'Recipient not found ... {sender}')
+            # print(f'Recipient not found ... {sender}')
             await self.send_message(sender, {
                 "event": "error",
                 "message": "The recipient is currently offline.",

@@ -69,12 +69,10 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        print('----attr---->', attrs, '<--------')
         password = attrs.get('password')
         if password is None:
             raise serializers.ValidationError(
                 {'password': 'Password is required to update your informations!'})
-        print('-----context--->>', self.context['request'].user, '<--------')
         user = self.context['request'].user
         if not user.check_password(password):
             raise serializers.ValidationError(
