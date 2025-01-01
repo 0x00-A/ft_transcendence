@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
@@ -173,6 +173,10 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     sendMarkAsRead();
   };
 
+  const clearMessages = (() => {
+    setMessages([]);
+  });
+
   const updateActiveConversation = (conversationId: number) => {
     const socket = socketRef.current;
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -186,9 +190,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
 
-  const clearMessages = () => {
-    setMessages([]);
-  };
 
   const toggleBlockStatus = (conversationId: number, blockerId: number, blockedId: number, status: boolean) => {
     const socket = socketRef.current;
@@ -204,6 +205,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
       );
     }
   };
+
   return (
     <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages, messages, lastMessage, markAsReadData, toggleBlockStatus, blockStatusUpdate }}>
       {children}
