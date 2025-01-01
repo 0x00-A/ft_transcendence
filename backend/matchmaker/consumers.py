@@ -14,17 +14,43 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         self.player_id = None
 
-        if user and not isinstance(user, AnonymousUser):
-            await self.accept()
+        if user.is_authenticated:
+            if user.id in Matchmaker.connected_clients:
+                print(f"Found previous active connection")
+                previous_consumer = Matchmaker.connected_clients[user.id]
+                previous_consumer.is_being_closed = True
+                await self.channel_layer.send(previous_consumer.channel_name, {
+                    "type": "close.connection"
+                })
             self.player_id = user.id
-            await Matchmaker.register_client(self.player_id, self.channel_name)
+            print(f"New connection register ...")
+            await Matchmaker.register_client(self.player_id, self)
+            await self.accept()
         else:
             await self.close()
 
     async def disconnect(self, close_code):
+        print(f"disconnecting client ...")
+
         await Matchmaker.handle_player_unready(self.player_id)
-        await Matchmaker.unregister_client(self.player_id, self.channel_name)
+        # if hasattr(self, 'is_being_closed') and self.is_being_closed:
+        # return
+
+        if not hasattr(self, 'is_being_closed') or not self.is_being_closed:
+            await Matchmaker.unregister_client(self.player_id)
+        else:
+            print(f"Skipping disconnect for closed consumer")
         return await super().disconnect(close_code)
+
+    async def close_connection(self, event):
+        # Custom close type to handle connection close
+        print(f"Closing previous connection ...")
+        await self.send(text_data=json.dumps(
+            {
+                "event": "close_connection",
+            }
+        ))
+        await self.close()
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -49,7 +75,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         elif event == 'player_left':
             await Matchmaker.leave_tournament(self.player_id)
 
-    async def user_message(self, event):
-        message = event["message"]
+    # async def user_message(self, event):
+    #     message = event["message"]
 
+    #     await self.send(text_data=json.dumps(message))
+
+    async def send_message(self, message):
         await self.send(text_data=json.dumps(message))

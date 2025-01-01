@@ -26,6 +26,7 @@ import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/Ma
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
 import RefreshButton from './RefreshButton';
+import { useNavigate } from 'react-router-dom';
 
 
 const Game = () => {
@@ -48,6 +49,8 @@ const Game = () => {
   );
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
+
+  const navigate = useNavigate();
 
   const ModesList = useMemo(() => {
       return [
@@ -157,6 +160,9 @@ const Game = () => {
         if (data.event === 'error') {
           toast.error(data.message);
         }
+        if (data.event === 'close_connection') {
+          navigate('/')
+        }
         if (data.event === 'success') {
           toast.success(data.message);
         }
@@ -222,6 +228,7 @@ const Game = () => {
   };
 
   const requestMultipleGame = () => {
+    setGameState('inqueue');
     sendMessage({
       event: 'request_multiple_game',
     });

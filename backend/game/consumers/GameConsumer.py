@@ -31,7 +31,7 @@ ball_max_speed = 8
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 games = {}
-connected_players = defaultdict(set)
+# connected_players = defaultdict(set)
 
 
 class Ball:
@@ -224,33 +224,33 @@ def get_game(game_id):
 
 
 def remove_game(game_id):
-    global connected_players
+    # global connected_players
     if game_id in games:
         del games[game_id]
-    if game_id in connected_players:
-        del connected_players[game_id]
+    # if game_id in connected_players:
+    #     del connected_players[game_id]
 
 
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        global connected_players
+        # global connected_players
         user = self.scope['user']
         self.game_id = None
 
-        print(f"connected: {connected_players}")
+        # print(f"connected: {connected_players}")
         if user.is_authenticated:
             await self.accept()
             self.game_id = self.scope['url_route']['kwargs']['game_id']
-            if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
-                await self.send(text_data=json.dumps(
-                    {
-                        'type': 'go_home',
-                    }
-                ))
-                self.close()
-                return
-            connected_players[self.game_id].add(user.id)
+            # if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
+            #     await self.send(text_data=json.dumps(
+            #         {
+            #             'type': 'go_home',
+            #         }
+            #     ))
+            #     self.close()
+            #     return
+            # connected_players[self.game_id].add(user.id)
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
             if not get_game(self.game_id):
