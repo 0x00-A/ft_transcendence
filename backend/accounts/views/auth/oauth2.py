@@ -122,6 +122,7 @@ def oauth2_set_username(request):
     if 'username' not in request.data:
         return Response(data={'error': "Missing 'username' data!"}, status=status.HTTP_400_BAD_REQUEST)
     user_data['username'] = request.data.get('username')
+    del request.session['user_data']
     serializer = Oauth2Serializer(data = user_data)
     serializer.is_valid(raise_exception=True)
     user = serializer.save()

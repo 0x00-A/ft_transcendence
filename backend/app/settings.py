@@ -85,10 +85,10 @@ if DEBUG:
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -97,14 +97,34 @@ MIDDLEWARE = [
     'middleware.translate_middleware.TranslateResponseMiddleware',
 ]
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_NAME = 'sessionid'
-SESSION_COOKIE_HTTPONLY = True
-SESSION_SAVE_EVERY_REQUEST = True
 
 ROOT_URLCONF = 'app.urls'
 
 hostname = socket.gethostname()
+
+"""
+        SecurityMiddleware SETTINGS
+"""
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+C_FRAME_OPTIONS = 'DENY'
+
+"""
+        SessionMiddleware SETTINGS
+"""
+SESSION_ENGINE = 'django.contrib.sessions.backends.db' #default
+SESSION_COOKIE_NAME = 'ft_pong_sessionid'
+SESSION_COOKIE_HTTPONLY = True #efault
+SESSION_COOKIE_AGE = 3600 # 1 hour
+SESSION_SAVE_EVERY_REQUEST = True
 
 
 # INTERNAL_IPS = [
@@ -328,10 +348,13 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = [
     'content-type',
+    'x-csrftoken'
     # 'authorization',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False
+# CORS_ALLOW_HEADERS = default_headers
+
+# CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
 

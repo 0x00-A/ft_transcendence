@@ -14,5 +14,7 @@ class LogoutView(APIView):
         response = Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
+        request.session.flush()
         logout(request)
+
         return response
