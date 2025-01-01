@@ -12,16 +12,16 @@ class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         async def log_receive():
             event = await receive()
-            print('++++++++++++++ Received event: ', event)
+            # print('++++++++++++++ Received event: ', event)
             return event
 
         async def log_send():
             event = await send()
-            print('++++++++++++++ Sent event: ', event)
+            # print('++++++++++++++ Sent event: ', event)
             return event
 
         headers = dict(scope['headers'])
-        cookie = headers.get(b'cookie', b'').decode('utf-8')        
+        cookie = headers.get(b'cookie', b'').decode('utf-8')
         # print('api ==> JwtAuthMiddleware: Cookie--++:', cookie)
         cookies = SimpleCookie()
         cookies.load(cookie)
@@ -32,16 +32,14 @@ class JwtAuthMiddleware(BaseMiddleware):
                 validated_token = JWTAuthentication().get_validated_token(raw_token=access_token)
                 user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
                 scope['user'] = user
-                print('api ==> JwtAuthMiddleware: User authenticated')
+                # print('api ==> JwtAuthMiddleware: User authenticated')
             except (InvalidToken, TokenError, AuthenticationFailed):
-                print('api ==> JwtAuthMiddleware: User not authenticated (Anonynous)')
+                # print('api ==> JwtAuthMiddleware: User not authenticated (Anonynous)')
                 scope['user'] = AnonymousUser()
         else:
-            print('api ==> JwtAuthMiddleware: No token found in the request')
+            # print('api ==> JwtAuthMiddleware: No token found in the request')
             scope['user'] = AnonymousUser()
         return await super().__call__(scope, receive, send)
-
-
 
 
 # @database_sync_to_async

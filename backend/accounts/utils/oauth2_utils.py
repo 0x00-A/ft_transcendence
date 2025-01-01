@@ -16,7 +16,7 @@ class ConfirmOauth2Login(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        print('api ==> oauth2_confirm_login: User is authenticated')
+        # print('api ==> oauth2_confirm_login: User is authenticated')
         return Response({"message": "User is authenticated"}, status=status.HTTP_200_OK)
 
 

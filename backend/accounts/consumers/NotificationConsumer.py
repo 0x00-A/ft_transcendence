@@ -21,10 +21,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
         self.username = None
-        print('------------Notification Consumer Connected------------')
 
         if user.is_authenticated:
-            print(f"------------>>User is Authenticated: {user.username}")
             await self.accept()
             self.username = user.username
             self.id = user.id
