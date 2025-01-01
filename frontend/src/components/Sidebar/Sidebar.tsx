@@ -110,13 +110,13 @@ export default function Sidebar() {
     const fetchLanguage = async () => {
       try {
         const response = await apiClient.get(API_GET_LANGUAGE_URL);
-        console.log('Language fetched successfully:', response.data.language);
+        // console.log('Language fetched successfully:', response.data.language);
 
         const lang = response.data.language || 'en';
         setSelectedLang(lang);
         i18n.changeLanguage(lang);
       } catch (error) {
-        console.error('Error fetching language:', error);
+        // console.error('Error fetching language:', error);
         setSelectedLang('en');
         i18n.changeLanguage('en');
       }
@@ -138,9 +138,9 @@ export default function Sidebar() {
 
       fetchNotifications()
 
-      console.log('Language updated successfully:', response.data.language);
+      // console.log('Language updated successfully:', response.data.language);
     } catch (error) {
-      console.error('Error updating language:', error);
+      // console.error('Error updating language:', error);
     }
   };
 

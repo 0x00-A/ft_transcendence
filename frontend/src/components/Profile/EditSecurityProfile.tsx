@@ -83,13 +83,13 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
         catch (error) {
             if (error instanceof Yup.ValidationError) {
                 setErrorOtp(error.message);
-                console.log('error.message == ', error.message);
+                // console.log('error.message == ', error.message);
             } else {
-                console.log('error == ', error);
+                // console.log('error == ', error);
                 setErrorOtp('Error otp, try again!');
             }
             return ;
-            console.log('error osf == ', error);
+            // console.log('error osf == ', error);
         }
         try{
             const response = await apiClient.post(API_ENABLE_2FA_URL, {otp: otp})

@@ -67,7 +67,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { data } = await apiClient.get('/notifications/');
       setNotifications(data);
-      console.log('notification data: ', data);
+      // console.log('notification data: ', data);
       setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -167,7 +167,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleAcceptInvite = (from: string) => {
-    console.log(`Accepted invite from ${from}`);
+    // console.log(`Accepted invite from ${from}`);
     sendMessage({
       event: 'invite_accept',
       from: from,
@@ -176,7 +176,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleRejectInvite = (from: string) => {
-    console.log(`Rejected invite from ${from}`);
+    // console.log(`Rejected invite from ${from}`);
     sendMessage({
       event: 'invite_reject',
       from: from,
@@ -190,7 +190,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     ws.current = new WebSocket(`${getWebSocketUrl('notifications/')}`);
 
     ws.current.onopen = () => {
-      console.log('Notification WebSocket connected');
+      // console.log('Notification WebSocket connected');
     };
 
     ws.current.onmessage = (event) => {

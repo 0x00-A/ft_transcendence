@@ -306,7 +306,7 @@
               "Score": "Score",
               "Against": "Against"
           },
-          "WaitingPJ": "Waiting for players to join..."
+          "WaitingPJ": "Initializing game..."
       },
       "joinedTournaments": {
           "title": "Joined Tournaments",

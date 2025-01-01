@@ -48,7 +48,7 @@ const MessageList = () => {
   const location = useLocation();
   const { setSelectedConversation, selectedConversation } = useSelectedConversation();
   const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
 
 
@@ -70,14 +70,14 @@ const MessageList = () => {
     const handleBlockStatusUpdate = async () => {
       if (blockStatusUpdate) {
         const selectedConversationId = blockStatusUpdate.conversationId;
-  
+
       try {
           const response = await apiClient.get('/chat/conversations');
           if (selectedConversation) {
             const foundConversation = response.data?.find(
               (convo: conversationProps) => convo.id === selectedConversationId
             );
-            console.log("conversationData?.block_status: ", foundConversation?.block_status)
+            // console.log("conversationData?.block_status: ", foundConversation?.block_status)
             setSelectedConversation(foundConversation!);
           }
       } catch (error: any) {
@@ -118,11 +118,11 @@ const MessageList = () => {
         conversation => conversation.name === username
       );
 
-      console.log("matchedConversation; ", matchedConversation);
-      console.log("username; ", username);
+      // console.log("matchedConversation; ", matchedConversation);
+      // console.log("username; ", username);
       if (matchedConversation) {
         setSelectedConversation(matchedConversation);
-        
+
         setIsSearchActive(false);
         setSearchQuery('');
         setMenuState((prevState) => ({
@@ -134,8 +134,8 @@ const MessageList = () => {
         const fetchUser = async () => {
           try {
             const user = await apiGetUser(username);
-            console.log("Fetched user: ", user);
-  
+            // console.log("Fetched user: ", user);
+
             if (user) {
               handleSearchItemClick(user);
             }
@@ -143,7 +143,7 @@ const MessageList = () => {
             console.error("Error fetching user: ");
           }
         };
-  
+
         fetchUser();
       }
     }
@@ -197,7 +197,7 @@ const MessageList = () => {
 
   const handleClose = () => {
     if (selectedConversation !== null) {
-      console.log("selectedConversation: ", selectedConversation)
+      // console.log("selectedConversation: ", selectedConversation)
       updateActiveConversation(-1);
       setSelectedConversation(null);
     }
@@ -265,13 +265,13 @@ const MessageList = () => {
   }, []);
 
   useEffect(() => {
-    
+
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-    
+
       const isOutsideSearch = searchContainerRef.current && !searchContainerRef.current.contains(target);
       const isOutsideMainContainer = messageListRef.current && !messageListRef.current.contains(target);
-    
+
       if (isOutsideSearch && isOutsideMainContainer) {
         setIsSearchActive(false);
       }
@@ -283,8 +283,8 @@ const MessageList = () => {
   }, []);
 
   const handleConversationClick = useCallback((conversation: conversationProps | null) => {
-    
-    console.log(" ..... selectedConversation: ", conversation)
+
+    // console.log(" ..... selectedConversation: ", conversation)
     setSelectedConversation(conversation);
     setIsSearchActive(false);
     setSearchQuery('');
@@ -294,14 +294,14 @@ const MessageList = () => {
       activeIndex: null,
     }));
   }, [ConversationList, selectedConversation]);
-  
+
   const handleSearchItemClick = useCallback(async (friend: Friend) => {
     try {
       const newConversation = await apiCreateConversation(friend.id);
-      
+
       if (newConversation && newConversation.id) {
         await refetch();
-        console.log("new => Conversation: ", newConversation);
+        // console.log("new => Conversation: ", newConversation);
         setSelectedConversation(newConversation);
         setIsSearchActive(false);
         setSearchQuery('');
@@ -392,7 +392,7 @@ const MessageList = () => {
             )
           ) : (
               <>
-                  {ConversationList?.length === 0 
+                  {ConversationList?.length === 0
                     ? (
                     <div className={css.statusMessage}>
                       <span className={css.notFoundConversation}>{t('MessageList.noConversationFound')}</span>
@@ -446,10 +446,10 @@ const MessageList = () => {
               onClick={() => handleBlock(ConversationList[menuState.activeIndex!])}
             >
               <Ban />
-              <span> 
+              <span>
                 {t(ConversationList[menuState.activeIndex!].block_status === "blocker"
                   ? 'MessageList.menu.unblock'
-                  : 'MessageList.menu.block')} 
+                  : 'MessageList.menu.block')}
               </span>
             </div>
           </div>
