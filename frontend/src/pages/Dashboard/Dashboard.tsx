@@ -55,6 +55,8 @@ const Dashboard = () => {
     </main>
 
   );
+  console.log('currentUser => ', currentUser);
+
 
   return (
     <main className={css.container}>

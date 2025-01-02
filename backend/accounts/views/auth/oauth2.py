@@ -45,7 +45,7 @@ def oauth2_authentication(request, choice):
     if user_data is None:
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get user {choice} resources!')}")
     try:
-        # check_user = User.objects.get(email=user_data['email'])
+        # check_user = User.active.get(email=user_data['email'])
         check_user = User.objects.get(oauth2_id=user_data['id'], oauth2_provider=choice)
         if not check_user.is_active:
             try:
@@ -82,7 +82,7 @@ def oauth2_authentication(request, choice):
         except Exception as e:
             return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to create user, try again!')}")
         # try:
-        #     check_user = User.objects.get(serializer.validated_data['username'])
+        #     check_user = User.active.get(serializer.validated_data['username'])
         # except User.DoesNotExist:
         #     return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote('Failed to create a new user!')}")
         # check_user = authenticate(email=serializer.validated_data['email'])

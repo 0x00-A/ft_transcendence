@@ -79,8 +79,8 @@ class Matchmaker:
     @classmethod
     async def create_remote_game(cls, player1_id, player2_id):
         # print(f"creating game... p1: {player1_id} | p2: {player2_id}")
-        p1 = await User.objects.aget(id=player1_id)
-        p2 = await User.objects.aget(id=player2_id)
+        p1 = await User.active.aget(id=player1_id)
+        p2 = await User.active.aget(id=player2_id)
         game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
@@ -99,10 +99,10 @@ class Matchmaker:
     async def create_multi_game(cls, player1_id, player2_id, player3_id, player4_id):
         print(
             f"creating multi game... p1: {player1_id} | p2: {player2_id} | p3: {player3_id} | p4: {player4_id}")
-        p1 = await User.objects.aget(id=player1_id)
-        p2 = await User.objects.aget(id=player2_id)
-        p3 = await User.objects.aget(id=player3_id)
-        p4 = await User.objects.aget(id=player4_id)
+        p1 = await User.active.aget(id=player1_id)
+        p2 = await User.active.aget(id=player2_id)
+        p3 = await User.active.aget(id=player3_id)
+        p4 = await User.active.aget(id=player4_id)
         game = await MultiGame.objects.acreate(
             player1=p1, player2=p2, player3=p3, player4=p4
         )
@@ -134,7 +134,7 @@ class Matchmaker:
         new_tournament = await Tournament.objects.acreate(
             creator_id=creator_id, name=tournament_name
         )
-        user = await User.objects.aget(id=creator_id)
+        user = await User.active.aget(id=creator_id)
         await new_tournament.players.aadd(user)
         await new_tournament.asave()
         message = {
@@ -245,7 +245,7 @@ class Matchmaker:
             # channel_name = consumer.channel_name
             # Retrieve the user's preferred language
             try:
-                user = await User.objects.aget(id=player_id)
+                user = await User.active.aget(id=player_id)
                 profile = await sync_to_async(lambda: user.profile)()
                 target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
             except Exception:
