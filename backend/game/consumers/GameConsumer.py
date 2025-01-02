@@ -226,6 +226,7 @@ def get_game(game_id):
 def remove_game(game_id):
     # global connected_players
     if game_id in games:
+        print(f"\033[33mGame Removed {game_id}.\033[0m")
         del games[game_id]
     # if game_id in connected_players:
     #     del connected_players[game_id]
@@ -377,6 +378,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
         game.status = 'started'
+        print(f"\033[33mGame Loop started {game_id}.\033[0m")
         # Game loop
         while True:
             await self.broadcast_game_state(game_id)
