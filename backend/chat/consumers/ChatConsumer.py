@@ -154,6 +154,44 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=user_id)
         return user.open_chat
 
+    @sync_to_async
+    def send_notification_to_receiver(self, receiver_id, sender_id, message):
+        try:
+            sender_user = User.objects.get(id=sender_id)
+            receiver_user = User.objects.get(id=receiver_id)
+            
+            target_language = receiver_user.profile.preferred_language or 'en'
+
+            try:
+                translated_message = translate_text(
+                    f"{sender_user.username} sent you a message: ", target_language)
+                translated_title = translate_text("New Message", target_language)
+            except Exception as e:
+                translated_message = f"{sender_user.username} sent you a message: "
+                translated_title = "New Message"
+
+            notification = Notification.objects.create(
+                user=receiver_user,
+                link="/chat",
+                state=self.user.username,
+                title=translated_title,
+                message=f"{translated_message} {message}",
+            )
+            
+            NotificationConsumer.send_notification_to_user(
+                receiver_id, notification)
+            
+            notification_data = {
+                "event": "new_message",
+                "from": self.user.username,
+                "message": f"{self.user.username} sent you a message.",
+            }
+            NotificationConsumer.send_notification_to_user(
+                receiver_id, notification_data)
+                
+        except Exception as e:
+            print(f"Failed to send notification: {str(e)}")
+
     async def handle_send_message(self, data):
         message = data.get("message")
         receiver_id = data.get("receiver_id")
@@ -212,43 +250,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f"Notification error: {str(e)}")
 
-    @sync_to_async
-    def send_notification_to_receiver(self, receiver_id, sender_id, message):
-        try:
-            sender_user = User.objects.get(id=sender_id)
-            receiver_user = User.objects.get(id=receiver_id)
-            
-            target_language = receiver_user.profile.preferred_language or 'en'
-
-            try:
-                translated_message = translate_text(
-                    f"{sender_user.username} sent you a message: ", target_language)
-                translated_title = translate_text("New Message", target_language)
-            except Exception as e:
-                translated_message = f"{sender_user.username} sent you a message: "
-                translated_title = "New Message"
-
-            notification = Notification.objects.create(
-                user=receiver_user,
-                link="/chat",
-                state=self.user.username,
-                title=translated_title,
-                message=f"{translated_message} {message}",
-            )
-            
-            NotificationConsumer.send_notification_to_user(
-                receiver_id, notification)
-            
-            notification_data = {
-                "event": "new_message",
-                "from": self.user.username,
-                "message": f"{self.user.username} sent you a message.",
-            }
-            NotificationConsumer.send_notification_to_user(
-                receiver_id, notification_data)
-                
-        except Exception as e:
-            print(f"Failed to send notification: {str(e)}")
 
     async def get_or_create_conversation(self, sender_id, receiver_id):
         return await sync_to_async(Conversation.objects.get)(
