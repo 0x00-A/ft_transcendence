@@ -63,9 +63,7 @@ class SignupSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password2')
         password = validated_data.pop('password')
-        user, created = User.objects.get_or_create(**validated_data)
-        if not created:
-            raise serializers.ValidationError('User already exist!')
+        user = User.objects.create(**validated_data)
         user.set_password(password)
         user.is_password_set = True
         user.is_active = False

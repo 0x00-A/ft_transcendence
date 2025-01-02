@@ -13,7 +13,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         try:
-            user = User.objects.get(username=attrs['username'])
+            user = User.active.get(username=attrs['username'])
             if (not user.check_password(attrs['password'])):
                 raise serializers.ValidationError(
                     {'password': 'password not valid'})

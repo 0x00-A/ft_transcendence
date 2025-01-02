@@ -29,9 +29,10 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 
 SERVER_URL = os.environ.get('SERVER_URL')
+CLIENT_URL = os.environ.get('CLIENT_URL')
 
-ALLOWED_HOSTS = ['e1r6p15']
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+# ALLOWED_HOSTS = ['e2r6p15']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # Application definition
@@ -100,7 +101,7 @@ hostname = socket.gethostname()
         SessionMiddleware SETTINGS
 """
 SESSION_ENGINE = 'django.contrib.sessions.backends.db' #default
-SESSION_COOKIE_NAME = 'ft_pong_sessionid'
+# SESSION_COOKIE_NAME = 'ft_pong_sessionid'
 SESSION_COOKIE_HTTPONLY = True #efault
 # SESSION_COOKIE_AGE = 3600 # 1 hour
 SESSION_SAVE_EVERY_REQUEST = True
@@ -120,7 +121,8 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-                        'http://e1r6p15:3000'
+                        # 'https://e2r6p15',
+                        CLIENT_URL
                         # 'http://0.0.0.0:3000',
                         # 'wss://yourdomain.com'
                         ]
@@ -332,9 +334,10 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    'http://e1r6p15:3000',
+    # 'https://e2r6p15',
     'https://ft-pong.me',
-    'https://e1r6p15'
+    CLIENT_URL,
+    # 'https://e1r6p15'
 ]
 CORS_ALLOW_METHODS = [
     'GET',
@@ -357,26 +360,26 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-import logging
+# import logging
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.security.csrf': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.security.csrf': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
 
 # LOG_DIR = '/app/backend/logs'
 # os.makedirs(LOG_DIR, exist_ok=True)
