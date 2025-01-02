@@ -30,7 +30,7 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 SERVER_URL = os.environ.get('SERVER_URL')
 
-ALLOWED_HOSTS = ['e1r6p15']
+ALLOWED_HOSTS = ['localhost']
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 
@@ -120,7 +120,7 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-                        'http://e1r6p15:3000'
+                        'http://localhost:3000'
                         # 'http://0.0.0.0:3000',
                         # 'wss://yourdomain.com'
                         ]
@@ -332,7 +332,7 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    'http://e1r6p15:3000',
+    'http://localhost:3000',
     'https://ft-pong.me',
     'https://e1r6p15'
 ]
