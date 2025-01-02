@@ -34,9 +34,9 @@ class JwtAuthMiddleware(BaseMiddleware):
                 scope['user'] = user
                 print(
                     '\033[33mapi ==> JwtAuthMiddleware: User authenticated\033[0m')
-            except (InvalidToken, TokenError, AuthenticationFailed):
+            except (InvalidToken, TokenError, AuthenticationFailed) as e:
                 print(
-                    '\033[33mapi ==> JwtAuthMiddleware: User not authenticated (Anonynous)\033[0m')
+                    f'\033[33mapi ==> JwtAuthMiddleware: User not authenticated (Anonynous) ERROR: {e}\033[0m')
                 scope['user'] = AnonymousUser()
         else:
             print('api ==> JwtAuthMiddleware: No token found in the request')
