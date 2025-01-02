@@ -27,10 +27,27 @@ const ChatContent = () => {
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    console.log("clear webSocket..... ");
+    return () => {
+      clearMessages();
+      setWebsocketChatMessages([]);
+    };
+  }, []);
+  
+  useEffect(() => {
+    console.log("clear webSocket Message ..... ");
+    if (selectedConversation) {
+      setWebsocketChatMessages([]);
+    }
+  }, [selectedConversation]);
 
+  
   useEffect(() => {
     if (!selectedConversation) return;
 
+    clearMessages()
     const fetchMessages = async () => {
       setIsLoading(true);
       setError(null);
@@ -42,6 +59,7 @@ const ChatContent = () => {
           );
           setHasMore(!!data.next);
         }
+        console.log("fetech data good");
       } catch {
         setError('Failed to load messages. Please try again later.');
       } finally {
@@ -59,10 +77,12 @@ const ChatContent = () => {
       (message) => message.conversation === selectedConversation.id
     );
 
+    console.log("webSocketMessage: ", filteredMessages);
+
     if (filteredMessages.length > 0) {
       setWebsocketChatMessages(filteredMessages);
     }
-  }, [websocketMessages, selectedConversation]);
+  }, [websocketMessages]);
 
   useEffect(() => {
     if (selectedConversation?.id) {
@@ -73,11 +93,10 @@ const ChatContent = () => {
     }
   }, [selectedConversation]);
 
-  useEffect(() => {
-    return () => clearMessages();
-  }, []);
 
   const combinedMessages = useMemo(() => {
+    console.log("com == websocketChatMessages: ", websocketChatMessages);
+
     const reversedFetched = [...fetchedChatMessages].reverse();
     return [...reversedFetched, ...websocketChatMessages];
   }, [fetchedChatMessages, websocketChatMessages]);

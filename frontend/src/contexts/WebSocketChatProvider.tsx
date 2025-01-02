@@ -166,6 +166,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     };
   
     sendMarkAsRead();
+    setMessages([]);
   };
 
   const clearMessages = (() => {

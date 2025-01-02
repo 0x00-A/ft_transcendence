@@ -54,7 +54,7 @@
   "chatHeader": {
       "typing": "Typing...",
       "activeNow": "Active now",
-      "lastSeen": "Last seen at"
+      "lastSeen": "Last seen at "
   },
   "messageInput": {
       "placeholder": "Write a message",

@@ -157,7 +157,7 @@ const MessageList = () => {
         top = buttonRect.bottom - messageListRect.top + 110;
         left = buttonRect.left - messageListRect.left;
       } else {
-        top = buttonRect.top - messageListRect.top - menuHeight + 190;
+        top = buttonRect.top - messageListRect.top - 90;
         left = buttonRect.left - messageListRect.left;
       }
 

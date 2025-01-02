@@ -16,7 +16,7 @@ const ProfileSection = () => {
       {
         (selectedConversation?.status
         ? <p className={css.online} >{t('chatHeader.activeNow')}</p>
-        : <p className={css.offline}>{t('chatHeader.lastSeen' + selectedConversation?.last_seen)}</p>)
+        : <p className={css.offline}>{t('chatHeader.lastSeen') + selectedConversation?.last_seen}</p>)
       }
     </div>
   );
