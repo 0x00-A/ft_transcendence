@@ -43,7 +43,6 @@ import {
 import ConnectionStatus from './components/ConnectionStatus';
 import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
 import EditEmailVerification from './components/Profile/EditEmailVerification';
-// import Spinner from './components/Spinner/Spinner';
 
 const PageNotFound = React.lazy(
   () => import('./pages/PageNotFound/PageNotFound')

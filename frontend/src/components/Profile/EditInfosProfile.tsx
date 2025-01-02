@@ -76,7 +76,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     // }
     useEffect(() => {
         const handle_refetch = async () => {
-            const result = await refetch();
+            await refetch();
             // console.log("refetch result == ", result);
         }
         if (mutation.isSuccess) {

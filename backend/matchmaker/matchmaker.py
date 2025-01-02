@@ -28,6 +28,8 @@ class Matchmaker:
     async def register_client(cls, player_id, consumer):
         cls.connected_clients[player_id] = consumer
         # cls.connected_clients[player_id].add(channel_name)
+        # cls.connected_clients[player_id].add(channel_name)
+
 
     @classmethod
     async def unregister_client(cls, player_id):
@@ -38,6 +40,8 @@ class Matchmaker:
             #     del cls.connected_clients[player_id]
         if player_id in cls.games_queue:
             cls.games_queue.remove(player_id)
+        if player_id in cls.multi_games_queue:
+            cls.multi_games_queue.remove(player_id)
 
     @classmethod
     async def request_remote_game(cls, player_id):
@@ -74,7 +78,7 @@ class Matchmaker:
 
     @classmethod
     async def create_remote_game(cls, player1_id, player2_id):
-        print(f"creating game... p1: {player1_id} | p2: {player2_id}")
+        # print(f"creating game... p1: {player1_id} | p2: {player2_id}")
         p1 = await User.objects.aget(id=player1_id)
         p2 = await User.objects.aget(id=player2_id)
         game = await Game.objects.acreate(
@@ -234,9 +238,9 @@ class Matchmaker:
 
     @classmethod
     async def send_message_to_client(cls, player_id, message):
+        await asyncio.sleep(0.1)
         # channel_layer = get_channel_layer()
         consumer = cls.connected_clients.get(player_id)
-
         if consumer:
             # channel_name = consumer.channel_name
             # Retrieve the user's preferred language
@@ -267,6 +271,7 @@ class Matchmaker:
             # await send_message_to_channel(channel, message)
         else:
             print("MatchmakerConsumer: User is not connected.")
+
 
     @classmethod
     async def is_client_already_playing(cls, player_id):
@@ -358,7 +363,7 @@ class Matchmaker:
             await cls.process_tournament_match(game_id, winner, p1_score, p2_score)
             return
 
-        print(f"Game ID {game_id} not found.")
+        # print(f"Game ID {game_id} not found.")
 
     @classmethod
     async def process_game_result(cls, game_id, winner, p1_score, p2_score):
@@ -401,7 +406,6 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_unready(cls, player_id):
-
         try:
             match = await sync_to_async(Match.objects.get)(
                 (Q(player1_id=player_id) | Q(

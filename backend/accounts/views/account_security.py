@@ -62,7 +62,6 @@ class Enable2faView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         totp = pyotp.TOTP(user.otp_secret)
-        # print('api ==> enable 2fa: Verifying OTP : ', request.data['otp'])
         if totp.verify(request.data['otp']):
             user = request.user
             user.is2fa_active = True
@@ -105,6 +104,4 @@ class Disable2FAView(APIView):
         user.otp_secret = None
         user.is2fa_active = False
         user.save()
-
-        print('api ==> disable 2fa: 2FA disabled successfully')
         return Response({'message': 'Two-factor authentication disabled'}, status=status.HTTP_200_OK)

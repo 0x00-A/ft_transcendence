@@ -35,6 +35,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         await Matchmaker.handle_player_unready(self.player_id)
         # if hasattr(self, 'is_being_closed') and self.is_being_closed:
         # return
+        await Matchmaker.remove_from_queue(self.player_id)
 
         if not hasattr(self, 'is_being_closed') or not self.is_being_closed:
             await Matchmaker.unregister_client(self.player_id)
@@ -55,7 +56,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         event = data['event']
-        print(f'Websocket Message Recieved: {event}')
+        # print(f'Websocket Message Recieved: {event}')
         if event == 'request_remote_game':
             await Matchmaker.request_remote_game(self.player_id)
         elif event == 'request_multiple_game':
