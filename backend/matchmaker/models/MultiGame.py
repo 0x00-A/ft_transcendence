@@ -66,7 +66,8 @@ class MultiGame(models.Model):
         self.save()
 
     def end_game(self, winner, p1_score, p2_score, p3_score, p4_score):
-        print(f"--------------- Game: {self.id} ended -------------------")
+        print(
+            f"\033[31m---------------Multi Game: {self.id} ended -------------------\033[0m]")
 
         self.winner = self.player1 if winner == 1 else self.player2 if winner == 2 \
             else self.player3 if winner == 3 else self.player4
@@ -119,9 +120,6 @@ class MultiGame(models.Model):
         current_day = self.end_time.strftime('%a')
         duration = (self.end_time -
                     self.start_time).total_seconds() / 3600.0
-        print(
-            f'start: {self.start_time} - end: {self.end_time} - DURATION: {duration}')
-
         for player in [self.player1, self.player2, self.player3, self.player4]:
             stats = player.profile.stats.get('performanceData', [])
             day_found = False

@@ -9,7 +9,7 @@ const useGetData = <T>(endpoint: string,
     queryKey: [endpoint],
     queryFn: () => getData<T>(`${endpoint}/`),
     staleTime: 5000,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
     // refetchInterval: 5000,
     ...options, // Spread additional options like `enabled`
   });
