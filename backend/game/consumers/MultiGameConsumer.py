@@ -72,7 +72,7 @@ class GameInstance:
         self.connected_players = 1
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 2
+        self.paddle_speed = 4
         self.paddle_width: int = 15
         self.paddle_height: int = 70
         self.corner_size = 10
@@ -409,7 +409,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
         if user.is_authenticated:
             await self.accept()
-            print(f"\033[31mAdding to group: {user.username} !!.\033[0m")
+            # print(f"\033[31mAdding to group: {user.username} !!.\033[0m")
             self.game_id = self.scope['url_route']['kwargs']['game_id']
             # if len(connected_players[self.game_id]) >= 4 or user.id in connected_players[self.game_id]:
             #     await self.send(text_data=json.dumps(
@@ -435,7 +435,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                     await MultiGame.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
                     asyncio.create_task(self.start_game(self.game_id))
         else:
-            print(f"\033[31mUser {user.username} not authenticated !!.\033[0m")
+            print(f"\033[31mUser {user.username} not authenticated!\033[0m")
             await self.close()
 
     async def disconnect(self, close_code):
@@ -510,8 +510,23 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             game.state[f"{self.player_id}_paddle_x"] = new_position
 
     async def send_countdown_to_clients(self):
-        for count in range(5, -1, -1):
+        for count in range(3, -1, -1):
             await asyncio.sleep(1)
+
+        await self.channel_layer.group_send(
+            self.game_id,
+            {
+                "type": "game.countdown",
+                "count": count,
+            },
+        )
+
+    async def game_countdown(self, event):
+        await self.send(text_data=json.dumps(
+            {
+                'type': 'game_countdown',
+            }
+        ))
 
     async def set_player_id_name(self):
         game: GameInstance = get_game(self.game_id)

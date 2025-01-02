@@ -270,7 +270,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=12),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     # 'ACCESS_TOKEN_LIFETIME': timedelta(seconds=5),
     # 'REFRESH_TOKEN_LIFETIME': timedelta(seconds=20),
@@ -294,18 +294,18 @@ AUTHENTICATION_BACKENDS = [
 ASGI_APPLICATION = "app.asgi.application"
 
 CHANNEL_LAYERS = {
-    # 'default': {
-    #     'BACKEND': 'channels_redis.core.RedisChannelLayer',
-    #     'CONFIG': {
-    #         'hosts': [
-    #             (os.environ.get('REDIS_HOST', 'redis'),
-    #              int(os.environ.get('REDIS_PORT', 6379)))
-    #         ],
-    #     },
-    # },
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [
+                (os.environ.get('REDIS_HOST', 'redis'),
+                 int(os.environ.get('REDIS_PORT', 6379)))
+            ],
+        },
     },
+    # 'default': {
+    #     'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    # },
 }
 
 """
@@ -313,7 +313,7 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    'http://e1r6p14:3000',
     'https://ft-pong.me',
 ]
 
@@ -340,7 +340,7 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-    'http://localhost:3000'
+    'http://e1r6p14:3000'
     # 'http://0.0.0.0:3000',
     # 'wss://yourdomain.com'
 ]
