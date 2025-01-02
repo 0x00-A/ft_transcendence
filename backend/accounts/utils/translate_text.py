@@ -1,6 +1,7 @@
 import requests
 from django.conf import settings
 
+
 def translate_text(text, target_language):
     api_key = settings.API_KEY
     url = "https://api-free.deepl.com/v2/translate"

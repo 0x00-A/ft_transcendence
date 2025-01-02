@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import css from './ChatContent.module.css';
 import MessageArea from './MessageArea';
 import MessageInput from './MessageInput';
-import { useGetData } from '@/api/apiHooks';
 import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 import ChatSkeleton from './ChatSkeleton';
+import { apiGetConversationMessages } from '@/api/chatApi';
+import { OctagonAlert } from 'lucide-react';
 
 interface MessageProps {
   id: number;
@@ -17,60 +18,52 @@ interface MessageProps {
   seen?: boolean;
 }
 
-interface PaginatedMessagesResponse {
-  results: MessageProps[];
-  next: string | null; 
-  previous: string | null; 
-  count: number; 
-}
-
 const ChatContent = () => {
   const { selectedConversation } = useSelectedConversation();
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false); 
+  const [hasMore, setHasMore] = useState(false);
   const [websocketChatMessages, setWebsocketChatMessages] = useState<MessageProps[]>([]);
   const { messages: websocketMessages, sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages } = useWebSocketChat();
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
-  const [reversedFetchedMessages, setReversedFetchedMessages] = useState<MessageProps[]>([]);
-
-  const { data: fetchedMessages, isLoading, error } = useGetData<PaginatedMessagesResponse>(
-    `chat/conversations/${selectedConversation?.id}/messages/?page=${page}`
-  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!selectedConversation) return;
-    console.log(" i here for clear ")
-    clearMessages();
-    setWebsocketChatMessages([]);
-    if (page === 1) {
-      setFetchedChatMessages(fetchedMessages?.results || []);
-    } else if (fetchedMessages?.results) {
-      setFetchedChatMessages((prevMessages) => [
-        ...prevMessages,
-        ...fetchedMessages?.results,
-      ]);
-    }
-    setHasMore(!!fetchedMessages?.next);
-  }, [selectedConversation, fetchedMessages]);
-  
-  
+
+    const fetchMessages = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const data = await apiGetConversationMessages(selectedConversation.id, page);
+        if (data) {
+          setFetchedChatMessages((prevMessages) =>
+            page === 1 ? data.results : [...prevMessages, ...data.results]
+          );
+          setHasMore(!!data.next);
+        }
+      } catch {
+        setError('Failed to load messages. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMessages();
+  }, [page]);
+
   useEffect(() => {
     if (!selectedConversation) return;
-    
-    console.log(" i here ")
-    if (websocketMessages.length === 0) {
-      console.log(" i here for set just fetched ")
-      setReversedFetchedMessages([...fetchedChatMessages].reverse());
-      return;
-    }
-    const lastMessageSocket = websocketMessages[websocketMessages.length - 1];
-    if (lastMessageSocket?.conversation === selectedConversation.id) {
-      setWebsocketChatMessages(websocketMessages);
-    } else {
-      setReversedFetchedMessages([...fetchedChatMessages].reverse());
+
+    const filteredMessages = websocketMessages.filter(
+      (message) => message.conversation === selectedConversation.id
+    );
+
+    if (filteredMessages.length > 0) {
+      setWebsocketChatMessages(filteredMessages);
     }
   }, [websocketMessages, selectedConversation]);
-  
+
   useEffect(() => {
     if (selectedConversation?.id) {
       updateActiveConversation(selectedConversation.id);
@@ -79,44 +72,37 @@ const ChatContent = () => {
       }
     }
   }, [selectedConversation]);
-  
+
   useEffect(() => {
-    return () => {
-      clearMessages();
-    };
+    return () => clearMessages();
   }, []);
-  
+
+  const combinedMessages = useMemo(() => {
+    const reversedFetched = [...fetchedChatMessages].reverse();
+    return [...reversedFetched, ...websocketChatMessages];
+  }, [fetchedChatMessages, websocketChatMessages]);
+
   const handleSendMessage = useCallback(
     (message: string) => {
-      if (message.trim()) {
-        sendMessage(selectedConversation!.user_id, message);
+      if (message.trim() && selectedConversation) {
+        sendMessage(selectedConversation.user_id, message);
       }
     },
-    [sendMessage, selectedConversation?.user_id]
+    [sendMessage, selectedConversation]
   );
-  
+
   const handleTyping = useCallback(
     (isTyping: boolean) => {
-      sendTypingStatus(selectedConversation!.user_id, isTyping);
+      if (selectedConversation) {
+        sendTypingStatus(selectedConversation.user_id, isTyping);
+      }
     },
-    [sendTypingStatus, selectedConversation?.user_id]
+    [sendTypingStatus, selectedConversation]
   );
-  
-  const loadMoreMessages = () => {
+
+  const loadMoreMessages = useCallback(() => {
     setPage((prevPage) => prevPage + 1);
-  };
-  
-  // useEffect(() => {
-    //   if (fetchedChatMessages.length > 0) {
-      //     setReversedFetchedMessages([...fetchedChatMessages].reverse());
-      //   }
-      // }, [page, fetchedChatMessages]);
-      
-      const combinedMessages = useMemo(() => {
-        
-        console.log(" i here for set combinedMessages ")
-        return [...reversedFetchedMessages, ...websocketChatMessages];
-      }, [reversedFetchedMessages, websocketChatMessages]);
+  }, []);
 
   return (
     <>
@@ -124,14 +110,13 @@ const ChatContent = () => {
         {isLoading && page === 1 ? (
           <ChatSkeleton />
         ) : error ? (
-          <div>Error loading messages</div>
+          <OctagonAlert />
         ) : (
           <MessageArea
             messages={combinedMessages}
             onLoadMore={loadMoreMessages}
             hasMore={hasMore}
-        />
-
+          />
         )}
       </div>
       <MessageInput

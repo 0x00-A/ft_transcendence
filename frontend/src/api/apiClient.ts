@@ -41,9 +41,9 @@ apiClient.interceptors.response.use(
   async error => {
     if (error.response) {
       // console.log(error);
-      console.error(`apiClient ==> Error message: ${error.message},
-          Response Error: ${error.response.data?.error},
-          Response Data: ${JSON.stringify(error.response.data)}`);
+      // console.error(`apiClient ==> Error message: ${error.message},
+      //     Response Error: ${error.response.data?.error},
+      //     Response Data: ${JSON.stringify(error.response.data)}`);
     }
     return Promise.reject(error)
   }

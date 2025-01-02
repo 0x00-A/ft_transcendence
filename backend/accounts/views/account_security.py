@@ -68,7 +68,7 @@ class Enable2faView(APIView):
             user.save()
             # qrcode_path = f"{MEDIA_ROOT}/qrcodes/{user.username}_2fa.png"
             # if os.path.exists(qrcode_path):
-                # os.remove(qrcode_path)
+            # os.remove(qrcode_path)
             return Response({'message': 'Two-factor authentication enabled'}, status=status.HTTP_200_OK)
         else:
             return Response(

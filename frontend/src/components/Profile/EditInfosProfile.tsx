@@ -34,7 +34,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
 
     const handleEditProfile = (data: EditProfileFormData) => {
 
-        console.log("data == ", data);
+        // console.log("data == ", data);
 
         const formData = new FormData();
         if (data.avatar) formData.append('avatar', data.avatar);
@@ -76,8 +76,8 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     // }
     useEffect(() => {
         const handle_refetch = async () => {
-            const result = await refetch();
-            console.log("refetch result == ", result);
+            await refetch();
+            // console.log("refetch result == ", result);
         }
         if (mutation.isSuccess) {
             handle_refetch();

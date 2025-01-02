@@ -44,7 +44,6 @@ import ConnectionStatus from './components/ConnectionStatus';
 import { SelectedConversationProvider } from './contexts/SelectedConversationContext';
 import EditEmailVerification from './components/Profile/EditEmailVerification';
 
-
 const PageNotFound = React.lazy(
   () => import('./pages/PageNotFound/PageNotFound')
 );

@@ -19,8 +19,8 @@ from collections import defaultdict
 
 class Matchmaker:
 
-    # connected_clients = {}
-    connected_clients = defaultdict(set)
+    connected_clients = {}
+    # connected_clients = defaultdict(set)
     games_queue = []
     multi_games_queue = []
 
@@ -31,12 +31,12 @@ class Matchmaker:
         # print(f"channel names: {cls.connected_clients[player_id]}")
 
     @classmethod
-    async def unregister_client(cls, player_id, channel_name):
+    async def unregister_client(cls, player_id):
         if player_id in cls.connected_clients:
-            # del cls.connected_clients[player_id]
-            cls.connected_clients[player_id].remove(channel_name)
-            if not cls.connected_clients[player_id]:  # Clean up empty sets
-                del cls.connected_clients[player_id]
+            del cls.connected_clients[player_id]
+            # cls.connected_clients[player_id].remove(channel_name)
+            # if not cls.connected_clients[player_id]:
+            #     del cls.connected_clients[player_id]
         if player_id in cls.games_queue:
             cls.games_queue.remove(player_id)
 
@@ -57,7 +57,7 @@ class Matchmaker:
     async def request_multi_game(cls, player_id):
         if await cls.is_client_already_playing(player_id):
             return
-        # cls.multi_games_queue.append(player_id)
+        cls.multi_games_queue.append(player_id)
         # message = {
         #     'event': 'in_queue'
         # }
@@ -95,7 +95,7 @@ class Matchmaker:
     @classmethod
     async def create_multi_game(cls, player1_id, player2_id, player3_id, player4_id):
         print(
-            f"creating game... p1: {player1_id} | p2: {player2_id} | p3: {player3_id} | p4: {player4_id}")
+            f"creating multi game... p1: {player1_id} | p2: {player2_id} | p3: {player3_id} | p4: {player4_id}")
         p1 = await User.objects.aget(id=player1_id)
         p2 = await User.objects.aget(id=player2_id)
         p3 = await User.objects.aget(id=player3_id)
@@ -235,10 +235,11 @@ class Matchmaker:
 
     @classmethod
     async def send_message_to_client(cls, player_id, message):
-        channel_layer = get_channel_layer()
-        channel_name = cls.connected_clients.get(player_id)
+        # channel_layer = get_channel_layer()
+        consumer = cls.connected_clients.get(player_id)
 
-        if channel_name:
+        if consumer:
+            # channel_name = consumer.channel_name
             # Retrieve the user's preferred language
             try:
                 user = await User.objects.aget(id=player_id)
@@ -254,15 +255,17 @@ class Matchmaker:
                         message_text, target_language)
                 except Exception as e:
                     print(f"Translation failed: {e}")
-            for channel in cls.connected_clients.get(player_id, []):
-                await channel_layer.send(
-                    channel,
-                    {
-                        "type": "user.message",
-                        "message": message,
-                    }
-                )
-                # await send_message_to_channel(channel, message)
+
+            await consumer.send_message(message)
+            # for channel in cls.connected_clients.get(player_id, []):
+            # await channel_layer.send(
+            #     channel_name,
+            #     {
+            #         "type": "user.message",
+            #         "message": message,
+            #     }
+            # )
+            # await send_message_to_channel(channel, message)
         else:
             print("MatchmakerConsumer: User is not connected.")
 
