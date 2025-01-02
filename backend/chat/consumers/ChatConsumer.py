@@ -6,6 +6,7 @@ from asgiref.sync import sync_to_async
 from django.db.models import Q
 from accounts.models import Notification
 from accounts.consumers import NotificationConsumer
+import asyncio
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -34,11 +35,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user.save()
 
     async def receive(self, text_data):
-        # print("Received data: ", text_data, "-----------------")
         data = json.loads(text_data)
         action = data.get("action")
 
-        # print(f"Action: {action}, Data: {data}")
         try:
             if action == "update_active_conversation":
                 await self.update_active_conversation(data)
@@ -155,39 +154,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=user_id)
         return user.open_chat
 
-    @sync_to_async
-    def send_notification_to_receiver(self, receiver_id, sender_id, message):
-        sender_user = User.objects.get(id=sender_id)
-        receiver_user = User.objects.get(id=receiver_id)
-
-        target_language = receiver_user.profile.preferred_language or 'en'
-
-        try:
-            translated_message = translate_text(
-                f"{sender_user.username} sent you a message: ", target_language)
-            translated_title = translate_text("New Message", target_language)
-        except Exception as e:
-            translated_message = f"{sender_user.username} sent you a message: "
-            translated_title = "New Message"
-
-        # print("receiver message" + self.user.username)
-        notification = Notification.objects.create(
-            user=receiver_user,
-            link=f"/chat",
-            state=self.user.username,
-            title=translated_title,
-            message=f"{translated_message} {message}",
-        )
-        NotificationConsumer.send_notification_to_user(
-            receiver_id, notification)
-        notification_data = {
-            "event": "new_message",
-            "from": self.user.username,
-            "message": f"{self.user.username} sent you a message.",
-        }
-        NotificationConsumer.send_notification_to_user(
-            receiver_id, notification_data)
-
     async def handle_send_message(self, data):
         message = data.get("message")
         receiver_id = data.get("receiver_id")
@@ -198,35 +164,91 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         message = message[:300]
 
-        conversation = await self.get_or_create_conversation(sender_id, receiver_id)
+        try:
+            conversation = await self.get_or_create_conversation(sender_id, receiver_id)
+            
+            if await self.is_conversation_blocked(conversation, sender_id):
+                raise ValueError("Cannot send message. Conversation is blocked.")
+            
+            saved_conversation = await self.save_message(sender_id, receiver_id, message)
+            
+            await self.channel_layer.group_send(
+                f"user_{sender_id}",
+                {
+                    "type": "chat_message",
+                    "message": message,
+                    "sender_id": sender_id,
+                    "receiver_id": receiver_id,
+                    "conversation_id": saved_conversation.id,
+                }
+            )
+            await self.channel_layer.group_send(
+                f"user_{receiver_id}",
+                {
+                    "type": "chat_message",
+                    "message": message,
+                    "sender_id": sender_id,
+                    "receiver_id": receiver_id,
+                    "conversation_id": saved_conversation.id,
+                }
+            )
+            await self.handle_notification(receiver_id, sender_id, message)
+        except Exception as e:
+            await self.send(text_data=json.dumps({
+                "type": "error",
+                "message": str(e)
+            }))
 
-        if await self.is_conversation_blocked(conversation, sender_id):
-            raise ValueError("Cannot send message. Conversation is blocked.")
-        saved_conversation = await self.save_message(sender_id, receiver_id, message)
+    async def handle_notification(self, receiver_id, sender_id, message):
+        """
+        Separate method to handle notification logic after message is sent
+        """
+        try:
+            is_open_chat = await self.get_user_open_chat_status(receiver_id)
+            if not is_open_chat:
+                asyncio.create_task(
+                    self.send_notification_to_receiver(receiver_id, sender_id, message)
+                )
+        except Exception as e:
+            print(f"Notification error: {str(e)}")
 
-        await self.channel_layer.group_send(
-            f"user_{sender_id}",
-            {
-                "type": "chat_message",
-                "message": message,
-                "sender_id": sender_id,
-                "receiver_id": receiver_id,
-                "conversation_id": saved_conversation.id,
+    @sync_to_async
+    def send_notification_to_receiver(self, receiver_id, sender_id, message):
+        try:
+            sender_user = User.objects.get(id=sender_id)
+            receiver_user = User.objects.get(id=receiver_id)
+            
+            target_language = receiver_user.profile.preferred_language or 'en'
+
+            try:
+                translated_message = translate_text(
+                    f"{sender_user.username} sent you a message: ", target_language)
+                translated_title = translate_text("New Message", target_language)
+            except Exception as e:
+                translated_message = f"{sender_user.username} sent you a message: "
+                translated_title = "New Message"
+
+            notification = Notification.objects.create(
+                user=receiver_user,
+                link="/chat",
+                state=self.user.username,
+                title=translated_title,
+                message=f"{translated_message} {message}",
+            )
+            
+            NotificationConsumer.send_notification_to_user(
+                receiver_id, notification)
+            
+            notification_data = {
+                "event": "new_message",
+                "from": self.user.username,
+                "message": f"{self.user.username} sent you a message.",
             }
-        )
-        await self.channel_layer.group_send(
-            f"user_{receiver_id}",
-            {
-                "type": "chat_message",
-                "message": message,
-                "sender_id": sender_id,
-                "receiver_id": receiver_id,
-                "conversation_id": saved_conversation.id,
-            }
-        )
-        is_open_chat = await self.get_user_open_chat_status(receiver_id)
-        if not is_open_chat:
-            await self.send_notification_to_receiver(receiver_id, sender_id, message)
+            NotificationConsumer.send_notification_to_user(
+                receiver_id, notification_data)
+                
+        except Exception as e:
+            print(f"Failed to send notification: {str(e)}")
 
     async def get_or_create_conversation(self, sender_id, receiver_id):
         return await sync_to_async(Conversation.objects.get)(

@@ -31,6 +31,3 @@ def translate_text(text, target_language):
     except Exception as e:
         raise Exception(f"Error: {str(e)}")
 
-result = translate_text("Hello, how are you?", "es")
-print("google trans -------------------");
-print(result)  # Outputs: "Hola, ¿cómo estás?"
