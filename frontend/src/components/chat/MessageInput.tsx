@@ -30,7 +30,7 @@ const MessageInput = ({
   const emojiRef = useRef<HTMLDivElement>(null);
   const buttonEmojiRef = useRef<HTMLButtonElement>(null);
   const { user } = useUser();
-  const { toggleBlockStatus } = useWebSocketChat();
+  const { toggleBlockStatus, sendTypingStatus } = useWebSocketChat();
   const { sendMessage } = useWebSocket();
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -141,6 +141,8 @@ const MessageInput = ({
   const handleBlock = async (activeConversation: conversationProps) => {
     if (user?.id !== undefined) {
       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
+      sendTypingStatus(selectedConversation!.user_id, false);
+
     }
   };
 

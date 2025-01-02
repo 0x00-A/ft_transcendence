@@ -46,7 +46,7 @@ const MessageList = () => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { setSelectedConversation, selectedConversation } = useSelectedConversation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, sendTypingStatus, blockStatusUpdate } = useWebSocketChat();
   const { t } = useTranslation();
 
   const {
@@ -179,6 +179,7 @@ const MessageList = () => {
       else
         toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
     }
+    sendTypingStatus(selectedConversation!.user_id, false);
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,

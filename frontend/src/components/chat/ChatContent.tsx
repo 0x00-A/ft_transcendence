@@ -29,25 +29,18 @@ const ChatContent = () => {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    console.log("clear webSocket..... ");
+    // console.log("clear webSocket..... ");
+    // clearMessages();
+    // setWebsocketChatMessages([]);
     return () => {
       clearMessages();
       setWebsocketChatMessages([]);
     };
   }, []);
-  
-  useEffect(() => {
-    console.log("clear webSocket Message ..... ");
-    if (selectedConversation) {
-      setWebsocketChatMessages([]);
-    }
-  }, [selectedConversation]);
 
-  
   useEffect(() => {
     if (!selectedConversation) return;
 
-    clearMessages()
     const fetchMessages = async () => {
       setIsLoading(true);
       setError(null);
@@ -57,6 +50,7 @@ const ChatContent = () => {
           setFetchedChatMessages((prevMessages) =>
             page === 1 ? data.results : [...prevMessages, ...data.results]
           );
+          setWebsocketChatMessages([]);
           setHasMore(!!data.next);
         }
         console.log("fetech data good");
@@ -77,7 +71,7 @@ const ChatContent = () => {
       (message) => message.conversation === selectedConversation.id
     );
 
-    console.log("webSocketMessage: ", filteredMessages);
+    console.log("filteredMessages: ", filteredMessages);
 
     if (filteredMessages.length > 0) {
       setWebsocketChatMessages(filteredMessages);
@@ -92,7 +86,6 @@ const ChatContent = () => {
       }
     }
   }, [selectedConversation]);
-
 
   const combinedMessages = useMemo(() => {
     console.log("com == websocketChatMessages: ", websocketChatMessages);
