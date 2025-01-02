@@ -25,7 +25,7 @@ canvas_height: int = 480
 losing_score: int = 7
 
 ball_raduis: int = 8
-initial_ball_speed = 3
+initial_ball_speed = 4
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -395,6 +395,7 @@ def get_game(game_id):
 def remove_game(game_id):
     # global connected_players
     if game_id in games:
+        print(f"\033[31mGame {game_id} deleted!\033[0m")
         del games[game_id]
     # if game_id in connected_players:
         # del connected_players[game_id]
@@ -408,6 +409,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
         if user.is_authenticated:
             await self.accept()
+            print(f"\033[31mAdding to group: {user.username} !!.\033[0m")
             self.game_id = self.scope['url_route']['kwargs']['game_id']
             # if len(connected_players[self.game_id]) >= 4 or user.id in connected_players[self.game_id]:
             #     await self.send(text_data=json.dumps(
@@ -428,15 +430,87 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 game.connected_players += 1
                 await self.set_player_id_name()
                 if game.connected_players == 4:
-                    await self.send_countdown_to_clients()
                     await self.broadcast_initial_state()
+                    await self.send_countdown_to_clients()
                     await MultiGame.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
                     asyncio.create_task(self.start_game(self.game_id))
         else:
+            print(f"\033[31mUser {user.username} not authenticated !!.\033[0m")
             await self.close()
 
+    async def disconnect(self, close_code):
+        game_id = self.game_id
+        if game_id and hasattr(self, 'player_id'):
+            game: GameInstance = get_game(game_id)
+            await self.channel_layer.group_discard(self.game_id, self.channel_name)
+
+            game.state[f"{self.player_id}_lost"] = True
+            game.connected_players -= 1
+            await self.broadcast_player_lost_state()
+            if game.connected_players <= 0:
+                game.is_over = True
+                remove_game(game_id)
+        return await super().disconnect(close_code)
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        game: GameInstance = get_game(self.game_id)
+
+        if data['type'] == 'keydown':
+            await self.handle_keydown(data['direction'])
+
+    async def handle_keydown(self, direction):
+        game: GameInstance = get_game(self.game_id)
+        corner_size = 0
+        if self.player_id == 'player3':
+            if direction == 'down':
+                new_position = max(
+                    corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+            elif direction == 'up':
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - corner_size,
+                                   game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
+            game.state[f"{self.player_id}_paddle_y"] = new_position
+        elif self.player_id == 'player1':
+            if direction == 'up':
+                new_position = max(
+                    corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
+            elif direction == 'down':
+                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - corner_size,
+                                   game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
+            game.state[f"{self.player_id}_paddle_y"] = new_position
+        elif self.player_id == 'player4':
+            if direction == 'up':
+                new_position = max(
+                    corner_size, game.state[f"{self.player_id}_paddle_x"] -
+                    game.paddle_speed
+                )
+            elif direction == 'down':
+                new_position = min(
+                    canvas_width -
+                    game.state[f"{self.player_id}_paddle_w"] -
+                    corner_size,
+                    game.state[f"{self.player_id}_paddle_x"] +
+                    game.paddle_speed
+                )
+            game.state[f"{self.player_id}_paddle_x"] = new_position
+        else:
+            if direction == 'down':
+                new_position = max(
+                    corner_size, game.state[f"{self.player_id}_paddle_x"] -
+                    game.paddle_speed
+                )
+            elif direction == 'up':
+                new_position = min(
+                    canvas_width -
+                    game.state[f"{self.player_id}_paddle_w"] -
+                    corner_size,
+                    game.state[f"{self.player_id}_paddle_x"] +
+                    game.paddle_speed
+                )
+            game.state[f"{self.player_id}_paddle_x"] = new_position
+
     async def send_countdown_to_clients(self):
-        for count in range(3, -1, -1):
+        for count in range(5, -1, -1):
             await asyncio.sleep(1)
 
     async def set_player_id_name(self):
@@ -531,80 +605,8 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    async def receive(self, text_data):
-        data = json.loads(text_data)
-        game: GameInstance = get_game(self.game_id)
-
-        if data['type'] == 'keydown':
-            await self.handle_keydown(data['direction'])
-
-    async def handle_keydown(self, direction):
-        game: GameInstance = get_game(self.game_id)
-        corner_size = 0
-        if self.player_id == 'player3':
-            if direction == 'down':
-                new_position = max(
-                    corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
-            elif direction == 'up':
-                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - corner_size,
-                                   game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
-            game.state[f"{self.player_id}_paddle_y"] = new_position
-        elif self.player_id == 'player1':
-            if direction == 'up':
-                new_position = max(
-                    corner_size, game.state[f"{self.player_id}_paddle_y"] - game.paddle_speed)
-            elif direction == 'down':
-                new_position = min(canvas_height - game.state[f"{self.player_id}_paddle_h"] - corner_size,
-                                   game.state[f"{self.player_id}_paddle_y"] + game.paddle_speed)
-            game.state[f"{self.player_id}_paddle_y"] = new_position
-        elif self.player_id == 'player4':
-            if direction == 'up':
-                new_position = max(
-                    corner_size, game.state[f"{self.player_id}_paddle_x"] -
-                    game.paddle_speed
-                )
-            elif direction == 'down':
-                new_position = min(
-                    canvas_width -
-                    game.state[f"{self.player_id}_paddle_w"] -
-                    corner_size,
-                    game.state[f"{self.player_id}_paddle_x"] +
-                    game.paddle_speed
-                )
-            game.state[f"{self.player_id}_paddle_x"] = new_position
-        else:
-            if direction == 'down':
-                new_position = max(
-                    corner_size, game.state[f"{self.player_id}_paddle_x"] -
-                    game.paddle_speed
-                )
-            elif direction == 'up':
-                new_position = min(
-                    canvas_width -
-                    game.state[f"{self.player_id}_paddle_w"] -
-                    corner_size,
-                    game.state[f"{self.player_id}_paddle_x"] +
-                    game.paddle_speed
-                )
-            game.state[f"{self.player_id}_paddle_x"] = new_position
-
-    async def disconnect(self, close_code):
-        game_id = self.game_id
-        if game_id and hasattr(self, 'player_id'):
-            game: GameInstance = get_game(game_id)
-            await self.channel_layer.group_discard(self.game_id, self.channel_name)
-
-            game.state[f"{self.player_id}_lost"] = True
-            game.connected_players -= 1
-            await self.broadcast_player_lost_state()
-            if game.connected_players <= 0:
-                game.is_over = True
-                remove_game(game_id)
-        return await super().disconnect(close_code)
-
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
-
         # Game loop
         while True:
             await self.broadcast_game_state(game_id)
@@ -691,24 +693,6 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             game.winner = game.get_winner()
             game.is_over = True
             await self.broadcast_score_state()
-
-    async def play_paddle_sound(self, game):
-        await self.channel_layer.group_send(
-            game.game_id,
-            {
-                "type": "play_sound",
-                "collision": "paddle"
-            }
-        )
-
-    async def play_wall_sound(self, game):
-        await self.channel_layer.group_send(
-            game.game_id,
-            {
-                "type": "play_sound",
-                "collision": "wall"
-            }
-        )
 
     async def broadcast_score_state(self):
         game: GameInstance = games[self.game_id]
@@ -837,6 +821,24 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    async def play_paddle_sound(self, game):
+        await self.channel_layer.group_send(
+            game.game_id,
+            {
+                "type": "play_sound",
+                "collision": "paddle"
+            }
+        )
+
+    async def play_wall_sound(self, game):
+        await self.channel_layer.group_send(
+            game.game_id,
+            {
+                "type": "play_sound",
+                "collision": "wall"
+            }
+        )
+
     async def score_update(self, event):
         await self.send(text_data=json.dumps(
             {
@@ -869,9 +871,6 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         }))
 
     async def game_init(self, event):
-        game_id = self.game_id
-        game: GameInstance = get_game(game_id)
-
         await self.send(text_data=json.dumps(
             {
                 "type": 'game_started',

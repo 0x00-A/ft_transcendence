@@ -32,12 +32,14 @@ class JwtAuthMiddleware(BaseMiddleware):
                 validated_token = JWTAuthentication().get_validated_token(raw_token=access_token)
                 user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
                 scope['user'] = user
-                # print('api ==> JwtAuthMiddleware: User authenticated')
+                print(
+                    '\033[33mapi ==> JwtAuthMiddleware: User authenticated\033[0m')
             except (InvalidToken, TokenError, AuthenticationFailed):
-                # print('api ==> JwtAuthMiddleware: User not authenticated (Anonynous)')
+                print(
+                    '\033[33mapi ==> JwtAuthMiddleware: User not authenticated (Anonynous)\033[0m')
                 scope['user'] = AnonymousUser()
         else:
-            # print('api ==> JwtAuthMiddleware: No token found in the request')
+            print('api ==> JwtAuthMiddleware: No token found in the request')
             scope['user'] = AnonymousUser()
         return await super().__call__(scope, receive, send)
 
