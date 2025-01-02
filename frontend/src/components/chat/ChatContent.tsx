@@ -7,6 +7,7 @@ import { useSelectedConversation } from '@/contexts/SelectedConversationContext'
 import ChatSkeleton from './ChatSkeleton';
 import { apiGetConversationMessages } from '@/api/chatApi';
 import { OctagonAlert } from 'lucide-react';
+import moment from 'moment';
 
 interface MessageProps {
   id: number;
@@ -29,9 +30,6 @@ const ChatContent = () => {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    // console.log("clear webSocket..... ");
-    // clearMessages();
-    // setWebsocketChatMessages([]);
     return () => {
       clearMessages();
       setWebsocketChatMessages([]);
@@ -47,13 +45,17 @@ const ChatContent = () => {
       try {
         const data = await apiGetConversationMessages(selectedConversation.id, page);
         if (data) {
+          const updatedMessages = data.results.map((message: MessageProps) => {
+            const localTime = moment.utc(message.timestamp).local().format("HH:mm");
+            return { ...message, timestamp: localTime };
+          });
+
           setFetchedChatMessages((prevMessages) =>
-            page === 1 ? data.results : [...prevMessages, ...data.results]
+            page === 1 ? updatedMessages : [...prevMessages, ...updatedMessages]
           );
           setWebsocketChatMessages([]);
           setHasMore(!!data.next);
         }
-        console.log("fetech data good");
       } catch {
         setError('Failed to load messages. Please try again later.');
       } finally {
@@ -71,8 +73,6 @@ const ChatContent = () => {
       (message) => message.conversation === selectedConversation.id
     );
 
-    console.log("filteredMessages: ", filteredMessages);
-
     if (filteredMessages.length > 0) {
       setWebsocketChatMessages(filteredMessages);
     }
@@ -88,8 +88,6 @@ const ChatContent = () => {
   }, [selectedConversation]);
 
   const combinedMessages = useMemo(() => {
-    console.log("com == websocketChatMessages: ", websocketChatMessages);
-
     const reversedFetched = [...fetchedChatMessages].reverse();
     return [...reversedFetched, ...websocketChatMessages];
   }, [fetchedChatMessages, websocketChatMessages]);

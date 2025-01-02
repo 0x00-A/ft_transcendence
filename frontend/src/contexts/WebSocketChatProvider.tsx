@@ -2,7 +2,6 @@ import React, { createContext, useCallback, useContext, useEffect, useRef, useSt
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
-import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
 
 
 
@@ -65,7 +64,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   const [blockStatusUpdate, setBlockStatusUpdate] = useState<BlockStatusUpdate | null>(null);
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
-  const { selectedConversation } = useSelectedConversation();
 
 
 
@@ -174,7 +172,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   };
 
   const clearMessages = useCallback(() => {
-    console.log("clear webSocket..... ");
     setMessages([]);
   }, []);
   

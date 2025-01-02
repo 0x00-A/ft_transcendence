@@ -109,7 +109,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "block_status": "success"
             }
         )
-
+        
         await self.channel_layer.group_send(
             f"user_{blocked_id}",
             {
@@ -122,6 +122,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def block_status_update(self, event):
+                
         await self.send(text_data=json.dumps({
             "type": "block_status_update",
             "conversation_id": event["conversation_id"],
