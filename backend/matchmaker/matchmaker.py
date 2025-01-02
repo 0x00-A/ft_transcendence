@@ -28,6 +28,8 @@ class Matchmaker:
     async def register_client(cls, player_id, consumer):
         cls.connected_clients[player_id] = consumer
         # cls.connected_clients[player_id].add(channel_name)
+        # cls.connected_clients[player_id].add(channel_name)
+
 
     @classmethod
     async def unregister_client(cls, player_id):
