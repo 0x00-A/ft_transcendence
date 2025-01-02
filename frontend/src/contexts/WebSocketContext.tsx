@@ -65,7 +65,8 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchNotifications = async () => {
     try {
-      const { data } = await apiClient.get('/notifications/');
+      // const { data } = await apiClient.get('/notifications/');
+      const data : Notification[] = []
       setNotifications(data);
       // console.log('notification data: ', data);
       setUnreadCount(data.filter((n: Notification) => !n.is_read).length);

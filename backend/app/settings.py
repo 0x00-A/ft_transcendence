@@ -340,10 +340,10 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-                        'http://localhost:3000'
-                        # 'http://0.0.0.0:3000',
-                        # 'wss://yourdomain.com'
-                        ]
+    'http://localhost:3000'
+    # 'http://0.0.0.0:3000',
+    # 'wss://yourdomain.com'
+]
 
 # LOG_DIR = '/app/backend/logs'
 # os.makedirs(LOG_DIR, exist_ok=True)
