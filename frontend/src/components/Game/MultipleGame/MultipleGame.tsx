@@ -111,7 +111,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     }
     const timeout = setTimeout(() => {
       f(gameState);
-    }, 6000);
+    }, 10000);
 
     return () => {
       clearTimeout(timeout);
@@ -136,7 +136,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
         // console.log(data);
 
         if (data.type === 'game_started') {
-
           paddle1Ref.current.x = data.state[`player1_paddle_x`];
           paddle2Ref.current.y = data.state[`player2_paddle_y`];
           paddle3Ref.current.x = data.state[`player3_paddle_x`];
@@ -207,7 +206,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
     return () => {
       if (ws.current) {
-        // console.log('Closing game websocket ....');
+        console.log('Closing multi game websocket ....');
         ws.current.close();
       }
     };
@@ -359,7 +358,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       {/* <div className="relative w-[750px]"> */}
         {/* Top Score */}
 
-        {player1_id ? <PlayerCard layout='horizontal' score={score2[0]} against={score2[1]} p_id={player2_id}/>
+        {player2_id ? <PlayerCard layout='horizontal' score={score2[0]} against={score2[1]} p_id={player2_id}/>
             : <PlayerCardSkeleton layout='horizontal'/>}
 
         <div className="flex items-center justify-center gap-4">
@@ -421,13 +420,13 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
           {/* Right Score */}
 
-          {player1_id ? <PlayerCard score={score3[0]} against={score3[1]} p_id={player3_id}/>
+          {player3_id ? <PlayerCard score={score3[0]} against={score3[1]} p_id={player3_id}/>
             : <PlayerCardSkeleton />}
         </div>
 
         {/* Bottom Score */}
 
-         {player1_id ? <PlayerCard layout='horizontal' score={score4[0]} against={score4[1]} p_id={player4_id}/>
+         {player4_id ? <PlayerCard layout='horizontal' score={score4[0]} against={score4[1]} p_id={player4_id}/>
             : <PlayerCardSkeleton layout='horizontal'/>}
       </div>
     // </div>

@@ -1,0 +1,40 @@
+
+> world-wise@0.0.0 build
+> tsc -b && vite build
+
+src/App.tsx(46,1): error TS6133: 'Spinner' is declared but its value is never read.
+src/components/Auth/AuthPongBox.tsx(5,32): error TS6133: 'setIslogin' is declared but its value is never read.
+src/components/chat/MessageArea.tsx(20,10): error TS6133: 'shouldScroll' is declared but its value is never read.
+src/components/chat/MessageArea.tsx(21,9): error TS6133: 't' is declared but its value is never read.
+src/components/Dashboard/CompetitiveOverview.tsx(1,21): error TS6133: 'useState' is declared but its value is never read.
+src/components/Profile/EditInfosProfile.tsx(2,10): error TS6133: 'FormEvent' is declared but its value is never read.
+src/components/Profile/EditInfosProfile.tsx(239,26): error TS2339: Property 'email' does not exist on type 'FieldErrors<EditProfileFormData>'.
+src/components/Profile/EditInfosProfile.tsx(239,76): error TS2339: Property 'email' does not exist on type 'FieldErrors<EditProfileFormData>'.
+src/components/Profile/EditSecurityProfile.tsx(285,145): error TS2872: This kind of expression is always truthy.
+src/components/Profile/ProfileFriends.tsx(25,90): error TS6133: 'onlineRefetch' is declared but its value is never read.
+src/components/Profile/ProfileFriends.tsx(26,93): error TS6133: 'offlineRefetch' is declared but its value is never read.
+src/components/Profile/ProfileHeader.tsx(3,1): error TS6133: 'MdEdit' is declared but its value is never read.
+src/components/ProtectedRoute.tsx(3,1): error TS6133: 'PreLoader' is declared but its value is never read.
+src/contexts/WebSocketChatProvider.tsx(66,9): error TS6133: 'selectedConversation' is declared but its value is never read.
+src/contexts/WebSocketContext.tsx(15,1): error TS6133: 'useUser' is declared but its value is never read.
+src/pages/Auth/Oauth2Callback.tsx(105,29): error TS2741: Property 'loadingBarRef' is missing in type '{ setOtpRequired: Dispatch<SetStateAction<boolean>>; username: string; }' but required in type '{ setOtpRequired: Dispatch<SetStateAction<boolean>>; username: string; loadingBarRef: LoadingBarContextType; }'.
+src/pages/Auth/ResetPassword.tsx(48,41): error TS2339: Property 'response' does not exist on type 'Error'.
+src/pages/Leaderboard/GamesHistory.tsx(4,1): error TS6133: 'History' is declared but its value is never read.
+src/pages/Leaderboard/GamesHistory.tsx(21,10): error TS6133: 'isBtnActive' is declared but its value is never read.
+src/pages/Leaderboard/GamesHistory.tsx(21,23): error TS6133: 'setBtnActive' is declared but its value is never read.
+src/pages/Leaderboard/Leaderboard_History.tsx(1,1): error TS6133: 'LeaderBoard' is declared but its value is never read.
+src/pages/Profile/UsersProfile.tsx(10,1): error TS6133: 'useGetData' is declared but its value is never read.
+src/pages/Profile/UsersProfile.tsx(12,21): error TS6133: 'useState' is declared but its value is never read.
+src/pages/Profile/UsersProfile.tsx(16,1): error TS6133: 'PreLoader' is declared but its value is never read.
+src/pages/Profile/UsersProfile.tsx(17,1): error TS6133: 'useUser' is declared but its value is never read.
+src/pages/Profile/UsersProfile.tsx(18,8): error TS6133: 'apiClient' is declared but its value is never read.
+src/pages/Profile/UsersProfile.tsx(135,41): error TS2322: Type 'OtherUser | undefined' is not assignable to type 'OtherUser'.
+  Type 'undefined' is not assignable to type 'OtherUser'.
+src/pages/Profile/UsersProfile.tsx(138,29): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/pages/Profile/UsersProfile.tsx(141,42): error TS18048: 'user' is possibly 'undefined'.
+src/pages/Profile/UsersProfile.tsx(143,61): error TS18048: 'user' is possibly 'undefined'.
+src/types/formSchemas.ts(3,1): error TS6133: 'at' is declared but its value is never read.
+src/types/formSchemas.ts(4,1): error TS6133: 'use' is declared but its value is never read.
+src/types/formSchemas.ts(5,1): error TS6133: 'ReturnBack' is declared but its value is never read.
+src/types/formSchemas.ts(114,27): error TS7006: Parameter 't' implicitly has an 'any' type.

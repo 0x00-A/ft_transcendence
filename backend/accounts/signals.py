@@ -31,8 +31,9 @@ def log_profile_changes(sender, instance, **kwargs):
         if old_profile.level + 1 == instance.level:
             target_language = instance.user.profile.preferred_language or 'en'
             try:
-                translated_message = translate_text(f"You have reached level {instance.level}" ,target_language)
-                translated_title = translate_text('Level Up',target_language)
+                translated_message = translate_text(
+                    f"You have reached level {instance.level}", target_language)
+                translated_title = translate_text('Level Up', target_language)
             except Exception as e:
                 translated_message = f"You have reached level {instance.level}"
                 translated_title = "Level Up"
@@ -50,20 +51,21 @@ def log_profile_changes(sender, instance, **kwargs):
         #     print(f"-------------Played games {old_profile.user.username} changed from {old_profile.played_games} to {instance.played_games}-------------")
 
 
-
 @receiver(post_save, sender=UserAchievement)
 def achievement_unlocked(sender, instance, **kwargs):
 
     if instance.is_unlocked:
         target_language = instance.user.profile.preferred_language or 'en'
         try:
-            translated_message = translate_text(f"Achievement {instance.achievement.name} unlocked" ,target_language)
-            translated_title = translate_text('Achievement unlocked',target_language)
+            translated_message = translate_text(
+                f"Achievement {instance.achievement.name} unlocked", target_language)
+            translated_title = translate_text(
+                'Achievement unlocked', target_language)
         except Exception as e:
             translated_message = f"Achievement {instance.achievement.name} unlocked"
             translated_title = "Achievement unlocked"
         notification = Notification.objects.create(
-            user=instance.user, title=translated_title , message=translated_message)
+            user=instance.user, title=translated_title, message=translated_message)
         notification.save()
         NotificationConsumer.send_notification_to_user(
             instance.user.id, notification)
@@ -72,16 +74,17 @@ def achievement_unlocked(sender, instance, **kwargs):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-       Profile.objects.create(user=instance,
-                              rank=Profile.objects.count() + 1,
-                              badge=Badge.objects.get(name='Bronze'),
-                              stats={'wins': 0, 'losses': 0, 'games_played': 0, 'highest_score': 0, 'best_rank': Profile.objects.count() + 1, 'win_track': 0, 'win_streak': 0}
-                              )
-       achievements = Achievement.objects.all()
-       for achievement in achievements:
-            user_achievement, created = UserAchievement.objects.get_or_create(user=instance, achievement=achievement)
+        Profile.objects.create(user=instance,
+                               rank=Profile.objects.count() + 1,
+                               badge=Badge.objects.get(name='Bronze'),
+                               stats={'wins': 0, 'losses': 0, 'games_played': 0, 'highest_score': 0,
+                                      'best_rank': Profile.objects.count() + 1, 'win_track': 0, 'win_streak': 0}
+                               )
+        achievements = Achievement.objects.all()
+        for achievement in achievements:
+            user_achievement, created = UserAchievement.objects.get_or_create(
+                user=instance, achievement=achievement)
         # Check if the achievement is already unlocked
-
 
 
 @receiver(post_save, sender=User)
@@ -134,10 +137,7 @@ def delete_user_with_profile(sender, instance, **kwargs):
 #                 user_achievement.progress["games_won"] = progress
 #                 if progress >= achievement.condition["games_won"]:
 #                     user_achievement.is_unlocked = True
-#                     # Send notification
-#                     send_achievement_notification(user, achievement)
-#                 user_achievement.save()
-
+#                     # Send n
 
 @receiver(post_save, sender=Game)
 def unlock_achievements_on_game(sender, instance, **kwargs):
@@ -203,7 +203,7 @@ def track_login_streak(sender, request, user, **kwargs):
     achievement = Achievement.objects.get(condition__has_key="logins")
 
     user_achievement, created = UserAchievement.objects.get_or_create(
-            user=user, achievement=achievement)
+        user=user, achievement=achievement)
 
     if not user_achievement.is_unlocked:
         if user.last_login == today - timedelta(days=1):

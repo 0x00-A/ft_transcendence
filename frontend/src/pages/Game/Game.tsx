@@ -22,10 +22,13 @@ import NoTournamentIcon from '../../components/Tournament/components/NoTournamen
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import { formatDate } from '@/utils/helpers';
-import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
+// import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
 import RefreshButton from './RefreshButton';
+import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 
 const Game = () => {
@@ -46,9 +49,11 @@ const Game = () => {
   const [tournamentStat, setTournamentStat] = useState<TournamentState | null>(
     null
   );
+  const [isSearching, setIsSearching] = useState(false);
+  const [timeoutId, setTimeoutId] = useState< NodeJS.Timeout | null>(null);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
-
+  const navigate = useNavigate();
   const ModesList = useMemo(() => {
       return [
         {
@@ -83,7 +88,6 @@ const Game = () => {
         },
       ]
   }, [t])
-
   const {
     gameAccepted,
     gameInvite,
@@ -91,11 +95,9 @@ const Game = () => {
     player1_id: p1_id,
     player2_id: p2_id,
   } = useGameInvite();
-
   const { user } = useUser();
 
   const getTranslatedStatus = (status: string) => {
-
     switch (status) {
       case 'waiting':
         return t('game.joinedTournaments.statusGame.waiting');
@@ -140,6 +142,27 @@ const Game = () => {
     refetch: refetchTournaments,
   } = useGetData<TournmentType[]>('matchmaker/tournaments');
 
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (isSearching) {
+      timeout = setTimeout(() => {
+        setIsSearching(false);
+        sendMessage({
+          event: 'remove_from_queue',
+        });
+        toast.error("Matchmaking timeout!");
+      }, 10000);
+      setTimeoutId(timeout);
+    }
+
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isSearching]);
+
 
   useEffect(() => {
       const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
@@ -152,10 +175,15 @@ const Game = () => {
       socket.onmessage = (e) => {
         refetchData();
         const data = JSON.parse(e.data);
-        console.log(data);
+        // console.log(data);
 
         if (data.event === 'error') {
+          cancelMatchmaking()
           toast.error(data.message);
+        }
+        if (data.event === 'close_connection') {
+          // cancelMatchmaking()
+          navigate('/')
         }
         if (data.event === 'success') {
           toast.success(data.message);
@@ -170,16 +198,20 @@ const Game = () => {
         //   setGameState('inqueue');
         // }
         if (data.event === 'game_address') {
+          if (timeoutId)
+            clearTimeout(timeoutId);
           setGameAdrress(data.game_address);
           setPlayer1_id(data.player1_id);
           setPlayer2_id(data.player2_id);
-          console.log("setting game address..");
-
+          setIsSearching(false);
           setGameState('startGame');
         }
         if (data.event === 'multigame_address') {
+          if (timeoutId)
+            clearTimeout(timeoutId);
           setGameAdrress(data.game_address);
           setGameState('startMultiGame');
+          setIsSearching(false);
         }
         if (data.event === 'tournament_update') {
           setTournamentStat(data.tournament_stat);
@@ -214,14 +246,25 @@ const Game = () => {
     }
   };
 
+  const cancelMatchmaking = () => {
+    sendMessage({
+      event: 'remove_from_queue',
+    });
+    setIsSearching(false)
+    // setGameState(null);
+  };
+
   const requestRemoteGame = () => {
-    setGameState('inqueue');
+    setGameState(null);
+    setIsSearching(true);
     sendMessage({
       event: 'request_remote_game',
     });
   };
 
   const requestMultipleGame = () => {
+    setGameState(null);
+    setIsSearching(true);
     sendMessage({
       event: 'request_multiple_game',
     });
@@ -328,16 +371,30 @@ const Game = () => {
 
   return (
     <div className={styles.container}>
-      {gameState === 'inqueue' && !(gameAccepted && gameInvite) && (
+      {isSearching && !(gameAccepted && gameInvite) && (
         <div className={styles.modalOverlay}>
-          <MatchmakingScreen
+          {/* <MatchmakingScreen
             onClick={() => {
               sendMessage({
                 event: 'remove_from_queue',
               });
+              setIsSearching(false)
               setGameState(null);
             }}
-          />
+          /> */}
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <span>Searching for match...</span>
+          </div>
+          <Button
+            onClick={cancelMatchmaking}
+            variant="destructive"
+            className="px-8 py-4 text-lg"
+          >
+            Cancel
+          </Button>
+        </div>
         </div>
       )}
       <div className={styles.topContainer}>

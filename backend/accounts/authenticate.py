@@ -19,7 +19,8 @@ class CookieJWTAuthentication(JWTAuthentication):
         except (InvalidToken, TokenError) as e:
             try:
                 new_access_token = RefreshToken(refresh_token).access_token
-                validated_token = self.get_validated_token(str(new_access_token))
+                validated_token = self.get_validated_token(
+                    str(new_access_token))
                 request.session['new_access_token'] = str(new_access_token)
                 return self.get_user(validated_token), validated_token
             except (InvalidToken, TokenError):

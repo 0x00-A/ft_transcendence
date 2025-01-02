@@ -236,9 +236,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def is_conversation_blocked(self, conversation, sender_id):
         conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
 
-        if sender_id == conversation.user1_id and conversation.user1_block_status == "blocker" or sender_id == conversation.user1_id and conversation.user1_block_status == "blocked":
+        if conversation.user1_block_status == "blocker" or  conversation.user1_block_status == "blocked":
             return True
-        if sender_id == conversation.user2_id and conversation.user2_block_status == "blocker" or sender_id == conversation.user2_id and conversation.user2_block_status == "blocker":
+        if conversation.user2_block_status == "blocker" or conversation.user2_block_status == "blocker":
             return True
         return False
 

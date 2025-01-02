@@ -12,12 +12,12 @@ class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         async def log_receive():
             event = await receive()
-            print('++++++++++++++ Received event: ', event)
+            # print('++++++++++++++ Received event: ', event)
             return event
 
         async def log_send():
             event = await send()
-            print('++++++++++++++ Sent event: ', event)
+            # print('++++++++++++++ Sent event: ', event)
             return event
 
         headers = dict(scope['headers'])
@@ -37,8 +37,6 @@ class JwtAuthMiddleware(BaseMiddleware):
         else:
             scope['user'] = AnonymousUser()
         return await super().__call__(scope, receive, send)
-
-
 
 
 # @database_sync_to_async

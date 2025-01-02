@@ -63,12 +63,12 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   const { setTyping } = useTyping();
   const socketRef = useRef<WebSocket | null>(null);
 
+
   useEffect(() => {
     const wsUrl = `${getWebSocketUrl(`chat/`)}`;
     const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
-      // console.log('WebSocket connection opened');
     };
 
     socket.onmessage = (event) => {
@@ -84,9 +84,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           timestamp: moment().format('HH:mm'),
           seen: false,
         };
-
         setMessages((prev) => [...prev, newMessage]);
-
         setLastMessage({
           conversationId: data.conversation_id,
           content: data.message,
@@ -104,13 +102,11 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           blockedId: data.blocked_id,
           blockStatus: data.block_status,
         };
-        // console.log('>>>>>>>>>>>>>>>>>Sending toggle block status:', blockStatusData);
         setBlockStatusUpdate(blockStatusData);
       }
     };
 
     socket.onclose = () => {
-      // console.log('WebSocket connection closed');
     };
 
     socket.onerror = (error) => {
@@ -172,6 +168,10 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     sendMarkAsRead();
   };
 
+  const clearMessages = (() => {
+    setMessages([]);
+  });
+
   const updateActiveConversation = (conversationId: number) => {
     const socket = socketRef.current;
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -185,9 +185,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     }
   };
 
-  const clearMessages = () => {
-    setMessages([]);
-  };
 
   const toggleBlockStatus = (conversationId: number, blockerId: number, blockedId: number, status: boolean) => {
     const socket = socketRef.current;
@@ -203,6 +200,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
       );
     }
   };
+
   return (
     <WebSocketContext.Provider value={{ sendMessage, sendTypingStatus, markAsRead, updateActiveConversation, clearMessages, messages, lastMessage, markAsReadData, toggleBlockStatus, blockStatusUpdate }}>
       {children}

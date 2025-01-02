@@ -1,4 +1,5 @@
 {
+    "showMyProfile": "My Profile",
   "editEmail": {
       "btnEdit": "Edit",
       "editEmail": "Edit Your Email",
@@ -306,7 +307,7 @@
               "Score": "Score",
               "Against": "Against"
           },
-          "WaitingPJ": "Waiting for players to join..."
+          "WaitingPJ": "Initializing game..."
       },
       "joinedTournaments": {
           "title": "Joined Tournaments",
