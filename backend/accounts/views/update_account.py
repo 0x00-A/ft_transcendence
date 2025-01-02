@@ -17,16 +17,12 @@ class EditProfileView(APIView):
 
     def put(self, request):
         user = request.user
-        print('--->>REQUEST DATA ==>: ', request.data, '<<---')
         serializer = EditProfileSerializer(user, context={'request': request}, data=request.data, partial=True)
         if request.FILES:
-            print('---------->>> FILES: ', request.FILES)
             serializer.files = request.FILES
         if serializer.is_valid():
             serializer.save()
-            print('api ==> edit profile: Changes apply to your profile successfuly')
             return Response({'message': 'Changes apply to your profile successfuly'}, status=status.HTTP_200_OK)
-        print('api ==> edit profile: Failed to apply Changes to your profile')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateEmailRequest(APIView):
@@ -56,7 +52,6 @@ class UpdateEmailRequest(APIView):
             send_update_email_email(user, request.data['email'])
         except Exception as e:
             return Response({'error': f'Something went wrong, please try again!, detalails: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
-        print('api ==> change email: Email sent successfully')
         return Response({'message': 'Verification email sent successfully'}, status=status.HTTP_200_OK)
 
 

@@ -2,13 +2,9 @@ from django.utils.deprecation import MiddlewareMixin
 
 
 class RefreshTokenMiddleware(MiddlewareMixin):
-    def process_request(self, request):
-        # print('+++++++++++request.headers++++++++++++', request.headers, '+++++++++++request.headers++++++++++++')
-        # print('-----------request.user-----------', request.user, '-----------request.user-----------')
-        pass
 
     def process_response(self, request, response):
-        # print('+++++++++++request.headers++++++++++++', request.headers, '+++++++++++request.headers++++++++++++')
+        print('api ==> RefreshTokenMiddleware: Processing the response')
         if 'new_access_token' in request.session:
             new_access_token = request.session.get('new_access_token')
             del request.session['new_access_token']

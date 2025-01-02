@@ -32,6 +32,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
+  const [countEnded, setCountEnded] = useState(false);
   // const [count, setCount] = useState(3);
 
   //pong
@@ -192,10 +193,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
             // setGameAccepted(false)
           }
         }
-        // if (data.type === 'game_countdown') {
-        //   console.log(data);
-        //   setCount(data.count)
-        // }
+        if (data.type === 'game_countdown') {
+          console.log(data);
+          setCountEnded(true);
+        }
       };
 
       gameSocket.onclose = () => {
@@ -213,7 +214,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   }, [restart]);
 
   useEffect(() => {
-    if (isGameOver || gameState != 'started') return;
+    if (isGameOver || !countEnded) return;
     const canvas = canvasRef.current!;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
@@ -340,7 +341,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       window.removeEventListener('keydown', (e) => handleKeyDown(e));
       window.removeEventListener('keyup', (e) => handleKeyUp(e));
     };
-  }, [isGameOver, gameState]);
+  }, [isGameOver, gameState, countEnded]);
 
 
   const handleRetry = () => {
@@ -356,79 +357,109 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   return (
     <div className={css.container}>
       {/* <div className="relative w-[750px]"> */}
-        {/* Top Score */}
+      {/* Top Score */}
 
-        {player2_id ? <PlayerCard layout='horizontal' score={score2[0]} against={score2[1]} p_id={player2_id}/>
-            : <PlayerCardSkeleton layout='horizontal'/>}
+      {player2_id ? (
+        <PlayerCard
+          layout="horizontal"
+          score={score2[0]}
+          against={score2[1]}
+          p_id={player2_id}
+          countEnded={countEnded}
+        />
+      ) : (
+        <PlayerCardSkeleton layout="horizontal" />
+      )}
 
-        <div className="flex items-center justify-center gap-4">
-          {/* Left Score */}
-          {player1_id ? <PlayerCard score={score1[0]} against={score1[1]} p_id={player1_id}/>
-            : <PlayerCardSkeleton />}
+      <div className="flex items-center justify-center gap-4">
+        {/* Left Score */}
+        {player1_id ? (
+          <PlayerCard
+            score={score1[0]}
+            against={score1[1]}
+            p_id={player1_id}
+            countEnded={countEnded}
+          />
+        ) : (
+          <PlayerCardSkeleton />
+        )}
 
-
-
-          {/* Game Area */}
-          {gameState === 'started' || gameState === 'ended' ? (
-            <div
-              className="flex justify-center items-center relative min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
-              style={{
-                boxSizing: 'content-box',
-                userSelect: 'none',
-                touchAction: 'manipulation'
-              }}
-            >
-              {currentScreen === 'game' && (
+        {/* Game Area */}
+        {countEnded && (gameState === 'started' || gameState === 'ended') ? (
+          <div
+            className="flex justify-center items-center relative min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+            style={{
+              boxSizing: 'content-box',
+              userSelect: 'none',
+              touchAction: 'manipulation',
+            }}
+          >
+            {currentScreen === 'game' && (
               <div id="gameScreen" className={css.gameScreenDiv}>
-                  <canvas
-                    width={canvasWidth}
-                    height={canvasHeight}
-                    id={css.gameCanvas}
-                    ref={canvasRef}
-                  />
-              </div>
-
-              )}
-              {currentScreen === 'end' && (
-                <EndGameScreen
-                  isWinner={isWinner}
-                  handleRetry={handleRetry}
-                  handleMainMenu={handleMainMenu}
-                  isMatchTournament={isMatchTournament}
+                <canvas
+                  width={canvasWidth}
+                  height={canvasHeight}
+                  id={css.gameCanvas}
+                  ref={canvasRef}
                 />
-              )}
-            </div>
-          ) :
-
-          (
-              <div
-                className="relative flex items-center justify-center min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
-                style={{
-                  boxSizing: 'content-box',
-                  userSelect: 'none',
-                  touchAction: 'manipulation'
-                }}
-              >
-              <div className="relative flex items-center justify-center">
-                  <div className="animate-pulse text-center">
-                    <p className="text-gray-400">{t('game.multipleGame.WaitingPJ')}</p>
-                  </div>
+              </div>
+            )}
+            {currentScreen === 'end' && (
+              <EndGameScreen
+                isWinner={isWinner}
+                handleRetry={handleRetry}
+                handleMainMenu={handleMainMenu}
+                isMatchTournament={isMatchTournament}
+              />
+            )}
+          </div>
+        ) : (
+          <div
+            className="relative flex items-center justify-center min-w-[480px] min-h-[480px] max-w-[480px] max-h-[480px] w-[480px] h-[480px] bg-[var(--main-surface-tertiary)] border-[6px] border-[var(--text-color)]"
+            style={{
+              boxSizing: 'content-box',
+              userSelect: 'none',
+              touchAction: 'manipulation',
+            }}
+          >
+            <div className="relative flex items-center justify-center">
+              <div className="animate-pulse text-center">
+                <p className="text-gray-400">
+                  {t('game.multipleGame.WaitingPJ')}
+                </p>
               </div>
             </div>
+          </div>
+        )}
 
-          )}
+        {/* Right Score */}
 
-          {/* Right Score */}
-
-          {player3_id ? <PlayerCard score={score3[0]} against={score3[1]} p_id={player3_id}/>
-            : <PlayerCardSkeleton />}
-        </div>
-
-        {/* Bottom Score */}
-
-         {player4_id ? <PlayerCard layout='horizontal' score={score4[0]} against={score4[1]} p_id={player4_id}/>
-            : <PlayerCardSkeleton layout='horizontal'/>}
+        {player3_id ? (
+          <PlayerCard
+            score={score3[0]}
+            against={score3[1]}
+            p_id={player3_id}
+            countEnded={countEnded}
+          />
+        ) : (
+          <PlayerCardSkeleton />
+        )}
       </div>
+
+      {/* Bottom Score */}
+
+      {player4_id ? (
+        <PlayerCard
+          layout="horizontal"
+          score={score4[0]}
+          against={score4[1]}
+          p_id={player4_id}
+          countEnded={countEnded}
+        />
+      ) : (
+        <PlayerCardSkeleton layout="horizontal" />
+      )}
+    </div>
     // </div>
   );
 

@@ -22,13 +22,15 @@ import NoTournamentIcon from '../../components/Tournament/components/NoTournamen
 import { useUser } from '@/contexts/UserContext';
 import { useGameInvite } from '@/contexts/GameInviteContext';
 import { formatDate } from '@/utils/helpers';
-import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
+// import MatchmakingScreen from '@/components/Game/components/MatchmakingScreen/MatchmakingScreen';
 import MultipleGame from '@/components/Game/MultipleGame/MultipleGame';
 import { useTranslation } from 'react-i18next';
 import RefreshButton from './RefreshButton';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 
 const Game = () => {
@@ -51,6 +53,8 @@ const Game = () => {
   );
   const [isSearching, setIsSearching] = useState(false);
   const [timeoutId, setTimeoutId] = useState< NodeJS.Timeout | null>(null);
+  const [isConnected, setIsConnected] = useState(true);
+  const [reconnectTrigger, setReconnectTrigger] = useState(false);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
   const navigate = useNavigate();
@@ -165,11 +169,13 @@ const Game = () => {
 
 
   useEffect(() => {
+    try {
       const wsUrl = `${getWebSocketUrl('matchmaking/')}`;
       const socket = new WebSocket(wsUrl);
       ws.current = socket;
 
       socket.onopen = () => {
+        setIsConnected(true);
       };
 
       socket.onmessage = (e) => {
@@ -225,7 +231,16 @@ const Game = () => {
       };
       socket.onclose = () => {
         // console.log('Matchmaker Socket disconnected');
+        setIsConnected(false);
       };
+      socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        setIsConnected(false);
+      };
+    }  catch (error) {
+      console.error('Failed to create WebSocket:', error);
+      setIsConnected(false);
+    }
 
     return () => {
       if (ws.current) {
@@ -238,7 +253,7 @@ const Game = () => {
       }
       setGameAccepted(false);
     };
-  }, []);
+  }, [reconnectTrigger]);
 
   const sendMessage = (message: Record<string, any>) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
@@ -285,6 +300,13 @@ const Game = () => {
     setGameState(null);
     setSelectedMode(null);
     setShowTournamentView(false);
+  };
+
+  const handleReconnect = () => {
+    if (ws.current) {
+      ws.current?.close();
+    }
+    setReconnectTrigger(prev => !prev);
   };
 
   if (selectedMode === 0) {
@@ -371,6 +393,28 @@ const Game = () => {
 
   return (
     <div className={styles.container}>
+
+      {!isConnected && !(gameAccepted && gameInvite) && (
+        <div className={styles.modalOverlay}>
+            <Alert variant="destructive" className="p-4 text-lg w-auto">
+              <AlertDescription className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-center gap-4">
+                  <AlertCircle className="h-6 w-6" />
+                  <span className='font-medium text-xl'>WebSocket not connected</span>
+                </div>
+                <Button
+                  onClick={handleReconnect}
+                  variant="outline"
+                  size="default"
+                  className="ml-10 py-6 px-6 text-xl"
+                >
+                  Reconnect
+                </Button>
+              </AlertDescription>
+            </Alert>
+        </div>
+      )}
+
       {isSearching && !(gameAccepted && gameInvite) && (
         <div className={styles.modalOverlay}>
           {/* <MatchmakingScreen
