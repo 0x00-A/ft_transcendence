@@ -16,7 +16,7 @@ const SettingsSection = () => {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const { selectedConversation } = useSelectedConversation();
   const { user } = useUser();
-  const { toggleBlockStatus, sendTypingStatus } = useWebSocketChat();
+  const { toggleBlockStatus } = useWebSocketChat();
   const [isMutualFriendsOpen, setIsMutualFriendsOpen] = useState(false);
   const { data: mutualFriends, isLoading: mutualIsLoading } = useGetData<MutualFriend>(
     `/friends/mutual/${selectedConversation?.name}`
@@ -36,7 +36,6 @@ const SettingsSection = () => {
       else if (selectedConversation?.block_status == 'blocked')
         toggleBlockStatus(selectedConversation.id, user.id, selectedConversation.user_id, true);
       else toggleBlockStatus(selectedConversation!.id, user.id, selectedConversation!.user_id, true);
-      sendTypingStatus(selectedConversation!.user_id, false);
     }
   };
 

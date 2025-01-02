@@ -74,6 +74,7 @@ const MessageList = () => {
             const foundConversation = response?.find(
               (convo: conversationProps) => convo.id === selectedConversationId
             );
+            sendTypingStatus(selectedConversation!.user_id, false);
             setSelectedConversation(foundConversation!);
             refetch();
           }
@@ -179,7 +180,6 @@ const MessageList = () => {
       else
         toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, true);
     }
-    sendTypingStatus(selectedConversation!.user_id, false);
     setMenuState((prevState) => ({
       ...prevState,
       isOpen: false,
