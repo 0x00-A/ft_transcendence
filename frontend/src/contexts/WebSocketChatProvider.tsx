@@ -171,7 +171,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         setTimeout(sendMarkAsRead, 1000);
       }
     };
-  
     sendMarkAsRead();
   };
 

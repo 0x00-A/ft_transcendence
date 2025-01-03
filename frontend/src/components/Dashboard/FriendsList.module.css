@@ -47,6 +47,11 @@
   height: 45px;
   border-radius: 50%;
   border: 2px solid #B0B9D0;
+  cursor: pointer;
+}
+
+.avatar:hover {
+  border: 2px solid #f8c25c;
 }
 
 .friendInfo {
@@ -58,6 +63,11 @@
   font-size: 1.4rem;
   font-weight: bold;
   color: #F8F3E3;
+  cursor: pointer;
+}
+
+.name:hover {
+  color: #f8c25c;
 }
 
 .level {

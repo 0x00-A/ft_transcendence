@@ -39,7 +39,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         notifications = self.get_queryset()
         if not notifications.exists():
             return Response([], status=200)
-        
+
         translated_notifications = [
             self.translate_notification(notification, language) for notification in notifications
         ]

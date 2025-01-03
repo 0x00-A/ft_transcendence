@@ -49,10 +49,10 @@ const LastMatch = ({username}:{username:string | undefined}) => {
                             </button>
                         </div>}
                         { matchesData && matchesData.length > 0 && matchesData.map((match: LastGames) => (
-                            <div className={`${css.matchItem} ${match.result === 'Win' ? css.yellow : css.green}`} key={match.id}>
-                                <img src={match.opponent_avatar} alt={match.opponent_username} className={css.avatar} />
+                            <div className={`${css.matchItem} ${match.result === 'Win' ? css.yellow : css.green}`} key={match.id} onClick={() => navigate(`/profile/${match.opponent_username}`)}>
+                                <img src={match.opponent_avatar} alt={match.opponent_username} className={css.avatar} onClick={() => navigate(`/profile/${match.opponent_username}`)} />
                                 <div className={css.matchInfo}>
-                                    <span className={css.name}>{match.opponent_username}</span>
+                                    <span className={css.name} onClick={() => navigate(`/profile/${match.opponent_username}`)}>{match.opponent_username}</span>
                                     <span className={css.date}>{formatDate(new Date(match.start_time), t('lang'))}</span>
                                 </div>
                                 <div className={css.score}> <span className={css.YourGoals}>{match.my_score}</span> : <span className={css.opponentGoals}>{match.opponent_score}</span></div>
