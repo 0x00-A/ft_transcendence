@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useRef, useSt
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 
 
@@ -77,7 +78,10 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-      if (data.type === 'chat_message') {
+      if (data.type === 'error') {
+        toast.error(data.message);
+      }
+      else if (data.type === 'chat_message') {
         const newMessage: MessageProps = {
           id: data.id,
           conversation: data.conversation_id,
