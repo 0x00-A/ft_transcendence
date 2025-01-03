@@ -45,7 +45,7 @@ class CreateConversationView(APIView):
             return Response({"error": "user2_id is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user2 = User.objects.get(id=user2_id)
+            user2 = User.active.get(id=user2_id)
 
             conversation, created = Conversation.objects.get_or_create(
                 user1=min(user1, user2, key=lambda u: u.id),
@@ -136,7 +136,7 @@ class GetConversationsView(APIView):
                 updated_at_str = conversation['updated_at']
                 updated_at = datetime.fromisoformat(updated_at_str)
                 truncated_message = last_message[:10] + "..." if len(last_message) > 10 else last_message
-                
+
                 conversation_data = {
                     'id': conversation['id'],
                     'last_seen': other_last_seen,
@@ -176,32 +176,32 @@ class GetMessagesView(APIView):
                 Q(id=conversation_id),
                 Q(user1=user) | Q(user2=user)
             )
-            
+
             messages = conversation.messages.all().order_by('-timestamp')
-            
+
             paginator = self.pagination_class()
-            
+
             page = request.query_params.get('page', 1)
-            
+
             try:
                 page = int(str(page).rstrip('/'))
             except (ValueError, TypeError):
-                page = 1  
-            
+                page = 1
+
             request.query_params._mutable = True
             request.query_params['page'] = page
-            
+
             try:
                 paginated_messages = paginator.paginate_queryset(messages, request)
                 serializer = MessageSerializer(paginated_messages, many=True)
                 return paginator.get_paginated_response(serializer.data)
-            
+
             except Exception as pagination_error:
                 return Response(
                     {'error': 'Pagination error', 'details': str(pagination_error)},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-        
+
         except Conversation.DoesNotExist:
             return Response(
                 {'error': 'Conversation not found or access denied'},

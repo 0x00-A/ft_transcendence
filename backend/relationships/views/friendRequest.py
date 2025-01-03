@@ -31,7 +31,7 @@ class MutualFriendsView(APIView):
     def get(self, request, username):
         try:
             user = request.user
-            otherUser = User.objects.get(username=username)
+            otherUser = User.active.get(username=username)
 
             mutual_friends = user.friends.filter(
                 id__in=otherUser.friends.values_list('id', flat=True)
@@ -67,7 +67,7 @@ class SuggestedConnectionsView(APIView):
     def get(self, request):
         user = request.user
 
-        mutual_friend_ids = User.objects.filter(friends__in=user.friends.all()).exclude(id=user.id).distinct()
+        mutual_friend_ids = User.active.filter(friends__in=user.friends.all()).exclude(id=user.id).distinct()
 
         suggested_users = []
         for suggested_user in mutual_friend_ids:
@@ -92,7 +92,7 @@ class UserFriendsView(APIView):
     def get(self, request, username=None):
         if username:
             try:
-                user = User.objects.get(username=username)
+                user = User.active.get(username=username)
                 friends = user.friends.all()
                 serializer = self.serializer_class(friends, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)
@@ -151,7 +151,7 @@ class SendFriendRequestView(APIView):
 
     def post(self, request, username):
         try:
-            receiver = User.objects.get(username=username)
+            receiver = User.active.get(username=username)
             sender_user = request.user
 
             if BlockRelationship.objects.filter(
@@ -208,7 +208,7 @@ class SendFriendRequestView(APIView):
                     title=translated_title,
                     message=translated_message,
                 )
-                
+
                 notification.save()
                 NotificationConsumer.send_notification_to_user(receiver.id, notification)
 
@@ -239,7 +239,7 @@ class AcceptFriendRequestView(APIView):
 
     def post(self, request, username):
         try:
-            sender_user = User.objects.get(username=username)
+            sender_user = User.active.get(username=username)
             receiver = request.user
 
             friend_request = FriendRequest.objects.get(sender=sender_user, receiver=receiver, status='pending')
@@ -299,7 +299,7 @@ class RejectFriendRequestView(APIView):
 
     def post(self, request, username):
         try:
-            sender_user = User.objects.get(username=username)
+            sender_user = User.active.get(username=username)
             receiver_user = request.user
 
             # Fetch pending friend request
@@ -370,7 +370,7 @@ class CancelFriendRequestView(APIView):
 
     def delete(self, request, username):
         try:
-            receiver_user = User.objects.get(username=username)
+            receiver_user = User.active.get(username=username)
             friend_request = FriendRequest.objects.get(
                 sender=request.user,
                 receiver=receiver_user,
@@ -397,7 +397,7 @@ class RemoveFriendView(APIView):
     def delete(self, request, username):
         try:
             user = request.user
-            friend_to_remove = User.objects.get(username=username)
+            friend_to_remove = User.active.get(username=username)
 
             if friend_to_remove not in user.friends.all():
                 return Response(

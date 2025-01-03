@@ -18,7 +18,7 @@ def update_conversation_block_status(blocker, blocked, block):
             Q(user1=blocker, user2=blocked) | Q(user1=blocked, user2=blocker)
         ).first()
         if not conversation:
-            return 
+            return
         if block:
             if conversation.user1 == blocker:
                 conversation.user1_block_status = "blocker"
@@ -43,9 +43,9 @@ def update_conversation_block_status(blocker, blocked, block):
                     conversation.user2_block_status = None
         conversation.save()
     except Conversation.DoesNotExist:
-        pass  
+        pass
     except Exception as e:
-        raise e  
+        raise e
 
 class BlockUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -53,7 +53,7 @@ class BlockUserView(APIView):
 
     def post(self, request, username):
         try:
-            target_user = User.objects.get(username=username)
+            target_user = User.active.get(username=username)
 
             if not request.user.friends.filter(username=target_user.username).exists():
                 return Response({'error': 'You can only block friends'}, status=status.HTTP_400_BAD_REQUEST)
@@ -81,7 +81,7 @@ class BlockUserView(APIView):
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception:
             return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 
 class UnblockUserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -89,7 +89,7 @@ class UnblockUserView(APIView):
 
     def post(self, request, username):
         try:
-            target_user = User.objects.get(username=username)
+            target_user = User.active.get(username=username)
             deleted_count, _ = BlockRelationship.objects.filter(blocker=request.user, blocked=target_user).delete()
             if deleted_count > 0:
                 update_conversation_block_status(request.user, target_user, block=False)

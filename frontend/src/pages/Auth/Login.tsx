@@ -96,12 +96,12 @@ const Login = () => {
           <form className={css.entryArea} onSubmit={ handleSubmit(handleLogin) }>
               <div className={css.inputContainer}>
                 <FaRegUser className={css.inputIcon}/>
-                <input type="text" required placeholder="username" {...register('username')}/>
+                <input type="text" placeholder="username" className={css.inputText} {...register('username')}/>
                 {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
               </div>
               <div className={css.inputContainer}>
                 <MdLockOutline className={css.inputIcon} />
-                <input type={showPassword ? "text" : "password"} required placeholder="password" {...register('password')}/>
+                <input type={showPassword ? "text" : "password"} className={css.inputPassword} placeholder="password" {...register('password')}/>
                 { showPassword ?  <BiShow className={css.showPassIcon} onClick={() => setShowPassword(!showPassword)}/> :
                   <BiHide className={css.showPassIcon} onClick={() => setShowPassword(!showPassword)}/>}
                 {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}

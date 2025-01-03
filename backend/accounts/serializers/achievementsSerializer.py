@@ -21,18 +21,3 @@ class UserAchievementsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAchievement
         fields = ['achievement', 'progress', 'is_unlocked', 'unlocked_at']
-        # depth = 1
-
-    # def validate(self, attrs):
-    #     try:
-    #         user = User.objects.get(username=attrs['username'])
-    #         if (not user.check_password(attrs['password'])):
-    #             raise serializers.ValidationError(
-    #                 {'password': 'password not valid'})
-    #         if not user.is_active:
-    #             raise serializers.ValidationError(
-    #                 {'error': 'User is not active, Please verify your email and retry again!'})
-    #     except User.DoesNotExist:
-    #         raise serializers.ValidationError(
-    #             {'username': 'username not exist'})
-    #     return attrs

@@ -1,6 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
+
+class ActiveUsersManager(BaseUserManager):
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().filter(is_active=True)
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, blank=False)
@@ -16,6 +20,10 @@ class User(AbstractUser):
     active_conversation = models.IntegerField(default=-1)
     open_chat = models.BooleanField(default=False)
 
+    active = ActiveUsersManager()
+
+    # class Meta:
+    #     base_manager_name = 'active'
 
     def __str__(self):
         return self.username
