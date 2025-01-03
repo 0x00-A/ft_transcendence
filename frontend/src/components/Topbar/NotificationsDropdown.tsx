@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,22 +15,27 @@ import { Bell } from "lucide-react";
 const NotificationsDropdown = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [page, setPage] = useState<number>(1);
+
+
   const {
     unreadCount,
     fetchNotifications,
     markAllAsRead,
     notifications,
+    paginationInfo,
     deleteAllNotifications,
   } = useWebSocket();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      await fetchNotifications();
+      console.log("notification ********")
+      await fetchNotifications(page);
     })();
 
     return () => {};
-  }, []);
+  }, [page]);
 
   const handleClick = () => {
     if (unreadCount) markAllAsRead();
@@ -40,8 +45,12 @@ const NotificationsDropdown = () => {
     deleteAllNotifications();
   };
 
+  const loadMoreNotifications = useCallback(() => {
+    setPage((prevPage) => prevPage + 1);
+  }, []);
+
   return (
-    <DropdownMenu open={isOpen} onOpenChange={() => {handleClick(); setIsOpen((open)=> !open)}}>
+    <DropdownMenu open={isOpen} onOpenChange={(open) => { handleClick(); setIsOpen(open) }}>
       <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 rounded-full  focus:outline-none">
         <IoMdNotificationsOutline
           size={32}
@@ -108,46 +117,24 @@ const NotificationsDropdown = () => {
               // </DropdownMenuItem>
             ))
           )}
-          {/* {notifications.map((notification, index) => (
-            <div
-              key={index}
-              className={`px-4 py-3 hover:bg-[#5774a0] border-b border-gray-600 last:border-b-0 ${
-                notification.link && notification.link !== '#'
-                  ? 'cursor-pointer'
-                  : ''
-              }`}
-              onClick={() => {
-                console.log("click item notification");
-                console.log(notification);
-                if (notification.link && notification.state) {
-                  navigate(notification.link, { state: { selectedFriend: notification.state } });
-                } else if (notification.link && notification.link !== '#') {
-                  navigate(notification.link);
-                }
-                setIsOpen(false);
-              }}
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold text-white">
-                  {notification.title}
-                </h3>
-                <span className="text-[10px] text-gray-100">
-                  {formatDate(notification.created_at, t('lang'))}
-                </span>
-              </div>
-              <p className="text-[13px] font-sans text-gray-100 mt-1">
-                {notification.message}
-              </p>
-            </div>
-          ))} */}
         </div>
-        {notifications.length != 0 && (
-          <DropdownMenuItem
-            onClick={handleClearAll}
-            className="flex justify-center border-t border-gray-600"
-          >
-            <span>{t('notifications.clearAll')}</span>
-          </DropdownMenuItem>
+        {notifications.length !== 0 && (
+          <>
+            <DropdownMenuItem
+              onClick={handleClearAll}
+              className="flex justify-center border-t border-gray-600"
+            >
+              <span>{t('notifications.clearAll')}</span>
+            </DropdownMenuItem>
+            {paginationInfo && (
+              <DropdownMenuItem
+                onClick={loadMoreNotifications}
+                className="flex justify-center border-t border-gray-600"
+              >
+                <span>show more</span>
+              </DropdownMenuItem>
+            )}
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
