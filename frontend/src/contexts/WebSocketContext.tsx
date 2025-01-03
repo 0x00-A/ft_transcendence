@@ -41,8 +41,9 @@ export interface Notification {
 
 export interface WebSocketContextType {
   notifications: Notification[];
+  paginationInfo: string;
   sendMessage: (message: Record<string, any>) => void;
-  fetchNotifications: () => Promise<void>;
+  fetchNotifications: (page: number) => Promise<void>;
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
@@ -62,18 +63,24 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const { isLoggedIn } = useAuth();
   const { t } = useTranslation();
+  const [paginationInfo, setPaginationInfo] = useState<string>('');
 
-  const fetchNotifications = async () => {
+
+  const fetchNotifications = async (page: number = 1) => {
     try {
-      const { data } = await apiClient.get('/notifications/');
-      // const data : Notification[] = []
-      setNotifications(data);
-      // console.log('notification data: ', data);
-      setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
+      const { data } = await apiClient.get(`/notifications/?page=${page}`);
+      
+      const { results, next } = data;
+  
+      setNotifications(results);
+  
+      setUnreadCount(results.filter((n: Notification) => !n.is_read).length);
+      setPaginationInfo(next);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
   };
+  
 
   const markAsRead = async (notificationId: number) => {
     try {
@@ -252,6 +259,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     <WebSocketContext.Provider
       value={{
         notifications,
+        paginationInfo,
         sendMessage,
         fetchNotifications,
         markAllAsRead,

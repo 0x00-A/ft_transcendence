@@ -137,7 +137,7 @@ export default function Sidebar() {
       setShowLangPopup(false);
 
       
-      fetchNotifications()
+      fetchNotifications(1)
 
       // console.log('Language updated successfully:', response.data.language);
     } catch (error) {
