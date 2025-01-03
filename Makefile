@@ -27,4 +27,9 @@ test:
 shell:
 	docker compose run --rm backend sh -c "python manage.py shell"
 
+clean-migrations:
+	cd backend && \
+	find accounts/migrations chat/migrations game/migrations matchmaker/migrations relationships/migrations \
+	-type f ! -name '__init__.py' -name '*.py' -delete
+
 re: fclean all
