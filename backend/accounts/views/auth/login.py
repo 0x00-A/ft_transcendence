@@ -69,7 +69,7 @@ class RequestResetPasswordView(APIView):
         if 'username' not in request.data:
             return Response({'error': 'Invalid data, username required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            user = User.objects.get(username=request.data['username'])
+            user = User.active.get(username=request.data['username'])
             if not user.has_usable_password():
                 return Response({'error': f'Cannot reset password, you can log in using your {user.oauth2_provider}'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:

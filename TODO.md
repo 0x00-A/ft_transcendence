@@ -41,6 +41,11 @@ MAHDI:
  - [ ] You don't play any games yet
  - [ ] friends dashboard and offline
  - [ ] delete signals log
+
+ - [ ] email LOGO
+ - [X] exclude inactive users
+ - [ ] reset password
+
 MAHDI NOTES:
    - if a user sign up with an email and not verify his email, and next he is sign up using google (oauth2) with same email
       i mark the account as verified because google has already verified the email, and user can login with oauth2 or with his username and password

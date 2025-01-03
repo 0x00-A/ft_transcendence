@@ -54,7 +54,7 @@ class DashboardFriendsView(APIView):
 
     def get(self, request, username=None):
         try:
-            user = User.objects.get(username=username)
+            user = User.active.get(username=username)
             friends = user.friends.annotate(
                 is_online_order=Case(When(profile__is_online=True,
                                           then=Value(True)),
@@ -81,7 +81,7 @@ class UserFriendsView(APIView):
     def get(self, request, username=None):
         if username:
             try:
-                user = User.objects.get(username=username)
+                user = User.active.get(username=username)
                 friends = user.friends.all()
                 serializer = self.serializer_class(friends, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)

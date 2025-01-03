@@ -35,6 +35,9 @@ const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<bo
         reset();
         setIslogin(true);
      }
+     return () => {
+        loadingBarRef.current?.complete();
+     }
    }, [mutation.isSuccess, setIslogin]);
 
     useEffect(() => {
@@ -68,24 +71,24 @@ const Signup = ({setIslogin}: {setIslogin:React.Dispatch<React.SetStateAction<bo
         <form noValidate={true} className={css.entryArea} onSubmit={ handleSubmit(handleSignup) }>
           <div className={css.inputContainer}>
             <FaRegUser className={css.inputIcon}/>
-            <input type="text" placeholder="username" {...register('username')} />
+            <input type="text" placeholder="username" className={css.inputText} {...register('username')} />
             {errors.username && <span className={css.fieldError}>{errors.username.message}</span>}
           </div>
           <div className={css.inputContainer}>
             <MdOutlineEmail className={css.inputIcon}/>
-            <input type="email" placeholder="email" {...register('email')}/>
+            <input type="email" placeholder="email" className={css.inputText} {...register('email')}/>
             {errors.email && <span className={css.fieldError}>{errors.email.message}</span>}
           </div>
           <div className={css.inputContainer}>
             <MdLockOutline className={css.inputIcon} />
-            <input type={showPassword.password ? "text" : "password"} required placeholder="password" {...register('password')}/>
+            <input type={showPassword.password ? "text" : "password"} className={css.inputPassword} placeholder="password" {...register('password')}/>
             { showPassword.password ?  <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("password")}/> :
               <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("password")}/>}
             {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
           </div>
           <div className={css.inputContainer}>
             <MdLockOutline className={css.inputIcon} />
-            <input type={showPassword.confirm_pass ? "text" : "password"} required placeholder="password confirmation" {...register('password2')}/>
+            <input type={showPassword.confirm_pass ? "text" : "password"} className={css.inputPassword} placeholder="password confirmation" {...register('password2')}/>
             { showPassword.confirm_pass ?  <BiShow className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/> :
               <BiHide className={css.showPassIcon} onClick={() => togglePasswordVisibility("confirm_pass")}/>}
             {errors.password2 && <span className={css.fieldError}>{errors.password2.message}</span>}

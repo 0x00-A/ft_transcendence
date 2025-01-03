@@ -37,21 +37,24 @@
 
 .inputContainer {
     position: relative;
-    width: 270px;
     display: flex;
     align-items: center;
 }
 
-.inputContainer input {
+.inputText, .inputPassword {
     background: #41506b;
     /* background-color: #2b4450; */
     border-radius: 10px;
     border: none;
     outline: none;
-    padding: 1.3rem 4rem;
-    width: 100%;
+    width: 270px;
     font-size: medium;
     color: white;
+    padding: 1.3rem 1.3rem 1.3rem 4rem;
+}
+
+.inputPassword {
+    padding-right: 4rem !important;
 }
 
 .inputIcon {
@@ -60,9 +63,9 @@
     left: 1rem;
 }
 
-.inputContainer input:focus {
+/* .inputContainer input:focus {
     background-color: #497285;
-}
+} */
 
 .fieldError {
     position: absolute;

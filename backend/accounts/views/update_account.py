@@ -36,7 +36,7 @@ class UpdateEmailRequest(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         try:
-            User.objects.get(email=request.data['email'])
+            User.active.get(email=request.data['email'])
             return Response(
                 {'error': 'Email is already taken'},
                 status=status.HTTP_400_BAD_REQUEST

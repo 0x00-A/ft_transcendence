@@ -37,7 +37,7 @@ class UserProfileView(APIView):
         if username == request.user.username:
             return Response({'status': 'me'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            user = User.objects.get(username=username)
+            user = User.active.get(username=username)
             serializer = OtherUserSerializer(user, context={'request': request})
             if serializer.data['friend_status'] == 'Blocker':
                 return Response(
@@ -65,7 +65,7 @@ class GetProfileAchievementsView(APIView):
 
     def get(self, request, username):
         try:
-            user = User.objects.get(username=username)
+            user = User.active.get(username=username)
             achievements = UserAchievement.objects.filter(user=user).order_by('-is_unlocked', 'achievement__reward_points')
             serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -80,7 +80,7 @@ class LeaderBoardView(APIView):
 
     def get(self, request):
         try:
-            query_set = Profile.objects.all().order_by('rank')
+            query_set = Profile.objects.filter(user__is_active=True).select_related('user').order_by('rank')
             serializer = LeaderBoardSerializer(query_set, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Profile.DoesNotExist:
@@ -96,7 +96,7 @@ class DashboardLeaderBoardView(APIView):
 
     def get(self, request):
         try:
-            query_set = Profile.objects.all().order_by('rank')[:5]
+            query_set = Profile.objects.filter(user__is_active=True).select_related('user').order_by('rank')[:5]
             serializer = LeaderBoardSerializer(query_set, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Profile.DoesNotExist:
