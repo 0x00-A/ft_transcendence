@@ -53,9 +53,10 @@ const FriendsList = ({ username }: { username: string | undefined }) => {
                   src={friend.profile.avatar}
                   alt={friend.username}
                   className={css.avatar}
+                  onClick={() => navigate(`/profile/${friend.username}`)}
                 />
                 <div className={css.friendInfo}>
-                  <span className={css.name}>{friend.username}</span>
+                  <span className={css.name} onClick={() => navigate(`/profile/${friend.username}`)}>{friend.username}</span>
                   <span className={css.level}>
                     {t('dashboard.FriendsList.friendItem.levelLabel')} {friend.profile.level}
                   </span>

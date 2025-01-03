@@ -34,6 +34,16 @@
     padding: 10px;
     font-size: 1.3rem;
   }
+  
+  .tableRow:hover {
+    cursor: pointer;
+    color: #f8c25c;
+  }
+  
+  .tableRow:hover   .avatar {
+    border: 1px solid #f8c25c;
+
+  }
 
   .tableHeader span {
     font-size: 10px;
@@ -69,6 +79,12 @@
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
+    border: 1px solid #5774a1;
+  }
+  
+  .avatar:hover {
+    border: 1px solid #f8c25c;
+
   }
 
   .score {
