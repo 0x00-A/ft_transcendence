@@ -72,7 +72,10 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       
       const { results, next } = data;
   
-      setNotifications(results);
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        ...results,
+      ]);
   
       setUnreadCount(results.filter((n: Notification) => !n.is_read).length);
       setPaginationInfo(next);
@@ -85,6 +88,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const markAsRead = async (notificationId: number) => {
     try {
       await apiClient.patch(`/notifications/${notificationId}/mark-read/`);
+
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
       );
