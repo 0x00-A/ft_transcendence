@@ -195,7 +195,8 @@
   },
   "notifications": {
     "title": "Meldingen",
-    "clearAll": "Alles wissen"
+    "clearAll": "Alles wissen",
+    "loadMore": "Meer laden"
   },
   "game": {
     "gameArea": "GA!",

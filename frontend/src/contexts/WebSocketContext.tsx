@@ -43,7 +43,7 @@ export interface WebSocketContextType {
   notifications: Notification[];
   paginationInfo: string;
   sendMessage: (message: Record<string, any>) => void;
-  fetchNotifications: (page: number) => Promise<void>;
+  fetchNotifications: (page: number, state: boolean) => Promise<void>;
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
@@ -66,16 +66,20 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [paginationInfo, setPaginationInfo] = useState<string>('');
 
 
-  const fetchNotifications = async (page: number = 1) => {
+  const fetchNotifications = async (page: number = 1, state: boolean = true) => {
     try {
       const { data } = await apiClient.get(`/notifications/?page=${page}`);
       
       const { results, next } = data;
-  
-      setNotifications((prevNotifications) => [
-        ...prevNotifications,
-        ...results,
-      ]);
+      
+      if (state)
+        setNotifications(results);
+      else {
+        setNotifications((prevNotifications) => [
+          ...prevNotifications,
+          ...results,
+        ]);
+      }
   
       setUnreadCount(results.filter((n: Notification) => !n.is_read).length);
       setPaginationInfo(next);

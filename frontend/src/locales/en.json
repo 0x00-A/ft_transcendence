@@ -195,7 +195,8 @@
   },
   "notifications": {
       "title": "Notifications",
-      "clearAll": "Clear All"
+      "clearAll": "Clear All",
+      "loadMore": "load More"
   },
   "game": {
       "gameArea": "GO!",
