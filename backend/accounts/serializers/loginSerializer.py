@@ -13,14 +13,14 @@ class LoginSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         try:
-            user = User.active.get(username=attrs['username'])
-            if (not user.check_password(attrs['password'])):
-                raise serializers.ValidationError(
-                    {'password': 'password not valid'})
+            user = User.objects.get(username=attrs['username'])
             if not user.is_active:
                 raise serializers.ValidationError(
                     {'error': 'User is not active, Please verify your email and retry again!'})
+            if (not user.check_password(attrs['password'])):
+                raise serializers.ValidationError(
+                    {'password': 'Invalid  credentials!'})
         except User.DoesNotExist:
             raise serializers.ValidationError(
-                {'username': 'username not exist'})
+                {'username': 'Invalid  credentials!'})
         return attrs

@@ -50,10 +50,9 @@ class ResetPasswordSerializer(serializers.Serializer):
         return attrs
 
     def update(self, instance, validated_data):
-        user = instance.user
-        user.set_password(validated_data['new_password'])
-        user.save()
-        return user
+        instance.set_password(validated_data['new_password'])
+        instance.save()
+        return instance
 
 
 class SetPasswordSerializer(serializers.Serializer):

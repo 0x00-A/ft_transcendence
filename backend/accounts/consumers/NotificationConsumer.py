@@ -21,8 +21,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         user = self.scope['user']
         self.username = None
-        # print('------------Notification Consumer Connected------------')
-
         if user.is_authenticated:
             print(f"==> {user.username} is connected to the websocket NotificationConsumer")
             await self.accept()
@@ -47,8 +45,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def set_active_conversation(self, value):
         if self.username:
             try:
-                user = await User.active.aget(username=self.username)
-                user.active_conversation = value
+                user = await User.objects.aget(username=self.username)
+                user.objects_conversation = value
                 await user.asave()
             except User.DoesNotExist:
                 return
@@ -56,7 +54,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def set_last_seen(self):
         if self.username:
             try:
-                user = await User.active.aget(username=self.username)
+                user = await User.objects.aget(username=self.username)
                 user.last_seen = timezone.now().strftime("%H:%M")
                 await user.asave()
             except User.DoesNotExist:
@@ -109,8 +107,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         print(f"creating game... p1: {sender} | p2: {recipient}")
         # Store the game in your database (using Django ORM models)
         # User = get_user_model()
-        p1 = await User.active.aget(username=sender)
-        p2 = await User.active.aget(username=recipient)
+        p1 = await User.objects.aget(username=sender)
+        p2 = await User.objects.aget(username=recipient)
         game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
@@ -234,7 +232,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def get_user_id(self, username):
         try:
-            user = await User.active.aget(username=username)
+            user = await User.objects.aget(username=username)
             return user.id
         except User.DoesNotExist:
             return None
@@ -242,7 +240,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     @classmethod
     def get_username(cls, user_id):
         try:
-            user = User.active.get(id=user_id)
+            user = User.objects.get(id=user_id)
             return user.username
         except User.DoesNotExist:
             return None

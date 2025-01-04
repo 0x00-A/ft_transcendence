@@ -81,7 +81,6 @@ class Disable2FAView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        print('api ==> disable 2fa: Disabling 2FA')
         user = request.user
         if not user.is2fa_active:
             return Response(
