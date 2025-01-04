@@ -24,6 +24,7 @@
       "requestAccepted": "has accepted your friend request!",
       "newMessage": " has sent you a message.",
       "gameInvite": "Game invite from",
+      "TournamentInvite": "Tournament invite from",
       "inviteReject": "The invitation has expired or rejected.",
       "gameAddress": "Game successfully created"
   },
@@ -268,6 +269,13 @@
               "leaveConfirmationDescription": "Are you sure you want to leave the tournament? This action cannot be undone and may result in aborting the tournament.",
               "stayButton": "Stay",
               "leaveButton": "Leave Tournament"
+          },
+          "InviteFriendsButton": {
+              "InviteFriends": "Invite Friends",
+              "InviteButton": "Invite",
+              "toasts": {
+                "InviteSent": "Invite sent"
+              }
           },
           "sparkleEffect": {
               "cancel": "Cancel...",

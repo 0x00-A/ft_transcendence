@@ -167,6 +167,27 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const showTournamentInviteToast = (from: string, tournamentId: number) => {
+    toast(
+      <GameInviteCard
+        from={from}
+        onAccept={() => handleAcceptTournamentInvite(tournamentId)}
+        onReject={() => handleRejectTournamentInvite(tournamentId)}
+        isTournamentInvite={true}
+      />,
+      {
+        toastId: tournamentId,
+        autoClose: 10000,
+        closeOnClick: false,
+        closeButton: false,
+        style: {
+          padding: '0',
+          margin: '0',
+        },
+      }
+    );
+  };
+
   const handleAcceptInvite = (from: string) => {
     // console.log(`Accepted invite from ${from}`);
     sendMessage({
@@ -183,6 +204,20 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       from: from,
     });
     toast.dismiss(from);
+  };
+
+  const handleAcceptTournamentInvite = (tournamentId: number) => {
+    // console.log(`Accepted Tournament invite from ${from}`);
+    sendMessage({
+      event: 'tournament_invite_accept',
+      tournamentId: tournamentId,
+    });
+    toast.dismiss();
+  };
+
+  const handleRejectTournamentInvite = (tournamentId: number) => {
+    // console.log(`Rejected Tournament invite from ${from}`);
+    toast.dismiss(tournamentId);
   };
 
   // console.log(user);
@@ -216,8 +251,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         // toast.info(data.message)
         showGameInviteToast(data.from);
       }
+      if (data.event === 'tournament_invite') {
+        // toast.info(data.message)
+        showTournamentInviteToast(data.from, data.tournamentId);
+      }
       if (data.event === 'error') {
         toast.error(data.message);
+      }
+      if (data.event === 'success') {
+        toast.success(data.message);
       }
       if (data.event === 'invite_reject') {
         toast.info(t(`${data.message}`));
