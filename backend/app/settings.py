@@ -33,8 +33,7 @@ CLIENT_URL = os.environ.get('CLIENT_URL')
 
 # ALLOWED_HOSTS = ['e2r6p15']
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-
-
+ALLOWED_HOSTS.append('http://e2r6p15:8000')
 # Application definition
 
 INSTALLED_APPS = [
@@ -69,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'middleware.CrossOriginOpenerPolicyMiddleware.CrossOriginOpenerPolicyMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -122,7 +122,8 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://127.0.0.1',
     #                     'https://localhost',
                         # 'https://e2r6p15',
-                        CLIENT_URL
+                        CLIENT_URL,
+                        'http://e2r6p15:8000',
                         # 'http://0.0.0.0:3000',
                         # 'wss://yourdomain.com'
                         ]
@@ -337,6 +338,7 @@ CORS_ALLOWED_ORIGINS = [
     # 'https://e2r6p15',
     'https://ft-pong.me',
     CLIENT_URL,
+    'http://e2r6p15:8000',
     # 'https://e1r6p15'
 ]
 CORS_ALLOW_METHODS = [
@@ -350,9 +352,13 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = [
     'content-type',
-    'x-csrftoken'
+    # 'x-csrftoken'
     # 'authorization',
 ]
+
+# CORS_EXPOSE_HEADERS = [
+#     "Cross-Origin-Opener-Policy",
+# ]
 
 # CORS_ALLOW_HEADERS = default_headers
 

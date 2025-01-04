@@ -57,7 +57,7 @@ class AllUsersView(APIView):
 
     def get(self, request):
         try:
-            users = User.active.exclude(
+            users = User.objects.exclude(
                 Q(blocked_users__blocked=request.user) | Q(
                     blockers__blocker=request.user)
             ).exclude(username=request.user.username)
@@ -89,7 +89,7 @@ class UserDetailView(APIView):
 
     def get(self, request, user_id):
         try:
-            user = User.active.get(id=user_id)
+            user = User.objects.get(id=user_id)
             user_data = UserSerializer(user).data
             # # Optionally, add friend request status
             # user_data['friend_request_status'] = get_friend_status(
@@ -113,7 +113,7 @@ class OnlineUsersView(APIView):
 
     def get(self, request):
         try:
-            online_count = User.active.filter(profile__is_online=True).count()
+            online_count = User.objects.filter(profile__is_online=True).count()
             return Response(
                 {'online_players': online_count},
                 status=status.HTTP_200_OK

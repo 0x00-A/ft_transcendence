@@ -12,17 +12,14 @@ class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         async def log_receive():
             event = await receive()
-            # print('++++++++++++++ Received event: ', event)
             return event
 
         async def log_send():
             event = await send()
-            # print('++++++++++++++ Sent event: ', event)
             return event
 
         headers = dict(scope['headers'])
         cookie = headers.get(b'cookie', b'').decode('utf-8')
-        # print('api ==> JwtAuthMiddleware: Cookie--++:', cookie)
         cookies = SimpleCookie()
         cookies.load(cookie)
         access_token = cookies.get('access_token')

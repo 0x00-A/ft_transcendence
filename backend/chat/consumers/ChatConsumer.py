@@ -29,7 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def update_open_chat_status(self, user_id, status):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         user.open_chat = status
         user.save()
 
@@ -132,13 +132,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def set_active_conversation(self, user_id, conversation_id):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         user.active_conversation = conversation_id
         user.save()
 
     @sync_to_async
     def dis_active_conversation(self, user_id, conversation_id):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         if user.active_conversation != -1:
             return
         user.active_conversation = conversation_id
@@ -151,13 +151,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def get_user_open_chat_status(self, user_id):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         return user.open_chat
 
     @sync_to_async
     def send_notification_to_receiver(self, receiver_id, sender_id, message):
-        sender_user = User.active.get(id=sender_id)
-        receiver_user = User.active.get(id=receiver_id)
+        sender_user = User.objects.get(id=sender_id)
+        receiver_user = User.objects.get(id=receiver_id)
 
         target_language = receiver_user.profile.preferred_language or 'en'
 
@@ -291,8 +291,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def save_message(self, sender_id, receiver_id, message):
-        sender = User.active.get(id=sender_id)
-        receiver = User.active.get(id=receiver_id)
+        sender = User.objects.get(id=sender_id)
+        receiver = User.objects.get(id=receiver_id)
 
         conversation = Conversation.objects.get(
             user1=min(sender, receiver, key=lambda user: user.id),

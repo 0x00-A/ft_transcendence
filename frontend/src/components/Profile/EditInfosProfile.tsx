@@ -34,8 +34,6 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
 
     const handleEditProfile = (data: EditProfileFormData) => {
 
-        // console.log("data == ", data);
-
         const formData = new FormData();
         if (data.avatar) formData.append('avatar', data.avatar);
         if (selectedAvatar === 'remove') formData.append('removeAvatar', "true");
@@ -75,12 +73,8 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     //     setConfirmSave(true)
     // }
     useEffect(() => {
-        const handle_refetch = async () => {
-            await refetch();
-            // console.log("refetch result == ", result);
-        }
         if (mutation.isSuccess) {
-            handle_refetch();
+            refetch();
             toast.success(mutation.data?.data?.message);
             reset();
             setEditProfile(false);
@@ -98,8 +92,6 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
    }), [mutation.isError];
 
    const handleDisbaleSave = () => {
-        // console.log("formValues == ", formValues);
-        // console.log("profileData == ", profileData);
         if (formValues[0] === undefined && formValues[1] === undefined && formValues[2] === undefined && selectedAvatar === null) {
             return true;
         }
@@ -187,11 +179,6 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                     {/* {errors.at_least_one_field && <span className={css.fieldError}>{errors.at_least_one_field.message}</span>} */}
                 </div>
                 { isConfirmSave && <div className={css.bluredBgConfirm}>
-                {/* <form className={css.saveConfirmContainer} onSubmit={(e) => { */}
-                    {/* console.log("submitting form");
-                    e.stopPropagation();
-                    handleSubmit(handleEditProfile)(e);
-                }}> */}
                 <div className={css.saveConfirmContainer}>
                     <h1>{t('Profile.EditInfosProfile.confirmSave.title')}</h1>
                     <p>{t('Profile.EditInfosProfile.confirmSave.description')}</p>

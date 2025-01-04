@@ -35,13 +35,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
     try {
       const response = await apiClient.post(API_LOGOUT_URL);
-      // console.log('Logout response ==> ', response.data.message);
       response;
       setIsLoggedIn(false);
       navigate('/auth')
     }
     catch (error) {
-      // console.log('Logout error ==> ', error.response.data.error);
+
     }
   }
 
@@ -51,7 +50,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     // }
     apiClient.get(API_CONFIRM_LOGIN_URL)
     .then(() => {
-      // console.log('apiClient ==> Confirm Login response: ', response.data.message);
       setIsLoggedIn(true);
     })
     .catch(() => {

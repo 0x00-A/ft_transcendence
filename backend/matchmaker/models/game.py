@@ -9,9 +9,6 @@ from accounts.models import User, Profile, Badge, Achievement, UserAchievement
 WIN_SCORE = 10
 
 
-for query in connection.queries:
-    print(f"-----------SQL: {query['sql']} | Time: {query['time']}")
-
 
 class GameManager(models.Manager):
     def create_game(self, player1, player2):
