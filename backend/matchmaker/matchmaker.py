@@ -30,7 +30,6 @@ class Matchmaker:
         # cls.connected_clients[player_id].add(channel_name)
         # cls.connected_clients[player_id].add(channel_name)
 
-
     @classmethod
     async def unregister_client(cls, player_id):
         if player_id in cls.connected_clients:
@@ -171,6 +170,13 @@ class Matchmaker:
                            #    'tournament_stat': await sync_to_async(tournament.to_presentation)(),
                            }
                 await cls.send_message_to_client(player_id, message)
+                message = {'event': 'tournament_update',
+                           'tournament_id': tournament_id,
+                           'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                           }
+                players = await sync_to_async(list)(tournament.players.all())
+                for p in players:
+                    await cls.send_message_to_client(p.id, message)
                 await sync_to_async(tournament.check_if_full)()
                 if await sync_to_async(tournament.start_tournament)():
                     message = {'event': 'tournament_update',
@@ -271,7 +277,6 @@ class Matchmaker:
             # await send_message_to_channel(channel, message)
         else:
             print("MatchmakerConsumer: User is not connected.")
-
 
     @classmethod
     async def is_client_already_playing(cls, player_id):
@@ -472,3 +477,16 @@ class Matchmaker:
             match.player1_ready = False
             match.player2_ready = False
             await sync_to_async(match.save)()
+
+    @classmethod
+    async def send_tournament_invite(cls, player_id, sender, to, tournament_id):
+        from accounts.consumers import NotificationConsumer
+
+        reciever = await User.active.aget(username=to)
+        message = {
+            "event": "tournament_invite",
+            "from": sender,
+            "tournamentId": tournament_id,
+        }
+
+        await sync_to_async(NotificationConsumer.send_notification_to_user)(reciever.id, message)

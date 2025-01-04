@@ -16,6 +16,7 @@ interface GameInviteCardProps {
   duration?: number;
   onAccept: () => void;
   onReject: () => void;
+  isTournamentInvite?: boolean;
 }
 
 const GameInviteCard: React.FC<GameInviteCardProps> = ({
@@ -25,6 +26,7 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
   duration = 10,
   onAccept,
   onReject,
+  isTournamentInvite = false,
 }) => {
   const [seconds, setSeconds] = useState(duration);
   const { t } = useTranslation();
@@ -79,7 +81,11 @@ const GameInviteCard: React.FC<GameInviteCardProps> = ({
         >
           {/* <CardTitle className={styles.cardTitle}>Game Invitation</CardTitle> */}
           <div className="">
+            {!isTournamentInvite ?
             <p className={styles.playerName}>{t('toast.gameInvite')} {from}</p>
+            :
+            <p className={styles.playerName}>{t('toast.TournamentInvite')} {from}</p>
+            }
           </div>
         </CardContent>
 

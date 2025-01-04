@@ -31,6 +31,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { API_GET_TOURNAMENTS, API_GET_USER_TOURNAMENTS } from '@/api/apiConfig';
 
 
 const Game = () => {
@@ -137,14 +138,14 @@ const Game = () => {
     isLoading: userTournamentsIsLoading,
     error: userTournamentsError,
     refetch: refetchUserTournaments,
-  } = useGetData<TournmentType[]>('matchmaker/tournaments/user-tournaments');
+  } = useGetData<TournmentType[]>(API_GET_USER_TOURNAMENTS);
 
   const {
     data: tournaments,
     isLoading,
     error,
     refetch: refetchTournaments,
-  } = useGetData<TournmentType[]>('matchmaker/tournaments');
+  } = useGetData<TournmentType[]>(API_GET_TOURNAMENTS);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -181,7 +182,7 @@ const Game = () => {
       socket.onmessage = (e) => {
         refetchData();
         const data = JSON.parse(e.data);
-        // console.log(data);
+        console.log(data);
 
         if (data.event === 'error') {
           cancelMatchmaking()

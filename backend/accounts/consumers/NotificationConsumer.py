@@ -6,11 +6,13 @@ from asgiref.sync import async_to_sync
 
 from accounts.models import User
 from accounts.models import Notification
+from matchmaker.models import Tournament
 from matchmaker.models.game import Game
 from matchmaker.matchmaker import Matchmaker
 from django.db.models import Q
 from accounts.models import Profile
 from django.utils import timezone
+from asgiref.sync import sync_to_async
 
 
 connected_users = {}
@@ -24,7 +26,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         # print('------------Notification Consumer Connected------------')
 
         if user.is_authenticated:
-            print(f"==> {user.username} is connected to the websocket NotificationConsumer")
+            print(
+                f"==> {user.username} is connected to the websocket NotificationConsumer")
             await self.accept()
             self.username = user.username
             self.id = user.id
@@ -72,6 +75,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             await self.handle_accept(data.get('from'), self.username)
         if event == 'invite_reject':
             await self.handle_reject(data.get('from'), self.username)
+        if event == 'tournament_invite_accept':
+            await self.handle_tournament_accept(data.get('tournamentId'), self.username)
 
     async def disconnect(self, close_code):
         if self.username in connected_users:
@@ -173,6 +178,48 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 "event": "error",
                 "message": "The recipient is currently offline.",
             })
+
+    async def handle_tournament_accept(self, tournament_id, invitee):
+        from matchmaker.consumers import Matchmaker
+        print(f"\033[33m{invitee} Accepted Tournament Invite")
+        player = await User.active.aget(username=invitee)
+
+        if await Tournament.objects.filter(players__id=player.id).exclude(status='ended').exclude(status='aborted').aexists():
+            if await Tournament.objects.filter(id=tournament_id, players__id=player.id).exclude(status='ended').aexists():
+                await self.send_message(invitee, {'event': 'error',
+                                                  'message': 'Already in tournament'})
+            else:
+                await self.send_message(invitee, {'event': 'error',
+                                                  'message': 'Cannot join more tournaments until your current tournament ends'})
+            return
+        try:
+            tournament = await Tournament.objects.aget(id=tournament_id)
+            if await sync_to_async(tournament.check_if_full)():
+                await self.send_message(invitee, {'event': 'error',
+                                                  'message': 'Tournament is full'})
+            else:
+                await tournament.players.aadd(player.id)
+                await self.send_message(invitee, {'event': 'success',
+                                                  'message': f'Joined tournament {tournament.name} successfully',
+                                                  })
+                players = await sync_to_async(list)(tournament.players.all())
+                for p in players:
+                    await Matchmaker.send_message_to_client(p.id, {'event': 'tournament_update',
+                                                                   'tournament_id': tournament_id,
+                                                                   'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                                                                   })
+                await sync_to_async(tournament.check_if_full)()
+                if await sync_to_async(tournament.start_tournament)():
+                    message = {'event': 'tournament_update',
+                               'tournament_id': tournament_id,
+                               'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                               }
+                    players = await sync_to_async(list)(tournament.players.all())
+                    for p in players:
+                        await Matchmaker.send_message_to_client(p.id, message)
+
+        except Tournament.DoesNotExist:
+            await self.send_message(player.id, {'error': 'Tournament does not exist'})
 
     async def send_message(self, username, message):
         channel_layer = get_channel_layer()

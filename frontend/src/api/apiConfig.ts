@@ -60,6 +60,8 @@ export const API_GET_PLAYED_GAMES_URL = '/matchmaker/played-games';
 export const API_GET_DASHBOARD_LEADERBOARD_URL = '/dashboard-leaderboard';
 
 export const API_GET_LAST_GAMES_URL = '/matchmaker/last-games';
+export const API_GET_TOURNAMENTS = 'matchmaker/tournaments';
+export const API_GET_USER_TOURNAMENTS = 'matchmaker/tournaments/user-tournaments';
 
 export const API_GET_LANGUAGE_URL = '/get-language/';
 export const API_POST_SET_LANGUAGE_URL = '/set-language/';

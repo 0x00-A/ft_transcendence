@@ -24,6 +24,7 @@
       "requestAccepted": "¡ha aceptado tu solicitud de amistad!",
       "newMessage": "te ha enviado un mensaje.",
       "gameInvite": "Invitación de juego de",
+      "TournamentInvite": "Invitación al torneo de",
       "inviteReject": "La invitación ha expirado o ha sido rechazada.",
       "gameAddress": "Juego creado con éxito"
   },
@@ -269,6 +270,13 @@
               "leaveConfirmationDescription": "¿Estás seguro de que quieres salir del torneo? Esta acción no se puede deshacer y puede resultar en la cancelación del torneo.",
               "stayButton": "Permanecer",
               "leaveButton": "Salir del Torneo"
+          },
+          "InviteFriendsButton": {
+                "InviteFriends": "Invitar amigos",
+                "InviteButton": "Invitar",
+                "toasts": {
+                    "InviteSent": "Invitación enviada"
+                }
           },
           "sparkleEffect": {
               "cancel": "Cancelar...",
