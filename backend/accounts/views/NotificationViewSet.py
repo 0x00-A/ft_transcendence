@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 
 class NotificationPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 100 
 
@@ -27,6 +27,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
         return user.profile.preferred_language or 'en'
 
     def translate_notification(self, notification, language):
+        print("***** translator ****")
+        print(language)
         translated_title = translate_text(notification.title, language)
         translated_message = translate_text(notification.message, language)
         return {
