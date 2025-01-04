@@ -196,7 +196,8 @@
   "notifications": {
     "title": "Meldingen",
     "clearAll": "Alles wissen",
-    "loadMore": "Meer laden"
+    "loadMore": "Meer tonen",
+    "loading": "Laden..."
   },
   "game": {
     "gameArea": "GA!",

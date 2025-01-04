@@ -197,7 +197,8 @@
   "notifications": {
       "title": "Notificaciones",
       "clearAll": "Limpiar todo",
-      "loadMore": "cargar Más"
+      "loadMore": "Ver más",
+      "loading": "Cargando..."
   },
   "game": {
       "gameArea": "IR!",

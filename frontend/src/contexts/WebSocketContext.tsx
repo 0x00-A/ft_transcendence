@@ -182,6 +182,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const newMessageToast = (from: string, message: string) => {
+    toast(
+        message,
+      {
+        toastId: from
+      }
+    );
+  };
+
   const handleAcceptInvite = (from: string) => {
     // console.log(`Accepted invite from ${from}`);
     sendMessage({
@@ -218,7 +227,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.success(`${data.from} ${t('toast.requestAccepted')}`);
       }
       if (data.event === 'new_message') {
-        toast(`${data.from} ${t('toast.newMessage')}`);
+        newMessageToast(data.from, `${t('toast.newMessage')}`)
       }
       if (data.event === 'friend_request' || data.event === 'status_update') {
         showFriendRequestToast(data.from);
