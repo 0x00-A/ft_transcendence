@@ -15,9 +15,11 @@ import ProfileGamesHistory from '@/components/Profile/ProfileGamesHistory';
 import axios from 'axios';
 import { getData } from '@/api/apiClient';
 
+
 const UsersProfile = () => {
 
   const { username } = useParams();
+  if (!username || username === undefined) return null;
   // const { user, isLoading } = useUser();
   const { data : user, isLoading, refetch, isError, error } = useQuery({
     queryKey: [API_GET_PROFILE_URL, username],

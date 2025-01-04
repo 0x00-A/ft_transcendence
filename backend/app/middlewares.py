@@ -11,10 +11,12 @@ from http.cookies import SimpleCookie
 class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         async def log_receive():
+            print('++++++++++LOGRECEIVE+++++++++++++++')
             event = await receive()
             return event
 
         async def log_send():
+            print('++++++++++LOGRECEIVE+++++++++++++++')
             event = await send()
             return event
 

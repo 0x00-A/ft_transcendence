@@ -36,7 +36,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     enabled: isLoggedIn, // React Query will skip the query if this is false
   }
   );
-  
+
   const contextValue = isLoggedIn
     ? { user, isLoading, error, refetch }
     : { user: null, isLoading: false, error: null, refetch: () => {} };

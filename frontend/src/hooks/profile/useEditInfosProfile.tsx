@@ -16,18 +16,21 @@ const useEditInfosProfile = () => {
     handleSubmit,
     formState: { errors, isValid },
     reset,
+    clearErrors,
     watch,
     setError,
     setValue,
+    control,
   } = useForm<EditProfileFormData>({
     resolver: yupResolver(EditInfosProfileSchema()),
-    // reValidateMode:'onChange',
-    mode: 'onSubmit',
+    reValidateMode:'onChange',
+    mode: 'onChange',
   });
   const mutation = useMutation({
     mutationFn: async (data: FormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
     onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
+        console.log('+++++++++++++++useEditInfosProfile onError+++++++++++++++++');
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
         errs?.first_name && setError("first_name", {type: '', message: errs?.first_name}, {shouldFocus:true})
@@ -42,11 +45,13 @@ const useEditInfosProfile = () => {
   });
   return {
     register,
+    control,
     handleSubmit,
     errors,
     isValid,
     mutation,
     reset,
+    clearErrors,
     setValue,
     watch,
     setError,
