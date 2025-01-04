@@ -196,7 +196,8 @@
   "notifications": {
       "title": "Notifications",
       "clearAll": "Clear All",
-      "loadMore": "load More"
+      "loadMore": "Show More",
+      "loading": "Loading..."
   },
   "game": {
       "gameArea": "GO!",
