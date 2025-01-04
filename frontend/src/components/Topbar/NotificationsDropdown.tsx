@@ -12,11 +12,14 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Bell } from "lucide-react";
 
+import NotificationSkeleton from './NotificationSkeleton';
+
 const NotificationsDropdown = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInitialLoading, setIsInitialLoading] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
@@ -45,12 +48,13 @@ const NotificationsDropdown = () => {
   useEffect(() => {
     (async () => {
       try {
-        setIsLoading(true);
+        setIsInitialLoading(true);
         await fetchNotifications(1, true);
+        console.log("Fetched notifications page 1:");
       }
       catch (error) {
       } finally {
-        setIsLoading(false);
+        setIsInitialLoading(false);
       }
     })();
     return () => {};
@@ -105,7 +109,9 @@ const NotificationsDropdown = () => {
         </div>
 
         <div className="max-h-96 overflow-y-auto overscroll-contain">
-          {notifications.length === 0 && !isLoading ? (
+          {isInitialLoading ? (
+            <NotificationSkeleton />
+          ) : notifications.length === 0 && !isLoading ? (
             <div className="p-8 text-center">
               <div className="flex justify-center mb-3">
                 <Bell className="h-8 w-8 text-muted-foreground" />
@@ -138,7 +144,7 @@ const NotificationsDropdown = () => {
                 </div>
               ))}
               
-              {/* Show More button */}
+              {/* Show More button with loading state */}
               {paginationInfo && (
                 <div className="flex justify-center py-4 border-t border-gray-600">
                   <button
