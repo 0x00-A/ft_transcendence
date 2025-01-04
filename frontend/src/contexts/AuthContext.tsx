@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const interceptor = apiClient.interceptors.response.use(
       (response) => response,
       (error) => {
+        console.log('+++++++++++++++useAuth interceptors.response+++++++++++++++++');
         if (isLoggedIn && error.response && error.response.status === 401) {
           logout();
         }

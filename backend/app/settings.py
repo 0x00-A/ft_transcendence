@@ -33,7 +33,8 @@ CLIENT_URL = os.environ.get('CLIENT_URL')
 
 # ALLOWED_HOSTS = ['e2r6p15']
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-ALLOWED_HOSTS.append('http://e2r6p15:8000')
+# ALLOWED_HOSTS.append('http://e2r6p15:8000')
+ALLOWED_HOSTS.append('localhost')
 # Application definition
 
 INSTALLED_APPS = [
@@ -124,6 +125,8 @@ CSRF_TRUSTED_ORIGINS = [
                         # 'https://e2r6p15',
                         CLIENT_URL,
                         'http://e2r6p15:8000',
+                        'https://localhost',
+                        'http://localhost:3000',
                         # 'http://0.0.0.0:3000',
                         # 'wss://yourdomain.com'
                         ]
@@ -339,6 +342,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://ft-pong.me',
     CLIENT_URL,
     'http://e2r6p15:8000',
+    'http://localhost:3000'
     # 'https://e1r6p15'
 ]
 CORS_ALLOW_METHODS = [
@@ -365,6 +369,9 @@ CORS_ALLOW_HEADERS = [
 # CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800 # 50MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800 # 50MB
 
 # import logging
 

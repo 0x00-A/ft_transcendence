@@ -1,5 +1,6 @@
 // React
 import { useEffect, useRef, useState } from 'react';
+import { Controller } from "react-hook-form";
 // Styles
 import css from './EditInfosProfile.module.css'
 import { toast } from 'react-toastify';
@@ -20,11 +21,11 @@ import { DEFAULT_AVATAR } from '@/config/constants';
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-    const { register, handleSubmit, mutation, reset, errors, watch, setValue}  = useEditProfile();
+    const { register, control, handleSubmit, mutation, reset, clearErrors, errors, watch, setValue}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
     const [isEditEmail, setEditEmail] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    // const fileInputRef = useRef<HTMLInputElement | null>(null);
     const { user: profileData, refetch } = useUser();
     const formValues = watch(['username', 'first_name', 'last_name']);
     const [emailValue, setEmailValue] = useState<string>('');
@@ -44,19 +45,24 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         mutation.mutate(formData);
     };
 
-    const handleChangeAvatar = (event: { preventDefault: () => void; }) => {
-        event.preventDefault();
-        fileInputRef.current?.click();
-    };
+    // const handleChangeAvatar = (event: { preventDefault: () => void; }) => {
+    //     event.preventDefault();
+    //     fileInputRef.current?.click();
+    // };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-          setValue('avatar', file);
-          const url = URL.createObjectURL(file);
-          setSelectedAvatar(url);
-        }
-    };
+    // const handleChangeAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const file = event.target.files?.[0];
+    //     if (file) {
+    //         console.log('---------file ', file.name);
+
+    //       setValue('avatar', file);
+    //       const url = URL.createObjectURL(file);
+    //       setSelectedAvatar(url);
+    //     //   if (errors.avatar) {
+    //     //       clearErrors('avatar');
+    //     //   }
+    //     }
+    // };
 
     // const handleSubmitForm = (e:FormEvent<HTMLFormElement>) => {
     //     e.preventDefault();
@@ -72,27 +78,12 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
     //     }
     //     setConfirmSave(true)
     // }
-    useEffect(() => {
-        if (mutation.isSuccess) {
-            refetch();
-            toast.success(mutation.data?.data?.message);
-            reset();
-            setEditProfile(false);
-        }
-   }, [mutation.isSuccess]);
-
-   useEffect(() => {
-        if (errors && errors.password) {
-            return ;
-        } else if (errors.root) {
-            toast.error(errors.root.message);
-            setConfirmSave(false);
-            mutation.reset();
-        }
-   }), [mutation.isError];
 
    const handleDisbaleSave = () => {
         if (formValues[0] === undefined && formValues[1] === undefined && formValues[2] === undefined && selectedAvatar === null) {
+            return true;
+        }
+        if (errors.username || errors.first_name || errors.last_name || errors.avatar || errors.password) {
             return true;
         }
         return formValues[0] === profileData?.username && formValues[1] === profileData?.first_name && formValues[2] === profileData?.last_name && !selectedAvatar
@@ -127,6 +118,32 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
             }
         }
    }
+   useEffect(() => {
+        if (mutation.isSuccess) {
+            refetch();
+            toast.success(mutation.data?.data?.message);
+            reset();
+            setEditProfile(false);
+        }
+   }, [mutation.isSuccess]);
+
+   useEffect(() => {
+        if (mutation.isError && errors.password) {
+            return ;
+        }
+        if (mutation.isError) {
+            toast.error(errors?.root?.message);
+            mutation.reset();
+            reset();
+            setConfirmSave(false);
+        }
+   }), [mutation.isError];
+
+//    useEffect(() => {
+//     if (errors && !errors.password) {
+//         setConfirmSave(false);
+//     }
+//    }, [errors]);
 
     return (
         <div className={css.editInfosContainer}>
@@ -141,9 +158,39 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                         (selectedAvatar === 'remove' ? <div className={css.avatarContainer}><img src='/icons/defaultAvatar.png' alt="" /></div> :
                         <div className={css.avatarContainer}><img src={selectedAvatar} alt="" /></div> )} */}
                     <div className={css.avatarButtons}>
-                        <input type="file" accept='image/*' {...register('avatar')} ref={(e) => { register("avatar"); fileInputRef.current = e}} onChange={handleFileChange}/>
-                        <button className={css.avatarBtn} type='button' onClick={handleChangeAvatar}>{t('Profile.EditInfosProfile.avatar.changeButton')}</button>
-                        <button className={css.removeAvatarBtn} disabled={selectedAvatar === 'remove'} type='button' onClick={(e) => {e.preventDefault(); setSelectedAvatar('remove')}}>{t('Profile.EditInfosProfile.avatar.removeButton')}</button>
+                        {/* //  ref={(e) => { register("avatar"); fileInputRef.current = e}} onChange={handleFileChange} */}
+                        <Controller name='avatar' control={control} render={({ field: { onChange, ref } }) => (
+                            <>
+                                <input
+                                    type="file"
+                                    id="avatar"
+                                    accept='image/*'
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0] || null;
+                                        setSelectedAvatar(file ? URL.createObjectURL(file) : null);
+                                        onChange(file);
+                                    }}
+                                    ref={ref}
+                                    style={{ display: "none" }} />
+                                <button
+                                    className={css.avatarBtn}
+                                    type='button'
+                                    onClick={ () => document.getElementById("avatar")?.click() }>
+                                    {t('Profile.EditInfosProfile.avatar.changeButton')}
+                                </button>
+                                <button
+                                    className={css.removeAvatarBtn}
+                                    disabled={selectedAvatar === 'remove'}
+                                    type='button'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setSelectedAvatar('remove');
+                                        onChange(null);
+                                    }}>
+                                    {t('Profile.EditInfosProfile.avatar.removeButton')}
+                                </button>
+                            </>
+                        )} />
                         {errors.avatar && <span className={css.fieldError}>{errors.avatar.message}</span>}
                     </div>
                 </div>
@@ -189,7 +236,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                         {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
                     </div>
                     <div className={css.ConfirmButtons}>
-                        <button type='reset' className={css.closeBtn} onClick={() => setConfirmSave(false)}>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
+                        <button type='reset' className={css.closeBtn} onClick={() => {setConfirmSave(false); reset();} }>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
                         <button type='submit' className={css.confirmBtn}>{t('Profile.EditInfosProfile.confirmSave.buttons.confirm')}</button>
                     </div>
                 </div>

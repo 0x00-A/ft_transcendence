@@ -45,6 +45,7 @@ MAHDI:
  - [ ] email LOGO
  - [X] exclude inactive users
  - [ ] reset password
+ - [ ] large avatar
 
 MAHDI NOTES:
    - if a user sign up with an email and not verify his email, and next he is sign up using google (oauth2) with same email
