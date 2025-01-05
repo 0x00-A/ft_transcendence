@@ -55,7 +55,8 @@ const Dashboard = () => {
     </main>
 
   );
-  console.log('currentUser => ', currentUser);
+  console.log('currentUser: ', currentUser);
+
 
 
   return (

@@ -3,21 +3,55 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 // import { API_BASE_URL } from '../config/constants';
 
 
+// const originalConsoleError = console.error;
+
+// console.error = (...args) => {
+//   const firstArg = args[0];
+
+//   const isSuppressedError =  typeof firstArg === "object" && firstArg?.response?.status && [400, 404].includes(firstArg.response.status);
+//   if (!isSuppressedError) {
+//     originalConsoleError.apply(console, args);
+//   } else {
+//     console.log('Suppressed error: ', args);
+//   }
+// }
+
+
 const apiClient = axios.create({
   baseURL: getApiUrl(''),
   withCredentials: true,
 });
 
 
+
 export const getData = async <T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> => {
-  const response: AxiosResponse<T> = await apiClient.get(endpoint, config);
-  return response.data;
+    const response: AxiosResponse<T> = await apiClient.get(endpoint, config);
+    return response.data;
 }
 
 export const postData = async <T, D>(endpoint: string, data: D, config?: AxiosRequestConfig): Promise<T> => {
   const response: AxiosResponse<T> = await apiClient.post(endpoint, data, config);
   return response.data;
 }
+
+// apiClient.interceptors.response.use(
+//   response => response,
+//   error => {
+//     console.log('+++++++++++++++interceptors.response+++++++++++++++++');
+//     error.toJSON = () => ({
+//       message: error.message,
+//       name: error.name,
+//       description: error.description,
+//       number: error.number,
+//       fileName: error.fileName,
+//       lineNumber: error.lineNumber,
+//       columnNumber: error.columnNumber,
+//       stack: error.stack
+//     });
+//     return Promise.reject(error);
+//   }
+// );
+
 
 // apiClient.interceptors.request.use(async (config) => {
 //   const access_token = localStorage.getItem('access_token');
@@ -33,21 +67,6 @@ export const postData = async <T, D>(endpoint: string, data: D, config?: AxiosRe
 // so you should request api to logout (clear the cookies) and nivaigate to auth page , set user as not logged in
 // const navigate = useNavigate();
 // const {setIsLoggedIn} = useAuth();
-
-apiClient.interceptors.response.use(
-  response => {
-    return response;
-  },
-  async error => {
-    if (error.response) {
-      // console.log(error);
-      // console.error(`apiClient ==> Error message: ${error.message},
-      //     Response Error: ${error.response.data?.error},
-      //     Response Data: ${JSON.stringify(error.response.data)}`);
-    }
-    return Promise.reject(error)
-  }
-)
 
 
 // const refreshAccessToken = async () => {

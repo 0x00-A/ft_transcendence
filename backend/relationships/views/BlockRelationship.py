@@ -53,7 +53,7 @@ class BlockUserView(APIView):
 
     def post(self, request, username):
         try:
-            target_user = User.active.get(username=username)
+            target_user = User.objects.get(username=username)
 
             if not request.user.friends.filter(username=target_user.username).exists():
                 return Response({'error': 'You can only block friends'}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,7 +89,7 @@ class UnblockUserView(APIView):
 
     def post(self, request, username):
         try:
-            target_user = User.active.get(username=username)
+            target_user = User.objects.get(username=username)
             deleted_count, _ = BlockRelationship.objects.filter(blocker=request.user, blocked=target_user).delete()
             if deleted_count > 0:
                 update_conversation_block_status(request.user, target_user, block=False)

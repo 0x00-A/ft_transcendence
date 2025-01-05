@@ -22,12 +22,6 @@ from accounts.consumers import NotificationConsumer
 def log_profile_changes(sender, instance, **kwargs):
     if instance.pk:
         old_profile = Profile.objects.get(pk=instance.pk)
-        # if old_profile.score != instance.score:
-        #     print(f"-------------Score changedfrom {old_profile.score} to {instance.score}-------------")
-        # if old_profile.wins != instance.wins:
-        #     print(f"-------------Wins changed from {old_profile.wins} to {instance.wins}-------------")
-        # if old_profile.losses != instance.losses:
-        #     print(f"-------------Losses changed from {old_profile.losses} to {instance.losses}-------------")
         if old_profile.level + 1 == instance.level:
             target_language = instance.user.profile.preferred_language or 'en'
             try:
@@ -40,15 +34,6 @@ def log_profile_changes(sender, instance, **kwargs):
             notification = Notification.objects.create(user=instance.user, title=translated_title, message=translated_message)
             notification.save()
             NotificationConsumer.send_notification_to_user(instance.user.id, notification)
-        # if old_profile.rank != instance.rank:
-        #     print(f"-------------Rank changed from {old_profile.rank} to {instance.rank}---------------")
-        # if old_profile.badge != instance.badge:
-        #     print(f"-------------Badge changed from {old_profile.badge} to {instance.badge}-------------")
-
-        # if 'best_rank' in old_profile.stats and old_profile.stats['best_rank'] != instance.stats['best_rank']:
-            # print(f"-------------Stats changed from {old_profile.stats['best_rank']} to {instance.stats['best_rank']}-------------")
-        # if old_profile.played_games != instance.played_games:
-        #     print(f"-------------Played games {old_profile.user.username} changed from {old_profile.played_games} to {instance.played_games}-------------")
 
 
 @receiver(post_save, sender=UserAchievement)
@@ -84,7 +69,6 @@ def create_user_profile(sender, instance, created, **kwargs):
         for achievement in achievements:
             user_achievement, created = UserAchievement.objects.get_or_create(
                 user=instance, achievement=achievement)
-        # Check if the achievement is already unlocked
 
 
 @receiver(post_save, sender=User)
@@ -104,13 +88,9 @@ def delete_user_with_profile(sender, instance, **kwargs):
 # def delete_old_avatar(sender, instance, **kwargs):
 #     if instance.pk:
 #         try:
-#             print('-----+++++-----delete_old_avatar--------')
 #             old_profile = Profile.objects.get(pk=instance.pk)
 #             if old_profile.avatar:
-#                 print('---------old_avatar------->', old_profile.avatar)
-#                 print('---------new_avatar------->', instance.avatar)
 #                 # if os.path.isfile(old_profile.avatar.path):
-#                 #     print('-------deleting avatar file in delete_old_avatar--------')
 #                 #     os.remove(old_profile.avatar.path)
 #         except Profile.DoesNotExist:
 #             pass

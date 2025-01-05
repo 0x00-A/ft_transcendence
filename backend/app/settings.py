@@ -54,8 +54,8 @@ CLIENT_URL = os.environ.get('CLIENT_URL')
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-
-
+# ALLOWED_HOSTS.append('http://e2r6p15:8000')
+ALLOWED_HOSTS.append('localhost')
 # Application definition
 
 INSTALLED_APPS = [
@@ -87,7 +87,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'middleware.CrossOriginOpenerPolicyMiddleware.CrossOriginOpenerPolicyMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -146,11 +148,14 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-    # 'https://e2r6p15',
-    CLIENT_URL
-    # 'http://0.0.0.0:3000',
-    # 'wss://yourdomain.com'
-]
+                        # 'https://e2r6p15',
+                        CLIENT_URL,
+                        'http://e2r6p15:8000',
+                        'https://localhost',
+                        'http://localhost:3000',
+                        # 'http://0.0.0.0:3000',
+                        # 'wss://yourdomain.com'
+                        ]
 # CSRF_COOKIE_AGE = 3600 # 1 hour
 
 # INTERNAL_IPS = [
@@ -362,6 +367,8 @@ CORS_ALLOWED_ORIGINS = [
     # 'https://e2r6p15',
     'https://ft-pong.me',
     CLIENT_URL,
+    'http://e2r6p15:8000',
+    'http://localhost:3000'
     # 'https://e1r6p15'
 ]
 CORS_ALLOW_METHODS = [
@@ -375,12 +382,22 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = [
     'content-type',
+    # 'x-csrftoken'
     # 'authorization',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False
+# CORS_EXPOSE_HEADERS = [
+#     "Cross-Origin-Opener-Policy",
+# ]
+
+# CORS_ALLOW_HEADERS = default_headers
+
+# CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800 # 50MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800 # 50MB
 
 # import logging
 

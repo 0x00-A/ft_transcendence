@@ -82,9 +82,9 @@
     gap: 1rem;
 }
 
-.avatarButtons input {
+/* .avatarButtons input {
     display: none;
-}
+} */
 
 .avatarBtn, .removeAvatarBtn {
     background-color: #0E1725;
