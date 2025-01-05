@@ -25,7 +25,7 @@ canvas_height: int = 480
 losing_score: int = 7
 
 ball_raduis: int = 8
-initial_ball_speed = 4
+initial_ball_speed = 3
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -72,7 +72,7 @@ class GameInstance:
         self.connected_players = 1
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 4
+        self.paddle_speed = self.ball.speed - 2
         self.paddle_width: int = 15
         self.paddle_height: int = 70
         self.corner_size = 10
@@ -123,8 +123,8 @@ class GameInstance:
         self.ball.dx = initial_ball_speed * math.cos(angle)
         self.ball.dy = initial_ball_speed * math.sin(angle)
 
-        # Set ball speed
         self.ball.speed = initial_ball_speed
+        self.paddle_speed = self.ball.speed - 2
 
     def increment_score(self, player):
         if player == 1:
@@ -378,7 +378,9 @@ class GameInstance:
 
     def increase_ball_speed(self):
         if self.ball.speed < 8:
-            self.ball.speed += 0.1
+
+            self.ball.speed += 0.2
+            self.paddle_speed = self.ball.speed - 2
 
 
 def create_game(game_id):
@@ -401,6 +403,9 @@ def remove_game(game_id):
         # del connected_players[game_id]
 
 
+lock = asyncio.Lock()
+
+
 class MultiGameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
@@ -409,31 +414,28 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
         if user.is_authenticated:
             await self.accept()
-            # print(f"\033[31mAdding to group: {user.username} !!.\033[0m")
             self.game_id = self.scope['url_route']['kwargs']['game_id']
-            # if len(connected_players[self.game_id]) >= 4 or user.id in connected_players[self.game_id]:
-            #     await self.send(text_data=json.dumps(
-            #         {
-            #             'type': 'go_home',
-            #         }
-            #     ))
-            #     self.close()
-            #     return
-            # connected_players[self.game_id].add(user.id)
+
+            async with lock:
+                if not get_game(self.game_id):
+                    create_game(self.game_id)
+                    await self.set_player_id_name()
+                else:
+                    game: GameInstance = get_game(self.game_id)
+                    game.connected_players += 1
+                    await self.set_player_id_name()
+
+            print(f"\033[31mAdding to group: {user.username} !!.\033[0m")
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
-            if not get_game(self.game_id):
-                create_game(self.game_id)
-                await self.set_player_id_name()
-            else:
-                game: GameInstance = get_game(self.game_id)
-                game.connected_players += 1
-                await self.set_player_id_name()
-                if game.connected_players == 4:
-                    await self.broadcast_initial_state()
-                    await self.send_countdown_to_clients()
-                    await MultiGame.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
-                    asyncio.create_task(self.start_game(self.game_id))
+            game: GameInstance = get_game(self.game_id)
+            print(f"\033[31mConnected Players = {
+                  game.connected_players}.\033[0m")
+            if game.connected_players == 4:
+                await self.broadcast_initial_state()
+                await self.send_countdown_to_clients()
+                await MultiGame.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+                asyncio.create_task(self.start_game(self.game_id))
         else:
             print(f"\033[31mUser {user.username} not authenticated!\033[0m")
             await self.close()
