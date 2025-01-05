@@ -1,8 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import styles from './Welcome.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Welcome = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
 
   return (
     <div className={styles.content}>
@@ -12,7 +15,7 @@ const Welcome = () => {
           {t('welcome.description')}
         </p>
       </div>
-      <button className={styles.playButton}>{t('welcome.playButton')}</button>
+      <button className={styles.playButton} onClick={() => navigate(`/play`)}>{t('welcome.playButton')}</button>
     </div>
   );
 };

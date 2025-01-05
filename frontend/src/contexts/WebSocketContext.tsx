@@ -41,8 +41,9 @@ export interface Notification {
 
 export interface WebSocketContextType {
   notifications: Notification[];
+  paginationInfo: string;
   sendMessage: (message: Record<string, any>) => void;
-  fetchNotifications: () => Promise<void>;
+  fetchNotifications: (page: number, state: boolean) => Promise<void>;
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
@@ -62,22 +63,36 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const { isLoggedIn } = useAuth();
   const { t } = useTranslation();
+  const [paginationInfo, setPaginationInfo] = useState<string>('');
 
-  const fetchNotifications = async () => {
+
+  const fetchNotifications = async (page: number = 1, state: boolean = true) => {
     try {
-      // const { data } = await apiClient.get('/notifications/');
-      const data : Notification[] = []
-      setNotifications(data);
-      // console.log('notification data: ', data);
-      setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
+      const { data } = await apiClient.get(`/notifications/?page=${page}`);
+
+      const { results, next } = data;
+
+      if (state)
+        setNotifications(results);
+      else {
+        setNotifications((prevNotifications) => [
+          ...prevNotifications,
+          ...results,
+        ]);
+      }
+
+      setUnreadCount(results.filter((n: Notification) => !n.is_read).length);
+      setPaginationInfo(next);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
   };
 
+
   const markAsRead = async (notificationId: number) => {
     try {
       await apiClient.patch(`/notifications/${notificationId}/mark-read/`);
+
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
       );
@@ -167,6 +182,36 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const showTournamentInviteToast = (from: string, tournamentId: number) => {
+    toast(
+      <GameInviteCard
+        from={from}
+        onAccept={() => handleAcceptTournamentInvite(tournamentId)}
+        onReject={() => handleRejectTournamentInvite(tournamentId)}
+        isTournamentInvite={true}
+      />,
+      {
+        toastId: tournamentId,
+        autoClose: 10000,
+        closeOnClick: false,
+        closeButton: false,
+        style: {
+          padding: '0',
+          margin: '0',
+        },
+      }
+    );
+  };
+
+  const newMessageToast = (from: string, message: string) => {
+    toast(
+        message,
+      {
+        toastId: from
+      }
+    );
+  };
+
   const handleAcceptInvite = (from: string) => {
     // console.log(`Accepted invite from ${from}`);
     sendMessage({
@@ -183,6 +228,20 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       from: from,
     });
     toast.dismiss(from);
+  };
+
+  const handleAcceptTournamentInvite = (tournamentId: number) => {
+    // console.log(`Accepted Tournament invite from ${from}`);
+    sendMessage({
+      event: 'tournament_invite_accept',
+      tournamentId: tournamentId,
+    });
+    toast.dismiss();
+  };
+
+  const handleRejectTournamentInvite = (tournamentId: number) => {
+    // console.log(`Rejected Tournament invite from ${from}`);
+    toast.dismiss(tournamentId);
   };
 
   // console.log(user);
@@ -203,7 +262,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.success(`${data.from} ${t('toast.requestAccepted')}`);
       }
       if (data.event === 'new_message') {
-        toast(`${data.from} ${t('toast.newMessage')}`);
+        newMessageToast(data.from, `${t('toast.newMessage')}`)
       }
       if (data.event === 'friend_request' || data.event === 'status_update') {
         showFriendRequestToast(data.from);
@@ -216,8 +275,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         // toast.info(data.message)
         showGameInviteToast(data.from);
       }
+      if (data.event === 'tournament_invite') {
+        // toast.info(data.message)
+        showTournamentInviteToast(data.from, data.tournamentId);
+      }
       if (data.event === 'error') {
         toast.error(data.message);
+      }
+      if (data.event === 'success') {
+        toast.success(data.message);
       }
       if (data.event === 'invite_reject') {
         toast.info(t(`${data.message}`));
@@ -225,6 +291,12 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       if (data.event === 'game_address') {
         toast.info(t(`${data.message}`));
         acceptInvite(data.game_address, data.p1_id, data.p2_id);
+      }
+      if (data.event === 'opponent_ready') {
+        toast.info(data.message);
+      }
+      if (data.event === 'opponent_unready') {
+        toast.info(data.message);
       }
     };
 
@@ -252,6 +324,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     <WebSocketContext.Provider
       value={{
         notifications,
+        paginationInfo,
         sendMessage,
         fetchNotifications,
         markAllAsRead,

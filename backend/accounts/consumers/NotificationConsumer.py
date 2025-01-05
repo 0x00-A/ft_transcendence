@@ -6,11 +6,14 @@ from asgiref.sync import async_to_sync
 
 from accounts.models import User
 from accounts.models import Notification
+from accounts.utils.translate_text import translate_text
+from matchmaker.models import Tournament
 from matchmaker.models.game import Game
 from matchmaker.matchmaker import Matchmaker
 from django.db.models import Q
 from accounts.models import Profile
 from django.utils import timezone
+from asgiref.sync import sync_to_async
 
 
 connected_users = {}
@@ -22,7 +25,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         user = self.scope['user']
         self.username = None
         if user.is_authenticated:
-            print(f"==> {user.username} is connected to the websocket NotificationConsumer")
             await self.accept()
             self.username = user.username
             self.id = user.id
@@ -63,13 +65,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         event = data['event']
-        print(f'Notication Websocket Message Recieved: {event}')
         if event == 'game_invite':
             await self.handle_invite(self.username, data.get('to'))
         if event == 'invite_accept':
             await self.handle_accept(data.get('from'), self.username)
         if event == 'invite_reject':
             await self.handle_reject(data.get('from'), self.username)
+        if event == 'tournament_invite_accept':
+            await self.handle_tournament_accept(data.get('tournamentId'), self.username)
 
     async def disconnect(self, close_code):
         if self.username in connected_users:
@@ -100,10 +103,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             }
             await self.send_message(recipient, message)
             return
-        # player1_id = await self.get_user_id(sender)
-        # player2_id = await self.get_user_id(sender)
 
-        # if player1_id and player2_id:
         print(f"creating game... p1: {sender} | p2: {recipient}")
         # Store the game in your database (using Django ORM models)
         # User = get_user_model()
@@ -113,10 +113,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             player1=p1, player2=p2
         )
         game_address = f"game/game_{game.id}"
-        # Simulate game creation with game_id and address
-        # game_id = await cls.get_new_game_id()
-
-        # Send the game address to both players
         message = {
             'event': 'game_address',
             'message': 'toast.gameAddress',
@@ -135,7 +131,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 return False
             if await Game.objects.filter(
                 (Q(player1=user_id) | Q(player2=user_id)) & Q(
-                    status="started")
+                    status="started") & Q(players_connected=True)
             ).aexists():
                 return True
             return False
@@ -171,6 +167,48 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 "event": "error",
                 "message": "The recipient is currently offline.",
             })
+
+    async def handle_tournament_accept(self, tournament_id, invitee):
+        from matchmaker.consumers import Matchmaker
+        print(f"\033[33m{invitee} Accepted Tournament Invite")
+        player = await User.active.aget(username=invitee)
+
+        if await Tournament.objects.filter(players__id=player.id).exclude(status='ended').exclude(status='aborted').aexists():
+            if await Tournament.objects.filter(id=tournament_id, players__id=player.id).exclude(status='ended').aexists():
+                await self.send_message(invitee, {'event': 'error',
+                                                  'message': 'Already in tournament'})
+            else:
+                await self.send_message(invitee, {'event': 'error',
+                                                  'message': 'Cannot join more tournaments until your current tournament ends'})
+            return
+        try:
+            tournament = await Tournament.objects.aget(id=tournament_id)
+            if await sync_to_async(tournament.check_if_full)():
+                await self.send_message(invitee, {'event': 'error',
+                                                  'message': 'Tournament is full'})
+            else:
+                await tournament.players.aadd(player.id)
+                await self.send_message(invitee, {'event': 'success',
+                                                  'message': f'Joined tournament {tournament.name} successfully',
+                                                  })
+                players = await sync_to_async(list)(tournament.players.all())
+                for p in players:
+                    await Matchmaker.send_message_to_client(p.id, {'event': 'tournament_update',
+                                                                   'tournament_id': tournament_id,
+                                                                   'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                                                                   })
+                await sync_to_async(tournament.check_if_full)()
+                if await sync_to_async(tournament.start_tournament)():
+                    message = {'event': 'tournament_update',
+                               'tournament_id': tournament_id,
+                               'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                               }
+                    players = await sync_to_async(list)(tournament.players.all())
+                    for p in players:
+                        await Matchmaker.send_message_to_client(p.id, message)
+
+        except Tournament.DoesNotExist:
+            await self.send_message(player.id, {'error': 'Tournament does not exist'})
 
     async def send_message(self, username, message):
         channel_layer = get_channel_layer()
@@ -216,6 +254,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def user_message(self, event):
         message = event["message"]
 
+        target_language = await sync_to_async(lambda: self.scope['user'].profile.preferred_language or 'en')()
+        try:
+            message_text = message['message']
+            message['message'] = translate_text(message_text, target_language)
+        except Exception as e:
+            print(f"Translation failed: {e}")
+
         await self.send(text_data=json.dumps(message))
 
     async def user_notification(self, event):
@@ -224,11 +269,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'event': 'notification',
             'data': message
         }))
-
-    async def user_message(self, event):
-        message = event["message"]
-        # print(f"Sending Message: {event["message"]}")
-        await self.send(text_data=json.dumps(message))
 
     async def get_user_id(self, username):
         try:

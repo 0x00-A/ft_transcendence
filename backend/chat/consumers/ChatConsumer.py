@@ -6,7 +6,7 @@ from asgiref.sync import sync_to_async
 from django.db.models import Q
 from accounts.models import Notification
 from accounts.consumers import NotificationConsumer
-
+import asyncio
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -34,11 +34,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user.save()
 
     async def receive(self, text_data):
-        # print("Received data: ", text_data, "-----------------")
         data = json.loads(text_data)
         action = data.get("action")
 
-        # print(f"Action: {action}, Data: {data}")
         try:
             if action == "update_active_conversation":
                 await self.update_active_conversation(data)
@@ -51,19 +49,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif action == "toggle_block_status":
                 await self.handle_block_status(data)
         except Exception as e:
-            # print(f"Error handling action {action}: {str(e)}")
+            target_language = await sync_to_async(
+                lambda: self.user.profile.preferred_language or 'en'
+            )()
+            try:
+                translated_message = translate_text(str(e), target_language)
+            except Exception:
+                translated_message = str(e)
+
             await self.send(text_data=json.dumps({
                 "type": "error",
-                "message": str(e)
+                "message": translated_message
             }))
-
     async def handle_block_status(self, data):
         conversation_id = data.get("conversation_id")
         blocker_id = data.get("blocker_id")
         blocked_id = data.get("blocked_id")
         status = data.get("status")
 
-        if not all([conversation_id, blocker_id, blocked_id]):
+        if not all([conversation_id, blocker_id, blocked_id, status]):
             raise ValueError("Missing required block status parameters")
 
         await self.toggle_block_status(conversation_id, blocker_id, blocked_id, status)
@@ -122,6 +126,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def block_status_update(self, event):
+
         await self.send(text_data=json.dumps({
             "type": "block_status_update",
             "conversation_id": event["conversation_id"],
@@ -146,6 +151,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def update_active_conversation(self, data):
         conversation_id = data.get("conversation_id")
+
+        if not all([conversation_id]):
+            raise ValueError("Missing required active conversation parameters")
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
 
@@ -156,76 +164,109 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def send_notification_to_receiver(self, receiver_id, sender_id, message):
-        sender_user = User.objects.get(id=sender_id)
-        receiver_user = User.objects.get(id=receiver_id)
-
-        target_language = receiver_user.profile.preferred_language or 'en'
-
         try:
-            translated_message = translate_text(
-                f"{sender_user.username} sent you a message: {message}", target_language)
-            translated_title = translate_text("New Message", target_language)
-        except Exception as e:
-            translated_message = f"{sender_user.username} sent you a message: {message}"
-            translated_title = "New Message"
+            sender_user = User.objects.get(id=sender_id)
+            receiver_user = User.objects.get(id=receiver_id)
 
-        # print("receiver message" + self.user.username)
-        notification = Notification.objects.create(
-            user=receiver_user,
-            link=f"/chat",
-            state=self.user.username,
-            title=translated_title,
-            message=translated_message,
-        )
-        NotificationConsumer.send_notification_to_user(
-            receiver_id, notification)
-        notification_data = {
-            "event": "new_message",
-            "from": self.user.username,
-            "message": f"{self.user.username} sent you a message.",
-        }
-        NotificationConsumer.send_notification_to_user(
-            receiver_id, notification_data)
+            target_language = receiver_user.profile.preferred_language or 'en'
+
+            try:
+                translated_message = translate_text(
+                    f"{sender_user.username} sent you a message: ", target_language)
+                translated_title = translate_text(
+                    "New Message", target_language)
+            except Exception as e:
+                translated_message = f"{sender_user.username} sent you a message: "
+                translated_title = "New Message"
+
+            notification = Notification.objects.create(
+                user=receiver_user,
+                link="/chat",
+                state=self.user.username,
+                title=translated_title,
+                message=f"{translated_message} {message}",
+            )
+
+            NotificationConsumer.send_notification_to_user(
+                receiver_id, notification)
+
+            notification_data = {
+                "event": "new_message",
+                "from": self.user.username,
+                "message": f"{self.user.username} sent you a message.",
+            }
+            NotificationConsumer.send_notification_to_user(
+                receiver_id, notification_data)
+
+        except Exception as e:
+            print(f"Failed to send notification: {str(e)}")
 
     async def handle_send_message(self, data):
         message = data.get("message")
         receiver_id = data.get("receiver_id")
         sender_id = self.user.id
-
-        if not receiver_id or not message:
-            return
+        
+        if not all([receiver_id, message]):
+            raise ValueError("Missing required send message parameters")
 
         message = message[:300]
 
-        conversation = await self.get_or_create_conversation(sender_id, receiver_id)
+        try:
+            conversation = await self.get_or_create_conversation(sender_id, receiver_id)
 
-        if await self.is_conversation_blocked(conversation, sender_id):
-            raise ValueError("Cannot send message. Conversation is blocked.")
-        saved_conversation = await self.save_message(sender_id, receiver_id, message)
+            if await self.is_conversation_blocked(conversation, sender_id):
+                raise ValueError(
+                    "Cannot send message. Conversation is blocked.")
 
-        await self.channel_layer.group_send(
-            f"user_{sender_id}",
-            {
-                "type": "chat_message",
-                "message": message,
-                "sender_id": sender_id,
-                "receiver_id": receiver_id,
-                "conversation_id": saved_conversation.id,
-            }
-        )
-        await self.channel_layer.group_send(
-            f"user_{receiver_id}",
-            {
-                "type": "chat_message",
-                "message": message,
-                "sender_id": sender_id,
-                "receiver_id": receiver_id,
-                "conversation_id": saved_conversation.id,
-            }
-        )
-        is_open_chat = await self.get_user_open_chat_status(receiver_id)
-        if not is_open_chat:
-            await self.send_notification_to_receiver(receiver_id, sender_id, message)
+            saved_conversation = await self.save_message(sender_id, receiver_id, message)
+
+            await self.channel_layer.group_send(
+                f"user_{sender_id}",
+                {
+                    "type": "chat_message",
+                    "message": message,
+                    "sender_id": sender_id,
+                    "receiver_id": receiver_id,
+                    "conversation_id": saved_conversation.id,
+                }
+            )
+            await self.channel_layer.group_send(
+                f"user_{receiver_id}",
+                {
+                    "type": "chat_message",
+                    "message": message,
+                    "sender_id": sender_id,
+                    "receiver_id": receiver_id,
+                    "conversation_id": saved_conversation.id,
+                }
+            )
+            await self.handle_notification(receiver_id, sender_id, message)
+        except Exception as e:
+            target_language = await sync_to_async(
+                lambda: self.user.profile.preferred_language or 'en'
+            )()
+            try:
+                translated_message = translate_text(str(e), target_language)
+            except Exception:
+                translated_message = str(e)
+            await self.send(text_data=json.dumps({
+                "type": "error",
+                "message": translated_message
+            }))
+
+    async def handle_notification(self, receiver_id, sender_id, message):
+        """
+        Separate method to handle notification logic after message is sent
+        """
+        try:
+            is_open_chat = await self.get_user_open_chat_status(receiver_id)
+            if not is_open_chat:
+                asyncio.create_task(
+                    self.send_notification_to_receiver(
+                        receiver_id, sender_id, message)
+                )
+        except Exception as e:
+            print(f"Notification error: {str(e)}")
 
     async def get_or_create_conversation(self, sender_id, receiver_id):
         return await sync_to_async(Conversation.objects.get)(
@@ -236,19 +277,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def is_conversation_blocked(self, conversation, sender_id):
         conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
 
-        if conversation.user1_block_status == "blocker" or  conversation.user1_block_status == "blocked":
+        if conversation.user1_block_status == "blocker" or conversation.user1_block_status == "blocked":
             return True
         if conversation.user2_block_status == "blocker" or conversation.user2_block_status == "blocker":
             return True
         return False
 
     async def handle_typing_status(self, data):
-        typing = data.get("typing", False)
+        typing = data.get("typing")
         receiver_id = data.get("receiver_id")
         sender_id = self.user.id
 
-        if not receiver_id:
-            return
+        if not all([receiver_id]):
+            raise ValueError("Missing required typing status parameters")
 
         await self.channel_layer.group_send(
             f"user_{receiver_id}",
@@ -261,9 +302,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def handle_mark_as_read(self, data):
         conversation_id = data.get("conversation_id")
-
-        if not conversation_id:
-            return
+        
+        if not all([conversation_id]):
+            raise ValueError("Missing required conversation_id parameters")
 
         await self.mark_conversation_as_read(conversation_id, self.user)
 

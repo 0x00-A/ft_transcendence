@@ -3,18 +3,10 @@ from accounts.models import Profile, User
 from accounts.utils.translate_text import translate_text
 from .models import Game, Tournament, Match, MultiGame
 from asgiref.sync import sync_to_async
-from channels.layers import get_channel_layer
-from datetime import datetime
-from django.utils import timezone
-from django.utils.timezone import now
 import asyncio
 
 
-import json
 from django.db.models import Q
-from django.contrib.auth import get_user_model
-
-from collections import defaultdict
 
 
 class Matchmaker:
@@ -29,7 +21,6 @@ class Matchmaker:
         cls.connected_clients[player_id] = consumer
         # cls.connected_clients[player_id].add(channel_name)
         # cls.connected_clients[player_id].add(channel_name)
-
 
     @classmethod
     async def unregister_client(cls, player_id):
@@ -48,10 +39,10 @@ class Matchmaker:
         if await cls.is_client_already_playing(player_id):
             return
         cls.games_queue.append(player_id)
-        # message = {
-        #     'event': 'in_queue'
-        # }
-        # await cls.send_message_to_client(player_id, message)
+        message = {
+            'event': 'in_queue'
+        }
+        await cls.send_message_to_client(player_id, message)
         players = await cls.find_two_players()
         if players:
             await cls.create_remote_game(*players)
@@ -61,10 +52,10 @@ class Matchmaker:
         if await cls.is_client_already_playing(player_id):
             return
         cls.multi_games_queue.append(player_id)
-        # message = {
-        #     'event': 'in_queue'
-        # }
-        # await cls.send_message_to_client(player_id, message)
+        message = {
+            'event': 'in_queue'
+        }
+        await cls.send_message_to_client(player_id, message)
         players = await cls.find_four_players()
         if players:
             await cls.create_multi_game(*players)
@@ -92,8 +83,10 @@ class Matchmaker:
             'player1_id': game.player1.id,
             'player2_id': game.player2.id,
         }
-        await cls.send_message_to_client(player1_id, message)
-        await cls.send_message_to_client(player2_id, message)
+        await asyncio.gather(
+            cls.send_message_to_client(player1_id, message),
+            cls.send_message_to_client(player2_id, message)
+        )
 
     @classmethod
     async def create_multi_game(cls, player1_id, player2_id, player3_id, player4_id):
@@ -112,10 +105,16 @@ class Matchmaker:
             'message': 'Game successfully created',
             'game_address': game_address,
         }
-        await cls.send_message_to_client(player1_id, message)
-        await cls.send_message_to_client(player2_id, message)
-        await cls.send_message_to_client(player3_id, message)
-        await cls.send_message_to_client(player4_id, message)
+        # await cls.send_message_to_client(player1_id, message)
+        # await cls.send_message_to_client(player2_id, message)
+        # await cls.send_message_to_client(player3_id, message)
+        # await cls.send_message_to_client(player4_id, message)
+        await asyncio.gather(
+            cls.send_message_to_client(player1_id, message),
+            cls.send_message_to_client(player2_id, message),
+            cls.send_message_to_client(player3_id, message),
+            cls.send_message_to_client(player4_id, message)
+        )
 
     @classmethod
     async def create_tournament(cls, creator_id, tournament_name):
@@ -171,6 +170,13 @@ class Matchmaker:
                            #    'tournament_stat': await sync_to_async(tournament.to_presentation)(),
                            }
                 await cls.send_message_to_client(player_id, message)
+                message = {'event': 'tournament_update',
+                           'tournament_id': tournament_id,
+                           'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+                           }
+                players = await sync_to_async(list)(tournament.players.all())
+                for p in players:
+                    await cls.send_message_to_client(p.id, message)
                 await sync_to_async(tournament.check_if_full)()
                 if await sync_to_async(tournament.start_tournament)():
                     message = {'event': 'tournament_update',
@@ -224,7 +230,8 @@ class Matchmaker:
                             translated_title = translate_text(
                                 "Tournament Aborted", target_language)
                         except Exception as e:
-                            translated_message = f"Tournament {tournament.name} aborted because a player left!"
+                            translated_message = f"Tournament {
+                                tournament.name} aborted because a player left!"
                             translated_title = "Tournament Aborted"
                         notification = await Notification.objects.acreate(
                             user=p, title=translated_title, message=translated_message)
@@ -238,7 +245,7 @@ class Matchmaker:
 
     @classmethod
     async def send_message_to_client(cls, player_id, message):
-        await asyncio.sleep(0.1)
+        # await asyncio.sleep(0.1)
         # channel_layer = get_channel_layer()
         consumer = cls.connected_clients.get(player_id)
         if consumer:
@@ -271,7 +278,6 @@ class Matchmaker:
             # await send_message_to_channel(channel, message)
         else:
             print("MatchmakerConsumer: User is not connected.")
-
 
     @classmethod
     async def is_client_already_playing(cls, player_id):
@@ -367,7 +373,6 @@ class Matchmaker:
 
     @classmethod
     async def process_game_result(cls, game_id, winner, p1_score, p2_score):
-        """Process a single game result and update the database"""
         game = await Game.objects.aget(game_id=game_id)
 
         await sync_to_async(game.end_game)(winner, p1_score, p2_score)
@@ -375,7 +380,6 @@ class Matchmaker:
 
     @classmethod
     async def process_multi_game_result(cls, game_id, winner, p1_score, p2_score, p3_score, p4_score):
-        """Process a multi game result and update the database"""
         game = await MultiGame.objects.aget(game_id=game_id)
 
         await sync_to_async(game.end_game)(winner, p1_score, p2_score, p3_score, p4_score)
@@ -383,7 +387,6 @@ class Matchmaker:
 
     @classmethod
     async def process_tournament_match(cls, match_id, winner, p1_score, p2_score):
-        """Process a tournament match result and advance the tournament"""
         match = await Match.objects.aget(match_id=match_id)
 
         await sync_to_async(match.end_match)(winner, p1_score, p2_score)
@@ -406,24 +409,27 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_unready(cls, player_id):
+        from accounts.consumers import NotificationConsumer
         try:
             match = await sync_to_async(Match.objects.get)(
                 (Q(player1_id=player_id) | Q(
                     player2_id=player_id)) & Q(status='waiting')
             )
-            if match.player1_id == player_id:
+            if match.player1_id == player_id and match.player1_ready:
                 match.player1_ready = False
                 message = {
                     'event': 'opponent_unready',
                     "message": "Your oponent is not ready!",
                 }
+                await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player2_id, message)
                 await cls.send_message_to_client(match.player2_id, message)
-            elif match.player2_id == player_id:
+            elif match.player2_id == player_id and match.player2_ready:
                 match.player2_ready = False
                 message = {
                     'event': 'opponent_unready',
                     "message": "Your oponent is not ready!",
                 }
+                await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player1_id, message)
                 await cls.send_message_to_client(match.player1_id, message)
 
             await sync_to_async(match.save)()
@@ -432,14 +438,20 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_ready(cls, player_id, match_id):
+        from accounts.consumers import NotificationConsumer
+        print(f"\033[033mMatch_id = {match_id}\033[0m")
         match = await Match.objects.aget(match_id=match_id)
 
+        if not match:
+            print(f"\033[033mMatch does not exist\033[0m")
+            return
         if match.player1_id == player_id:
             match.player1_ready = True
             message = {
                 'event': 'opponent_ready',
                 "message": "Your oponent is ready!",
             }
+            await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player2_id, message)
             await cls.send_message_to_client(match.player2_id, message)
         elif match.player2_id == player_id:
             match.player2_ready = True
@@ -447,6 +459,7 @@ class Matchmaker:
                 'event': 'opponent_ready',
                 "message": "Your oponent is ready!",
             }
+            await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player1_id, message)
             await cls.send_message_to_client(match.player1_id, message)
 
         await sync_to_async(match.save)()
@@ -467,8 +480,31 @@ class Matchmaker:
                 'player1_id': match.player1_id,
                 'player2_id': match.player2_id,
             }
-            await cls.send_message_to_client(match.player1_id, message)
-            await cls.send_message_to_client(match.player2_id, message)
+            await asyncio.gather(
+                cls.send_message_to_client(match.player1_id, message),
+                cls.send_message_to_client(match.player2_id, message)
+            )
             match.player1_ready = False
             match.player2_ready = False
             await sync_to_async(match.save)()
+
+    @classmethod
+    async def send_tournament_invite(cls, player_id, sender, to, tournament_id):
+        from accounts.consumers import NotificationConsumer
+
+        reciever = await User.active.aget(username=to)
+        if reciever:
+            if await Tournament.objects.filter(Q(id=tournament_id) & Q(players__id=reciever.id)).aexists():
+                await cls.send_message_to_client(player_id, {
+                    'event': 'error',
+                    'message': 'User already in tournament!'
+                })
+                return
+
+            message = {
+                "event": "tournament_invite",
+                "from": sender,
+                "tournamentId": tournament_id,
+            }
+
+            await sync_to_async(NotificationConsumer.send_notification_to_user)(reciever.id, message)

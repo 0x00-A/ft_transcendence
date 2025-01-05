@@ -5,19 +5,9 @@ from asgiref.sync import sync_to_async
 import math
 import json
 import random
-import uuid
-from django.contrib.auth.models import AnonymousUser
-
-
 from channels.generic.websocket import AsyncWebsocketConsumer
-
 from channels.layers import get_channel_layer
-
-from asgiref.sync import async_to_sync
-
 import asyncio
-
-from collections import defaultdict
 
 channel_layer = get_channel_layer()
 
@@ -31,7 +21,6 @@ ball_max_speed = 8
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 games = {}
-# connected_players = defaultdict(set)
 
 
 class Ball:
@@ -51,7 +40,7 @@ class Ball:
         self.y += self.dy
 
     # def bounce(self):
-    #     self.dx = -self.dx  # Reverse x direction on bounce
+    #     self.dx = -self.dx
 
 
 class GameInstance:
@@ -104,7 +93,6 @@ class GameInstance:
 
     def reverse_vertical_direction(self):
         self.ball.dy = -self.ball.dy
-        # Correct the ball position to stay within bounds
         if self.ball.y - self.ball.radius <= 0:
             self.ball.y = self.ball.radius
         else:
@@ -122,7 +110,7 @@ class GameInstance:
     def do_line_segments_intersect(self, x1, y1, x2, y2, x3, y3, x4, y4):
         denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
 
-        # Lines are parallel if the denominator is 0
+        # lines are parallel if the denominator is 0
         if denominator == 0:
             return False
 
@@ -136,22 +124,19 @@ class GameInstance:
         ball_from_bottom = self.ball.y > self.state[f"{
             paddle}_y"] + self.paddle_height
 
-        # Previous and current position of the ball
         next_x = self.ball.x + self.ball.dx + \
             (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
         next_y = self.ball.y + self.ball.dy
 
-        # next_y = (ballFromTop? ball.y + ball.radius: (ballFromBottom? ball.y - ball.radius: ball.y)) + ball.dy
         next_y += self.ball.radius if ball_from_top else - \
             self.ball.radius if ball_from_bottom else 0
 
-        # Paddle edges as line segments
+        # paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
         paddle_right = self.state[f"{paddle}_x"] + self.paddle_width
         paddle_top = self.state[f"{paddle}_y"]
         paddle_bottom = self.state[f"{paddle}_y"] + self.paddle_height
 
-        # Check for intersection with paddle's vertical sides (left and right)
         intersects_left = self.do_line_segments_intersect(
             self.ball.x, self.ball.y, next_x, next_y,
             paddle_left, paddle_top, paddle_left, paddle_bottom
@@ -162,7 +147,6 @@ class GameInstance:
             paddle_right, paddle_top, paddle_right, paddle_bottom
         )
 
-        # Check for intersection with paddle's horizontal sides (top and bottom)
         intersects_top = self.do_line_segments_intersect(
             self.ball.x, self.ball.y, next_x, next_y,
             paddle_left, paddle_top, paddle_right, paddle_top
@@ -198,14 +182,13 @@ class GameInstance:
             # new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
 
-            # Update ball dx, dy based on the new angle
             direction = 1 if self.ball.dx > 0 else -1
             if self.ball.speed < ball_max_speed:
                 self.ball.speed += 0.1
             self.ball.dx = direction * self.ball.speed * \
-                math.cos(new_angle)  # Horizontal velocity
+                math.cos(new_angle)
             self.ball.dy = self.ball.speed * \
-                math.sin(new_angle)  # Vertical velocity
+                math.sin(new_angle)
 
         # top/bottom collision
         if ball_from_top or ball_from_bottom:
@@ -224,54 +207,41 @@ def get_game(game_id):
 
 
 def remove_game(game_id):
-    # global connected_players
     if game_id in games:
-        print(f"\033[33mGame Removed {game_id}.\033[0m")
         del games[game_id]
-    # if game_id in connected_players:
-    #     del connected_players[game_id]
+
+
+lock = asyncio.Lock()
 
 
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        # global connected_players
         user = self.scope['user']
         self.game_id = None
 
-        # print(f"connected: {connected_players}")
         if user.is_authenticated:
             await self.accept()
             self.game_id = self.scope['url_route']['kwargs']['game_id']
-            # if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
-            #     await self.send(text_data=json.dumps(
-            #         {
-            #             'type': 'go_home',
-            #         }
-            #     ))
-            #     self.close()
-            #     return
-            # connected_players[self.game_id].add(user.id)
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
-            if not get_game(self.game_id):
-                create_game(self.game_id)
-                await self.set_player_id_name()
-            else:
-                await self.set_player_id_name()
-                await self.send_countdown_to_clients()
-                await self.broadcast_initial_state()
-                # await self.set_game_started()
-                # Start the game loop
-                if await Game.objects.filter(game_id=self.game_id).aexists():
-                    await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
-                elif await Match.objects.filter(match_id=self.game_id).aexists():
-                    await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
-                # match.status = 'started'
-                # match.start_time = timezone.now()
-                # await match.asave()
-                asyncio.create_task(self.start_game(self.game_id))
+            async with lock:
+                if not get_game(self.game_id):
+                    create_game(self.game_id)
+                    await self.set_player_id_name()
+                else:
+                    await self.set_player_id_name()
+                    await self.send_countdown_to_clients()
+                    await self.broadcast_initial_state()
+
+                    if await Game.objects.filter(game_id=self.game_id).aexists():
+                        await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+                    elif await Match.objects.filter(match_id=self.game_id).aexists():
+                        await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
+
+                    asyncio.create_task(self.start_game(self.game_id))
         else:
+            print(f"\033[31mGameConsumer: User not authenticated!\033[0m")
             await self.close()
 
     async def disconnect(self, close_code):
@@ -378,7 +348,6 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
         game.status = 'started'
-        print(f"\033[33mGame Loop started {game_id}.\033[0m")
         # Game loop
         while True:
             await self.broadcast_game_state(game_id)
@@ -392,7 +361,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 remove_game(self.game_id)
                 break
 
-            await asyncio.sleep(1 / 60)  # Run at 60 FPS
+            await asyncio.sleep(1 / 60)
 
     async def check_collision(self, game: GameInstance):
         if game.is_colliding_with_paddle("player1_paddle"):

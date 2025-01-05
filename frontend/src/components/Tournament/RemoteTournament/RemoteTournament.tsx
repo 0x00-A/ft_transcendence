@@ -9,6 +9,7 @@ import ReadyButton from '../components/ReadyButton/ReadyButton';
 import LeaveTournamentButton from '../components/LeaveTournamentButton';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
+import { InviteButton } from '../components/InviteButton/InviteButton';
 
 const Match = ({
   // player1,
@@ -216,14 +217,17 @@ const RemoteTournament = ({
   return (
     <div className={css.container}>
       {tournamentStat.status != 'ended' && (
-        <LeaveTournamentButton
-          onLeaveTournament={() => {
-            sendMessage({
-              event: 'player_left',
-            });
-            onReturn();
-          }}
-        />
+        <div className={css.buttonWrapper}>
+          <LeaveTournamentButton
+            onLeaveTournament={() => {
+              sendMessage({
+                event: 'player_left',
+              });
+              onReturn();
+            }}
+          />
+          {tournamentStat.status === 'waiting' && <InviteButton tournamentId={tournamentStat.tournament_id} sendMessage={sendMessage} />}
+        </div>
       )}
       <div className={css.tournamentBody}>
         <TournamentHeader />

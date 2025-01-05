@@ -66,8 +66,6 @@ class MultiGame(models.Model):
         self.save()
 
     def end_game(self, winner, p1_score, p2_score, p3_score, p4_score):
-        print(
-            f"\033[31m---------------Multi Game: {self.id} ended -------------------\033[0m]")
 
         self.winner = self.player1 if winner == 1 else self.player2 if winner == 2 \
             else self.player3 if winner == 3 else self.player4
@@ -82,7 +80,7 @@ class MultiGame(models.Model):
     def update_stats(self):
 
         for player in [self.player1, self.player2, self.player3, self.player4]:
-            # Initialize stats
+            # initialize stats
             if 'wins' not in player.profile.stats:
                 player.profile.stats['wins'] = 0
             if 'losses' not in player.profile.stats:

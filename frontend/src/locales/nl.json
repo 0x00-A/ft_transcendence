@@ -24,6 +24,7 @@
     "requestAccepted": "heeft je vriendschapsverzoek geaccepteerd!",
     "newMessage": " heeft je een bericht gestuurd.",
     "gameInvite": "Speluitnodiging van",
+    "TournamentInvite": "Toernooi-uitnodiging van",
     "inviteReject": "De uitnodiging is verlopen of afgewezen.",
     "gameAddress": "Spel succesvol aangemaakt"
   },
@@ -195,9 +196,15 @@
   },
   "notifications": {
     "title": "Meldingen",
-    "clearAll": "Alles wissen"
+    "clearAll": "Alles wissen",
+    "loadMore": "Meer tonen",
+    "loading": "Laden..."
   },
   "game": {
+    "toasts": {
+      "GameNotStarted": "Sorry, de andere speler heeft zich niet bij het spel gevoegd.",
+      "MultiGameNotStarted": "Sorry, een speler heeft het spel niet gehaald."
+    },
     "gameArea": "GA!",
     "localGame": {
       "title": "Lokaal spel",
@@ -268,6 +275,13 @@
         "leaveConfirmationDescription": "Weet je zeker dat je het toernooi wilt verlaten? Deze actie kan niet ongedaan worden gemaakt en kan resulteren in het afbreken van het toernooi.",
         "stayButton": "Blijven",
         "leaveButton": "Verlaat toernooi"
+      },
+      "InviteFriendsButton": {
+        "InviteFriends": "Vrienden uitnodigen",
+        "InviteButton": "Uitnodigen",
+        "toasts": {
+          "InviteSent": "Uitnodiging verzonden"
+        }
       },
       "sparkleEffect": {
         "cancel": "Annuleren...",

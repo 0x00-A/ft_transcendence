@@ -5,6 +5,7 @@ import { API_GET_DASHBOARD_LEADERBOARD_URL } from '@/api/apiConfig';
 // Types
 import { LeaderBoard } from '@/types/apiTypes';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const Leaderboard = () => {
   const {
@@ -13,6 +14,8 @@ const Leaderboard = () => {
     error,
   } = useGetData<LeaderBoard[]>(API_GET_DASHBOARD_LEADERBOARD_URL);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
 
   return (
     <>
@@ -64,7 +67,7 @@ const Leaderboard = () => {
             leaderboardData &&
             leaderboardData.length > 0 &&
             leaderboardData.map((player: LeaderBoard, index: number) => (
-              <div className={css.tableRow} key={index}>
+              <div className={css.tableRow} key={index} onClick={() => navigate(`/profile/${player.username}`)}>
                 <span>{player.rank}</span>
                 <span className={css.player}>
                   <img

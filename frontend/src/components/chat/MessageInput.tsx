@@ -141,6 +141,7 @@ const MessageInput = ({
   const handleBlock = async (activeConversation: conversationProps) => {
     if (user?.id !== undefined) {
       toggleBlockStatus(activeConversation.id, user.id, activeConversation.user_id, false);
+
     }
   };
 
