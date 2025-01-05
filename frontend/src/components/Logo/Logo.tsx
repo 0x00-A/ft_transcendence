@@ -22,7 +22,7 @@ function Logo({ style }: LogoProps) {
   return (
     <img
       className={style}
-      src={isLargeScreen ? "/logo/logo.png" : "/logo/logoLarge.png"}
+      src={isLargeScreen ? "/logo/ft_pong.png" : "/logo/ft-pongLarge.png"}
       alt="logo"
     />
   );
