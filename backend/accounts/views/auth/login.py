@@ -69,9 +69,11 @@ class RequestResetPasswordView(APIView):
         if 'username' not in request.data:
             return Response({'error': 'Invalid data, username required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            user = User.active.get(username=request.data['username'])
+            user = User.objects.get(username=request.data['username'])
             if not user.has_usable_password():
                 return Response({'error': f'Cannot reset password, you can log in using your {user.oauth2_provider}'}, status=status.HTTP_400_BAD_REQUEST)
+            if not user.is_active:
+                return Response({'error': 'User is not active'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         try:
@@ -95,7 +97,8 @@ class ResetPasswordView(APIView):
         serializer.is_valid(raise_exception=True)
         try:
             token = PasswordReset.objects.get(token=serializer.validated_data['token'])
-            serializer.update(token.user, serializer.validated_data)
+            user = token.user
+            serializer.update(user, serializer.validated_data)
             token.delete()
             return Response({'message': 'Password reseted succeffuly'}, status=status.HTTP_200_OK)
         except Exception as e:

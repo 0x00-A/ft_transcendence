@@ -23,6 +23,7 @@ class ProfileSerializer(serializers.ModelSerializer):
                   'rank', 'badge', 'stats', 'is_online', 'blocked_user_name', 'preferred_language']
 
     def get_avatar(self, obj):
+        print(F'------------>>> {SERVER_URL}{obj.avatar.url}<<----------------')
         return SERVER_URL + obj.avatar.url
 
     def get_username(self, obj):

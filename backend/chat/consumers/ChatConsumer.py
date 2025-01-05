@@ -30,7 +30,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def update_open_chat_status(self, user_id, status):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         user.open_chat = status
         user.save()
 
@@ -132,13 +132,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def set_active_conversation(self, user_id, conversation_id):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         user.active_conversation = conversation_id
         user.save()
 
     @sync_to_async
     def dis_active_conversation(self, user_id, conversation_id):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         if user.active_conversation != -1:
             return
         user.active_conversation = conversation_id
@@ -151,7 +151,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def get_user_open_chat_status(self, user_id):
-        user = User.active.get(id=user_id)
+        user = User.objects.get(id=user_id)
         return user.open_chat
 
     @sync_to_async
@@ -165,7 +165,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             try:
                 translated_message = translate_text(
                     f"{sender_user.username} sent you a message: ", target_language)
-                translated_title = translate_text("New Message", target_language)
+                translated_title = translate_text(
+                    "New Message", target_language)
             except Exception as e:
                 translated_message = f"{sender_user.username} sent you a message: "
                 translated_title = "New Message"
@@ -206,7 +207,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             conversation = await self.get_or_create_conversation(sender_id, receiver_id)
 
             if await self.is_conversation_blocked(conversation, sender_id):
-                raise ValueError("Cannot send message. Conversation is blocked.")
+                raise ValueError(
+                    "Cannot send message. Conversation is blocked.")
 
             saved_conversation = await self.save_message(sender_id, receiver_id, message)
 
@@ -245,11 +247,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             is_open_chat = await self.get_user_open_chat_status(receiver_id)
             if not is_open_chat:
                 asyncio.create_task(
-                    self.send_notification_to_receiver(receiver_id, sender_id, message)
+                    self.send_notification_to_receiver(
+                        receiver_id, sender_id, message)
                 )
         except Exception as e:
             print(f"Notification error: {str(e)}")
-
 
     async def get_or_create_conversation(self, sender_id, receiver_id):
         return await sync_to_async(Conversation.objects.get)(
@@ -260,7 +262,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def is_conversation_blocked(self, conversation, sender_id):
         conversation = await sync_to_async(Conversation.objects.get)(id=conversation.id)
 
-        if conversation.user1_block_status == "blocker" or  conversation.user1_block_status == "blocked":
+        if conversation.user1_block_status == "blocker" or conversation.user1_block_status == "blocked":
             return True
         if conversation.user2_block_status == "blocker" or conversation.user2_block_status == "blocker":
             return True
@@ -315,8 +317,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def save_message(self, sender_id, receiver_id, message):
-        sender = User.active.get(id=sender_id)
-        receiver = User.active.get(id=receiver_id)
+        sender = User.objects.get(id=sender_id)
+        receiver = User.objects.get(id=receiver_id)
 
         conversation = Conversation.objects.get(
             user1=min(sender, receiver, key=lambda user: user.id),

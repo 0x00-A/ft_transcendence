@@ -49,6 +49,9 @@ const Login = () => {
       setIsLoggedIn(true);
       navigate('/');
     }
+    return () => {
+      loadingBarRef.current?.complete();
+    }
   }, [mutation.isSuccess])
 
   useEffect(() => {

@@ -42,7 +42,7 @@ class LastGamesView(APIView):
 
     def get(self, request, username):
         try:
-            user = User.active.get(username=username)
+            user = User.objects.get(username=username)
             last_games = (Game.objects.filter(player1=user) | Game.objects.filter(player2=user)).order_by('-start_time')[:5]
             serializer = ProfileGamesSerializer(last_games, many=True, context={'request': request, 'user': user})
             return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -5,6 +5,13 @@ import App from "./App.tsx";
 import "./index.css";
 import './config/i18n.config.ts';
 
+// const originalConsoleError = console.error;
+
+// console.error = (...args) => {
+//   console.log("-->> Stack trace for console.error:", new Error().stack);
+//   originalConsoleError.apply(console, args);
+// };
+
 
 const queryClient = new QueryClient();
   // defaultOptions: {

@@ -45,7 +45,7 @@ class CreateConversationView(APIView):
             return Response({"error": "user2_id is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user2 = User.active.get(id=user2_id)
+            user2 = User.objects.get(id=user2_id)
 
             conversation, created = Conversation.objects.get_or_create(
                 user1=min(user1, user2, key=lambda u: u.id),

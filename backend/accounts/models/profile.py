@@ -31,7 +31,6 @@ class Profile(models.Model):
     # def delete(self, *args, **kwargs):
     #     if self.avatar:
     #         if os.path.isfile(self.avatar.path):
-    #             print('-------deleting avatar file--------')
     #             os.remove(self.avatar.path)
     #     super().delete(*args, **kwargs)
 

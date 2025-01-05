@@ -20,7 +20,7 @@ class LoginVerifyOTPView(APIView):
         if 'username' not in request.data:
             return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            user = User.active.get(username=request.data['username'])
+            user = User.objects.get(username=request.data['username'])
         except User.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         if not user.is2fa_active:

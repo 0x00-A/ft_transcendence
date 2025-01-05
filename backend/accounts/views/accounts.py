@@ -37,7 +37,7 @@ class UserProfileView(APIView):
         if username == request.user.username:
             return Response({'status': 'me'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            user = User.active.get(username=username)
+            user = User.objects.get(username=username)
             serializer = OtherUserSerializer(user, context={'request': request})
             if serializer.data['friend_status'] == 'Blocker':
                 return Response(
@@ -65,7 +65,7 @@ class GetProfileAchievementsView(APIView):
 
     def get(self, request, username):
         try:
-            user = User.active.get(username=username)
+            user = User.objects.get(username=username)
             achievements = UserAchievement.objects.filter(user=user).order_by('-is_unlocked', 'achievement__reward_points')
             serializer = UserAchievementsSerializer(achievements, many=True, context={'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
