@@ -19,11 +19,11 @@ import { getData } from '@/api/apiClient';
 const UsersProfile = () => {
 
   const { username } = useParams();
-  if (!username || username === undefined) return null;
-  // const { user, isLoading } = useUser();
+  // if (!username || username === undefined) return null;
+
   const { data : user, isLoading, refetch, isError, error } = useQuery({
     queryKey: [API_GET_PROFILE_URL, username],
-    queryFn: () => getData<OtherUser>(`${API_GET_PROFILE_URL}${username}`),
+    queryFn: () => getData<OtherUser>(`${API_GET_PROFILE_URL}${username}/`),
     retry: 0,
     // staleTime: 5000,
     // refetchOnWindowFocus: true,
