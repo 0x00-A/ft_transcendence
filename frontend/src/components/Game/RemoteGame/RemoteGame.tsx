@@ -78,7 +78,7 @@ const RemoteGame: React.FC<GameProps> = ({
   useEffect(() => {
     SwitchSound(true);
     hitWallSound.current.preload = 'auto';
-    hitWallSound.current.load(); // Preload the audio into the browser's memory
+    hitWallSound.current.load(); // preload the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
     paddleHitSound.current.load();
   }, [sound]);
@@ -86,12 +86,11 @@ const RemoteGame: React.FC<GameProps> = ({
   useEffect(() => {
     const f = (gameState: GameState) => {
       if (gameState !== 'started') {
-        toast.info("Sorry the other player didn't make it");
+        toast.info(t("game.toasts.GameNotStarted"));
         if (
           ws.current &&
           ws.current.readyState === WebSocket.OPEN
         ) {
-          ws.current.send(JSON.stringify({ type: 'player_left' }));
           ws.current.close();
         }
         handleMainMenu();

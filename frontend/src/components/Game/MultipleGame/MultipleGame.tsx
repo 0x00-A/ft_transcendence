@@ -26,14 +26,12 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   const [gameState, setGameState] = useState<GameState>('started');
   const [restart, setRestart] = useState(false);
   const { t } = useTranslation();
-  // const [player, setPlayer] = useState<string>('');
 
   const [currentScreen, setCurrentScreen] = useState<GameScreens>('game');
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
   const [sound, SwitchSound] = useState(true);
   const [countEnded, setCountEnded] = useState(false);
-  // const [count, setCount] = useState(3);
 
   //pong
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -93,10 +91,10 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
   });
 
   useEffect(() => {
-    SwitchSound(true)
+    SwitchSound(true) // unused
 
     hitWallSound.current.preload = 'auto';
-    hitWallSound.current.load(); // Preload the audio into the browser's memory
+    hitWallSound.current.load(); // preload the audio into the browser's memory
     paddleHitSound.current.preload = 'auto';
     paddleHitSound.current.load();
   }, []);
@@ -105,7 +103,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
     const f = (gameState: GameState) => {
       if (gameState !== 'started')
       {
-        toast.info("Sorry some player didn't make it to the game.");
+        toast.info(t("game.toasts.MultiGameNotStarted"));
         ws?.current?.close();
         handleMainMenu();
       }
@@ -194,7 +192,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
           }
         }
         if (data.type === 'game_countdown') {
-          console.log(data);
           setCountEnded(true);
         }
       };
@@ -207,7 +204,7 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
     return () => {
       if (ws.current) {
-        console.log('Closing multi game websocket ....');
+        // console.log('Closing multi game websocket ....');
         ws.current.close();
       }
     };
@@ -253,27 +250,27 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       ctx.lineTo(0, cornerSize);
       ctx.fill();
 
-      // Top-right corner
+      // top-right corner
       ctx.beginPath();
       ctx.moveTo(canvas.width, 0);
       ctx.lineTo(canvas.width - cornerSize, 0);
       ctx.lineTo(canvas.width, cornerSize);
       ctx.fill();
 
-      // Bottom-left corner
+      // bottom-left corner
       ctx.beginPath();
       ctx.moveTo(0, canvas.height);
       ctx.lineTo(cornerSize, canvas.height);
       ctx.lineTo(0, canvas.height - cornerSize);
       ctx.fill();
 
-      // Bottom-right corner
+      // bottom-right corner
       ctx.beginPath();
       ctx.moveTo(canvas.width, canvas.height);
       ctx.lineTo(canvas.width - cornerSize, canvas.height);
       ctx.lineTo(canvas.width, canvas.height - cornerSize);
       ctx.fill();
-      // Draw Bal
+      // ball
       ctx.fillStyle = ball.color;
       ctx.beginPath();
       ctx.arc(
@@ -285,22 +282,22 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
       );
       ctx.fill()
       ctx.closePath()
-      // Paddle 1
+      // paddle 1
       if (!lost.current[0]) {
         ctx.fillStyle = colors.current[0];
         ctx.fillRect(paddle1.x, paddle1.y, paddle1.w, paddle1.h);
       }
-      // Paddle 2
+      // paddle 2
       if (!lost.current[1]) {
         ctx.fillStyle = colors.current[1];
         ctx.fillRect(paddle2.x, paddle2.y, paddle2.w, paddle2.h);
       }
-      // Paddle 3
+      // paddle 3
       if (!lost.current[2]) {
         ctx.fillStyle = colors.current[2];
         ctx.fillRect(paddle3.x, paddle3.y, paddle3.w, paddle3.h);
       }
-      // Paddle 4
+      // paddle 4
       if (!lost.current[3]) {
         ctx.fillStyle = colors.current[3];
         ctx.fillRect(paddle4.x, paddle4.y, paddle4.w, paddle4.h);
@@ -356,7 +353,6 @@ const MultipleGame: React.FC<GameProps> = ({ game_address,requestMultipleGame=()
 
   return (
     <div className={css.container}>
-      {/* <div className="relative w-[750px]"> */}
       {/* Top Score */}
 
       {player2_id ? (

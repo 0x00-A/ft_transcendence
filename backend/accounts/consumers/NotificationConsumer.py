@@ -27,8 +27,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         # print('------------Notification Consumer Connected------------')
 
         if user.is_authenticated:
-            print(
-                f"==> {user.username} is connected to the websocket NotificationConsumer")
             await self.accept()
             self.username = user.username
             self.id = user.id
@@ -69,7 +67,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         event = data['event']
-        print(f'Notication Websocket Message Recieved: {event}')
         if event == 'game_invite':
             await self.handle_invite(self.username, data.get('to'))
         if event == 'invite_accept':
@@ -108,23 +105,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             }
             await self.send_message(recipient, message)
             return
-        # player1_id = await self.get_user_id(sender)
-        # player2_id = await self.get_user_id(sender)
 
-        # if player1_id and player2_id:
         print(f"creating game... p1: {sender} | p2: {recipient}")
-        # Store the game in your database (using Django ORM models)
-        # User = get_user_model()
         p1 = await User.active.aget(username=sender)
         p2 = await User.active.aget(username=recipient)
         game = await Game.objects.acreate(
             player1=p1, player2=p2
         )
         game_address = f"game/game_{game.id}"
-        # Simulate game creation with game_id and address
-        # game_id = await cls.get_new_game_id()
-
-        # Send the game address to both players
         message = {
             'event': 'game_address',
             'message': 'toast.gameAddress',
@@ -143,7 +131,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
                 return False
             if await Game.objects.filter(
                 (Q(player1=user_id) | Q(player2=user_id)) & Q(
-                    status="started")
+                    status="started") & Q(players_connected=True)
             ).aexists():
                 return True
             return False
@@ -227,14 +215,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         channel_name = connected_users.get(
             username)
 
-        # profile = await sync_to_async(lambda: self.user.profile)()
-        target_language = await sync_to_async(lambda: self.scope['user'].profile.preferred_language or 'en')()
-        try:
-            message_text = message['message']
-            message['message'] = translate_text(message_text, target_language)
-        except Exception as e:
-            print(f"Translation failed: {e}")
-
         if channel_name:
             await channel_layer.send(
                 channel_name,
@@ -274,6 +254,13 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def user_message(self, event):
         message = event["message"]
 
+        target_language = await sync_to_async(lambda: self.scope['user'].profile.preferred_language or 'en')()
+        try:
+            message_text = message['message']
+            message['message'] = translate_text(message_text, target_language)
+        except Exception as e:
+            print(f"Translation failed: {e}")
+
         await self.send(text_data=json.dumps(message))
 
     async def user_notification(self, event):
@@ -282,11 +269,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'event': 'notification',
             'data': message
         }))
-
-    async def user_message(self, event):
-        message = event["message"]
-        # print(f"Sending Message: {event["message"]}")
-        await self.send(text_data=json.dumps(message))
 
     async def get_user_id(self, username):
         try:

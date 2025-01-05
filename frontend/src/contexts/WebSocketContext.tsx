@@ -268,6 +268,12 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.info(t(`${data.message}`));
         acceptInvite(data.game_address, data.p1_id, data.p2_id);
       }
+      if (data.event === 'opponent_ready') {
+        toast.info(data.message);
+      }
+      if (data.event === 'opponent_unready') {
+        toast.info(data.message);
+      }
     };
 
     ws.current.onclose = () => {};
