@@ -232,45 +232,48 @@ def remove_game(game_id):
     #     del connected_players[game_id]
 
 
+lock = asyncio.Lock()
+
+
 class GameConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        # global connected_players
         user = self.scope['user']
         self.game_id = None
 
-        # print(f"connected: {connected_players}")
         if user.is_authenticated:
             await self.accept()
             self.game_id = self.scope['url_route']['kwargs']['game_id']
-            # if len(connected_players[self.game_id]) >= 2 or user.id in connected_players[self.game_id]:
-            #     await self.send(text_data=json.dumps(
-            #         {
-            #             'type': 'go_home',
-            #         }
-            #     ))
-            #     self.close()
-            #     return
-            # connected_players[self.game_id].add(user.id)
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
-            if not get_game(self.game_id):
-                create_game(self.game_id)
-                await self.set_player_id_name()
-            else:
-                await self.set_player_id_name()
-                await self.send_countdown_to_clients()
-                await self.broadcast_initial_state()
-                # await self.set_game_started()
-                # Start the game loop
-                if await Game.objects.filter(game_id=self.game_id).aexists():
-                    await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
-                elif await Match.objects.filter(match_id=self.game_id).aexists():
-                    await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
-                # match.status = 'started'
-                # match.start_time = timezone.now()
-                # await match.asave()
-                asyncio.create_task(self.start_game(self.game_id))
+            # if not get_game(self.game_id):
+            #     create_game(self.game_id)
+            #     await self.set_player_id_name()
+            # else:
+            #     await self.set_player_id_name()
+            #     await self.send_countdown_to_clients()
+            #     await self.broadcast_initial_state()
+
+            #     if await Game.objects.filter(game_id=self.game_id).aexists():
+            #         await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+            #     elif await Match.objects.filter(match_id=self.game_id).aexists():
+            #         await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
+            #     asyncio.create_task(self.start_game(self.game_id))
+            async with lock:
+                if not get_game(self.game_id):
+                    create_game(self.game_id)
+                    await self.set_player_id_name()
+                else:
+                    await self.set_player_id_name()
+                    await self.send_countdown_to_clients()
+                    await self.broadcast_initial_state()
+
+                    if await Game.objects.filter(game_id=self.game_id).aexists():
+                        await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+                    elif await Match.objects.filter(match_id=self.game_id).aexists():
+                        await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
+
+                    asyncio.create_task(self.start_game(self.game_id))
         else:
             await self.close()
 
