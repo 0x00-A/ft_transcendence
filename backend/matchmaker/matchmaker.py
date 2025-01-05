@@ -3,18 +3,10 @@ from accounts.models import Profile, User
 from accounts.utils.translate_text import translate_text
 from .models import Game, Tournament, Match, MultiGame
 from asgiref.sync import sync_to_async
-from channels.layers import get_channel_layer
-from datetime import datetime
-from django.utils import timezone
-from django.utils.timezone import now
 import asyncio
 
 
-import json
 from django.db.models import Q
-from django.contrib.auth import get_user_model
-
-from collections import defaultdict
 
 
 class Matchmaker:
@@ -417,24 +409,27 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_unready(cls, player_id):
+        from accounts.consumers import NotificationConsumer
         try:
             match = await sync_to_async(Match.objects.get)(
                 (Q(player1_id=player_id) | Q(
                     player2_id=player_id)) & Q(status='waiting')
             )
-            if match.player1_id == player_id:
+            if match.player1_id == player_id and match.player1_ready:
                 match.player1_ready = False
                 message = {
                     'event': 'opponent_unready',
                     "message": "Your oponent is not ready!",
                 }
+                await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player2_id, message)
                 await cls.send_message_to_client(match.player2_id, message)
-            elif match.player2_id == player_id:
+            elif match.player2_id == player_id and match.player2_ready:
                 match.player2_ready = False
                 message = {
                     'event': 'opponent_unready',
                     "message": "Your oponent is not ready!",
                 }
+                await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player1_id, message)
                 await cls.send_message_to_client(match.player1_id, message)
 
             await sync_to_async(match.save)()
@@ -443,14 +438,20 @@ class Matchmaker:
 
     @classmethod
     async def handle_player_ready(cls, player_id, match_id):
+        from accounts.consumers import NotificationConsumer
+        print(f"\033[033mMatch_id = {match_id}\033[0m")
         match = await Match.objects.aget(match_id=match_id)
 
+        if not match:
+            print(f"\033[033mMatch does not exist\033[0m")
+            return
         if match.player1_id == player_id:
             match.player1_ready = True
             message = {
                 'event': 'opponent_ready',
                 "message": "Your oponent is ready!",
             }
+            await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player2_id, message)
             await cls.send_message_to_client(match.player2_id, message)
         elif match.player2_id == player_id:
             match.player2_ready = True
@@ -458,6 +459,7 @@ class Matchmaker:
                 'event': 'opponent_ready',
                 "message": "Your oponent is ready!",
             }
+            await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player1_id, message)
             await cls.send_message_to_client(match.player1_id, message)
 
         await sync_to_async(match.save)()
@@ -491,10 +493,18 @@ class Matchmaker:
         from accounts.consumers import NotificationConsumer
 
         reciever = await User.active.aget(username=to)
-        message = {
-            "event": "tournament_invite",
-            "from": sender,
-            "tournamentId": tournament_id,
-        }
+        if reciever:
+            if await Tournament.objects.filter(Q(id=tournament_id) & Q(players__id=reciever.id)).aexists():
+                await cls.send_message_to_client(player_id, {
+                    'event': 'error',
+                    'message': 'User already in tournament!'
+                })
+                return
 
-        await sync_to_async(NotificationConsumer.send_notification_to_user)(reciever.id, message)
+            message = {
+                "event": "tournament_invite",
+                "from": sender,
+                "tournamentId": tournament_id,
+            }
+
+            await sync_to_async(NotificationConsumer.send_notification_to_user)(reciever.id, message)

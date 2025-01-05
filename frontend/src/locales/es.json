@@ -200,6 +200,10 @@
       "clearAll": "Limpiar todo"
   },
   "game": {
+      "toasts": {
+          "GameNotStarted": "Lo siento, el otro jugador no se unió al juego.",
+          "MultiGameNotStarted": "Lo siento, algún jugador no llegó al juego."
+      },
       "gameArea": "IR!",
       "localGame": {
           "title": "Juego Local",

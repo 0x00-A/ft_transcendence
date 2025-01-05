@@ -237,9 +237,11 @@ const Game = () => {
         }
         if (data.event === 'opponent_ready') {
           setOpponentReady(true);
+          // toast.info(data.message);
         }
         if (data.event === 'opponent_unready') {
           setOpponentReady(false);
+          // toast.info(data.message);
         }
       };
       socket.onclose = () => {

@@ -199,6 +199,10 @@
     "clearAll": "Alles wissen"
   },
   "game": {
+    "toasts": {
+      "GameNotStarted": "Sorry, de andere speler heeft zich niet bij het spel gevoegd.",
+      "MultiGameNotStarted": "Sorry, een speler heeft het spel niet gehaald."
+    },
     "gameArea": "GA!",
     "localGame": {
       "title": "Lokaal spel",

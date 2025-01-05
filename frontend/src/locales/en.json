@@ -1,5 +1,5 @@
 {
-    "showMyProfile": "My Profile",
+  "showMyProfile": "My Profile",
   "editEmail": {
       "btnEdit": "Edit",
       "editEmail": "Edit Your Email",
@@ -199,6 +199,10 @@
       "clearAll": "Clear All"
   },
   "game": {
+      "toasts": {
+            "GameNotStarted": "Sorry the other player didn't join the game.",
+            "MultiGameNotStarted": "Sorry some player didn't join the game."
+      },
       "gameArea": "GO!",
       "localGame": {
           "title": "Local Game",
