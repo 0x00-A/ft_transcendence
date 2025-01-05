@@ -63,7 +63,7 @@ const LastMatch = ({username}:{username:string | undefined}) => {
                                     )}
                                 </div>
                                 <div className={css.points}>
-                                    <span> + {match.xp_gained}</span>  pts
+                                    <span>+{match.xp_gained}</span> {t('dashboard.LastMatch.pts')}
                                 </div>
                             </div>
                         </div>
