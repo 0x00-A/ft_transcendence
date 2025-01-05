@@ -244,7 +244,7 @@ class Matchmaker:
 
     @classmethod
     async def send_message_to_client(cls, player_id, message):
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.2)
         # channel_layer = get_channel_layer()
         consumer = cls.connected_clients.get(player_id)
         if consumer:

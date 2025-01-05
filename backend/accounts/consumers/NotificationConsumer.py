@@ -6,6 +6,7 @@ from asgiref.sync import async_to_sync
 
 from accounts.models import User
 from accounts.models import Notification
+from accounts.utils.translate_text import translate_text
 from matchmaker.models import Tournament
 from matchmaker.models.game import Game
 from matchmaker.matchmaker import Matchmaker
@@ -225,6 +226,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         channel_layer = get_channel_layer()
         channel_name = connected_users.get(
             username)
+
+        # profile = await sync_to_async(lambda: self.user.profile)()
+        target_language = await sync_to_async(lambda: self.scope['user'].profile.preferred_language or 'en')()
+        try:
+            message_text = message['message']
+            message['message'] = translate_text(message_text, target_language)
+        except Exception as e:
+            print(f"Translation failed: {e}")
 
         if channel_name:
             await channel_layer.send(
