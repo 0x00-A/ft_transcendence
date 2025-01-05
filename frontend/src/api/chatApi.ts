@@ -43,7 +43,6 @@ export const apiGetConversations = async () => {
       if (error.response && error.response.data && error.response.data.error) {
         throw new Error(error.response.data.error);
       }
-      throw new Error('An error occurred while fetching conversations.');
     }
   };
   

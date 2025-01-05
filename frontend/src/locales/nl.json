@@ -196,7 +196,9 @@
   },
   "notifications": {
     "title": "Meldingen",
-    "clearAll": "Alles wissen"
+    "clearAll": "Alles wissen",
+    "loadMore": "Meer tonen",
+    "loading": "Laden..."
   },
   "game": {
     "toasts": {

@@ -14,6 +14,7 @@ import { CircleX, CheckCheck, User, Ban, Search, ChevronLeft } from 'lucide-reac
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 interface FriendProfile {
   avatar: string;
@@ -79,7 +80,7 @@ const MessageList = () => {
             refetch();
           }
       } catch (error: any) {
-          console.log('An error occurred while fetching conversations.');
+          toast.error(error.response.data.error)
         }
       }
     };

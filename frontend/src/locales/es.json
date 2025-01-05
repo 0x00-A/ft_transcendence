@@ -197,7 +197,9 @@
   },
   "notifications": {
       "title": "Notificaciones",
-      "clearAll": "Limpiar todo"
+      "clearAll": "Limpiar todo",
+      "loadMore": "Ver más",
+      "loading": "Cargando..."
   },
   "game": {
       "toasts": {
