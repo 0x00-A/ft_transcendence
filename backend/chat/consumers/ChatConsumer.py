@@ -8,7 +8,6 @@ from accounts.models import Notification
 from accounts.consumers import NotificationConsumer
 import asyncio
 
-
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
@@ -50,19 +49,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
             elif action == "toggle_block_status":
                 await self.handle_block_status(data)
         except Exception as e:
-            # print(f"Error handling action {action}: {str(e)}")
+            target_language = await sync_to_async(
+                lambda: self.user.profile.preferred_language or 'en'
+            )()
+            try:
+                translated_message = translate_text(str(e), target_language)
+            except Exception:
+                translated_message = str(e)
+
             await self.send(text_data=json.dumps({
                 "type": "error",
-                "message": str(e)
+                "message": translated_message
             }))
-
     async def handle_block_status(self, data):
         conversation_id = data.get("conversation_id")
         blocker_id = data.get("blocker_id")
         blocked_id = data.get("blocked_id")
         status = data.get("status")
 
-        if not all([conversation_id, blocker_id, blocked_id]):
+        if not all([conversation_id, blocker_id, blocked_id, status]):
             raise ValueError("Missing required block status parameters")
 
         await self.toggle_block_status(conversation_id, blocker_id, blocked_id, status)
@@ -146,6 +151,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def update_active_conversation(self, data):
         conversation_id = data.get("conversation_id")
+
+        if not all([conversation_id]):
+            raise ValueError("Missing required active conversation parameters")
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
 
@@ -197,9 +205,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data.get("message")
         receiver_id = data.get("receiver_id")
         sender_id = self.user.id
-
-        if not receiver_id or not message:
-            return
+        
+        if not all([receiver_id, message]):
+            raise ValueError("Missing required send message parameters")
 
         message = message[:300]
 
@@ -234,9 +242,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
             await self.handle_notification(receiver_id, sender_id, message)
         except Exception as e:
+            target_language = await sync_to_async(
+                lambda: self.user.profile.preferred_language or 'en'
+            )()
+            try:
+                translated_message = translate_text(str(e), target_language)
+            except Exception:
+                translated_message = str(e)
             await self.send(text_data=json.dumps({
                 "type": "error",
-                "message": str(e)
+                "message": translated_message
             }))
 
     async def handle_notification(self, receiver_id, sender_id, message):
@@ -269,12 +284,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return False
 
     async def handle_typing_status(self, data):
-        typing = data.get("typing", False)
+        typing = data.get("typing")
         receiver_id = data.get("receiver_id")
         sender_id = self.user.id
 
-        if not receiver_id:
-            return
+        if not all([receiver_id]):
+            raise ValueError("Missing required typing status parameters")
 
         await self.channel_layer.group_send(
             f"user_{receiver_id}",
@@ -287,9 +302,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def handle_mark_as_read(self, data):
         conversation_id = data.get("conversation_id")
-
-        if not conversation_id:
-            return
+        
+        if not all([conversation_id]):
+            raise ValueError("Missing required conversation_id parameters")
 
         await self.mark_conversation_as_read(conversation_id, self.user)
 

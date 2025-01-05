@@ -41,8 +41,9 @@ export interface Notification {
 
 export interface WebSocketContextType {
   notifications: Notification[];
+  paginationInfo: string;
   sendMessage: (message: Record<string, any>) => void;
-  fetchNotifications: () => Promise<void>;
+  fetchNotifications: (page: number, state: boolean) => Promise<void>;
   markAsRead: (notificationId: number) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   deleteAllNotifications: () => Promise<void>;
@@ -62,22 +63,36 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const { isLoggedIn } = useAuth();
   const { t } = useTranslation();
+  const [paginationInfo, setPaginationInfo] = useState<string>('');
 
-  const fetchNotifications = async () => {
+
+  const fetchNotifications = async (page: number = 1, state: boolean = true) => {
     try {
-      // const { data } = await apiClient.get('/notifications/');
-      const data : Notification[] = []
-      setNotifications(data);
-      // console.log('notification data: ', data);
-      setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
+      const { data } = await apiClient.get(`/notifications/?page=${page}`);
+
+      const { results, next } = data;
+
+      if (state)
+        setNotifications(results);
+      else {
+        setNotifications((prevNotifications) => [
+          ...prevNotifications,
+          ...results,
+        ]);
+      }
+
+      setUnreadCount(results.filter((n: Notification) => !n.is_read).length);
+      setPaginationInfo(next);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
   };
 
+
   const markAsRead = async (notificationId: number) => {
     try {
       await apiClient.patch(`/notifications/${notificationId}/mark-read/`);
+
       setNotifications((prev) =>
         prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n))
       );
@@ -188,6 +203,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const newMessageToast = (from: string, message: string) => {
+    toast(
+        message,
+      {
+        toastId: from
+      }
+    );
+  };
+
   const handleAcceptInvite = (from: string) => {
     // console.log(`Accepted invite from ${from}`);
     sendMessage({
@@ -238,7 +262,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.success(`${data.from} ${t('toast.requestAccepted')}`);
       }
       if (data.event === 'new_message') {
-        toast(`${data.from} ${t('toast.newMessage')}`);
+        newMessageToast(data.from, `${t('toast.newMessage')}`)
       }
       if (data.event === 'friend_request' || data.event === 'status_update') {
         showFriendRequestToast(data.from);
@@ -300,6 +324,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     <WebSocketContext.Provider
       value={{
         notifications,
+        paginationInfo,
         sendMessage,
         fetchNotifications,
         markAllAsRead,

@@ -196,7 +196,9 @@
   },
   "notifications": {
       "title": "Notifications",
-      "clearAll": "Clear All"
+      "clearAll": "Clear All",
+      "loadMore": "Show More",
+      "loading": "Loading..."
   },
   "game": {
       "toasts": {
