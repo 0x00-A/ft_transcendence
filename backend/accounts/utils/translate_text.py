@@ -1,19 +1,21 @@
-import requests
-from django.conf import settings
+from googletrans import Translator
 
 
 def translate_text(text, target_language):
-    api_key = settings.API_KEY
-    url = "https://api-free.deepl.com/v2/translate"
-    params = {
-        "auth_key": api_key,
-        "text": text,
-        "target_lang": target_language.upper()
-    }
-    response = requests.post(url, data=params)
+    translator = Translator()
 
-    # print("====== translate ======")
-    if response.status_code == 200:
-        return response.json()["translations"][0]["text"]
-    else:
-        raise Exception(f"Error: {response.status_code}, {response.text}")
+    try:
+        print("-- trans --")
+        if not text:
+            raise ValueError("Invalid input: Text is empty.")
+        
+        translated = translator.translate(text, dest=target_language)
+        if  translated is None or  translated.text is None:
+            raise ValueError("Translation result is empty or None.")
+        print(f"Raw response: {translated.text}")
+        return translated.text
+    except Exception as e:
+        print(f"Error during translation: {str(e)}")
+        print(f"Failed text: {text}")
+        print(f"Target language: {target_language}")
+        return text

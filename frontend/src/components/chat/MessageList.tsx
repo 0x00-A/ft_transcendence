@@ -14,6 +14,7 @@ import { CircleX, CheckCheck, User, Ban, Search, ChevronLeft } from 'lucide-reac
 import ConversationSkeleton from './ConversationSkeleton';
 import SearchFriendsSkeleton from './SearchFriendsSkeleton';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 interface FriendProfile {
   avatar: string;
@@ -46,7 +47,7 @@ const MessageList = () => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { setSelectedConversation, selectedConversation } = useSelectedConversation();
-  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, blockStatusUpdate } = useWebSocketChat();
+  const { lastMessage, updateActiveConversation, markAsReadData, markAsRead, toggleBlockStatus, sendTypingStatus, blockStatusUpdate } = useWebSocketChat();
   const { t } = useTranslation();
 
   const {
@@ -74,11 +75,12 @@ const MessageList = () => {
             const foundConversation = response?.find(
               (convo: conversationProps) => convo.id === selectedConversationId
             );
+            sendTypingStatus(selectedConversation!.user_id, false);
             setSelectedConversation(foundConversation!);
             refetch();
           }
       } catch (error: any) {
-          console.log('An error occurred while fetching conversations.');
+          toast.error(error.response.data.error)
         }
       }
     };
@@ -157,7 +159,7 @@ const MessageList = () => {
         top = buttonRect.bottom - messageListRect.top + 110;
         left = buttonRect.left - messageListRect.left;
       } else {
-        top = buttonRect.top - messageListRect.top - menuHeight + 190;
+        top = buttonRect.top - messageListRect.top - 90;
         left = buttonRect.left - messageListRect.left;
       }
 

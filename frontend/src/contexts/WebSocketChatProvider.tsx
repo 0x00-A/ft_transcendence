@@ -1,7 +1,10 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
+import { toast } from 'react-toastify';
+
+
 
 interface MessageProps {
   id: number;
@@ -64,6 +67,7 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
   const socketRef = useRef<WebSocket | null>(null);
 
 
+
   useEffect(() => {
     const wsUrl = `${getWebSocketUrl(`chat/`)}`;
     const socket = new WebSocket(wsUrl);
@@ -74,9 +78,12 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-      if (data.type === 'chat_message') {
+      if (data.type === 'error') {
+        toast.error(data.message);
+      }
+      else if (data.type === 'chat_message') {
         const newMessage: MessageProps = {
-          id: Date.now(),
+          id: data.id,
           conversation: data.conversation_id,
           sender: data.sender_id,
           receiver: userId,
@@ -164,16 +171,17 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
         setTimeout(sendMarkAsRead, 1000);
       }
     };
-  
     sendMarkAsRead();
   };
 
-  const clearMessages = (() => {
+  const clearMessages = useCallback(() => {
     setMessages([]);
-  });
+  }, []);
+  
 
   const updateActiveConversation = (conversationId: number) => {
     const socket = socketRef.current;
+    clearMessages();
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(
         JSON.stringify({
@@ -181,7 +189,6 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
           conversation_id: conversationId,
         })
       );
-      clearMessages();
     }
   };
 

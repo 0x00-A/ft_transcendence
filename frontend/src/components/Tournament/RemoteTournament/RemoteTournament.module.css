@@ -225,3 +225,10 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.buttonWrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+}

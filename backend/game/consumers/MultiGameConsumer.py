@@ -26,6 +26,7 @@ losing_score: int = 7
 
 ball_raduis: int = 8
 initial_ball_speed = 4
+initial_paddle_speed = 3
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
 
@@ -72,7 +73,7 @@ class GameInstance:
         self.connected_players = 1
         self.is_over = False
         self.winner = 0
-        self.paddle_speed = 4
+        self.paddle_speed = initial_paddle_speed
         self.paddle_width: int = 15
         self.paddle_height: int = 70
         self.corner_size = 10
@@ -112,19 +113,19 @@ class GameInstance:
         self.ball.move()
 
     def reset_ball(self):
-        # Reset ball position to the center of the canvas
+        # reset ball position to the center of the canvas
         self.ball.color = 'white'
         self.ball.x = canvas_width / 2
         self.ball.y = canvas_height / 2
 
         angle = random.uniform(0, 2 * math.pi)
 
-        # Set ball direction based on the angle
+        # ball direction based on the angle
         self.ball.dx = initial_ball_speed * math.cos(angle)
         self.ball.dy = initial_ball_speed * math.sin(angle)
 
-        # Set ball speed
         self.ball.speed = initial_ball_speed
+        self.paddle_speed = initial_paddle_speed
 
     def increment_score(self, player):
         if player == 1:
@@ -163,11 +164,9 @@ class GameInstance:
     def reverse_vertical_direction(self):
         self.increase_ball_speed()
         self.ball.dy = -self.ball.dy
-        # Add slight horizontal angle to prevent direct wall bouncing
-        if abs(self.ball.dx) < 0.2:  # If ball is moving almost vertically
-            # Add a small random horizontal component
+        # add slight horizontal angle to prevent direct wall bouncing
+        if abs(self.ball.dx) < 0.2:
             self.ball.dx += random.uniform(-0.5, 0.5)
-        # Correct the ball position to stay within bounds
         if self.ball.y - self.ball.radius <= 0:
             self.ball.y = self.ball.radius
         else:
@@ -177,10 +176,8 @@ class GameInstance:
         self.increase_ball_speed()
         self.ball.dx = -self.ball.dx
         # Add slight vertical angle to prevent direct wall bouncing
-        if abs(self.ball.dy) < 0.2:  # If ball is moving almost horizontally
-            # Add a small random vertical component
+        if abs(self.ball.dy) < 0.2:
             self.ball.dy += random.uniform(-0.5, 0.5)
-        # Correct the ball position to stay within bounds
         if self.ball.x - self.ball.radius <= 0:
             self.ball.x = self.ball.radius
         else:
@@ -201,7 +198,7 @@ class GameInstance:
     def do_line_segments_intersect(self, x1, y1, x2, y2, x3, y3, x4, y4):
         denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
 
-        # Lines are parallel if the denominator is 0
+        # lines are parallel if the denominator is 0
         if denominator == 0:
             return False
 
@@ -212,7 +209,6 @@ class GameInstance:
 
     def is_colliding_with_paddle(self, paddle):
         if paddle == 'player1_paddle' or paddle == 'player3_paddle':
-            # Previous and current position of the ball
             next_x = self.ball.x + self.ball.dx + \
                 (self.ball.radius if self.ball.dx > 0 else -self.ball.radius)
             next_y = self.ball.y + self.ball.dy
@@ -220,6 +216,8 @@ class GameInstance:
             ball_from_top = self.ball.y < self.state[f"{paddle}_y"]
             ball_from_bottom = self.ball.y > self.state[f"{paddle}_y"] + \
                 self.state[f"{paddle}_h"]
+
+            # this fixed edge collision not detected
             next_y += self.ball.radius if ball_from_top else - \
                 self.ball.radius if ball_from_bottom else 0
         else:
@@ -233,7 +231,7 @@ class GameInstance:
             next_x += self.ball.radius if ball_from_right else - \
                 self.ball.radius if ball_from_left else 0
 
-        # Paddle edges as line segments
+        # paddle edges as line segments
         paddle_left = self.state[f"{paddle}_x"]
         paddle_right = self.state[f"{paddle}_x"] + \
             self.state[f"{paddle}_w"]
@@ -241,7 +239,7 @@ class GameInstance:
         paddle_bottom = self.state[f"{paddle}_y"] + \
             self.state[f"{paddle}_h"]
 
-        # Check for intersection with paddle's vertical sides (left and right)
+        # intersection with left and right
         intersects_left = self.do_line_segments_intersect(
             self.ball.x, self.ball.y, next_x, next_y,
             paddle_left, paddle_top, paddle_left, paddle_bottom
@@ -252,7 +250,7 @@ class GameInstance:
             paddle_right, paddle_top, paddle_right, paddle_bottom
         )
 
-        # Check for intersection with paddle's horizontal sides (top and bottom)
+        # intersection with top and bottom
         intersects_top = self.do_line_segments_intersect(
             self.ball.x, self.ball.y, next_x, next_y,
             paddle_left, paddle_top, paddle_right, paddle_top
@@ -271,7 +269,7 @@ class GameInstance:
     def handle_paddle_collision(self, paddle):
         self.ball.color = self.state[f"{paddle}_color"]
         self.scorer = paddle.split('_')[0]
-        # Check if the ball is hitting the top/bottom or the sides
+
         ball_from_left = self.ball.x < self.state[f"{paddle}_x"]
         ball_from_right = self.ball.x > self.state[f"{paddle}_x"] + \
             self.state[f"{paddle}_w"]
@@ -280,11 +278,11 @@ class GameInstance:
         ball_from_bottom = self.ball.y > self.state[f"{paddle}_y"] + \
             self.state[f"{paddle}_h"]
 
-        # Handle side collision
+        # side collision
         if ball_from_left or ball_from_right:
             self.ball.dx *= -1
 
-        # Handle top/bottom collision
+        # top/bottom collision
         if ball_from_top or ball_from_bottom:
             self.ball.dy *= -1
 
@@ -293,38 +291,36 @@ class GameInstance:
                 self.ball.y - (self.state[f"{paddle}_y"] + self.state[f"{paddle}_h"] / 2)) / (self.state[f"{paddle}_h"] / 2)
             max_bounce_angle = math.pi / 3  # 45 degrees maximum bounce angle
 
-            # Calculate new angle based on relative impact
+            # new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
 
-            # Update ball's velocity (dx, dy) based on the new angle
+            # ball velocity (dx, dy) based on the new angle
             direction = 1 if self.ball.dx > 0 else -1
             self.increase_ball_speed()
             self.ball.dx = direction * self.ball.speed * \
-                math.cos(new_angle)  # Horizontal velocity
+                math.cos(new_angle)
             self.ball.dy = self.ball.speed * \
-                math.sin(new_angle)  # Vertical velocity
+                math.sin(new_angle)
 
-        else:
-            # For horizontal paddle - calculate relative impact based on x position
+        else:  # horizontal paddle
+            # relative impact based on x position
             relative_impact = (
                 self.ball.x - (self.state[f"{paddle}_x"] + self.state[f"{paddle}_w"] / 2)) / (self.state[f"{paddle}_w"] / 2)
             max_bounce_angle = math.pi / 3  # 45 degrees maximum bounce angle
 
-            # Calculate new angle based on relative impact
             new_angle = relative_impact * max_bounce_angle
 
-            # Update ball's velocity (dx, dy) based on the new angle
-            direction = 1 if self.ball.dy > 0 else -1  # Now using dy for direction
+            direction = 1 if self.ball.dy > 0 else -1
             self.increase_ball_speed()
             self.ball.dx = self.ball.speed * \
-                math.sin(new_angle)  # Horizontal velocity
+                math.sin(new_angle)
             self.ball.dy = direction * self.ball.speed * \
-                math.cos(new_angle)  # Vertical velocity
+                math.cos(new_angle)
 
     def check_corner_collision(self):
         next_x = self.ball.x + self.ball.dx
         next_y = self.ball.y + self.ball.dy
-        # Define the corners with their line segments
+        # corners with their line segments
         corners = [
             # Top-left: (0,corner_size) to (corner_size,0)
             {
@@ -354,21 +350,19 @@ class GameInstance:
                 corner['x1'], corner['y1'], corner['x2'], corner['y2']
             ):
                 self.increase_ball_speed()
-                # reverse the direction
+
                 self.ball.dx = -self.ball.dx
                 self.ball.dy = -self.ball.dy
 
-                # add random angle variation (between -30 and 30 degrees)
                 angle = random.uniform(-30, 30) * \
-                    math.pi / 180  # Convert to radians
+                    math.pi / 180
 
-                # Calculate new direction while maintaining speed
+                # new direction while maintaining speed
                 speed = math.sqrt(self.ball.dx * self.ball.dx +
                                   self.ball.dy * self.ball.dy)
                 current_angle = math.atan2(self.ball.dy, self.ball.dx)
                 new_angle = current_angle + angle
 
-                # Update velocity components
                 self.ball.dx = speed * math.cos(new_angle)
                 self.ball.dy = speed * math.sin(new_angle)
 
@@ -378,7 +372,9 @@ class GameInstance:
 
     def increase_ball_speed(self):
         if self.ball.speed < 8:
-            self.ball.speed += 0.1
+
+            self.ball.speed += 0.2
+            self.paddle_speed += 0.1
 
 
 def create_game(game_id):
@@ -393,12 +389,11 @@ def get_game(game_id):
 
 
 def remove_game(game_id):
-    # global connected_players
     if game_id in games:
-        print(f"\033[31mGame {game_id} deleted!\033[0m")
         del games[game_id]
-    # if game_id in connected_players:
-        # del connected_players[game_id]
+
+
+lock = asyncio.Lock()
 
 
 class MultiGameConsumer(AsyncWebsocketConsumer):
@@ -409,33 +404,26 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
 
         if user.is_authenticated:
             await self.accept()
-            # print(f"\033[31mAdding to group: {user.username} !!.\033[0m")
             self.game_id = self.scope['url_route']['kwargs']['game_id']
-            # if len(connected_players[self.game_id]) >= 4 or user.id in connected_players[self.game_id]:
-            #     await self.send(text_data=json.dumps(
-            #         {
-            #             'type': 'go_home',
-            #         }
-            #     ))
-            #     self.close()
-            #     return
-            # connected_players[self.game_id].add(user.id)
+
+            async with lock:
+                if not get_game(self.game_id):
+                    create_game(self.game_id)
+                    await self.set_player_id_name()
+                else:
+                    game: GameInstance = get_game(self.game_id)
+                    game.connected_players += 1
+                    await self.set_player_id_name()
             await self.channel_layer.group_add(self.game_id, self.channel_name)
 
-            if not get_game(self.game_id):
-                create_game(self.game_id)
-                await self.set_player_id_name()
-            else:
-                game: GameInstance = get_game(self.game_id)
-                game.connected_players += 1
-                await self.set_player_id_name()
-                if game.connected_players == 4:
-                    await self.broadcast_initial_state()
-                    await self.send_countdown_to_clients()
-                    await MultiGame.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
-                    asyncio.create_task(self.start_game(self.game_id))
+            game: GameInstance = get_game(self.game_id)
+            if game.connected_players == 4:
+                await self.broadcast_initial_state()
+                await self.send_countdown_to_clients()
+                await MultiGame.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
+                asyncio.create_task(self.start_game(self.game_id))
         else:
-            print(f"\033[31mUser {user.username} not authenticated!\033[0m")
+            print(f"\033[31mMultiGameConsumer: User not authenticated!\033[0m")
             await self.close()
 
     async def disconnect(self, close_code):
@@ -634,7 +622,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
                 await Matchmaker.process_multi_game_result(game_id, game.winner, game.player1_score, game.player2_score, game.player3_score, game.player4_score)
                 break
 
-            await asyncio.sleep(1 / 60)  # 60 FPS
+            await asyncio.sleep(1 / 60)
 
     async def check_collision(self, game: GameInstance):
         if game.check_corner_collision():

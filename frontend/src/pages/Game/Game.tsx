@@ -1,7 +1,7 @@
 import styles from './Game.module.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import TournamentList from '../../components/Tournament/components/TournamentList/TournamentList';
@@ -31,14 +31,14 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-
+import { API_GET_TOURNAMENTS, API_GET_USER_TOURNAMENTS } from '@/api/apiConfig';
 
 const Game = () => {
   const { t } = useTranslation();
   const [hoveredOption, setHoveredOption] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<number | null>(null);
   const [gameState, setGameState] = useState<
-    'startGame' | 'inqueue' | 'startMultiGame' | null
+    'startGame' | 'startMultiGame' | null
   >(null);
   const [gameAdrress, setGameAdrress] = useState<string | null>(null);
   const [player1_id, setPlayer1_id] = useState<number | null>(null);
@@ -52,46 +52,47 @@ const Game = () => {
     null
   );
   const [isSearching, setIsSearching] = useState(false);
-  const [timeoutId, setTimeoutId] = useState< NodeJS.Timeout | null>(null);
+  const [timeoutIds, setTimeoutIds] = useState<NodeJS.Timeout[]>([]);
   const [isConnected, setIsConnected] = useState(true);
   const [reconnectTrigger, setReconnectTrigger] = useState(false);
   const [showTournamentView, setShowTournamentView] = useState(false);
   const [opponentReady, setOpponentReady] = useState(false);
+  const [cancelOptimisticUpdate, setCancelOptimisticUpdate] = useState(true);
   const navigate = useNavigate();
   const ModesList = useMemo(() => {
-      return [
-        {
-          id: 0,
-          title: t('game.localGame.title'),
-          icon: Gamepad2,
-          description: t('game.localGame.description'),
-        },
-        {
-          id: 1,
-          title: t('game.remoteGame.title'),
-          icon: Globe,
-          description: t('game.remoteGame.description'),
-        },
-        {
-          id: 2,
-          title: t('game.remoteTournament.title'),
-          icon: Trophy,
-          description: t('game.remoteTournament.description'),
-        },
-        {
-          id: 3,
-          title: t('game.localTournament.title'),
-          icon: Users,
-          description: t('game.localTournament.description'),
-        },
-        {
-          id: 4,
-          title: t('game.multipleGame.title'),
-          icon: Users,
-          description: t('game.multipleGame.description'),
-        },
-      ]
-  }, [t])
+    return [
+      {
+        id: 0,
+        title: t('game.localGame.title'),
+        icon: Gamepad2,
+        description: t('game.localGame.description'),
+      },
+      {
+        id: 1,
+        title: t('game.remoteGame.title'),
+        icon: Globe,
+        description: t('game.remoteGame.description'),
+      },
+      {
+        id: 2,
+        title: t('game.remoteTournament.title'),
+        icon: Trophy,
+        description: t('game.remoteTournament.description'),
+      },
+      {
+        id: 3,
+        title: t('game.localTournament.title'),
+        icon: Users,
+        description: t('game.localTournament.description'),
+      },
+      {
+        id: 4,
+        title: t('game.multipleGame.title'),
+        icon: Users,
+        description: t('game.multipleGame.description'),
+      },
+    ];
+  }, [t]);
   const {
     gameAccepted,
     gameInvite,
@@ -137,36 +138,49 @@ const Game = () => {
     isLoading: userTournamentsIsLoading,
     error: userTournamentsError,
     refetch: refetchUserTournaments,
-  } = useGetData<TournmentType[]>('matchmaker/tournaments/user-tournaments');
+  } = useGetData<TournmentType[]>(API_GET_USER_TOURNAMENTS);
 
   const {
     data: tournaments,
     isLoading,
     error,
     refetch: refetchTournaments,
-  } = useGetData<TournmentType[]>('matchmaker/tournaments');
+  } = useGetData<TournmentType[]>(API_GET_TOURNAMENTS);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout1: NodeJS.Timeout;
+    let timeout2: NodeJS.Timeout;
     if (isSearching) {
-      timeout = setTimeout(() => {
-        setIsSearching(false);
-        sendMessage({
-          event: 'remove_from_queue',
-        });
-        toast.error("Matchmaking timeout!");
-      }, 10000);
-      setTimeoutId(timeout);
+      timeout1 = setTimeout(() => {
+        cancelMatchmaking();
+        toast.error('Matchmaking timeout!');
+      }, 30000);
+      setTimeoutIds((prev) => [...prev, timeout1]);
+
+      timeout2 = setTimeout(() => {
+        if (cancelOptimisticUpdate) {
+          cancelMatchmaking();
+          toast.error('Matchmaking failed!');
+        }
+      }, 1000);
+      setTimeoutIds((prev) => [...prev, timeout2]);
     }
 
-
     return () => {
-      if (timeout) {
-        clearTimeout(timeout);
+      if (timeout1) {
+        clearTimeout(timeout1);
+      }
+      if (timeout2) {
+        clearTimeout(timeout2);
       }
     };
-  }, [isSearching]);
+  }, [isSearching, cancelOptimisticUpdate]);
 
+  const clearAllTimeouts = () => {
+    timeoutIds.forEach((timeoutId: NodeJS.Timeout) => {
+      if (timeoutId) clearTimeout(timeoutId);
+    });
+  };
 
   useEffect(() => {
     try {
@@ -184,12 +198,12 @@ const Game = () => {
         // console.log(data);
 
         if (data.event === 'error') {
-          cancelMatchmaking()
+          cancelMatchmaking();
           toast.error(data.message);
         }
         if (data.event === 'close_connection') {
           // cancelMatchmaking()
-          navigate('/')
+          navigate('/');
         }
         if (data.event === 'success') {
           toast.success(data.message);
@@ -200,12 +214,12 @@ const Game = () => {
           setPlayer2_id(data.player2_id);
           setMatchStarted(true);
         }
-        // if (data.event === 'in_queue') {
-        //   setGameState('inqueue');
-        // }
+        if (data.event === 'in_queue') {
+          clearAllTimeouts();
+          setCancelOptimisticUpdate(false);
+        }
         if (data.event === 'game_address') {
-          if (timeoutId)
-            clearTimeout(timeoutId);
+          clearAllTimeouts();
           setGameAdrress(data.game_address);
           setPlayer1_id(data.player1_id);
           setPlayer2_id(data.player2_id);
@@ -213,8 +227,7 @@ const Game = () => {
           setGameState('startGame');
         }
         if (data.event === 'multigame_address') {
-          if (timeoutId)
-            clearTimeout(timeoutId);
+          clearAllTimeouts();
           setGameAdrress(data.game_address);
           setGameState('startMultiGame');
           setIsSearching(false);
@@ -224,9 +237,11 @@ const Game = () => {
         }
         if (data.event === 'opponent_ready') {
           setOpponentReady(true);
+          // toast.info(data.message);
         }
         if (data.event === 'opponent_unready') {
           setOpponentReady(false);
+          // toast.info(data.message);
         }
       };
       socket.onclose = () => {
@@ -237,7 +252,7 @@ const Game = () => {
         console.error('WebSocket error:', error);
         setIsConnected(false);
       };
-    }  catch (error) {
+    } catch (error) {
       console.error('Failed to create WebSocket:', error);
       setIsConnected(false);
     }
@@ -265,7 +280,7 @@ const Game = () => {
     sendMessage({
       event: 'remove_from_queue',
     });
-    setIsSearching(false)
+    setIsSearching(false);
     // setGameState(null);
   };
 
@@ -306,7 +321,7 @@ const Game = () => {
     if (ws.current) {
       ws.current?.close();
     }
-    setReconnectTrigger(prev => !prev);
+    setReconnectTrigger((prev) => !prev);
   };
 
   if (selectedMode === 0) {
@@ -393,25 +408,26 @@ const Game = () => {
 
   return (
     <div className={styles.container}>
-
       {!isConnected && !(gameAccepted && gameInvite) && (
         <div className={styles.modalOverlay}>
-            <Alert variant="destructive" className="p-4 text-lg w-auto">
-              <AlertDescription className="flex items-center justify-between mt-2">
-                <div className="flex items-center justify-center gap-4">
-                  <AlertCircle className="h-6 w-6" />
-                  <span className='font-medium text-xl'>WebSocket not connected</span>
-                </div>
-                <Button
-                  onClick={handleReconnect}
-                  variant="outline"
-                  size="default"
-                  className="ml-10 py-6 px-6 text-xl"
-                >
-                  Reconnect
-                </Button>
-              </AlertDescription>
-            </Alert>
+          <Alert variant="destructive" className="p-4 text-lg w-auto">
+            <AlertDescription className="flex items-center justify-between mt-2">
+              <div className="flex items-center justify-center gap-4">
+                <AlertCircle className="h-6 w-6" />
+                <span className="font-medium text-xl">
+                  WebSocket not connected
+                </span>
+              </div>
+              <Button
+                onClick={handleReconnect}
+                variant="outline"
+                size="default"
+                className="ml-10 py-6 px-6 text-xl"
+              >
+                Reconnect
+              </Button>
+            </AlertDescription>
+          </Alert>
         </div>
       )}
 
@@ -426,19 +442,19 @@ const Game = () => {
               setGameState(null);
             }}
           /> */}
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <span>Searching for match...</span>
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span>Searching for match...</span>
+            </div>
+            <Button
+              onClick={cancelMatchmaking}
+              variant="destructive"
+              className="px-8 py-4 text-lg"
+            >
+              Cancel
+            </Button>
           </div>
-          <Button
-            onClick={cancelMatchmaking}
-            variant="destructive"
-            className="px-8 py-4 text-lg"
-          >
-            Cancel
-          </Button>
-        </div>
         </div>
       )}
       <div className={styles.topContainer}>
@@ -475,7 +491,10 @@ const Game = () => {
             <CardHeader>
               <CardTitle className={styles.title}>
                 <p>{t('game.joinedTournaments.title')}</p>
-                <RefreshButton onClick={() => refetchUserTournaments()} isLoading={userTournamentsIsLoading}/>
+                <RefreshButton
+                  onClick={() => refetchUserTournaments()}
+                  isLoading={userTournamentsIsLoading}
+                />
               </CardTitle>
             </CardHeader>
             <CardContent className={styles.content}>
@@ -536,7 +555,10 @@ const Game = () => {
           <CardHeader>
             <CardTitle className={styles.title}>
               <p>{t('game.openTournaments.title')}</p>
-              <RefreshButton onClick={() => refetchTournaments()} isLoading={isLoading}/>
+              <RefreshButton
+                onClick={() => refetchTournaments()}
+                isLoading={isLoading}
+              />
             </CardTitle>
           </CardHeader>
           <CardContent className={styles.bottomCardContent}>

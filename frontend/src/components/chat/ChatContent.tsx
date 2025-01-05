@@ -7,6 +7,7 @@ import { useSelectedConversation } from '@/contexts/SelectedConversationContext'
 import ChatSkeleton from './ChatSkeleton';
 import { apiGetConversationMessages } from '@/api/chatApi';
 import { OctagonAlert } from 'lucide-react';
+import moment from 'moment';
 
 interface MessageProps {
   id: number;
@@ -27,6 +28,13 @@ const ChatContent = () => {
   const [fetchedChatMessages, setFetchedChatMessages] = useState<MessageProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    return () => {
+      clearMessages();
+      setWebsocketChatMessages([]);
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedConversation) return;
@@ -37,9 +45,15 @@ const ChatContent = () => {
       try {
         const data = await apiGetConversationMessages(selectedConversation.id, page);
         if (data) {
+          const updatedMessages = data.results.map((message: MessageProps) => {
+            const localTime = moment.utc(message.timestamp).local().format("HH:mm");
+            return { ...message, timestamp: localTime };
+          });
+
           setFetchedChatMessages((prevMessages) =>
-            page === 1 ? data.results : [...prevMessages, ...data.results]
+            page === 1 ? updatedMessages : [...prevMessages, ...updatedMessages]
           );
+          setWebsocketChatMessages([]);
           setHasMore(!!data.next);
         }
       } catch {
@@ -62,7 +76,7 @@ const ChatContent = () => {
     if (filteredMessages.length > 0) {
       setWebsocketChatMessages(filteredMessages);
     }
-  }, [websocketMessages, selectedConversation]);
+  }, [websocketMessages]);
 
   useEffect(() => {
     if (selectedConversation?.id) {
@@ -72,10 +86,6 @@ const ChatContent = () => {
       }
     }
   }, [selectedConversation]);
-
-  useEffect(() => {
-    return () => clearMessages();
-  }, []);
 
   const combinedMessages = useMemo(() => {
     const reversedFetched = [...fetchedChatMessages].reverse();
