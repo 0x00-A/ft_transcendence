@@ -32,8 +32,7 @@ def oauth2_authorize(request, choice):
 @authentication_classes([])
 @permission_classes([AllowAny])
 def oauth2_authentication(request, choice):
-    # client_redirect_url = request.GET.get('redirect_url')
-    # if
+
     code = request.GET.get('code')
     if code is None:
         return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=failed&error={quote(f'Failed to get the code from {choice}, (go to authorize page)')}")
@@ -64,7 +63,7 @@ def oauth2_authentication(request, choice):
     if check_user is None:
         try:
             if User.objects.filter(email=user_data['email']).exists():
-                request.session['user_data'] = user_data
+                # request.session['user_data'] = user_data
                 return redirect(f"{conf.API_CLIENT_OAUTH2_REDIRECT_URL}?status=email_exists&message={quote(f'Email already exists, you can login with your account!')}")
             if User.objects.filter(username=user_data['username']).exists():
                 # request.session['user_data'] = {'id': user_data['id'], 'email': user_data['email'], 'avatar_link': user_data['avatar_link']}
@@ -122,10 +121,10 @@ def oauth2_set_username(request):
     if 'username' not in request.data:
         return Response(data={'error': "Missing 'username' data!"}, status=status.HTTP_400_BAD_REQUEST)
     user_data['username'] = request.data.get('username')
-    del request.session['user_data']
     serializer = Oauth2Serializer(data = user_data)
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
+    del request.session['user_data']
     send_oauth2_welcome(user, serializer.validated_data['provider'])
     # del request.session['user_data']
     # user = authenticate(email=serializer.validated_data['email'])

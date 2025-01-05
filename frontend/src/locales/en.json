@@ -612,7 +612,8 @@
                   "buttons": {
                       "disable2FA": "Disable 2FA"
                   }
-              }
+              },
+              "ask_disable": "Are you sure you want to disable 2FA?"
           },
           "downloadAppPopup": {
               "title": "Select Your OS",

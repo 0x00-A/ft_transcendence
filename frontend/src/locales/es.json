@@ -611,7 +611,8 @@
                   "buttons": {
                       "disable2FA": "Deshabilitar 2FA"
                   }
-              }
+              },
+               "ask_disable": "Estás seguro de que quieres desactivar 2FA?"
           },
           "downloadAppPopup": {
               "title": "Seleccione su Sistema Operativo",
