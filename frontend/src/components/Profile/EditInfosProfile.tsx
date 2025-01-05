@@ -1,5 +1,5 @@
 // React
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller } from "react-hook-form";
 // Styles
 import css from './EditInfosProfile.module.css'
@@ -21,7 +21,7 @@ import { DEFAULT_AVATAR } from '@/config/constants';
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-    const { register, control, handleSubmit, mutation, reset, clearErrors, errors, watch, setValue}  = useEditProfile();
+    const { register, control, handleSubmit, mutation, reset, errors, watch}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
     const [isEditEmail, setEditEmail] = useState(false);
@@ -287,9 +287,6 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                       <button className={css.closeBtn} type='reset' onClick={() => setEditEmail(false)}>{t('editEmail.btnCancel')}</button>
                       <button type='button' className={css.confirmBtn} onClick={handleVerifyEmail}>{t('editEmail.btnSubmit')}</button>
                     </div>
-                    {/* <div className={css.resendOtp}>
-                        <p>Didn't receive the code?</p> <span className={css.resendLink}>Resend code</span>
-                    </div> */}
                 </div> }
             </div>
         </div>
@@ -297,19 +294,3 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
 }
 
 export default EditInfosProfile
-
-
-// {selectedAvatar === 'null' ? (
-//                     <div
-//                         className={css.avatarContainer}
-//                         style={{
-//                         backgroundImage: `url('${profileData?.profile.avatar}')`
-//                         }}
-//                     ></div>
-//                     ) : (selectedAvatar === 'remove' ? <div className={css.avatarContainer} style={{
-//                         backgroundImage: `url('/icons/defaultAvatar.png')`
-//                         }}></div> :
-
-//                 // { selectedAvatar === 'null' ? <img src={profileData?.profile.avatar} alt={profileData?.username} className={css.avatar}/> :
-
-//                     <div style={{backgroundImage: `url('${selectedAvatar}')`}} className={css.avatarContainer}></div>) }
