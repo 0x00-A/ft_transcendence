@@ -10,7 +10,7 @@ export const SIDEBAR_RESIZE_WIDTH = 768;
 
 export const SERVER_PORT = 8000
 
-export const LOGO = "/icons/logo.svg";
+export const LOGO = "/logo/ft_pong.png";
 
 export const DEFAULT_AVATAR = "/icons/defaultAvatar.jpeg";
 
