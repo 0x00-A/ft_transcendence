@@ -33,6 +33,7 @@ class JwtAuthMiddleware(BaseMiddleware):
                 user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
                 scope['user'] = user
             except (InvalidToken, TokenError, AuthenticationFailed):
+                print("\033[031muser not auth\033[0m")
                 scope['user'] = AnonymousUser()
         else:
             scope['user'] = AnonymousUser()
