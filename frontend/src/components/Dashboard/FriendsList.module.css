@@ -40,6 +40,7 @@
 
 .friendItem:hover {
   background-color: #283245;
+  transform: scale(1.01);
 }
 
 .avatar {
@@ -185,11 +186,6 @@
 @media (max-height: 1060px) {
   .friendList {
     gap: 5px;
-  }
-}
-@media (max-height: 1170px) {
-  .friendItem {
-    padding: 5px;
   }
 }
 
