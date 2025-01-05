@@ -81,9 +81,34 @@
   align-items: center;
   gap: 8px;
   padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 1.2rem;
+  border-radius: 10px;
   color: #F8F3E3;
+  background-color: #384b6c;
+}
+
+.challenge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 10px;
+  color: #F8F3E3;
+  background-color: #384b6c;
+  cursor: pointer;
+}
+
+.challenge:hover {
+  background-color: #1E2A3C;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+.cooldownTimer {
+  font-size: 15px;
+  color: rgb(255, 255, 255);
 }
 
 .statusIndicator {
