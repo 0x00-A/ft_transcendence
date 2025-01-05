@@ -33,7 +33,7 @@
   align-items: center;
   gap: 15px;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: #1E2A3C;
   transition: background-color 0.3s;
 }
@@ -44,8 +44,8 @@
 }
 
 .avatar {
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 2px solid #B0B9D0;
   cursor: pointer;
@@ -185,7 +185,7 @@
 
 @media (max-height: 1060px) {
   .friendList {
-    gap: 5px;
+    gap: 8px;
   }
 }
 
