@@ -2,7 +2,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 90%;
+  height: 88%;
 }
 
 .messageList {
