@@ -10,25 +10,17 @@ from http.cookies import SimpleCookie
 
 class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
-        # print('++++++++++request websocket+++++++++++++++')
-        # print("request: ", scope)
-        async def log_receive():
-            print('++++++++++LOGRECEIVE+++++++++++++++')
-            event = await receive()
-            return event
+        # headers = dict(scope['headers'])
 
-        async def log_send():
-            print('++++++++++LOGRECEIVE+++++++++++++++')
-            event = await send()
-            return event
-
-        headers = dict(scope['headers'])
-        cookie = headers.get(b'cookie', b'').decode('utf-8')
+        # cookie = headers.get(b'cookie', b'').decode('utf-8')
+        cookie = next((value.decode('utf-8') for name, value in scope['headers'] if name == b'cookie'), None)
         cookies = SimpleCookie()
         cookies.load(cookie)
         access_token = cookies.get('access_token')
+        refresh_token = cookies.get('refresh_token')
         access_token = access_token.value if access_token else None
-        if access_token:
+        refresh_token = refresh_token.value if refresh_token else None
+        if access_token and refresh_token:
             try:
                 validated_token = JWTAuthentication().get_validated_token(raw_token=access_token)
                 user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
@@ -39,17 +31,3 @@ class JwtAuthMiddleware(BaseMiddleware):
             scope['user'] = AnonymousUser()
         return await super().__call__(scope, receive, send)
 
-
-# @database_sync_to_async
-# def get_user_from_token(token):
-#     try:
-#         # Decode the token and get the user ID
-#         validated_token = UntypedToken(token)
-#         user_id = validated_token['user_id']
-#         return User.objects.get(id=user_id)
-#     except (InvalidToken, TokenError, User.DoesNotExist):
-#         return AnonymousUser()
-
-# class LogOriginMiddleware(MiddlewareMixin):
-#     def process_request(self, request):
-#         print('++++++++++LOGORIGINMIDDLEWARE+++++++++++++++', request.META['HTTP_ORIGIN'], '+++++++++++++++++++++++++')

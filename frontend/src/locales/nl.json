@@ -611,7 +611,8 @@
           "confirmPasswordLabel": "Bevestig je wachtwoord",
           "buttons": {
             "disable2FA": "2FA uitschakelen"
-          }
+          },
+          "ask_disable": "Weet je zeker dat je 2FA wilt uitschakelen?"
         }
       },
       "downloadAppPopup": {

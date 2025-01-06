@@ -1,7 +1,7 @@
 import styles from './Game.module.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Trophy, Globe, ArrowRight, Gamepad2 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import RemoteGame from '../../components/Game/RemoteGame/RemoteGame';
 import getWebSocketUrl from '../../utils/getWebSocketUrl';
 import TournamentList from '../../components/Tournament/components/TournamentList/TournamentList';

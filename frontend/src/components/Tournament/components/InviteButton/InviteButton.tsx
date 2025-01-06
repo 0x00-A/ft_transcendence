@@ -3,7 +3,7 @@ import { Users, X } from 'lucide-react';
 import styles from './InviteButton.module.css';
 import { useGetData } from '@/api/apiHooks';
 import { API_GET_FRIENDS_URL, API_GET_TOURNAMENTS } from '@/api/apiConfig';
-import { Friends, Tournament, TournamentState } from '@/types/apiTypes';
+import { Friends, Tournament } from '@/types/apiTypes';
 import { useUser } from '@/contexts/UserContext';
 import RefreshButton from '@/pages/Game/RefreshButton';
 import { toast } from 'react-toastify';
