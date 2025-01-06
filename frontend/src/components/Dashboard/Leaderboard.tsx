@@ -1,11 +1,10 @@
-import css from './Leaderboard.module.css';
-// API
 import { useGetData } from '@/api/apiHooks';
 import { API_GET_DASHBOARD_LEADERBOARD_URL } from '@/api/apiConfig';
-// Types
-import { LeaderBoard } from '@/types/apiTypes';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { ArrowRight, Trophy, Medal, TrendingUp, TrendingDown } from 'lucide-react';
+import styles from './Leaderboard.module.css';
+import { LeaderBoard } from '@/types/apiTypes';
 
 const Leaderboard = () => {
   const {
@@ -16,87 +15,132 @@ const Leaderboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const getRankBadge = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <Trophy className={styles.trophy} />;
+      case 2:
+        return <Medal className={styles.silverMedal} />;
+      case 3:
+        return <Medal className={styles.bronzeMedal} />;
+      default:
+        return <span className={styles.rank}>{rank}</span>;
+    }
+  };
+
+  const renderSkeletonRows = () => {
+    return Array(5).fill(0).map((_, i) => (
+      <div key={i} className={styles.skeleton}>
+        <div className={styles.skeletonItem} />
+        <div className={styles.playerCell}>
+          <div className={styles.skeletonAvatar} />
+          <div className={styles.skeletonItem} style={{ flex: 1 }} />
+        </div>
+        <div className={styles.skeletonItem} />
+        <div className={styles.skeletonItem} />
+        <div className={styles.skeletonItem} />
+      </div>
+    ));
+  };
 
   return (
-    <>
-      <div className={css.header}>
-        <h3>{t('dashboard.Leaderboard.headerTitle')}</h3>
-        <a href="/leaderboard" className={css.viewAll}>
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>
+          {t('dashboard.Leaderboard.headerTitle')}
+        </h3>
+        <button 
+          onClick={() => navigate('/leaderboard')}
+          className={styles.viewAllButton}
+        >
           {t('dashboard.Leaderboard.viewAll')}
-        </a>
+          <ArrowRight size={16} />
+        </button>
       </div>
 
-      <div className={css.tables}>
-        <div className={css.table}>
-          <div className={css.tableHeader}>
-            <span>{t('dashboard.Leaderboard.tableHeaders.rank')}</span>
-            <span>{t('dashboard.Leaderboard.tableHeaders.name')}</span>
-            <span>{t('dashboard.Leaderboard.tableHeaders.games')}</span>
-            <span>{t('dashboard.Leaderboard.tableHeaders.winRate')}</span>
-            <span>{t('dashboard.Leaderboard.tableHeaders.loseRate')}</span>
-            <span>{t('dashboard.Leaderboard.tableHeaders.score')}</span>
+      <div className={styles.tableContainer}>
+        <div className={styles.tableHeader}>
+          <div className={styles.tableHeaderCell}>
+            {t('dashboard.Leaderboard.tableHeaders.rank')}
           </div>
-          {error && <p>{error.message}</p>}
-          {isLoading ? (
-            <div className="table w-full">
-              <div className="tableRow grid grid-cols-6 items-center p-2.5 text-base bg-[#283245] mb-1 hover:bg-[#33425E] animate-pulse ">
-                <span className="flex">
-                  <div className="w-10 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div>
-                </span>
-                <span className="player flex items-center">
-                  <div className="avatar w-8 h-8 rounded-full bg-gray-400 mr-2 animate-pulse"></div>
-                  <span className="w-20 h-4 bg-gray-300 rounded animate-pulse"></span>
-                </span>
-                <span className="flex">
-                  <div className="w-10 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div>
-                </span>
-                <span className="flex">
-                  <div className="w-10 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div>
-                </span>
-                <span className="flex">
-                  <div className="w-10 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div>
-                </span>
-                <span className="score flex text-[#ffb902] font-bold animate-pulse">
-                  <div className="w-16 h-4 bg-gray-300 rounded mx-auto animate-pulse"></div>
-                </span>
-              </div>
-            </div>
-          ) : leaderboardData && leaderboardData.length == 0 ? (
-            <p>{t('dashboard.Leaderboard.noDataFound')}</p>
-          ) : (
+          <div className={styles.tableHeaderCell}>
+            {t('dashboard.Leaderboard.tableHeaders.name')}
+          </div>
+          <div className={`${styles.tableHeaderCell} ${styles.centered}`}>
+            {t('dashboard.Leaderboard.tableHeaders.games')}
+          </div>
+          <div className={`${styles.tableHeaderCell} ${styles.centered}`}>
+            {t('dashboard.Leaderboard.tableHeaders.winRate')}
+          </div>
+          <div className={`${styles.tableHeaderCell} ${styles.centered}`}>
+            {t('dashboard.Leaderboard.tableHeaders.score')}
+          </div>
+        </div>
+
+        {error && (
+          <div className={styles.error}>
+            {error.message}
+          </div>
+        )}
+
+        {isLoading ? (
+          renderSkeletonRows()
+        ) : leaderboardData  && leaderboardData.length === 0 ? (
+          <div className={styles.noData}>
+            {t('dashboard.Leaderboard.noDataFound')}
+          </div>
+        ) : (
             leaderboardData &&
             leaderboardData.length > 0 &&
             leaderboardData.map((player: LeaderBoard, index: number) => (
-              <div className={css.tableRow} key={index} onClick={() => navigate(`/profile/${player.username}`)}>
-                <span>{player.rank}</span>
-                <span className={css.player}>
-                  <img
-                    src={player.avatar}
-                    alt={player.username}
-                    className={css.avatar}
-                  />
+            <div
+              key={index}
+              onClick={() => navigate(`/profile/${player.username}`)}
+              className={styles.tableRow}
+            >
+              <div className={styles.rankCell}>
+                {getRankBadge(player.rank)}
+              </div>
+              <div className={styles.playerCell}>
+                <img
+                  src={player.avatar}
+                  alt={player.username}
+                  className={styles.avatar}
+                />
+                <span className={styles.username}>
                   {player.username}
                 </span>
-                <span>{player.played_games}</span>
-                <span>
-                  {Number.isInteger(player.win_rate)
-                    ? player.win_rate
-                    : player.win_rate.toFixed(2)}
-                  %
-                </span>
-                <span>
-                  {Number.isInteger(player.lose_rate)
-                    ? player.lose_rate
-                    : player.lose_rate.toFixed(2)}
-                  %
-                </span>
-                <span className={css.score}>{player.score}</span>
               </div>
-            ))
-          )}
-        </div>
+              <div className={styles.centered}>
+                {player.played_games}
+              </div>
+              <div className={styles.centered}>
+                {Number.isInteger(player.win_rate)
+                  ? player.win_rate
+                  : player.win_rate.toFixed(1)}%
+              </div>
+              {player.score.toLocaleString() == '0'
+                  ? <div className={styles.scoreDown}>
+                      {player.score.toLocaleString()}
+                      <TrendingDown className={styles.scoreIconDown} />
+                    </div>
+                  : <div className={styles.scoreUp}>
+                      {player.score.toLocaleString()}
+                      <TrendingUp className={styles.scoreIcon} />
+                    </div>
+              }
+              {/* <div className={styles.score}>
+                {player.score.toLocaleString()}
+                {player.score.toLocaleString() == '0'
+                  ? <TrendingDown className={styles.scoreIconDown} />
+                  : <TrendingUp className={styles.scoreIcon} />
+                }
+              </div> */}
+            </div>
+          ))
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

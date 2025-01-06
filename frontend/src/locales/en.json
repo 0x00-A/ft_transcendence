@@ -746,6 +746,7 @@
           }
       },
       "LastMatch": {
+        "pts": "pts",
           "headerTitle": "Last Games",
           "viewMore": "View More",
           "winMessage": "Great job, Keep playing to maintain your streak!",

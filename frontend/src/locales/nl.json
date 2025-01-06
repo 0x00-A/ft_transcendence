@@ -746,6 +746,7 @@
       }
     },
     "LastMatch": {
+      "pts": "pts",
       "headerTitle": "Laatste Wedstrijden",
       "viewMore": "Bekijk Meer",
       "winMessage": "Goed gedaan, blijf spelen om je reeks vast te houden!",

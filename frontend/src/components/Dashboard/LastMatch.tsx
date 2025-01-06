@@ -4,7 +4,7 @@ import css from './LastMatch.module.css';
 import { API_GET_LAST_GAMES_URL } from '@/api/apiConfig';
 import { LastGames } from '@/types/apiTypes';
 import LastGamesSkeleton from '@/skeltons/profile/LastGamesSkeleton';
-import { Trophy, X } from 'lucide-react';
+import { Gamepad, Trophy, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
@@ -16,7 +16,7 @@ const LastMatch = ({username}:{username:string | undefined}) => {
 
     return (
         <div className={css.container}>
-            <h1 className={css.title}>Last Games</h1>
+            <h3 className={css.title}>{t('dashboard.LastMatch.headerTitle')}</h3>
             
             {error && <div className={css.error}>{error.message}</div>}
             
@@ -24,6 +24,13 @@ const LastMatch = ({username}:{username:string | undefined}) => {
                 <LastGamesSkeleton />
             ) : (
                 <div className={css.gamesList}>
+                    { matchesData?.length == 0 && <div className={css.noGames}>
+                            <span className={css.noHistoryTitle}>{t('dashboard.LastMatch.noGames.message')}</span>
+                            <button className={css.playBtn} onClick={() => navigate('/play')}>
+                                <Gamepad color='#F8C25C'/>
+                                <span>{t('dashboard.LastMatch.noGames.playNow')}</span>
+                            </button>
+                    </div>}
                     {matchesData?.map((match: LastGames) => (
                         <div 
                             key={match.id} 
@@ -56,7 +63,7 @@ const LastMatch = ({username}:{username:string | undefined}) => {
                                     )}
                                 </div>
                                 <div className={css.points}>
-                                    <span> + {match.xp_gained}</span>  pts
+                                    <span>+{match.xp_gained}</span> {t('dashboard.LastMatch.pts')}
                                 </div>
                             </div>
                         </div>

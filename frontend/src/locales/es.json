@@ -745,6 +745,7 @@
           }
       },
       "LastMatch": {
+        "pts": "pts",
           "headerTitle": "Últimos Juegos",
           "viewMore": "Ver Más",
           "winMessage": "Gran trabajo, ¡sigue jugando para mantener tu racha!",
