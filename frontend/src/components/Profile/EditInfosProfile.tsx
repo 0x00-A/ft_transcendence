@@ -1,5 +1,5 @@
 // React
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller } from "react-hook-form";
 // Styles
 import css from './EditInfosProfile.module.css'
@@ -21,7 +21,7 @@ import { DEFAULT_AVATAR } from '@/config/constants';
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-    const { register, control, handleSubmit, mutation, reset, clearErrors, errors, watch, setValue}  = useEditProfile();
+    const { register, control, handleSubmit, mutation, reset, errors, watch}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
     const [isEditEmail, setEditEmail] = useState(false);

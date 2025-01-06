@@ -12,16 +12,16 @@ services:
       - ./backend:/app/backend
       - static_data:/app/backend/static
       - django-logs:/app/backend/logs
-    environment:
-      - ALLOWED_HOSTS=$ALLOWED_HOSTS
-      - DB_HOST=$DB_HOST
-      - DB_NAME=$DB_NAME
-      - DB_USER=$DB_USER
-      - DB_PASS=$DB_PASS
-      - REDIS_HOST=$REDIS_HOST
-      - REDIS_PORT=$REDIS_PORT
-      - DEBUG=0
-      - SECRET_KEY=$SECRET_KEY
+    # environment:
+    #   - DJANGO_ALLOWED_HOSTS=e2r6p14
+    #   - DB_HOST=$DB_HOST
+    #   - DB_NAME=$DB_NAME
+    #   - DB_USER=$DB_USER
+    #   - DB_PASS=$DB_PASS
+    #   - REDIS_HOST=$REDIS_HOST
+    #   - REDIS_PORT=$REDIS_PORT
+    #   - DEBUG=0
+    #   - SECRET_KEY=$SECRET_KEY
     env_file:
       - .env
     networks:
