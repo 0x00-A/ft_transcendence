@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { LeaderBoard } from '@/types/apiTypes';
 import styles from './Leaderboard.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/contexts/UserContext';
 
 const LeaderboardPage = () => {
   const {
@@ -15,6 +16,7 @@ const LeaderboardPage = () => {
   } = useGetData<LeaderBoard[]>(API_GET_LEADER_BOARD_URL);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useUser();
 
 
 
@@ -39,29 +41,29 @@ const LeaderboardPage = () => {
     return (
       <div className={styles.podium}>
         <div className={styles.podiumPlace}>
-          <div className={`${styles.podiumAvatar} ${styles.secondPlace}`}>
+          <div className={`${styles.podiumAvatar} ${styles.secondPlace}`} onClick={() => navigate(`/profile/${second.username}`)}>
             <img src={second.avatar} alt={second.username} />
           </div>
           <Medal className={styles.silverMedal} />
-          <span className={styles.podiumUsername}>{second.username}</span>
+          <span className={styles.podiumUsername} onClick={() => navigate(`/profile/${second.username}`)} >{second.username}</span>
           <span className={styles.podiumScore}>{second.score.toLocaleString()} pts</span>
         </div>
 
         <div className={`${styles.podiumPlace} ${styles.firstPlace}`}>
-          <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`}>
+          <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`} onClick={() => navigate(`/profile/${first.username}`)}>
             <img src={first.avatar} alt={first.username} />
           </div>
           <Trophy className={styles.trophy} />
-          <span className={styles.podiumUsername}>{first.username}</span>
+          <span className={styles.podiumUsername} onClick={() => navigate(`/profile/${first.username}`)}>{first.username}</span>
           <span className={styles.podiumScore}>{first.score.toLocaleString()} pts</span>
         </div>
 
         <div className={styles.podiumPlace}>
-          <div className={`${styles.podiumAvatar} ${styles.thirdPlace}`}>
+          <div className={`${styles.podiumAvatar} ${styles.thirdPlace}`} onClick={() => navigate(`/profile/${third.username}`)}>
             <img src={third.avatar} alt={third.username} />
           </div>
           <Medal className={styles.bronzeMedal} />
-          <span className={styles.podiumUsername}>{third.username}</span>
+          <span className={styles.podiumUsername} onClick={() => navigate(`/profile/${third.username}`)}>{third.username}</span>
           <span className={styles.podiumScore}>{third.score.toLocaleString()} pts</span>
         </div>
       </div>
@@ -126,7 +128,7 @@ const LeaderboardPage = () => {
                 <div
                   key={player.rank}
                   onClick={() => navigate(`/profile/${player.username}`)}
-                  className={styles.tableRow}
+                  className={`${styles.tableRow} ${player.username === user?.username ? styles.myRank : ''}`}
                 >
                   <div className={styles.rankCell}>
                     {getRankBadge(player.rank)}

@@ -38,6 +38,7 @@
   overflow: hidden;
   border: 3px solid rgb(55, 65, 81);
   margin-bottom: 1rem;
+  cursor: pointer;
 }
 
 .firstPlaceAvatar {
@@ -65,8 +66,13 @@
   font-weight: bold;
   color: rgb(229, 231, 235);
   margin-top: 0.5rem;
+  cursor: pointer;
 }
 
+.podiumUsername:hover {
+  color: rgb(250, 204, 21);
+  scale: 1.1;
+}
 .firstPlace .podiumUsername {
   font-size: 1.5rem;
 }
@@ -123,6 +129,15 @@
 
 .tableRow:hover {
   background-color: rgba(55, 65, 81, 0.5);
+}
+
+.myRank {
+  background-color: #0e1725 !important;
+  border-left: 4px solid rgb(250, 204, 21) !important;
+}
+
+.myRank:hover {
+  background-color: rgba(55, 65, 81, 0.5) !important;
 }
 
 .rankCell {
