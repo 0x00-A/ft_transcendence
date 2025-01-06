@@ -22,6 +22,7 @@
 
 
 .logo {
+  cursor: pointer;
   height: 80px;
   scale: 1;
 }

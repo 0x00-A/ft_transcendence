@@ -129,13 +129,6 @@ const Leaderboard = () => {
                       <TrendingUp className={styles.scoreIcon} />
                     </div>
               }
-              {/* <div className={styles.score}>
-                {player.score.toLocaleString()}
-                {player.score.toLocaleString() == '0'
-                  ? <TrendingDown className={styles.scoreIconDown} />
-                  : <TrendingUp className={styles.scoreIcon} />
-                }
-              </div> */}
             </div>
           ))
         )}

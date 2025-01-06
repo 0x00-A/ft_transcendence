@@ -1,107 +1,173 @@
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from '@/components/ui/table';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Link } from 'react-router-dom';
 
-import css from './Leaderboard.module.css';
-import { API_GET_LEADER_BOARD_URL } from '@/api/apiConfig';
 import { useGetData } from '@/api/apiHooks';
+import { API_GET_LEADER_BOARD_URL } from '@/api/apiConfig';
+import { Trophy, Medal, TrendingUp, TrendingDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { LeaderBoard } from '@/types/apiTypes';
+import styles from './Leaderboard.module.css';
+import { useNavigate } from 'react-router-dom';
 
-// const users = [
-//   {
-//     id: 0,
-//     username: '@username',
-//     score: '1400',
-//     country: 'Morroco',
-//   },
-// ];
-
-const Leaderboard = () => {
+const LeaderboardPage = () => {
   const {
     data: leaderboardData,
     isLoading,
     error,
   } = useGetData<LeaderBoard[]>(API_GET_LEADER_BOARD_URL);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  if (isLoading || error) {
-    return ;
-    // return (
-    //   <div className={css.container}>
-    //     <h1>Loading...</h1>
-    //   </div>
-    // );
-  }
+
+
+  const getRankBadge = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <Trophy className={styles.trophy} />;
+      case 2:
+        return <Medal className={styles.silverMedal} />;
+      case 3:
+        return <Medal className={styles.bronzeMedal} />;
+      default:
+        return <span className={styles.rank}>{rank}</span>;
+    }
+  };
+
+  const renderTopRanks = () => {
+    if (!leaderboardData || leaderboardData.length < 3) return null;
+
+    const [first, second, third] = leaderboardData;
+    
+    return (
+      <div className={styles.podium}>
+        <div className={styles.podiumPlace}>
+          <div className={`${styles.podiumAvatar} ${styles.secondPlace}`}>
+            <img src={second.avatar} alt={second.username} />
+          </div>
+          <Medal className={styles.silverMedal} />
+          <span className={styles.podiumUsername}>{second.username}</span>
+          <span className={styles.podiumScore}>{second.score.toLocaleString()} pts</span>
+        </div>
+
+        <div className={`${styles.podiumPlace} ${styles.firstPlace}`}>
+          <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`}>
+            <img src={first.avatar} alt={first.username} />
+          </div>
+          <Trophy className={styles.trophy} />
+          <span className={styles.podiumUsername}>{first.username}</span>
+          <span className={styles.podiumScore}>{first.score.toLocaleString()} pts</span>
+        </div>
+
+        <div className={styles.podiumPlace}>
+          <div className={`${styles.podiumAvatar} ${styles.thirdPlace}`}>
+            <img src={third.avatar} alt={third.username} />
+          </div>
+          <Medal className={styles.bronzeMedal} />
+          <span className={styles.podiumUsername}>{third.username}</span>
+          <span className={styles.podiumScore}>{third.score.toLocaleString()} pts</span>
+        </div>
+      </div>
+    );
+  };
+
+  const renderSkeletonRows = () => {
+    return Array(8).fill(0).map((_, i) => (
+      <div key={i} className={styles.skeleton}>
+        <div className={styles.skeletonItem} />
+        <div className={styles.playerCell}>
+          <div className={styles.skeletonAvatar} />
+          <div className={styles.skeletonItem} style={{ flex: 1 }} />
+        </div>
+        <div className={styles.skeletonItem} />
+        <div className={styles.skeletonItem} />
+        <div className={styles.skeletonItem} />
+      </div>
+    ));
+  };
 
   return (
-    <main className={css.container}>
-      <Table className="w-full">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="h-20 w-[40px] text-center">#Rank</TableHead>
-            <TableHead className="h-20 w-[200px]">Username</TableHead>
-            <TableHead className="h-20 w-[200px]">Games</TableHead>
-            <TableHead className="h-20 w-[200px]">Win Rate</TableHead>
-            <TableHead className="h-20 w-[200px]">Lose Rate</TableHead>
-            <TableHead className="h-20 w-[100px]">Score</TableHead>
-            {/* <TableHead className="h-20 w-[150px]">Country</TableHead> */}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {leaderboardData &&
-            leaderboardData?.length > 0 &&
-            leaderboardData?.map((data: LeaderBoard, index: number) => (
-              <TableRow
-                key={index}
-                className="hover:bg-gray-500 dark:hover:bg-gray-800 transition-colors h-20"
-              >
-                <TableCell className="text-center font-medium">
-                  {data.rank}
-                </TableCell>
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage src={data.avatar} alt="@username1" />
-                      <AvatarFallback>U1</AvatarFallback>
-                    </Avatar>
-                    <Link to={`/profile/${data.username}`} className="text-blue-500 hover:underline">
-                      {data.username}
-                    </Link>
+    <div className={styles.container}>
+
+      {renderTopRanks()}
+
+        <div className={styles.tableContainer}>
+          <div className={styles.tableHeader}>
+            <div className={styles.tableHeaderCell}>
+              {t('dashboard.Leaderboard.tableHeaders.rank')}
+            </div>
+            <div className={styles.tableHeaderCell}>
+              {t('dashboard.Leaderboard.tableHeaders.name')}
+            </div>
+            <div className={`${styles.tableHeaderCell} ${styles.centered}`}>
+              {t('dashboard.Leaderboard.tableHeaders.games')}
+            </div>
+            <div className={`${styles.tableHeaderCell} ${styles.centered}`}>
+              {t('dashboard.Leaderboard.tableHeaders.winRate')}
+            </div>
+            <div className={`${styles.tableHeaderCell} ${styles.centered}`}>
+              {t('dashboard.Leaderboard.tableHeaders.score')}
+            </div>
+          </div>
+
+          {error && (
+            <div className={styles.error}>
+              {error.message}
+            </div>
+          )}
+
+          {isLoading ? (
+            renderSkeletonRows()
+          ) : leaderboardData && leaderboardData.length === 0 ? (
+            <div className={styles.noData}>
+              {t('dashboard.Leaderboard.noDataFound')}
+            </div>
+          ) : (
+            <div className={styles.tablesRows}>
+              { leaderboardData &&
+              leaderboardData.slice(3).map((player: LeaderBoard) => (
+                <div
+                  key={player.rank}
+                  onClick={() => navigate(`/profile/${player.username}`)}
+                  className={styles.tableRow}
+                >
+                  <div className={styles.rankCell}>
+                    {getRankBadge(player.rank)}
                   </div>
-                </TableCell>
-                <TableCell className="">{data.played_games}</TableCell>
-                <TableCell className="">
-                  {Number.isInteger(data.win_rate)
-                    ? data.win_rate
-                    : data.win_rate.toFixed(2)}
-                  %
-                </TableCell>
-                <TableCell className="">
-                  {Number.isInteger(data.lose_rate)
-                    ? data.lose_rate
-                    : data.lose_rate.toFixed(2)}
-                  %
-                </TableCell>
-                <TableCell className="">{data.score}</TableCell>
-                {/* <TableCell className="flex items-center justify-start">
-                  <span className="sr-only">{data.country}</span>
-                  <Flag />
-                </TableCell> */}
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-      {/* <div className="text-center mt-4">
-        <Link to="/leaderboard" className="text-blue-500 hover:underline">View All Leaderboard</Link>
-      </div> */}
-    </main>
+                  <div className={styles.playerCell}>
+                    <img
+                      src={player.avatar}
+                      alt={player.username}
+                      className={styles.avatar}
+                    />
+                    <span className={styles.username}>
+                      {player.username}
+                    </span>
+                  </div>
+                  <div className={styles.centered}>
+                    {player.played_games}
+                  </div>
+                  <div className={styles.centered}>
+                    {Number.isInteger(player.win_rate)
+                      ? player.win_rate
+                      : player.win_rate.toFixed(1)}%
+                  </div>
+                  {player.score.toLocaleString() === '0' ? (
+                    <div className={styles.scoreDown}>
+                      {player.score.toLocaleString()}
+                      <TrendingDown className={styles.scoreIconDown} />
+                    </div>
+                  ) : (
+                    <div className={styles.scoreUp}>
+                      {player.score.toLocaleString()}
+                      <TrendingUp className={styles.scoreIcon} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )
+        }
+        </div>
+      </div>
   );
 };
 
-export default Leaderboard;
+export default LeaderboardPage;
