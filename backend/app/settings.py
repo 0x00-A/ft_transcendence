@@ -52,10 +52,9 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 SERVER_URL = os.environ.get('SERVER_URL')
 CLIENT_URL = os.environ.get('CLIENT_URL')
 
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-# ALLOWED_HOSTS.append('http://e2r6p15:8000')
-ALLOWED_HOSTS.append('localhost')
+# ALLOWED_HOSTS = ['e2r6p14']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -148,14 +147,14 @@ CSRF_TRUSTED_ORIGINS = [
     #                     'https://wwww.ft-pong.me',
     #                     'https://127.0.0.1',
     #                     'https://localhost',
-                        # 'https://e2r6p15',
-                        CLIENT_URL,
-                        'http://e2r6p15:8000',
-                        'https://localhost',
-                        'http://localhost:3000',
-                        # 'http://0.0.0.0:3000',
-                        # 'wss://yourdomain.com'
-                        ]
+    # 'https://e2r6p15',
+    CLIENT_URL,
+    'http://e2r6p15:8000',
+    'https://localhost',
+    'http://localhost:3000',
+    # 'http://0.0.0.0:3000',
+    # 'wss://yourdomain.com'
+]
 # CSRF_COOKIE_AGE = 3600 # 1 hour
 
 # INTERNAL_IPS = [
@@ -396,8 +395,8 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800 # 50MB
-FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800 # 50MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB
 
 # import logging
 
