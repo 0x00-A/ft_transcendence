@@ -10,6 +10,8 @@ from http.cookies import SimpleCookie
 
 class JwtAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
+        # print('++++++++++request websocket+++++++++++++++')
+        # print("request: ", scope)
         async def log_receive():
             print('++++++++++LOGRECEIVE+++++++++++++++')
             event = await receive()
