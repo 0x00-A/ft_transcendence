@@ -224,7 +224,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                     <div className={css.disable2faContainer}>
                         <p>{t('Profile.EditSecurity.twoFactorAuth.enabled.status')}</p>
                         <p>{t('Profile.EditSecurity.twoFactorAuth.ask_disable')}</p>
-                        <div className={css.containerFiled}>
+                        <div className={css.containerFiled2}>
                             <label htmlFor="" className={css.label}>{t('Profile.EditSecurity.twoFactorAuth.enabled.confirmPasswordLabel')}</label>
                             <div className={css.passContainer}>
                                 <input

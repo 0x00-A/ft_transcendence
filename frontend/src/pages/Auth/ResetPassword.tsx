@@ -9,6 +9,7 @@ import { ResetPasswordForm } from '@/types/apiTypes';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { LOGO } from '@/config/constants';
 
 
 type ShowPasswordFields = 'new_pass' | 'confirm_pass';
@@ -56,7 +57,7 @@ const ResetPassword = () => {
     <div className={css.resetPassContainer}>
         <div className={css.resetPassBox}>
             <div className={css.boxHeader}>
-                <img src="/icons/logo.svg" alt="" className={css.logo}/>
+                <img src={LOGO} alt="" className={css.logo}/>
                 <h1>Reset Password</h1>
             </div>
             <form action="" className={css.resetPassForm} onSubmit={ handleSubmit(handleResetPass) }>
