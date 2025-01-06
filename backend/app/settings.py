@@ -91,7 +91,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'middleware.CrossOriginOpenerPolicyMiddleware.CrossOriginOpenerPolicyMiddleware',
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -134,6 +133,7 @@ SESSION_COOKIE_HTTPONLY = True  # efault
 SESSION_SAVE_EVERY_REQUEST = True
 
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 
 """
