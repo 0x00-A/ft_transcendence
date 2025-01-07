@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+import os
 
 
 class Command(BaseCommand):
@@ -8,9 +9,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         User = get_user_model()
-        username = "admin"
-        email = "admin@example.com"
-        password = "admin123456"
+        username = os.getenv("ADMIN_USERNAME", "admin")
+        email = os.getenv("ADMIN_EMAIL", "admin@example.com")
+        password = os.getenv("ADMIN_PASS", "admin123456")
 
         try:
             # Check if the superuser already exists
@@ -22,4 +23,4 @@ class Command(BaseCommand):
             User.objects.create_superuser(
                 username=username, email=email, password=password)
             self.stdout.write(self.style.SUCCESS(
-                f"Superuser '{username}|{password}' created successfully."))
+                f"Superuser created successfully."))

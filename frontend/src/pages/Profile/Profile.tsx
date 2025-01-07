@@ -89,7 +89,7 @@ const Profile = () => {
     }
     navigate('/');
   }
-  console.log('currentUser', currentUser);
+  // console.log('currentUser', currentUser);
 
 
   return (

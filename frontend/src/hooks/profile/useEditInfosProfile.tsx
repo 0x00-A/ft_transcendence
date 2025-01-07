@@ -30,7 +30,7 @@ const useEditInfosProfile = () => {
     mutationFn: async (data: FormData) => await apiClient.put(API_EDIT_PROFILE_URL, data),
     onError: (error:unknown) => {
       if (axios.isAxiosError(error)) {
-        console.log('+++++++++++++++useEditInfosProfile onError+++++++++++++++++');
+        // console.log('+++++++++++++++useEditInfosProfile onError+++++++++++++++++');
         const errs = error?.response?.data;
         errs?.username && setError("username", {type: '', message: errs?.username}, {shouldFocus:true})
         errs?.first_name && setError("first_name", {type: '', message: errs?.first_name}, {shouldFocus:true})

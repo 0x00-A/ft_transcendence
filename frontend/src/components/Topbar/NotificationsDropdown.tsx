@@ -33,24 +33,24 @@ const NotificationsDropdown = () => {
 
   const loadNotifications = useCallback(async (pageToLoad: number) => {
     if (isLoading) return;
-    
+
     try {
       setIsLoading(true);
       await fetchNotifications(pageToLoad, false);
-      console.log("Fetched notifications for page:", pageToLoad);
+      // console.log("Fetched notifications for page:", pageToLoad);
     } catch (error) {
-      console.error("Error loading notifications:", error);
+      // console.error("Error loading notifications:", error);
     } finally {
       setIsLoading(false);
     }
   }, [fetchNotifications]);
-  
+
   useEffect(() => {
     (async () => {
       try {
         setIsInitialLoading(true);
         await fetchNotifications(1, true);
-        console.log("Fetched notifications page 1:");
+        // console.log("Fetched notifications page 1:");
       }
       catch (error) {
       } finally {
@@ -97,7 +97,7 @@ const NotificationsDropdown = () => {
           </span>
         )}
       </DropdownMenuTrigger>
-      
+
       <DropdownMenuContent
         align="end"
         className="w-[32rem] text-white bg-[#1e2738] border-gray-600 shadow-lg"
@@ -143,7 +143,7 @@ const NotificationsDropdown = () => {
                   </p>
                 </div>
               ))}
-              
+
             {/* Show More button with improved loading state */}
             {paginationInfo && (
               <div className="flex justify-center py-4 border-t border-gray-600">
@@ -180,16 +180,16 @@ const NotificationsDropdown = () => {
                     <>
                       <span className="flex items-center justify-center gap-2">
                         {t('notifications.loadMore')}
-                        <svg 
-                          className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5" 
-                          fill="none" 
-                          stroke="currentColor" 
+                        <svg
+                          className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5"
+                          fill="none"
+                          stroke="currentColor"
                           viewBox="0 0 24 24"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
                             d="M19 9l-7 7-7-7"
                           />
                         </svg>

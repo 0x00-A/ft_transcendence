@@ -47,7 +47,7 @@ export function InviteButton({sendMessage, tournamentId} : {tournamentId: number
 
   const handleInvite = (username: string) => {
     // Handle invite logic here
-    console.log(`Inviting friend with ID: ${username}`);
+    // console.log(`Inviting friend with ID: ${username}`);
     sendMessage({
       event: "tournament_invite",
       from: user?.username,
