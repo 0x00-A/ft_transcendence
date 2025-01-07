@@ -53,25 +53,26 @@ until curl -s -X PUT -u "elastic:${ELASTIC_PASSWORD}" --cacert config/certs/ca/c
     "policy": {
         "phases": {
         "hot": {
+            "min_age": "0ms",
             "actions": {
-            "rollover": {
-                "max_size": "50GB",
-                "max_age": "30d"
+            "set_priority": {
+                "priority": 100
             }
             }
         },
         "warm": {
+            "min_age": "10d",
             "actions": {
-            "shrink": {
-                "number_of_shards": 1
+            "set_priority": {
+                "priority": 50
             }
             }
         },
         "cold": {
+            "min_age": "60d",
             "actions": {
             "freeze": {}
-            },
-            "min_age": "60d"
+            }
         },
         "delete": {
             "min_age": "90d",
@@ -93,7 +94,6 @@ until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
         "template": {
             "settings": {
                 "index.lifecycle.name": "ilm_policy",
-                "index.lifecycle.rollover_alias": "logs",
                 "number_of_shards": 1,
                 "number_of_replicas": 0
             }
