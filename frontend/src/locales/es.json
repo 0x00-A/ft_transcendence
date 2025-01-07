@@ -91,6 +91,7 @@
   "optionsButton": "charlar",
   "settingsSection": {
       "profileButton": "Perfil",
+      "closeChat": "Cerrar chat",
       "inviteButton": "Invitar",
       "privacy": "Privacidad",
       "mutualFriends": "Amigos en común",

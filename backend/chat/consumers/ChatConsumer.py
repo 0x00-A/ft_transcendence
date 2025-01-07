@@ -67,7 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         blocked_id = data.get("blocked_id")
         status = data.get("status")
 
-        if not all([conversation_id, blocker_id, blocked_id, status]):
+        if not all([conversation_id, blocker_id, blocked_id]):
             raise ValueError("Missing required block status parameters")
 
         await self.toggle_block_status(conversation_id, blocker_id, blocked_id, status)

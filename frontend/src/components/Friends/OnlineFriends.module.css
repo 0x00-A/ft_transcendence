@@ -44,6 +44,11 @@
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+  cursor: pointer;
+}
+
+.avatar:hover {
+  border: 2px solid #f8c25c;
 }
 
 .userInfo {
@@ -53,6 +58,12 @@
 .username {
   display: block;
   font-weight: bold;
+  cursor: pointer;
+}
+
+.username:hover {
+  color: #f8c25c;
+  scale: 1;
 }
 
 .online {

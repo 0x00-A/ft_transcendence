@@ -65,6 +65,25 @@ const MessageList = () => {
 
 
   useEffect(() => {
+    const update = async () => {
+  
+      try {
+          const response = await apiGetConversations();
+          if (selectedConversation) {
+            const foundConversation = response?.find(
+              (convo: conversationProps) => convo.id === selectedConversation.id
+            );
+            setSelectedConversation(foundConversation!);
+            refetch();
+          }
+      } catch (error: any) {
+          toast.error(error.response.data.error)
+      }
+    };
+    update();
+  }, []);
+
+  useEffect(() => {
     const handleBlockStatusUpdate = async () => {
       if (blockStatusUpdate) {
         const selectedConversationId = blockStatusUpdate.conversationId;
