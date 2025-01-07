@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface LogoProps {
   style: string;
@@ -6,6 +7,8 @@ interface LogoProps {
 
 function Logo({ style }: LogoProps) {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1264);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,6 +24,7 @@ function Logo({ style }: LogoProps) {
 
   return (
     <img
+      onClick={() => {navigate('/');}}
       className={style}
       src={isLargeScreen ? "/logo/ft_pong.png" : "/logo/ft-pongLarge.png"}
       alt="logo"
