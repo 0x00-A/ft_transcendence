@@ -33,8 +33,6 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
 
     const [showDownloadPopup, setShowDownloadPopup] = useState(false);
     const [selectedOS, setSelectedOS] = useState<string>('');
-    // const androidQrCode = "/qrcodes/android-qr.png";
-    // const iosQrCode = "/qrcodes/android-qr.png";
 
     const { t } = useTranslation();
 
