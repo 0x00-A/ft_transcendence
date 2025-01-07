@@ -21,7 +21,7 @@ import { DEFAULT_AVATAR } from '@/config/constants';
 
 const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.SetStateAction<boolean>>}) => {
 
-    const { register, control, handleSubmit, mutation, reset, errors, watch}  = useEditProfile();
+    const { register, control, handleSubmit, mutation, reset, errors, resetField, watch}  = useEditProfile();
     const [isConfirmSave, setConfirmSave] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
     const [isEditEmail, setEditEmail] = useState(false);
@@ -83,7 +83,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         if (formValues[0] === undefined && formValues[1] === undefined && formValues[2] === undefined && selectedAvatar === null) {
             return true;
         }
-        if (errors.username || errors.first_name || errors.last_name || errors.avatar || errors.password) {
+        if (errors.username || errors.first_name || errors.last_name || errors.avatar) {
             return true;
         }
         return formValues[0] === profileData?.username && formValues[1] === profileData?.first_name && formValues[2] === profileData?.last_name && !selectedAvatar
@@ -131,10 +131,10 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         if (mutation.isError && errors.password) {
             return ;
         }
-        if (mutation.isError) {
+        if (mutation.isError && !errors.password) {
             toast.error(errors?.root?.message);
             mutation.reset();
-            reset();
+            // reset();
             setConfirmSave(false);
         }
    }), [mutation.isError];
@@ -236,7 +236,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                         {errors.password && <span className={css.fieldError}>{errors.password.message}</span>}
                     </div>
                     <div className={css.ConfirmButtons}>
-                        <button type='reset' className={css.closeBtn} onClick={() => {setConfirmSave(false); reset();} }>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
+                        <button type='reset' className={css.closeBtn} onClick={() => { setConfirmSave(false); resetField('password')}}>{t('Profile.EditInfosProfile.confirmSave.buttons.close')}</button>
                         <button type='submit' className={css.confirmBtn}>{t('Profile.EditInfosProfile.confirmSave.buttons.confirm')}</button>
                     </div>
                 </div>
