@@ -82,12 +82,21 @@
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+  cursor: pointer;
+}
+.avatar:hover {
+  border: 2px solid #f8c25c;
 }
 
 .username {
   display: block;
   font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
+}
+.username:hover {
+  color: #f8c25c;
+  scale: 1;
 }
 
 .Online {

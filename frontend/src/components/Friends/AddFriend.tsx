@@ -186,12 +186,13 @@ const AddFriend: React.FC = () => {
             searchResults.map((user) => (
               <div key={user.username} className={css.userCard}>
                 <img
+                  onClick={() => navigate(`/profile/${user.username}`)}
                   src={`${user.profile.avatar}`}
                   alt={user.username}
                   className={css.avatar}
                 />
                 <div className={css.userInfo}>
-                  <span className={css.username}>{user.username}</span>
+                  <span className={css.username} onClick={() => navigate(`/profile/${user.username}`)}>{user.username}</span>
                   <span className={css.fullName}>{`${user.first_name} ${user.last_name}`.trim()}</span>
                 </div>
                 <div className={css.actions}>

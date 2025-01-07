@@ -8,6 +8,7 @@ import FriendSkeleton from './FriendSkeleton';
 import { useTranslation } from 'react-i18next';
 import { CgUnblock } from "react-icons/cg";
 import { formatDate } from '@/utils/helpers';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -32,6 +33,7 @@ interface BlockedUser {
 const BlockedList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
 
   const { data: blockedUsers = [], isLoading, error, refetch } = useGetData<BlockedUser[]>('blocked');
@@ -85,12 +87,13 @@ const BlockedList: React.FC = () => {
           filteredUsers.map((user) => (
             <div key={user.blocked.id} className={css.userCard}>
               <img
+                onClick={() => navigate(`/profile/${user.blocked.username}`)}
                 src={user.blocked.profile.avatar}
                 alt={user.blocked.username}
                 className={css.avatar}
               />
               <div className={css.userInfo}>
-              <span className={css.username}>{user.blocked.username}</span>
+              <span className={css.username} onClick={() => navigate(`/profile/${user.blocked.username}`)}>{user.blocked.username}</span>
                 <span className={css.timestamp}> {formatDate(new Date(user.date_blocked), t('lang'))} </span>
               </div>
               <button

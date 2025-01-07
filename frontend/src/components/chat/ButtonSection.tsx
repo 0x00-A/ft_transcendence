@@ -6,12 +6,16 @@ import { useSelectedConversation } from '@/contexts/SelectedConversationContext'
 import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
+import { MessageCircleX } from 'lucide-react';
+
 
 
 const ButtonSection: React.FC = () => {
   const { user } = useUser();
   const { sendMessage } = useWebSocket();
-  const { selectedConversation } = useSelectedConversation();
+  const { selectedConversation, setSelectedConversation } = useSelectedConversation();
+  const { updateActiveConversation } = useWebSocketChat();
   const navigate = useNavigate();
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -48,6 +52,13 @@ const ButtonSection: React.FC = () => {
   }, [isInviteDisabled, timeLeft]);
 
 
+  const handleClose = () => {
+    if (selectedConversation !== null) {
+      updateActiveConversation(-1);
+      setSelectedConversation(null);
+    }
+  };
+
   return (
     <div className={css.buttonSection}>
       <div className={css.button}>
@@ -58,6 +69,15 @@ const ButtonSection: React.FC = () => {
           <User size={30} color="#F8F3E3" />
         </div>
         <p>{t('settingsSection.profileButton')}</p>
+      </div>
+      <div className={css.button}>
+        <div
+          className={css.icon}
+          onClick={handleClose}
+        >
+          <MessageCircleX size={30} color="#F8F3E3" />
+        </div>
+        <p>{t('settingsSection.closeChat')}</p>
       </div>
       <div className={css.button}>
         <div

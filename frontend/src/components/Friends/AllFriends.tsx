@@ -32,6 +32,7 @@ const AllFriends: React.FC = () => {
   const [isInviteDisabled, setIsInviteDisabled] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const { t } = useTranslation();
+  
 
 
 
@@ -115,12 +116,13 @@ const AllFriends: React.FC = () => {
           filteredFriends.map((friend) => (
             <div key={friend.id} className={css.friendCard}>
               <img
+                onClick={() => navigate(`/profile/${friend.username}`)}
                 src={friend.profile.avatar}
                 alt={friend.username}
                 className={css.avatar}
               />
               <div className={css.userInfo}>
-                <span className={css.username}>{friend.username}</span>
+                <span className={css.username} onClick={() => navigate(`/profile/${friend.username}`)} >{friend.username}</span>
                 {friend.profile.is_online ? (
                   <span className={css.Online}>{t('allFriends.online')}</span>
                 ) : (

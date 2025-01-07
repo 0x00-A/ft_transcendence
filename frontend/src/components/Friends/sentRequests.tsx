@@ -8,6 +8,7 @@ import { X } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
+import { useNavigate } from 'react-router-dom';
 
 interface Profile {
   id: number;
@@ -28,6 +29,7 @@ interface SentRequest {
 const SentRequests: React.FC = () => {
   const { data: sentRequests, isLoading, error, refetch } = useGetData<SentRequest[]>('friend-requests/sent');
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
 
   const handleCancel = async (username: string) => {
@@ -54,12 +56,13 @@ const SentRequests: React.FC = () => {
           ) : sentRequests?.map((request) => (
             <div key={request.id} className={css.requestCard}>
               <img
+                onClick={() => navigate(`/profile/${request.receiver.username}`)}
                 src={request.receiver.profile.avatar}
                 alt={request.receiver.username}
                 className={css.avatar}
               />
               <div className={css.userInfo}>
-                <span className={css.username}>{request.receiver.username}</span>
+                <span className={css.username} onClick={() => navigate(`/profile/${request.receiver.username}`)}>{request.receiver.username}</span>
                 <span className={css.timestamp}>{formatDate(new Date(request.timestamp), t('lang'))}</span>
               </div>
               <button

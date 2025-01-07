@@ -89,6 +89,7 @@
   "optionsButton": "Chat",
   "settingsSection": {
     "profileButton": "Profiel",
+    "closeChat": "Chat sluitent",
     "inviteButton": "Uitnodigen",
     "privacy": "Privacy",
     "mutualFriends": "Gemeenschappelijke vrienden",
