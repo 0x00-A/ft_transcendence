@@ -17,7 +17,7 @@ import { ChangePasswordForm } from '@/types/apiTypes';
 import { API_DISABLE_2FA_URL, API_ENABLE_2FA_REQUEST_URL, API_ENABLE_2FA_URL } from '@/api/apiConfig';
 import { otpSchema } from '@/types/formSchemas';
 import { useTranslation } from 'react-i18next';
-import { APP_ANDROID_QRCODE, APP_ANDROID_URL, APP_IOS_QRCODE, APP_IOS_URL } from '@/config/constants';
+import { APP_ANDROID_QRCODE, APP_ANDROID_URL, APP_APPLE_QRCODE, APP_IOS_URL } from '@/config/constants';
 
 type ShowPasswordFields = 'current_pass' | 'new_pass' | 'confirm_pass' | 'pass2fa';
 
@@ -274,7 +274,7 @@ const EditSecurityProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<Rea
                                 <div className={css.qrCodeContainerApp}>
                                     <p>{t('Profile.EditSecurity.downloadAppPopup.qrCodeInstructions')}</p>
                                     <img
-                                        src={selectedOS === "android" ? APP_ANDROID_QRCODE : APP_IOS_QRCODE }
+                                        src={selectedOS === "android" ? APP_ANDROID_QRCODE : APP_APPLE_QRCODE }
                                         alt={`${selectedOS} QR Code`}
                                     />
                                     <a className={css.appLink} href={selectedOS === "android" ? APP_ANDROID_URL : APP_IOS_URL} target='_blank'>{selectedOS === "android" ? APP_ANDROID_URL : APP_IOS_URL}</a>

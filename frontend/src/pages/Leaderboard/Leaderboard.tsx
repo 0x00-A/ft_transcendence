@@ -1,4 +1,3 @@
-
 import { useGetData } from '@/api/apiHooks';
 import { API_GET_LEADER_BOARD_URL } from '@/api/apiConfig';
 import { Trophy, Medal, TrendingUp, TrendingDown } from 'lucide-react';
@@ -8,7 +7,7 @@ import styles from './Leaderboard.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 
-const LeaderboardPage = () => {
+const Leaderboard = () => {
   const {
     data: leaderboardData,
     isLoading,
@@ -17,8 +16,6 @@ const LeaderboardPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useUser();
-
-
 
   const getRankBadge = (rank: number) => {
     switch (rank) {
@@ -34,36 +31,105 @@ const LeaderboardPage = () => {
   };
 
   const renderTopRanks = () => {
-    if (!leaderboardData || leaderboardData.length < 3) return null;
+    if (!leaderboardData || leaderboardData.length === 0) return null;
+
+    if (leaderboardData.length === 1) {
+      const first = leaderboardData[0];
+      return (
+        <div className={styles.podium}>
+          <div className={styles.podiumPlace} style={{ gridColumn: '2' }}>
+            <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`} 
+                 onClick={() => navigate(`/profile/${first.username}`)}>
+              <img src={first.avatar} alt={first.username} />
+            </div>
+            <Trophy className={styles.trophy} />
+            <span className={styles.podiumUsername} 
+                  onClick={() => navigate(`/profile/${first.username}`)}>
+              {first.username}
+            </span>
+            <span className={styles.podiumScore}>{first.score.toLocaleString()} pts</span>
+            <div className={styles.soloMessage}>{t('onlyPlayers')}</div>
+          </div>
+        </div>
+      );
+    }
+
+    if (leaderboardData.length === 2) {
+      const [first, second] = leaderboardData;
+      return (
+        <div className={styles.podium}>
+          <div className={styles.podiumPlace}>
+            <div className={`${styles.podiumAvatar} ${styles.secondPlace}`} 
+                 onClick={() => navigate(`/profile/${second.username}`)}>
+              <img src={second.avatar} alt={second.username} />
+            </div>
+            <Medal className={styles.silverMedal} />
+            <span className={styles.podiumUsername} 
+                  onClick={() => navigate(`/profile/${second.username}`)}>
+              {second.username}
+            </span>
+            <span className={styles.podiumScore}>{second.score.toLocaleString()} pts</span>
+          </div>
+
+          <div className={`${styles.podiumPlace} ${styles.firstPlace}`}>
+            <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`} 
+                 onClick={() => navigate(`/profile/${first.username}`)}>
+              <img src={first.avatar} alt={first.username} />
+            </div>
+            <Trophy className={styles.trophy} />
+            <span className={styles.podiumUsername} 
+                  onClick={() => navigate(`/profile/${first.username}`)}>
+              {first.username}
+            </span>
+            <span className={styles.podiumScore}>{first.score.toLocaleString()} pts</span>
+          </div>
+
+          <div className={styles.emptyPodium}>
+            <div className={styles.waitingMessage}>{t('WaitingPlayers')}</div>
+          </div>
+        </div>
+      );
+    }
 
     const [first, second, third] = leaderboardData;
-    
     return (
       <div className={styles.podium}>
         <div className={styles.podiumPlace}>
-          <div className={`${styles.podiumAvatar} ${styles.secondPlace}`} onClick={() => navigate(`/profile/${second.username}`)}>
+          <div className={`${styles.podiumAvatar} ${styles.secondPlace}`} 
+               onClick={() => navigate(`/profile/${second.username}`)}>
             <img src={second.avatar} alt={second.username} />
           </div>
           <Medal className={styles.silverMedal} />
-          <span className={styles.podiumUsername} onClick={() => navigate(`/profile/${second.username}`)} >{second.username}</span>
+          <span className={styles.podiumUsername} 
+                onClick={() => navigate(`/profile/${second.username}`)}>
+            {second.username}
+          </span>
           <span className={styles.podiumScore}>{second.score.toLocaleString()} pts</span>
         </div>
 
         <div className={`${styles.podiumPlace} ${styles.firstPlace}`}>
-          <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`} onClick={() => navigate(`/profile/${first.username}`)}>
+          <div className={`${styles.podiumAvatar} ${styles.firstPlaceAvatar}`} 
+               onClick={() => navigate(`/profile/${first.username}`)}>
             <img src={first.avatar} alt={first.username} />
           </div>
           <Trophy className={styles.trophy} />
-          <span className={styles.podiumUsername} onClick={() => navigate(`/profile/${first.username}`)}>{first.username}</span>
+          <span className={styles.podiumUsername} 
+                onClick={() => navigate(`/profile/${first.username}`)}>
+            {first.username}
+          </span>
           <span className={styles.podiumScore}>{first.score.toLocaleString()} pts</span>
         </div>
 
         <div className={styles.podiumPlace}>
-          <div className={`${styles.podiumAvatar} ${styles.thirdPlace}`} onClick={() => navigate(`/profile/${third.username}`)}>
+          <div className={`${styles.podiumAvatar} ${styles.thirdPlace}`} 
+               onClick={() => navigate(`/profile/${third.username}`)}>
             <img src={third.avatar} alt={third.username} />
           </div>
           <Medal className={styles.bronzeMedal} />
-          <span className={styles.podiumUsername} onClick={() => navigate(`/profile/${third.username}`)}>{third.username}</span>
+          <span className={styles.podiumUsername} 
+                onClick={() => navigate(`/profile/${third.username}`)}>
+            {third.username}
+          </span>
           <span className={styles.podiumScore}>{third.score.toLocaleString()} pts</span>
         </div>
       </div>
@@ -87,9 +153,10 @@ const LeaderboardPage = () => {
 
   return (
     <div className={styles.container}>
-
       {renderTopRanks()}
 
+      {/* Only show table if there are 3 or more users */}
+      {leaderboardData && leaderboardData.length > 3 && (
         <div className={styles.tableContainer}>
           <div className={styles.tableHeader}>
             <div className={styles.tableHeaderCell}>
@@ -117,14 +184,9 @@ const LeaderboardPage = () => {
 
           {isLoading ? (
             renderSkeletonRows()
-          ) : leaderboardData && leaderboardData.length === 0 ? (
-            <div className={styles.noData}>
-              {t('dashboard.Leaderboard.noDataFound')}
-            </div>
           ) : (
             <div className={styles.tablesRows}>
-              { leaderboardData &&
-              leaderboardData.slice(3).map((player: LeaderBoard) => (
+              {leaderboardData.slice(3).map((player: LeaderBoard) => (
                 <div
                   key={player.rank}
                   onClick={() => navigate(`/profile/${player.username}`)}
@@ -165,11 +227,11 @@ const LeaderboardPage = () => {
                 </div>
               ))}
             </div>
-          )
-        }
+          )}
         </div>
-      </div>
+      )}
+    </div>
   );
 };
 
-export default LeaderboardPage;
+export default Leaderboard;

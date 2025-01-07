@@ -1,7 +1,6 @@
 
 .container {
   width: 100%;
-  min-height: 500px;
   background-color: #1e2533;
   border-radius: 20px;
 }
@@ -91,7 +90,7 @@
 }
 
 .tablesRows {
-  height: 650px;
+  max-height: 600px;
   overflow-y: auto;
 }
 .tableHeader {
@@ -266,6 +265,27 @@
   height: 5rem;
   border-radius: 9999px;
   background-color: rgb(55, 65, 81);
+}
+.soloMessage {
+  margin-top: 1rem;
+  color: rgb(250, 204, 21);
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.waitingMessage {
+  color: rgb(156, 163, 175);
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.emptyPodium {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 @keyframes pulse {
