@@ -345,18 +345,18 @@ AUTHENTICATION_BACKENDS = [
 ASGI_APPLICATION = "app.asgi.application"
 
 CHANNEL_LAYERS = {
-    # 'default': {
-    #     'BACKEND': 'channels_redis.core.RedisChannelLayer',
-    #     'CONFIG': {
-    #         'hosts': [
-    #             (os.environ.get('REDIS_HOST', 'redis'),
-    #              int(os.environ.get('REDIS_PORT', 6379)))
-    #         ],
-    #     },
-    # },
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [
+                (os.environ.get('REDIS_HOST', 'redis'),
+                 int(os.environ.get('REDIS_PORT', 6379)))
+            ],
+        },
     },
+    # 'default': {
+    #     'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    # },
 }
 
 """
@@ -364,12 +364,8 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    # 'https://e2r6p15',
     'https://ft-pong.me',
     CLIENT_URL,
-    'http://e2r6p15:8000',
-    'http://localhost:3000'
-    # 'https://e1r6p15'
 ]
 CORS_ALLOW_METHODS = [
     'GET',
@@ -399,108 +395,57 @@ CORS_ALLOW_CREDENTIALS = True
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50MB
 
-# import logging
+LOG_DIR = '/app/backend/logs'
+os.makedirs(LOG_DIR, exist_ok=True)
 
-# logging.basicConfig(level=logging.DEBUG)
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django.security.csrf': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
-
-# LOG_DIR = '/app/backend/logs'
-# os.makedirs(LOG_DIR, exist_ok=True)
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format': '{levelname} {asctime} {module} {message}',
-#             'style': '{',
-#         },
-#         'simple': {
-#             'format': '{levelname} {message}',
-#             'style': '{',
-#         },
-#     },
-#     'handlers': {
-#         # 'file': {
-#         #     'level': 'DEBUG',
-#         #     'class': 'logging.FileHandler',
-#         #     'filename': os.path.join(LOG_DIR, 'django_logs.log'),
-#         #     'formatter': 'verbose',
-#         # },
-#         'file': {
-#             'level': 'INFO',
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': os.path.join(LOG_DIR, 'app.log'),
-#             'maxBytes': 1024 * 1024 * 1,  # 10 MB
-#             'backupCount': 5,
-#             'formatter': 'verbose',
-#         },
-#         # 'error_file': {
-#         #     'level': 'ERROR',
-#         #     'class': 'logging.FileHandler',
-#         #     # 'filename': '/var/log/django/error.log',
-#         #     'filename': os.path.join(LOG_DIR, 'error.log'),
-#         #     'formatter': 'verbose',
-#         # },
-#         # 'console': {
-#         #     'level': 'ERROR',  # Change from DEBUG to ERROR
-#         #     'class': 'logging.StreamHandler',
-#         # },
-#     },
-#     'loggers': {
-#         # '': {  # Root logger configuration
-#         #     'level': 'DEBUG',
-#         #     # Log messages will be written to the 'file' handler
-#         #     'handlers': ['file'],
-#         # },
-#         # 'django.request': {
-#         #     'handlers': ['error_file'],
-#         #     'level': 'DEBUG',
-#         #     'propagate': True,
-#         # },
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#         # 'django.security': {
-#         #     'handlers': ['file'],
-#         #     'level': 'INFO',  # You can adjust the level to capture specific events
-#         #     'propagate': False,
-#         # },
-#         # 'daphne': {
-#         #     'handlers': ['file'],
-#         #     'level': 'DEBUG',
-#         #     'propagate': True,
-#         # },
-#         # 'django.db.backends': {
-#         #     'level': 'INFO',
-#         #     'handlers': ['file'],
-#         #     'propagate': True,
-#         # },
-#         # 'django.channels': {
-#         #     'handlers': ['console'],
-#         #     'level': 'ERROR',  # Adjust this to reduce verbosity
-#         #     'propagate': True,
-#         # },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        # 'file': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.FileHandler',
+        #     'filename': os.path.join(LOG_DIR, 'django_logs.log'),
+        #     'formatter': 'verbose',
+        # },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'app.log'),
+            'maxBytes': 1024 * 1024 * 1,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        # 'error_file': {
+        #     'level': 'ERROR',
+        #     'class': 'logging.FileHandler',
+        #     # 'filename': '/var/log/django/error.log',
+        #     'filename': os.path.join(LOG_DIR, 'error.log'),
+        #     'formatter': 'verbose',
+        # },
+        # 'console': {
+        #     'level': 'ERROR',  # Change from DEBUG to ERROR
+        #     'class': 'logging.StreamHandler',
+        # },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 
 # # LOGGING = {

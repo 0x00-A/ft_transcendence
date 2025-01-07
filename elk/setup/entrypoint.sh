@@ -93,6 +93,7 @@ until curl -s -X PUT "https://es:9200/_index_template/logs_template" \
         "template": {
             "settings": {
                 "index.lifecycle.name": "ilm_policy",
+                "index.lifecycle.rollover_alias": "logs",
                 "number_of_shards": 1,
                 "number_of_replicas": 0
             }
