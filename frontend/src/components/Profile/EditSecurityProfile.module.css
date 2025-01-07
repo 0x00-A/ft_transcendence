@@ -234,11 +234,18 @@
     align-items: center;
     gap: 1rem;
 }
+
+.qrCodeContainerApp p {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    font-weight: 700;
+
+}
 .qrCodeContainerApp img {
     border-radius: 10px;
     border: 2px solid #f8c25c;
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
 }
 .fieldError {
     color: #AA2926;
@@ -337,8 +344,8 @@
 }
 
 .closePopup:hover {
-    background-color: #394056;
-    color: #AA2926;
+    background-color: #5874a2;
+    color: red;
 }
 
 .qrCode {
