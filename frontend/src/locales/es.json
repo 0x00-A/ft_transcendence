@@ -1,5 +1,7 @@
 {
     "showMyProfile": "Mi Perfil",
+  "WaitingPlayers": "¡A la espera de más jugadores!",
+  "onlyPlayers": "¡Eres el único jugador!",
   "editEmail": {
       "btnEdit": "Editar",
       "editEmail": "Editar su correo electrónico",

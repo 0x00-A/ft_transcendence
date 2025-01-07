@@ -56,6 +56,10 @@
   background-color: #1e293b;
 }
 
+.avatar:hover {
+  border: 2px solid #fbbf24;
+}
+
 .userDetails {
   display: flex;
   flex-direction: column;
@@ -65,6 +69,10 @@
   color: #F8F3E3;
   font-size: 16px;
   font-weight: 500;
+}
+
+.username:hover {
+  color: #fbbf24;
 }
 
 .timestamp {
