@@ -90,7 +90,6 @@ const Profile = () => {
     navigate('/');
   }
 
-
   return (
     <div className={css.profileContainer}>
       { isEditProfile &&

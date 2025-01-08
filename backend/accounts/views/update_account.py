@@ -93,12 +93,12 @@ class UpdatePasswordView(APIView):
             )
         if not user.check_password(request.data['current_password']):
             return Response(
-                {'error': 'Current password is incorrect'},
+                {'current_password': 'Current password is incorrect'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         if request.data['new_password'] != request.data['confirm_password']:
             return Response(
-                {'error': 'Passwords do not match'},
+                {'new_password': 'Passwords do not match'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         try:
@@ -107,7 +107,7 @@ class UpdatePasswordView(APIView):
             user.save()
             return Response({'message': 'Password changed successfully'}, status=status.HTTP_200_OK)
         except ValidationError as exc:
-            return Response({'password': exc.messages}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'new_password': exc.messages}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SetPasswordView(APIView):

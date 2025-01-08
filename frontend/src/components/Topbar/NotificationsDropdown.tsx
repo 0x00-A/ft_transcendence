@@ -37,7 +37,6 @@ const NotificationsDropdown = () => {
     try {
       setIsLoading(true);
       await fetchNotifications(pageToLoad, false);
-      // console.log("Fetched notifications for page:", pageToLoad);
     } catch (error) {
       // console.error("Error loading notifications:", error);
     } finally {
