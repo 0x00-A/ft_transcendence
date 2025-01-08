@@ -5,6 +5,7 @@
     align-items: center;
     height: 100vh;
     background-color: var(--color-bg);
+    position: relative;
 }
 
 .entryArea {
@@ -83,7 +84,7 @@
     padding: 5px;
     background-color: #fffbe1;
     /* width: auto; */
-    z-index: 5;
+    z-index: 10;
     /* right: calc(100% + 1rem); */
     right: calc(100% + 1rem);
     top: 50%;

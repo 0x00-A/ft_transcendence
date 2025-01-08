@@ -42,6 +42,8 @@ MAHDI:
  - [ ] friends dashboard and offline
  - [ ] delete signals log
 
+ - [ ] 500 internal server error
+
  - [ ] email LOGO
  - [X] exclude inactive users
  - [ ] reset password

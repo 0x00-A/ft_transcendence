@@ -13,7 +13,7 @@ class AchievementSerializer(serializers.ModelSerializer):
                     'progress_percentage', 'is_unlocked']
 
     def get_image(self, obj):
-        return f'{settings.SERVER_URL}{obj.image}'
+        return f'{settings.SERVER_URL}{obj.image.url}'
 
 class UserAchievementsSerializer(serializers.ModelSerializer):
     achievement = AchievementSerializer()

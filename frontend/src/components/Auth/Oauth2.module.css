@@ -4,6 +4,8 @@
     flex-direction: column;
     justify-content: center;
     place-items: center;
+    overflow: visible;
+    /* position: relative; */
 }
 
 .or {
@@ -27,7 +29,6 @@
     display: flex;
     gap: 3rem;
     padding: 1rem;
-
 }
 
 .oauthBtn {

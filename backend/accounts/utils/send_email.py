@@ -3,6 +3,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from email.mime.image import MIMEImage
+
 from accounts.models import EmailVerification, PasswordReset, Notification
 from accounts.conf import CLIENT_EMAIL_VERIFICATION_URL, CLIENT_RESET_PASSWORD_URL, LOGO_PATH, CLIENT_URL, CLIENT_EMAIL_UPDATE_URL
 from accounts.consumers import NotificationConsumer
@@ -15,11 +17,9 @@ def send_verification_email(user):
 
     html_message = render_to_string('email_verification.html', context={
         'username': user.username,
-        # 'logo_path': LOGO_PATH,
-        'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
+        'logo': 'logo',
         'verification_link': verification_link,
     })
-
     plain_text = strip_tags(html_message)
     email = EmailMultiAlternatives(
         subject='-ft-pong- Email Verification',
@@ -28,6 +28,10 @@ def send_verification_email(user):
         to=[user.email],
     )
     email.content_subtype = 'html'
+    with open(LOGO_PATH, 'rb') as f:
+        image = MIMEImage(f.read())
+        image.add_header('Content-ID', '<logo>')
+        email.attach(image)
     email.attach_alternative(html_message, 'text/html')
     email.send(fail_silently=False)
 
@@ -37,11 +41,10 @@ def send_update_email_email(user, email):
 
     html_message = render_to_string('email_update.html', context={
         'username': user.username,
-        # 'logo_path': LOGO_PATH,
-        'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
+        'logo': 'logo',
+        # 'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
         'verification_link': verification_link,
     })
-
     plain_text = strip_tags(html_message)
     email = EmailMultiAlternatives(
         subject='-ft-pong- Email Verification',
@@ -50,6 +53,10 @@ def send_update_email_email(user, email):
         to=[email],
     )
     email.content_subtype = 'html'
+    with open(LOGO_PATH, 'rb') as f:
+        image = MIMEImage(f.read())
+        image.add_header('Content-ID', '<logo>')
+        email.attach(image)
     email.attach_alternative(html_message, 'text/html')
     email.send(fail_silently=False)
 
@@ -61,11 +68,10 @@ def send_reset_password_email(user):
 
     html_message = render_to_string('reset_password.html', context={
         'username': user.username,
-        # 'logo_path': LOGO_PATH,
-        'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
+        'logo': 'logo',
+        # 'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
         'resetpass_link': resetpass_link,
     })
-
     plain_text = strip_tags(html_message)
     email = EmailMultiAlternatives(
         subject='-ft-pong- Reset Your Password',
@@ -74,6 +80,10 @@ def send_reset_password_email(user):
         to=[user.email],
     )
     email.content_subtype = 'html'
+    with open(LOGO_PATH, 'rb') as f:
+        image = MIMEImage(f.read())
+        image.add_header('Content-ID', '<logo>')
+        email.attach(image)
     email.attach_alternative(html_message, 'text/html')
     email.send(fail_silently=False)
 
@@ -81,8 +91,8 @@ def send_oauth2_welcome(user, choice:str):
     html_message = render_to_string('oauth2_welcome.html', context={
         'username': user.username,
         'choice': choice,
-        # 'logo_path': LOGO_PATH,
-        'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
+        'logo': 'logo',
+        # 'logo_path': "https://static.vecteezy.com/system/resources/previews/014/692/147/non_2x/table-tennis-rackets-with-ball-illustration-on-white-background-table-tennis-and-ping-pong-rackets-with-ball-logo-vector.jpg",
         'website_link': CLIENT_URL,
     })
 
@@ -94,6 +104,10 @@ def send_oauth2_welcome(user, choice:str):
         to=[user.email],
     )
     email.content_subtype = 'html'
+    with open(LOGO_PATH, 'rb') as f:
+        image = MIMEImage(f.read())
+        image.add_header('Content-ID', '<logo>')
+        email.attach(image)
     email.attach_alternative(html_message, 'text/html')
     email.send()
 

@@ -14,7 +14,7 @@ class Achievement(models.Model):
     reward_points = models.IntegerField(default=0)
     # icon = models.ImageField(
     #     upload_to='achievement_icons/', blank=True, null=True)
-    image = models.URLField()
+    image = models.ImageField(upload_to='achievements/', blank=True, null=True)
     threshold = models.FloatField()
     progress_percentage = models.FloatField(
         default=0.0)  # Progress in percentage
