@@ -7,7 +7,6 @@ from accounts.serializers.badgeSerializer import BadgeSerializer
 from app.settings import SERVER_URL, MEDIA_URL, DEFAULT_AVATAR
 
 
-
 class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()
@@ -23,7 +22,6 @@ class ProfileSerializer(serializers.ModelSerializer):
                   'rank', 'badge', 'stats', 'is_online', 'blocked_user_name', 'preferred_language']
 
     def get_avatar(self, obj):
-        print(F'------------>>> {SERVER_URL}{obj.avatar.url}<<----------------')
         return SERVER_URL + obj.avatar.url
 
     def get_username(self, obj):

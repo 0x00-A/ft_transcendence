@@ -9,7 +9,7 @@ import { useGetData } from '@/api/apiHooks';
 // Api
 import { LastGames } from '@/types/apiTypes';
 import { API_GET_LAST_GAMES_URL, API_GET_PLAYED_GAMES_URL } from '@/api/apiConfig';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
 
@@ -18,7 +18,7 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [isBtnActive, setBtnActive] = useState(true);
+  // const [isBtnActive, setBtnActive] = useState(true);
   if (isOtherUser) {
     var { data: playedGames, isLoading, error } = useGetData<LastGames[]>(`${API_GET_LAST_GAMES_URL}/${username}`);
   }

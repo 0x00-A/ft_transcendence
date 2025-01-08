@@ -510,11 +510,12 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         )
 
     async def game_countdown(self, event):
-        await self.send(text_data=json.dumps(
-            {
-                'type': 'game_countdown',
-            }
-        ))
+        if self.channel_name is not None:
+            await self.send(text_data=json.dumps(
+                {
+                    'type': 'game_countdown',
+                }
+            ))
 
     async def set_player_id_name(self):
         game: GameInstance = get_game(self.game_id)
@@ -825,58 +826,65 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         )
 
     async def play_paddle_sound(self, game):
-        await self.channel_layer.group_send(
-            game.game_id,
-            {
-                "type": "play_sound",
-                "collision": "paddle"
-            }
-        )
+        if self.channel_name is not None:
+            await self.channel_layer.group_send(
+                game.game_id,
+                {
+                    "type": "play_sound",
+                    "collision": "paddle"
+                }
+            )
 
     async def play_wall_sound(self, game):
-        await self.channel_layer.group_send(
-            game.game_id,
-            {
-                "type": "play_sound",
-                "collision": "wall"
-            }
-        )
+        if self.channel_name is not None:
+            await self.channel_layer.group_send(
+                game.game_id,
+                {
+                    "type": "play_sound",
+                    "collision": "wall"
+                }
+            )
 
     async def score_update(self, event):
-        await self.send(text_data=json.dumps(
-            {
-                'type': 'score_update',
-                'state': event[f"{self.player_id}_state"]
-            }
-        ))
+        if self.channel_name is not None:
+            await self.send(text_data=json.dumps(
+                {
+                    'type': 'score_update',
+                    'state': event[f"{self.player_id}_state"]
+                }
+            ))
 
     async def player_lost(self, event):
-        await self.send(text_data=json.dumps(
-            {
-                'type': 'player_lost',
-                'state': event[f"{self.player_id}_state"]
-            }
-        ))
+        if self.channel_name is not None:
+            await self.send(text_data=json.dumps(
+                {
+                    'type': 'player_lost',
+                    'state': event[f"{self.player_id}_state"]
+                }
+            ))
 
     async def game_state_update(self, event):
-        await self.send(text_data=json.dumps(
-            {
-                'type': 'game_update',
-                'state': event[f"{self.player_id}_state"]
+        if self.channel_name is not None:
+            await self.send(text_data=json.dumps(
+                {
+                    'type': 'game_update',
+                    'state': event[f"{self.player_id}_state"]
 
-            }
-        ))
+                }
+            ))
 
     async def play_sound(self, event):
-        await self.send(text_data=json.dumps({
-            'type': event['type'],
-            'collision': event['collision']
-        }))
+        if self.channel_name is not None:
+            await self.send(text_data=json.dumps({
+                'type': event['type'],
+                'collision': event['collision']
+            }))
 
     async def game_init(self, event):
-        await self.send(text_data=json.dumps(
-            {
-                "type": 'game_started',
-                'state': event[f"{self.player_id}_state"]
-            }
-        ))
+        if self.channel_name is not None:
+            await self.send(text_data=json.dumps(
+                {
+                    "type": 'game_started',
+                    'state': event[f"{self.player_id}_state"]
+                }
+            ))

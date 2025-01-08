@@ -5,7 +5,7 @@ import { useTyping } from '@/contexts/TypingContext';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelectedConversation } from '@/contexts/SelectedConversationContext';
-import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
+// import { useWebSocketChat } from '@/contexts/WebSocketChatProvider';
 
 
 interface ChatHeaderProps {
