@@ -1,1 +1,0 @@
-import{u as s,j as t}from"./index-erQsObJq.js";const o=()=>{const e=new Date().getFullYear(),{t:r}=s();return t.jsx("footer",{className:"h-12 pb-2  w-full mt-4",children:t.jsxs("div",{className:"text-center text-lg text-gray-400",children:["© ",e," ",r("footer")]})})};export{o as default};
