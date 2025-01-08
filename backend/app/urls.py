@@ -21,7 +21,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from django.conf import settings
-from debug_toolbar.toolbar import debug_toolbar_urls
+# from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf.urls.static import static
 
 
@@ -43,6 +43,6 @@ urlpatterns = [
     path('api/', include('relationships.urls')),
     path('api/chat/', include('chat.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -346,18 +346,18 @@ AUTHENTICATION_BACKENDS = [
 ASGI_APPLICATION = "app.asgi.application"
 
 CHANNEL_LAYERS = {
-    # 'default': {
-    #     'BACKEND': 'channels_redis.core.RedisChannelLayer',
-    #     'CONFIG': {
-    #         'hosts': [
-    #             (os.environ.get('REDIS_HOST', 'redis'),
-    #              int(os.environ.get('REDIS_PORT', 6379)))
-    #         ],
-    #     },
-    # },
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [
+                (os.environ.get('REDIS_HOST', 'redis'),
+                 int(os.environ.get('REDIS_PORT', 6379)))
+            ],
+        },
     },
+    # 'default': {
+    #     'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    # },
 }
 
 """

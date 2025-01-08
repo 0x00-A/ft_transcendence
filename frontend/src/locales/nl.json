@@ -201,7 +201,8 @@
     "title": "Meldingen",
     "clearAll": "Alles wissen",
     "loadMore": "Meer tonen",
-    "loading": "Laden..."
+    "loading": "Laden...",
+    "empty": "Meldingen Leeg"
   },
   "game": {
     "toasts": {
