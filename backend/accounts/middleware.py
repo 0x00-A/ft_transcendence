@@ -14,7 +14,7 @@ class RefreshTokenMiddleware(MiddlewareMixin):
                 'access_token',
                 new_access_token,
                 httponly=True,
-                secure=False,
+                secure=True,
                 samesite='Strict'
             )
         return response
