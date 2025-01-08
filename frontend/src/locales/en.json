@@ -201,7 +201,8 @@
       "title": "Notifications",
       "clearAll": "Clear All",
       "loadMore": "Show More",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "empty": "Notifications Empty"
   },
   "game": {
       "toasts": {

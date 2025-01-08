@@ -202,7 +202,8 @@
       "title": "Notificaciones",
       "clearAll": "Limpiar todo",
       "loadMore": "Ver más",
-      "loading": "Cargando..."
+      "loading": "Cargando...",
+      "empty": "Notificaciones Vacías"
   },
   "game": {
       "toasts": {
