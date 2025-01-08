@@ -66,7 +66,6 @@ const MessageList = () => {
 
   useEffect(() => {
     const update = async () => {
-  
       try {
           const response = await apiGetConversations();
           if (selectedConversation) {
@@ -152,7 +151,7 @@ const MessageList = () => {
               handleSearchItemClick(user);
             }
           } catch (error) {
-            console.error("Error fetching user: ");
+            console.error("Error fetching user: ", error);
           }
         };
 

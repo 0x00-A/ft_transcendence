@@ -33,7 +33,7 @@ const ProfileFriends = () => {
                 <Users size={30} color="#f8c25c" />
                 <h3>{t('Profile.friends.title')}</h3>
             </div>
-            <button className={css.viewMore} onClick={() => navigate('/friends')}>{t('Profile.friends.viewMore')}</button>
+            <button className={css.viewMore} onClick={() => navigate('/friends?view=all')}>{t('Profile.friends.viewMore')}</button>
         </div>
         <div className={css.friendsList}>
             <div className={css.buttonsGrp}>

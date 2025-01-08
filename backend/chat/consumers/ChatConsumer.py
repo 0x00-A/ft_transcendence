@@ -3,7 +3,6 @@ from accounts.utils import translate_text
 from channels.generic.websocket import AsyncWebsocketConsumer
 from ..models import User, Message, Conversation
 from asgiref.sync import sync_to_async
-from django.db.models import Q
 from accounts.models import Notification
 from accounts.consumers import NotificationConsumer
 import asyncio
@@ -66,6 +65,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         blocker_id = data.get("blocker_id")
         blocked_id = data.get("blocked_id")
         status = data.get("status")
+
+        try:
+            conversation_id = int(conversation_id)
+        except (ValueError, TypeError):
+            raise ValueError("Invalid conversation_id. It must be a number.")
 
         if not all([conversation_id, blocker_id, blocked_id]):
             raise ValueError("Missing required block status parameters")
@@ -154,6 +158,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if not all([conversation_id]):
             raise ValueError("Missing required active conversation parameters")
+        
+        try:
+            conversation_id = int(conversation_id)
+        except (ValueError, TypeError):
+            raise ValueError("Invalid conversation_id. It must be a number.")
+        
         if conversation_id is not None:
             await self.set_active_conversation(self.user.id, conversation_id)
 
@@ -209,7 +219,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not all([receiver_id, message]):
             raise ValueError("Missing required send message parameters")
 
-        message = message[:300]
+        try:
+            receiver_id = int(receiver_id)
+        except (ValueError, TypeError):
+            raise ValueError("Invalid receiver_id. It must be a number.")
+
+        message = message[:400]
 
         try:
             conversation = await self.get_or_create_conversation(sender_id, receiver_id)
@@ -284,12 +299,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return False
 
     async def handle_typing_status(self, data):
-        typing = data.get("typing")
+        typing = data.get("typing", False)
         receiver_id = data.get("receiver_id")
         sender_id = self.user.id
 
         if not all([receiver_id]):
             raise ValueError("Missing required typing status parameters")
+        
+        try:
+            receiver_id = int(receiver_id)
+        except (ValueError, TypeError):
+            raise ValueError("Invalid receiver_id. It must be a number.")
 
         await self.channel_layer.group_send(
             f"user_{receiver_id}",
@@ -306,6 +326,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not all([conversation_id]):
             raise ValueError("Missing required conversation_id parameters")
 
+        try:
+            conversation_id = int(conversation_id)
+        except (ValueError, TypeError):
+            raise ValueError("Invalid conversation_id. It must be a number.")
+        
         await self.mark_conversation_as_read(conversation_id, self.user)
 
         await self.send(text_data=json.dumps({

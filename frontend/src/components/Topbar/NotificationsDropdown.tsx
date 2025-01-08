@@ -50,7 +50,6 @@ const NotificationsDropdown = () => {
       try {
         setIsInitialLoading(true);
         await fetchNotifications(1, true);
-        // console.log("Fetched notifications page 1:");
       }
       catch (error) {
       } finally {
