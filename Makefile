@@ -1,5 +1,4 @@
-DOCKER_COMPOSE_NAME=docker-compose-deploy.yml
-# DOCKER_COMPOSE_NAME=docker-compose.yml
+DOCKER_COMPOSE_NAME=docker-compose.yml
 all: up
 
 clean:

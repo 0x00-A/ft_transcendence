@@ -4,7 +4,7 @@ LABEL maintainer='abdelatif'
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV DJANGO_SETTINGS_MODULE=app.settings
+ENV DJANGO_SETTINGS_MODULE='app.settings'
 
 COPY ./requirements*.txt /tmp/
 # COPY ./requirements.dev.txt /tmp/requirements.dev.txt
@@ -18,9 +18,9 @@ RUN pip install --upgrade pip && \
     apk add --update --no-cache --virtual .tmp-build-deps \
     build-base postgresql-dev musl-dev && \
     pip install -r /tmp/requirements.txt && \
-    if [ $DEV = "true" ]; \
-    then pip install -r /tmp/requirements.dev.txt ; \
-    fi && \
+    # if [ $DEV = "true" ]; \
+    # then pip install -r /tmp/requirements.dev.txt ; \
+    # fi && \
     rm -rf /tmp && \
     apk del .tmp-build-deps && \
     adduser \
@@ -30,10 +30,31 @@ RUN pip install --upgrade pip && \
 
 COPY . /app/backend
 
-#USER django-user
+# RUN mkdir -p /app/backend/logs && \
+#     chown -R django-user:django-user /app/backend/logs && \
+#     chmod -R 755 /app/backend/logs && \
+#     touch /app/backend/logs/django_logs.log && \
+#     chown django-user:django-user /app/backend/logs/django_logs.log
+
+# Create logs directory with proper permissions
+RUN mkdir -p /app/backend/logs
+RUN mkdir -p /app/backend/static
+RUN chown -R django-user:django-user /app/backend/logs
+RUN chown -R django-user:django-user /app/backend/static
+
+COPY ./scripts /scripts
+RUN chmod +x /scripts/*
+
+# # Switch to non-root user
+# USER 1000:1000
+
+
+# USER django-user
 
 EXPOSE 8000
 
 # ENTRYPOINT [ "python" ]
 
 # CMD [ "manage.py", "runserver", "0.0.0.0:8000" ]
+
+CMD [ "/scripts/entrypoint.sh" ]

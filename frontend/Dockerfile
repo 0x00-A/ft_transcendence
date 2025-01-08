@@ -1,12 +1,16 @@
 FROM node:20-alpine
 
-WORKDIR /app/frontend/
+WORKDIR /app
 
-COPY package*.json /app/frontend/
+COPY package*.json /app
 RUN npm i
 
+# RUN npm i -g serve
+
+
 COPY . .
+RUN npm run build
 
-EXPOSE 3000
+# EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# CMD [ "serve", "-s", "dist" ]
