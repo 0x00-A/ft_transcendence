@@ -37,7 +37,6 @@ const NotificationsDropdown = () => {
     try {
       setIsLoading(true);
       await fetchNotifications(pageToLoad, false);
-      console.log("Fetched notifications for page:", pageToLoad);
     } catch (error) {
       console.error("Error loading notifications:", error);
     } finally {
@@ -50,7 +49,6 @@ const NotificationsDropdown = () => {
       try {
         setIsInitialLoading(true);
         await fetchNotifications(1, true);
-        console.log("Fetched notifications page 1:");
       }
       catch (error) {
       } finally {

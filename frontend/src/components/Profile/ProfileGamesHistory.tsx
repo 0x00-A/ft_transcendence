@@ -67,19 +67,6 @@ const ProfileGamesHistory = ({isOtherUser, username}:{isOtherUser:boolean, usern
             <History size={30} color='#f8c25c' />
             <h3>{t('Profile.gameHistory.title')}</h3>
           </div>
-          <div className={css.buttonsGrp}>
-            <button onClick={() => setBtnActive(true)}
-                className={`${css.button} ${isBtnActive  ? css.buttonActive : ''}`}>
-                {t('Profile.gameHistory.buttons.game')}
-            </button>
-            <button onClick={() => setBtnActive(false)}
-                className={`${css.button} ${!isBtnActive ? css.buttonActive : ''}`}>
-                {t('Profile.gameHistory.buttons.tournament')}
-            </button>
-          </div>
-          {/* <button className={css.dateFilterBtn}>Game
-            <IoFilterSharp />
-          </button> */}
         </div>
         {error && <div className="text-red-500">{error.message}</div>}
         { isLoading ?
