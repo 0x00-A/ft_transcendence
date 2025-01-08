@@ -89,8 +89,6 @@ const Profile = () => {
     }
     navigate('/');
   }
-  // console.log('currentUser', currentUser);
-
 
   return (
     <div className={css.profileContainer}>

@@ -31,8 +31,8 @@ const ChatContent = () => {
   
   useEffect(() => {
     return () => {
-      clearMessages();
       setWebsocketChatMessages([]);
+      clearMessages();
     };
   }, []);
 
@@ -62,9 +62,8 @@ const ChatContent = () => {
         setIsLoading(false);
       }
     };
-
     fetchMessages();
-  }, [page]);
+  }, [page, selectedConversation]);
 
   useEffect(() => {
     if (!selectedConversation) return;
@@ -72,7 +71,7 @@ const ChatContent = () => {
     const filteredMessages = websocketMessages.filter(
       (message) => message.conversation === selectedConversation.id
     );
-
+    
     if (filteredMessages.length > 0) {
       setWebsocketChatMessages(filteredMessages);
     }
