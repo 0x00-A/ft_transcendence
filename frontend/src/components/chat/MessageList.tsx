@@ -66,7 +66,7 @@ const MessageList = () => {
 
   useEffect(() => {
     const update = async () => {
-  
+      console.log("i here rander list message")
       try {
           const response = await apiGetConversations();
           if (selectedConversation) {
