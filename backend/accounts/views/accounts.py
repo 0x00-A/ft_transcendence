@@ -107,7 +107,6 @@ class DashboardLeaderBoardView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-
 class DeleteAccountView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -118,7 +117,8 @@ class DeleteAccountView(APIView):
             user = request.user
             if not user.check_password(request.data['password']):
                 return Response({'password': 'Invalid password'}, status=status.HTTP_400_BAD_REQUEST)
-            user.delete()
+            user.is_active = False
+            user.save()
             return Response({'message': 'Account deleted successfully'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(

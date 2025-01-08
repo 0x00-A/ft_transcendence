@@ -46,5 +46,5 @@ API_CLIENT_OAUTH2_REDIRECT_URL = os.getenv('API_CLIENT_OAUTH2_REDIRECT_URL')
 
 
 SERVER_URL = os.getenv('SERVER_URL', 'http://localhost:8000')
-LOGO_PATH = SERVER_URL + '/media/logo.svg'
-LOGO_PATH = "http://localhost:8000/media/logo.svg"
+LOGO_PATH = 'static/media/ft_pong.png'
+# LOGO_PATH = "http://localhost:8000/media/logo.svg"

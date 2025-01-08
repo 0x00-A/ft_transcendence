@@ -12,23 +12,23 @@ import ProfileAchievements from '@/components/Profile/ProfileAchievements';
 import css from './Profile.module.css';
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { toast } from 'react-toastify';
-import { RiDeleteBin6Line } from "react-icons/ri";
+// import { RiDeleteBin6Line } from "react-icons/ri";
 // Api
 import { useUser } from '@/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import useDeleteAccount from '@/hooks/profile/useDeleteAccount';
-import { PasswordForm } from '@/types/apiTypes';
+// import useDeleteAccount from '@/hooks/profile/useDeleteAccount';
+// import { PasswordForm } from '@/types/apiTypes';
 
 
 const Profile = () => {
 
   const [isEditProfile, setEditProfile] = useState(false);
   const [activeBtn, setActiveBtn] = useState(true);
-  const [isDeleteAcc, setDeleteAcc] = useState(false);
+  // const [isDeleteAcc, setDeleteAcc] = useState(false);
   const { user: currentUser, error, refetch, isLoading } = useUser();
-  const { register, handleSubmit, errors, mutation, reset } = useDeleteAccount();
+  // const { register, handleSubmit, errors, mutation, reset } = useDeleteAccount();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -58,21 +58,21 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    if (mutation.isSuccess) {
-      toast.success('Account deleted successfully!');
-      reset();
-      navigate('/auth');
-    }
-  }, [mutation.isSuccess]);
+  // useEffect(() => {
+  //   if (mutation.isSuccess) {
+  //     toast.success('Account deleted successfully!');
+  //     reset();
+  //     navigate('/auth');
+  //   }
+  // }, [mutation.isSuccess]);
 
-  useEffect(() => {
-    if (mutation.isError) {
-      if (errors.root) {
-        toast.error(errors.root.message);
-      }
-    }
-  }, [mutation.isError]);
+  // useEffect(() => {
+  //   if (mutation.isError) {
+  //     if (errors.root) {
+  //       toast.error(errors.root.message);
+  //     }
+  //   }
+  // }, [mutation.isError]);
 
   if (isLoading) {
     return

@@ -85,7 +85,7 @@ const ProfileAchievements = ({
                 >
                   {!achievement.is_unlocked && <p className={css.lockedAchievCard}>{t(`Profile.Achievements.locked`)}</p>}
                   <div className={css.achievTitle}>
-                    <img src="/pong.png" className={css.achievImg} alt="" />
+                    <img src={achievement.achievement.image} className={css.achievImg} alt="" />
                     {/* <img src={achievement.achievement.image} className={css.achievImg} alt="" /> */}
                     <h4>{t(`Profile.Achievements.achievements.${achievement.achievement.name_trans}_name`)}</h4>
                   </div>
