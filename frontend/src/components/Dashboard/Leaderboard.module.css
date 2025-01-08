@@ -177,7 +177,7 @@
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
   gap: 1rem;
-  padding: 0.75rem;
+  padding: 1.75rem;
   background-color: rgba(31, 41, 55, 0.5);
   border-bottom: 1px solid rgb(55, 65, 81);
 }

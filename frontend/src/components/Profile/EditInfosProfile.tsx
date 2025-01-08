@@ -139,11 +139,6 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
         }
    }), [mutation.isError];
 
-//    useEffect(() => {
-//     if (errors && !errors.password) {
-//         setConfirmSave(false);
-//     }
-//    }, [errors]);
 
     return (
         <div className={css.editInfosContainer}>
@@ -154,11 +149,7 @@ const EditInfosProfile = ({setEditProfile}:{setEditProfile:React.Dispatch<React.
                         <img src={!selectedAvatar ? profileData?.profile.avatar :
                             selectedAvatar === 'remove' ? DEFAULT_AVATAR : selectedAvatar} alt="" />
                     </div>
-                    {/* {!selectedAvatar ? (<div className={css.avatarContainer}> <img src={profileData?.profile.avatar} alt="" /></div>) :
-                        (selectedAvatar === 'remove' ? <div className={css.avatarContainer}><img src='/icons/defaultAvatar.png' alt="" /></div> :
-                        <div className={css.avatarContainer}><img src={selectedAvatar} alt="" /></div> )} */}
                     <div className={css.avatarButtons}>
-                        {/* //  ref={(e) => { register("avatar"); fileInputRef.current = e}} onChange={handleFileChange} */}
                         <Controller name='avatar' control={control} render={({ field: { onChange, ref } }) => (
                             <>
                                 <input

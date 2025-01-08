@@ -31,7 +31,7 @@
     background-color: #0E1725;
     border-radius: 25px;
     width: 600px;
-    height: 850px;
+    /* height: 850px; */
     display: flex;
     flex-direction: column;
 }
