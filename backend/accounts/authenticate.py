@@ -8,7 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 class CookieJWTAuthentication(JWTAuthentication):
 
     def authenticate(self, request: Request):
-        print('------------->reuest.headers: ', request.headers)
+        # print('------------->reuest.headers: ', request.headers)
         access_token = request.COOKIES.get('access_token')
         refresh_token = request.COOKIES.get('refresh_token')
         if access_token is None or refresh_token is None:
