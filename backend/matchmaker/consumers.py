@@ -16,22 +16,18 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         if user.is_authenticated:
             if user.id in Matchmaker.connected_clients:
-                print(f"Found previous active connection")
                 previous_consumer = Matchmaker.connected_clients[user.id]
                 previous_consumer.is_being_closed = True
                 await self.channel_layer.send(previous_consumer.channel_name, {
                     "type": "close.connection"
                 })
             self.player_id = user.id
-            print(f"New connection register ...")
             await Matchmaker.register_client(self.player_id, self)
             await self.accept()
         else:
             await self.close()
 
     async def disconnect(self, close_code):
-        print(f"disconnecting client ...")
-
         await Matchmaker.handle_player_unready(self.player_id)
         # if hasattr(self, 'is_being_closed') and self.is_being_closed:
         # return
@@ -39,13 +35,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
         if not hasattr(self, 'is_being_closed') or not self.is_being_closed:
             await Matchmaker.unregister_client(self.player_id)
-        else:
-            print(f"Skipping disconnect for closed consumer")
         return await super().disconnect(close_code)
 
     async def close_connection(self, event):
         # Custom close type to handle connection close
-        print(f"Closing previous connection ...")
         await self.send(text_data=json.dumps(
             {
                 "event": "close_connection",
@@ -56,7 +49,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         event = data['event']
-        print(f'Websocket Message Recieved: {event}')
+        # print(f'Websocket Message Recieved: {event}')
         if event == 'request_remote_game':
             await Matchmaker.request_remote_game(self.player_id)
         elif event == 'request_multiple_game':

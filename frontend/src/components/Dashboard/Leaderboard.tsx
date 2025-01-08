@@ -49,7 +49,7 @@ const Leaderboard = () => {
         <h3 className={styles.title}>
           {t('dashboard.Leaderboard.headerTitle')}
         </h3>
-        <button 
+        <button
           onClick={() => navigate('/leaderboard')}
           className={styles.viewAllButton}
         >

@@ -49,7 +49,7 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 # if DEBUG:
 #     SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
 # else:
-SERVER_URL = os.environ.get('SERVER_URL')
+SERVER_URL = os.environ.get('SERVER_URL', '')
 CLIENT_URL = os.environ.get('CLIENT_URL')
 
 # ALLOWED_HOSTS = ['e2r6p14']

@@ -7,7 +7,6 @@ from accounts.serializers.badgeSerializer import BadgeSerializer
 from app.settings import SERVER_URL, MEDIA_URL, DEFAULT_AVATAR
 
 
-
 class ProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.SerializerMethodField()

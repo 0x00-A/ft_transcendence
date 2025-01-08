@@ -249,7 +249,7 @@ const Game = () => {
         setIsConnected(false);
       };
       socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        // console.error('WebSocket error:', error);
         setIsConnected(false);
       };
     } catch (error) {
