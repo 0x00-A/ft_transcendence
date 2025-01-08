@@ -97,14 +97,14 @@ def oauth2_authentication(request, choice):
         value=token['access'],
         httponly=True,
         secure=True,
-        samesite='Strict'
+        samesite='Lax'
     )
     response.set_cookie(
         key='refresh_token',
         value=token['refresh'],
         httponly=True,
         secure=True,
-        samesite='Strict'
+        samesite='Lax'
     )
     login(request, check_user)
     return response
@@ -137,14 +137,14 @@ def oauth2_set_username(request):
         value = token['access'],
         httponly = True,
         secure = True,
-        samesite = 'Strict'
+        samesite = 'Lax'
     )
     response.set_cookie(
         key = 'refresh_token',
         value = token['refresh'],
         httponly = True,
         secure = True,
-        samesite = 'Strict'
+        samesite = 'Lax'
     )
     login(request, user)
     return response
