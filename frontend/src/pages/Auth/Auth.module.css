@@ -29,6 +29,8 @@
     transform-style: preserve-3d;
     transform: translateX(102%);
     perspective: 100px;
+    /* position: relative; */
+    z-index: 3;
 }
 
 @media (max-width: 1024px) {

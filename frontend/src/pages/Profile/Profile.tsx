@@ -115,12 +115,12 @@ const Profile = () => {
               </div>
               { activeBtn ? <EditInfosProfile setEditProfile={setEditProfile} /> :
                 <EditSecurityProfile setEditProfile={setEditProfile} /> }
-              { !activeBtn &&
-                <button className={css.deleteAccBtn} onClick={() => setDeleteAcc(true)}>
+              {/* { !activeBtn &&
+                <button className={css.deleteAccBtn} disabled={true} onClick={() => setDeleteAcc(true)}>
                   <RiDeleteBin6Line size='2.2rem' />
                   <span>{t('deleteAccount.btnDelete')}</span>
-                </button> }
-                { isDeleteAcc && <div className={css.bluredBgConfirm}>
+                </button> } */}
+                {/* { isDeleteAcc && <div className={css.bluredBgConfirm}>
                   <form className={css.confirmDelAccContainer} onSubmit={ handleSubmit((data: PasswordForm) => mutation.mutate(data)) }>
                     <h1>{t('deleteAccount.title')}</h1>
                     <p>{t('deleteAccount.description')}</p>
@@ -136,7 +136,7 @@ const Profile = () => {
                         <button type='submit' className={css.confirmBtn}>{t('Profile.EditInfosProfile.confirmSave.buttons.confirm')}</button>
                     </div>
                   </form>
-                </div>}
+                </div>} */}
             </div>
           </div>
         </div>)
