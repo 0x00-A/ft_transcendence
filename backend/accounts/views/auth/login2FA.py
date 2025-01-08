@@ -36,15 +36,15 @@ class LoginVerifyOTPView(APIView):
                             key = 'access_token',
                             value = token['access'],
                             httponly = True,
-                            secure = False,
-                            samesite = 'Strict'
+                            secure = True,
+                            samesite = 'Lax'
                         )
                         response.set_cookie(
                             key = 'refresh_token',
                             value = token['refresh'],
                             httponly = True,
-                            secure = False,
-                            samesite = 'Strict'
+                            secure = True,
+                            samesite = 'Lax'
                         )
                         login(request, user)
                         return response
