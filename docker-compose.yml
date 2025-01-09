@@ -45,7 +45,8 @@ services:
         condition: service_healthy
 
   db:
-    image: postgres:13-alpine
+    # image: postgres:13-alpine
+    image: postgres:15.3-alpine
     container_name: postgres
     restart: on-failure
     # ports:

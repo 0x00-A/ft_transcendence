@@ -14,4 +14,4 @@ python manage.py createsuperuser_auto
 # python manage.py runserver 0.0.0.0:8000
 #uwsgi --socket :8000 --master --enable-threads --module app.wsgi
 
-exec daphne -b 0.0.0.0 -p 8000 app.asgi:application
+daphne -b 0.0.0.0 -p 8000 app.asgi:application

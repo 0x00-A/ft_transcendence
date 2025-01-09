@@ -25,7 +25,7 @@ canvas_height: int = 480
 losing_score: int = 7
 
 ball_raduis: int = 8
-initial_ball_speed = 4
+initial_ball_speed = 3
 initial_paddle_speed = 3
 initial_ball_angle = (random.random() * math.pi) / 2 - math.pi / 4
 
@@ -430,15 +430,14 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.game_id, self.channel_name)
         game_id = self.game_id
         if game_id and hasattr(self, 'player_id'):
-            game: GameInstance = get_game(game_id)
-            await self.channel_layer.group_discard(self.game_id, self.channel_name)
-
-            game.state[f"{self.player_id}_lost"] = True
-            game.connected_players -= 1
-            await self.broadcast_player_lost_state()
-            if game.connected_players <= 0:
-                game.is_over = True
-                remove_game(game_id)
+            async with lock:
+                game: GameInstance = get_game(game_id)
+                game.state[f"{self.player_id}_lost"] = True
+                game.connected_players -= 1
+                await self.broadcast_player_lost_state()
+                if game.connected_players <= 0:
+                    game.is_over = True
+                    remove_game(game_id)
         return await super().disconnect(close_code)
 
     async def receive(self, text_data):

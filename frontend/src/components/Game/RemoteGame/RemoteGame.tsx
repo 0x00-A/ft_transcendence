@@ -98,7 +98,7 @@ const RemoteGame: React.FC<GameProps> = ({
     };
     const timeout = setTimeout(() => {
       f(gameState);
-    }, 6000);
+    }, 10000);
 
     return () => {
       clearTimeout(timeout);
@@ -235,7 +235,7 @@ const RemoteGame: React.FC<GameProps> = ({
       const ball = ballRef.current;
       const paddle1 = paddle1Ref.current;
       const paddle2 = paddle2Ref.current;
-      // Draw Bal
+      // Draw Ball
       ctx.fillStyle = '#f8f3e3';
       ctx.fillRect(
         ball.x - ball.radius,

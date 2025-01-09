@@ -12,13 +12,14 @@ from rest_framework.views import APIView
 class NotificationPagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = 'page_size'
-    max_page_size = 100 
+    max_page_size = 100
+
 
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = NotificationPagination 
+    pagination_class = NotificationPagination
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user).order_by('-created_at')
@@ -27,8 +28,8 @@ class NotificationViewSet(viewsets.ModelViewSet):
         return user.profile.preferred_language or 'en'
 
     def translate_notification(self, notification, language):
-        print("***** translator ****")
-        print(language)
+        # print("***** translator ****")
+        # print(language)
         translated_title = translate_text(notification.title, language)
         translated_message = translate_text(notification.message, language)
         return {
@@ -43,7 +44,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         language = self.get_user_language(request.user)
-        
+
         page = self.paginate_queryset(self.get_queryset())
         if page is not None:
             translated_notifications = [
@@ -76,6 +77,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def delete_all_notifications(self, request, pk=None):
         self.get_queryset().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class HasNewRequestsView(APIView):
     permission_classes = [permissions.IsAuthenticated]

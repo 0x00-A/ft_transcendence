@@ -442,7 +442,14 @@ class Matchmaker:
     async def handle_player_ready(cls, player_id, match_id):
         from accounts.consumers import NotificationConsumer
         print(f"\033[033mMatch_id = {match_id}\033[0m")
-        match = await Match.objects.aget(match_id=match_id)
+        # match = await Match.objects.aget(match_id=match_id)
+        # tournament = await sync_to_async(lambda: match.tournament)()
+        match = await sync_to_async(
+            lambda: Match.objects.filter(
+                Q(player1__id=player_id) | Q(player2__id=player_id),
+                status='waiting'
+            ).first()
+        )()
 
         if not match:
             print(f"\033[033mMatch does not exist\033[0m")
@@ -463,6 +470,12 @@ class Matchmaker:
             }
             await sync_to_async(NotificationConsumer.send_notification_to_user)(match.player1_id, message)
             await cls.send_message_to_client(match.player1_id, message)
+        # message = {'event': 'tournament_update',
+        #     'tournament_id': match.tournament.id,
+        #     'tournament_stat': await sync_to_async(tournament.to_presentation)(),
+        #     }
+        # await cls.send_message_to_client(match.player1_id, message)
+        # await cls.send_message_to_client(match.player2_id, message)
 
         await sync_to_async(match.save)()
 

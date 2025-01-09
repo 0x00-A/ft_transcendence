@@ -23,7 +23,7 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
     host: true,
-    origin: 'http://localhost:3000',
+    origin: 'http://0.0.0.0:3000',
   },
   resolve: {
     alias: {
