@@ -427,6 +427,7 @@ class MultiGameConsumer(AsyncWebsocketConsumer):
             await self.close()
 
     async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(self.game_id, self.channel_name)
         game_id = self.game_id
         if game_id and hasattr(self, 'player_id'):
             game: GameInstance = get_game(game_id)

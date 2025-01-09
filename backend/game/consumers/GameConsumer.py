@@ -231,21 +231,22 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.set_player_id_name()
 
                 else:
-                    await self.set_player_id_name()
-                    await self.send_countdown_to_clients()
-                    await self.broadcast_initial_state()
-
+                    game: GameInstance = get_game(self.game_id)
                     if await Game.objects.filter(game_id=self.game_id).aexists():
                         await Game.objects.filter(game_id=self.game_id).aupdate(players_connected=True)
                     elif await Match.objects.filter(match_id=self.game_id).aexists():
                         await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
-
+                    game.status = 'started'
+                    await self.set_player_id_name()
+                    await self.send_countdown_to_clients()
+                    await self.broadcast_initial_state()
                     asyncio.create_task(self.start_game(self.game_id))
         else:
             print(f"\033[31mGameConsumer: User not authenticated!\033[0m")
             await self.close()
 
     async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(self.game_id, self.channel_name)
         if self.game_id and hasattr(self, 'player_id'):
             game: GameInstance = get_game(self.game_id)
             if game:
@@ -349,7 +350,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
-        game.status = 'started'
         # Game loop
         while True:
             await self.broadcast_game_state(game_id)
