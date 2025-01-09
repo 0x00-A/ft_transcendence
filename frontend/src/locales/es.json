@@ -372,7 +372,7 @@
               "username": {
                   "required": "¡Nombre de usuario es obligatorio!",
                   "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
-                  "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
+                  "max": "¡El nombre de usuario no debe exceder 14 caracteres!"
               },
               "email": {
                   "required": "¡Correo electrónico es obligatorio!",
@@ -442,7 +442,7 @@
               "username": {
                   "required": "¡Nombre de usuario es obligatorio!",
                   "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
-                  "max": "¡El nombre de usuario no debe exceder 30 caracteres!"
+                  "max": "¡El nombre de usuario no debe exceder 14 caracteres!"
               }
           },
           "otp": {
@@ -455,15 +455,15 @@
           "editProfile": {
               "username": {
                   "min": "¡El nombre de usuario debe tener al menos 4 caracteres!",
-                  "max": "¡El nombre de usuario no debe exceder 15 caracteres!"
+                  "max": "¡El nombre de usuario no debe exceder 14 caracteres!"
               },
               "firstName": {
                   "min": "¡El nombre debe tener al menos 3 caracteres!",
-                  "max": "¡El nombre no debe exceder 15 caracteres!"
+                  "max": "¡El nombre no debe exceder 20 caracteres!"
               },
               "lastName": {
                   "min": "¡El apellido debe tener al menos 3 caracteres!",
-                  "max": "¡El apellido no debe exceder 15 caracteres!"
+                  "max": "¡El apellido no debe exceder 20 caracteres!"
               },
               "email": {
                   "invalid": "¡Formato de correo electrónico inválido!"

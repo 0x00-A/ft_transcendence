@@ -49,7 +49,7 @@ DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 # if DEBUG:
 #     SERVER_URL = f"http://{os.environ.get('DOMAIN_NAME')}:{os.environ.get('PORT')}"
 # else:
-SERVER_URL = os.environ.get('SERVER_URL', '')
+SERVER_URL = os.environ.get('SERVER_URL')
 CLIENT_URL = os.environ.get('CLIENT_URL')
 
 # ALLOWED_HOSTS = ['e2r6p14']
@@ -144,17 +144,8 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 # CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
-    # 'https://ft-pong.me',
-    #                     'https://wwww.ft-pong.me',
-    #                     'https://127.0.0.1',
-    #                     'https://localhost',
-    # 'https://e2r6p15',
     CLIENT_URL,
-    'http://e2r6p15:8000',
     'https://localhost',
-    'http://localhost:3000',
-    # 'http://0.0.0.0:3000',
-    # 'wss://yourdomain.com'
 ]
 # CSRF_COOKIE_AGE = 3600 # 1 hour
 
@@ -365,9 +356,10 @@ CHANNEL_LAYERS = {
 """
 
 CORS_ALLOWED_ORIGINS = [
-    'https://ft-pong.me',
     CLIENT_URL,
+    'https://localhost',
 ]
+
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',

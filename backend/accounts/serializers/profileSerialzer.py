@@ -53,8 +53,9 @@ class EditProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'Username must be lowercase!'})
         if len(value) < 4:
-            raise serializers.ValidationError(
-                {'Username must be at least 4 characters!'})
+            raise serializers.ValidationError({'Username must be at least 4 characters!'})
+        if len(value) > 14:
+            raise serializers.ValidationError({'Username must be at most 14 characters!'})
         return value
 
     def validate_avatar(self, value):
@@ -65,6 +66,20 @@ class EditProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'avatar': 'Image format should be jpeg or png or jpg!'})
         value.name = f"{self.context['request'].user.username}_{datetime.now()}.png"
+        return value
+
+    def validate_first_name(self, value):
+        if len(value) < 3:
+            raise serializers.ValidationError({'First name must be at least 3 characters!'})
+        if len(value) > 10:
+            raise serializers.ValidationError({'First name must be at most 20 characters!'})
+        return value
+
+    def validate_last_name(self, value):
+        if len(value) < 3:
+            raise serializers.ValidationError({'First name must be at least 3 characters!'})
+        if len(value) > 10:
+            raise serializers.ValidationError({'First name must be at most 20 characters!'})
         return value
 
     def validate(self, attrs):

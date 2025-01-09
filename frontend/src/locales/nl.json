@@ -371,7 +371,7 @@
         "username": {
           "required": "Gebruikersnaam is verplicht!",
           "min": "Gebruikersnaam moet minimaal 4 tekens bevatten!",
-          "max": "Gebruikersnaam mag niet langer zijn dan 30 tekens!"
+          "max": "Gebruikersnaam mag niet langer zijn dan 14 tekens!"
         },
         "email": {
           "required": "E-mail is verplicht!",
@@ -441,7 +441,7 @@
         "username": {
           "required": "Gebruikersnaam is verplicht!",
           "min": "Gebruikersnaam moet minimaal 4 tekens bevatten!",
-          "max": "Gebruikersnaam mag niet langer zijn dan 30 tekens!"
+          "max": "Gebruikersnaam mag niet langer zijn dan 14 tekens!"
         }
       },
       "otp": {
@@ -455,15 +455,15 @@
         "username": {
           "required": "Gebruikersnaam is verplicht!",
           "min": "Gebruikersnaam moet minimaal 4 tekens bevatten!",
-          "max": "Gebruikersnaam mag niet langer zijn dan 15 tekens!"
+          "max": "Gebruikersnaam mag niet langer zijn dan 14 tekens!"
         },
         "firstName": {
           "min": "Voornaam moet minimaal 3 tekens bevatten!",
-          "max": "Voornaam mag niet langer zijn dan 15 tekens!"
+          "max": "Voornaam mag niet langer zijn dan 20 tekens!"
         },
         "lastName": {
           "min": "Achternaam moet minimaal 3 tekens bevatten!",
-          "max": "Achternaam mag niet langer zijn dan 15 tekens!"
+          "max": "Achternaam mag niet langer zijn dan 20 tekens!"
         },
         "email": {
           "invalid": "Ongeldig e-mailformaat!"

@@ -46,7 +46,12 @@ interface SuggestedUser {
 const AddFriend: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const { data: suggestedConnections, isLoading: loadingSuggested, error: suggestedError } = useGetData<SuggestedUser[]>('suggested-connections');
+  const { 
+    data: suggestedConnections, 
+    isLoading: loadingSuggested, 
+    error: suggestedError ,
+    refetch: refetchSuggestedConnections 
+  } = useGetData<SuggestedUser[]>('suggested-connections');
   const { data: users, isLoading: loadingUsers, error: usersError, refetch } = useGetData<User[]>('users');
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -79,6 +84,7 @@ const AddFriend: React.FC = () => {
     try {
       await apiSendFriendRequest(username);
       refetch();
+      refetchSuggestedConnections()
     } catch  {
       toast.error(t('errorsFriends.send'));
     }
@@ -134,8 +140,8 @@ const AddFriend: React.FC = () => {
             <div className={css.results}>
               {suggestedConnections.map(({ user, status }) => (
                 <div key={user.username} className={css.userCard}>
-                  <img src={user.profile.avatar} alt={user.username} className={css.avatar} />
-                  <div className={css.userInfo}>
+                  <img src={user.profile.avatar} alt={user.username} className={css.avatar} onClick={() => navigate(`/profile/${user.username}`)}/>
+                  <div className={css.userInfo} onClick={() => navigate(`/profile/${user.username}`)}>
                     <span className={css.username}>{user.username}</span>
                   </div>
                   <div className={css.actions}>

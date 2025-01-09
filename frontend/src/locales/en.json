@@ -371,7 +371,7 @@
               "username": {
                   "required": "Username is required!",
                   "min": "Username must be at least 4 characters!",
-                  "max": "Username must not exceed 30 characters!"
+                  "max": "Username must not exceed 14 characters!"
               },
               "email": {
                   "required": "Email is required!",
@@ -441,7 +441,7 @@
               "username": {
                   "required": "Username is required!",
                   "min": "Username must be at least 4 characters!",
-                  "max": "Username must not exceed 30 characters!"
+                  "max": "Username must not exceed 14 characters!"
               }
           },
           "otp": {
@@ -455,15 +455,15 @@
               "username": {
                   "required": "Username is required!",
                   "min": "Username must be at least 4 characters!",
-                  "max": "Username must not exceed 30 characters!"
+                  "max": "Username must not exceed 14 characters!"
               },
               "firstName": {
                   "min": "First name must be at least 3 characters!",
-                  "max": "First name must not exceed 15 characters!"
+                  "max": "First name must not exceed 20 characters!"
               },
               "lastName": {
                   "min": "Last name must be at least 3 characters!",
-                  "max": "Last name must not exceed 15 characters!"
+                  "max": "Last name must not exceed 20 characters!"
               },
               "email": {
                   "invalid": "Invalid email format!"
