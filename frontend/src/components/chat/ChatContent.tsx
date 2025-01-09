@@ -31,7 +31,6 @@ const ChatContent = () => {
   
   useEffect(() => {
     return () => {
-      setWebsocketChatMessages([]);
       clearMessages();
     };
   }, []);
@@ -50,10 +49,12 @@ const ChatContent = () => {
             return { ...message, timestamp: localTime };
           });
 
+          if (page === 1) {
+            setWebsocketChatMessages([]);
+          }
           setFetchedChatMessages((prevMessages) =>
             page === 1 ? updatedMessages : [...prevMessages, ...updatedMessages]
           );
-          setWebsocketChatMessages([]);
           setHasMore(!!data.next);
         }
       } catch {
