@@ -30,9 +30,9 @@ class SignupSerializer(serializers.ModelSerializer):
         if len(value) < 4:
             raise serializers.ValidationError(
                 {'Username must be at least 4 characters!'})
-        if len(value) > 30:
+        if len(value) > 14:
             raise serializers.ValidationError(
-                {'Username must be at most 30 characters!'})
+                {'Username must be at most 14 characters!'})
         return value
 
     # def validate_email(self, value):

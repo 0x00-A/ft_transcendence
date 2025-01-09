@@ -10,7 +10,7 @@ export const SignupSchema = () => {
       .string()
       .required(t('Profile.errors.signup.username.required'))
       .min(4, t('Profile.errors.signup.username.min'))
-      .max(30, t('Profile.errors.signup.username.max')),
+      .max(14, t('Profile.errors.signup.username.max')),
     email: yup
       .string()
       .email(t('Profile.errors.signup.email.invalid'))
@@ -56,7 +56,7 @@ export const LoginSchema = () => {
       .string()
       .required(t('Profile.errors.login.username.required'))
       .min(4, t('Profile.errors.login.username.min'))
-      .max(20, t('Profile.errors.login.username.max')),
+      .max(14, t('Profile.errors.login.username.max')),
     password: yup
       .string()
       .required(t('Profile.errors.login.password.required'))
@@ -105,7 +105,7 @@ export const SetUsernameSchema = () => {
       .string()
       .required(t('Profile.errors.setUsername.username.required'))
       .min(4, t('Profile.errors.setUsername.username.min'))
-      .max(30, t('Profile.errors.setUsername.username.max')),
+      .max(14, t('Profile.errors.setUsername.username.max')),
   });
 };
 
@@ -128,7 +128,7 @@ export const EditInfosProfileSchema = () => {
       .string()
       .required(t('Profile.errors.editProfile.username.required'))
       .min(4, t('Profile.errors.editProfile.username.min'))
-      .max(30, t('Profile.errors.editProfile.username.max')),
+      .max(14, t('Profile.errors.editProfile.username.max')),
     first_name: yup
       .string()
       .nullable()
@@ -136,7 +136,7 @@ export const EditInfosProfileSchema = () => {
         if (!value) return true;
         return value.length >= 3;
       })
-      .max(30, t('Profile.errors.editProfile.firstName.max')),
+      .max(20, t('Profile.errors.editProfile.firstName.max')),
     last_name: yup
       .string()
       .nullable()
@@ -144,7 +144,7 @@ export const EditInfosProfileSchema = () => {
         if (!value) return true;
         return value.length >= 3;
       })
-      .max(30, t('Profile.errors.editProfile.lastName.max')),
+      .max(20, t('Profile.errors.editProfile.lastName.max')),
     password: yup
       .string()
       .min(8, t('Profile.errors.editProfile.password.min'))

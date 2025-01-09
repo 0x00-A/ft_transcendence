@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import getWebSocketUrl from '@/utils/getWebSocketUrl';
 import { useTyping } from './TypingContext';
 import moment from 'moment';
@@ -174,9 +174,9 @@ export const WebSocketChatProvider: React.FC<WebSocketProviderProps> = ({ childr
     sendMarkAsRead();
   };
 
-  const clearMessages = useCallback(() => {
+  const clearMessages = () => {
     setMessages([]);
-  }, []);
+  };
   
 
   const updateActiveConversation = (conversationId: number) => {

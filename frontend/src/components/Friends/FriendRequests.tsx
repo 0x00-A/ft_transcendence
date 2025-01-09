@@ -8,6 +8,7 @@ import { Check, X } from 'lucide-react';
 import FriendSkeleton from './FriendSkeleton';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/helpers';
+import { useNavigate } from 'react-router-dom';
 
 
 interface Profile {
@@ -36,6 +37,8 @@ const FriendRequests: React.FC = () => {
     refetch
   } = useGetData<FriendRequest[]>('friend-requests/pending');
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
 
 
 
@@ -78,10 +81,11 @@ const FriendRequests: React.FC = () => {
                 <img
                   src={request.sender.profile.avatar}
                   alt={request.sender.username}
+                  onClick={() => navigate(`/profile/${request.sender.username}`)}
                   className={css.avatar}
                 />
                 <div className={css.userInfo}>
-                  <span className={css.username}>{request.sender.username}</span>
+                  <span className={css.username} onClick={() => navigate(`/profile/${request.sender.username}`)}>{request.sender.username}</span>
                   <span className={css.timestamp}>{formatDate(new Date(request.timestamp), t('lang'))}</span>
                 </div>
                 <div className={css.actions}>
