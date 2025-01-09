@@ -53,9 +53,11 @@ class EditProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'Username must be lowercase!'})
         if len(value) < 4:
-            raise serializers.ValidationError({'Username must be at least 4 characters!'})
+            raise serializers.ValidationError(
+                {'username': 'Username must be at least 4 characters!'})
         if len(value) > 14:
-            raise serializers.ValidationError({'Username must be at most 14 characters!'})
+            raise serializers.ValidationError(
+                {'username': 'Username must be at most 14 characters!'})
         return value
 
     def validate_avatar(self, value):
@@ -72,18 +74,22 @@ class EditProfileSerializer(serializers.ModelSerializer):
         if value == '':
             return value
         if len(value) < 3:
-            raise serializers.ValidationError({'First name must be at least 3 characters!'})
-        if len(value) > 10:
-            raise serializers.ValidationError({'First name must be at most 20 characters!'})
+            raise serializers.ValidationError(
+                {'first_name': 'First name must be at least 3 characters!'})
+        if len(value) > 20:
+            raise serializers.ValidationError(
+                {'first_name': 'First name must be at most 20 characters!'})
         return value
 
     def validate_last_name(self, value):
         if value == '':
             return value
         if len(value) < 3:
-            raise serializers.ValidationError({'First name must be at least 3 characters!'})
-        if len(value) > 10:
-            raise serializers.ValidationError({'First name must be at most 20 characters!'})
+            raise serializers.ValidationError(
+                {'last_name': 'Last name must be at least 3 characters!'})
+        if len(value) > 20:
+            raise serializers.ValidationError(
+                {'last_name': 'Last name must be at most 20 characters!'})
         return value
 
     def validate(self, attrs):

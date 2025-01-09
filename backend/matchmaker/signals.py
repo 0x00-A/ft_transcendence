@@ -34,29 +34,33 @@ def notify_players_on_match_creation(sender, instance, created, **kwargs):
         #     "content": f"You are scheduled for the next round in Tournament {instance.tournament.name}!",
         #     "match_id": instance.match_id,
         # }
-                        # set notification
+        # set notification
         # target_language = 'es'
         target_language1 = player1.profile.preferred_language or 'en'
         target_language2 = player2.profile.preferred_language or 'en'
         # target_language = receiver.preferred_language
         try:
-            translated_message1 = translate_text(f"You are scheduled for the next round in Tournament {instance.tournament.name}!",target_language1)
-            translated_title1 = translate_text("Match Notification",target_language1)
+            translated_message1 = translate_text(
+                f"You are scheduled for the next round in Tournament", target_language1)
+            translated_title1 = translate_text(
+                "Match Notification", target_language1)
         except Exception as e:
-            translated_message1 = f"You are scheduled for the next round in Tournament {instance.tournament.name}!"
+            translated_message1 = f"You are scheduled for the next round in Tournament"
             translated_title1 = "Match Notification"
 
         try:
-            translated_message2 = translate_text("You are scheduled for the next round in Tournament {instance.tournament.name}!",target_language2)
-            translated_title2 = translate_text("Match Notification",target_language2)
+            translated_message2 = translate_text(
+                f"You are scheduled for the next round in Tournament", target_language2)
+            translated_title2 = translate_text(
+                "Match Notification", target_language2)
         except Exception as e:
-            translated_message2 = f"You are scheduled for the next round in Tournament {instance.tournament.name}!"
+            translated_message2 = f"You are scheduled for the next round in Tournament"
             translated_title2 = "Match Notification"
 
         notification = Notification.objects.create(
             user=player1,
             title=translated_title1,
-            message=translated_message1
+            message=f"{translated_message1} {instance.tournament.name}!"
         )
         notification.save()
         NotificationConsumer.send_notification_to_user(
@@ -65,7 +69,7 @@ def notify_players_on_match_creation(sender, instance, created, **kwargs):
         notification = Notification.objects.create(
             user=player2,
             title=translated_title2,
-            message=translated_message2
+            message=f"{translated_message2} {instance.tournament.name}!"
         )
         notification.save()
         NotificationConsumer.send_notification_to_user(

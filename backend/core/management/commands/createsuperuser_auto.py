@@ -17,7 +17,7 @@ class Command(BaseCommand):
             # Check if the superuser already exists
             User.objects.get(username=username)
             self.stdout.write(self.style.WARNING(
-                f"Superuser '{username}' already exists."))
+                f"Superuser already exists."))
         except ObjectDoesNotExist:
             # Create the superuser if it doesn't exist
             User.objects.create_superuser(

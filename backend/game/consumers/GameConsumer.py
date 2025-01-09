@@ -229,6 +229,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 if not get_game(self.game_id):
                     create_game(self.game_id)
                     await self.set_player_id_name()
+
                 else:
                     await self.set_player_id_name()
                     await self.send_countdown_to_clients()
@@ -305,22 +306,23 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def broadcast_initial_state(self):
         game: GameInstance = get_game(self.game_id)
-        await self.channel_layer.group_send(
-            self.game_id,
-            {
-                "type": "game.init",
-                # "room_id": game_room_id,
-                # "message": 'game_started'
-                'player1_state': {
-                    'player1_paddle_x': game.state["player1_paddle_x"],
-                    'player2_paddle_x': game.state["player2_paddle_x"],
-                },
-                'player2_state': {
-                    'player1_paddle_x': canvas_width - game.state["player2_paddle_x"] - game.paddle_width,
-                    'player2_paddle_x': canvas_width - game.state["player1_paddle_x"] - game.paddle_width,
-                },
-            }
-        )
+        if game:
+            await self.channel_layer.group_send(
+                self.game_id,
+                {
+                    "type": "game.init",
+                    # "room_id": game_room_id,
+                    # "message": 'game_started'
+                    'player1_state': {
+                        'player1_paddle_x': game.state["player1_paddle_x"],
+                        'player2_paddle_x': game.state["player2_paddle_x"],
+                    },
+                    'player2_state': {
+                        'player1_paddle_x': canvas_width - game.state["player2_paddle_x"] - game.paddle_width,
+                        'player2_paddle_x': canvas_width - game.state["player1_paddle_x"] - game.paddle_width,
+                    },
+                }
+            )
 
     async def receive(self, text_data):
         data = json.loads(text_data)

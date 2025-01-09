@@ -171,7 +171,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def handle_tournament_accept(self, tournament_id, invitee):
         from matchmaker.consumers import Matchmaker
         print(f"\033[33m{invitee} Accepted Tournament Invite")
-        player = await User.active.aget(username=invitee)
+        player = await User.objects.aget(username=invitee)
 
         if await Tournament.objects.filter(players__id=player.id).exclude(status='ended').exclude(status='aborted').aexists():
             if await Tournament.objects.filter(id=tournament_id, players__id=player.id).exclude(status='ended').aexists():

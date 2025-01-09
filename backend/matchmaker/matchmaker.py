@@ -83,10 +83,12 @@ class Matchmaker:
             'player1_id': game.player1.id,
             'player2_id': game.player2.id,
         }
-        await asyncio.gather(
-            cls.send_message_to_client(player1_id, message),
-            cls.send_message_to_client(player2_id, message)
-        )
+        await cls.send_message_to_client(player1_id, message)
+        await cls.send_message_to_client(player2_id, message)
+        # await asyncio.gather(
+        #     cls.send_message_to_client(player1_id, message),
+        #     cls.send_message_to_client(player2_id, message)
+        # )
 
     @classmethod
     async def create_multi_game(cls, player1_id, player2_id, player3_id, player4_id):
@@ -492,7 +494,7 @@ class Matchmaker:
     async def send_tournament_invite(cls, player_id, sender, to, tournament_id):
         from accounts.consumers import NotificationConsumer
 
-        reciever = await User.active.aget(username=to)
+        reciever = await User.objects.aget(username=to)
         if reciever:
             if await Tournament.objects.filter(Q(id=tournament_id) & Q(players__id=reciever.id)).aexists():
                 await cls.send_message_to_client(player_id, {
