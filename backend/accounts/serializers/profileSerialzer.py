@@ -69,6 +69,8 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_first_name(self, value):
+        if value == '':
+            return value
         if len(value) < 3:
             raise serializers.ValidationError({'First name must be at least 3 characters!'})
         if len(value) > 10:
@@ -76,6 +78,8 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return value
 
     def validate_last_name(self, value):
+        if value == '':
+            return value
         if len(value) < 3:
             raise serializers.ValidationError({'First name must be at least 3 characters!'})
         if len(value) > 10:
