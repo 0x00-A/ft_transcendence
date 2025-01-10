@@ -51,6 +51,9 @@ const MessageInput = ({
   };
 
   useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -132,9 +135,9 @@ const MessageInput = ({
     setIsFlying(true);
     setShowEmojiPicker(false);
     setCharCount(0);
-    // if (textareaRef.current) {
-    //   textareaRef.current.focus();
-    // }
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
     setTimeout(() => setIsFlying(false), 500);
   };
 
@@ -148,7 +151,7 @@ const MessageInput = ({
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     if (textareaRef.current) {
-      // textareaRef.current.focus();
+      textareaRef.current.focus();
     }
   };
 
