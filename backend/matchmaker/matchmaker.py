@@ -255,8 +255,7 @@ class Matchmaker:
             # Retrieve the user's preferred language
             try:
                 user = await User.objects.aget(id=player_id)
-                profile = await sync_to_async(lambda: user.profile)()
-                target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
+                target_language = await sync_to_async(lambda: user.profile.preferred_language or 'en')()
             except Exception:
                 target_language = 'en'
 
@@ -441,7 +440,6 @@ class Matchmaker:
     @classmethod
     async def handle_player_ready(cls, player_id, match_id):
         from accounts.consumers import NotificationConsumer
-        print(f"\033[033mMatch_id = {match_id}\033[0m")
         # match = await Match.objects.aget(match_id=match_id)
         # tournament = await sync_to_async(lambda: match.tournament)()
         match = await sync_to_async(

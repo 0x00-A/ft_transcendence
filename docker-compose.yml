@@ -19,8 +19,8 @@ services:
     depends_on:
       db:
         condition: service_started
-      redis:
-        condition: service_started
+      # redis:
+      #   condition: service_started
     restart: on-failure
     healthcheck:
       test: ["CMD", "python", "manage.py", "check"]
@@ -60,16 +60,16 @@ services:
     networks:
       - default_network-deploy
 
-  redis:
-    image: "redis:latest"
-    container_name: redis
-    restart: on-failure
-    # ports:
-    #   - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - default_network-deploy
+  # redis:
+  #   image: "redis:latest"
+  #   container_name: redis
+  #   restart: on-failure
+  #   # ports:
+  #   #   - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - default_network-deploy
 
   nginx:
     build:
@@ -137,7 +137,7 @@ services:
       - xpack.security.http.ssl.key=certs/es/es.key
       - xpack.security.http.ssl.certificate=certs/es/es.crt
       - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-      - logger.level=error
+      # - logger.level=error
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key=certs/es/es.key
       - xpack.security.transport.ssl.certificate=certs/es/es.crt

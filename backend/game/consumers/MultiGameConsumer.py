@@ -162,7 +162,7 @@ class GameInstance:
                 return p
 
     def reverse_vertical_direction(self):
-        self.increase_ball_speed()
+        # self.increase_ball_speed()
         self.ball.dy = -self.ball.dy
         # add slight horizontal angle to prevent direct wall bouncing
         if abs(self.ball.dx) < 0.2:
@@ -173,7 +173,7 @@ class GameInstance:
             self.ball.y = canvas_height - self.ball.radius
 
     def reverse_horizontal_direction(self):
-        self.increase_ball_speed()
+        # self.increase_ball_speed()
         self.ball.dx = -self.ball.dx
         # Add slight vertical angle to prevent direct wall bouncing
         if abs(self.ball.dy) < 0.2:
@@ -296,7 +296,7 @@ class GameInstance:
 
             # ball velocity (dx, dy) based on the new angle
             direction = 1 if self.ball.dx > 0 else -1
-            self.increase_ball_speed()
+            # self.increase_ball_speed()
             self.ball.dx = direction * self.ball.speed * \
                 math.cos(new_angle)
             self.ball.dy = self.ball.speed * \
@@ -311,7 +311,7 @@ class GameInstance:
             new_angle = relative_impact * max_bounce_angle
 
             direction = 1 if self.ball.dy > 0 else -1
-            self.increase_ball_speed()
+            # self.increase_ball_speed()
             self.ball.dx = self.ball.speed * \
                 math.sin(new_angle)
             self.ball.dy = direction * self.ball.speed * \
@@ -349,7 +349,7 @@ class GameInstance:
                 self.ball.x, self.ball.y, next_x, next_y,
                 corner['x1'], corner['y1'], corner['x2'], corner['y2']
             ):
-                self.increase_ball_speed()
+                # self.increase_ball_speed()
 
                 self.ball.dx = -self.ball.dx
                 self.ball.dy = -self.ball.dy
@@ -370,11 +370,11 @@ class GameInstance:
 
         return False
 
-    def increase_ball_speed(self):
-        if self.ball.speed < 8:
+    # def increase_ball_speed(self):
+    #     if self.ball.speed < 8:
 
-            self.ball.speed += 0.2
-            self.paddle_speed += 0.1
+    #         self.ball.speed += 0.2
+    #         self.paddle_speed += 0.1
 
 
 def create_game(game_id):

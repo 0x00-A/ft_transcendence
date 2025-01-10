@@ -19,5 +19,5 @@ requests==2.32.3
 pyotp==2.9.0
 qrcode==8.0
 googletrans==4.0.0rc1
-twisted[http2,tls]
+# twisted[http2,tls]
 # celery[redis]

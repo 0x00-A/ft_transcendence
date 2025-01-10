@@ -98,7 +98,7 @@ const RemoteGame: React.FC<GameProps> = ({
     };
     const timeout = setTimeout(() => {
       f(gameState);
-    }, 10000);
+    }, 6000);
 
     return () => {
       clearTimeout(timeout);

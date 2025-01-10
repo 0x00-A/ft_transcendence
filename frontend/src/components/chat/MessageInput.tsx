@@ -132,9 +132,9 @@ const MessageInput = ({
     setIsFlying(true);
     setShowEmojiPicker(false);
     setCharCount(0);
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
+    // if (textareaRef.current) {
+    //   textareaRef.current.focus();
+    // }
     setTimeout(() => setIsFlying(false), 500);
   };
 
@@ -148,7 +148,7 @@ const MessageInput = ({
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.native);
     if (textareaRef.current) {
-      textareaRef.current.focus();
+      // textareaRef.current.focus();
     }
   };
 
@@ -161,11 +161,11 @@ const MessageInput = ({
   if (conversationData?.block_status == 'blocker' || conversationData?.block_status == 'blocked') {
     return (
       <div className={css.messageBlock}>
-        {conversationData?.block_status === 'blocker' 
-          ? <h2>{t('messageInput.block.blocker')}</h2> 
+        {conversationData?.block_status === 'blocker'
+          ? <h2>{t('messageInput.block.blocker')}</h2>
           : <h2>{t('messageInput.block.blocked')}</h2>
         }
-        
+
         <p>{t('messageInput.block.description')}</p>
         {conversationData?.block_status === 'blocker' && (
           <button

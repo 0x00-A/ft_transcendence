@@ -262,7 +262,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.success(`${data.from} ${t('toast.requestAccepted')}`);
       }
       if (data.event === 'new_message') {
-        newMessageToast(data.from, `${t('toast.newMessage')}`)
+        newMessageToast(data.from, `${data.from} ${t('toast.newMessage')}`);
       }
       if (data.event === 'friend_request' || data.event === 'status_update') {
         showFriendRequestToast(data.from);

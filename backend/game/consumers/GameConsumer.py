@@ -238,16 +238,14 @@ class GameConsumer(AsyncWebsocketConsumer):
                         await Match.objects.filter(match_id=self.game_id).aupdate(players_connected=True, status='started', start_time=timezone.now())
                     game.status = 'started'
                     await self.set_player_id_name()
-                    await self.send_countdown_to_clients()
-                    await self.broadcast_initial_state()
                     asyncio.create_task(self.start_game(self.game_id))
         else:
             print(f"\033[31mGameConsumer: User not authenticated!\033[0m")
             await self.close()
 
     async def disconnect(self, close_code):
-        print(
-            f"\033[31mGameConsumer: player {1 if self.player_id == 'player1' else 2} disconnected!\033[0m")
+        # print(
+        #     f"\033[31mGameConsumer: player {1 if self.player_id == 'player1' else 2} disconnected!\033[0m")
         await self.channel_layer.group_discard(self.game_id, self.channel_name)
         if self.game_id and hasattr(self, 'player_id'):
             async with lock:
@@ -257,8 +255,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                         remove_game(self.game_id)
                     else:
                         game.winner = 1 if self.player_id == 'player2' else 2
-                        print(
-                            f"\033[31mGameConsumer: Winner is {game.winner}\033[0m")
+                        # print(
+                        #     f"\033[31mGameConsumer: Winner is {game.winner}\033[0m")
                         game.is_over = True
                         await self.broadcast_score_state()
         return await super().disconnect(close_code)
@@ -356,6 +354,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def start_game(self, game_id):
         game: GameInstance = games[game_id]
         # Game loop
+        await self.send_countdown_to_clients()
+        await self.broadcast_initial_state()
         while True:
             await self.broadcast_game_state(game_id)
 
