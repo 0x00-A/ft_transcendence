@@ -195,18 +195,22 @@ const Game = () => {
       socket.onmessage = (e) => {
         refetchData();
         const data = JSON.parse(e.data);
-        console.log(data);
+        // console.log(data);
 
         if (data.event === 'error') {
           cancelMatchmaking();
-          toast.error(data.message);
+          toast.error(data.message, {
+            toastId: data.message,
+          });
         }
         if (data.event === 'close_connection') {
           // cancelMatchmaking()
           navigate('/');
         }
         if (data.event === 'success') {
-          toast.success(data.message);
+          toast.success(data.message, {
+            toastId: data.message,
+          });
         }
         if (data.event === 'match_start') {
           setMatchAdrress(data.match_address);

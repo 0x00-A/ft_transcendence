@@ -13,7 +13,7 @@ services:
       - static_data:/app/backend/static
       - django-logs:/app/backend/logs
     env_file:
-      - .env
+      - .env.dev
     networks:
       - default_network-deploy
     depends_on:

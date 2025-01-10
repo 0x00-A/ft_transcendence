@@ -9,9 +9,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         User = get_user_model()
-        username = os.getenv("ADMIN_USERNAME", "admin")
-        email = os.getenv("ADMIN_EMAIL", "admin@example.com")
-        password = os.getenv("ADMIN_PASS", "admin123456")
+        username = os.getenv("ADMIN_USERNAME")
+        email = os.getenv("ADMIN_EMAIL")
+        password = os.getenv("ADMIN_PASS")
 
         try:
             # Check if the superuser already exists
