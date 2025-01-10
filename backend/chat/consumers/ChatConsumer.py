@@ -52,7 +52,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 lambda: self.user.profile.preferred_language or 'en'
             )()
             try:
-                translated_message = translate_text(str(e), target_language)
+                translated_message = await sync_to_async(translate_text)(str(e), target_language)
             except Exception:
                 translated_message = str(e)
 
@@ -181,10 +181,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             target_language = receiver_user.profile.preferred_language or 'en'
 
             try:
-                translated_message = translate_text(
-                    f"{sender_user.username} sent you a message: ", target_language)
-                translated_title = translate_text(
-                    "New Message", target_language)
+                translated_message = translate_text(f"{sender_user.username} sent you a message: ", target_language)
+                translated_title = translate_text("New Message", target_language)
             except Exception as e:
                 translated_message = f"{sender_user.username} sent you a message: "
                 translated_title = "New Message"
@@ -199,7 +197,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             NotificationConsumer.send_notification_to_user(
                 receiver_id, notification)
-
+            
             notification_data = {
                 "event": "new_message",
                 "from": self.user.username,
@@ -261,7 +259,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 lambda: self.user.profile.preferred_language or 'en'
             )()
             try:
-                translated_message = translate_text(str(e), target_language)
+                translated_message = await sync_to_async(translate_text)(str(e), target_language)
             except Exception:
                 translated_message = str(e)
             await self.send(text_data=json.dumps({

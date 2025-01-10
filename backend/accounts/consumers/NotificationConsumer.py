@@ -257,7 +257,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         target_language = await sync_to_async(lambda: self.scope['user'].profile.preferred_language or 'en')()
         try:
             message_text = message['message']
-            message['message'] = translate_text(message_text, target_language)
+            message['message'] = await sync_to_async(translate_text)(message_text, target_language)
         except Exception as e:
             print(f"Translation failed: {e}")
 

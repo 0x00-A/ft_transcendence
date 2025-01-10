@@ -227,10 +227,8 @@ class Matchmaker:
                         profile = await sync_to_async(lambda: p.profile)()
                         target_language = await sync_to_async(lambda: profile.preferred_language if profile else 'en')()
                         try:
-                            translated_message = translate_text(
-                                f"Tournament {tournament.name} aborted because a player left!", target_language)
-                            translated_title = translate_text(
-                                "Tournament Aborted", target_language)
+                            translated_message = await sync_to_async(translate_text)(f"Tournament {tournament.name} aborted because a player left!", target_language)
+                            translated_title = await sync_to_async(translate_text)("Tournament Aborted", target_language)
                         except Exception as e:
                             translated_message = f"Tournament {
                                 tournament.name} aborted because a player left!"
@@ -262,8 +260,7 @@ class Matchmaker:
             if isinstance(message, dict) and 'message' in message:
                 try:
                     message_text = message['message']
-                    message['message'] = translate_text(
-                        message_text, target_language)
+                    message['message'] = await sync_to_async(translate_text)(message_text, target_language)
                 except Exception as e:
                     print(f"Translation failed: {e}")
 
