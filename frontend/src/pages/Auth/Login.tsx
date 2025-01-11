@@ -56,7 +56,7 @@ const Login = () => {
 
   useEffect(() => {
     if (errors.root) {
-      toast.error(errors.root?.message?.at(0)??'something went wrong!');
+      toast.error(errors.root.message || 'Something went wrong!');
     }
     return () => {
       loadingBarRef.current?.complete();

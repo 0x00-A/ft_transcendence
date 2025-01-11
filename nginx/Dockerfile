@@ -27,4 +27,4 @@ RUN rm -rf /usr/share/nginx/html/*
 
 EXPOSE 80 443
 
-USER nginx
+# USER nginx

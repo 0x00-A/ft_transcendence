@@ -29,7 +29,8 @@ def translate_text(text, target_language):
     try:
         if not text:
             raise ValueError("Invalid input: Text is empty.")
-
+        if isinstance(text, list):
+            text = " ".join(text)
         translated = translator.translate(text, dest=target_language)
         if not translated or not translated.text:
             raise ValueError("Translation result is empty or None.")

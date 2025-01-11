@@ -127,7 +127,7 @@ export default function Sidebar() {
 
   const changeLanguage = async (lang: string) => {
     try {
-      console.log('Changing language to:', lang);
+      // console.log('Changing language to:', lang);
 
       const response = await apiClient.post(
         `${API_POST_SET_LANGUAGE_URL}${lang}/`, {}

@@ -15,8 +15,7 @@ class LoginSerializer(serializers.ModelSerializer):
         try:
             user = User.objects.get(username=attrs['username'])
             if not user.is_active:
-                raise serializers.ValidationError(
-                    {'error': 'User is not active, Please verify your email and retry again!'})
+                raise serializers.ValidationError({'error': 'User is not active, Please verify your email and retry again!'})
             if (not user.check_password(attrs['password'])):
                 raise serializers.ValidationError(
                     {'password': 'Invalid  credentials!'})

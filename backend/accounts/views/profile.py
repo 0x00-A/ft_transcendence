@@ -142,7 +142,6 @@ class SetLanguageView(APIView):
 
     def post(self, request, lang):
         try:
-            print('----------------')
             profile = request.user.profile
             profile.preferred_language = lang
             profile.save()
