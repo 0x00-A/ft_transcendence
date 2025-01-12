@@ -19,6 +19,8 @@ https://www.notion.so/Project-setup-40737f3cd2b64b72a82e53d94a036527?pvs=4
 ### Overview
 A web-based multiplayer Pong game built with a React frontend and a Django backend. Players can compete against each other in real-time, chat, and enjoy various game modes.
 
+The application is live at: [https://ft-pong.me/](https://ft-pong.me/)
+
 ### Features
 - **User Authentication**: Secure login and registration system.
 - **Real-Time Gameplay**: Smooth and responsive multiplayer game experience.
@@ -42,7 +44,7 @@ A web-based multiplayer Pong game built with a React frontend and a Django backe
 2. Create a `.env` file in the root directory of the project and populate it with the necessary environment variables. You can refer to `.env.example` for the required variables.
 3. Run the project using the `make` command:
    ```bash
-   make run
+   make
    ```
    This command sets up the entire development environment with Docker Compose, starting both the frontend and backend services.
 
