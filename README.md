@@ -42,7 +42,7 @@ A web-based multiplayer Pong game built with a React frontend and a Django backe
 2. Create a `.env` file in the root directory of the project and populate it with the necessary environment variables. You can refer to `.env.example` for the required variables.
 3. Run the project using the `make` command:
    ```bash
-   make run
+   make
    ```
    This command sets up the entire development environment with Docker Compose, starting both the frontend and backend services.
 
