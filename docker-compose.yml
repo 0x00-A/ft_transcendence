@@ -18,16 +18,16 @@ services:
               python manage.py createsuperuser_auto &&
               python manage.py load_initial_data &&
               python manage.py runserver 0.0.0.0:8000"
-    environment:
-      # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
-      - ALLOWED_HOSTS=*
-      - DEBUG=1
-      - DB_HOST=$DB_HOST
-      - DB_NAME=$DB_NAME
-      - DB_USER=$DB_USER
-      - DB_PASS=$DB_PASS
-      - REDIS_HOST=$REDIS_HOST
-      - REDIS_PORT=$REDIS_PORT
+    # environment:
+    #   # - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1,10.11.6.14
+    #   - ALLOWED_HOSTS=*
+    #   - DEBUG=1
+    #   - DB_HOST=$DB_HOST
+    #   - DB_NAME=$DB_NAME
+    #   - DB_USER=$DB_USER
+    #   - DB_PASS=$DB_PASS
+    #   - REDIS_HOST=$REDIS_HOST
+    #   - REDIS_PORT=$REDIS_PORT
     env_file:
       - .env
     networks:
