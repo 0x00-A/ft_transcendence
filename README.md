@@ -1,8 +1,8 @@
 ---
 # ft_transcendence
 ![Dashboard Screenshot](images/dashboard.png)
-# Project setup documentation
-https://www.notion.so/Project-setup-40737f3cd2b64b72a82e53d94a036527?pvs=4
+# Project setup documentation (for development)
+https://crimson-sapphire-6bd.notion.site/Project-setup-40737f3cd2b64b72a82e53d94a036527
 
 ### Table of Contents
 1. [Overview](#overview)
