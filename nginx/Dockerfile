@@ -25,6 +25,9 @@ RUN chown -R nginx:nginx /etc/nginx/ssl
 # RUN chmod +x /docker-entrypoint.d/entrypoint.sh
 RUN rm -rf /usr/share/nginx/html/*
 
+COPY ./LandingPage /usr/share/nginx/LandingPage
+RUN chown -R nginx:nginx /usr/share/nginx/LandingPage/*
+
 EXPOSE 80 443
 
 # USER nginx
