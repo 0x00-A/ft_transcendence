@@ -254,13 +254,13 @@ class AcceptFriendRequestView(APIView):
             target_language = sender_user.profile.preferred_language or 'en'
             try:
                 translated_message = translate_text(f'{receiver.username} has accepted your friend request! You are now friends.',target_language)
-                translated_title = translate_text("friend request accepted",target_language)
+                translated_title = translate_text("Friend request accepted",target_language)
             except Exception as e:
                 translated_message = f'{receiver.username} has accepted your friend request! You are now friends.'
-                translated_title = "friend_request_accepted"
+                translated_title = "Friend request accepted"
             # set notification
             notification = Notification.objects.create(
-                user=receiver,
+                user=sender_user,
                 link=f'/profile/{receiver.username}',
                 title=translated_title,
                 message=translated_message
