@@ -1,5 +1,5 @@
 .scoreButton, .controllButtons {
-    width: 30px;
+/*     width: 30px; */
     margin: 0 30px;
     background-color: var(--color-game-screen-bg);
     border: 3px var(--game-screen-text-color) solid;
